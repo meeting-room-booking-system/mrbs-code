@@ -458,7 +458,7 @@ class RepeatRule
     }
 
     // The UNTIL date-time "MUST be specified in UTC time"
-    $rule .= ";UNTIL=" . gmdate(RFC5545_FORMAT . '\Z', $this->getEndDate()->getTimestamp());
+    $rule .= ";UNTIL=" . gmdate(RFC5545::DATETIME_FORMAT . '\Z', $this->getEndDate()->getTimestamp());
 
     return $rule;
   }

@@ -1,6 +1,8 @@
 <?php
 namespace MRBS;
 
+use MRBS\ICalendar\RFC5545;
+
 define('INTERVAL_DAY', 0);
 
 
@@ -1315,7 +1317,7 @@ function mrbsCreateSingleEntry(array $data)
     // keep this value, even if the start time is subsequently changed.
     if ($data['entry_type'] == ENTRY_RPT_ORIGINAL)
     {
-      $data['ical_recur_id'] = gmdate(RFC5545_FORMAT . '\Z', $data['start_time']);
+      $data['ical_recur_id'] = gmdate(RFC5545::DATETIME_FORMAT . '\Z', $data['start_time']);
     }
     return mrbsCreateEntry(_tbl('entry'), $data);
   }

@@ -446,9 +446,9 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
 
   $results[] = "BEGIN:VEVENT";
   $results[] = "UID:" . $data['ical_uid'];  // compulsory
-  $results[] = "DTSTAMP:" . gmdate(RFC5545_FORMAT . '\Z');  // compulsory
+  $results[] = "DTSTAMP:" . gmdate(RFC5545::DATETIME_FORMAT . '\Z');  // compulsory
   $last_modified = empty($data['last_updated']) ? time() : $data['last_updated'];
-  $results[] = "LAST-MODIFIED:" . gmdate(RFC5545_FORMAT . '\Z', $last_modified);
+  $results[] = "LAST-MODIFIED:" . gmdate(RFC5545::DATETIME_FORMAT . '\Z', $last_modified);
 
 
   // Note: we try and write the event times in the format of a local time with
@@ -469,13 +469,13 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
 
   if ($vtimezone === false)
   {
-    $results[] = "DTSTART:" . gmdate(RFC5545_FORMAT . '\Z', $data['start_time']);
-    $results[] = "DTEND:" . gmdate(RFC5545_FORMAT . '\Z', $data['end_time']);
+    $results[] = "DTSTART:" . gmdate(RFC5545::DATETIME_FORMAT . '\Z', $data['start_time']);
+    $results[] = "DTEND:" . gmdate(RFC5545::DATETIME_FORMAT . '\Z', $data['end_time']);
   }
   else
   {
-    $results[] = "DTSTART;TZID=$timezone:" . date(RFC5545_FORMAT, $data['start_time']);
-    $results[] = "DTEND;TZID=$timezone:" . date(RFC5545_FORMAT, $data['end_time']);
+    $results[] = "DTSTART;TZID=$timezone:" . date(RFC5545::DATETIME_FORMAT, $data['start_time']);
+    $results[] = "DTEND;TZID=$timezone:" . date(RFC5545::DATETIME_FORMAT, $data['end_time']);
   }
 
   if ($series)
