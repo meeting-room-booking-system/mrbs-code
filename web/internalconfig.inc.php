@@ -339,7 +339,7 @@ define('TZDIR_OUTLOOK', 'tzurl/zoneinfo-outlook');  // Outlook compatible TZURL 
  *****************************************/
 
 define ('RFC5545_FORMAT', 'Ymd\THis');  // Format for expressing iCalendar dates
-define ('ICAL_EOL', "\r\n");            // Lines must be terminated by CRLF
+
 
 /****************************************************************
  * DATABASE TABLES  - internal use, do not change
