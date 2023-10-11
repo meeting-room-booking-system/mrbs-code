@@ -334,13 +334,6 @@ define('TZDIR',         'tzurl/zoneinfo');          // Directory containing TZUR
 define('TZDIR_OUTLOOK', 'tzurl/zoneinfo-outlook');  // Outlook compatible TZURL definitions
 
 
-/*****************************************
- * ICALENDAR - internal use, do not change
- *****************************************/
-
-define ('RFC5545_FORMAT', 'Ymd\THis');  // Format for expressing iCalendar dates
-
-
 /****************************************************************
  * DATABASE TABLES  - internal use, do not change
  ****************************************************************/

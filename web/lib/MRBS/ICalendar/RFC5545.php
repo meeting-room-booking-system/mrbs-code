@@ -11,6 +11,7 @@ use function MRBS\utf8_seq;
 
 class RFC5545
 {
+  public const DATETIME_FORMAT = 'Ymd\THis';  // Format for expressing iCalendar dates
   // An array which can be used to map day of the week numbers (0..6)
   // onto days of the week as defined in RFC 5545
   public const DAYS = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
@@ -109,11 +110,11 @@ class RFC5545
     {
       if (isset($timezone))
       {
-        $dates[] = date(RFC5545_FORMAT, $timestamp);
+        $dates[] = date(self::DATETIME_FORMAT, $timestamp);
       }
       else
       {
-        $dates[] = gmdate(RFC5545_FORMAT . '\Z', $timestamp);
+        $dates[] = gmdate(self::DATETIME_FORMAT . '\Z', $timestamp);
       }
     }
 
