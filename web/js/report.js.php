@@ -258,7 +258,7 @@ $(document).on('page_ready', function() {
             batches = [];
 
             for (i=0; i<nEntries; i++) {
-              batch.push($(data[i][0]).data('id'));
+              batch.push($(data[i][0]).siblings('a').data('id'));
               if (batch.length >= batchSize) {
                 batches.push(batch);
                 batch = [];
