@@ -1,20 +1,10 @@
 <?php
 namespace MRBS;
 
-use DateTimeZone;
+use MRBS\ICalendar\RFC5545;
 use MRBS\ICalendar\RFC5545Exception;
 use MRBS\ICalendar\Series;
 use PHPMailer\PHPMailer\PHPMailer;
-
-
-// Extracts a VTIMEZONE component from a VCALENDAR.
-function extract_vtimezone(string $vcalendar) : string
-{
-  // The VTIMEZONE components are enclosed in a VCALENDAR, so we want to
-  // extract the VTIMEZONE component.
-  preg_match('/BEGIN:VTIMEZONE[\s\S]*?END:VTIMEZONE/', $vcalendar, $matches);
-  return $matches[0] ?? '';
-}
 
 
 // Gets a VTIMEZONE definition from the file system.
@@ -38,7 +28,7 @@ function get_vtimezone_file(string $tz) : ?string
     return null;
   }
 
-  $vtimezone = extract_vtimezone($vcalendar);
+  $vtimezone = RFC5545::extractVtimezone($vcalendar);
 
   return (empty($vtimezone)) ? null : $vtimezone;
 }
@@ -51,7 +41,7 @@ function get_vtimezone_url(string $vtimezone) : ?string
   // gives the URL of the most up-to-date version.  Calendar applications
   // should be able to check this themselves, but we might as well give them
   // the most up-to-date version in the first place).
-  $properties = explode("\r\n", ical_unfold($vtimezone));
+  $properties = explode("\r\n", RFC5545::unfold($vtimezone));
   foreach ($properties as $property)
   {
     if (utf8_strpos($property, "TZURL:") === 0)
@@ -76,7 +66,7 @@ function get_vtimezone_url(string $vtimezone) : ?string
     return null;
   }
 
-  $new_vtimezone = extract_vtimezone($vcalendar);
+  $new_vtimezone = RFC5545::extractVtimezone($vcalendar);
   if (empty($new_vtimezone))
   {
     trigger_error("MRBS: $tz_url did not contain a valid VTIMEZONE", E_USER_WARNING);
@@ -254,61 +244,6 @@ function get_vtimezone(string $tz)
 }
 
 
-// Returns a UNIX timestamp given an RFC5545 date or date-time
-// $params is an optional second argument and is an array of property parameters
-function get_time(string $value, ?array $params=null) : int
-{
-  // If we haven't got any parameters default to "UTC".   Not strictly correct,
-  // but in most cases it will be true.  Need to do something better.
-  if (empty($params))
-  {
-    $event_timezone = 'UTC';
-  }
-
-  $value_type = 'DATE-TIME';  // the default
-
-  // Work out which, if any, parameters have been set
-  if (isset($params))
-  {
-    foreach ($params as $param_name => $param_value)
-    {
-      switch ($param_name)
-      {
-        case 'VALUE':
-          $value_type = $param_value;
-          break;
-        case 'TZID':
-          $event_timezone = $param_value;
-          break;
-      }
-    }
-  }
-
-  if (str_ends_with($value, 'Z'))
-  {
-    $value = rtrim($value, 'Z');
-    $event_timezone = 'UTC';
-  }
-
-  if (!isset($event_timezone))
-  {
-    $event_timezone = date_default_timezone_get();
-    if ($value_type == 'DATE-TIME')
-    {
-      trigger_error("Floating times not supported", E_USER_NOTICE);
-    }
-  }
-
-  if ($value_type == 'DATE')
-  {
-    $value .= 'T000000';
-  }
-
-  $datetime = DateTime::createFromFormat('Ymd\THis', $value, new DateTimeZone($event_timezone));
-  return $datetime->getTimestamp();
-}
-
-
 // Gets a username given an ORGANIZER value.   Returns NULL if none found
 function get_create_by(string $organizer)
 {
@@ -474,13 +409,13 @@ function get_repeat_rule(string $rrule, int $start_time, array &$errors)
   if (isset($rules['UNTIL']))
   {
     // Strictly speaking "the value of the UNTIL rule part MUST have the same
-    // value type as the "DTSTART" property".   So we should really tell get_time()
+    // value type as the "DTSTART" property".   So we should really tell getTimestamp()
     // the value type.  But "if the "DTSTART" property is specified as a date with UTC
     // time or a date with local time and time zone reference, then the UNTIL rule
     // part MUST be specified as a date with UTC time" - so in nearly all cases
     // supported by MRBS the value will be a UTC time.
     $repeat_end_date = new DateTime();
-    $repeat_end_date->setTimestamp(get_time($rules['UNTIL']));
+    $repeat_end_date->setTimestamp(RFC5545::getTimestamp($rules['UNTIL']));
     $repeat_rule->setEndDate($repeat_end_date);
   }
   elseif (isset($rules['COUNT']))
@@ -494,274 +429,6 @@ function get_repeat_rule(string $rrule, int $start_time, array &$errors)
   }
 
   return (empty($errors)) ? $repeat_rule : false;
-}
-
-
-// "Folds" lines longer than 75 octets. Multibyte safe.
-//
-// "Lines of text SHOULD NOT be longer than 75 octets, excluding the line
-// break.  Long content lines SHOULD be split into a multiple line
-// representations using a line "folding" technique.  That is, a long
-// line can be split between any two characters by inserting a CRLF
-// immediately followed by a single linear white-space character (i.e.,
-// SPACE or HTAB).  Any sequence of CRLF followed immediately by a
-// single linear white-space character is ignored (i.e., removed) when
-// processing the content type."  (RFC 5545)
-function ical_fold(string $str) : string
-{
-  // Deal with the trivial case
-  if ($str === '')
-  {
-    return $str;
-  }
-
-  $line_split = "\r\n ";  // The RFC also allows a tab instead of a space
-
-  // We assume that we are using UTF-8 and therefore that a space character
-  // is one octet long.  If we ever switched for some reason to using for
-  // example UTF-16 this assumption would be invalid.
-  if ((get_charset() != 'utf-8') || (get_mail_charset() != 'utf-8'))
-  {
-    trigger_error("MRBS: internal error - using unsupported character set", E_USER_WARNING);
-  }
-  $space_octets = 1;
-
-  $octets_max = 75;
-
-  $result = '';
-  $octets = 0;
-  $byte_index = 0;
-
-  while (isset($byte_index))
-  {
-    // Get the next character
-    $prev_byte_index = $byte_index;
-    $char = utf8_seq($str, $byte_index);
-
-    $char_octets = $byte_index - $prev_byte_index;
-    // If it's a CR then look ahead to the following character, if there is one
-    if (($char == "\r") && isset($byte_index))
-    {
-      $this_byte_index = $byte_index;
-      $next_char = utf8_seq($str, $byte_index);
-      // If that's a LF then take the CR, and advance by one character
-      if ($next_char == "\n")
-      {
-        $result .= $char;    // take the CR
-        $char = $next_char;  // advance by one character
-        $octets = 0;         // reset the octet counter to the beginning of the line
-        $char_octets = 0;    // and pretend the LF is zero octets long so that after
-                             // we've added it in we're still at the beginning of the line
-      }
-      // otherwise stay where we were
-      else
-      {
-        $byte_index = $this_byte_index;
-      }
-    }
-    // otherwise if this character will take us over the octet limit for the line,
-    // fold the line and set the octet count to however many octets a space takes
-    // (the folding involves adding a CRLF followed by one character, a space or a tab)
-    //
-    // [Note:  It's not entirely clear from the RFC whether the octet that is introduced
-    // when folding counts towards the 75 octets.   Some implementations (eg Google
-    // Calendar as of Jan 2011) do not count it.  However, it can do no harm to err on
-    // the safe side and include the initial whitespace in the count.]
-    elseif (($octets + $char_octets) > $octets_max)
-    {
-      $result .= $line_split;
-      $octets = $space_octets;
-    }
-    // finally add the character to the result string and up the octet count
-    $result .= $char;
-    $octets += $char_octets;
-  }
-  return $result;
-}
-
-
-// Reverse the RFC 5545 folding process, which splits lines into groups
-// of max 75 octets separated by 'CRLFspace' or 'CRLFtab'
-function ical_unfold(string $str) : string
-{
-  // Deal with the trivial case
-  if ($str === '')
-  {
-    return $str;
-  }
-
-  // We've got a non-zero length string
-  $result = '';
-  $byte_index = 0;
-
-  while (isset($byte_index))
-  {
-    // Get the next character
-    $char = utf8_seq($str, $byte_index);
-    // If it's a CR then look ahead to the following character, if there is one
-    if (($char == "\r") && isset($byte_index))
-    {
-      $char = utf8_seq($str, $byte_index);
-      // If that's a LF then look ahead to the next character, if there is one
-      if (($char == "\n") && isset($byte_index))
-      {
-        $char = utf8_seq($str, $byte_index);
-        // If that's a space or a tab then ignore it because we've just had a fold
-        // sequence.  Otherwise, add the characters into the result string.
-        if (($char != " ") && ($char != "\t"))
-        {
-          $result .= "\r\n" . $char;
-        }
-      }
-      else
-      {
-        $result .= "\r" . $char;
-      }
-    }
-    else
-    {
-      $result .= $char;
-    }
-  }
-
-  return $result;
-}
-
-
-// Escape text for use in an iCalendar text value
-function ical_escape_text(string $str) : string
-{
-  // Escape '\'
-  $str = str_replace("\\", "\\\\", $str);
-  // Escape ';'
-  $str = str_replace(";", "\;", $str);
-  // Escape ','
-  $str = str_replace(",", "\,", $str);
-  // EOL can only be \n
-  $str = str_replace("\r\n", "\n", $str);
-  // Escape '\n'
-  $str = str_replace("\n", "\\n", $str);
-  // Escape '\N'
-  $str = str_replace("\N", "\\N", $str);
-
-  return $str;
-}
-
-
-// Reverses RFC 5545 escaping of text
-function ical_unescape_text(string $str) : string
-{
-  // Unescape '\N'
-  $str = str_replace("\\N", "\N", $str);
-  // Unescape '\n'
-  $str = str_replace("\\n", "\n", $str);
-  // Unescape ','
-  $str = str_replace("\,", ",", $str);
-  // Unescape ';'
-  $str = str_replace("\;", ";", $str);
-  // Unescape '\'
-  $str = str_replace("\\\\", "\\", $str);
-
-  return $str;
-}
-
-
-// Escape text for use in an iCalendar quoted string
-function ical_escape_quoted_string(string $str) : string
-{
-  // From RFC 5545:
-  //    quoted-string = DQUOTE *QSAFE-CHAR DQUOTE
-
-  //    QSAFE-CHAR    = WSP / %x21 / %x23-7E / NON-US-ASCII
-  //    ; Any character except CONTROL and DQUOTE
-
-  // We'll just get rid of any double quotes, replacing them with a space.
-  // (There is no way of escaping double quotes)
-  return str_replace('"', ' ', $str);
-}
-
-
-function ical_unescape_quoted_string(string $str) : string
-{
-  return trim($str, '"');
-}
-
-
-// Splits a string at the first colon or semicolon (the delimiter) unless the delimiter
-// is inside a quoted string.  Used for parsing iCalendar lines to get property parameters
-// It assumes the string will always have at least one more delimiter to come, so can
-// only be used when you know you've still got the colon to come.
-//
-// Returns an array of three elements (the second is the delimiter)
-// or just one element if the delimiter is not found
-function ical_split(string $string) : array
-{
-  // We want to split the string up to the first delimiter which isn't inside a quoted
-  // string.   So the look ahead must not contain exactly one double quote before the next
-  // delimiter.   Note that (a) you cannot escape double quotes inside a quoted string, so
-  // we don't have to worry about that complication (b) we assume there will always be a
-  // second delimiter
-  return preg_split('/([:;](?![^"]*"{1}[:;]))/', $string, 2, PREG_SPLIT_DELIM_CAPTURE);
-}
-
-
-
-// Parse a content line which is a property (ie is inside a component).   Returns
-// an associative array:
-//   'name'       the property name
-//   'params'     an associative array of parameters indexed by parameter name
-//   'value'      the property value.  The value will have escaping reversed
-function parse_ical_property(string $line) : array
-{
-  $result = array();
-  // First of all get the string up to the first colon or semicolon.   This will
-  // be the property name.   We also want to get the delimiter so that we know
-  // whether there are any parameters to come.   The split will return an array
-  // with three elements:  0 - the string before the delimiter, 1 - the delimiter
-  // and 2 the rest of the string
-  $tmp = ical_split($line);
-  $result['name'] = $tmp[0];
-  $params = array();
-  if ($tmp[1] != ':')
-  {
-    // Get all the property parameters
-    do
-    {
-      $tmp = ical_split($tmp[2]);
-      list($param_name, $param_value) = explode('=', $tmp[0], 2);
-      // The parameter value can be a quoted string, so get rid of any double quotes
-      $params[$param_name] = ical_unescape_quoted_string($param_value);
-    }
-    while ($tmp[1] != ':');
-  }
-  $result['params'] = $params;
-  $result['value'] = ical_unescape_text($tmp[2]);
-  return $result;
-}
-
-
-// Create a comma separated list of dates for use with the EXDATE property.
-// The TZID parameter if used must be added separately
-function create_exdate_list(array $dates) : string
-{
-  global $timezone;
-
-  $vtimezone = get_vtimezone($timezone);
-
-  $results = array();
-
-  foreach ($dates as $date)
-  {
-    if ($vtimezone === false)
-    {
-      $results[] = gmdate(RFC5545_FORMAT . '\Z', $date);
-    }
-    else
-    {
-      $results[] = date(RFC5545_FORMAT, $date);
-    }
-  }
-  return implode(',', $results);
 }
 
 
@@ -816,14 +483,15 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
     $results[] = "RRULE:" . $data['repeat_rule']->toRFC5545Rule();
     if (!empty($data['skip_list']))
     {
-      $results[] = "EXDATE" .
-                   (($vtimezone === false) ? ":" : ";TZID=$timezone:") .
-                   create_exdate_list($data['skip_list']);
+      $results[] = RFC5545::createExdateProperty(
+        $data['skip_list'],
+        ($vtimezone === false) ? null : $timezone
+      );
     }
   }
-  $results[] = "SUMMARY:" . ical_escape_text($data['name']);
-  $results[] = "DESCRIPTION:" . ical_escape_text($data['description']);
-  $results[] = "LOCATION:" . ical_escape_text($data['area_name'] . $default_area_room_delimiter . $data['room_name']);
+  $results[] = "SUMMARY:" . RFC5545::escapeText($data['name']);
+  $results[] = "DESCRIPTION:" . RFC5545::escapeText($data['description']);
+  $results[] = "LOCATION:" . RFC5545::escapeText($data['area_name'] . $default_area_room_delimiter . $data['room_name']);
   $results[] = "SEQUENCE:" . $data['ical_sequence'];
   // If this is an individual member of a series then set the recurrence id
   if (!$series && ($data['entry_type'] != ENTRY_SINGLE))
@@ -867,7 +535,7 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
 
   if (isset($organizer['address']) && ($organizer['address'] !== ''))
   {
-    $results[] = "ORGANIZER;CN=\"" . ical_escape_quoted_string($organizer['name']) . "\":mailto:" . $organizer['address'];
+    $results[] = 'ORGANIZER;CN=' . RFC5545::escapeQuotedString($organizer['name']) . ':mailto:' . $organizer['address'];
   }
 
   // Put the people on the "to" list as required participants and those on the cc
@@ -909,7 +577,7 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
           // Use the common name if there is one
           $partstat = ($partstat_accepted) ? "ACCEPTED" : "NEEDS-ACTION";
           $results[] = "ATTENDEE;" .
-                       ((isset($attendee['name']) && ($attendee['name'] !== '')) ? "CN=\"" . ical_escape_quoted_string($attendee['name']) . "\";" : "") .
+                       ((isset($attendee['name']) && ($attendee['name'] !== '')) ? 'CN=' . RFC5545::escapeQuotedString($attendee['name']) . ';' : '') .
                        "PARTSTAT=$partstat;ROLE=$role:mailto:" . $attendee['address'];
         }
       }
@@ -919,7 +587,7 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
 
   // MRBS specific properties
   // Type
-  $results[] = "X-MRBS-TYPE:" . ical_escape_text(get_type_vocab($data['type']));
+  $results[] = "X-MRBS-TYPE:" . RFC5545::escapeText(get_type_vocab($data['type']));
   // Registration properties
   $properties = array(
       'allow_registration',
@@ -941,15 +609,15 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
     foreach ($registrants as $registrant) {
       // We can't use the ATTENDEEE property because its value has to be a URI.
       $results[] = "X-MRBS-REGISTRANT;X-MRBS-REGISTERED=" . $registrant['registered'] .
-        ';' . 'X-MRBS-CREATE-BY="' . ical_escape_quoted_string($registrant['create_by']) . '"' .
-        ':' . ical_escape_text($registrant['username']);
+        ';' . 'X-MRBS-CREATE-BY=' . RFC5545::escapeQuotedString($registrant['create_by']) .
+        ':' . RFC5545::escapeText($registrant['username']);
     }
   }
 
   $results[] = "END:VEVENT";
 
   // No CRLF at end: that will be added later
-  return implode(ICAL_EOL, $results);
+  return implode(RFC5545::EOL, $results);
 }
 
 
@@ -988,10 +656,9 @@ function create_icalendar(string $method, array $components) : string
 
   $results[] = "END:VCALENDAR";
 
-  $result = implode(ICAL_EOL, $results);
-  $result .= ICAL_EOL;  // Has to end with a CRLF
-
-  $result = ical_fold($result);
+  $result = implode(RFC5545::EOL, $results);
+  $result .= RFC5545::EOL;  // Has to end with the correct line ending
+  $result = RFC5545::fold($result);
 
   return $result;
 }

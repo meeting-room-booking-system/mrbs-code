@@ -13,6 +13,7 @@ use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldInputUrl;
 use MRBS\Form\FieldSelect;
 use MRBS\Form\Form;
+use MRBS\ICalendar\RFC5545;
 use ReflectionClass;
 use ZipArchive;
 
@@ -305,7 +306,7 @@ function process_event(array $vevent) : bool
   $line = current($vevent);
   while ($line !== false)
   {
-    $property = parse_ical_property($line);
+    $property = RFC5545::parseProperty($line);
     // Ignore any sub-components (eg a VALARM inside a VEVENT) as MRBS does not
     // yet handle things like reminders.  Skip through to the end of the sub-
     // component.   Just in case you can have sub-components at a greater depth
@@ -316,7 +317,7 @@ function process_event(array $vevent) : bool
       // Get the start time because we'll need it later
       if ($property['name'] == 'DTSTART')
       {
-        $booking['start_time'] = get_time($property['value'], $property['params']);
+        $booking['start_time'] = RFC5545::getTimestamp($property['value'], $property['params']);
       }
     }
     else
@@ -325,7 +326,7 @@ function process_event(array $vevent) : bool
       while (!(($property['name'] == 'END') && ($property['value'] == $component)) &&
              ($line = next($vevent)))
       {
-        $property = parse_ical_property($line);
+        $property = RFC5545::parseProperty($line);
       }
     }
     $line = next($vevent);
@@ -376,7 +377,7 @@ function process_event(array $vevent) : bool
         break;
 
       case 'DTEND':
-        $booking['end_time'] = get_time($property['value'], $property['params']);
+        $booking['end_time'] = RFC5545::getTimestamp($property['value'], $property['params']);
         break;
 
       case 'DURATION':
@@ -470,7 +471,7 @@ function process_event(array $vevent) : bool
             $registrants[] = array(
               'username'    => $property['value'],
               'registered'  => $property['params']['X-MRBS-REGISTERED'],
-              'create_by'   => ical_unescape_quoted_string($property['params']['X-MRBS-CREATE-BY'])
+              'create_by'   => RFC5545::unescapeQuotedString($property['params']['X-MRBS-CREATE-BY'])
             );
           }
           // TODO: custom fields
