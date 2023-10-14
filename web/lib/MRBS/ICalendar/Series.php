@@ -19,8 +19,8 @@ class Series
 
   private $data;
   private $repeat;
-  private $expected_entries;
-  private $actual_entries;
+  private $expected_start_times;
+  private $actual_start_times;
 
   // Constructs a new Series object and adds $row to it.
   // $limit is the limiting UNIX timestamp for the series.  This may be before the actual end
@@ -54,12 +54,12 @@ class Series
     // Create the repeat rule
     $this->repeat = self::addRepeatRule($this->repeat);
 
-    // Construct an array of the entries we'd expect to see in this series so that
-    // we can check whether any are missing and if so set their status to "cancelled".
-    $this->expected_entries = $this->repeat['repeat_rule']->getRepeatStartTimes($this->repeat['start_time']);
+    // Construct an array of the start times we'd expect to see in this series so that
+    // we can check whether any are missing.
+    $this->expected_start_times = $this->repeat['repeat_rule']->getRepeatStartTimes($this->repeat['start_time']);
 
-    // And keep an array of all the entries we actually see
-    $this->actual_entries = array();
+    // And keep an array of all the start times we actually see
+    $this->actual_start_times = array();
 
     // And finally add the row to the series
     $this->addRow($row);
@@ -74,10 +74,10 @@ class Series
     // Add the row to the data array
     $this->data[] = $row;
 
-    // If this is an original entry, add it to the array of ones we've seen
+    // If this is an original entry, add its start time to the array of ones we've seen
     if ($row['entry_type'] == ENTRY_RPT_ORIGINAL)
     {
-      $this->actual_entries[] = $row['start_time'];
+      $this->actual_start_times[] = $row['start_time'];
     }
 
     // And if we haven't yet seen an original row, and this is one, then grab
@@ -98,7 +98,7 @@ class Series
   {
     $events = array();
 
-    $this->repeat['skip_list'] = array_diff($this->expected_entries, $this->actual_entries);
+    $this->repeat['skip_list'] = array_diff($this->expected_start_times, $this->actual_start_times);
     $events[] = create_ical_event($method, $this->repeat, null, true);
 
     // Then iterate through the series looking for changed entries
