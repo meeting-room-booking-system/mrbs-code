@@ -1470,6 +1470,18 @@ function get_repeat_id(int $entry_id) : ?int
 }
 
 
+function get_repeat(int $repeat_id) : ?array
+{
+  $sql = "SELECT *
+              FROM " . _tbl('repeat') . "
+             WHERE id=:repeat_id
+             LIMIT 1";
+
+  $res = db()->query($sql, array(':repeat_id' => $repeat_id));
+
+  return ($res->count() == 0) ? null : $res->next_row_keyed();
+}
+
 // Update the time of last reminding.
 // If the entry is part of a repeating series, then also increment
 // the last reminder time in the repeat table and all the individual
