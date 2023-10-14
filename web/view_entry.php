@@ -708,7 +708,7 @@ if (isset($action) && ($action == "export"))
 
     if ($series)
     {
-      $sql .= " ORDER BY E.ical_recur_id";
+      $sql .= " ORDER BY E.start_time";
     }
     $res = db()->query($sql, $sql_params);
 
