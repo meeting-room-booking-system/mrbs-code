@@ -667,7 +667,7 @@ function create_icalendar(string $method, array $components) : string
 // outputs an iCalendar based on the data in $res, the result of an SQL query.
 //
 //    &$res       resource  the result of an SQL query on the entry table, which
-//                          has been sorted by repeat_id, ical_recur_id (both ascending).
+//                          has been sorted by repeat_id, start_time (both ascending).
 //                          As well as all the fields in the entry table, the rows will
 //                          also contain the area name, the room name and the repeat
 //                          details (rep_type, end_date, rep_opt, rep_interval)
@@ -678,22 +678,16 @@ function export_icalendar(DBStatement $res, bool $keep_private, int $export_end=
   require_once "mrbs_sql.inc";
 
   // We construct an iCalendar by going through the rows from the SQL query.  Because
-  // it was sorted by repeat_id and then by ical_recur_id we will
-  //    - get all the individual entries (which will not have a rep_type)
+  // it was sorted by repeat_id we will
+  //    - get all the individual entries (which will not have a repeat_id)
   //    - then get the series.    For each series we have to:
-  //        - identify the series information.   This is the original series information,
-  //          so we can only get it from an entry that has not been changed, ie has
-  //          entry_type == ENTRY_RPT_ORIGINAL.   If there isn't one of these then it
-  //          does not matter, because every entry will have been changed and so there
-  //          is no need for the original data. [Note: another way of getting the
-  //          series information would have been to get it as part of the query]
+  //        - identify the series information.
   //        - identify any events that have been changed from the standard, ie events
   //          with entry_type == ENTRY_RPT_CHANGED
   //        - identify any events from the original series that have been cancelled.  We
   //          can do this because we know from the repeat information the events that
-  //          should be there, and we can tell from the recurrence-id the events that
-  //          are actually there.   We can then issue cancellations for the missing
-  //          events.
+  //          should be there, and we can tell from the start times the events that are
+  //          actually there.
 
   // We use PUBLISH rather than REQUEST because we're not inviting people to these meetings,
   // we're just exporting the calendar.   Furthermore, if we don't use PUBLISH then some
