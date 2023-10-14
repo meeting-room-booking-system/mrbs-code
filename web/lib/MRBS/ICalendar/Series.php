@@ -5,9 +5,9 @@ namespace MRBS\ICalendar;
 use MRBS\DateTime;
 use MRBS\Exception;
 use MRBS\RepeatRule;
-use function MRBS\_tbl;
 use function MRBS\create_ical_event;
 use function MRBS\entry_has_registrants;
+use function MRBS\get_repeat;
 
 require_once MRBS_ROOT . '/functions_ical.inc';
 require_once MRBS_ROOT . '/mrbs_sql.inc';
@@ -33,7 +33,7 @@ class Series
     $this->repeat_id = $row['repeat_id'];
 
     // Get the repeat data and save it, so that we can construct the repeat event later
-    $this->repeat = self::get_repeat($this->repeat_id);
+    $this->repeat = get_repeat($this->repeat_id);
     if (!isset($this->repeat))
     {
       throw new Exception("Repeat data not available");
@@ -94,7 +94,7 @@ class Series
 
   // Convert the series to an array of iCalendar events.
   // $method ids the METHOD, eg 'PUBLISH'.
-  public function toEvents($method)
+  public function toEvents(string $method) : array
   {
     $events = array();
 
@@ -145,19 +145,6 @@ class Series
     $row['repeat_rule'] = $repeat_rule;
 
     return $row;
-  }
-
-
-  private function get_repeat(int $repeat_id) : ?array
-  {
-    $sql = "SELECT *
-              FROM " . _tbl('repeat') . "
-             WHERE id=:repeat_id
-             LIMIT 1";
-
-    $res = \MRBS\db()->query($sql, array(':repeat_id' => $repeat_id));
-
-    return ($res->count() == 0) ? null : $res->next_row_keyed();
   }
 
 
