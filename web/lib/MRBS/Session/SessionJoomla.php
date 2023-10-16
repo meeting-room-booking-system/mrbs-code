@@ -1,6 +1,8 @@
 <?php
 namespace MRBS\Session;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Language;
 use MRBS\JFactory;
 use MRBS\User;
 use function MRBS\auth;
@@ -36,7 +38,7 @@ class SessionJoomla extends SessionWithLogin
       // See https://groups.google.com/g/joomla-dev-general/c/55J2s9hhMxA
 
       // Boot the DI container
-      $container = \Joomla\CMS\Factory::getContainer();
+      $container = Factory::getContainer();
 
       // Alias the session service keys to the web session service as that is the primary session backend for this application.
       // In addition to aliasing "common" service keys, we also create aliases for the PHP classes to ensure autowiring objects
@@ -51,9 +53,18 @@ class SessionJoomla extends SessionWithLogin
 
       // Instantiate the application.
       $this->app = $container->get(\Joomla\CMS\Application\SiteApplication::class);
+      // Build the namespace map and load the language (necessary from Joomla 4.3.0 onwards - see
+      // https://groups.google.com/g/joomla-dev-general/c/55J2s9hhMxA/m/IpBrs3HZAgAJ?utm_medium=email&utm_source=footer&pli=1
+      // and https://joomla.stackexchange.com/questions/32145/joomla-4-error-when-i-use-getarticleroute/32146#32146)
+      if (version_compare(JVERSION, '4.3.0', '>='))
+      {
+        $this->app->createExtensionNamespaceMap();
+        $lang = Language::getInstance('en');  // doesn't matter which language as we never use it
+        $this->app->loadLanguage($lang);
+      }
 
       // Set the application as global app
-      \Joomla\CMS\Factory::$application = $this->app;
+      Factory::$application = $this->app;
     }
 
     $this->session = JFactory::getSession();
