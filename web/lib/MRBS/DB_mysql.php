@@ -522,6 +522,7 @@ class DB_mysql extends DB
     // Map MySQL types on to a set of generic types
     $nature_map = array(
       'bigint'      => 'integer',
+      'blob'        => 'file',
       'char'        => 'character',
       'date'        => 'timestamp',
       'datetime'    => 'timestamp',
@@ -529,7 +530,9 @@ class DB_mysql extends DB
       'double'      => 'real',
       'float'       => 'real',
       'int'         => 'integer',
+      'longblob'    => 'file',
       'longtext'    => 'character',
+      'mediumblob'  => 'file',
       'mediumint'   => 'integer',
       'mediumtext'  => 'character',
       'numeric'     => 'decimal',
@@ -537,6 +540,7 @@ class DB_mysql extends DB
       'text'        => 'character',
       'time'        => 'timestamp',
       'timestamp'   => 'timestamp',
+      'tinyblob'    => 'file',
       'tinyint'     => 'integer',
       'tinytext'    => 'character',
       'varchar'     => 'character',
