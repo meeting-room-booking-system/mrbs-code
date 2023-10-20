@@ -239,7 +239,16 @@ foreach($fields as $field)
     $var = VAR_PREFIX . $field['name'];
     if ($field['nature'] == 'binary')
     {
-      // TODO: error checking
+      var_dump($_FILES);
+      // TODO: error checking and better error handling
+      if ($_FILES[$var]['size'] === 0)
+      {
+        throw new Exception("Empty file");
+      }
+      if (!isset($_FILES[$var]['tmp_name']) || $_FILES[$var]['tmp_name'] === '')
+      {
+        throw new Exception("Empty file name");
+      }
       // PDO will take a file pointer and read the contents into the database
       $custom_fields[$field['name']] = fopen($_FILES[$var]['tmp_name'], 'rb');
     }
