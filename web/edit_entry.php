@@ -1701,9 +1701,11 @@ if (!empty($back_button))
   $form->setAttribute('data-back', 1);
 }
 
-$hidden_inputs = array('returl'      => $returl,
-                       'rep_id'      => $rep_id,
-                       'edit_series' => $edit_series);
+$hidden_inputs = array(
+  'returl'      => $returl,
+  'rep_id'      => $rep_id,
+  'edit_series' => $edit_series
+);
 
 $form->addHiddenInputs($hidden_inputs);
 
