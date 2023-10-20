@@ -133,10 +133,36 @@ abstract class DB
   // Throws a DBException on error.
   public function command(string $sql, array $params = array()): int
   {
-    try {
+    try
+    {
       $sth = $this->dbh->prepare($sql);
-      $sth->execute($params);
-    } catch (PDOException $e) {
+      // We are going to bind the parameters manually.  The default, by passing
+      // $params as an argument to execute(), is that all parameters are bound
+      // PDO::PARAM_STR.  However, it's possible that some of the parameters could
+      // be file pointers (if we've uploaded a file from a form) in which case
+      // we want to bind them as PDO::PARAM_LOB.  PDO will then magically read the
+      // contents of the file and write them to the database.
+      foreach ($params as $key => &$value) // The value is passed by reference to bindParam()
+      {
+        // Parameters can either be named parameters, eg ':id', or question mark ('?') parameters,
+        // in which case they are 1-indexed, so we need to add 1 to the array index.  You
+        // cannot mix named and question mark parameters, so we don't need to worry about that
+        // possibility.  See https://www.php.net/pdo.prepare
+        $param = (is_int($key)) ? $key + 1 : $key;
+        if (is_resource($value))
+        {
+          $sth->bindParam($param, $value, PDO::PARAM_LOB);
+        }
+        else
+        {
+          $sth->bindParam($param, $value, PDO::PARAM_STR);
+        }
+      }
+      $sth->execute();
+
+    }
+    catch (PDOException $e)
+    {
       throw new DBException($e->getMessage(), 0, $e, $sql, $params);
     }
 

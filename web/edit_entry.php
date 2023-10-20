@@ -623,6 +623,11 @@ function get_field_custom(string $key, bool $disabled=false)
   {
     $class = 'FieldInputNumber';
   }
+  // If it's a binary data type then create a file upload input
+  elseif ($custom_field['nature'] == 'binary')
+  {
+    $class = 'FieldInputFile';
+  }
   // Otherwise it's a text input of some kind (which includes <select>s and
   // <datalist>s)
   else
@@ -1684,10 +1689,11 @@ else
 
 $form = new Form();
 
-$form->setAttributes(array('class'  => 'standard js_hidden',
-                           'id'     => 'main',
-                           'action' => multisite('edit_entry_handler.php'),
-                           'method' => 'post'));
+$form->setAttributes(array('class'    => 'standard js_hidden',
+                           'id'       => 'main',
+                           'enctype'  => 'multipart/form-data', // in case we have a binary custom field
+                           'action'   => multisite('edit_entry_handler.php'),
+                           'method'   => 'post'));
 
 if (!empty($back_button))
 {

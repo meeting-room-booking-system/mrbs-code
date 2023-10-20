@@ -236,44 +236,49 @@ foreach($fields as $field)
 {
   if (!in_array($field['name'], $standard_fields['entry']))
   {
-    switch($field['nature'])
-    {
-      case 'character':
-        $f_type = 'string';
-        break;
-      case 'integer':
-        // Smallints and tinyints are considered to be booleans
-        $f_type = (isset($field['length']) && ($field['length'] <= 2)) ? 'string' : 'int';
-        break;
-      case 'decimal':
-        $f_type = 'decimal';
-        break;
-      // We can only really deal with the types above at the moment
-      default:
-        $f_type = 'string';
-        break;
-    }
-
     $var = VAR_PREFIX . $field['name'];
-    $custom_fields[$field['name']] = get_form_var($var, $f_type);
-
-    if (($f_type == 'int') && ($custom_fields[$field['name']] === ''))
+    if ($field['nature'] == 'binary')
     {
-      $custom_fields[$field['name']] = null;
+      // TODO: error checking
+      // PDO will take a file pointer and read the contents into the database
+      $custom_fields[$field['name']] = fopen($_FILES[$var]['tmp_name'], 'rb');
     }
-    // Turn checkboxes into booleans
-    if (($field['nature'] == 'integer') &&
+    else
+    {
+      switch ($field['nature']) {
+        case 'character':
+          $f_type = 'string';
+          break;
+        case 'integer':
+          // Smallints and tinyints are considered to be booleans
+          $f_type = (isset($field['length']) && ($field['length'] <= 2)) ? 'string' : 'int';
+          break;
+        case 'decimal':
+          $f_type = 'decimal';
+          break;
+        // We can only really deal with the types above at the moment
+        default:
+          $f_type = 'string';
+          break;
+      }
+
+      $custom_fields[$field['name']] = get_form_var($var, $f_type);
+
+      if (($f_type == 'int') && ($custom_fields[$field['name']] === '')) {
+        $custom_fields[$field['name']] = null;
+      }
+      // Turn checkboxes into booleans
+      if (($field['nature'] == 'integer') &&
         isset($field['length']) &&
-        ($field['length'] <= 2))
-    {
-      $custom_fields[$field['name']] = (bool) $custom_fields[$field['name']];
-    }
+        ($field['length'] <= 2)) {
+        $custom_fields[$field['name']] = (bool)$custom_fields[$field['name']];
+      }
 
-    // Trim any strings and truncate them to the maximum field length
-    if (is_string($custom_fields[$field['name']]) && ($field['nature'] != 'decimal'))
-    {
-      $custom_fields[$field['name']] = trim($custom_fields[$field['name']]);
-      $custom_fields[$field['name']] = truncate($custom_fields[$field['name']], 'entry.' . $field['name']);
+      // Trim any strings and truncate them to the maximum field length
+      if (is_string($custom_fields[$field['name']]) && ($field['nature'] != 'decimal')) {
+        $custom_fields[$field['name']] = trim($custom_fields[$field['name']]);
+        $custom_fields[$field['name']] = truncate($custom_fields[$field['name']], 'entry.' . $field['name']);
+      }
     }
 
   }
