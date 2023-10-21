@@ -239,8 +239,8 @@ foreach($fields as $field)
     $var = VAR_PREFIX . $field['name'];
     if ($field['nature'] == 'binary')
     {
-      // If the field is nullable, then the file is not required so ignore any empty uploads
-      if ($field['is_nullable'] && ($_FILES[$var]['tmp_name'] === '') && ($_FILES[$var]['size'] === 0))
+      // If the field is not required ignore any empty uploads
+      if ($field['is_nullable'] && empty($is_mandatory_field["entry.$var"]))
       {
         continue;
       }
