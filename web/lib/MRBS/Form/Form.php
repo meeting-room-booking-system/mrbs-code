@@ -20,6 +20,18 @@ class Form extends Element
   public function __construct()
   {
     parent::__construct('form');
+    // Add a MAX_FILE_SIZE hidden input for use by forms that have a file
+    // upload input.  This hidden input must come before the file input
+    // element if it is to be used by PHP. Although at the time of writing
+    // it is not used by any browsers, we can add some JavaScript to check
+    // the file size when it is selected and thus save a failed upload attempt.
+    $max_file_size = ini_get('upload_max_filesize');
+    if ($max_file_size !== false)
+    {
+      $max_file_size = self::convertToBytes($max_file_size);
+      $this->addHiddenInput('MAX_FILE_SIZE', $max_file_size);
+    }
+    // Add a CSRF token
     $this->addCSRFToken();
   }
 
@@ -192,6 +204,38 @@ class Form extends Element
   private static function getStoredToken() : ?string
   {
     return session()->get(self::TOKEN_NAME);
+  }
+
+
+  // Convert a file size to bytes
+  // See https://www.php.net/manual/en/faq.using.php#faq.using.shorthandbytes
+  private static function convertToBytes(string $size) : int
+  {
+    // Split the size into value and units (if any)
+    $values = preg_split('/(?<=[0-9])(?=[^0-9]+)/i', $size);
+
+    if (count($values) == 2)
+    {
+      $result = intval($values[0]);
+      switch ($values[1])
+      {
+        case 'G':
+          $result = 1024 * $result;
+          // Fall through
+        case 'M':
+          $result = 1024 * $result;
+          // Fall through
+        case 'K':
+          $result = 1024 * $result;
+          return $result;
+          break;
+        default:
+          // Unrecognised suffix
+          break;
+      }
+    }
+
+    return intval($size);
   }
 
 }

@@ -1093,34 +1093,44 @@ if (!empty($import))
   }
   else
   {
-    if ($_FILES['upload_file']['error'] !== UPLOAD_ERR_OK)
-      {
-      echo "<p>\n";
-      echo get_vocab("upload_failed");
-      switch ($_FILES['upload_file']['error'])
-      {
-        case UPLOAD_ERR_INI_SIZE:
-          echo "<br>\n";
-          echo get_vocab("max_allowed_file_size") . " " . ini_get('upload_max_filesize');
-          break;
-        case UPLOAD_ERR_NO_FILE:
-          echo "<br>\n";
-          echo get_vocab("no_file");
-          break;
-        default:
-          // None of the other possible errors would make much sense to the user, but should be reported
-          trigger_error($_FILES['upload_file']['error'], E_USER_NOTICE);
-          break;
-      }
-      echo "</p>\n";
-    }
-    elseif (!is_uploaded_file($_FILES['upload_file']['tmp_name']))
+    if (($_FILES['upload_file']['error'] !== UPLOAD_ERR_OK) ||
+        !is_uploaded_file($_FILES['upload_file']['tmp_name']))
     {
-      // This should not happen and if it does may mean that somebody is messing about
       echo "<p>\n";
       echo get_vocab("upload_failed");
+
+      if ($_FILES['upload_file']['error'] !== UPLOAD_ERR_OK)
+      {
+        try
+        {
+          throw new UploadException($_FILES['upload_file']['error']);
+        }
+        catch (UploadException $e)
+        {
+          switch ($e->getCode())
+          {
+            case UPLOAD_ERR_INI_SIZE:
+            case UPLOAD_ERR_FORM_SIZE:
+              echo "<br>\n" . get_vocab("max_allowed_file_size", ini_get('upload_max_filesize'));
+              break;
+            case UPLOAD_ERR_NO_FILE:
+              echo "<br>\n" . get_vocab("no_file");
+              break;
+            default:
+              // None of the other possible errors would make much sense to the user, but should be reported
+              trigger_error($e->getMessage(), E_USER_WARNING);
+              break;
+          }
+        }
+      }
+      // Check this last, as it will be true if there is an error
+      elseif (!is_uploaded_file($_FILES['upload_file']['tmp_name']))
+      {
+        // This should not happen and if it does may mean that somebody is messing about
+        trigger_error("Attempt to import a file that has not been uploaded", E_USER_WARNING);
+      }
+
       echo "</p>\n";
-      trigger_error("Attempt to import a file that has not been uploaded", E_USER_WARNING);
     }
     else
     {
