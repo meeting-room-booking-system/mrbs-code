@@ -542,7 +542,7 @@ $vocab["import_bzip2"]                = "bzip2 文件";
 $vocab["file_name"]                   = "文件名";
 $vocab["import"]                      = "导入";
 $vocab["upload_failed"]               = "上传失败";
-$vocab["max_allowed_file_size"]       = "允许的最大文件大小";
+$vocab["max_allowed_file_size"]       = "允许的最大文件大小 %s";
 $vocab["no_file"]                     = "没有文件被上传";
 $vocab["could_not_process"]           = "导入失败：无法处理文件";
 
