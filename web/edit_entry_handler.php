@@ -239,8 +239,15 @@ foreach($fields as $field)
     $var = VAR_PREFIX . $field['name'];
     if ($field['nature'] == 'binary')
     {
-      var_dump($_FILES);
-      // TODO: error checking and better error handling
+      // TODO: better error handling
+      if ($_FILES[$var]['error'] !== UPLOAD_ERR_OK)
+      {
+        throw new UploadException($_FILES[$var]['error']);
+      }
+      if (!is_uploaded_file($_FILES[$var]['tmp_name']))
+      {
+        throw new Exception("Attempt to use a file that has not been uploaded");
+      }
       if ($_FILES[$var]['size'] === 0)
       {
         throw new Exception("Empty file");
