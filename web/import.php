@@ -1107,7 +1107,8 @@ if (!empty($import))
         }
         catch (UploadException $e)
         {
-          switch ($_FILES['upload_file']['error']) {
+          switch ($e->getCode())
+          {
             case UPLOAD_ERR_INI_SIZE:
             case UPLOAD_ERR_FORM_SIZE:
               echo "<br>\n" . get_vocab("max_allowed_file_size") . " " . ini_get('upload_max_filesize');
