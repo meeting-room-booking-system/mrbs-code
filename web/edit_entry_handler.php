@@ -239,6 +239,12 @@ foreach($fields as $field)
     $var = VAR_PREFIX . $field['name'];
     if ($field['nature'] == 'binary')
     {
+      // If the field is nullable, then the file is not required so ignore any empty uploads
+      if ($field['is_nullable'] && ($_FILES[$var]['tmp_name'] === '') && ($_FILES[$var]['size'] === 0))
+      {
+        continue;
+      }
+      // Otherwise check for errors
       // TODO: better error handling
       if ($_FILES[$var]['error'] !== UPLOAD_ERR_OK)
       {
