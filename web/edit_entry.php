@@ -672,6 +672,10 @@ function get_field_custom(string $key, bool $disabled=false)
   {
     $field->setControlChecked(!empty($custom_fields[$key]));
   }
+  elseif (($class == 'FieldInputFile') && !empty($is_mandatory_field["entry.$key"]))
+  {
+    $field->setControlAttribute('required', true);
+  }
   else
   {
     $field->setControlAttribute('value', (isset($custom_fields[$key])) ? $custom_fields[$key] : null);
