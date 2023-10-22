@@ -239,6 +239,11 @@ foreach($fields as $field)
     $var = VAR_PREFIX . $field['name'];
     if ($field['nature'] == 'binary')
     {
+      // We are not interested in file uploads if this is an Ajax request
+      if ($is_ajax)
+      {
+        continue;
+      }
       // If the field is not required ignore any empty uploads
       if (empty($is_mandatory_field["entry.$var"]) &&
           ($_FILES[$var]['tmp_name'] === '') &&
