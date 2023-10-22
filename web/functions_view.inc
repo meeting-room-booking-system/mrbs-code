@@ -300,6 +300,11 @@ function create_details_body(array $data, bool $as_html=false, bool $keep_privat
             $value = empty($data[$key]) ? get_vocab("no") : get_vocab("yes");
           }
         }
+        elseif ($field['nature'] == 'binary')
+        {
+          // TODO: put in a link to download
+          jjh
+        }
         // Otherwise output a string
         else
         {
