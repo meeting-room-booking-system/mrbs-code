@@ -158,7 +158,7 @@ if (isset($from_date))
 {
   if (validate_iso_date($from_date))
   {
-    $search_start_time = DateTime::createFromFormat('Y-m-d', $from_date)->getTimestamp();
+    $search_start_time = DateTime::createFromFormat('Y-m-d', $from_date)->setTime(0, 0)->getTimestamp();
   }
   else
   {
