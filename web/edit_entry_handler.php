@@ -588,22 +588,6 @@ if ($end_time == $start_time)
   $end_time += $resolution;
 }
 
-if (isset($rep_type) && ($rep_type != RepeatRule::NONE) && isset($rep_end_date))
-{
-  // Get the repeat entry settings
-  if (false === ($date = DateTime::createFromFormat('Y-m-d', $rep_end_date)))
-  {
-    throw new Exception("Invalid rep_end_date '$rep_end_date'");
-  }
-  $date->setTime(intval($start_seconds/SECONDS_PER_HOUR), intval(($start_seconds%SECONDS_PER_HOUR)/60));
-  $rep_end_time = $date->getTimestamp();
-}
-else
-{
-  $rep_type = RepeatRule::NONE;
-  $rep_end_time = 0;  // to avoid an undefined variable notice
-}
-
 if (!isset($rep_day))
 {
   $rep_day = array();
@@ -774,7 +758,6 @@ foreach ($rooms as $room_id)
   $booking['room_id'] = $room_id;
   $booking['start_time'] = $start_time;
   $booking['end_time'] = $end_time;
-  $booking['end_date'] = $rep_end_time;
   $booking['ical_uid'] = $ical_uid;
   $booking['ical_sequence'] = $ical_sequence;
   $booking['ical_recur_id'] = $ical_recur_id;
