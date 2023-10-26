@@ -1611,17 +1611,21 @@ $field_order_list[] = 'last_updated';
 if ($phase == 2)
 {
   // Start and end times are also used to clip the times for summary info.
-  if (false === ($report_start_date = DateTime::createFromFormat('Y-m-d H:i:s', "$from_date 00:00:00")))
+  // createFromFormat('Y-m-d') gives the current time.  We want the report to
+  // start at the beginning of the start day and end of the day, so set the
+  // times accordingly.
+  if (false === ($report_start = DateTime::createFromFormat('Y-m-d', $from_date)))
   {
     throw new Exception("Invalid from_date '$from_date'");
   }
-  $report_start = $report_start_date->getTimestamp();
+  $report_start = $report_start->setTime(0, 0)->getTimestamp();
 
-  if (false === ($report_end_date = DateTime::createFromFormat('Y-m-d H:i:s', "$to_date 00:00:00")))
+  if (false === ($report_end = DateTime::createFromFormat('Y-m-d', $to_date)))
   {
     throw new Exception("Invalid to_date '$to_date'");
   }
-  $report_end = $report_end_date->modify('+1 day')->getTimestamp();
+  $report_end = $report_end->setTime(24, 0)->getTimestamp();
+
 
   // Construct the SQL query
   $sql_params = array();
