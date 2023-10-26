@@ -635,6 +635,7 @@ if ($repeat_rule->getType() != RepeatRule::NONE)
     {
       throw new Exception("Could not create repeat end date");
     }
+    $repeat_end_date->setTime(intval($start_seconds/SECONDS_PER_HOUR), intval(($start_seconds%SECONDS_PER_HOUR)/60));
     $repeat_rule->setEndDate($repeat_end_date);
   }
 
