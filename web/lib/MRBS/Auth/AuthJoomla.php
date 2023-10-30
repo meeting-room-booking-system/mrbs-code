@@ -103,7 +103,14 @@ class AuthJoomla extends Auth
     foreach($groups as $group)
     {
       // Include child groups by doing it recursively
-      $user_ids = array_merge($user_ids, \JAccess::getUsersByGroup($group, $recursive=true));
+      if (version_compare(JVERSION, '5.0', '<'))
+      {
+        $user_ids = array_merge($user_ids, \JAccess::getUsersByGroup($group, $recursive = true));
+      }
+      else
+      {
+        $user_ids = array_merge($user_ids, \Joomla\CMS\Access\Access::getUsersByGroup($group, $recursive = true));
+      }
     }
 
     $user_ids = array_unique($user_ids);
@@ -112,7 +119,14 @@ class AuthJoomla extends Auth
     // be using the Joomla API abstraction.
     foreach ($user_ids as $user_id)
     {
-      $user = JFactory::getUser((int) $user_id);
+      if (version_compare(JVERSION, '5.0', '<'))
+      {
+        $user = JFactory::getUser((int)$user_id);
+      }
+      else
+      {
+        $user = Factory::getUser((int)$user_id);
+      }
       $result[] = array('username'     => $user->username,
                         'display_name' => $user->name);
     }
@@ -141,7 +155,15 @@ class AuthJoomla extends Auth
     // it with direct access to the database.
 
     // Get a db connection.
-    $db = JFactory::getDbo();
+    if (version_compare(JVERSION, '5.0', '<'))
+    {
+      $db = JFactory::getDbo();
+    }
+    else
+    {
+      $db = Factory::getDbo();
+    }
+
 
     // Create a new query object.
     $query = $db->getQuery(true);
