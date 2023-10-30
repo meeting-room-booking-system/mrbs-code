@@ -67,7 +67,14 @@ class SessionJoomla extends SessionWithLogin
       Factory::$application = $this->app;
     }
 
-    $this->session = JFactory::getSession();
+    if (version_compare(JVERSION, '5.0', '<'))
+    {
+      $this->session = JFactory::getSession();
+    }
+    else
+    {
+      $this->session = Factory::getSession();
+    }
 
     parent::__construct();
   }

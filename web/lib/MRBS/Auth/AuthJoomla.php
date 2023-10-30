@@ -1,6 +1,7 @@
 <?php
 namespace MRBS\Auth;
 
+use Joomla\CMS\Factory;
 use MRBS\JFactory;
 use MRBS\User;
 
@@ -32,7 +33,14 @@ class AuthJoomla extends Auth
     #[\SensitiveParameter]
     ?string $pass)
   {
-    $mainframe = JFactory::getApplication('site');
+    if (version_compare(JVERSION, '5.0', '<'))
+    {
+      $mainframe = JFactory::getApplication('site');
+    }
+    else
+    {
+      $mainframe = Factory::getApplication('site');
+    }
 
     return $mainframe->login(array('username' => $user, 'password' => $pass));
   }
@@ -45,7 +53,14 @@ class AuthJoomla extends Auth
       return null;
     }
 
-    $joomla_user = JFactory::getUser($username);
+    if (version_compare(JVERSION, '5.0', '<'))
+    {
+      $joomla_user = JFactory::getUser($username);
+    }
+    else
+    {
+      $joomla_user = Factory::getUser($username);
+    }
 
     if ($joomla_user === false)
     {
@@ -151,9 +166,17 @@ class AuthJoomla extends Auth
   }
 
 
-  private static function getUserLevel(\MRBS\JUser $joomla_user) : int
+  private static function getUserLevel(object $joomla_user) : int
   {
     global $auth;
+
+    $required_class = (version_compare(JVERSION, '5.0', '<')) ? 'MRBS\JUser' : 'Joomla\CMS\User\User';
+    $actual_class = get_class($joomla_user);
+    if ($actual_class !== $required_class)
+    {
+      $message = 'Argument #1 ($joomla_user) must be of type ' . "$required_class, $actual_class given";
+      throw new \TypeError($message);
+    }
 
     // User not logged in, user level '0'
     if ($joomla_user->guest)
