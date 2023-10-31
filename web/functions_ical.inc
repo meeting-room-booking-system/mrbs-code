@@ -589,7 +589,9 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
   // Type
   $results[] = "X-MRBS-TYPE:" . RFC5545::escapeText(get_type_vocab($data['type']));
   // Registration properties
-  $properties = array(
+  if (isset($data['allow_registration']))
+  {
+    $properties = array(
       'allow_registration',
       'registrant_limit',
       'registrant_limit_enabled',
@@ -598,19 +600,18 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
       'registration_closes',
       'registration_closes_enabled'
     );
-  foreach ($properties as $property)
-  {
-    $results[] = "X-MRBS-" . strtoupper(str_replace('_', '-', $property)) . ":" . $data[$property];
-  }
-  // Registrants (but only for individual entries)
-  if (!$series)
-  {
-    $registrants = get_registrants($data['id'], false);
-    foreach ($registrants as $registrant) {
-      // We can't use the ATTENDEE property because its value has to be a URI.
-      $results[] = "X-MRBS-REGISTRANT;X-MRBS-REGISTERED=" . $registrant['registered'] .
-        ';' . 'X-MRBS-CREATE-BY=' . RFC5545::escapeQuotedString($registrant['create_by']) .
-        ':' . RFC5545::escapeText($registrant['username']);
+    foreach ($properties as $property) {
+      $results[] = "X-MRBS-" . strtoupper(str_replace('_', '-', $property)) . ":" . $data[$property];
+    }
+    // Registrants (but only for individual entries)
+    if (!$series) {
+      $registrants = get_registrants($data['id'], false);
+      foreach ($registrants as $registrant) {
+        // We can't use the ATTENDEE property because its value has to be a URI.
+        $results[] = "X-MRBS-REGISTRANT;X-MRBS-REGISTERED=" . $registrant['registered'] .
+          ';' . 'X-MRBS-CREATE-BY=' . RFC5545::escapeQuotedString($registrant['create_by']) .
+          ':' . RFC5545::escapeText($registrant['username']);
+      }
     }
   }
 
