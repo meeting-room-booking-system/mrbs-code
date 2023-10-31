@@ -2,7 +2,7 @@
 namespace MRBS\Auth;
 
 use Joomla\CMS\Factory;
-use MRBS\JFactory;
+use MRBS\Joomla\JFactory;
 use MRBS\User;
 
 require_once MRBS_ROOT . '/auth/cms/joomla.inc';
@@ -192,7 +192,7 @@ class AuthJoomla extends Auth
   {
     global $auth;
 
-    $required_class = (version_compare(JVERSION, '5.0', '<')) ? 'MRBS\JUser' : 'Joomla\CMS\User\User';
+    $required_class = (version_compare(JVERSION, '5.0', '<')) ? 'MRBS\Joomla\JUser' : 'Joomla\CMS\User\User';
     $actual_class = get_class($joomla_user);
     if ($actual_class !== $required_class)
     {

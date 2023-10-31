@@ -1,6 +1,6 @@
 <?php
 
-namespace MRBS;
+namespace MRBS\Joomla;
 
 class JUser extends \JUser {
 

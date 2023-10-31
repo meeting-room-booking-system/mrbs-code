@@ -1,6 +1,6 @@
 <?php
 
-namespace MRBS;
+namespace MRBS\Joomla;
 
 require_once MRBS_ROOT . '/auth/cms/joomla.inc';
 
@@ -35,7 +35,7 @@ class JFactory extends \JFactory {
 
     // need to cast the object to MRBS\JUser to avoid more
     // Joomla timezone problems
-    $result = self::cast('MRBS\JUser', parent::getUser($user_id));
+    $result = self::cast('MRBS\Joomla\JUser', parent::getUser($user_id));
     date_default_timezone_set($tz);
     return $result;
   }

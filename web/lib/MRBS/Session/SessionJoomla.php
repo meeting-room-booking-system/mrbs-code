@@ -3,7 +3,7 @@ namespace MRBS\Session;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Language;
-use MRBS\JFactory;
+use MRBS\Joomla\JFactory;
 use MRBS\User;
 use function MRBS\auth;
 
