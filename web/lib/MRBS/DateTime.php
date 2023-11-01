@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use IntlCalendar;
 use MRBS\ICalendar\RFC5545;
 use UnexpectedValueException;
 
@@ -32,6 +33,39 @@ class DateTime extends \DateTime
 
     return new static($parent->format('Y-m-d\TH:i:s.u'), $parent->getTimezone());
   }
+
+
+  // Returns the first day of the week (0 = Sunday) for a given timezone and locale.
+  // If $timezone is null, the default timezone will be used.
+  // If $locale is null, the default locale will be used.
+  // The method relies on the IntlCalendar class.  If it doesn't exist, or there's an error,
+  // the method assumes that the week starts on a Monday.
+  public static function firstDayOfWeek(?string $timezone = null, ?string $locale = null) : int
+  {
+    $default = 1; // Monday
+
+    if (!class_exists('\\IntlCalendar'))
+    {
+      return $default;
+    }
+
+    $calendar = IntlCalendar::createInstance($timezone, $locale);
+    if (!isset($calendar))
+    {
+      trigger_error("Could not create IntlCalendar for timezone '$timezone' and locale '$locale'", E_USER_WARNING);
+      return $default;
+    }
+
+    $first_day = $calendar->getFirstDayOfWeek();
+    if ($first_day === false)
+    {
+      trigger_error($calendar->getErrorMessage(), E_USER_WARNING);
+      return $default;
+    }
+
+    return $first_day - 1;  // IntlCalendar::DOW_SUNDAY = 1, so we need to subtract 1
+  }
+
 
   // TODO: replace usages of byday_to_day() with this method
   // TODO: make $relative an object?
