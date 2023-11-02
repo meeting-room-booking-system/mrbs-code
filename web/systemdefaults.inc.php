@@ -1616,7 +1616,12 @@ $mail_settings['icalendar'] = false; // Set to true to include iCalendar details
 // HOW TO EMAIL - LANGUAGE
 // -----------------------------------------
 
-// Set the language used for emails (choose an available lang.* file).
+// Set the language used for emails.  This should be in the form of a BCP 47
+// language tag, eg 'en-GB'.  MRBS will use the language tag to set the locale
+// for date and time formats, and find the best match in the lang.* files for
+// translations.  For example, setting the admin_lang to 'en' will give English
+// text and am/pm style times; setting it to 'en-GB' will give English text with
+// 24-hour times.
 $mail_settings['admin_lang'] = 'en';   // Default is 'en'.
 
 

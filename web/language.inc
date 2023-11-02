@@ -718,14 +718,17 @@ function get_vocab(string $tag) : string
 // Same as get_vocab(), but uses the mailing language
 function get_mail_vocab(string $tag) : string
 {
-  global $vocab, $mail_settings;
+  global $vocab, $mail_settings, $default_language_tokens;
 
   static $mail_vocab = null;
 
   if (!isset($mail_vocab))
   {
     $web_vocab = $vocab;   // Save $vocab before it gets overwritten
-    set_vocab($mail_settings['admin_lang']);
+    // Get the best language available for mail
+    $available_languages = get_langtags(MRBS_ROOT . '/lang', 'lang.');
+    $admin_lang = Locale::lookup($available_languages, $mail_settings['admin_lang'], false, $default_language_tokens ?? 'en');
+    set_vocab($admin_lang);
     $mail_vocab = $vocab;
     $vocab = $web_vocab;  // Restore $vocab
   }
