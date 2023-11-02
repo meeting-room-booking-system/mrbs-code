@@ -325,8 +325,9 @@ class IntlDateFormatter
         break;
 
       // week of year
-      // The ICU documentation isn't very clear what is meant by "week of year", but testing reveals that it is
-      // the ISO week number.
+      // The ICU documentation isn't very clear what is meant by "week of year", but it seems to be locale
+      // dependent. In many locales it is the ISO week number, but in some locales it isn't.  It (partly?)
+      // depends on the locale's first day of the week, which can be got from IntlCalendar::getFirstDayOfWeek().
       case 'w':       // 7
         $format = '%J';   // ISO-8601:1988 week number of the given year without leading zeroes, eg 1 through 53
         break;
