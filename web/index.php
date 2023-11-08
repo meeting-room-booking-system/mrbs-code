@@ -330,7 +330,7 @@ function get_calendar_nav(string $view, int $view_all, int $year, int $month, in
 
 function get_date_heading(string $view, int $year, int $month, int $day) : string
 {
-  global $datetime_formats, $display_timezone,
+  global $datetime_formats, $display_timezone, $timezone,
          $weekstarts, $view_week_number;
 
   $html = '';
@@ -345,9 +345,9 @@ function get_date_heading(string $view, int $year, int $month, int $day) : strin
       break;
 
     case 'week':
-      // Display the week number if required, provided the week starts on Monday,
-      // otherwise it's spanning two ISO weeks and doesn't make sense.
-      if ($view_week_number && ($weekstarts == 1))
+      // Display the week number if required, provided the MRBS week starts on the first day
+      // of the week, otherwise it's spanning two weeks and doesn't make sense.
+      if ($view_week_number && ($weekstarts == DateTime::firstDayOfWeek($timezone, get_mrbs_locale())))
       {
         $html .= '<span class="week_number">' .
                  get_vocab('week_number', datetime_format($datetime_formats['week_number'], $time)) .

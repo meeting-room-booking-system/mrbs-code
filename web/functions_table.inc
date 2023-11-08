@@ -1600,6 +1600,7 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
   global $weekstarts, $view_week_number, $show_plus_link, $monthly_view_entries_details;
   global $enable_periods, $morningstarts, $morningstarts_minutes;
   global $prevent_booking_on_holidays, $prevent_booking_on_weekends;
+  global $timezone;
 
   // Check that we've got a valid, enabled and visible room
   $room = Room::getById($room_id);
@@ -1683,8 +1684,8 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
                     'area'  => $area_id,
                     'room'  => $room_id);
 
-      // If it's a Monday (the start of the ISO week), show the week number
-      if ($view_week_number && (($weekcol + $weekstarts)%DAYS_PER_WEEK == 1))
+      // If it's the first day of the week, show the week number
+      if ($view_week_number && (($weekcol + $weekstarts)%DAYS_PER_WEEK == DateTime::firstDayOfWeek($timezone, get_mrbs_locale())))
       {
         $vars['view'] = 'week';
         $query = http_build_query($vars, '', '&');

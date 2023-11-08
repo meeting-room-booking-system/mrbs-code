@@ -429,10 +429,17 @@ $kiosk_exit_page_timeout = 10; // seconds
 // of 12.
 $monthly_view_entries_details = "both";
 
-// To show ISO week numbers in the main calendar, set this to true. The week
-// numbers are only displayed if you set $weekstarts to 1 (Monday), i.e. the
-// start of the ISO week.
+// To show week numbers in the main calendar, set this to true. The week
+// numbers are only displayed if you set $weekstarts to start on the first
+// day of the week in your locale and area's timezone.  (This assumes that
+// the PHP IntlCalendar class is available; if not, the week is assumed to
+// start on Mondays, ie the ISO stanard.)
 $view_week_number = false;
+
+// To display week numbers in the mini-calendars, set this to true. The week
+// numbers are only displayed if you set $weekstarts to the start of the week.
+// See the comment about when the week starts above.
+$mincals_week_numbers = false;
 
 // Whether or not the mini-calendars are displayed.  (Note that mini-calendars are only
 // displayed anyway if the window is wide enough.)
@@ -442,11 +449,6 @@ $display_mincals = true;
 // setting the following variable to true they will be displayed above the main calendar,
 // provided the window is high enough.
 $display_mincals_above = false;
-
-// To display week numbers in the mini-calendars, set this to true. The week
-// numbers are only displayed if you set $weekstarts to 1 (Monday), i.e. the
-// start of the ISO week.
-$mincals_week_numbers = false;
 
 // To display the endtime in the slot description, eg '09:00-09:30' instead of '09:00', set
 // this to true.
@@ -715,6 +717,26 @@ $datetime_formats['view_week_year'] = array(
 $datetime_formats['week_number'] = array(
   'pattern' => 'w'
 );
+
+
+/***************
+ * ICU overrides
+ * *************/
+
+// Sometimes we may want to override the standard ICU library settings,
+// for example if the ICU library on the server is out of date and can't
+// be updated.  This can be done by setting:
+//
+// $icu_override[<locale>]['first_day_of_week'] and/or
+// $icu_override[<locale>]['minimal_days_in_first_week']
+//
+// where <locale> is a valid locale in BCP 47 format and both settings take
+// integer values in the range 1..7 (IntlCalendar days start with Sunday = 1).
+
+// For example:
+//
+// $icu_override['en-AU']['first_day_of_week'] = 2; // Monday
+// $icu_override['en-AU']['minimal_days_in_first_week'] = 1;
 
 
 /************************
@@ -1604,7 +1626,12 @@ $mail_settings['icalendar'] = false; // Set to true to include iCalendar details
 // HOW TO EMAIL - LANGUAGE
 // -----------------------------------------
 
-// Set the language used for emails (choose an available lang.* file).
+// Set the language used for emails.  This should be in the form of a BCP 47
+// language tag, eg 'en-GB'.  MRBS will use the language tag to set the locale
+// for date and time formats, and find the best match in the lang.* files for
+// translations.  For example, setting the admin_lang to 'en' will give English
+// text and am/pm style times; setting it to 'en-GB' will give English text with
+// 24-hour times.
 $mail_settings['admin_lang'] = 'en';   // Default is 'en'.
 
 
