@@ -786,6 +786,13 @@ function get_loc_field_name(string $table, string $name) : string
 
 function datetime_format(array $format, int $timestamp=null, string $locale=null) : string
 {
+  global $icu_override, $timezone;
+
+  if (!isset($timestamp))
+  {
+    $timestamp = time();
+  }
+
   if (!isset($locale))
   {
     $locale = get_mrbs_locale();
@@ -809,7 +816,27 @@ function datetime_format(array $format, int $timestamp=null, string $locale=null
     null, null, $pattern
   );
 
-  return $formatter->format($timestamp ?? time());
+  // If we're overriding the ICU value(s) then use those, provided that we're able to make use
+  // of them with the IntlCalendar and (standard, not emulated - hence the check for the loaded
+  // extension, rather than whether the class exists, which it always will) IntlDateFormatter classes.
+  if (isset($icu_override[$locale]) && extension_loaded('intl') && class_exists('IntlCalendar'))
+  {
+    $cal = \IntlCalendar::createInstance($timezone, $locale);
+    {
+      if (isset($icu_override[$locale]['first_day_of_week']))
+      {
+        $cal->setFirstDayOfWeek($icu_override[$locale]['first_day_of_week']);
+      }
+      if (isset($icu_override[$locale]['minimal_days_in_first_week']))
+      {
+        $cal->setMinimalDaysInFirstWeek($icu_override[$locale]['minimal_days_in_first_week']);
+      }
+    }
+    $cal->setTime($timestamp * 1000);
+    return $formatter->format($cal);
+  }
+
+  return $formatter->format($timestamp);
 }
 
 

@@ -42,6 +42,8 @@ class DateTime extends \DateTime
   // the method assumes that the week starts on a Monday.
   public static function firstDayOfWeek(?string $timezone = null, ?string $locale = null) : int
   {
+    global $icu_override;
+
     $default = 1; // Monday
 
     if (!class_exists('\\IntlCalendar'))
@@ -56,11 +58,32 @@ class DateTime extends \DateTime
       return $default;
     }
 
-    $first_day = $calendar->getFirstDayOfWeek();
-    if ($first_day === false)
+    // If we're overriding the ICU library then use that value
+    if (isset($icu_override[$locale]['first_day_of_week']))
     {
-      trigger_error($calendar->getErrorMessage(), E_USER_WARNING);
-      return $default;
+      $first_day =  $icu_override[$locale]['first_day_of_week'];
+      // Check that it's a valid day
+      if (!in_array($first_day, array(
+          IntlCalendar::DOW_SUNDAY,
+          IntlCalendar::DOW_MONDAY,
+          IntlCalendar::DOW_TUESDAY,
+          IntlCalendar::DOW_WEDNESDAY,
+          IntlCalendar::DOW_THURSDAY,
+          IntlCalendar::DOW_FRIDAY,
+          IntlCalendar::DOW_SATURDAY
+        )))
+      {
+        throw new Exception('$icu_override[' . $locale . "]['first_day_of_week'] must be in the range [1..7]");
+      }
+    }
+    // Otherwise just get the standard value from ICU
+    else
+    {
+      $first_day = $calendar->getFirstDayOfWeek();
+      if ($first_day === false) {
+        trigger_error($calendar->getErrorMessage(), E_USER_WARNING);
+        return $default;
+      }
     }
 
     return $first_day - 1;  // IntlCalendar::DOW_SUNDAY = 1, so we need to subtract 1
