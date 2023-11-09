@@ -101,6 +101,27 @@ class AuthSaml extends Auth
         }
       }
 
+      if (isset($auth['saml']['user'])
+      {
+        foreach ($auth['saml']['user'] as $attr => $values)
+        {
+          if (array_key_exists($attr, $userData))
+          {
+            foreach ($values as $value)
+            {
+              if (in_array($value, $userData[$attr]))
+              {
+                return 1;
+              }
+            }
+          }
+        }
+      }
+      else
+      {
+        return 1;
+      }
+
       return 1;
     }
 
