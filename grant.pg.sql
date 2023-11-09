@@ -20,5 +20,6 @@ GRANT ALL ON
    mrbs_room,mrbs_room_id_seq,
    mrbs_users,mrbs_users_id_seq,
    mrbs_variables,mrbs_variables_id_seq,
+   mrbs_participants,mrbs_participants_id_seq,
    mrbs_zoneinfo,mrbs_zoneinfo_id_seq
 TO mrbs;
