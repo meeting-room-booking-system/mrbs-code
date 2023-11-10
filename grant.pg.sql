@@ -18,8 +18,8 @@ GRANT ALL ON
    mrbs_entry,mrbs_entry_id_seq,
    mrbs_repeat,mrbs_repeat_id_seq,
    mrbs_room,mrbs_room_id_seq,
-   mrbs_users,mrbs_users_id_seq,
-   mrbs_variables,mrbs_variables_id_seq,
-   mrbs_participants,mrbs_participants_id_seq,
+   mrbs_user,mrbs_user_id_seq,
+   mrbs_variable,mrbs_variable_id_seq,
+   mrbs_participant,mrbs_participant_id_seq,
    mrbs_zoneinfo,mrbs_zoneinfo_id_seq
 TO mrbs;
