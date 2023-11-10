@@ -1,6 +1,5 @@
 <?php
-namespace MRBS;
-
+namespace MRBS\Intl;
 
 // A partial emulation of the \Locale class.   We use the emulation because
 //  (a) the standard class in the intl extension has some bugs in it, in particular when using
@@ -8,10 +7,29 @@ namespace MRBS;
 //      [See also https://sourceforge.net/p/mrbs/support-requests/2178/]
 //  (b) the intl extension isn't enabled on all sites.
 //
-// If \Locale were working properly then one possibility would be to put this class in the directory above and
-// in the global namespace. Then this class would only be found by the autoloader if the global Locale class
-// didn't already exist.  In other words this class would just be a fallback on systems where the intl
-// extension wasn't installed.
+// If \Locale were working properly then one possibility would be to add conditional code as for the
+// other MRBS\Intl classes, do that the emulation is only a fallback if the PHP class doesn't exist eg
+/*
+if (class_exists('\Locale'))
+{
+  class Locale extends \Locale
+  {
+  }
+}
+else
+{
+  class Locale
+  {
+    // this code
+  }
+}
+*/
+
+use MRBS\Exception;
+use MRBS\System;
+use function MRBS\get_qualifiers;
+use function MRBS\utf8_strtolower;
+
 class Locale
 {
   const LANG_TAG               = 'language';
@@ -146,7 +164,7 @@ class Locale
 
     while (null !== ($subtag = array_shift($subtags)))
     {
-      // Tags are case insensitive, so convert to lowercase before processing and then
+      // Tags are case-insensitive, so convert to lowercase before processing and then
       // later convert as necessary according to convention
       $subtag = strtolower($subtag);
 

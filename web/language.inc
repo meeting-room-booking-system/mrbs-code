@@ -1,11 +1,12 @@
 <?php
 namespace MRBS;
 
-// Note that we are using \MRBS\Locale because \Locale has some bugs in it (and also
+// Note that we are using MRBS\Intl\Locale because \Locale has some bugs in it (and also
 // isn't always installed).
 
-use IntlDateFormatter;
-use IntlDatePatternGenerator;
+use MRBS\Intl\IntlDateFormatter;
+use MRBS\Intl\IntlDatePatternGenerator;
+use MRBS\Intl\Locale;
 use PHPMailer\PHPMailer\PHPMailer;
 
 require_once "functions.inc";

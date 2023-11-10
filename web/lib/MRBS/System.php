@@ -2,6 +2,7 @@
 
 namespace MRBS;
 
+use MRBS\Intl\Locale;
 use ResourceBundle;
 
 class System
