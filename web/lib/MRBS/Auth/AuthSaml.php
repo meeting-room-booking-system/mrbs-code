@@ -101,7 +101,7 @@ class AuthSaml extends Auth
         }
       }
 
-      if (isset($auth['saml']['user'])
+      if (isset($auth['saml']['user']))
       {
         foreach ($auth['saml']['user'] as $attr => $values)
         {
