@@ -1673,7 +1673,7 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
       $date->setDate($year, $month, $d);
       $classes = get_date_classes($date);
 
-      $html .= '<td class="' . implode(' ', $classes) . "\">\n";
+      $html .= '<td' . ((empty($classes)) ? '' : ' class="' . implode(' ', $classes) . '"') . ">\n";
       $html .= "<div class=\"cell_container\">\n";
 
       $html .= "<div class=\"cell_header\">\n";
