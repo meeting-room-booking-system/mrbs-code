@@ -390,6 +390,13 @@ class DateTime extends \DateTime
   }
 
 
+  public function isToday() : bool
+  {
+    $today = new DateTime();
+    return ($this->format('Y-m-d') == $today->format('Y-m-d'));
+  }
+
+
   public function isWeekend() : bool
   {
     return is_weekend($this->format('w'));

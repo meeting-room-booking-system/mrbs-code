@@ -8,6 +8,7 @@ use SessionHandler;
 use function MRBS\db;
 use function MRBS\db_schema_version;
 use function MRBS\get_cookie_path;
+use function MRBS\is_https;
 
 abstract class Session
 {
@@ -37,9 +38,18 @@ abstract class Session
       return;
     }
 
-    // Set some session settings, as a defence against session fixation.
+    // Session settings, for security
+    // ini_set() only accepts string values prior to PHP 8.1.0
+    ini_set('session.cookie_httponly', '1');
+    if (version_compare(PHP_VERSION, '7.3', '>='))
+    {
+      // Only introduced in PHP Version 7.3
+      ini_set('session.cookie_samesite', 'Strict');
+    }
+    ini_set('session.cookie_secure', (is_https()) ? '1' : '0');
+    // More settings, as a defence against session fixation.
     ini_set('session.use_only_cookies', '1');
-    ini_set('session.use_strict_mode', '1');  // Only available since PHP 5.5.2, but does no harm before then
+    ini_set('session.use_strict_mode', '1');
     ini_set('session.use_trans_sid', '0');
 
     $cookie_path = get_cookie_path();

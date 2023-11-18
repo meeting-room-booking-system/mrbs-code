@@ -13,6 +13,10 @@ function get_date_classes(DateTime $date) : array
   {
     $result[] = 'holiday';
   }
+  if ($date->isToday())
+  {
+    $result[] = 'today';
+  }
 
   return $result;
 }
