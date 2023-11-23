@@ -47,6 +47,13 @@ abstract class Session
       ini_set('session.cookie_samesite', 'Strict');
     }
     ini_set('session.cookie_secure', (is_https()) ? '1' : '0');
+    $sid_bits_per_character = ini_get('session.sid_bits_per_character');
+    if (($sid_bits_per_character !== false) && ($sid_bits_per_character < 5))
+    {
+      // Increase the strength of the session ID by increasing the number of
+      // bits per character. The default is 4.
+      ini_set('session.sid_bits_per_character', '5');
+    }
     // More settings, as a defence against session fixation.
     ini_set('session.use_only_cookies', '1');
     ini_set('session.use_strict_mode', '1');
