@@ -180,17 +180,14 @@ function validate_form_data(User &$user) : array
       // we assume that the user is trying to nullify the value.
       if ($column->getType() == 'date')
       {
-        if (!validate_iso_date($user->{$column->name}))
+        if ($column->getIsNullable() && (!isset($user->{$column->name}) || ($user->{$column->name} === '')))
         {
-          if ($column->getIsNullable() && ($user->{$column->name} === ''))
-          {
-            $user->{$column->name} = null;
-          }
-          else
-          {
-            // Need to add an index otherwise previous elements will be overwritten
-            $errors["invalid_dates[$index]"] = $column->name;
-          }
+          $user->{$column->name} = null;
+        }
+        elseif (!validate_iso_date($user->{$column->name}))
+        {
+          // Need to add an index otherwise previous elements will be overwritten
+          $errors["invalid_dates[$index]"] = $column->name;
         }
       }
     }
