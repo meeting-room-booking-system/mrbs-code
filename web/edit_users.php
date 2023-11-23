@@ -1132,17 +1132,14 @@ if (isset($action) && ($action == "update"))
     // we assume that the user is trying to nullify the value.
     if ($field['type'] == 'date')
     {
-      if (!validate_iso_date($values[$field['name']]))
+      if ($field['is_nullable'] && (!isset($values[$field['name']]) || ($values[$field['name']] === '')))
       {
-        if ($field['is_nullable'] && ($values[$field['name']] === ''))
-        {
-          $values[$field['name']] = null;
-        }
-        else
-        {
-          $valid_data = false;
-          $q_string .= "&invalid_dates[]=" . urlencode($field['name']);
-        }
+        $values[$field['name']] = null;
+      }
+      elseif (!validate_iso_date($values[$field['name']]))
+      {
+        $valid_data = false;
+        $q_string .= "&invalid_dates[]=" . urlencode($field['name']);
       }
     }
   }
