@@ -12,6 +12,10 @@ use function MRBS\is_https;
 
 abstract class Session
 {
+  protected const SAMESITE_NONE = 'None';
+  protected const SAMESITE_LAX = 'Lax';
+  protected const SAMESITE_STRICT = 'Strict';
+  protected const SAMESITE = self::SAMESITE_STRICT;
 
   public function __construct()
   {
@@ -44,7 +48,8 @@ abstract class Session
     if (version_compare(PHP_VERSION, '7.3', '>='))
     {
       // Only introduced in PHP Version 7.3
-      ini_set('session.cookie_samesite', 'Strict');
+      // Use of static:: allows child classes to override the constant
+      ini_set('session.cookie_samesite', static::SAMESITE);
     }
     ini_set('session.cookie_secure', (is_https()) ? '1' : '0');
     $sid_bits_per_character = ini_get('session.sid_bits_per_character');
