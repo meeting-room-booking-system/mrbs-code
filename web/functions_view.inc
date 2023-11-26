@@ -5,7 +5,7 @@ namespace MRBS;
 // a table row of details.   The first column is the $label and the second column
 // the $value.   $class is an optional class name which can be applied to the
 // second column.  If $email is set then the $value will be turned into a mailto: link.
-function create_details_row(string $label, ?string $value, bool $as_html=false, string $class='', ?string $email=null) : string
+function create_details_row(string $label, ?string $value, bool $as_html=false, string $class='', ?string $email=null, ?string $url=null) : string
 {
   $value = $value ?? '';
   $result = '';
@@ -22,10 +22,18 @@ function create_details_row(string $label, ?string $value, bool $as_html=false, 
       $html = '<a href="mailto:' . rawurlencode($email) . '">' . $escaped_value . '</a>';
       $result .= '<span class="contact" data-html="' . base64_encode($html) . '">';
     }
+    elseif (isset($url))
+    {
+      $result .= '<a href="' . htmlspecialchars($url) . '">';
+    }
     $result .= $escaped_value;
     if (isset($email))
     {
       $result .= '</span>';
+    }
+    elseif (isset($url))
+    {
+      $result .= '</a>';
     }
     $result .= "</td>\n";
     $result .= "</tr>\n";
@@ -302,8 +310,10 @@ function create_details_body(array $data, bool $as_html=false, bool $keep_privat
         }
         elseif ($field['nature'] == 'binary')
         {
-          // TODO: put in a link to download
-          jjh
+          // TODO: handle the case where this is a private field
+          $url = multisite('download.php?id=' . $data['id'] . "&column=$key");
+          $tbody .= create_details_row($label, 'value', $as_html, '', null, $url);
+          break;
         }
         // Otherwise output a string
         else
