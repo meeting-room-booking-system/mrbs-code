@@ -12,7 +12,19 @@ $sql = "SELECT $column
          WHERE id=:id";
 $data = db()->query_lob1($sql, [':id' => $id]);
 
-// TODO: handle case when mime_content_type doesn't exist
+// Get the MIME type
+if (!function_exists('mime_content_type'))
+{
+  $message = "The function mime_content_type() does not exist. You should enable the fileinfo extension.";
+  trigger_error($message, E_USER_WARNING);
+  fatal_error(get_vocab("fatal_error"));
+}
 $type = mime_content_type($data);
-header("Content-Type: $type");
+if ($type === false)
+{
+  $type = 'application/octet-stream';  // a standard default
+}
+
+// Output the file
+http_headers(["Content-Type: $type"]);
 fpassthru($data);
