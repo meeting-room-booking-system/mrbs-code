@@ -4,6 +4,10 @@ namespace MRBS;
 
 require "defaultincludes.inc";
 
+// TODO: check user is authorised for this page
+// TODO: check user can view this entry
+// TODO: check file is not private
+
 $column = get_form_var('column', 'string');
 $id = get_form_var('id', 'int');
 
