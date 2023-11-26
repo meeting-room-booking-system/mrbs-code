@@ -1,7 +1,7 @@
 <?php
 namespace MRBS\Auth;
 
-use MRBS\Locale;
+use MRBS\Intl\Locale;
 use MRBS\User;
 use phpCAS;
 use function MRBS\get_lang;
@@ -99,7 +99,7 @@ class AuthCas extends Auth
     );
 
     $locale = Locale::parseLocale(get_lang());
-    
+
     if (isset($cas_lang_map[$locale['language']]))
     {
       phpCAS::setLang($cas_lang_map[$locale['language']]);

@@ -1,7 +1,8 @@
 <?php
 namespace MRBS\Auth;
 
-use MRBS\JFactory;
+use Joomla\CMS\Factory;
+use MRBS\Joomla\JFactory;
 use MRBS\User;
 
 require_once MRBS_ROOT . '/auth/cms/joomla.inc';
@@ -32,7 +33,14 @@ class AuthJoomla extends Auth
     #[\SensitiveParameter]
     ?string $pass)
   {
-    $mainframe = JFactory::getApplication('site');
+    if (version_compare(JVERSION, '5.0', '<'))
+    {
+      $mainframe = JFactory::getApplication('site');
+    }
+    else
+    {
+      $mainframe = Factory::getApplication('site');
+    }
 
     return $mainframe->login(array('username' => $user, 'password' => $pass));
   }
@@ -45,7 +53,14 @@ class AuthJoomla extends Auth
       return null;
     }
 
-    $joomla_user = JFactory::getUser($username);
+    if (version_compare(JVERSION, '5.0', '<'))
+    {
+      $joomla_user = JFactory::getUser($username);
+    }
+    else
+    {
+      $joomla_user = Factory::getUser($username);
+    }
 
     if ($joomla_user === false)
     {
@@ -88,7 +103,14 @@ class AuthJoomla extends Auth
     foreach($groups as $group)
     {
       // Include child groups by doing it recursively
-      $user_ids = array_merge($user_ids, \JAccess::getUsersByGroup($group, $recursive=true));
+      if (version_compare(JVERSION, '5.0', '<'))
+      {
+        $user_ids = array_merge($user_ids, \JAccess::getUsersByGroup($group, $recursive = true));
+      }
+      else
+      {
+        $user_ids = array_merge($user_ids, \Joomla\CMS\Access\Access::getUsersByGroup($group, $recursive = true));
+      }
     }
 
     $user_ids = array_unique($user_ids);
@@ -97,7 +119,14 @@ class AuthJoomla extends Auth
     // be using the Joomla API abstraction.
     foreach ($user_ids as $user_id)
     {
-      $user = JFactory::getUser((int) $user_id);
+      if (version_compare(JVERSION, '5.0', '<'))
+      {
+        $user = JFactory::getUser((int)$user_id);
+      }
+      else
+      {
+        $user = Factory::getUser((int)$user_id);
+      }
       $result[] = array('username'     => $user->username,
                         'display_name' => $user->name);
     }
@@ -126,7 +155,15 @@ class AuthJoomla extends Auth
     // it with direct access to the database.
 
     // Get a db connection.
-    $db = JFactory::getDbo();
+    if (version_compare(JVERSION, '5.0', '<'))
+    {
+      $db = JFactory::getDbo();
+    }
+    else
+    {
+      $db = Factory::getDbo();
+    }
+
 
     // Create a new query object.
     $query = $db->getQuery(true);
@@ -151,9 +188,17 @@ class AuthJoomla extends Auth
   }
 
 
-  private static function getUserLevel(\MRBS\JUser $joomla_user) : int
+  private static function getUserLevel(object $joomla_user) : int
   {
     global $auth;
+
+    $required_class = (version_compare(JVERSION, '5.0', '<')) ? 'MRBS\Joomla\JUser' : 'Joomla\CMS\User\User';
+    $actual_class = get_class($joomla_user);
+    if ($actual_class !== $required_class)
+    {
+      $message = 'Argument #1 ($joomla_user) must be of type ' . "$required_class, $actual_class given";
+      throw new \TypeError($message);
+    }
 
     // User not logged in, user level '0'
     if ($joomla_user->guest)

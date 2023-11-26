@@ -8,9 +8,14 @@ use SessionHandler;
 use function MRBS\db;
 use function MRBS\db_schema_version;
 use function MRBS\get_cookie_path;
+use function MRBS\is_https;
 
 abstract class Session
 {
+  protected const SAMESITE_NONE = 'None';
+  protected const SAMESITE_LAX = 'Lax';
+  protected const SAMESITE_STRICT = 'Strict';
+  protected const SAMESITE = self::SAMESITE_STRICT;
 
   public function __construct()
   {
@@ -37,9 +42,26 @@ abstract class Session
       return;
     }
 
-    // Set some session settings, as a defence against session fixation.
+    // Session settings, for security
+    // ini_set() only accepts string values prior to PHP 8.1.0
+    ini_set('session.cookie_httponly', '1');
+    if (version_compare(PHP_VERSION, '7.3', '>='))
+    {
+      // Only introduced in PHP Version 7.3
+      // Use of static:: allows child classes to override the constant
+      ini_set('session.cookie_samesite', static::SAMESITE);
+    }
+    ini_set('session.cookie_secure', (is_https()) ? '1' : '0');
+    $sid_bits_per_character = ini_get('session.sid_bits_per_character');
+    if (($sid_bits_per_character !== false) && ($sid_bits_per_character < 5))
+    {
+      // Increase the strength of the session ID by increasing the number of
+      // bits per character. The default is 4.
+      ini_set('session.sid_bits_per_character', '5');
+    }
+    // More settings, as a defence against session fixation.
     ini_set('session.use_only_cookies', '1');
-    ini_set('session.use_strict_mode', '1');  // Only available since PHP 5.5.2, but does no harm before then
+    ini_set('session.use_strict_mode', '1');
     ini_set('session.use_trans_sid', '0');
 
     $cookie_path = get_cookie_path();

@@ -37,6 +37,8 @@ use function MRBS\url_base;
 
 class SessionSaml extends SessionWithLogin
 {
+  protected const SAMESITE = self::SAMESITE_LAX;
+
   public $ssp;
 
 

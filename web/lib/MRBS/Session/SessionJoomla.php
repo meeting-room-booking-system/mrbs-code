@@ -3,7 +3,7 @@ namespace MRBS\Session;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Language;
-use MRBS\JFactory;
+use MRBS\Joomla\JFactory;
 use MRBS\User;
 use function MRBS\auth;
 
@@ -67,7 +67,14 @@ class SessionJoomla extends SessionWithLogin
       Factory::$application = $this->app;
     }
 
-    $this->session = JFactory::getSession();
+    if (version_compare(JVERSION, '5.0', '<'))
+    {
+      $this->session = JFactory::getSession();
+    }
+    else
+    {
+      $this->session = Factory::getSession();
+    }
 
     parent::__construct();
   }
