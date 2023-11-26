@@ -10,7 +10,7 @@ $id = get_form_var('id', 'int');
 $sql = "SELECT $column
           FROM " . _tbl('entry') . "
          WHERE id=:id";
-$data = db()->query_lob1($column, $sql, [':id' => $id]);
+$data = db()->query_lob1($sql, [':id' => $id]);
 
 // TODO: handle case when mime_content_type doesn't exist
 $type = mime_content_type($data);

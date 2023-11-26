@@ -238,7 +238,24 @@ abstract class DB
   }
 
 
-  //
+  // Execute an SQL query that returns a single large object (LOB) as a resource
+  // of type stream.
+  // Throws a DBException on error
+  public function query_lob1(string $sql, array $params = array())
+  {
+    try {
+      $stmt = $this->dbh->prepare($sql);
+      $stmt->execute($params);
+      $stmt->bindColumn(1, $data, PDO::PARAM_LOB);
+      $stmt->fetch(PDO::FETCH_BOUND);
+    } catch (PDOException $e) {
+      throw new DBException($e->getMessage(), 0, $e, $sql, $params);
+    }
+
+    return $data;
+  }
+
+
   public function begin(): void
   {
     // Turn off ignore_user_abort until the transaction has been committed or rolled back.
