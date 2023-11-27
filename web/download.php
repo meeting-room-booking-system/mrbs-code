@@ -5,9 +5,16 @@ namespace MRBS;
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
-// TODO: check user is authorised for this page
+// Check the user is authorised for this page
+if (!checkAuthorised(this_page(), true))
+{
+  http_response_code(403);
+  exit;
+}
+
 // TODO: check user can view this entry
 // TODO: check file is not private
+
 
 $column = get_form_var('column', 'string');
 $id = get_form_var('id', 'int');
