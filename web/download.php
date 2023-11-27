@@ -12,7 +12,7 @@ if (!checkAuthorised(this_page(), true))
   exit;
 }
 
-// TODO: check user can view this entry
+// TODO: check user can view this entry (make common with view_entry??)
 // TODO: check file is not private
 
 
