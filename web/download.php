@@ -11,11 +11,8 @@ require "defaultincludes.inc";
 $column = get_form_var('column', 'string');
 $id = get_form_var('id', 'int');
 
-$sql = "SELECT $column
-          FROM " . _tbl('entry') . "
-         WHERE id=:id
-         LIMIT 1";
-$data = db()->query_lob1($sql, [':id' => $id]);
+// Get the file (stream)
+$data = get_entry_file($id, $column);
 
 // Get the MIME type
 if (!function_exists('mime_content_type'))

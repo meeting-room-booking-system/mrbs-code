@@ -740,6 +740,19 @@ function get_entry_by_id(int $id) : ?array
 }
 
 
+// Gets the file in column $column for entry $id.
+// Returns a stream.
+function get_entry_file(int $id, string $column)
+{
+  $sql = "SELECT $column
+            FROM " . _tbl('entry') . "
+           WHERE id=:id
+           LIMIT 1";
+
+  return db()->query_lob1($sql, [':id' => $id]);
+}
+
+
 // Returns the timestamp for a registration opening/closing boundary.
 // Takes account of periods, when registration closes at $periods_booking_opens
 // on the day of the booking, because we don't know when in the day periods occur.
