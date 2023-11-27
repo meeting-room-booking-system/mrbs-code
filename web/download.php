@@ -13,7 +13,8 @@ $id = get_form_var('id', 'int');
 
 $sql = "SELECT $column
           FROM " . _tbl('entry') . "
-         WHERE id=:id";
+         WHERE id=:id
+         LIMIT 1";
 $data = db()->query_lob1($sql, [':id' => $id]);
 
 // Get the MIME type
