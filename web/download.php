@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace MRBS;
 
 require "defaultincludes.inc";
+require_once "mrbs_sql.inc";
 
 // TODO: check user is authorised for this page
 // TODO: check user can view this entry
