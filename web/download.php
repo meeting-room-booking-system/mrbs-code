@@ -5,6 +5,10 @@ namespace MRBS;
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
+// Get the form variables
+$column = get_form_var('column', 'string');
+$id = get_form_var('id', 'int');
+
 // Check the user is authorised for this page
 if (!checkAuthorised(this_page(), true))
 {
@@ -12,14 +16,20 @@ if (!checkAuthorised(this_page(), true))
   exit;
 }
 
-// TODO: check user can view this entry (make common with view_entry??)
-// TODO: check file is not private
+// Check the user is allowed to view this file.
+// If this column is private and the entry is private and the current user doesn't
+// have write access to the entry, then they are not allowed to view the file.
+$booking = get_booking_info($id, false, true);
+if (($booking === false) ||
+    (!empty($is_private_field["entry.$column"]) &&
+     is_private_event($booking['private']) &&
+     !getWritable($booking['create_by'], $booking['room_id'])))
+{
+  http_response_code(403);
+  exit;
+}
 
-
-$column = get_form_var('column', 'string');
-$id = get_form_var('id', 'int');
-
-// Get the file (stream)
+// Everything's OK, so get the file (stream)
 $data = get_entry_file($id, $column);
 
 // Get the MIME type
@@ -30,6 +40,7 @@ if (!function_exists('mime_content_type'))
   fatal_error(get_vocab("fatal_error"));
 }
 $type = mime_content_type($data);
+
 if ($type === false)
 {
   $type = 'application/octet-stream';  // a standard default

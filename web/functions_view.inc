@@ -308,11 +308,22 @@ function create_details_body(array $data, bool $as_html=false, bool $keep_privat
             $value = empty($data[$key]) ? get_vocab("no") : get_vocab("yes");
           }
         }
+        // If it's a binary field, output a link to download the file, unless it's private
         elseif ($field['nature'] == 'binary')
         {
-          // TODO: handle the case where this is a private field
-          $url = multisite('download.php?id=' . $data['id'] . "&column=$key");
-          $tbody .= create_details_row($label, 'value', $as_html, '', null, $url);
+          if ($keep_private && isset($is_private_field["entry.$key"]) && $is_private_field["entry.$key"])
+          {
+            $value = '[' . get_vocab('unavailable') . ']';
+            $class = 'private';
+            $url = null;
+          }
+          else
+          {
+            $value = get_vocab('download_file');
+            $class = '';
+            $url = multisite('download.php?id=' . $data['id'] . "&column=$key");
+          }
+          $tbody .= create_details_row($label, $value, $as_html, $class, null, $url);
           break;
         }
         // Otherwise output a string
