@@ -1155,7 +1155,7 @@ $back_button = get_form_var('back_button', 'string');
 // Check the CSRF token.
 // Only check the token if the page is accessed via a POST request.  Therefore
 // this page should not take any action, but only display data.
-Form::checkToken($post_only=true);
+Form::checkToken(true);
 
 // Get the return URL.  Need to do this before checkAuthorised().
 // We might be going through edit_entry more than once, for example if we have to log on on the way.  We
