@@ -416,7 +416,7 @@ function display_rooms($area_id)
 // Check the CSRF token.
 // Only check the token if the page is accessed via a POST request.  Therefore
 // this page should not take any action, but only display data.
-Form::checkToken($post_only=true);
+Form::checkToken(true);
 
 // Check the user is authorised for this page
 checkAuthorised(this_page());

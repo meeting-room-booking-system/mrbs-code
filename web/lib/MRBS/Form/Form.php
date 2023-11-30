@@ -80,7 +80,7 @@ class Form extends Element
   //        or via a POST request.   These pages should not take any action, but as a matter of
   //        good practice should check the token anyway if they have been requested by a POST.
   //        To cater for these pages the $post_only parameter should be set to TRUE.
-  public static function checkToken($post_only=false) : void
+  public static function checkToken(bool $post_only=false) : void
   {
     global $server;
 
