@@ -627,6 +627,7 @@ function report_header() : void
   global $custom_fields;
   global $approval_somewhere, $confirmation_somewhere, $registration_somewhere;
   global $field_order_list, $booking_types;
+  global $field_natures;
 
   // Don't do anything if this is an Ajax request: we only want to send the data
   if ($is_ajax)
@@ -639,6 +640,13 @@ function report_header() : void
 
   foreach ($field_order_list as $field)
   {
+    // No point in displaying even a file download link. If they want that then they
+    // can get it from viewentry.php.
+    if (isset($field_natures[$field]) && ($field_natures[$field] == 'binary'))
+    {
+      continue;
+    }
+
     // We give some columns a type data value so that the JavaScript knows how to sort them
     // TODO: the 'title-*' plugins are now deprecated in DataTables.  Use the replacement.
     // TODO: is 'string' really necessary or does DataTables auto-detect? (But it is necessary
@@ -918,6 +926,13 @@ function report_row(&$rows, $data)
 
   foreach ($field_order_list as $field)
   {
+    // No point in displaying even a file download link. If they want that then they
+    // can get it from viewentry.php.
+    if (isset($field_natures[$field]) && ($field_natures[$field] == 'binary'))
+    {
+      continue;
+    }
+
     $value = $data[$field];
 
     // Some fields need some special processing to turn the raw value into something
