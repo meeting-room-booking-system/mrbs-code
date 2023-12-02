@@ -266,7 +266,8 @@ class MailQueue
     // Build the email.   We're going to use the "alternative" subtype which means
     // that we order the sub parts according to how faithful they are to the original,
     // putting the least faithful first, ie the ordinary plain text version.   The
-    // email client then uses the most faithful version that it can handle.
+    // email client then uses the most faithful version that it can handle. (See
+    // https://www.rfc-editor.org/rfc/rfc2046#section-5.1.4)
     //
     // If we are also adding the iCalendar information then we enclose this alternative
     // mime subtype in an outer mime type which is mixed.    This is necessary so that
