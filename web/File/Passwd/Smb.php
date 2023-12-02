@@ -4,7 +4,7 @@
 /**
  * File::Passwd::Smb
  * 
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * LICENSE: This source file is subject to version 3.0 of the PHP license
  * that is available through the world-wide-web at the following URI:
@@ -18,7 +18,7 @@
  * @author     Michael Bretterklieber <michael@bretterklieber.com>
  * @copyright  2003-2005 Michael Wallner
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: Smb.php,v 1.18 2005/05/06 10:22:48 mike Exp $
+ * @version    CVS: $Id$
  * @link       http://pear.php.net/package/File_Passwd
  */
 
@@ -73,7 +73,7 @@ require_once 'Crypt/CHAP.php';
 * @author   Michael Bretterklieber <michael@bretterklieber.com>
 * @author   Michael Wallner <mike@php.net>
 * @package  File_Passwd
-* @version  $Revision: 1.18 $
+* @version  $Revision$
 * @access   public
 */
 class File_Passwd_Smb extends File_Passwd_Common
@@ -85,17 +85,6 @@ class File_Passwd_Smb extends File_Passwd_Common
     * @var object
     */
     var $msc;
-
-    /**
-    * Constructor
-    *
-    * @access public
-    * @param  string $file  SMB passwd file
-    */
-    function File_Passwd_Smb($file = 'smbpasswd')
-    {
-        File_Passwd_Smb::__construct($file);
-    }
     
     /**
     * Constructor (ZE2)
@@ -108,7 +97,7 @@ class File_Passwd_Smb extends File_Passwd_Common
     function __construct($file = 'smbpasswd')
     {
         $this->setFile($file);
-        $this->msc = &new Crypt_CHAP_MSv1;
+        $this->msc = new Crypt_CHAP_MSv1;
     }     
     
     /**
@@ -133,13 +122,13 @@ class File_Passwd_Smb extends File_Passwd_Common
     function staticAuth($file, $user, $pass, $nt_or_lm = 'nt')
     {
         $line = File_Passwd_Common::_auth($file, $user);
-        if (!$line || PEAR::isError($line)) {
+        if (!$line) {
             return $line;
         }
         @list(,,$lm,$nt) = explode(':', $line);
-        $chap            = &new Crypt_CHAP_MSv1;
+        $chap            = new Crypt_CHAP_MSv1;
         
-        switch(utf8_strtolower($nt_or_lm)){
+        switch(strToLower($nt_or_lm)){
         	case FILE_PASSWD_NT: 
                 $real       = $nt; 
                 $crypted    = $chap->ntPasswordHash($pass); 
@@ -149,12 +138,12 @@ class File_Passwd_Smb extends File_Passwd_Common
                 $crypted    = $chap->lmPasswordHash($pass); 
                 break;
         	default:
-                return PEAR::raiseError(
+                throw new File_Passwd_Exception(
                     sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $nt_or_lm),
                     FILE_PASSWD_E_INVALID_ENC_MODE
                 );
         }
-        return (utf8_strtoupper(bin2hex($crypted)) === $real);
+        return (strToUpper(bin2hex($crypted)) === $real);
     }
     
     /**
@@ -170,7 +159,7 @@ class File_Passwd_Smb extends File_Passwd_Common
         foreach ($this->_contents as $line){
             $info = explode(':', $line);
             if (count($info) < 4) {
-                return PEAR::raiseError(
+                throw new File_Passwd_Exception(
                     FILE_PASSWD_E_INVALID_FORMAT_STR,
                     FILE_PASSWD_E_INVALID_FORMAT
                 );
@@ -212,13 +201,13 @@ class File_Passwd_Smb extends File_Passwd_Common
     function addUser($user, $pass, $params, $isMachine = false)
     {
         if ($this->userExists($user)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_EXISTS_ALREADY_STR, 'User ', $user),
                 FILE_PASSWD_E_EXISTS_ALREADY
             );
         }
         if (!preg_match($this->_pcre, $user)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_INVALID_CHARS_STR, 'User ', $user),
                 FILE_PASSWD_E_INVALID_CHARS
             );
@@ -233,7 +222,7 @@ class File_Passwd_Smb extends File_Passwd_Common
             'flags'     => $flags,
             'userid'    => (int)@$params['userid'],
             'comment'   => trim(@$params['comment']),
-            'lct'       => 'LCT-' . utf8_strtoupper(dechex(time()))
+            'lct'       => 'LCT-' . strToUpper(dechex(time()))
         );
         return $this->changePasswd($user, $pass);
     }
@@ -257,27 +246,27 @@ class File_Passwd_Smb extends File_Passwd_Common
     function modUser($user, $params)
     {
         if (!$this->userExists($user)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
                 FILE_PASSWD_E_EXISTS_NOT
             );
         }
         if (!preg_match($this->_pcre, $user)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_INVALID_CHARS_STR, 'User ', $user),
                 FILE_PASSWD_E_INVALID_CHARS
             );
         }
         foreach ($params as $key => $value){
-            $key = utf8_strtolower($key);
+            $key = strToLower($key);
             if (!isset($this->_users[$user][$key])) {
-                return PEAR::raiseError(
+                throw new File_Passwd_Exception(
                     sprintf(FILE_PASSWD_E_INVALID_PROPERTY_STR, $key),
                     FILE_PASSWD_E_INVALID_PROPERTY
                 );
             }
             $this->_users[$user][$key] = trim($value);
-            $this->_users[$user]['lct']= 'LCT-' . utf8_strtoupper(dechex(time()));
+            $this->_users[$user]['lct']= 'LCT-' . strToUpper(dechex(time()));
         }
         return true;
     }
@@ -296,7 +285,7 @@ class File_Passwd_Smb extends File_Passwd_Common
     function changePasswd($user, $pass)
     {
         if (!$this->userExists($user)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
                 FILE_PASSWD_E_EXISTS_NOT
             );
@@ -304,8 +293,8 @@ class File_Passwd_Smb extends File_Passwd_Common
         if (empty($pass)) {
             $nthash = $lmhash = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
         } else {
-            $nthash = utf8_strtoupper(bin2hex($this->msc->ntPasswordHash($pass)));
-            $lmhash = utf8_strtoupper(bin2hex($this->msc->lmPasswordHash($pass)));
+            $nthash = strToUpper(bin2hex($this->msc->ntPasswordHash($pass)));
+            $lmhash = strToUpper(bin2hex($this->msc->lmPasswordHash($pass)));
         }
         $this->_users[$user]['nthash'] = $nthash;
         $this->_users[$user]['lmhash'] = $lmhash;
@@ -330,19 +319,19 @@ class File_Passwd_Smb extends File_Passwd_Common
     function verifyEncryptedPasswd($user, $nthash, $lmhash = '')
     {
         if (!$this->userExists($user)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
                 FILE_PASSWD_E_EXISTS_NOT
             );
         }
         if (strstr($this->_users[$user]['flags'], 'D')) {
-            return PEAR::raiseError("User '$user' is disabled.", 0);
+            throw new File_Passwd_Exception("User '$user' is disabled.", 0);
         }
         if (!empty($nthash)) {
-            return $this->_users[$user]['nthash'] === utf8_strtoupper($nthash);
+            return $this->_users[$user]['nthash'] === strToUpper($nthash);
         }
         if (!empty($lmhash)) {
-            return $this->_users[$user]['lm'] === utf8_strtoupper($lmhash);
+            return $this->_users[$user]['lm'] === strToUpper($lmhash);
         }
         return false;
     }
@@ -408,10 +397,10 @@ class File_Passwd_Smb extends File_Passwd_Common
     function generatePasswd($pass, $mode = 'nt')
     {
         $chap = &new Crypt_CHAP_MSv1;
-        $hash = utf8_strtolower($mode) == 'nt' ? 
+        $hash = strToLower($mode) == 'nt' ? 
             $chap->ntPasswordHash($pass) :
             $chap->lmPasswordHash($pass);
-        return utf8_strtoupper(bin2hex($hash));
+        return strToUpper(bin2hex($hash));
     }
     
     /**
@@ -423,4 +412,4 @@ class File_Passwd_Smb extends File_Passwd_Common
         return File_Passwd_Smb::generatePasswd($pass, $mode);
     }
 }
-
+?>

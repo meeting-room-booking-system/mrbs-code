@@ -4,7 +4,7 @@
 /**
  * File::Passwd::Authdigest
  * 
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * LICENSE: This source file is subject to version 3.0 of the PHP license
  * that is available through the world-wide-web at the following URI:
@@ -17,7 +17,7 @@
  * @author     Michael Wallner <mike@php.net>
  * @copyright  2003-2005 Michael Wallner
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: Authdigest.php,v 1.13 2005/09/27 06:26:08 mike Exp $
+ * @version    CVS: $Id$
  * @link       http://pear.php.net/package/File_Passwd
  */
 
@@ -54,7 +54,7 @@ require_once 'File/Passwd/Common.php';
 * 
 * @author   Michael Wallner <mike@php.net>
 * @package  File_Passwd
-* @version  $Revision: 1.13 $
+* @version  $Revision$
 * @access   public
 */
 class File_Passwd_Authdigest extends File_Passwd_Common
@@ -66,17 +66,6 @@ class File_Passwd_Authdigest extends File_Passwd_Common
     * @access private
     */
     var $_file = '.htdigest';
-
-    /** 
-    * Constructor
-    * 
-    * @access public
-    * @param string $file       path to AuthDigestFile
-    */
-    function File_Passwd_Authdigest($file = '.htdigest')
-    {
-        parent::__construct($file);
-    }
 
     /**
     * Fast authentication of a certain user
@@ -101,7 +90,7 @@ class File_Passwd_Authdigest extends File_Passwd_Common
     function staticAuth($file, $user, $pass, $realm)
     {
         $line = File_Passwd_Common::_auth($file, $user.':'.$realm);
-        if (!$line || PEAR::isError($line)) {
+        if (!$line) {
             return $line;
         }
         @list(,,$real)= explode(':', $line);
@@ -155,18 +144,18 @@ class File_Passwd_Authdigest extends File_Passwd_Common
     function addUser($user, $realm, $pass)
     {
         if ($this->userInRealm($user, $realm)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 "User '$user' already exists in realm '$realm'.", 0
             );
         }
         if (!preg_match($this->_pcre, $user)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_INVALID_CHARS_STR, 'User ', $user),
                 FILE_PASSWD_E_INVALID_CHARS
             );
         }
         if (!preg_match($this->_pcre, $realm)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_INVALID_CHARS_STR, 'Realm ', $realm),
                 FILE_PASSWD_E_INVALID_CHARS
             );
@@ -241,11 +230,9 @@ class File_Passwd_Authdigest extends File_Passwd_Common
     */
     function changePasswd($user, $realm, $pass)
     {
-        if (PEAR::isError($error = $this->delUserInRealm($user, $realm))) {
-            return $error;
-        } else {
-            return $this->addUser($user, $realm, $pass);
-        }
+        $this->delUserInRealm($user, $realm);
+        
+        return $this->addUser($user, $realm, $pass);
     }
 
     /** 
@@ -263,7 +250,7 @@ class File_Passwd_Authdigest extends File_Passwd_Common
     function verifyPasswd($user, $realm, $pass)
     {
         if (!$this->userInRealm($user, $realm)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_USER_NOT_IN_REALM_STR, $user, $realm),
                 FILE_PASSWD_E_USER_NOT_IN_REALM
             );
@@ -299,7 +286,7 @@ class File_Passwd_Authdigest extends File_Passwd_Common
     function delUserInRealm($user, $inRealm)
     {
         if (!$this->userInRealm($user, $inRealm)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_USER_NOT_IN_REALM_STR, $user, $inRealm),
                 FILE_PASSWD_E_USER_NOT_IN_REALM
             );
@@ -323,7 +310,7 @@ class File_Passwd_Authdigest extends File_Passwd_Common
         foreach ($this->_contents as $line) {
             $user = explode(':', $line);
             if (count($user) != 3) {
-                return PEAR::raiseError(
+                throw new File_Passwd_Exception(
                     FILE_PASSWD_E_INVALID_FORMAT_STR,
                     FILE_PASSWD_E_INVALID_FORMAT
                 );
