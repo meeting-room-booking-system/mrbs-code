@@ -317,11 +317,17 @@ function create_details_body(array $data, bool $as_html=false, bool $keep_privat
             $class = 'private';
             $url = null;
           }
-          else
+          elseif (isset($data[$key]))
           {
             $value = get_vocab('download_file');
             $class = '';
             $url = multisite('download.php?id=' . $data['id'] . "&column=$key");
+          }
+          else
+          {
+            $value = '';
+            $class = '';
+            $url = null;
           }
           $tbody .= create_details_row($label, $value, $as_html, $class, null, $url);
           break;

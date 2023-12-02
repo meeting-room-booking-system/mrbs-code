@@ -32,6 +32,12 @@ if (($booking === false) ||
 // Everything's OK, so get the file (stream)
 $data = get_entry_file($id, $column);
 
+if (!isset($data))
+{
+  // This should not normally happen
+  fatal_error(get_vocab('no_data', get_loc_field_name(_tbl('entry'), $column), $id));
+}
+
 // Get the MIME type
 if (!function_exists('mime_content_type'))
 {
