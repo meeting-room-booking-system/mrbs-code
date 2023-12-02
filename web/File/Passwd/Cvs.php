@@ -17,7 +17,7 @@
  * @author     Michael Wallner <mike@php.net>
  * @copyright  2003-2005 Michael Wallner
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: Cvs.php,v 1.14 2005/03/30 18:33:33 mike Exp $
+ * @version    CVS: $Id$
  * @link       http://pear.php.net/package/File_Passwd
  */
 
@@ -55,7 +55,7 @@ require_once 'File/Passwd/Common.php';
 * 
 * @author   Michael Wallner <mike@php.net>
 * @package  File_Passwd
-* @version  $Revision: 1.14 $
+* @version  $Revision$
 * @access   public
 */
 class File_Passwd_Cvs extends File_Passwd_Common
@@ -90,7 +90,7 @@ class File_Passwd_Cvs extends File_Passwd_Common
     function staticAuth($file, $user, $pass)
     {
         $line = File_Passwd_Common::_auth($file, $user);
-        if (!$line || PEAR::isError($line)) {
+        if (!$line) {
             return $line;
         }
         @list(,$real)   = explode(':', $line);
@@ -139,7 +139,7 @@ class File_Passwd_Cvs extends File_Passwd_Common
         foreach ($this->_contents as $line) {
             $user = explode(':', $line);
             if (count($user) < 2) {
-                return PEAR::raiseError(
+                throw new File_Passwd_Exception(
                     FILE_PASSWD_E_INVALID_FORMAT_STR,
                     FILE_PASSWD_E_INVALID_FORMAT
                 );
@@ -174,20 +174,20 @@ class File_Passwd_Cvs extends File_Passwd_Common
     function addUser($user, $pass, $system_user = '')
     {
         if ($this->userExists($user)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_EXISTS_ALREADY_STR, 'User ', $user),
                 FILE_PASSWD_E_EXISTS_ALREADY
             );
         }
         if (!preg_match($this->_pcre, $user)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_INVALID_CHARS_STR, 'User ', $user),
                 FILE_PASSWD_E_INVALID_CHARS
             );
         }
         @setType($system_user, 'string');
         if (!empty($system_user) && !preg_match($this->_pcre, $system_user)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(
                     FILE_PASSWD_E_INVALID_CHARS_STR, 
                     'System user ', 
@@ -215,7 +215,7 @@ class File_Passwd_Cvs extends File_Passwd_Common
     function verifyPasswd($user, $pass)
     {
         if (!$this->userExists($user)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
                 FILE_PASSWD_E_EXISTS_NOT
             );
@@ -236,7 +236,7 @@ class File_Passwd_Cvs extends File_Passwd_Common
     function changePasswd($user, $pass)
     {
         if (!$this->userExists($user)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
                 FILE_PASSWD_E_EXISTS_NOT
             );
@@ -259,13 +259,13 @@ class File_Passwd_Cvs extends File_Passwd_Common
     function changeSysUser($user, $system)
     {
         if (!$this->userExists($user)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
                 FILE_PASSWD_E_EXISTS_NOT
             );
         }
         if (!preg_match($this->_pcre, $system)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(
                     FILE_PASSWD_E_INVALID_CHARS_STR, 
                     'System user ', 
@@ -301,3 +301,4 @@ class File_Passwd_Cvs extends File_Passwd_Common
         return File_Passwd_Cvs::generatePasswd($pass, $salt);
     }
 }
+?>

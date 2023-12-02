@@ -17,7 +17,7 @@
  * @author     Michael Wallner <mike@php.net>
  * @copyright  2003-2005 Michael Wallner
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: Custom.php,v 1.10 2005/03/30 18:33:33 mike Exp $
+ * @version    CVS: $Id$
  * @link       http://pear.php.net/package/File_Passwd
  */
 
@@ -40,7 +40,7 @@ require_once 'File/Passwd/Common.php';
 * </code>
 * 
 * @author   Michael Wallner <mike@php.net>
-* @version  $Revision: 1.10 $
+* @version  $Revision$
 * @access   public
 */
 class File_Passwd_Custom extends File_Passwd_Common
@@ -120,21 +120,17 @@ class File_Passwd_Custom extends File_Passwd_Common
     {
         setType($opts, 'array');
         if (count($opts) != 2 || empty($opts[1])) {
-            return PEAR::raiseError('Insufficient options.', 0);
+            throw new File_Passwd_Exception('Insufficient options.', 0);
         }
         
         $line = File_Passwd_Common::_auth($file, $user, $opts[1]);
         
-        if (!$line || PEAR::isError($line)) {
+        if (!$line) {
             return $line;
         }
         
         list(,$real)= explode($opts[1], $line);
         $crypted    = File_Passwd_Custom::_genPass($pass, $real, $opts[0]);
-        
-        if (PEAR::isError($crypted)) {
-            return $crypted;
-        }
         
         return ($crypted === $real);
     }
@@ -192,7 +188,7 @@ class File_Passwd_Custom extends File_Passwd_Common
             if (is_array($function)) {
                 $function = implode('::', $function);
             }
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $function),
                 FILE_PASSWD_E_INVALID_ENC_MODE
             );
@@ -259,7 +255,7 @@ class File_Passwd_Custom extends File_Passwd_Common
     function setMap($map = array())
     {
         if (!is_array($map)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_PARAM_MUST_BE_ARRAY_STR, '$map'),
                 FILE_PASSWD_E_PARAM_MUST_BE_ARRAY
             );
@@ -331,7 +327,7 @@ class File_Passwd_Custom extends File_Passwd_Common
         foreach ($this->_contents as $line){
             $parts = explode($this->_delim, $line);
             if (count($parts) < 2) {
-                return PEAR::raiseError(
+                throw new File_Passwd_Exception(
                     FILE_PASSWD_E_INVALID_FORMAT_STR,
                     FILE_PASSWD_E_INVALID_FORMAT
                 );
@@ -390,13 +386,13 @@ class File_Passwd_Custom extends File_Passwd_Common
     function addUser($user, $pass, $extra = array())
     {
         if ($this->userExists($user)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_EXISTS_ALREADY_STR, 'User ', $user),
                 FILE_PASSWD_E_EXISTS_ALREADY
             );
         }
         if (!preg_match($this->_pcre, $user) || strstr($user, $this->_delim)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_INVALID_CHARS_STR, 'User ', $user),
                 FILE_PASSWD_E_INVALID_CHARS
             );
@@ -406,7 +402,7 @@ class File_Passwd_Custom extends File_Passwd_Common
         }
         foreach ($extra as $e){
             if (strstr($e, $this->_delim)) {
-                return PEAR::raiseError(
+                throw new File_Passwd_Exception(
                     sprintf(FILE_PASSWD_E_INVALID_CHARS_STR, 'Property ', $e),
                     FILE_PASSWD_E_INVALID_CHARS
                 );
@@ -414,9 +410,6 @@ class File_Passwd_Custom extends File_Passwd_Common
         }
         
         $pass = $this->_genPass($pass);
-        if (PEAR::isError($pass)) {
-            return $pass;
-        }
         
         /**
         * If you don't use the 'name map' the user array will be numeric.
@@ -460,7 +453,7 @@ class File_Passwd_Custom extends File_Passwd_Common
     function modUser($user, $properties = array())
     {
         if (!$this->userExists($user)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
                 FILE_PASSWD_E_EXISTS_NOT
             );
@@ -472,7 +465,7 @@ class File_Passwd_Custom extends File_Passwd_Common
         
         foreach ($properties as $key => $value){
             if (strstr($value, $this->_delim)) {
-                return PEAR::raiseError(
+                throw new File_Passwd_Exception(
                     sprintf(FILE_PASSWD_E_INVALID_CHARS_STR, 'User ', $user),
                     FILE_PASSWD_E_INVALID_CHARS
                 );
@@ -501,16 +494,13 @@ class File_Passwd_Custom extends File_Passwd_Common
     function changePasswd($user, $pass)
     {
         if (!$this->userExists($user)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
                 FILE_PASSWD_E_EXISTS_NOT
             );
         }
         
         $pass = $this->_genPass($pass);
-        if (PEAR::isError($pass)) {
-            return $pass;
-        }
         
         if ($this->_usemap) {
             $this->_users[$user]['pass'] = $pass;
@@ -539,7 +529,7 @@ class File_Passwd_Custom extends File_Passwd_Common
     function verifyPasswd($user, $pass)
     {
         if (!$this->userExists($user)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
                 FILE_PASSWD_E_EXISTS_NOT
             );
@@ -575,12 +565,16 @@ class File_Passwd_Custom extends File_Passwd_Common
             if (is_array($func)) {
                 $func = implode('::', $func);
             }
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $func),
                 FILE_PASSWD_E_INVALID_ENC_MODE
             );
         }
-        
+
+        if ($func === 'md5') {
+            $salt = null;
+        }
+
         $return = @call_user_func($func, $pass, $salt);
         
         if (is_null($return) || $return === false) {
@@ -590,3 +584,4 @@ class File_Passwd_Custom extends File_Passwd_Common
         return $return;
     }
 }
+?>
