@@ -75,7 +75,7 @@ $GLOBALS['_PEAR_error_handler_stack']    = array();
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    Release: 1.10.5
+ * @version    Release: @package_version@
  * @link       http://pear.php.net/package/PEAR
  * @see        PEAR_Error
  * @since      Class available since PHP 4.0.2
@@ -542,7 +542,7 @@ class PEAR
             count($object->_expected_errors) > 0 &&
             count($exp = end($object->_expected_errors))
         ) {
-            if ($exp[0] == "*" ||
+            if ($exp[0] === "*" ||
                 (is_int(reset($exp)) && in_array($code, $exp)) ||
                 (is_string(reset($exp)) && in_array($message, $exp))
             ) {
@@ -766,6 +766,28 @@ class PEAR
 
         return @dl('php_'.$ext.$suffix) || @dl($ext.$suffix);
     }
+
+    /**
+     * Get SOURCE_DATE_EPOCH environment variable
+     * See https://reproducible-builds.org/specs/source-date-epoch/
+     *
+     * @return int
+     * @access public
+     */
+    static function getSourceDateEpoch()
+    {
+        if ($source_date_epoch = getenv('SOURCE_DATE_EPOCH')) {
+            if (preg_match('/^\d+$/', $source_date_epoch)) {
+                return (int) $source_date_epoch;
+            } else {
+            //  "If the value is malformed, the build process SHOULD exit with a non-zero error code."
+            self::raiseError("Invalid SOURCE_DATE_EPOCH: $source_date_epoch");
+            exit(1);
+            }
+        } else {
+            return time();
+        }
+    }
 }
 
 function _PEAR_call_destructors()
@@ -782,7 +804,7 @@ function _PEAR_call_destructors()
             $_PEAR_destructor_object_list = array_reverse($_PEAR_destructor_object_list);
         }
 
-        while (list($k, $objref) = each($_PEAR_destructor_object_list)) {
+        foreach ($_PEAR_destructor_object_list as $k => $objref) {
             $classname = get_class($objref);
             while ($classname) {
                 $destructor = "_$classname";
@@ -823,7 +845,7 @@ function _PEAR_call_destructors()
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    Release: 1.10.5
+ * @version    Release: @package_version@
  * @link       http://pear.php.net/manual/en/core.pear.pear-error.php
  * @see        PEAR::raiseError(), PEAR::throwError()
  * @since      Class available since PHP 4.0.2
@@ -837,6 +859,7 @@ class PEAR_Error
     var $message              = '';
     var $userinfo             = '';
     var $backtrace            = null;
+    var $callback             = null;
 
     /**
      * PEAR_Error constructor
