@@ -567,6 +567,11 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
     $columns = Columns::getInstance(_tbl('entry'));
     foreach ($columns as $column)
     {
+      if ($column->getNature() == Column::NATURE_BINARY)
+      {
+        // TODO: Handle binary fields
+        continue;
+      }
       if (!in_array($column->name, $standard_fields['entry']))
       {
         $key = $column->name;
