@@ -563,7 +563,7 @@ class AuthDb extends Auth
     MailQueue::add(
         $addresses,
         $subject,
-        array('content' => strip_tags($body)),
+        strip_tags($body),
         $body,
         null,
         get_mail_charset()

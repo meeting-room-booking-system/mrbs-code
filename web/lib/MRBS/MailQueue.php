@@ -19,7 +19,7 @@ class MailQueue
   public static function add(
       array $addresses,
       string $subject,
-      array $text_body,
+      string $text_body,
       ?string $html_body,
       ?array $attachment,
       string $charset = 'us-ascii'
@@ -93,9 +93,7 @@ class MailQueue
    *                                    'cc'
    *                                    'bcc'
    * @param string  $subject          email subject
-   * @param array   $text_body        text part of body, an array consisting of
-   *                                    'content'  the content itself
-   *                                    'cid'      the content id
+   * @param string  $text_body        text part of body
    * @param ?string $html_body        HTML part of body
    * @param array   $attachment       file to attach.   An array consisting of
    *                                    'content' the file or data to attach
@@ -107,7 +105,7 @@ class MailQueue
   protected static function sendMail(
       array $addresses,
       string $subject,
-      array $text_body,
+      string $text_body,
       ?string $html_body,
       ?array $attachment,
       string $charset = 'us-ascii'
@@ -293,9 +291,11 @@ class MailQueue
 
     // Add the text part
     $mime_params['content_type'] = "text/plain";
+    $mime_params['cid'] = generate_global_uid('text');
     $mime_params['encoding']     = "8bit";
     $mime_params['charset']      = $charset;
-    $mime_inner->addSubPart($text_body['content'], $mime_params);
+    $mime_inner->addSubPart($text_body, $mime_params);
+    unset($mime_params['cid']);
 
     // Add the HTML mail
     if (isset($html_body))
