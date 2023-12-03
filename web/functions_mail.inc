@@ -921,8 +921,7 @@ function notifyAdminOnBooking(array $data, array $mail_previous, bool $new_entry
   $html_body = array();
   if ($mail_settings['html'])
   {
-    $html_body['content'] = create_body($data, $mail_previous, $compare, $series, $action, $start_times, true, $note);
-    $html_body['cid'] = generate_global_uid("html");
+    $html_body = create_body($data, $mail_previous, $compare, $series, $action, $start_times, true, $note);
   }
 
   // Create the iCalendar if required
@@ -1018,8 +1017,7 @@ function notifyAdminOnDelete($data, $start_times, bool $series=false, string $ac
   $html_body = array();
   if ($mail_settings['html'])
   {
-    $html_body['content'] = create_body($data, null, false, $series, $action, $start_times, true, $note);
-    $html_body['cid'] = generate_global_uid("html");
+    $html_body = create_body($data, null, false, $series, $action, $start_times, true, $note);
   }
 
   // Set up the attachment

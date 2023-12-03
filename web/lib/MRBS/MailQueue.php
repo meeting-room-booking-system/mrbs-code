@@ -20,7 +20,7 @@ class MailQueue
       array $addresses,
       string $subject,
       array $text_body,
-      array $html_body,
+      ?string $html_body,
       ?array $attachment,
       string $charset = 'us-ascii'
     ) : void
@@ -96,9 +96,7 @@ class MailQueue
    * @param array   $text_body        text part of body, an array consisting of
    *                                    'content'  the content itself
    *                                    'cid'      the content id
-   * @param array   $html_body        HTML part of body, an array consisting of
-   *                                    'content'  the content itself
-   *                                    'cid'      the content id
+   * @param ?string $html_body        HTML part of body
    * @param array   $attachment       file to attach.   An array consisting of
    *                                    'content' the file or data to attach
    *                                    'method'  the iCalendar METHOD
@@ -110,7 +108,7 @@ class MailQueue
       array $addresses,
       string $subject,
       array $text_body,
-      array $html_body,
+      ?string $html_body,
       ?array $attachment,
       string $charset = 'us-ascii'
     ) : bool
@@ -300,11 +298,11 @@ class MailQueue
     $mime_inner->addSubPart($text_body['content'], $mime_params);
 
     // Add the HTML mail
-    if (!empty($html_body))
+    if (isset($html_body))
     {
       $mime_params['content_type'] = "text/html";
-      $mime_params['cid'] = $html_body['cid'];
-      $mime_inner->addSubPart($html_body['content'], $mime_params);
+      $mime_params['cid'] = generate_global_uid('html');
+      $mime_inner->addSubPart($html_body, $mime_params);
       unset($mime_params['cid']);
     }
 
