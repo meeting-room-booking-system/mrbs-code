@@ -100,7 +100,7 @@ class MailQueue
    *                                    'method'  the iCalendar METHOD
    *                                    'name'    the name to give it
    * @param string  $charset          character set used in body
-   * @return bool                     TRUE oon success, FALSE on failure
+   * @return bool                     TRUE on success, FALSE on failure
    */
   protected static function sendMail(
       array $addresses,
