@@ -19,8 +19,8 @@ class MailQueue
   public static function add(
       array $addresses,
       string $subject,
-      array $text_body,
-      array $html_body,
+      string $text_body,
+      ?string $html_body,
       ?array $attachment,
       string $charset = 'us-ascii'
     ) : void
@@ -93,24 +93,20 @@ class MailQueue
    *                                    'cc'
    *                                    'bcc'
    * @param string  $subject          email subject
-   * @param array   $text_body        text part of body, an array consisting of
-   *                                    'content'  the content itself
-   *                                    'cid'      the content id
-   * @param array   $html_body        HTML part of body, an array consisting of
-   *                                    'content'  the content itself
-   *                                    'cid'      the content id
+   * @param string  $text_body        text part of body
+   * @param ?string $html_body        HTML part of body
    * @param array   $attachment       file to attach.   An array consisting of
    *                                    'content' the file or data to attach
    *                                    'method'  the iCalendar METHOD
    *                                    'name'    the name to give it
    * @param string  $charset          character set used in body
-   * @return bool                     TRUE oon success, FALSE on failure
+   * @return bool                     TRUE on success, FALSE on failure
    */
   protected static function sendMail(
       array $addresses,
       string $subject,
-      array $text_body,
-      array $html_body,
+      string $text_body,
+      ?string $html_body,
       ?array $attachment,
       string $charset = 'us-ascii'
     ) : bool
@@ -266,7 +262,8 @@ class MailQueue
     // Build the email.   We're going to use the "alternative" subtype which means
     // that we order the sub parts according to how faithful they are to the original,
     // putting the least faithful first, ie the ordinary plain text version.   The
-    // email client then uses the most faithful version that it can handle.
+    // email client then uses the most faithful version that it can handle. (See
+    // https://www.rfc-editor.org/rfc/rfc2046#section-5.1.4)
     //
     // If we are also adding the iCalendar information then we enclose this alternative
     // mime subtype in an outer mime type which is mixed.    This is necessary so that
@@ -294,16 +291,18 @@ class MailQueue
 
     // Add the text part
     $mime_params['content_type'] = "text/plain";
+    $mime_params['cid'] = generate_global_uid('text');
     $mime_params['encoding']     = "8bit";
     $mime_params['charset']      = $charset;
-    $mime_inner->addSubPart($text_body['content'], $mime_params);
+    $mime_inner->addSubPart($text_body, $mime_params);
+    unset($mime_params['cid']);
 
     // Add the HTML mail
-    if (!empty($html_body))
+    if (isset($html_body))
     {
       $mime_params['content_type'] = "text/html";
-      $mime_params['cid'] = $html_body['cid'];
-      $mime_inner->addSubPart($html_body['content'], $mime_params);
+      $mime_params['cid'] = generate_global_uid('html');
+      $mime_inner->addSubPart($html_body, $mime_params);
       unset($mime_params['cid']);
     }
 

@@ -8,7 +8,6 @@ use function MRBS\_tbl;
 use function MRBS\auth;
 use function MRBS\db;
 use function MRBS\format_compound_name;
-use function MRBS\generate_global_uid;
 use function MRBS\generate_token;
 use function MRBS\get_mail_charset;
 use function MRBS\get_vocab;
@@ -564,9 +563,8 @@ class AuthDb extends Auth
     MailQueue::add(
         $addresses,
         $subject,
-        array('content' => strip_tags($body)),
-        array('content' => $body,
-          'cid'     => generate_global_uid("html")),
+        strip_tags($body),
+        $body,
         null,
         get_mail_charset()
       );
