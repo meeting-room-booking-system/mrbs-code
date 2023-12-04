@@ -914,15 +914,12 @@ function notifyAdminOnBooking(array $data, array $mail_previous, bool $new_entry
 
   // Create the text body
   $compare = !$new_entry;
-  $text_body = array();
-  $text_body['content'] = create_body($data, $mail_previous, $compare, $series, $action, $start_times, false, $note);
+  $text_body = create_body($data, $mail_previous, $compare, $series, $action, $start_times, false, $note);
 
   // Create the HTML body
-  $html_body = array();
   if ($mail_settings['html'])
   {
-    $html_body['content'] = create_body($data, $mail_previous, $compare, $series, $action, $start_times, true, $note);
-    $html_body['cid'] = generate_global_uid("html");
+    $html_body = create_body($data, $mail_previous, $compare, $series, $action, $start_times, true, $note);
   }
 
   // Create the iCalendar if required
@@ -950,7 +947,7 @@ function notifyAdminOnBooking(array $data, array $mail_previous, bool $new_entry
       $addresses,
       $subject,
       $text_body,
-      $html_body,
+      $html_body ?? null,
       $attachment,
       get_mail_charset()
     );
@@ -1011,15 +1008,12 @@ function notifyAdminOnDelete($data, $start_times, bool $series=false, string $ac
   }
 
   // Create the text body
-  $text_body = array();
-  $text_body['content'] = create_body($data, null, false, $series, $action, $start_times, false, $note);
+  $text_body = create_body($data, null, false, $series, $action, $start_times, false, $note);
 
   // Create the HTML body
-  $html_body = array();
   if ($mail_settings['html'])
   {
-    $html_body['content'] = create_body($data, null, false, $series, $action, $start_times, true, $note);
-    $html_body['cid'] = generate_global_uid("html");
+    $html_body = create_body($data, null, false, $series, $action, $start_times, true, $note);
   }
 
   // Set up the attachment
@@ -1037,7 +1031,7 @@ function notifyAdminOnDelete($data, $start_times, bool $series=false, string $ac
       $addresses,
       $subject,
       $text_body,
-      $html_body,
+      $html_body ?? null,
       $attachment,
       get_mail_charset()
     );
