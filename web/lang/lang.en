@@ -283,6 +283,9 @@ $vocab["max_secs_per_future_area"]    = 'The maximum total length of outstanding
 $vocab["skip_and_book"]           = "Skip and book";
 $vocab["skip_and_book_note"]      = "Carry on with the booking, skipping past the conflicting entries";
 
+// Used in edit_message.php
+$vocab["edit_message"]  = "Edit message";
+
 // Used in kiosk.php
 $vocab["enter"]                     = "Enter";
 $vocab["exit"]                      = "Exit";
