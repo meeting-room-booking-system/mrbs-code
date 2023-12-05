@@ -71,7 +71,7 @@ $fieldset->addLegend(get_vocab('edit_message'));
 
 $message_field = new FieldTextarea();
 $message_field->setLabel(get_vocab('message'))
-              ->setControlAttribute('name', 'message');
+              ->setControlAttribute('name', 'message_text');
 
 $fieldset->addElement($message_field);
 
