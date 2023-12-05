@@ -285,6 +285,7 @@ $vocab["skip_and_book_note"]      = "Carry on with the booking, skipping past th
 
 // Used in edit_message.php
 $vocab["edit_message"]  = "Edit message";
+$vocab["message"]       = "Message";
 
 // Used in kiosk.php
 $vocab["enter"]                     = "Enter";

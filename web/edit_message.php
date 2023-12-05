@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace MRBS;
 
 use MRBS\Form\ElementFieldset;
+use MRBS\Form\FieldTextarea;
 use MRBS\Form\Form;
 
 require 'defaultincludes.inc';
@@ -33,6 +34,12 @@ $form->setAttributes(array(
 
 $fieldset = new ElementFieldset();
 $fieldset->addLegend(get_vocab('edit_message'));
+
+$message_field = new FieldTextarea();
+$message_field->setLabel(get_vocab('message'))
+              ->setControlAttribute('name', 'message');
+
+$fieldset->addElement($message_field);
 
 $form->addElement($fieldset);
 
