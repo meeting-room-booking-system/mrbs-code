@@ -399,6 +399,18 @@ function get_date_heading(string $view, int $year, int $month, int $day) : strin
 }
 
 
+function message_html() : string
+{
+  $message = message_get();
+
+  if (!isset($message['text']) || ($message['text'] === ''))
+  {
+    return '';
+  }
+
+  return '<p class="message_top">' . htmlspecialchars($message['text']) . "</p>\n";
+}
+
 // Get non-standard form variables
 $refresh = get_form_var('refresh', 'int');
 $timetohighlight = get_form_var('timetohighlight', 'int');
@@ -480,6 +492,8 @@ echo "</div>\n";
 echo "<div class=\"view_container js_hidden\">\n";
 echo "<div class=\"date_heading\">$date_heading</div>";
 echo get_calendar_nav($view, $view_all, $year, $month, $day, $area, $room);
+
+echo message_html();
 
 $classes = array('dwm_main');
 if ($times_along_top)

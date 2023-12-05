@@ -654,6 +654,10 @@ nav a.next::after {
   content: '\00276f';  /* HEAVY RIGHT-POINTING ANGLE QUOTATION MARK ORNAMENT */
 }
 
+.message_top {
+  font-weight: bold;
+  color: red;
+}
 
 /* ------------ ADMIN.PHP ---------------------------*/
 
