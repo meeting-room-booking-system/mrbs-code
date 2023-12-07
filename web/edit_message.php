@@ -5,6 +5,7 @@ namespace MRBS;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\FieldDiv;
+use MRBS\Form\FieldInputDate;
 use MRBS\Form\FieldTextarea;
 use MRBS\Form\Form;
 
@@ -69,16 +70,19 @@ $form->setAttributes(array(
 $fieldset = new ElementFieldset();
 $fieldset->addLegend(get_vocab('edit_message'));
 
-$message_field = new FieldTextarea();
-$message_field->setLabel(get_vocab('message'))
-              ->setControlAttribute('name', 'message_text');
+$text_field = new FieldTextarea();
+$text_field->setLabel(get_vocab('message'))
+           ->setControlAttribute('name', 'message_text');
 
-$fieldset->addElement($message_field);
+$until_field = new FieldInputDate();
+$until_field->setLabel(get_vocab('display_until'))
+            ->setControlAttribute('name', 'message_until');
 
-$form->addElement($fieldset);
+$fieldset->addElement($text_field)
+         ->addElement($until_field);
 
-$form->addElement(get_fieldset_submit_buttons());
-
-$form->render();
+$form->addElement($fieldset)
+     ->addElement(get_fieldset_submit_buttons())
+     ->render();
 
 print_footer();

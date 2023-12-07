@@ -408,6 +408,17 @@ function message_html() : string
     return '';
   }
 
+  // Check to see whether there's an expiry date and if so whether it has passed.
+  if (isset($message['until']) && ($message['until'] !== ''))
+  {
+    $date = DateTime::createFromFormat('Y-m-d', $message['until']);
+    $date->setTime(0, 0)->modify('+1 day');
+    if (time() >= $date->getTimestamp())
+    {
+      return '';
+    }
+  }
+
   return '<p class="message_top">' . htmlspecialchars($message['text']) . "</p>\n";
 }
 
