@@ -411,8 +411,13 @@ function message_html() : string
   // Check to see whether there's an expiry date and if so whether it has passed.
   if (isset($message['until']) && ($message['until'] !== ''))
   {
-    $date = DateTime::createFromFormat('Y-m-d', $message['until']);
-    $date->setTime(0, 0)->modify('+1 day');
+    $format = 'Y-m-d\TH:i:s';
+    $date = DateTime::createFromFormat($format, $message['until']);
+    if ($date === false)
+    {
+      trigger_error("Could not create date from '" . $message['until'] . "'; expecting format '$format'.", E_USER_WARNING);
+      return '';
+    }
     if (time() >= $date->getTimestamp())
     {
       return '';
