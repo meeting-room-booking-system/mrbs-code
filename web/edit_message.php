@@ -11,6 +11,39 @@ use MRBS\Form\Form;
 
 require 'defaultincludes.inc';
 
+
+function get_field_display_until(array $message): FieldInputDate
+{
+  $field = new FieldInputDate();
+  $field->setLabel(get_vocab('display_until'))
+        ->setControlAttribute('name', 'message_until');
+
+  if (isset($message['until']) && ($message['until'] !== ''))
+  {
+    // Translate the stored date and time into a date
+    if (false !== ($date = DateTime::createFromFormat('Y-m-d\TH:i:s', $message['until'])))
+    {
+      $field->setControlAttribute(
+        'value',
+        $date->modify('-1 day')->format('Y-m-d')
+      );
+    }
+  }
+
+  return $field;
+}
+
+
+function get_field_message_text(array $message): FieldTextarea
+{
+  $field = new FieldTextarea();
+  $field->setLabel(get_vocab('message'))
+        ->setControlAttribute('name', 'message_text')
+        ->setControlText($message['text'] ?? '');
+  return $field;
+}
+
+
 function get_fieldset_submit_buttons() : ElementFieldset
 {
   $fieldset = new ElementFieldset();
@@ -58,6 +91,10 @@ $context = array(
 
 print_header($context);
 
+// Get the current message, if any
+$message = message_get();
+
+// Construct the form
 $form = new Form();
 
 $form->setAttributes(array(
@@ -70,16 +107,8 @@ $form->setAttributes(array(
 $fieldset = new ElementFieldset();
 $fieldset->addLegend(get_vocab('edit_message'));
 
-$text_field = new FieldTextarea();
-$text_field->setLabel(get_vocab('message'))
-           ->setControlAttribute('name', 'message_text');
-
-$until_field = new FieldInputDate();
-$until_field->setLabel(get_vocab('display_until'))
-            ->setControlAttribute('name', 'message_until');
-
-$fieldset->addElement($text_field)
-         ->addElement($until_field);
+$fieldset->addElement(get_field_message_text($message))
+         ->addElement(get_field_display_until($message));
 
 $form->addElement($fieldset)
      ->addElement(get_fieldset_submit_buttons())
