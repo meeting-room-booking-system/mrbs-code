@@ -26,7 +26,7 @@ class Message
   public function __wakeup()
   {
     // __wakeup() must have public visibility
-    throw new \Exception("Cannot unserialize a singleton.");
+    throw new \Exception("Cannot un-serialize a singleton.");
   }
 
   public static function getInstance(string $text = '', string $until_date = ''): Message
