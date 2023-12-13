@@ -38,6 +38,7 @@ class Message
   }
 
 
+  // Loads a message from the database
   public function load() : void
   {
     $sql = "SELECT variable_content
@@ -53,6 +54,7 @@ class Message
   }
 
 
+  // Saves a message to the database
   public function save() : bool
   {
     $sql_params = array();
@@ -69,12 +71,14 @@ class Message
   }
 
 
+  // Gets the message text
   public function getText() : string
   {
     return $this->text;
   }
 
 
+  // Gets the message end date
   public function getUntilDate() : string
   {
     if ($this->until === '')
@@ -91,12 +95,31 @@ class Message
   }
 
 
+  // Gets the message end timestamp
+  public function getUntilTimestamp() : ?int
+  {
+    if ($this->until === '')
+    {
+      return null;
+    }
+
+    if (false === ($date = DateTime::createFromFormat(self::FORMAT_DATETIME, $this->until)))
+    {
+      return null;
+    }
+
+    return $date->getTimestamp();
+  }
+
+
+  // Sets the message text
   public function setText(string $text) : void
   {
     $this->text = $text;
   }
 
 
+  // Sets the message end date
   public function setUntilDate(string $until_date) : void
   {
     if ($until_date !== '')

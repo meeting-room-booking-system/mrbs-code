@@ -1946,19 +1946,6 @@ function get_booking_info(int $id, bool $series, bool $silent=false)
 }
 
 
-// Gets a message from the database
-function message_get() : array
-{
-  $sql = "SELECT variable_content
-            FROM " . _tbl('variables') . "
-           WHERE variable_name='message'
-           LIMIT 1";
-  $res = db()->query_array($sql);
-
-  return (count($res) === 0) ? [] : json_decode($res[0], true);
-}
-
-
 // Gets the id of an area with a given name.
 // Returns NULL or the id.
 function get_area_id($area_name)

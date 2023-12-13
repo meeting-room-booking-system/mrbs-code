@@ -401,30 +401,24 @@ function get_date_heading(string $view, int $year, int $month, int $day) : strin
 
 function message_html() : string
 {
-  $message = message_get();
+  $message = Message::getInstance();
+  $message->load();;
+  $text = $message->getText();
 
-  if (!isset($message['text']) || ($message['text'] === ''))
+  if ($text === '')
   {
     return '';
   }
 
+  $until_timestamp = $message->getUntilTimestamp();
+
   // Check to see whether there's an expiry date and if so whether it has passed.
-  if (isset($message['until']) && ($message['until'] !== ''))
+  if (isset($until_timestamp)  && (time() > $until_timestamp))
   {
-    $format = 'Y-m-d\TH:i:s';
-    $date = DateTime::createFromFormat($format, $message['until']);
-    if ($date === false)
-    {
-      trigger_error("Could not create date from '" . $message['until'] . "'; expecting format '$format'.", E_USER_WARNING);
-      return '';
-    }
-    if (time() >= $date->getTimestamp())
-    {
-      return '';
-    }
+    return '';
   }
 
-  return '<p class="message_top">' . htmlspecialchars($message['text']) . "</p>\n";
+  return '<p class="message_top">' . htmlspecialchars($text) . "</p>\n";
 }
 
 // Get non-standard form variables
