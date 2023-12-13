@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace MRBS;
 
+
+// A class for managing the optional message that is displayed at the top of the calendar
 class Message
 {
   private const FORMAT_DATE = 'Y-m-d';
