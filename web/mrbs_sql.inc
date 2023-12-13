@@ -1946,20 +1946,6 @@ function get_booking_info(int $id, bool $series, bool $silent=false)
 }
 
 
-// Saves a message to the database
-function message_save(array $message) : bool
-{
-  $sql_params = array();
-  $data = array(
-    'variable_name' => 'message',
-    'variable_content' => json_encode($message)
-  );
-  $sql = db()->syntax_upsert($data, _tbl('variables'), $sql_params, 'id', ['id'], true);
-
-  return (0 < db()->command($sql, $sql_params));
-}
-
-
 // Gets a message from the database
 function message_get() : array
 {

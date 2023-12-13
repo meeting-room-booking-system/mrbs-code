@@ -12,34 +12,21 @@ use MRBS\Form\Form;
 require 'defaultincludes.inc';
 
 
-function get_field_display_until(array $message): FieldInputDate
+function get_field_display_until(Message $message): FieldInputDate
 {
   $field = new FieldInputDate();
   $field->setLabel(get_vocab('display_until'))
-        ->setControlAttribute('name', 'message_until');
-
-  if (isset($message['until']) && ($message['until'] !== ''))
-  {
-    // Translate the stored date and time into a date
-    if (false !== ($date = DateTime::createFromFormat('Y-m-d\TH:i:s', $message['until'])))
-    {
-      $field->setControlAttribute(
-        'value',
-        $date->modify('-1 day')->format('Y-m-d')
-      );
-    }
-  }
-
+        ->setControlAttributes(['name' => 'message_until', 'value' => $message->getUntilDate()]);
   return $field;
 }
 
 
-function get_field_message_text(array $message): FieldTextarea
+function get_field_message_text(Message $message): FieldTextarea
 {
   $field = new FieldTextarea();
   $field->setLabel(get_vocab('message'))
         ->setControlAttribute('name', 'message_text')
-        ->setControlText($message['text'] ?? '');
+        ->setControlText($message->getText());
   return $field;
 }
 
@@ -92,7 +79,8 @@ $context = array(
 print_header($context);
 
 // Get the current message, if any
-$message = message_get();
+$message = Message::getInstance();
+$message->load();
 
 // Construct the form
 $form = new Form();
