@@ -666,6 +666,10 @@ nav a.next::after {
   color: <?php echo $standard_font_color ?>;
 }
 
+.admin h2:not(:first-child) {
+  margin-top: 2em;
+}
+
 /* ------------ ADMIN.PHP ---------------------------*/
 
 .form_admin fieldset {
