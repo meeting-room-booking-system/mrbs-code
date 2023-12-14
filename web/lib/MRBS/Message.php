@@ -114,6 +114,22 @@ class Message
   }
 
 
+  // Get the message end time as a string in the user's locale
+  public function getUntilLocalString() : ?string
+  {
+    global $datetime_formats;
+
+    $timestamp = $this->getUntilTimestamp();
+
+    if (!isset($timestamp))
+    {
+      return null;
+    }
+
+    return datetime_format($datetime_formats['date_and_time'], $timestamp);
+  }
+
+
   // Sets the message text
   public function setText(string $text) : void
   {
@@ -144,6 +160,25 @@ class Message
     }
 
   }
+
+
+  // Determines whether there is a message that should be displayed, ie
+  // the message exists and the expiry date hasn't passed.
+  public function hasSomethingToDisplay() : bool
+  {
+    $text = $this->getText();
+
+    if ($text === '')
+    {
+      return false;
+    }
+
+    $until_timestamp = $this->getUntilTimestamp();
+
+    // Check to see whether there's an expiry date and if so whether it has passed.
+    return (!isset($until_timestamp)  || (time() <= $until_timestamp));
+  }
+
 
   private function setUntil(string $date_time_string) : void
   {

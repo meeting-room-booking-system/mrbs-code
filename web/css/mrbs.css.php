@@ -659,6 +659,13 @@ nav a.next::after {
   color: red;
 }
 
+.admin .message_top {
+  font-weight: normal;
+  font-style: italic;
+  padding-left: 2em;
+  color: <?php echo $standard_font_color ?>;
+}
+
 /* ------------ ADMIN.PHP ---------------------------*/
 
 .form_admin fieldset {

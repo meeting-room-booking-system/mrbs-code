@@ -458,6 +458,9 @@ $vocab["unique_addresses_copied"]  = "%%d unique email addresses copied to the c
 $vocab["clipboard_copy_failed"]    = "Clipboard copy failed.";
 
 // Used in admin.php
+$vocab["no_message"]         = "There is currently no message to display above the calendar.";
+$vocab["this_message"]       = "The message below will be displayed above the calendar.";
+$vocab["this_message_until"] = "The message below will be displayed above the calendar until %s.";
 $vocab["edit"]               = "Edit";
 $vocab["delete"]             = "Delete";
 $vocab["rooms"]              = "Rooms";

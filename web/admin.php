@@ -5,6 +5,7 @@ use MRBS\Form\ElementButton;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementImg;
 use MRBS\Form\ElementInputImage;
+use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\FieldInputEmail;
 use MRBS\Form\FieldInputNumber;
 use MRBS\Form\FieldInputSubmit;
@@ -274,6 +275,38 @@ if (isset($area))
   }
 }
 
+// Add in the link for editing the message
+if (is_admin())
+{
+  echo "<h2>" . get_vocab("message") . "</h2>\n";
+  // Display the message, if any
+  $message = Message::getInstance();
+  $message->load();
+  if ($message->hasSomethingToDisplay())
+  {
+    $until_string = $message->getUntilLocalString();
+    $text = (empty($until_string)) ? get_vocab("this_message") : get_vocab("this_message_until", $until_string);
+    echo '<p>' . htmlspecialchars($text) . "</p>\n";
+    echo '<p class="message_top">' . htmlspecialchars($message->getText()) . "</p>\n";
+  }
+  else
+  {
+    echo '<p>' . htmlspecialchars(get_vocab("no_message")) . "</p>\n";
+  }
+  // Add an edit button
+  $url = 'edit_message.php?' . http_build_query($context,  '', '&');
+  $form = new Form();
+  $form->setAttributes(array(
+      'id'     => 'edit_message',
+      'action' => multisite($url),
+      'method' => 'post'
+    )
+  );
+  $submit = new ElementInputSubmit();
+  $submit->setAttribute('value', get_vocab('edit_message'));
+  $form->addElement($submit);
+  $form->render();
+}
 
 echo "<h2>" . get_vocab("administration") . "</h2>\n";
 if (!empty($error))

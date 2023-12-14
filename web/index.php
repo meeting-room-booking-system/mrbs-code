@@ -402,23 +402,14 @@ function get_date_heading(string $view, int $year, int $month, int $day) : strin
 function message_html() : string
 {
   $message = Message::getInstance();
-  $message->load();;
-  $text = $message->getText();
+  $message->load();
 
-  if ($text === '')
+  if ($message->hasSomethingToDisplay())
   {
-    return '';
+    return '<p class="message_top">' . htmlspecialchars($message->getText()) . "</p>\n";
   }
 
-  $until_timestamp = $message->getUntilTimestamp();
-
-  // Check to see whether there's an expiry date and if so whether it has passed.
-  if (isset($until_timestamp)  && (time() > $until_timestamp))
-  {
-    return '';
-  }
-
-  return '<p class="message_top">' . htmlspecialchars($text) . "</p>\n";
+  return '';
 }
 
 // Get non-standard form variables

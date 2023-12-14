@@ -76,6 +76,8 @@ $context = array(
   'room'      => isset($room) ? $room : null
 );
 
+$returl = 'admin.php?' . http_build_query($context, '', '&');
+
 print_header($context);
 
 // Get the current message, if any
@@ -91,6 +93,8 @@ $form->setAttributes(array(
   'action' => multisite('edit_message_handler.php'),
   'method' => 'post')
 );
+
+$form->addHiddenInput('returl', $returl);
 
 $fieldset = new ElementFieldset();
 $fieldset->addLegend(get_vocab('edit_message'));
