@@ -164,6 +164,11 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
     $sql_params = array();
     $sql = db()->syntax_upsert($query_data, self::$table, $sql_params, 'id');
 
+    // From the MySQL manual:
+    // "With ON DUPLICATE KEY UPDATE, the affected-rows value per row is 1 if the row is inserted as a
+    // new row, 2 if an existing row is updated, and 0 if an existing row is set to its current values.
+    // If you specify the CLIENT_FOUND_ROWS flag to the mysql_real_connect() C API function when connecting
+    // to mysqld, the affected-rows value is 1 (not 0) if an existing row is set to its current values."
     return (0 < db()->command($sql, $sql_params));
   }
 
