@@ -427,6 +427,11 @@ class DB_mysql extends DB
       {
         $this->db_type = self::DB_PERCONA;
       }
+      // The Altervista.org hosting platform will give this version comment
+      elseif ($this->versionComment() == 'Source distribution')
+      {
+        $this->db_type = self::DB_MYSQL;
+      }
       else
       {
         if ($debug)

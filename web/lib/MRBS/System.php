@@ -901,6 +901,17 @@ class System
   }
 
 
+  // Returns information about the operating system PHP is running on
+  public static function info() : string
+  {
+    // On some systems php_uname() is disabled for security reasons
+    if (in_array('php_uname', explode(',', ini_get('disable_functions'))))
+    {
+      return PHP_OS;
+    }
+    return php_uname();
+  }
+
   // Checks whether $langtag is advertised as being available on this system
   private static function isAdvertisedLocale(string $langtag) : string
   {
