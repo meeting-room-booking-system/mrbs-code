@@ -12,6 +12,13 @@ Form::checkToken();
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
+// Must also be a booking admin
+if (!is_book_admin())
+{
+  showAccessDenied($view, $view_all, $year, $month, $day, $area, $room ?? null);
+  exit;
+}
+
 $message_text = get_form_var('message_text', 'string', '');
 $message_until = get_form_var('message_until', 'string', '');
 $returl = get_form_var('returl', 'string', 'admin.php');

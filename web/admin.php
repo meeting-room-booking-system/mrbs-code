@@ -276,7 +276,7 @@ if (isset($area))
 }
 
 // Add in the link for editing the message
-if (is_admin())
+if (is_book_admin())
 {
   echo "<h2>" . get_vocab("message") . "</h2>\n";
   // Display the message, if any
