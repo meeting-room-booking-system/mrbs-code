@@ -46,7 +46,7 @@ class Message
   public function load() : void
   {
     $sql = "SELECT variable_content
-              FROM " . _tbl('variables') . "
+              FROM " . _tbl('variable') . "
              WHERE variable_name='message'
              LIMIT 1";
     $res = db()->query_array($sql);
@@ -71,7 +71,7 @@ class Message
         'until' => $this->until
       ])
     );
-    $sql = db()->syntax_upsert($data, _tbl('variables'), $sql_params, 'id', ['id'], true);
+    $sql = db()->syntax_upsert($data, _tbl('variable'), $sql_params, 'id', ['id'], true);
 
     return (0 < db()->command($sql, $sql_params));
   }
