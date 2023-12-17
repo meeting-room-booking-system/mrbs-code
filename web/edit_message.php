@@ -12,6 +12,15 @@ use MRBS\Form\Form;
 require 'defaultincludes.inc';
 
 
+function get_field_display_from(Message $message): FieldInputDate
+{
+  $field = new FieldInputDate();
+  $field->setLabel(get_vocab('display_from'))
+        ->setControlAttributes(['name' => 'message_from', 'value' => $message->getFromDate()]);
+  return $field;
+}
+
+
 function get_field_display_until(Message $message): FieldInputDate
 {
   $field = new FieldInputDate();
@@ -107,6 +116,7 @@ $fieldset = new ElementFieldset();
 $fieldset->addLegend(get_vocab('edit_message'));
 
 $fieldset->addElement(get_field_message_text($message))
+         ->addElement(get_field_display_from($message))
          ->addElement(get_field_display_until($message));
 
 $form->addElement($fieldset)

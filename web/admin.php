@@ -282,10 +282,18 @@ if (is_book_admin())
   // Display the message, if any
   $message = Message::getInstance();
   $message->load();
-  if ($message->hasSomethingToDisplay())
+  if ($message->getText() !== '')
   {
+    $from_string = $message->getFromLocalString();
     $until_string = $message->getUntilLocalString();
-    $text = (empty($until_string)) ? get_vocab("this_message") : get_vocab("this_message_until", $until_string);
+    if (empty($from_string))
+    {
+      $text = (empty($until_string)) ? get_vocab("this_message") : get_vocab("this_message_until", $until_string);
+    }
+    else
+    {
+      $text = (empty($until_string)) ? get_vocab("this_message_from", $from_string) : get_vocab("this_message_from_until", $from_string, $until_string);
+    }
     echo '<p>' . htmlspecialchars($text) . "</p>\n";
     echo '<p class="message_top">' . htmlspecialchars($message->getText()) . "</p>\n";
   }
