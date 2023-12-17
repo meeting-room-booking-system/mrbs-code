@@ -110,6 +110,8 @@ function get_page_level($page)
     // made within the page to prevent ordinary users gaining access to admin features.
     case 'admin.php':
     case 'approve_entry_handler.php':   // Ordinary users are allowed to remind admins
+    case 'edit_message.php':            // Booking admins can edit messages
+    case 'edit_message_handler.php':    // Booking admins can edit messages
     case 'edit_room.php':               // Ordinary users can view room details
     case 'pending.php':                 // Ordinary users can view their own entries
     case 'registration_handler.php':    // Ordinary users can register for an event
