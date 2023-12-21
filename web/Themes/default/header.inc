@@ -397,7 +397,7 @@ function print_logoff()
 
 // $context is an associative array indexed by 'view', 'view_all', 'year', 'month', 'day', 'area' and 'room'.
 // When $omit_login is true the Login link is omitted.
-function print_banner($context, $simple=false, $omit_login=false)
+function print_banner(array $context, $simple=false, $omit_login=false)
 {
   global $kiosk_QR_code, $auth;
 
@@ -488,7 +488,7 @@ function print_banner($context, $simple=false, $omit_login=false)
 
 // Print a message which will only be displayed (thanks to CSS) if the user is
 // using an unsupported browser.
-function print_unsupported_message($context)
+function print_unsupported_message(array $context) : void
 {
   echo "<div class=\"unsupported_message\">\n";
   print_banner($context, $simple=true);
@@ -505,7 +505,7 @@ function print_unsupported_message($context)
 // If $simple is true, then just print a simple header that doesn't require any database
 // access or JavaScript (useful for fatal errors and database upgrades).
 // When $omit_login is true the Login link is omitted.
-function print_theme_header($context=null, $simple=false, $omit_login=false)
+function print_theme_header($context=null, bool $simple=false, bool $omit_login=false) : void
 {
   global $multisite, $site, $default_view, $default_view_all, $view_week_number, $style_weekends;
 
