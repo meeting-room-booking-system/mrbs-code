@@ -9,7 +9,7 @@ use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\Form;
 
 
-function print_head($simple=false)
+function print_head(bool $simple=false) : void
 {
   global $refresh_rate;
 
@@ -62,7 +62,7 @@ function print_head($simple=false)
 
 // Print the basic site information.   This function is used for all headers, including
 // the simple header, and so mustn't require any database access.
-function print_header_site_info()
+function print_header_site_info() : void
 {
   global $mrbs_company,
          $mrbs_company_url,
@@ -336,7 +336,7 @@ function print_report_link(User $user)
 }
 
 
-function print_logonoff_button($params, $value)
+function print_logonoff_button(array $params, string $value) : void
 {
   $form = new Form();
   $form->setAttributes(array('method' => $params['method'],
@@ -370,7 +370,7 @@ function print_logonoff_button($params, $value)
 }
 
 
-function print_logon()
+function print_logon() : void
 {
   if (method_exists(session(), 'getLogonFormParams'))
   {
@@ -383,7 +383,7 @@ function print_logon()
 }
 
 
-function print_logoff()
+function print_logoff() : void
 {
   if (method_exists(session(), 'getLogoffFormParams'))
   {
