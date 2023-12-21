@@ -491,7 +491,7 @@ function print_banner(array $context, $simple=false, $omit_login=false) : void
 function print_unsupported_message(array $context) : void
 {
   echo "<div class=\"unsupported_message\">\n";
-  print_banner($context, $simple=true);
+  print_banner($context, true);
   echo "<div class=\"contents\">\n";
   echo "<p>" . get_vocab('browser_not_supported', get_vocab('mrbs_abbr')) . "</p>\n";
   echo "</div>\n";
