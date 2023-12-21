@@ -230,8 +230,12 @@ class User extends Table
     $areas = new Areas();
     $permission_options = AreaRule::getPermissionOptions();
 
-    $html .= '<table data-id="' . htmlspecialchars($this->id) . "\">\n";
-
+    $html .= '<table';
+    if (isset($this->id) && ($this->id !== ''))
+    {
+      $html .= ' data-id="' . htmlspecialchars($this->id) . '"';
+    }
+    $html .= ">\n";
     $html .= "<thead>\n";
     $html .= "<tr>";
     $html .= "<th></th>";
