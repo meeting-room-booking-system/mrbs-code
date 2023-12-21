@@ -9,7 +9,7 @@ use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\Form;
 
 
-function print_head($simple=false)
+function print_head(bool $simple=false) : void
 {
   global $refresh_rate;
 
@@ -62,7 +62,7 @@ function print_head($simple=false)
 
 // Print the basic site information.   This function is used for all headers, including
 // the simple header, and so mustn't require any database access.
-function print_header_site_info()
+function print_header_site_info() : void
 {
   global $mrbs_company,
          $mrbs_company_url,
@@ -120,7 +120,7 @@ function print_header_site_info()
 }
 
 
-function print_goto_date($context)
+function print_goto_date(array $context) : void
 {
   global $multisite, $site;
 
@@ -338,7 +338,7 @@ function print_report_link(User $user)
 }
 
 
-function print_logonoff_button($params, $value)
+function print_logonoff_button(array $params, string $value) : void
 {
   $form = new Form();
   $form->setAttributes(array('method' => $params['method'],
@@ -372,7 +372,7 @@ function print_logonoff_button($params, $value)
 }
 
 
-function print_logon()
+function print_logon() : void
 {
   if (method_exists(session(), 'getLogonFormParams'))
   {
@@ -385,7 +385,7 @@ function print_logon()
 }
 
 
-function print_logoff()
+function print_logoff() : void
 {
   if (method_exists(session(), 'getLogoffFormParams'))
   {
@@ -399,7 +399,7 @@ function print_logoff()
 
 // $context is an associative array indexed by 'view', 'view_all', 'year', 'month', 'day', 'area' and 'room'.
 // When $omit_login is true the Login link is omitted.
-function print_banner(array $context, $simple=false, $omit_login=false)
+function print_banner(array $context, $simple=false, $omit_login=false) : void
 {
   global $kiosk_QR_code, $auth;
 
@@ -493,7 +493,7 @@ function print_banner(array $context, $simple=false, $omit_login=false)
 function print_unsupported_message(array $context) : void
 {
   echo "<div class=\"unsupported_message\">\n";
-  print_banner($context, $simple=true);
+  print_banner($context, true);
   echo "<div class=\"contents\">\n";
   echo "<p>" . get_vocab('browser_not_supported', get_vocab('mrbs_abbr')) . "</p>\n";
   echo "</div>\n";
@@ -548,7 +548,7 @@ function print_theme_header($context=null, bool $simple=false, bool $omit_login=
     // This will set the correct timezone for the area
     get_area_settings($context['area']);
 
-    // If we dont know the right date then use today's
+    // If we don't know the right date then use today's
     if (!isset($context['year']))
     {
       $context['year'] = date('Y');
