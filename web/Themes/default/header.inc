@@ -120,7 +120,7 @@ function print_header_site_info()
 }
 
 
-function print_goto_date($context)
+function print_goto_date(array $context) : void
 {
   global $multisite, $site;
 
@@ -397,7 +397,7 @@ function print_logoff()
 
 // $context is an associative array indexed by 'view', 'view_all', 'year', 'month', 'day', 'area' and 'room'.
 // When $omit_login is true the Login link is omitted.
-function print_banner(array $context, $simple=false, $omit_login=false)
+function print_banner(array $context, $simple=false, $omit_login=false) : void
 {
   global $kiosk_QR_code, $auth;
 
