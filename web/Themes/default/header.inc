@@ -546,7 +546,7 @@ function print_theme_header($context=null, bool $simple=false, bool $omit_login=
     // This will set the correct timezone for the area
     get_area_settings($context['area']);
 
-    // If we dont know the right date then use today's
+    // If we don't know the right date then use today's
     if (!isset($context['year']))
     {
       $context['year'] = date('Y');
