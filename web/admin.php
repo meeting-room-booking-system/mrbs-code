@@ -17,7 +17,7 @@ use MRBS\Form\Form;
 require "defaultincludes.inc";
 
 
-function generate_room_delete_form($room, $area)
+function generate_room_delete_form(int $room, int $area) : void
 {
   $form = new Form();
 
@@ -125,7 +125,7 @@ function generate_area_change_form(array $enabled_areas, array $disabled_areas) 
 }
 
 
-function generate_new_area_form()
+function generate_new_area_form() : void
 {
   $form = new Form();
 
@@ -164,7 +164,7 @@ function generate_new_area_form()
 }
 
 
-function generate_new_room_form()
+function generate_new_room_form() : void
 {
   global $area;
 
