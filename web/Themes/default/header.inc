@@ -245,7 +245,7 @@ function print_menu_items(string $query) : void
 
 
 
-function print_search($context)
+function print_search(array $context) : void
 {
   if (!checkAuthorised('search.php', true))
   {
@@ -515,7 +515,7 @@ function print_unsupported_message(array $context) : void
 // If $simple is true, then just print a simple header that doesn't require any database
 // access or JavaScript (useful for fatal errors and database upgrades).
 // When $omit_login is true the Login link is omitted.
-function print_theme_header($context=null, bool $simple=false, bool $omit_login=false) : void
+function print_theme_header(?array $context=null, bool $simple=false, bool $omit_login=false) : void
 {
   global $multisite, $site, $default_view, $default_view_all, $view_week_number, $style_weekends;
 
