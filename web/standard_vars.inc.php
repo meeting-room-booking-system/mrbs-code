@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 // Gets the standard variables of $day, $month, $year, $area and $room
