@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 use chillerlan\QRCode\QRCode;
@@ -559,17 +560,17 @@ function print_theme_header(?array $context=null, bool $simple=false, bool $omit
     // If we don't know the right date then use today's
     if (!isset($context['year']))
     {
-      $context['year'] = date('Y');
+      $context['year'] = (int) date('Y');
     }
 
     if (!isset($context['month']))
     {
-      $context['month'] = date('m');
+      $context['month'] = (int) date('m');
     }
 
     if (!isset($context['day']))
     {
-      $context['day'] = date('d');
+      $context['day'] = (int) date('d');
     }
 
     // Get the form token now, before any headers are sent, in case we are using the 'cookie'
@@ -656,7 +657,7 @@ function print_theme_header(?array $context=null, bool $simple=false, bool $omit
   {
     if (isset($value))
     {
-      echo " data-$key=\"" . htmlspecialchars($value) . '"';
+      echo " data-$key=\"" . htmlspecialchars((string)$value) . '"';
     }
   }
   echo ">\n";
