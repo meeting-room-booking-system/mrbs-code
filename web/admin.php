@@ -46,7 +46,7 @@ function generate_room_delete_form($room, $area)
 }
 
 
-function generate_area_change_form($enabled_areas, $disabled_areas)
+function generate_area_change_form(array $enabled_areas, array $disabled_areas) : void
 {
   global $area, $day, $month, $year;
 
