@@ -302,7 +302,7 @@ function print_search($context)
 
 
 // Generate the username link, which gives a report on the user's upcoming bookings.
-function print_report_link(User $user)
+function print_report_link(User $user) : void
 {
   // If possible, provide a link to the Report page, otherwise the Search page
   // and if that's not possible just print the username with no link.  (Note that
