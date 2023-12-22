@@ -480,7 +480,7 @@ function print_banner(array $context, $simple=false, $omit_login=false) : void
     // (The QR code library requires PHP 7.4 or greater)
     if (isset($context['kiosk']) &&
         $kiosk_QR_code &&
-        (version_compare(PHP_VERSION, 7.4) >= 0))
+        (version_compare(PHP_VERSION, '7.4') >= 0))
     {
       $url = multisite(url_base() . "/index.php?$query");
       echo '<nav class="qr" title="' . htmlspecialchars($url) . "\">\n";
