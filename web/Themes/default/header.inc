@@ -172,7 +172,7 @@ function print_goto_date(array $context) : void
 }
 
 
-function print_outstanding($query)
+function print_outstanding(string $query) : void
 {
   $mrbs_user = session()->getCurrentUser();
 
@@ -195,7 +195,12 @@ function print_outstanding($query)
       $class .= ' attention';
     }
 
-    echo '<a href="' . htmlspecialchars(multisite("pending.php?$query")) . '"' .
+    $url = 'pending.php';
+    if ($query !== '')
+    {
+      $url .= "?$query";
+    }
+    echo '<a href="' . htmlspecialchars(multisite($url)) . '"' .
          " class=\"$class\"" .
          ' title="' . get_vocab('outstanding', $n_outstanding) .
          "\">$n_outstanding</a>\n";
@@ -203,7 +208,7 @@ function print_outstanding($query)
 }
 
 
-function print_menu_items($query)
+function print_menu_items(string $query) : void
 {
   global $auth, $kiosk_mode_enabled;
 
@@ -228,7 +233,12 @@ function print_menu_items($query)
     // Only print menu items for which the user is allowed to access the page
     if (checkAuthorised($page, true))
     {
-      echo '<a href="' . htmlspecialchars(multisite("$page?$query")) . '">' . get_vocab($token) . "</a>\n";
+      $url = $page;
+      if ($query !== '')
+      {
+        $url .= "?$query";
+      }
+      echo '<a href="' . htmlspecialchars(multisite($url)) . '">' . get_vocab($token) . "</a>\n";
     }
   }
 }
