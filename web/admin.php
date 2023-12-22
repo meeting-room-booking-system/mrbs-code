@@ -358,7 +358,8 @@ function display_rooms($area_id)
                   echo "<td><div>" . htmlspecialchars($room->{$column->name} ?? '') . "</div></td>\n";
                   break;
                 case 'capacity':
-                  echo "<td class=\"int\"><div>" . htmlspecialchars(isset($room->{$column->name}) ? (string) $room->{$column->name} : '') . "</div></td>\n";
+                  $value = $room->{$column->name} ?? '';
+                  echo "<td class=\"int\"><div>" . htmlspecialchars((string) $value) . "</div></td>\n";
                   break;
                 case 'invalid_types':
                   echo "<td><div>" . get_type_names($room->{$column->name}) . "</div></td>\n";
@@ -375,7 +376,8 @@ function display_rooms($area_id)
                   elseif ($column->getNature() == Column::NATURE_INTEGER)
                   {
                     // integer values
-                    echo "<td class=\"int\"><div>" . htmlspecialchars(isset($room->{$column->name}) ? (string) $room->{$column->name} : '') . "</div></td>\n";
+                    $value = $room->{$column->name} ?? '';
+                    echo "<td class=\"int\"><div>" . htmlspecialchars((string) $value) . "</div></td>\n";
                   }
                   else
                   {
