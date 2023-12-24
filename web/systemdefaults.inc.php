@@ -1046,7 +1046,7 @@ $auth["session_php"]["inactivity_expire_time"] = 0; // seconds
 // for whom admin rights are defined here.   After that this list is ignored.
 unset($auth["admin"]);              // Include this when copying to config.inc.php
 $auth["admin"][] = "127.0.0.1";     // localhost IP address. Useful with IP sessions.
-$auth["admin"][] = "administrator"; // A user name from the user list. Useful
+$auth["admin"][] = "administrator"; // A username from the user list. Useful
                                     // with most other session schemes.
 //$auth["admin"][] = "10.0.0.1";
 //$auth["admin"][] = "10.0.0.2";
@@ -1118,7 +1118,7 @@ $auth['cas']['no_server_validation'] = false;
 // Filtering by attribute
 // The next two settings allow you to use CAS attributes to require that a user must have certain
 // attributes, otherwise their access level will be zero.  In other words unless they ahave the required
-// attributes they will be able to login successfully, but then won't have any more rights than an
+// attributes they will be able to log in successfully, but then won't have any more rights than an
 // unlogged in user.
 // $auth['cas']['filter_attr_name'] = ''; // eg 'department'
 // $auth['cas']['filter_attr_values'] = ''; // eg 'DEPT01', or else an array, eg array('DEPT01', 'DEPT02');

@@ -857,16 +857,6 @@ function get_fieldset_rep_monthly_details(RepeatRule $repeat_rule, bool $disable
 {
   $fieldset = new ElementFieldset();
 
-  $month_type = $repeat_rule->getMonthlyType();
-
-  // If the existing repeat type is other than a monthly repeat, we'll
-  // need to define a default month type in case the user decides to change
-  // to a monthly repeat
-  if (!isset($month_type))
-  {
-    $month_type = RepeatRule::MONTHLY_ABSOLUTE;
-  }
-
   $fieldset->setAttributes(array('class' => 'rep_type_details js_none',
                                  'id'    => 'rep_monthly'));
   $fieldset->addElement(get_fieldset_month_absolute($repeat_rule, $disabled))
@@ -1203,7 +1193,7 @@ if (isset($start_date))
 {
   // We'll only have got here from a drag select.  If the end date is not the same
   // as the start date then it's from the week view and will be a repeat.
-  list($year, $month, $day) = explode('-', $start_date);
+  list($year, $month, $day) = array_map('intval', explode('-', $start_date));
   if (isset($end_date) && ($start_date != $end_date) && $repeats_allowed)
   {
     // The end date that came through from the drag select is actually the repeat end

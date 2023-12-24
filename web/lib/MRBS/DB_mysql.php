@@ -212,7 +212,7 @@ class DB_mysql extends DB
   // This method should not be called for the first time while
   // locks are in place, because it will release them.
   // WARNING! This method should not be used as RELEASE_ALL_LOCKS
-  //  is not supportedby MariaDB Galera Cluster.
+  //  is not supported by MariaDB Galera Cluster.
   public function supportsMultipleLocks() : bool
   {
     if (!isset($this->supports_multiple_locks))
@@ -426,6 +426,11 @@ class DB_mysql extends DB
       elseif ((false !== utf8_stripos($this->versionComment(), 'percona')) || (false !== utf8_stripos($this->version(), 'percona')))
       {
         $this->db_type = self::DB_PERCONA;
+      }
+      // The Altervista.org hosting platform will give this version comment
+      elseif ($this->versionComment() == 'Source distribution')
+      {
+        $this->db_type = self::DB_MYSQL;
       }
       else
       {

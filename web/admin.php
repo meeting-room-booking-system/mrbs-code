@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 use MRBS\Form\ElementButton;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementImg;
 use MRBS\Form\ElementInputImage;
+use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\FieldInputEmail;
 use MRBS\Form\FieldInputNumber;
 use MRBS\Form\FieldInputSubmit;
@@ -16,7 +18,7 @@ use MRBS\Form\Form;
 require "defaultincludes.inc";
 
 
-function generate_room_delete_form($room, $area)
+function generate_room_delete_form(int $room, int $area) : void
 {
   $form = new Form();
 
@@ -45,7 +47,7 @@ function generate_room_delete_form($room, $area)
 }
 
 
-function generate_area_change_form($enabled_areas, $disabled_areas)
+function generate_area_change_form(array $enabled_areas, array $disabled_areas) : void
 {
   global $area, $day, $month, $year;
 
@@ -124,7 +126,7 @@ function generate_area_change_form($enabled_areas, $disabled_areas)
 }
 
 
-function generate_new_area_form()
+function generate_new_area_form() : void
 {
   $form = new Form();
 
@@ -163,7 +165,7 @@ function generate_new_area_form()
 }
 
 
-function generate_new_room_form()
+function generate_new_room_form() : void
 {
   global $area;
 
@@ -250,8 +252,8 @@ $context = array(
     'year'      => $year,
     'month'     => $month,
     'day'       => $day,
-    'area'      => isset($area) ? $area : null,
-    'room'      => isset($room) ? $room : null
+    'area'      => $area ?? null,
+    'room'      => $room ?? null
   );
 
 print_header($context);
@@ -274,6 +276,46 @@ if (isset($area))
   }
 }
 
+// Add in the link for editing the message
+if (is_book_admin())
+{
+  echo "<h2>" . get_vocab("message") . "</h2>\n";
+  // Display the message, if any
+  $message = Message::getInstance();
+  $message->load();
+  if ($message->getText() !== '')
+  {
+    $from_string = $message->getFromLocalString();
+    $until_string = $message->getUntilLocalString();
+    if (empty($from_string))
+    {
+      $text = (empty($until_string)) ? get_vocab("this_message") : get_vocab("this_message_until", $until_string);
+    }
+    else
+    {
+      $text = (empty($until_string)) ? get_vocab("this_message_from", $from_string) : get_vocab("this_message_from_until", $from_string, $until_string);
+    }
+    echo '<p>' . htmlspecialchars($text) . "</p>\n";
+    echo '<p class="message_top">' . htmlspecialchars($message->getText()) . "</p>\n";
+  }
+  else
+  {
+    echo '<p>' . htmlspecialchars(get_vocab("no_message")) . "</p>\n";
+  }
+  // Add an edit button
+  $url = 'edit_message.php?' . http_build_query($context,  '', '&');
+  $form = new Form();
+  $form->setAttributes(array(
+      'id'     => 'edit_message',
+      'action' => multisite($url),
+      'method' => 'post'
+    )
+  );
+  $submit = new ElementInputSubmit();
+  $submit->setAttribute('value', get_vocab('edit_message'));
+  $form->addElement($submit);
+  $form->render();
+}
 
 echo "<h2>" . get_vocab("administration") . "</h2>\n";
 if (!empty($error))
@@ -478,7 +520,8 @@ if (is_admin() || !empty($enabled_areas))
                     echo "<td><div>" . htmlspecialchars($r[$field['name']] ?? '') . "</div></td>\n";
                     break;
                   case 'capacity':
-                    echo "<td class=\"int\"><div>" . htmlspecialchars($r[$field['name']] ?? '') . "</div></td>\n";
+                    $value = $r[$field['name']] ?? '';
+                    echo "<td class=\"int\"><div>" . htmlspecialchars((string) $value) . "</div></td>\n";
                     break;
                   case 'invalid_types':
                     echo "<td><div>" . get_type_names($r[$field['name']]) . "</div></td>\n";
@@ -496,7 +539,8 @@ if (is_admin() || !empty($enabled_areas))
                     elseif (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] > 2))
                     {
                       // integer values
-                      echo "<td class=\"int\"><div>" . htmlspecialchars($r[$field['name']] ?? '') . "</div></td>\n";
+                      $value = $r[$field['name']] ?? '';
+                      echo "<td class=\"int\"><div>" . htmlspecialchars((string) $value) . "</div></td>\n";
                     }
                     else
                     {

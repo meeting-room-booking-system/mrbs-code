@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 use MRBS\Form\Form;
@@ -43,4 +44,3 @@ elseif ($type == "room")
 
 $returl = "admin.php?area=$area" . (!empty($error) ? "&error=$error" : "");
 location_header($returl);
-

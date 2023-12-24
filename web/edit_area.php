@@ -1,12 +1,12 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
-use MRBS\Form\Form;
 use MRBS\Form\ElementDiv;
+use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputCheckbox;
 use MRBS\Form\ElementInputNumber;
 use MRBS\Form\ElementInputSubmit;
-use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementLegend;
 use MRBS\Form\ElementP;
 use MRBS\Form\ElementSelect;
@@ -15,9 +15,9 @@ use MRBS\Form\FieldButton;
 use MRBS\Form\FieldDiv;
 use MRBS\Form\FieldInputCheckbox;
 use MRBS\Form\FieldInputCheckboxGroup;
-use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldInputEmail;
 use MRBS\Form\FieldInputNumber;
+use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldInputTime;
@@ -25,11 +25,12 @@ use MRBS\Form\FieldSelect;
 use MRBS\Form\FieldSpan;
 use MRBS\Form\FieldTextarea;
 use MRBS\Form\FieldTimeWithUnits;
+use MRBS\Form\Form;
 
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
-function get_timezone_options()
+function get_timezone_options() : array
 {
   global $zoneinfo_outlook_compatible;
 
@@ -70,7 +71,7 @@ function get_timezone_options()
 }
 
 
-function get_fieldset_errors(array $errors)
+function get_fieldset_errors(array $errors) : ElementFieldset
 {
   $fieldset = new ElementFieldset();
   $fieldset->addLegend('')
@@ -87,7 +88,7 @@ function get_fieldset_errors(array $errors)
 }
 
 
-function get_fieldset_general(array $data)
+function get_fieldset_general(array $data) : ElementFieldset
 {
   global $timezone, $auth;
 
@@ -186,7 +187,7 @@ function get_fieldset_general(array $data)
 }
 
 
-function get_fieldset_times()
+function get_fieldset_times() : ElementFieldset
 {
   global $enable_periods;
   global $morningstarts, $morningstarts_minutes;
@@ -208,7 +209,7 @@ function get_fieldset_times()
        ->setText(' (' . get_vocab('times_only') . ')');
 
   $legend = new ElementLegend();
-  $legend->setText(get_vocab('time_settings'), $text_at_start=true)
+  $legend->setText(get_vocab('time_settings'), true)
          ->addElement($span);
 
   $fieldset->addLegend($legend);
@@ -269,7 +270,7 @@ function get_fieldset_times()
 }
 
 
-function get_fieldset_periods()
+function get_fieldset_periods() : ElementFieldset
 {
   global $enable_periods, $periods;
 
@@ -315,7 +316,7 @@ function get_fieldset_periods()
 }
 
 
-function get_fieldset_create_ahead()
+function get_fieldset_create_ahead() : ElementFieldset
 {
   global $min_create_ahead_secs, $max_create_ahead_secs,
          $min_create_ahead_enabled, $max_create_ahead_enabled;
@@ -347,7 +348,7 @@ function get_fieldset_create_ahead()
 }
 
 
-function get_fieldset_delete_ahead()
+function get_fieldset_delete_ahead() : ElementFieldset
 {
   global $min_delete_ahead_secs, $max_delete_ahead_secs,
          $min_delete_ahead_enabled, $max_delete_ahead_enabled;
@@ -379,7 +380,7 @@ function get_fieldset_delete_ahead()
 }
 
 
-function get_fieldset_max_number()
+function get_fieldset_max_number() : ElementFieldset
 {
   global $interval_types,
          $max_per_interval_area_enabled, $max_per_interval_global_enabled,
@@ -417,7 +418,7 @@ function get_fieldset_max_number()
 
     $number_area = new ElementInputNumber();
     $number_area->setAttributes(array('min'   => '0',
-                                      'name'  => "area_max_per_{$interval_type}",
+                                      'name'  => "area_max_per_$interval_type",
                                       'value' => $max_per_interval_area[$interval_type]));
 
     // Wrap the area and global controls in <div>s.  It'll make the CSS easier.
@@ -439,7 +440,7 @@ function get_fieldset_max_number()
     $div_global->addElement($checkbox_global)
                ->addElement($number_global);
 
-    $field->setLabel(get_vocab("max_per_{$interval_type}"))
+    $field->setLabel(get_vocab("max_per_$interval_type"))
           ->addControlElement($div_area)
           ->addControlElement($div_global);
 
@@ -450,7 +451,7 @@ function get_fieldset_max_number()
 }
 
 
-function get_fieldset_max_secs()
+function get_fieldset_max_secs() : ElementFieldset
 {
   global $interval_types,
          $max_secs_per_interval_area_enabled, $max_secs_per_interval_global_enabled,
@@ -502,7 +503,7 @@ function get_fieldset_max_secs()
 
     $time_area = new ElementInputNumber();
     $time_area->setAttributes(array('min'   => '0',
-                                    'name'  => "area_max_secs_per_{$interval_type}",
+                                    'name'  => "area_max_secs_per_$interval_type",
                                     'value' => $max));
 
     // Wrap the area and global controls in <div>s.  It'll make the CSS easier.
@@ -533,7 +534,7 @@ function get_fieldset_max_secs()
                ->addElement($time_global)
                ->addElement($select);
 
-    $field->setLabel(get_vocab("max_secs_per_{$interval_type}"))
+    $field->setLabel(get_vocab("max_secs_per_$interval_type"))
           ->addControlElement($div_area)
           ->addControlElement($div_global);
 
@@ -544,7 +545,7 @@ function get_fieldset_max_secs()
 }
 
 
-function get_fieldset_max_duration()
+function get_fieldset_max_duration() : ElementFieldset
 {
   global $max_duration_enabled, $max_duration_secs, $max_duration_periods;
 
@@ -588,7 +589,7 @@ function get_fieldset_max_duration()
 }
 
 
-function get_fieldset_booking_policies()
+function get_fieldset_booking_policies() : ElementFieldset
 {
   global $enable_periods;
 
@@ -616,7 +617,7 @@ function get_fieldset_booking_policies()
 }
 
 
-function get_fieldset_confirmation_settings()
+function get_fieldset_confirmation_settings() : ElementFieldset
 {
   global $confirmation_enabled, $confirmed_default;
 
@@ -643,7 +644,7 @@ function get_fieldset_confirmation_settings()
 }
 
 
-function get_fieldset_approval_settings()
+function get_fieldset_approval_settings() : ElementFieldset
 {
   global $approval_enabled, $reminders_enabled;
 
@@ -668,7 +669,7 @@ function get_fieldset_approval_settings()
 }
 
 
-function get_fieldset_privacy_settings()
+function get_fieldset_privacy_settings() : ElementFieldset
 {
   global $private_enabled, $private_mandatory, $private_default;
 
@@ -702,7 +703,7 @@ function get_fieldset_privacy_settings()
 }
 
 
-function get_fieldset_privacy_display()
+function get_fieldset_privacy_display() : ElementFieldset
 {
   global $private_override;
 
@@ -725,7 +726,7 @@ function get_fieldset_privacy_display()
 }
 
 
-function get_fieldset_submit_buttons()
+function get_fieldset_submit_buttons() : ElementFieldset
 {
   $fieldset = new ElementFieldset();
 
@@ -753,8 +754,8 @@ $context = array(
   'year'      => $year,
   'month'     => $month,
   'day'       => $day,
-  'area'      => isset($area) ? $area : null,
-  'room'      => isset($room) ? $room : null
+  'area'      => $area ?? null,
+  'room'      => $room ?? null
 );
 
 print_header($context);

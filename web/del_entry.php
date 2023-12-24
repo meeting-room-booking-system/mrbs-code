@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 use MRBS\Form\Form;
-
 
 // Deletes an entry, or a series.    The $id is always the id of
 // an individual entry.   If $series is set then the entire series

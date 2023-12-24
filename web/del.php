@@ -1,13 +1,14 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
-use MRBS\Form\Form;
 use MRBS\Form\ElementInputSubmit;
+use MRBS\Form\Form;
 
 require "defaultincludes.inc";
 
 
-function generate_no_form($room, $area)
+function generate_no_form(int $room, int $area) : void
 {
   $form = new Form();
 
@@ -30,7 +31,7 @@ function generate_no_form($room, $area)
 }
 
 
-function generate_yes_form($room, $area)
+function generate_yes_form(int $room, int $area) : void
 {
   $form = new Form();
 
@@ -72,7 +73,7 @@ $context = array(
     'month'     => $month,
     'day'       => $day,
     'area'      => $area,
-    'room'      => isset($room) ? $room : null
+    'room'      => $room ?? null
   );
 
 // This is gonna blast away something. We want them to be really

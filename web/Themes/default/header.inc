@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 use chillerlan\QRCode\QRCode;
@@ -9,7 +10,7 @@ use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\Form;
 
 
-function print_head($simple=false)
+function print_head(bool $simple=false) : void
 {
   global $refresh_rate;
 
@@ -62,7 +63,7 @@ function print_head($simple=false)
 
 // Print the basic site information.   This function is used for all headers, including
 // the simple header, and so mustn't require any database access.
-function print_header_site_info()
+function print_header_site_info() : void
 {
   global $mrbs_company,
          $mrbs_company_url,
@@ -120,7 +121,7 @@ function print_header_site_info()
 }
 
 
-function print_goto_date($context)
+function print_goto_date(array $context) : void
 {
   global $multisite, $site;
 
@@ -172,7 +173,7 @@ function print_goto_date($context)
 }
 
 
-function print_outstanding($query)
+function print_outstanding(string $query) : void
 {
   $mrbs_user = session()->getCurrentUser();
 
@@ -195,7 +196,12 @@ function print_outstanding($query)
       $class .= ' attention';
     }
 
-    echo '<a href="' . htmlspecialchars(multisite("pending.php?$query")) . '"' .
+    $url = 'pending.php';
+    if ($query !== '')
+    {
+      $url .= "?$query";
+    }
+    echo '<a href="' . htmlspecialchars(multisite($url)) . '"' .
          " class=\"$class\"" .
          ' title="' . get_vocab('outstanding', $n_outstanding) .
          "\">$n_outstanding</a>\n";
@@ -203,7 +209,7 @@ function print_outstanding($query)
 }
 
 
-function print_menu_items($query)
+function print_menu_items(string $query) : void
 {
   global $auth, $kiosk_mode_enabled;
 
@@ -228,14 +234,19 @@ function print_menu_items($query)
     // Only print menu items for which the user is allowed to access the page
     if (checkAuthorised($page, true))
     {
-      echo '<a href="' . htmlspecialchars(multisite("$page?$query")) . '">' . get_vocab($token) . "</a>\n";
+      $url = $page;
+      if ($query !== '')
+      {
+        $url .= "?$query";
+      }
+      echo '<a href="' . htmlspecialchars(multisite($url)) . '">' . get_vocab($token) . "</a>\n";
     }
   }
 }
 
 
 
-function print_search($context)
+function print_search(array $context) : void
 {
   if (!checkAuthorised('search.php', true))
   {
@@ -292,7 +303,7 @@ function print_search($context)
 
 
 // Generate the username link, which gives a report on the user's upcoming bookings.
-function print_report_link(User $user)
+function print_report_link(User $user) : void
 {
   // If possible, provide a link to the Report page, otherwise the Search page
   // and if that's not possible just print the username with no link.  (Note that
@@ -336,7 +347,7 @@ function print_report_link(User $user)
 }
 
 
-function print_logonoff_button($params, $value)
+function print_logonoff_button(array $params, string $value) : void
 {
   $form = new Form();
   $form->setAttributes(array('method' => $params['method'],
@@ -370,7 +381,7 @@ function print_logonoff_button($params, $value)
 }
 
 
-function print_logon()
+function print_logon() : void
 {
   if (method_exists(session(), 'getLogonFormParams'))
   {
@@ -383,7 +394,7 @@ function print_logon()
 }
 
 
-function print_logoff()
+function print_logoff() : void
 {
   if (method_exists(session(), 'getLogoffFormParams'))
   {
@@ -397,7 +408,7 @@ function print_logoff()
 
 // $context is an associative array indexed by 'view', 'view_all', 'year', 'month', 'day', 'area' and 'room'.
 // When $omit_login is true the Login link is omitted.
-function print_banner($context, $simple=false, $omit_login=false)
+function print_banner(array $context, $simple=false, $omit_login=false) : void
 {
   global $kiosk_QR_code, $auth;
 
@@ -467,7 +478,7 @@ function print_banner($context, $simple=false, $omit_login=false)
     // (The QR code library requires PHP 7.4 or greater)
     if (isset($context['kiosk']) &&
         $kiosk_QR_code &&
-        (version_compare(PHP_VERSION, 7.4) >= 0))
+        (version_compare(PHP_VERSION, '7.4') >= 0))
     {
       $url = multisite(url_base() . "/index.php?$query");
       echo '<nav class="qr" title="' . htmlspecialchars($url) . "\">\n";
@@ -488,10 +499,10 @@ function print_banner($context, $simple=false, $omit_login=false)
 
 // Print a message which will only be displayed (thanks to CSS) if the user is
 // using an unsupported browser.
-function print_unsupported_message($context)
+function print_unsupported_message(array $context) : void
 {
   echo "<div class=\"unsupported_message\">\n";
-  print_banner($context, $simple=true);
+  print_banner($context, true);
   echo "<div class=\"contents\">\n";
   echo "<p>" . get_vocab('browser_not_supported', get_vocab('mrbs_abbr')) . "</p>\n";
   echo "</div>\n";
@@ -505,7 +516,7 @@ function print_unsupported_message($context)
 // If $simple is true, then just print a simple header that doesn't require any database
 // access or JavaScript (useful for fatal errors and database upgrades).
 // When $omit_login is true the Login link is omitted.
-function print_theme_header($context=null, $simple=false, $omit_login=false)
+function print_theme_header(?array $context=null, bool $simple=false, bool $omit_login=false) : void
 {
   global $multisite, $site, $default_view, $default_view_all, $view_week_number, $style_weekends;
 
@@ -546,20 +557,20 @@ function print_theme_header($context=null, $simple=false, $omit_login=false)
     // This will set the correct timezone for the area
     get_area_settings($context['area']);
 
-    // If we dont know the right date then use today's
+    // If we don't know the right date then use today's
     if (!isset($context['year']))
     {
-      $context['year'] = date('Y');
+      $context['year'] = (int) date('Y');
     }
 
     if (!isset($context['month']))
     {
-      $context['month'] = date('m');
+      $context['month'] = (int) date('m');
     }
 
     if (!isset($context['day']))
     {
-      $context['day'] = date('d');
+      $context['day'] = (int) date('d');
     }
 
     // Get the form token now, before any headers are sent, in case we are using the 'cookie'
@@ -646,7 +657,7 @@ function print_theme_header($context=null, $simple=false, $omit_login=false)
   {
     if (isset($value))
     {
-      echo " data-$key=\"" . htmlspecialchars($value) . '"';
+      echo " data-$key=\"" . htmlspecialchars((string)$value) . '"';
     }
   }
   echo ">\n";

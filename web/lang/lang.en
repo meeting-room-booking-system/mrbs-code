@@ -287,6 +287,12 @@ $vocab["max_secs_per_future_area"]    = 'The maximum total length of outstanding
 $vocab["skip_and_book"]           = "Skip and book";
 $vocab["skip_and_book_note"]      = "Carry on with the booking, skipping past the conflicting entries";
 
+// Used in edit_message.php
+$vocab["edit_message"]  = "Edit message";
+$vocab["message"]       = "Message";
+$vocab["display_from"]  = "Display from the start of";
+$vocab["display_until"] = "Display until the end of";
+
 // Used in kiosk.php
 $vocab["enter"]                     = "Enter";
 $vocab["exit"]                      = "Exit";
@@ -457,6 +463,11 @@ $vocab["unique_addresses_copied"]  = "%%d unique email addresses copied to the c
 $vocab["clipboard_copy_failed"]    = "Clipboard copy failed.";
 
 // Used in admin.php
+$vocab["no_message"]         = "There is currently no message to display above the calendar.";
+$vocab["this_message"]       = "The message below will be displayed above the calendar.";
+$vocab["this_message_from"]  = "The message below will be displayed above the calendar from %s.";
+$vocab["this_message_until"] = "The message below will be displayed above the calendar until %s.";
+$vocab["this_message_from_until"] = 'The message below will be displayed above the calendar from %1$s until %2$s.';
 $vocab["edit"]               = "Edit";
 $vocab["delete"]             = "Delete";
 $vocab["rooms"]              = "Rooms";

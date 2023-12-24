@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 define ('MRBS_MIN_PHP_VERSION', '7.2.0');
