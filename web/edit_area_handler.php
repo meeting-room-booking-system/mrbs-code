@@ -76,11 +76,11 @@ if (!isset($area_default_type))
 // Get the max_per_interval form variables
 foreach ($interval_types as $interval_type)
 {
-  $var = "area_max_per_{$interval_type}";
+  $var = "area_max_per_$interval_type";
   $$var = get_form_var($var, 'int');
   $var = "area_max_per_{$interval_type}_enabled";
   $$var = get_form_var($var, 'string');
-  $var = "area_max_secs_per_{$interval_type}";
+  $var = "area_max_secs_per_$interval_type";
   $$var = get_form_var($var, 'int');
   $var = "area_max_secs_per_{$interval_type}_units";
   $$var = get_form_var($var, 'string');
@@ -322,7 +322,7 @@ foreach($interval_types as $interval_type)
   $area_var = "area_" . $var;
   $assign_array[] = "$var=" . $$area_var;
 
-  $var = "max_per_{$interval_type}";
+  $var = "max_per_$interval_type";
   $area_var = "area_" . $var;
   if (isset($$area_var))
   {
@@ -337,7 +337,7 @@ foreach($interval_types as $interval_type)
   $area_var = "area_" . $var;
   $assign_array[] = "$var=" . $$area_var;
 
-  $var = "max_secs_per_{$interval_type}";
+  $var = "max_secs_per_$interval_type";
   $area_var = "area_" . $var;
 
   if (isset($$area_var))
