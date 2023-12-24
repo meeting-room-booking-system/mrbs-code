@@ -848,16 +848,6 @@ function get_fieldset_rep_monthly_details(RepeatRule $repeat_rule, bool $disable
 {
   $fieldset = new ElementFieldset();
 
-  $month_type = $repeat_rule->getMonthlyType();
-
-  // If the existing repeat type is other than a monthly repeat, we'll
-  // need to define a default month type in case the user decides to change
-  // to a monthly repeat
-  if (!isset($month_type))
-  {
-    $month_type = RepeatRule::MONTHLY_ABSOLUTE;
-  }
-
   $fieldset->setAttributes(array('class' => 'rep_type_details js_none',
                                  'id'    => 'rep_monthly'));
   $fieldset->addElement(get_fieldset_month_absolute($repeat_rule, $disabled))
