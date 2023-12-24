@@ -29,7 +29,7 @@ use MRBS\Form\Form;
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
-function get_timezone_options()
+function get_timezone_options() : array
 {
   global $zoneinfo_outlook_compatible;
 
@@ -70,7 +70,7 @@ function get_timezone_options()
 }
 
 
-function get_fieldset_errors(array $errors)
+function get_fieldset_errors(array $errors) : ElementFieldset
 {
   $fieldset = new ElementFieldset();
   $fieldset->addLegend('')
@@ -87,7 +87,7 @@ function get_fieldset_errors(array $errors)
 }
 
 
-function get_fieldset_general(array $data)
+function get_fieldset_general(array $data) : ElementFieldset
 {
   global $timezone, $auth;
 
@@ -186,7 +186,7 @@ function get_fieldset_general(array $data)
 }
 
 
-function get_fieldset_times()
+function get_fieldset_times() : ElementFieldset
 {
   global $enable_periods;
   global $morningstarts, $morningstarts_minutes;
@@ -269,7 +269,7 @@ function get_fieldset_times()
 }
 
 
-function get_fieldset_periods()
+function get_fieldset_periods() : ElementFieldset
 {
   global $enable_periods, $periods;
 
@@ -315,7 +315,7 @@ function get_fieldset_periods()
 }
 
 
-function get_fieldset_create_ahead()
+function get_fieldset_create_ahead() : ElementFieldset
 {
   global $min_create_ahead_secs, $max_create_ahead_secs,
          $min_create_ahead_enabled, $max_create_ahead_enabled;
@@ -347,7 +347,7 @@ function get_fieldset_create_ahead()
 }
 
 
-function get_fieldset_delete_ahead()
+function get_fieldset_delete_ahead() : ElementFieldset
 {
   global $min_delete_ahead_secs, $max_delete_ahead_secs,
          $min_delete_ahead_enabled, $max_delete_ahead_enabled;
@@ -379,7 +379,7 @@ function get_fieldset_delete_ahead()
 }
 
 
-function get_fieldset_max_number()
+function get_fieldset_max_number() : ElementFieldset
 {
   global $interval_types,
          $max_per_interval_area_enabled, $max_per_interval_global_enabled,
@@ -450,7 +450,7 @@ function get_fieldset_max_number()
 }
 
 
-function get_fieldset_max_secs()
+function get_fieldset_max_secs() : ElementFieldset
 {
   global $interval_types,
          $max_secs_per_interval_area_enabled, $max_secs_per_interval_global_enabled,
@@ -544,7 +544,7 @@ function get_fieldset_max_secs()
 }
 
 
-function get_fieldset_max_duration()
+function get_fieldset_max_duration() : ElementFieldset
 {
   global $max_duration_enabled, $max_duration_secs, $max_duration_periods;
 
@@ -588,7 +588,7 @@ function get_fieldset_max_duration()
 }
 
 
-function get_fieldset_booking_policies()
+function get_fieldset_booking_policies() : ElementFieldset
 {
   global $enable_periods;
 
@@ -616,7 +616,7 @@ function get_fieldset_booking_policies()
 }
 
 
-function get_fieldset_confirmation_settings()
+function get_fieldset_confirmation_settings() : ElementFieldset
 {
   global $confirmation_enabled, $confirmed_default;
 
@@ -668,7 +668,7 @@ function get_fieldset_approval_settings() : ElementFieldset
 }
 
 
-function get_fieldset_privacy_settings()
+function get_fieldset_privacy_settings() : ElementFieldset
 {
   global $private_enabled, $private_mandatory, $private_default;
 
@@ -702,7 +702,7 @@ function get_fieldset_privacy_settings()
 }
 
 
-function get_fieldset_privacy_display()
+function get_fieldset_privacy_display() : ElementFieldset
 {
   global $private_override;
 
@@ -725,7 +725,7 @@ function get_fieldset_privacy_display()
 }
 
 
-function get_fieldset_submit_buttons()
+function get_fieldset_submit_buttons() : ElementFieldset
 {
   $fieldset = new ElementFieldset();
 
