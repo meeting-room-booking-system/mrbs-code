@@ -1,13 +1,13 @@
 <?php
 namespace MRBS;
 
-use MRBS\Form\Form;
 use MRBS\Form\ElementInputSubmit;
+use MRBS\Form\Form;
 
 require "defaultincludes.inc";
 
 
-function generate_no_form($room, $area)
+function generate_no_form(int $room, int $area) : void
 {
   $form = new Form();
 
@@ -30,7 +30,7 @@ function generate_no_form($room, $area)
 }
 
 
-function generate_yes_form($room, $area)
+function generate_yes_form(int $room, int $area) : void
 {
   $form = new Form();
 
