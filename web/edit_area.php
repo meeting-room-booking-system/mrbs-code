@@ -209,7 +209,7 @@ function get_fieldset_times() : ElementFieldset
        ->setText(' (' . get_vocab('times_only') . ')');
 
   $legend = new ElementLegend();
-  $legend->setText(get_vocab('time_settings'), $text_at_start=true)
+  $legend->setText(get_vocab('time_settings'), true)
          ->addElement($span);
 
   $fieldset->addLegend($legend);
