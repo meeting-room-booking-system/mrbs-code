@@ -418,7 +418,7 @@ function get_fieldset_max_number() : ElementFieldset
 
     $number_area = new ElementInputNumber();
     $number_area->setAttributes(array('min'   => '0',
-                                      'name'  => "area_max_per_{$interval_type}",
+                                      'name'  => "area_max_per_$interval_type",
                                       'value' => $max_per_interval_area[$interval_type]));
 
     // Wrap the area and global controls in <div>s.  It'll make the CSS easier.
@@ -440,7 +440,7 @@ function get_fieldset_max_number() : ElementFieldset
     $div_global->addElement($checkbox_global)
                ->addElement($number_global);
 
-    $field->setLabel(get_vocab("max_per_{$interval_type}"))
+    $field->setLabel(get_vocab("max_per_$interval_type"))
           ->addControlElement($div_area)
           ->addControlElement($div_global);
 
@@ -502,7 +502,7 @@ function get_fieldset_max_secs() : ElementFieldset
 
     $time_area = new ElementInputNumber();
     $time_area->setAttributes(array('min'   => '0',
-                                    'name'  => "area_max_secs_per_{$interval_type}",
+                                    'name'  => "area_max_secs_per_$interval_type",
                                     'value' => $duration['value']));
 
     // Wrap the area and global controls in <div>s.  It'll make the CSS easier.
@@ -532,7 +532,7 @@ function get_fieldset_max_secs() : ElementFieldset
                ->addElement($time_global)
                ->addElement($select);
 
-    $field->setLabel(get_vocab("max_secs_per_{$interval_type}"))
+    $field->setLabel(get_vocab("max_secs_per_$interval_type"))
           ->addControlElement($div_area)
           ->addControlElement($div_global);
 
