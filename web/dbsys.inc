@@ -1,10 +1,11 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 // Returns the full table name including schema and prefix for a given table.
 // Needs to be dynamic rather than static in case we are running a multisite
 // installation and want to switch sites, eg during a database upgrade.
-function _tbl($short_name, $include_schema=true)
+function _tbl(string $short_name, bool $include_schema=true) : string
 {
   global $dbsys, $db_tbl_prefix, $db_schema;
 
