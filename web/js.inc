@@ -2,7 +2,7 @@
 namespace MRBS;
 
 
-function script($src, $add_version=false)
+function script(string $src, bool $add_version=false) : void
 {
   echo '<script src="';
   $value = ($add_version) ? add_version($src) : $src;
