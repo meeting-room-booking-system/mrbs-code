@@ -90,7 +90,7 @@ function get_fieldset_errors(array $errors) : ElementFieldset
 
 function get_fieldset_general(Area $area) : ElementFieldset
 {
-  global $timezone, $auth, $booking_types;
+  global $timezone, $auth;
 
   $fieldset = new ElementFieldset();
   $fieldset->addLegend(get_vocab('general_settings'));
