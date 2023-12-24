@@ -57,9 +57,9 @@ function get_form_data(Area &$area)
   // Add in the max_per_interval form variables
   foreach ($interval_types as $interval_type)
   {
-    $form_vars["area_max_per_{$interval_type}"] =               'int';
+    $form_vars["area_max_per_$interval_type"] =               'int';
     $form_vars["area_max_per_{$interval_type}_enabled"] =       'bool';
-    $form_vars["area_max_secs_per_{$interval_type}"] =          'int';
+    $form_vars["area_max_secs_per_$interval_type"] =          'int';
     $form_vars["area_max_secs_per_{$interval_type}_units"] =    'string';
     $form_vars["area_max_secs_per_{$interval_type}_enabled"] =  'bool';
   }
