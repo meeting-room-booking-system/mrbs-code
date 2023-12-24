@@ -1,12 +1,11 @@
 <?php
 namespace MRBS;
 
-use MRBS\Form\Form;
 use MRBS\Form\ElementDiv;
+use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputCheckbox;
 use MRBS\Form\ElementInputNumber;
 use MRBS\Form\ElementInputSubmit;
-use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementLegend;
 use MRBS\Form\ElementP;
 use MRBS\Form\ElementSelect;
@@ -15,9 +14,9 @@ use MRBS\Form\FieldButton;
 use MRBS\Form\FieldDiv;
 use MRBS\Form\FieldInputCheckbox;
 use MRBS\Form\FieldInputCheckboxGroup;
-use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldInputEmail;
 use MRBS\Form\FieldInputNumber;
+use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldInputTime;
@@ -25,6 +24,7 @@ use MRBS\Form\FieldSelect;
 use MRBS\Form\FieldSpan;
 use MRBS\Form\FieldTextarea;
 use MRBS\Form\FieldTimeWithUnits;
+use MRBS\Form\Form;
 
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
@@ -659,7 +659,7 @@ function get_fieldset_confirmation_settings()
 }
 
 
-function get_fieldset_approval_settings()
+function get_fieldset_approval_settings() : ElementFieldset
 {
   global $approval_enabled, $reminders_enabled;
 
