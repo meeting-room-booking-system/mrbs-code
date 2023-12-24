@@ -189,7 +189,7 @@ function validate_form_data(Area &$area) : array
       $units_property = "max_secs_per_{$interval_type}_units";
       if (isset($area->$units_property))
       {
-        $secs_property = "max_secs_per_{$interval_type}";
+        $secs_property = "max_secs_per_$interval_type";
         $area->$secs_property = from_time_string(array(
           'value' => $area->$secs_property,
           'units' => $area->$units_property
