@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 use MRBS\Form\ElementInputSubmit;
@@ -72,7 +73,7 @@ $context = array(
     'month'     => $month,
     'day'       => $day,
     'area'      => $area,
-    'room'      => isset($room) ? $room : null
+    'room'      => $room ?? null
   );
 
 // This is gonna blast away something. We want them to be really
