@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 // This file contains internal configuration settings and checking.   You should not
@@ -18,7 +19,7 @@ if (isset($provisional_enabled))
   $message = 'Please check your config file.   The variable $provisional_enabled ' .
              'is no longer used and has been replaced by $approval_enabled.';
   trigger_error($message, E_USER_NOTICE);
-  $approval_enabled = ($provisional_enabled) ? TRUE : FALSE;
+  $approval_enabled = (bool) $provisional_enabled;
 }
 
 // Variables no longer used in versions of MRBS > 1.4.5
@@ -31,7 +32,7 @@ if (isset($mail_settings['admin_all']))
              'is no longer used and has been replaced by $mail_settings["on_new"], ' .
              '$mail_settings["on_change"] and $mail_settings["on_delete"].';
   trigger_error($message, E_USER_NOTICE);
-  $mail_settings['on_change'] = ($mail_settings['admin_all']) ? TRUE : FALSE;
+  $mail_settings['on_change'] = (bool) $mail_settings['admin_all'];
 }
 
 if (isset($mail_settings['admin_on_delete']))
@@ -39,7 +40,7 @@ if (isset($mail_settings['admin_on_delete']))
   $message = 'Please check your config file.   The variable $mail_settings["admin_on_delete"] ' .
              'is no longer used and has been replaced by $mail_settings["on_delete"].';
   trigger_error($message, E_USER_NOTICE);
-  $mail_settings['on_delete'] = ($mail_settings['admin_on_delete']) ? TRUE : FALSE;
+  $mail_settings['on_delete'] = (bool) $mail_settings['admin_on_delete'];
 }
 
 if (isset($dateformat))
@@ -79,8 +80,8 @@ if (isset($min_book_ahead_enabled))
              'is no longer used and has been replaced by $min_create_ahead_enabled ' .
              'and $min_delete_ahead_enabled.';
   trigger_error($message, E_USER_WARNING);
-  $min_create_ahead_enabled = ($min_book_ahead_enabled) ? TRUE : FALSE;
-  $min_delete_ahead_enabled = ($min_book_ahead_enabled) ? TRUE : FALSE;
+  $min_create_ahead_enabled = (bool) $min_book_ahead_enabled;
+  $min_delete_ahead_enabled = (bool) $min_book_ahead_enabled;
 }
 
 if (isset($max_book_ahead_enabled))
@@ -89,7 +90,7 @@ if (isset($max_book_ahead_enabled))
              'is no longer used and has been replaced by $max_create_ahead_enabled ' .
              'and $max_delete_ahead_enabled.';
   trigger_error($message, E_USER_WARNING);
-  $max_create_ahead_enabled = ($max_book_ahead_enabled) ? TRUE : FALSE;
+  $max_create_ahead_enabled = (bool) $max_book_ahead_enabled;
   // No need to do anything about $max_delete_ahead_enabled as it didn't apply in the old system
 }
 

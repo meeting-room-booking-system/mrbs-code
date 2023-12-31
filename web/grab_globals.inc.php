@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 // +---------------------------------------------------------------------------+
@@ -24,7 +25,7 @@ namespace MRBS;
 //    $default    The default value for the variable
 //    $source     If set, then restrict the search to this source.  Can be
 //                INPUT_GET or INPUT_POST.
-function get_form_var($var, $var_type='string', $default=null, $source=null)
+function get_form_var(string $var, string $var_type='string', $default=null, int $source=null)
 {
   // We use some functions from here
   require_once "functions.inc";
@@ -96,7 +97,7 @@ if (defined('ABSPATH'))  // standard test for WordPress
   die('MRBS internal error: Wordpress files have already been included.');
 }
 
-// Unfotunately, in WordPress all $_GET, $_POST, $_COOKIE and $_SERVER superglobals are
+// Unfortunately, in WordPress all $_GET, $_POST, $_COOKIE and $_SERVER superglobals are
 // slashed, regardless of the setting of magic_quotes.   So if we are using the
 // WordPress authentication and session schemes then this will happen when the WordPress
 // files are included.  To get round this we take a local copy of $_GET and $_POST
