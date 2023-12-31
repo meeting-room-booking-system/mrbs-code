@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 // Gets the styling appropriate to the theme.     If there isn't a styling file
