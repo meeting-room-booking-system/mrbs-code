@@ -79,8 +79,8 @@ if (isset($min_book_ahead_enabled))
              'is no longer used and has been replaced by $min_create_ahead_enabled ' .
              'and $min_delete_ahead_enabled.';
   trigger_error($message, E_USER_WARNING);
-  $min_create_ahead_enabled = ($min_book_ahead_enabled) ? TRUE : FALSE;
-  $min_delete_ahead_enabled = ($min_book_ahead_enabled) ? TRUE : FALSE;
+  $min_create_ahead_enabled = (bool) $min_book_ahead_enabled;
+  $min_delete_ahead_enabled = (bool) $min_book_ahead_enabled;
 }
 
 if (isset($max_book_ahead_enabled))
@@ -89,7 +89,7 @@ if (isset($max_book_ahead_enabled))
              'is no longer used and has been replaced by $max_create_ahead_enabled ' .
              'and $max_delete_ahead_enabled.';
   trigger_error($message, E_USER_WARNING);
-  $max_create_ahead_enabled = ($max_book_ahead_enabled) ? TRUE : FALSE;
+  $max_create_ahead_enabled = (bool) $max_book_ahead_enabled;
   // No need to do anything about $max_delete_ahead_enabled as it didn't apply in the old system
 }
 
