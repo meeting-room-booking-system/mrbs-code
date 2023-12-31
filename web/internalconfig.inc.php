@@ -18,7 +18,7 @@ if (isset($provisional_enabled))
   $message = 'Please check your config file.   The variable $provisional_enabled ' .
              'is no longer used and has been replaced by $approval_enabled.';
   trigger_error($message, E_USER_NOTICE);
-  $approval_enabled = ($provisional_enabled) ? TRUE : FALSE;
+  $approval_enabled = (bool) $provisional_enabled;
 }
 
 // Variables no longer used in versions of MRBS > 1.4.5
@@ -31,7 +31,7 @@ if (isset($mail_settings['admin_all']))
              'is no longer used and has been replaced by $mail_settings["on_new"], ' .
              '$mail_settings["on_change"] and $mail_settings["on_delete"].';
   trigger_error($message, E_USER_NOTICE);
-  $mail_settings['on_change'] = ($mail_settings['admin_all']) ? TRUE : FALSE;
+  $mail_settings['on_change'] = (bool) $mail_settings['admin_all'];
 }
 
 if (isset($mail_settings['admin_on_delete']))
@@ -39,7 +39,7 @@ if (isset($mail_settings['admin_on_delete']))
   $message = 'Please check your config file.   The variable $mail_settings["admin_on_delete"] ' .
              'is no longer used and has been replaced by $mail_settings["on_delete"].';
   trigger_error($message, E_USER_NOTICE);
-  $mail_settings['on_delete'] = ($mail_settings['admin_on_delete']) ? TRUE : FALSE;
+  $mail_settings['on_delete'] = (bool) $mail_settings['admin_on_delete'];
 }
 
 if (isset($dateformat))
