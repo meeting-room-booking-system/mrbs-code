@@ -24,7 +24,7 @@ namespace MRBS;
 //    $default    The default value for the variable
 //    $source     If set, then restrict the search to this source.  Can be
 //                INPUT_GET or INPUT_POST.
-function get_form_var(string $var, string $var_type='string', $default=null, string $source=null)
+function get_form_var(string $var, string $var_type='string', $default=null, int $source=null)
 {
   // We use some functions from here
   require_once "functions.inc";
