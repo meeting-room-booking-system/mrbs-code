@@ -148,7 +148,14 @@ elseif (function_exists('strftime'))
             throw new \MRBS\Exception("Could not convert '$token'");
           }
           $format .= $converted_token;
-          $token_char = null;
+          if ($is_token_char) {
+            // And the start of a new token
+            $token_char = $char;
+            $token = $char;
+          }
+          else {
+            $token_char = null;
+          }
         }
 
         // Quoted text
