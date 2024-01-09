@@ -52,10 +52,10 @@ foreach ($skeletons as $skeleton) {
     $pattern = $pattern_generator->getBestPattern($skeleton);
     write_line($fp, $locale, $pattern);
     // Fix up for some locales
-    if (($locale == ' zh-Hans-CN') && !in_array('zh-CN', $locales)) {
+    if (($locale == 'zh-Hans-CN') && !in_array('zh-CN', $locales)) {
       write_line($fp, 'zh-CN', $pattern);
     }
-    if (($locale == ' zh-Hant-TW') && !in_array('zh-TW', $locales)) {
+    if (($locale == 'zh-Hant-TW') && !in_array('zh-TW', $locales)) {
       write_line($fp, 'zh-TW', $pattern);
     }
   }
@@ -90,10 +90,10 @@ foreach ($types as $date_key => $date_value)
       $pattern = $formatter->getPattern();
       write_line($fp, $locale, $pattern);
       // Fix up for some locales
-      if (($locale == ' zh-Hans-CN') && !in_array('zh-CN', $locales)) {
+      if (($locale == 'zh-Hans-CN') && !in_array('zh-CN', $locales)) {
         write_line($fp, 'zh-CN', $pattern);
       }
-      if (($locale == ' zh-Hant-TW') && !in_array('zh-TW', $locales)) {
+      if (($locale == 'zh-Hant-TW') && !in_array('zh-TW', $locales)) {
         write_line($fp, 'zh-TW', $pattern);
       }
     }

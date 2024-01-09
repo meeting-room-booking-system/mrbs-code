@@ -25,8 +25,12 @@ use function MRBS\get_mrbs_locale;
 use function MRBS\set_mrbs_locale;
 use function MRBS\utf8_strlen;
 
-
-if (class_exists('\IntlDateFormatter'))
+// We need to check that the 'intl' extension is loaded because earlier versions of
+// MRBS had the IntlDateFormatter emulation class at the top level in lib.  If users
+// have upgraded by just overwriting files without deleting that file, then it will
+// be picked up by the class_exists() test and used instead of the more up-to-date
+// emulation below.
+if (class_exists('\IntlDateFormatter') && extension_loaded('intl'))
 {
   class IntlDateFormatter extends \IntlDateFormatter
   {
