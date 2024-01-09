@@ -1847,6 +1847,7 @@ function get_booking_info(int $id, bool $series, bool $silent=false)
 
   // Cast the columns to their intended types
   row_cast_columns($row, ($series) ? 'repeat' : 'entry');
+  $row['area_id'] = intval($row['area_id']); // Necessary for some databases
 
   // Turn the last_updated column into an int (PostgreSQL will return a float)
   $row['last_updated'] = intval($row['last_updated']);
