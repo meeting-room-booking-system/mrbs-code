@@ -408,7 +408,7 @@ function print_logoff() : void
 
 // $context is an associative array indexed by 'view', 'view_all', 'year', 'month', 'day', 'area' and 'room'.
 // When $omit_login is true the Login link is omitted.
-function print_banner(array $context, $simple=false, $omit_login=false) : void
+function print_banner(?array $context, $simple=false, $omit_login=false) : void
 {
   global $kiosk_QR_code, $auth;
 
@@ -499,7 +499,7 @@ function print_banner(array $context, $simple=false, $omit_login=false) : void
 
 // Print a message which will only be displayed (thanks to CSS) if the user is
 // using an unsupported browser.
-function print_unsupported_message(array $context) : void
+function print_unsupported_message(?array $context) : void
 {
   echo "<div class=\"unsupported_message\">\n";
   print_banner($context, true);
