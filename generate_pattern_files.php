@@ -4,6 +4,22 @@ namespace MRBS;
 use IntlDateFormatter;
 use IntlDatePatternGenerator;
 
+function write_line($fp, string $key, string $value) : void
+{
+  $keywords = ['no', 'yes', 'true', 'false', 'on', 'off', 'null', 'none'];
+  if (in_arrayi($key, $keywords))
+  {
+    // If it's a keyword we put a space before the key because it is a keyword and otherwise
+    // parse_ini_file() will fail.  The space is trimmed when it is parsed.
+    // See https://stackoverflow.com/questions/6142980/using-a-keyword-as-variable-name-in-an-ini-file
+    $key = " $key";
+    $comment = "; The following line has a space before the key because it is a keyword\n";
+    fwrite($fp, $comment);
+  }
+  fwrite($fp, "$key = \"$value\"\n");
+}
+
+
 if (!extension_loaded('intl'))
 {
   die("The 'intl' extension needs to be loaded.");
@@ -34,13 +50,13 @@ foreach ($skeletons as $skeleton) {
     $locale = convert_to_BCP47($locale);
     $pattern_generator = new IntlDatePatternGenerator($locale);
     $pattern = $pattern_generator->getBestPattern($skeleton);
-    fwrite($fp, "$locale = \"$pattern\"\n");
+    write_line($fp, $locale, $pattern);
     // Fix up for some locales
     if (($locale == 'zh-Hans-CN') && !in_array('zh-CN', $locales)) {
-      fwrite($fp, "zh-CN = \"$pattern\"\n");
+      write_line($fp, 'zh-CN', $pattern);
     }
     if (($locale == 'zh-Hant-TW') && !in_array('zh-TW', $locales)) {
-      fwrite($fp, "zh-TW = \"$pattern\"\n");
+      write_line($fp, 'zh-TW', $pattern);
     }
   }
   fclose($fp);
@@ -72,13 +88,13 @@ foreach ($types as $date_key => $date_value)
       $locale = convert_to_BCP47($locale);
       $formatter = new IntlDateFormatter($locale, $date_value, $time_value);
       $pattern = $formatter->getPattern();
-      fwrite($fp, "$locale = \"$pattern\"\n");
+      write_line($fp, $locale, $pattern);
       // Fix up for some locales
       if (($locale == 'zh-Hans-CN') && !in_array('zh-CN', $locales)) {
-        fwrite($fp, "zh-CN = \"$pattern\"\n");
+        write_line($fp, 'zh-CN', $pattern);
       }
       if (($locale == 'zh-Hant-TW') && !in_array('zh-TW', $locales)) {
-        fwrite($fp, "zh-TW = \"$pattern\"\n");
+        write_line($fp, 'zh-TW', $pattern);
       }
     }
     fclose($fp);

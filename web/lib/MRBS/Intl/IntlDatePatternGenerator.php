@@ -7,7 +7,12 @@ namespace MRBS\Intl;
 use MRBS\Exception;
 use function MRBS\convert_to_BCP47;
 
-if (class_exists('\IntlDatePatternGenerator'))
+// We need to check that the 'intl' extension is loaded because earlier versions of
+// MRBS had the IntlDatePatternGenerator emulation class at the top level in lib.  If users
+// have upgraded by just overwriting files without deleting that file, then it will
+// be picked up by the class_exists() test and used instead of the more up-to-date
+// emulation below.
+if (class_exists('\IntlDatePatternGenerator') && extension_loaded('intl'))
 {
   class IntlDatePatternGenerator extends \IntlDatePatternGenerator
   {

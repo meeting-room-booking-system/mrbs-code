@@ -60,9 +60,8 @@ function db()
   {
     global $db_persist, $db_host, $db_login, $db_password,
            $db_database, $db_port, $dbsys, $db_options;
-
     $db_obj = DBFactory::create($dbsys, $db_host, $db_login, $db_password,
-                                $db_database, $db_persist, $db_port, $db_options);
+                                $db_database, (bool) $db_persist, $db_port, $db_options);
   }
   return $db_obj;
 }
