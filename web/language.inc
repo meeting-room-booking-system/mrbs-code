@@ -4,8 +4,8 @@ namespace MRBS;
 // Note that we are using MRBS\Intl\Locale because \Locale has some bugs in it (and also
 // isn't always installed).
 
-use MRBS\Intl\IntlDateFormatter;
-use MRBS\Intl\IntlDatePatternGenerator;
+use IntlDateFormatter;
+use IntlDatePatternGenerator;
 use MRBS\Intl\Locale;
 use PHPMailer\PHPMailer\PHPMailer;
 

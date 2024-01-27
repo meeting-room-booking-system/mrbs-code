@@ -1,7 +1,7 @@
 <?php
 namespace MRBS;
 
-use MRBS\Intl\IntlDateFormatter;
+use IntlDateFormatter;
 
 require_once 'lib/autoload.inc';
 

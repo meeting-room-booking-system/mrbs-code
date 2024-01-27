@@ -2,10 +2,10 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use IntlDateFormatter;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementSelect;
 use MRBS\Form\Form;
-use MRBS\Intl\IntlDateFormatter;
 use OpenPsa\Ranger\Ranger;
 
 require "defaultincludes.inc";
