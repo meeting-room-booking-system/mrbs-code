@@ -194,6 +194,13 @@ class IntlDateFormatter
   }
 
 
+  //Get the calendar type used for the IntlDateFormatter
+  public function getCalendar()
+  {
+    return $this->calendar ?? false;
+  }
+
+
   // Get the datetype used for the IntlDateFormatter
   public function getDateType()
   {
