@@ -1,7 +1,6 @@
 <?php
 
-// A class which is just a wrapper for the standard PHP class if it's available; otherwise it
-// provides a basic emulation of PHP's IntlDateFormatter class.
+// A class provides a basic emulation of PHP's IntlDateFormatter class.
 //
 // The emulation uses the deprecated function strftime() and is only necessary for older
 // PHP systems where the Intl extension isn't available.  Eventually the emulation can be
