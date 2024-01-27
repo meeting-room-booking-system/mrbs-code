@@ -47,6 +47,7 @@ class IntlDateFormatter
   const GREGORIAN = 1;
   const TRADITIONAL = 0;
 
+
   private const TYPE_NAMES = array(
     self::FULL => 'full',
     self::LONG => 'long',
@@ -194,11 +195,43 @@ class IntlDateFormatter
   }
 
 
+  // Get the datetype used for the IntlDateFormatter
+  public function getDateType()
+  {
+    return $this->dateType ?? false;
+  }
+
+
+  // Get the locale used by formatter
+  public function getLocale(int $type=Locale::ACTUAL_LOCALE)
+  {
+    switch ($type)
+    {
+      // TODO: Do something with $type, though it's not exactly clear what the difference is
+      // TODO: between the two types.  See also https://www.php.net/manual/en/collator.getlocale.php
+      case LOCALE::ACTUAL_LOCALE:
+      case LOCALE::VALID_LOCALE:
+        return $this->locale ?? false;
+        break;
+      default:
+        return false;
+        break;
+    }
+  }
+
+
+  // Get the pattern used for the IntlDateFormatter
   public function getPattern()
   {
     return $this->pattern ?? false;
   }
 
+
+  // Get the timetype used for the IntlDateFormatter
+  public function getTimeType()
+  {
+    return $this->timeType ?? false;
+  }
 
   // The standard PHP version can also return false
   public function setPattern(string $pattern): bool
