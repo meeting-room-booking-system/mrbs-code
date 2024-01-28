@@ -1,4 +1,5 @@
 <?php
+namespace MRBS\Intl;
 // A class which provides a basic emulation of PHP's IntlDatePatternGenerator class.
 
 use MRBS\Exception;
