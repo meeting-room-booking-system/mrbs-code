@@ -39,6 +39,8 @@ class Locale
   const VARIANT_TAG            = 'variant';
   const GRANDFATHERED_LANG_TAG = 'grandfathered';
   const PRIVATE_TAG            = 'private';
+  const ACTUAL_LOCALE = 0;
+  const VALID_LOCALE = 1;
 
 
   // Tries to find out best available locale based on HTTP "Accept-Language" header

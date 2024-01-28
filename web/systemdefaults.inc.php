@@ -1,7 +1,7 @@
 <?php
 namespace MRBS;
 
-use MRBS\Intl\IntlDateFormatter;
+use IntlDateFormatter;
 
 require_once 'lib/autoload.inc';
 
@@ -700,22 +700,8 @@ $datetime_formats['view_week_day_date_month'] = array(
   'pattern' => 'EEE, MMM d'
 );
 
-// The title of the week view calendar when the years and
-// months are the same for the start and end of the week
-$datetime_formats['view_week_date'] = array(
-  'skeleton' => 'd',
-  'pattern' => 'd'
-);
-
-// The title of the week view calendar when just the years
-// are the same for the start and end of the week
-$datetime_formats['view_week_month'] = array(
-  'skeleton' => 'dMMMM',
-  'pattern' => 'MMMM d'
-);
-
-// The title of the week view calendar (end of the week)
-$datetime_formats['view_week_year'] = array(
+// The title of the week view calendar
+$datetime_formats['view_week'] = array(
   'date_type' => IntlDateFormatter::LONG,
   'time_type' => IntlDateFormatter::NONE
 );
@@ -724,6 +710,11 @@ $datetime_formats['view_week_year'] = array(
 $datetime_formats['week_number'] = array(
   'pattern' => 'w'
 );
+
+// Sometimes if the server's ICU library is out of date and cannot easily be updated
+// it can be better to use the IntlDateFormatter emulation and strftime(), even if the
+// 'intl' extension is installed.  To do this set the variable below to true.
+$force_srtftime = false;
 
 
 /***************

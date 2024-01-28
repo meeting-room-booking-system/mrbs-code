@@ -5,6 +5,7 @@ namespace MRBS;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementSelect;
 use MRBS\Form\Form;
+use OpenPsa\Ranger\Ranger;
 
 require "defaultincludes.inc";
 require_once "functions_table.inc";
@@ -356,26 +357,14 @@ function get_date_heading(string $view, int $year, int $month, int $day) : strin
       // Then display the actual dates
       $day_of_week = date('w', $time);
       $our_day_of_week = ($day_of_week + DAYS_PER_WEEK - $weekstarts) % DAYS_PER_WEEK;
-      $start_of_week = mktime(12, 0, 0, $month, $day - $our_day_of_week, $year);
-      $end_of_week = mktime(12, 0, 0, $month, $day + 6 - $our_day_of_week, $year);
-      // We have to cater for three possible cases.  For example
-      //    Years differ:                   26 Dec 2016 - 1 Jan 2017
-      //    Years same, but months differ:  30 Jan - 5 Feb 2017
-      //    Years and months the same:      6 - 12 Feb 2017
-      if (date('Y', $start_of_week) != date('Y', $end_of_week))
-      {
-        $start_format = $datetime_formats['view_week_year'];
-      }
-      elseif (date('m', $start_of_week) != date('m', $end_of_week))
-      {
-        $start_format = $datetime_formats['view_week_month'];
-      }
-      else
-      {
-        $start_format = $datetime_formats['view_week_date'];
-      }
-      $html .= datetime_format($start_format, $start_of_week) . ' - ' .
-               datetime_format($datetime_formats['view_week_year'], $end_of_week);
+      $ranger = new Ranger(get_mrbs_locale());
+      $ranger->setDateType($datetime_formats['view_week']['date_type']);
+      $ranger->setTimeType($datetime_formats['view_week']['time_type']);
+      $range = $ranger->format(
+        format_iso_date($year, $month, $day - $our_day_of_week),
+        format_iso_date($year, $month, $day +6 - $our_day_of_week)
+      );
+      $html .= $range;
       break;
 
     case 'month':
