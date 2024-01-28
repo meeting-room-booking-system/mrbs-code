@@ -1,4 +1,5 @@
 <?php
+namespace MRBS\Intl;
 
 // A class provides a basic emulation of PHP's IntlDateFormatter class.
 //
