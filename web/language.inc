@@ -4,7 +4,8 @@ namespace MRBS;
 // Note that we are using MRBS\Intl\Locale because \Locale has some bugs in it (and also
 // isn't always installed).
 
-use MRBS\Intl\IntlDateFormatter;
+use IntlDateFormatter;
+use MRBS\Intl\IntlDateFormatterFactory;
 use MRBS\Intl\IntlDatePatternGenerator;
 use MRBS\Intl\Locale;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -810,7 +811,7 @@ function datetime_format(array $format, int $timestamp=null, string $locale=null
     $pattern = $format['pattern'] ?? null;
   }
 
-  $formatter = new IntlDateFormatter(
+  $formatter = IntlDateFormatterFactory::create(
     $locale,
     $format['date_type'] ?? IntlDateFormatter::FULL,
     $format['time_type'] ?? IntlDateFormatter::FULL,
@@ -861,7 +862,7 @@ function is_ampm(string $locale=null) : ?bool
   // Otherwise get the pattern that would be used by default.
   else
   {
-    $formatter = new IntlDateFormatter(
+    $formatter = IntlDateFormatterFactory::create(
       $locale,
       $format['date_type'] ?? IntlDateFormatter::NONE,
       $format['time_type'] ?? IntlDateFormatter::SHORT
