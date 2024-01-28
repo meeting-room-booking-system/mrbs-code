@@ -9,12 +9,7 @@ namespace MRBS\Intl;
 //
 // Note that some servers have out of date versions of the ICU library that can't be updated
 // easily.  In those cases better results can sometimes be achieved by using strftime() and
-// this can be forced by changing the line
-//    if (class_exists('\IntlDateFormatter'))
-// to
-//    if (false)
-// [It's not easy to do this using a config variable because this class is used in
-// systemdefaults.inc.php and so there's a bootstrapping problem.]
+// this can be forced by explicitly using this class.
 
 use MRBS\Exception;
 use MRBS\System;
