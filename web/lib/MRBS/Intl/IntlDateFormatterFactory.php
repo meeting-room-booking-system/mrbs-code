@@ -11,8 +11,8 @@ class IntlDateFormatterFactory
 {
   public static function create(
     ?string $locale,
-    int     $dateType = self::FULL,
-    int     $timeType = self::FULL,
+    int     $dateType = \IntlDateFormatter::FULL,
+    int     $timeType = \IntlDateFormatter::FULL,
             $timezone = null,
             $calendar = null,
     ?string $pattern = null)
@@ -21,10 +21,13 @@ class IntlDateFormatterFactory
 
     if ($force_strftime)
     {
+      // This will return an instance of the emulation
       return new IntlDateFormatter($locale, $dateType, $timeType, $timezone, $calendar, $pattern);
     }
     else
     {
+      // This will return an instance of the standard PHP class if the 'intl' extension is loaded,
+      // otherwise an instance of the emulation
       return new \IntlDateFormatter($locale, $dateType, $timeType, $timezone, $calendar, $pattern);
     }
   }
