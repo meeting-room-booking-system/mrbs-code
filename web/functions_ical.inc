@@ -490,7 +490,10 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
     }
   }
   $results[] = "SUMMARY:" . RFC5545::escapeText($data['name']);
-  $results[] = "DESCRIPTION:" . RFC5545::escapeText($data['description']);
+  if (isset($data['description']))
+  {
+    $results[] = "DESCRIPTION:" . RFC5545::escapeText($data['description']);
+  }
   $results[] = "LOCATION:" . RFC5545::escapeText($data['area_name'] . $default_area_room_delimiter . $data['room_name']);
   $results[] = "SEQUENCE:" . $data['ical_sequence'];
   // If this is an individual member of a series then set the recurrence id
