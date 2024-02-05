@@ -231,6 +231,13 @@ function output_error($heading, $body, $show_data=false)
 }
 
 
+// Converts an error into an exception
+function exception_thrower(int $errno, string $errstr)
+{
+  throw new \Exception($errstr, $errno);
+}
+
+
 function error_handler($errno, $errstr, $errfile, $errline)
 {
   // Check to see whether error reporting has been disabled by
