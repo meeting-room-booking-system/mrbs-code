@@ -5,6 +5,7 @@ namespace MRBS;
 // Returns the full table name including schema and prefix for a given table.
 // Needs to be dynamic rather than static in case we are running a multisite
 // installation and want to switch sites, eg during a database upgrade.
+
 function _tbl(string $short_name, bool $include_schema=true) : string
 {
   global $dbsys, $db_tbl_prefix, $db_schema;
@@ -54,15 +55,33 @@ function get_table_short_name(string $table) : string
 // default MRBS database
 function db()
 {
+  global $db_persist, $db_host, $db_login, $db_password,
+         $db_database, $db_port, $dbsys, $db_options;
+
   static $db_obj = null;
 
-  if (is_null($db_obj))
+  try
   {
-    global $db_persist, $db_host, $db_login, $db_password,
-           $db_database, $db_port, $dbsys, $db_options;
+    if (is_null($db_obj))
+    {
+      throw new \Exception("DB object not yet created");
+    }
+    // Check to see if the connection is still there.  If it isn't - perhaps because it
+    // has been timed out, eg by MySQL's wait_timeout - then this command will throw
+    // an exception which will cause us to re-create a connection.
+    // Typically it will either throw an exception, eg "SQLSTATE[HY000]: General error:
+    // 2006 MySQL server has gone away", or it will generate a warning, eg "Packets out
+    // of order. Expected 1 received 0. Packet size=145", which we convert into an exception.
+    set_error_handler(__NAMESPACE__. '\exception_thrower', E_WARNING);
+    $db_obj->command("SELECT 1");
+    restore_error_handler();
+  }
+  catch (\Exception $e)
+  {
     $db_obj = DBFactory::create($dbsys, $db_host, $db_login, $db_password,
                                 $db_database, (bool) $db_persist, $db_port, $db_options);
   }
+
   return $db_obj;
 }
 

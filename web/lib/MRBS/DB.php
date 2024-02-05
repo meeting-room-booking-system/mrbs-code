@@ -39,12 +39,17 @@ abstract class DB
   // Destructor cleans up the connection if there is one
   public function __destruct()
   {
-    if (isset($this->dbh)) {
+    try {
       // Release any forgotten locks
       $this->mutex_unlock_all();
 
       // Rollback any outstanding transactions
       $this->rollback();
+    }
+    catch (\Exception $e) {
+      // Don't do anything.  This is the destructor and if we get an exception
+      // it's probably because the connection has been lost or timed out, in which
+      // case the locks will have been released and the transaction rolled back anyway.
     }
   }
 
