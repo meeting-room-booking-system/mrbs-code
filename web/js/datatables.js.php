@@ -179,7 +179,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
             // Remove any elements used for sorting, which are all <span>s that don't
             // have a class of 'normal' (which the CSS makes visible). Note that we cannot
             // just remove :hidden elements because that would also remove everything that's
-            // not on the current page.
+            // not on the current page and visible on screen.
             // (We can get rid of this step when we move to using orthogonal data.)
             ?>
             div.find('span:not(.normal)').remove();
