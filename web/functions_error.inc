@@ -238,14 +238,16 @@ function exception_thrower(int $errno, string $errstr)
 }
 
 
-function error_handler($errno, $errstr, $errfile, $errline)
+// "If the function returns false then the normal error handler continues."
+// (https://www.php.net/manual/en/function.set-error-handler.php)
+function error_handler(int $errno, string $errstr, string $errfile, int $errline) : bool
 {
   // Check to see whether error reporting has been disabled by
   // the error suppression operator (@), because the custom error
   // handler is still called even if errors are suppressed.
   if (!(error_reporting() & $errno))
   {
-    return;
+    return true;
   }
 
   $heading = "\n" . get_error_name($errno) . " in $errfile at line $errline\n";
@@ -254,6 +256,8 @@ function error_handler($errno, $errstr, $errfile, $errline)
   $show_data = !in_array($errno, array(E_NOTICE, E_USER_NOTICE, E_USER_DEPRECATED));
 
   output_error($heading, $errstr, $show_data);
+
+  return true;
 }
 
 
