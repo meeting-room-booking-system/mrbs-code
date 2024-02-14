@@ -65,9 +65,16 @@ function get_error_name(int $errno) : string
 
 
 // Replace leading spaces in $string with non-breaking spaces
-function replace_leading_spaces($string)
+function replace_leading_spaces(string $string) : string
 {
-  return preg_replace('/\G /', '&nbsp;', $string);
+  $pattern = '/\G /';
+  $result = preg_replace($pattern, '&nbsp;', $string);
+  if (!isset($result))
+  {
+    // This should not happen
+    throw new Exception("preg_replace() failed - probably because of an error in the pattern '$pattern'.");
+  }
+  return $result;
 }
 
 
