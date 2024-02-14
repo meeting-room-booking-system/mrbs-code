@@ -308,7 +308,7 @@ function exception_handler(Throwable $exception) : void
 // errors without sending incomplete HTML pages. This is only used for
 // errors which "should never happen", not those caused by bad inputs.
 // Always outputs the bottom of the page and exits.
-function fatal_error($message)
+function fatal_error(string $message) : void
 {
   print_simple_header();
   echo "<p>\n". htmlspecialchars($message) . "</p>\n";
