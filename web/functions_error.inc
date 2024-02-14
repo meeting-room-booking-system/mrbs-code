@@ -53,7 +53,7 @@ function init_errors() : void
 
 
 // Translate an error constant value into the name of the constant
-function get_error_name($errno)
+function get_error_name(int $errno) : string
 {
   $constants = get_defined_constants(true);
   $keys = array_keys($constants['Core'], $errno);
