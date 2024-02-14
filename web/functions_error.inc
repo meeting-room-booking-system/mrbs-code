@@ -53,7 +53,7 @@ function init_errors() : void
 
 
 // Translate an error constant value into the name of the constant
-function get_error_name($errno)
+function get_error_name(int $errno) : string
 {
   $constants = get_defined_constants(true);
   $keys = array_keys($constants['Core'], $errno);
@@ -65,9 +65,16 @@ function get_error_name($errno)
 
 
 // Replace leading spaces in $string with non-breaking spaces
-function replace_leading_spaces($string)
+function replace_leading_spaces(string $string) : string
 {
-  return preg_replace('/\G /', '&nbsp;', $string);
+  $pattern = '/\G /';
+  $result = preg_replace($pattern, '&nbsp;', $string);
+  if (!isset($result))
+  {
+    // This should not happen
+    throw new Exception("preg_replace() failed - probably because of an error in the pattern '$pattern'.");
+  }
+  return $result;
 }
 
 
@@ -238,14 +245,16 @@ function exception_thrower(int $errno, string $errstr)
 }
 
 
-function error_handler($errno, $errstr, $errfile, $errline)
+// "If the function returns false then the normal error handler continues."
+// (https://www.php.net/manual/en/function.set-error-handler.php)
+function error_handler(int $errno, string $errstr, string $errfile, int $errline) : bool
 {
   // Check to see whether error reporting has been disabled by
   // the error suppression operator (@), because the custom error
   // handler is still called even if errors are suppressed.
   if (!(error_reporting() & $errno))
   {
-    return;
+    return true;
   }
 
   $heading = "\n" . get_error_name($errno) . " in $errfile at line $errline\n";
@@ -254,6 +263,8 @@ function error_handler($errno, $errstr, $errfile, $errline)
   $show_data = !in_array($errno, array(E_NOTICE, E_USER_NOTICE, E_USER_DEPRECATED));
 
   output_error($heading, $errstr, $show_data);
+
+  return true;
 }
 
 
