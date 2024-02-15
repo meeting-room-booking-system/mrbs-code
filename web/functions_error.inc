@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 use Throwable;
@@ -78,7 +79,7 @@ function replace_leading_spaces(string $string) : string
 }
 
 
-function to_html($string)
+function to_html(string $string) : string
 {
   $lines = explode("\n", $string);
   $lines = array_map(__NAMESPACE__ . "\\replace_leading_spaces", $lines);
@@ -86,7 +87,7 @@ function to_html($string)
 }
 
 
-function get_arg_string($args)
+function get_arg_string(array $args) : string
 {
   $result = array();
 
@@ -123,7 +124,7 @@ function get_arg_string($args)
 
 // Generate a backtrace.  This function allows us to format the output slightly better
 // than debug_print_backtrace(), for example by replacing newlines with <br> tags.
-function generate_backtrace()
+function generate_backtrace() : string
 {
   global $debug;
 
@@ -171,7 +172,7 @@ function generate_backtrace()
 }
 
 
-function output_error($heading, $body, $show_data=false)
+function output_error(string $heading, string $body, bool $show_data=false) : void
 {
   global $debug, $auth, $get, $post;
 
@@ -308,7 +309,7 @@ function exception_handler(Throwable $exception) : void
 // errors without sending incomplete HTML pages. This is only used for
 // errors which "should never happen", not those caused by bad inputs.
 // Always outputs the bottom of the page and exits.
-function fatal_error($message)
+function fatal_error(string $message) : void
 {
   print_simple_header();
   echo "<p>\n". htmlspecialchars($message) . "</p>\n";
@@ -317,7 +318,7 @@ function fatal_error($message)
 }
 
 
-function shutdown_function()
+function shutdown_function() : void
 {
   $error = error_get_last();
 
