@@ -171,7 +171,7 @@ function generate_backtrace()
 }
 
 
-function output_error($heading, $body, $show_data=false)
+function output_error(string $heading, string $body, bool $show_data=false) : void
 {
   global $debug, $auth, $get, $post;
 
