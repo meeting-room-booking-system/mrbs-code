@@ -317,7 +317,7 @@ function fatal_error(string $message) : void
 }
 
 
-function shutdown_function()
+function shutdown_function() : void
 {
   $error = error_get_last();
 
