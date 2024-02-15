@@ -86,7 +86,7 @@ function to_html(string $string) : string
 }
 
 
-function get_arg_string($args)
+function get_arg_string(array $args) : string
 {
   $result = array();
 
