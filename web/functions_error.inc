@@ -78,7 +78,7 @@ function replace_leading_spaces(string $string) : string
 }
 
 
-function to_html($string)
+function to_html(string $string) : string
 {
   $lines = explode("\n", $string);
   $lines = array_map(__NAMESPACE__ . "\\replace_leading_spaces", $lines);
