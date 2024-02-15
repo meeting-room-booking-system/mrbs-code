@@ -123,7 +123,7 @@ function get_arg_string(array $args) : string
 
 // Generate a backtrace.  This function allows us to format the output slightly better
 // than debug_print_backtrace(), for example by replacing newlines with <br> tags.
-function generate_backtrace()
+function generate_backtrace() : string
 {
   global $debug;
 
