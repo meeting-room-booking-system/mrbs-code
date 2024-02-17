@@ -3,16 +3,19 @@ declare(strict_types=1);
 namespace MRBS;
 
 
-function script(string $src, bool $add_version=false) : void
+// Generates the HTML for a <script> element
+function script_html(string $src, bool $add_version=false) : string
 {
-  echo '<script src="';
+  $html = '<script src="';
   $value = ($add_version) ? add_version($src) : $src;
-  echo htmlspecialchars($value);
-  echo "\"></script>\n";
+  $html .= htmlspecialchars($value);
+  $html .= "\"></script>\n";
+
+  return $html;
 }
 
 
-global $view, $year, $month, $day, $area, $room;
+global $area;
 global $multisite, $site;
 global $debug;
 global $custom_js_url;
@@ -32,15 +35,15 @@ if ($multisite && isset($site) && ($site !== ''))
 
 // Load the init file now so that it gets executed as soon as possible.  The init
 // file can't use jQuery.
-script('js/init.js.php', true);
+echo script_html('js/init.js.php', true);
 
-script(($debug) ? 'jquery/jquery-3.7.0.js' : 'jquery/jquery-3.7.0.min.js');
+echo script_html(($debug) ? 'jquery/jquery-3.7.0.js' : 'jquery/jquery-3.7.0.min.js');
 
 // We need the migration script now that we are running jQuery 3.0+, or at least
 // until we are confident that our JavaScript is not using any features that have
 // been removed.   The uncompressed version will output warnings about removed and
 // deprecated features to the console
-script(($debug) ? 'jquery/jquery-migrate-3.4.0.js' : 'jquery/jquery-migrate-3.4.0.min.js');
+echo script_html(($debug) ? 'jquery/jquery-migrate-3.4.0.js' : 'jquery/jquery-migrate-3.4.0.min.js');
 
 // We are using the jQuery UI library, which has been custom-built to include the following components:
 //   - Core
@@ -62,31 +65,31 @@ script(($debug) ? 'jquery/jquery-migrate-3.4.0.js' : 'jquery/jquery-migrate-3.4.
 //   - Cupertino theme
 // If you need any other components you will need to rebuild the custom UI library
 // See http://jqueryui.com/
-script(($debug) ? 'jquery/ui/jquery-ui.js' : 'jquery/ui/jquery-ui.min.js', true);
+echo script_html(($debug) ? 'jquery/ui/jquery-ui.js' : 'jquery/ui/jquery-ui.min.js', true);
 
 // All pages
-script("js/functions.js.php?$query_string", true);
-script("js/general.js.php?$query_string", true);
+echo script_html("js/functions.js.php?$query_string", true);
+echo script_html("js/general.js.php?$query_string", true);
 
 
-script("js/flatpickr/flatpickr.min.js", true);
+echo script_html("js/flatpickr/flatpickr.min.js", true);
 $datepicker_src = "js/datepicker.js.php?$query_string";
 $flatpickr_lang_path = get_flatpickr_lang_path();
 if (isset($flatpickr_lang_path))
 {
   // Add the localisation file
-  script($flatpickr_lang_path, true);
+  echo script_html($flatpickr_lang_path, true);
   // And give the datepicker file a query string parameter to force the browser cache
   // to be flushed when the language changes.
   $datepicker_src .= '&lang=' . urlencode(get_flatpickr_property($flatpickr_lang_path));
 }
-script($datepicker_src, true);
+echo script_html($datepicker_src, true);
 
-script("jquery/select2/dist/js/select2.full.min.js", true);
+echo script_html("jquery/select2/dist/js/select2.full.min.js", true);
 
 if (null !== ($select2_lang_path = get_select2_lang_path()))
 {
-  script($select2_lang_path, true);
+  echo script_html($select2_lang_path, true);
 }
 
 // dataTables initialisation
@@ -106,37 +109,37 @@ if (in_array($page, array('admin',
   //    Buttons, and all sub-options
   //    ColReorder
   //    FixedColumns
-  script(($debug) ? 'jquery/datatables/datatables.js' : 'jquery/datatables/datatables.min.js', true);
-  script('jquery/datatables/plugins.js', true);
-  script("js/datatables.js.php?$query_string", true);
+  echo script_html(($debug) ? 'jquery/datatables/datatables.js' : 'jquery/datatables/datatables.min.js', true);
+  echo script_html('jquery/datatables/plugins.js', true);
+  echo script_html("js/datatables.js.php?$query_string", true);
 }
 
 // Get any page specific JavaScript
 if (is_readable("js/$page.js"))
 {
-  script("js/$page.js?$query_string", true);
+  echo script_html("js/$page.js?$query_string", true);
 }
 if (is_readable("js/$page.js.php"))
 {
-  script("js/$page.js.php?$query_string", true);
+  echo script_html("js/$page.js.php?$query_string", true);
 }
 
 // The day, week and month views do refresh by Ajax.
 // We need the resizable bookings for the day and week views
 if ($page == 'index')
 {
-  script("js/refresh.js.php?$query_string", true);
-  script("js/resizable.js.php?$query_string", true);
+  echo script_html("js/refresh.js.php?$query_string", true);
+  echo script_html("js/resizable.js.php?$query_string", true);
 }
 
 if (isset($custom_js_url))
 {
-  script($custom_js_url, true);
+  echo script_html($custom_js_url, true);
 }
 
 // Include the HTML5 Shiv so that elements such as <header> etc. can be styled in IE8 and below.
 // (Even though we don't support IE8 and below, we still need the HTML5 Shiv for styling the
 // page which says we don't support them!).
 echo "<!--[if lte IE 8]>\n";
-script(($debug) ? 'js/html5shiv.js' : 'js/html5shiv.min.js', true);
+echo script_html(($debug) ? 'js/html5shiv.js' : 'js/html5shiv.min.js', true);
 echo "<![endif]-->\n";
