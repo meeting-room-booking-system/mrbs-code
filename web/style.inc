@@ -2,7 +2,7 @@
 namespace MRBS;
 
 
-function link($href, $add_version=false, $media=null)
+function link(string $href, bool $add_version=false, string $media=null)
 {
   echo '<link rel="stylesheet" type="text/css" href="';
   $value = ($add_version) ? add_version($href) : $href;
