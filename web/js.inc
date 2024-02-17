@@ -15,7 +15,7 @@ function script(string $src, bool $add_version=false) : string
 }
 
 
-global $view, $year, $month, $day, $area, $room;
+global $area;
 global $multisite, $site;
 global $debug;
 global $custom_js_url;
