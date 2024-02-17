@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace MRBS;
 
 
+// Generates the HTML for a <link> element
 function link(string $href, bool $add_version=false, string $media=null) : string
 {
   $html = '<link rel="stylesheet" type="text/css" href="';
