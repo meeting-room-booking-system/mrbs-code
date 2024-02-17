@@ -15,10 +15,9 @@ function init_errors() : void
   // Check for both Windows and Unix style separators because Unix separators can be used
   // on Windows.
   $error_log = ini_get('error_log');
-  if (isset($error_log) &&
-    ($error_log !== '') &&
-    (utf8_strpos($error_log, '/') === false) &&
-    (utf8_strpos($error_log, '\\') === false))
+  if (($error_log !== '') &&
+      (utf8_strpos($error_log, '/') === false) &&
+      (utf8_strpos($error_log, '\\') === false))
   {
     ini_set('error_log', getcwd() . '/' . $error_log);
   }
