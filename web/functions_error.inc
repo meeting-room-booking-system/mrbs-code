@@ -340,6 +340,6 @@ function shutdown_function() : void
             "enabling the iconv extension. Consult your PHP server documentation for " .
             "more information about enabling iconv support.\n";
 
-    output_error($heading, $body, false);
+    output_error($heading, $body);
   }
 }
