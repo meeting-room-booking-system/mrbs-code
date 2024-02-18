@@ -2341,7 +2341,7 @@ function working_time_diff(int $now, int $then) : int
 
 
 // checks whether a given day of the week is supposed to be hidden in the display
-function is_hidden_day($dow) : bool
+function is_hidden_day(int $dow) : bool
 {
   global $hidden_days;
 
