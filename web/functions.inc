@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 use DateInterval;
@@ -102,7 +103,7 @@ function generate_token(int $length) : string
     return bin2hex(openssl_random_pseudo_bytes($length));
   }
 
-  return md5(uniqid(rand(), true));
+  return md5(uniqid((string)rand(), true));
 }
 
 
@@ -2182,9 +2183,9 @@ function shift_to_workday(int $time) : int
   if ($skip_back != 0)
   {
     // set the time to the end of the working day
-    $d = date('j', $time) - $skip_back;
-    $m = date('n', $time);
-    $y  = date('Y', $time);
+    $d = intval(date('j', $time)) - $skip_back;
+    $m = intval(date('n', $time));
+    $y = intval(date('Y', $time));
     $time = mktime(23, 59, 59, $m, $d, $y);
   }
   return $time;
@@ -2230,8 +2231,8 @@ function working_time_diff(int $now, int $then) : int
   // (b) the number of non-working days in the part week
 
   // First let's calculate (a)
-  $last = mktime(12, 0, 0, date('n', $last), date('j', $last), date('Y', $last));
-  $first = mktime(12, 0, 0, date('n', $first), date('j', $first), date('Y', $first));
+  $last = mktime(12, 0, 0, (int)date('n', $last), (int)date('j', $last), (int)date('Y', $last));
+  $first = mktime(12, 0, 0, (int)date('n', $first), (int)date('j', $first), (int)date('Y', $first));
   $days_diff = (int) round(($last - $first)/SECONDS_PER_DAY);  // the difference in days
   $whole_weeks = (int) floor($days_diff/DAYS_PER_WEEK);  // the number of whole weeks between the two
   $non_working_days = $whole_weeks * (DAYS_PER_WEEK - $n_working_days);
@@ -2397,7 +2398,7 @@ function mrbs_ignore_user_abort(bool $set) : void
 
   if (!isset($original_state))
   {
-    $original_state = ignore_user_abort();
+    $original_state = boolval(ignore_user_abort());
   }
 
   // Set ignore_user_abort
@@ -2405,7 +2406,7 @@ function mrbs_ignore_user_abort(bool $set) : void
   {
     if ($outstanding_requests == 0)
     {
-      ignore_user_abort(1);
+      ignore_user_abort(true);
     }
     $outstanding_requests++;
   }
