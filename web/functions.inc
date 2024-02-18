@@ -2523,7 +2523,7 @@ function get_server_software() : string
 
 
 
-function get_field_entry_input($params)
+function get_field_entry_input(array $params)
 {
   global $select_options, $datalist_options;
 
