@@ -2513,12 +2513,7 @@ function get_server_software() : string
     }
   }
 
-  if (isset($server['SERVER_SOFTWARE']))
-  {
-    return $server['SERVER_SOFTWARE'];
-  }
-
-  return '';
+  return $server['SERVER_SOFTWARE'] ?? '';
 }
 
 
