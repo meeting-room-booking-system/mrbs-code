@@ -74,7 +74,7 @@ function generate_token(int $length) : string
     return bin2hex(openssl_random_pseudo_bytes($length));
   }
 
-  return md5(uniqid(rand(), true));
+  return md5(uniqid((string)rand(), true));
 }
 
 
