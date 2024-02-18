@@ -2483,7 +2483,7 @@ function mrbs_ignore_user_abort(bool $set) : void
   {
     if ($outstanding_requests == 0)
     {
-      ignore_user_abort(1);
+      ignore_user_abort(true);
     }
     $outstanding_requests++;
   }
