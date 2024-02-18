@@ -2351,7 +2351,7 @@ function is_hidden_day($dow) : bool
 
 // Checks whether a given day of the week is a weekend day.
 // $dow is in the range [0..6].
-function is_weekend($dow) : bool
+function is_weekend(int $dow) : bool
 {
   global $weekdays;
 

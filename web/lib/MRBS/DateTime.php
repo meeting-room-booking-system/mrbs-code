@@ -399,7 +399,7 @@ class DateTime extends \DateTime
 
   public function isWeekend() : bool
   {
-    return is_weekend($this->format('w'));
+    return is_weekend(intval($this->format('w')));
   }
 
 
