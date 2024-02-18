@@ -2475,7 +2475,7 @@ function mrbs_ignore_user_abort(bool $set) : void
 
   if (!isset($original_state))
   {
-    $original_state = ignore_user_abort();
+    $original_state = boolval(ignore_user_abort());
   }
 
   // Set ignore_user_abort
