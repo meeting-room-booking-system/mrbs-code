@@ -2361,7 +2361,7 @@ function is_weekend($dow) : bool
 
 // returns true if event should be considered private based on
 // config settings and event's privacy status (passed to function)
-function is_private_event($privacy_status)
+function is_private_event(bool $privacy_status) : bool
 {
   global $private_override;
   if ($private_override == "private" )
