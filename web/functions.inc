@@ -2006,7 +2006,7 @@ function period_name_nominal(int $s) : string
 
 
 // Returns the name of a period that doesn't exist
-function unknown_period_name($index) : string
+function unknown_period_name(int $index) : string
 {
   return get_vocab('unknown_period', $index);
 }
