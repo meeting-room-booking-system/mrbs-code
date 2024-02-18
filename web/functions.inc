@@ -2263,7 +2263,7 @@ function working_time_diff(int $now, int $then) : int
 
 
 // checks whether a given day of the week is supposed to be hidden in the display
-function is_hidden_day($dow) : bool
+function is_hidden_day(int $dow) : bool
 {
   global $hidden_days;
 
@@ -2273,7 +2273,7 @@ function is_hidden_day($dow) : bool
 
 // Checks whether a given day of the week is a weekend day.
 // $dow is in the range [0..6].
-function is_weekend($dow) : bool
+function is_weekend(int $dow) : bool
 {
   global $weekdays;
 
@@ -2283,7 +2283,7 @@ function is_weekend($dow) : bool
 
 // returns true if event should be considered private based on
 // config settings and event's privacy status (passed to function)
-function is_private_event($privacy_status)
+function is_private_event(bool $privacy_status) : bool
 {
   global $private_override;
   if ($private_override == "private" )
@@ -2435,17 +2435,12 @@ function get_server_software() : string
     }
   }
 
-  if (isset($server['SERVER_SOFTWARE']))
-  {
-    return $server['SERVER_SOFTWARE'];
-  }
-
-  return '';
+  return $server['SERVER_SOFTWARE'] ?? '';
 }
 
 
 
-function get_field_entry_input($params)
+function get_field_entry_input(array $params)
 {
   global $select_options, $datalist_options;
 
@@ -2549,7 +2544,7 @@ function get_field_entry_input($params)
 //    field       the field name, eg 'entry.create_by'
 //    label       the field label
 //    name        the field name
-function get_user_field(array $params, $datalist=false)
+function get_user_field(array $params, bool $datalist=false)
 {
   if (method_exists(auth(), 'getUsernames'))
   {
