@@ -754,7 +754,7 @@ function get_file_details_zip($file) : array
 }
 
 
-function get_details($file)
+function get_details($file) : array
 {
   $result = array();
 
