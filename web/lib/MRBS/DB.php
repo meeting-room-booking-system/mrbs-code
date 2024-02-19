@@ -335,7 +335,7 @@ abstract class DB
 
   // Return the value of an autoincrement field from the last insert.
   // Must be called right after an insert on that table!
-  abstract public function insert_id(string $table, string $field);
+  abstract public function insert_id(string $table, string $field) : int;
 
   // Determines whether the database supports multiple locks
   public function supportsMultipleLocks(): bool

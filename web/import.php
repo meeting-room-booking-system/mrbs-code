@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 use DateTimeZone;
@@ -1049,7 +1050,7 @@ $area_room_delimiter = get_form_var('area_room_delimiter', 'string', $default_ar
 $area_room_create = get_form_var('area_room_create', 'string', '0');
 $import_default_type = get_form_var('import_default_type', 'string', $default_type);
 $import_past = get_form_var('import_past', 'string', ((empty($default_import_past)) ? '0' : '1'));
-$skip = get_form_var('skip', 'string', ((empty($skip_default)) ? '0' : '1'));
+$skip = get_form_var('skip', 'bool', empty($skip_default));
 
 // Check the CSRF token if we're being asked to import data
 if (!empty($import))
