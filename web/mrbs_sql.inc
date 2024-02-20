@@ -1613,13 +1613,8 @@ function mrbsApproveEntry($id, $series)
 }
 
 
-function get_registration_by_id($id)
+function get_registration_by_id(int $id) : ?array
 {
-  if (!isset($id))
-  {
-    return null;
-  }
-
   $sql = "SELECT *
             FROM " . _tbl('participants') . "
            WHERE id=?

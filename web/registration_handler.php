@@ -7,7 +7,7 @@ use MRBS\Form\Form;
 
 
 // Cancel a user's registration
-function cancel_registration($registration_id)
+function cancel_registration(int $registration_id) : void
 {
   $registration = get_registration_by_id($registration_id);
 
@@ -111,7 +111,14 @@ switch ($action)
 {
   case 'cancel':
     $registration_id = get_form_var('registration_id', 'int');
-    cancel_registration($registration_id);
+    if (!isset($registration_id))
+    {
+      trigger_error("No registration_id received from form.");
+    }
+    else
+    {
+      cancel_registration($registration_id);
+    }
     break;
   case 'register':
     $username = get_form_var('username', 'string');
