@@ -142,7 +142,7 @@ function using_rtl_lang() : bool
 
 
 // Converts a locale to standard BCP 47 format
-function convert_to_BCP47($locale)
+function convert_to_BCP47(?string $locale) : ?string
 {
   if (!isset($locale))
   {

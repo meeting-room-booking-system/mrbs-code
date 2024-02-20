@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 use DateTimeZone;
@@ -639,7 +640,7 @@ function get_file_details_url(string $file) : array
 }
 
 
-function get_file_details_calendar($file) : array
+function get_file_details_calendar(array $file) : array
 {
   $files = array();
   $files[] = array('name'     => $file['name'],
@@ -649,7 +650,7 @@ function get_file_details_calendar($file) : array
 }
 
 
-function get_file_details_bzip2($file) : array
+function get_file_details_bzip2(array $file) : array
 {
   // It's not possible to get the uncompressed size of a bzip2 file without first
   // decompressing the whole file
@@ -660,7 +661,7 @@ function get_file_details_bzip2($file) : array
   return $files;
 }
 
-function get_file_details_gzip($file) : array
+function get_file_details_gzip(array $file) : array
 {
   // Get the uncompressed size of the gzip file which is stored in the last four
   // bytes of the file, little-endian
@@ -684,7 +685,7 @@ function get_file_details_gzip($file) : array
 }
 
 
-function get_file_details_zip($file) : array
+function get_file_details_zip(array $file) : array
 {
   $files = array();
 
@@ -752,7 +753,7 @@ function get_file_details_zip($file) : array
 }
 
 
-function get_details($file)
+function get_details($file) : array
 {
   $result = array();
 
@@ -1029,7 +1030,7 @@ $area_room_delimiter = get_form_var('area_room_delimiter', 'string', $default_ar
 $area_room_create = get_form_var('area_room_create', 'string', '0');
 $import_default_type = get_form_var('import_default_type', 'string', $default_type);
 $import_past = get_form_var('import_past', 'string', ((empty($default_import_past)) ? '0' : '1'));
-$skip = get_form_var('skip', 'string', ((empty($skip_default)) ? '0' : '1'));
+$skip = get_form_var('skip', 'bool', empty($skip_default));
 
 // Check the CSRF token if we're being asked to import data
 if (!empty($import))

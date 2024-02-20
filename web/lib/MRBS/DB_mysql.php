@@ -202,9 +202,9 @@ class DB_mysql extends DB
   // Must be called right after an insert on that table!
   //
   // For MySQL we don't need to refer to the passed $table or $field
-  public function insert_id(string $table, string $field)
+  public function insert_id(string $table, string $field): int
   {
-    return $this->dbh->lastInsertId();
+    return (int)$this->dbh->lastInsertId();
   }
 
 
