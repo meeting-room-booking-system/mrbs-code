@@ -1625,16 +1625,7 @@ function get_registration_by_id(int $id) : ?array
 
   $res = db()->query($sql, array($id));
 
-  if ($res->count() == 0)
-  {
-    $result = null;
-  }
-  else
-  {
-    $result = $res->next_row_keyed();
-  }
-
-  return $result;
+  return ($res->count() == 0) ? null : $res->next_row_keyed();
 }
 
 
