@@ -7,7 +7,7 @@ use MRBS\Form\Form;
 
 
 // Cancel a user's registration
-function cancel($registration_id)
+function cancel_registration($registration_id)
 {
   $registration = get_registration_by_id($registration_id);
 
@@ -45,7 +45,7 @@ function cancel($registration_id)
 
 
 // Register a user for an event
-function register($username, $event_id)
+function register_user($username, $event_id)
 {
   $entry = get_entry_by_id($event_id);
 
@@ -111,11 +111,11 @@ switch ($action)
 {
   case 'cancel':
     $registration_id = get_form_var('registration_id', 'int');
-    cancel($registration_id);
+    cancel_registration($registration_id);
     break;
   case 'register':
     $username = get_form_var('username', 'string');
-    register($username, $event_id);
+    register_user($username, $event_id);
     break;
   default:
     trigger_error("Unknown action '$action'", E_USER_WARNING);
