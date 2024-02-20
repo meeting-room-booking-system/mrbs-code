@@ -45,7 +45,7 @@ function cancel_registration(int $registration_id) : void
 
 
 // Register a user for an event
-function register_user($username, $event_id)
+function register_user(string $username, int $event_id) : void
 {
   $entry = get_entry_by_id($event_id);
 
@@ -122,6 +122,14 @@ switch ($action)
     break;
   case 'register':
     $username = get_form_var('username', 'string');
+    if (!isset($username) || ($username === ''))
+    {
+      trigger_error("No username received from form.");
+    }
+    if (!isset($event_id))
+    {
+      trigger_error("No event_id received from form.");
+    }
     register_user($username, $event_id);
     break;
   default:
