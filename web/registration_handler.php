@@ -127,7 +127,7 @@ try
       {
         throw new UnexpectedValueException("No username received from form.");
       }
-      elseif (!isset($event_id))
+      if (!isset($event_id))
       {
         throw new UnexpectedValueException("No event_id received from form.");
       }
