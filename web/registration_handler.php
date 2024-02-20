@@ -5,6 +5,7 @@ namespace MRBS;
 require "defaultincludes.inc";
 
 use MRBS\Form\Form;
+use UnexpectedValueException;
 
 
 // Cancel a user's registration
@@ -108,37 +109,38 @@ $returl = get_form_var('returl', 'string');
 
 // Take the appropriate action.  The individual functions check that the user
 // is authorised to take the action.
-switch ($action)
+try
 {
-  case 'cancel':
-    $registration_id = get_form_var('registration_id', 'int');
-    if (!isset($registration_id))
-    {
-      trigger_error("No registration_id received from form.");
-    }
-    else
-    {
+  switch ($action)
+  {
+    case 'cancel':
+      $registration_id = get_form_var('registration_id', 'int');
+      if (!isset($registration_id))
+      {
+        throw new UnexpectedValueException("No registration_id received from form.");
+      }
       cancel_registration($registration_id);
-    }
-    break;
-  case 'register':
-    $username = get_form_var('username', 'string');
-    if (!isset($username) || ($username === ''))
-    {
-      trigger_error("No username received from form.");
-    }
-    elseif (!isset($event_id))
-    {
-      trigger_error("No event_id received from form.");
-    }
-    else
-    {
+      break;
+    case 'register':
+      $username = get_form_var('username', 'string');
+      if (!isset($username) || ($username === ''))
+      {
+        throw new UnexpectedValueException("No username received from form.");
+      }
+      elseif (!isset($event_id))
+      {
+        throw new UnexpectedValueException("No event_id received from form.");
+      }
       register_user($username, $event_id);
-    }
-    break;
-  default:
-    trigger_error("Unknown action '$action'", E_USER_WARNING);
-    break;
+      break;
+    default:
+      throw new UnexpectedValueException("Unknown action '$action'");
+      break;
+  }
+}
+catch (UnexpectedValueException $e)
+{
+  trigger_error($e->getMessage(), E_USER_WARNING);
 }
 
 location_header($returl);
