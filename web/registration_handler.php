@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 require "defaultincludes.inc";
@@ -126,11 +127,14 @@ switch ($action)
     {
       trigger_error("No username received from form.");
     }
-    if (!isset($event_id))
+    elseif (!isset($event_id))
     {
       trigger_error("No event_id received from form.");
     }
-    register_user($username, $event_id);
+    else
+    {
+      register_user($username, $event_id);
+    }
     break;
   default:
     trigger_error("Unknown action '$action'", E_USER_WARNING);
