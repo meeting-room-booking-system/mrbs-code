@@ -328,9 +328,12 @@ $min_booking_date = "2012-04-23";  // Must be a string in the format "yyyy-mm-dd
 // min and max delete ahead settings.
 $approved_bookings_cannot_be_changed = false;
 
-// Set this to true if you want to prevent users having a booking for two different rooms
+// Set this to true if you want to prevent users having a booking for multiple rooms
 // at the same time.
 $prevent_simultaneous_bookings = false;
+
+// The maximum number of simultaneous bookings allowed if $prevent_simultaneous_bookings is true.
+$max_simultaneous_bookings = 1;
 
 // Set this to true if you want to prevent bookings of a type that is invalid for a room
 $prevent_invalid_types = true;
