@@ -76,7 +76,7 @@ class IntlDateFormatter
     $this->locale = $locale;
     $this->dateType = $dateType;
     $this->timeType = $timeType;
-    $this->timezone = $timezone;
+    $this->timezone = $timezone ?? date_default_timezone_get();
     $this->calendar = $calendar ?? self::GREGORIAN;
 
     if (!isset($pattern)) {
