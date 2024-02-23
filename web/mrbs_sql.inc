@@ -961,7 +961,8 @@ function get_entry_times_by_user(
                  AND E.create_by = :create_by
                  AND E.room_id = R.id
                  AND R.area_id = A.id
-                 AND R.disabled = 0";
+                 AND R.disabled = 0
+                 AND A.disabled = 0";
 
   $sql_params = array(
     ':interval_start' => $interval_start,
