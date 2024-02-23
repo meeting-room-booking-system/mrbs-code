@@ -2102,7 +2102,7 @@ function get_room_names($area_id, $all=FALSE)
 
 
 // Get all the room details for $room_id.
-// Returns FALSE on error, NULL if $room_id does not exist or is invisible.
+// Returns NULL if $room_id does not exist or is invisible.
 function get_room_details($room_id)
 {
   if (!is_visible($room_id))
