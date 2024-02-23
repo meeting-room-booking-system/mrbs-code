@@ -243,12 +243,11 @@ function check_simultaneous(array $booking, ?int $ignore_entry_id) : ?string
   // save it in a static variable).
   if ($simultaneous_ignore_other_areas && !isset($area_id))
   {
-    $room_details = get_room_details($booking['room_id']);
-    if (!isset($room_details['area_id']))
+    $area_id = Room::getAreaId($booking['room_id']);
+    if (!isset($area_id))
     {
       throw new Exception("Cannot get the area id for the room with id '" . $booking['room_id'] . "'");
     }
-    $area_id = $room_details['area_id'];
   }
 
   // Get the existing bookings for this user and interval, if we don't already have them
