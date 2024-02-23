@@ -336,7 +336,7 @@ $prevent_simultaneous_bookings = false;
 $max_simultaneous_bookings = 1;
 
 // Whether to count simultaneous bookings just in the area concerned (true), or globally (false).
-// NOTE: it only makes sense to count globally if all the enabled rooms and areas are in "times" mode
+// NOTE: it only makes sense to count globally if all the enabled areas are in "times" mode.
 $simultaneous_ignore_other_areas = false;
 
 // Set this to true if you want to prevent bookings of a type that is invalid for a room
