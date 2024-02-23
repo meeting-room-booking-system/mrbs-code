@@ -233,21 +233,37 @@ function mrbsCheckFree(array $booking, ?int $ignore_entry_id=null, ?int $ignore_
 // TODO: Maybe we should ignore bookings in rooms where the user is a booking admin??
 function check_simultaneous(array $booking, ?int $ignore_entry_id) : ?string
 {
-  global $max_simultaneous_bookings;
+  global $max_simultaneous_bookings, $simultaneous_ignore_other_areas;
 
   static $existing = array();
   static $proposed = array();
+  static $area_id = null;
+
+  // Get the area id if we need it (it will be the same for all bookings, so
+  // save it in a static variable).
+  if ($simultaneous_ignore_other_areas && !isset($area_id))
+  {
+    $room_details = get_room_details($booking['room_id']);
+    if (!isset($room_details['area_id']))
+    {
+      throw new Exception("Cannot get the area id for the room with id '" . $booking['room_id'] . "'");
+    }
+    $area_id = $room_details['area_id'];
+  }
 
   // Get the existing bookings for this user and interval, if we don't already have them
   if (!isset($existing[$booking['start_time']]))
   {
+    // If $simultaneous_ignore_other_areas is false then $area_id will be null, which is
+    // what we want.
     $existing[$booking['start_time']] = count(get_entry_times_by_user($booking['create_by'],
                                                                       $booking['start_time'],
                                                                       $booking['end_time'],
-                                                                      null,
+                                                                      $area_id,
                                                                       false,
                                                                       $ignore_entry_id));
   }
+
   // Increment the proposed bookings
   if (!isset($proposed[$booking['start_time']]))
   {
@@ -257,6 +273,7 @@ function check_simultaneous(array $booking, ?int $ignore_entry_id) : ?string
   {
     $proposed[$booking['start_time']]++;
   }
+
   // Check whether this would break the rules
   if (($existing[$booking['start_time']] + $proposed[$booking['start_time']]) > $max_simultaneous_bookings)
   {
