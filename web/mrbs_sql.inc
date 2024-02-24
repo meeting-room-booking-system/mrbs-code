@@ -228,6 +228,79 @@ function mrbsCheckFree(array $booking, ?int $ignore_entry_id=null, ?int $ignore_
 }
 
 
+// Checks whether the user will have more than the maximum number of rooms booked simultaneously
+// Returns NULL if OK, otherwise an error string.
+// TODO: Maybe we should ignore bookings in rooms where the user is a booking admin??
+function check_simultaneous(array $booking, ?int $ignore_entry_id) : ?string
+{
+  global $max_simultaneous_bookings, $simultaneous_ignore_other_areas;
+
+  static $existing = array();
+  static $proposed = array();
+  static $area_id = null;
+  static $check_complete = false;
+
+  // Check to see whether we are searching globally across a mixture of times and periods.
+  // This will lead to false clashes because (a) MRBS stores periods as one minute bookings
+  // starting at 12:00 and (b) MRBS does not know what times periods correspond to.
+  if ($simultaneous_ignore_other_areas && !$check_complete)
+  {
+    if (periods_somewhere(true)  && times_somewhere(true))
+    {
+      $message = 'It does not make sense to check the whole system for simultaneous bookings ' .
+                 'when there are some areas using periods and others using times. You should ' .
+                 'either change the value of the config setting $simultaneous_ignore_other_areas ' .
+                 'or change your area settings.';
+      trigger_error($message, E_USER_WARNING);
+    }
+    $check_complete = true;
+  }
+
+  // Get the area id if we need it (it will be the same for all bookings, so
+  // save it in a static variable).
+  if ($simultaneous_ignore_other_areas && !isset($area_id))
+  {
+    $room_details = get_room_details($booking['room_id']);
+    if (!isset($room_details['area_id']))
+    {
+      throw new Exception("Cannot get the area id for the room with id '" . $booking['room_id'] . "'");
+    }
+    $area_id = $room_details['area_id'];
+  }
+
+  // Get the existing bookings for this user and interval, if we don't already have them
+  if (!isset($existing[$booking['start_time']]))
+  {
+    // If $simultaneous_ignore_other_areas is false then $area_id will be null, which is
+    // what we want.
+    $existing[$booking['start_time']] = count(get_entry_times_by_user($booking['create_by'],
+                                                                      $booking['start_time'],
+                                                                      $booking['end_time'],
+                                                                      $area_id,
+                                                                      false,
+                                                                      $ignore_entry_id));
+  }
+
+  // Increment the proposed bookings
+  if (!isset($proposed[$booking['start_time']]))
+  {
+    $proposed[$booking['start_time']] = 1;
+  }
+  else
+  {
+    $proposed[$booking['start_time']]++;
+  }
+
+  // Check whether this would break the rules
+  if (($existing[$booking['start_time']] + $proposed[$booking['start_time']]) > $max_simultaneous_bookings)
+  {
+    return get_vocab('no_simultaneous_bookings', $max_simultaneous_bookings);
+  }
+
+  return null;
+}
+
+
 // Checks whether the proposed booking $booking would exceed the maximum number/length of
 // bookings in the interval of type $interval_type (can be 'day', 'week', 'month', 'year' or
 // 'future').  If $only_area is set then only the bookings in the same area are considered.
@@ -522,34 +595,14 @@ function mrbsCheckPolicy(array $booking, ?int $ignore_entry_id=null, ?int $ignor
         $violations[] = get_vocab('no_bookings_on_weekends', datetime_format($datetime_formats['date_holiday'], $date->getTimestamp()));
       }
     }
-    // Check whether the user is trying to book two rooms simultaneously
+
+    // Check whether the user is trying to book multiple rooms simultaneously
     if ($prevent_simultaneous_bookings)
     {
-      $sql_params = array(
-          ':end_time'   => $booking['end_time'],
-          ':start_time' => $booking['start_time'],
-          ':create_by'  => $booking['create_by']
-        );
-
-      $sql = "SELECT id
-                FROM " . _tbl('entry') . "
-               WHERE start_time < :end_time
-                 AND end_time > :start_time
-                 AND create_by = :create_by";
-
-      if (isset($ignore_entry_id))
+      $tmp = check_simultaneous($booking, $ignore_entry_id);
+      if (isset($tmp))
       {
-        $sql .= " AND id <> :ignore_entry_id";
-        $sql_params[':ignore_entry_id'] = $ignore_entry_id;
-      }
-
-      $sql .= " LIMIT 1";
-
-      $res = db()->query($sql, $sql_params);
-
-      if ($res->count() > 0)
-      {
-        $violations[] = get_vocab('no_simultaneous_bookings');
+        $violations[] = $tmp;
       }
     }
 
@@ -936,7 +989,8 @@ function get_entry_times_by_user(
                  AND E.create_by = :create_by
                  AND E.room_id = R.id
                  AND R.area_id = A.id
-                 AND R.disabled = 0";
+                 AND R.disabled = 0
+                 AND A.disabled = 0";
 
   $sql_params = array(
     ':interval_start' => $interval_start,
@@ -1626,13 +1680,8 @@ function mrbsApproveEntry($id, $series)
 }
 
 
-function get_registration_by_id($id)
+function get_registration_by_id(int $id) : ?array
 {
-  if (!isset($id))
-  {
-    return null;
-  }
-
   $sql = "SELECT *
             FROM " . _tbl('participants') . "
            WHERE id=?
@@ -1640,16 +1689,7 @@ function get_registration_by_id($id)
 
   $res = db()->query($sql, array($id));
 
-  if ($res->count() == 0)
-  {
-    $result = null;
-  }
-  else
-  {
-    $result = $res->next_row_keyed();
-  }
-
-  return $result;
+  return ($res->count() == 0) ? null : $res->next_row_keyed();
 }
 
 
@@ -2092,8 +2132,8 @@ function get_room_names($area_id, $all=FALSE)
 
 
 // Get all the room details for $room_id.
-// Returns FALSE on error, NULL if $room_id does not exist or is invisible.
-function get_room_details($room_id)
+// Returns NULL if $room_id does not exist or is invisible.
+function get_room_details(int $room_id) : ?array
 {
   if (!is_visible($room_id))
   {
@@ -2429,14 +2469,10 @@ function mrbsMakeBookings(array $bookings, ?int $id=null, bool $just_check=false
   $skip_lists = array();    // Holds a 2D array of bookings to skip past.  Indexed
                             // by room id and start time
 
-  // Do the simple check for simultaneous bookings and or selection of multiple rooms: if
-  // there is more than one booking then this is going to result in a simultaneous booking.
+  // Check for selection of multiple rooms.
   // The only question is whether this a notice or an error.  If the user is an ordinary user
   // in more than one of the rooms, then it's an error, otherwise a notice.
-  // The policy check later on will check whether the booking is at the same time as
-  // any other bookings made by this user.
-  if (($prevent_simultaneous_bookings || $auth['only_admin_can_select_multiroom'])
-      && (count($bookings) > 1))
+  if ($auth['only_admin_can_select_multiroom'] && (count($bookings) > 1))
   {
     $violation_status = 'notices';
     $non_admin_rooms = 0;
@@ -2453,14 +2489,7 @@ function mrbsMakeBookings(array $bookings, ?int $id=null, bool $just_check=false
         }
       }
     }
-    if ($prevent_simultaneous_bookings)
-    {
-      $violations[$violation_status][] = get_vocab('no_simultaneous_bookings');
-    }
-    if ($auth['only_admin_can_select_multiroom'])
-    {
-      $violations[$violation_status][] = get_vocab('multiroom_not_allowed');
-    }
+    $violations[$violation_status][] = get_vocab('multiroom_not_allowed');
   }
 
   // Check for any schedule conflicts in each room we're going to try and

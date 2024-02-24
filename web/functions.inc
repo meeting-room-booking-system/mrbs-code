@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 use DateInterval;
@@ -74,7 +75,7 @@ function generate_token(int $length) : string
     return bin2hex(openssl_random_pseudo_bytes($length));
   }
 
-  return md5(uniqid(rand(), true));
+  return md5(uniqid((string)rand(), true));
 }
 
 
@@ -1722,7 +1723,7 @@ function get_area_settings(int $area) : void
 }
 
 
-// generate the predicate for use in an SQL query to test whether
+// Generate the predicate for use in an SQL query to test whether
 // an area has $field set
 function some_area_predicate(string $field) : string
 {
@@ -1736,18 +1737,51 @@ function some_area_predicate(string $field) : string
   return $predicate;
 }
 
+
+// Generate the predicate for use in an SQL query to test whether
+// an area does not have $field set
+function some_area_predicate_not(string $field) : string
+{
+  global $area_defaults;
+
+  $predicate = "(($field IS NOT NULL) AND ($field = 0))";
+  if (empty($area_defaults[$field]))
+  {
+    $predicate = "(" . $predicate . " OR ($field IS NULL))";
+  }
+  return $predicate;
+}
+
+
 // Determines whether there is at least one area with the relevant $field
-// set (eg 'approval_enabled' or 'confirmation_enabled').   If $enabled
+// set (eg 'approval_enabled' or 'confirmation_enabled').   If $only_enabled
 // is TRUE then the search is limited to enabled areas
 //
 // Returns: boolean
-function some_area(string $field, bool $enabled=false) : bool
+function some_area(string $field, bool $only_enabled=false, bool $not=false) : bool
 {
-  $predicate = some_area_predicate($field);
+  $predicate = ($not) ? some_area_predicate_not($field) : some_area_predicate($field);
   $sql = "SELECT COUNT(*) FROM " . _tbl('area') . " WHERE $predicate";
-  $sql .= ($enabled) ? " AND disabled=0" : "";
+  $sql .= ($only_enabled) ? " AND disabled=0" : "";
   $sql .= " LIMIT 1";
+
   return (db()->query1($sql) > 0);
+}
+
+
+// Determines whether there is at least one area with periods enabled.
+// If $only_enabled is TRUE then the search is limited to enabled areas
+function periods_somewhere(bool $only_enabled=false) : bool
+{
+  return some_area('enable_periods', $only_enabled);
+}
+
+
+// Determines whether there is at least one area with times enabled.
+// If $only_enabled is TRUE then the search is limited to enabled areas
+function times_somewhere(bool $only_enabled=false) : bool
+{
+  return some_area('enable_periods', $only_enabled, true);
 }
 
 
@@ -2084,7 +2118,7 @@ function period_name_nominal(int $s) : string
 
 
 // Returns the name of a period that doesn't exist
-function unknown_period_name($index) : string
+function unknown_period_name(int $index) : string
 {
   return get_vocab('unknown_period', $index);
 }
@@ -2260,9 +2294,9 @@ function shift_to_workday(int $time) : int
   if ($skip_back != 0)
   {
     // set the time to the end of the working day
-    $d = date('j', $time) - $skip_back;
-    $m = date('n', $time);
-    $y  = date('Y', $time);
+    $d = intval(date('j', $time)) - $skip_back;
+    $m = intval(date('n', $time));
+    $y = intval(date('Y', $time));
     $time = mktime(23, 59, 59, $m, $d, $y);
   }
   return $time;
@@ -2308,8 +2342,8 @@ function working_time_diff(int $now, int $then) : int
   // (b) the number of non-working days in the part week
 
   // First let's calculate (a)
-  $last = mktime(12, 0, 0, date('n', $last), date('j', $last), date('Y', $last));
-  $first = mktime(12, 0, 0, date('n', $first), date('j', $first), date('Y', $first));
+  $last = mktime(12, 0, 0, (int)date('n', $last), (int)date('j', $last), (int)date('Y', $last));
+  $first = mktime(12, 0, 0, (int)date('n', $first), (int)date('j', $first), (int)date('Y', $first));
   $days_diff = (int) round(($last - $first)/SECONDS_PER_DAY);  // the difference in days
   $whole_weeks = (int) floor($days_diff/DAYS_PER_WEEK);  // the number of whole weeks between the two
   $non_working_days = $whole_weeks * (DAYS_PER_WEEK - $n_working_days);
@@ -2341,7 +2375,7 @@ function working_time_diff(int $now, int $then) : int
 
 
 // checks whether a given day of the week is supposed to be hidden in the display
-function is_hidden_day($dow) : bool
+function is_hidden_day(int $dow) : bool
 {
   global $hidden_days;
 
@@ -2351,7 +2385,7 @@ function is_hidden_day($dow) : bool
 
 // Checks whether a given day of the week is a weekend day.
 // $dow is in the range [0..6].
-function is_weekend($dow) : bool
+function is_weekend(int $dow) : bool
 {
   global $weekdays;
 
@@ -2361,7 +2395,7 @@ function is_weekend($dow) : bool
 
 // returns true if event should be considered private based on
 // config settings and event's privacy status (passed to function)
-function is_private_event($privacy_status)
+function is_private_event(bool $privacy_status) : bool
 {
   global $private_override;
   if ($private_override == "private" )
@@ -2475,7 +2509,7 @@ function mrbs_ignore_user_abort(bool $set) : void
 
   if (!isset($original_state))
   {
-    $original_state = ignore_user_abort();
+    $original_state = boolval(ignore_user_abort());
   }
 
   // Set ignore_user_abort
@@ -2483,7 +2517,7 @@ function mrbs_ignore_user_abort(bool $set) : void
   {
     if ($outstanding_requests == 0)
     {
-      ignore_user_abort(1);
+      ignore_user_abort(true);
     }
     $outstanding_requests++;
   }
@@ -2513,17 +2547,12 @@ function get_server_software() : string
     }
   }
 
-  if (isset($server['SERVER_SOFTWARE']))
-  {
-    return $server['SERVER_SOFTWARE'];
-  }
-
-  return '';
+  return $server['SERVER_SOFTWARE'] ?? '';
 }
 
 
 
-function get_field_entry_input($params)
+function get_field_entry_input(array $params)
 {
   global $select_options, $datalist_options;
 
@@ -2627,7 +2656,7 @@ function get_field_entry_input($params)
 //    field       the field name, eg 'entry.create_by'
 //    label       the field label
 //    name        the field name
-function get_user_field(array $params, $datalist=false)
+function get_user_field(array $params, bool $datalist=false)
 {
   if (method_exists(auth(), 'getUsernames'))
   {

@@ -1,13 +1,15 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 require "defaultincludes.inc";
 
 use MRBS\Form\Form;
+use UnexpectedValueException;
 
 
 // Cancel a user's registration
-function cancel($registration_id)
+function cancel_registration(int $registration_id) : void
 {
   $registration = get_registration_by_id($registration_id);
 
@@ -45,7 +47,7 @@ function cancel($registration_id)
 
 
 // Register a user for an event
-function register($username, $event_id)
+function register_user(string $username, int $event_id) : void
 {
   $entry = get_entry_by_id($event_id);
 
@@ -107,19 +109,38 @@ $returl = get_form_var('returl', 'string');
 
 // Take the appropriate action.  The individual functions check that the user
 // is authorised to take the action.
-switch ($action)
+try
 {
-  case 'cancel':
-    $registration_id = get_form_var('registration_id', 'int');
-    cancel($registration_id);
-    break;
-  case 'register':
-    $username = get_form_var('username', 'string');
-    register($username, $event_id);
-    break;
-  default:
-    trigger_error("Unknown action '$action'", E_USER_WARNING);
-    break;
+  switch ($action)
+  {
+    case 'cancel':
+      $registration_id = get_form_var('registration_id', 'int');
+      if (!isset($registration_id))
+      {
+        throw new UnexpectedValueException("No registration_id received from form.");
+      }
+      cancel_registration($registration_id);
+      break;
+    case 'register':
+      $username = get_form_var('username', 'string');
+      if (!isset($username) || ($username === ''))
+      {
+        throw new UnexpectedValueException("No username received from form.");
+      }
+      if (!isset($event_id))
+      {
+        throw new UnexpectedValueException("No event_id received from form.");
+      }
+      register_user($username, $event_id);
+      break;
+    default:
+      throw new UnexpectedValueException("Unknown action '$action'");
+      break;
+  }
+}
+catch (UnexpectedValueException $e)
+{
+  trigger_error($e->getMessage(), E_USER_WARNING);
 }
 
 location_header($returl);

@@ -174,21 +174,24 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
         columns: ':visible',
         format: {
           body: function (data, row, column, node) {
-            var object = $(node);
+            var div = $('<div>' + data + '</div>');
             <?php
-            // Remove any hidden elements.  These are typically used for sorting.  (We can
-            // get rid of this step when we move to using orthogonal data.)
+            // Remove any elements used for sorting, which are all <span>s that don't
+            // have a class of 'normal' (which the CSS makes visible). Note that we cannot
+            // just remove :hidden elements because that would also remove everything that's
+            // not on the current page and visible on screen.
+            // (We can get rid of this step when we move to using orthogonal data.)
             ?>
-            object.find(':hidden').remove();
+            div.find('span:not(.normal)').remove();
             <?php // Apply the default export data stripping ?>
-            var result = $.fn.dataTable.Buttons.stripData(object.html());
+            var result = $.fn.dataTable.Buttons.stripData(div.html());
             <?php
             // If that is the empty string then it may be that the data is actually a form
             // and the text we want is the text in the submit button.
             ?>
             if (result === '')
             {
-              var value = object.find('input[type="submit"]').attr('value');
+              var value = div.find('input[type="submit"]').attr('value');
               if (value !== undefined)
               {
                 result = value;

@@ -1150,7 +1150,7 @@ function get_slots(int $month, int $day, int $year, int $n_days=1, bool $day_cel
       // If there's more than one day in the interval then don't include the hidden days in the array, because
       // they don't appear in the DOM.  If there's only one day then we've managed to display the hidden day.
       if (($n_days > 1) &&
-          is_hidden_day(date('w', mktime($morningstarts, $morningstarts_minutes, 0, $month, $d, $year))))
+          is_hidden_day(intval(date('w', mktime($morningstarts, $morningstarts_minutes, 0, $month, $d, $year)))))
       {
         continue;
       }

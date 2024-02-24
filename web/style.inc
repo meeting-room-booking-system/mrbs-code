@@ -1,46 +1,50 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 
-function link($href, $add_version=false, $media=null)
+// Generates the HTML for a <link> element
+function link_html(string $href, bool $add_version=false, string $media=null) : string
 {
-  echo '<link rel="stylesheet" type="text/css" href="';
+  $html = '<link rel="stylesheet" type="text/css" href="';
   $value = ($add_version) ? add_version($href) : $href;
-  echo htmlspecialchars($value) . '"';
+  $html .= htmlspecialchars($value) . '"';
   if (isset($media))
   {
-    echo " media=\"$media\"";
+    $html .= " media=\"$media\"";
   }
-  echo ">\n";
+  $html .= ">\n";
+
+  return $html;
 }
 
 
 global $custom_css_url;
 global $debug;
 
-link(($debug) ? 'jquery/ui/css/jquery-ui.structure.css' : 'jquery/ui/css/jquery-ui.structure.min.css', true);
-link(($debug) ? 'jquery/ui/css/cupertino/jquery-ui.theme.css' : 'jquery/ui/css/cupertino/jquery-ui.theme.min.css', true);
-link(($debug) ? 'jquery/datatables/datatables.css' : 'jquery/datatables/datatables.min.css', true);
-link('js/flatpickr/css/flatpickr.min.css', true);
-link('jquery/select2/dist/css/select2.min.css', true);
-link(multisite('css/mrbs.css.php'), true);
+echo link_html(($debug) ? 'jquery/ui/css/jquery-ui.structure.css' : 'jquery/ui/css/jquery-ui.structure.min.css', true);
+echo link_html(($debug) ? 'jquery/ui/css/cupertino/jquery-ui.theme.css' : 'jquery/ui/css/cupertino/jquery-ui.theme.min.css', true);
+echo link_html(($debug) ? 'jquery/datatables/datatables.css' : 'jquery/datatables/datatables.min.css', true);
+echo link_html('js/flatpickr/css/flatpickr.min.css', true);
+echo link_html('jquery/select2/dist/css/select2.min.css', true);
+echo link_html(multisite('css/mrbs.css.php'), true);
 
 if (using_rtl_lang())
 {
-  link(multisite('css/mrbs-rtl.css.php'), true);
+  echo link_html(multisite('css/mrbs-rtl.css.php'), true);
 }
 
-link(multisite('css/mrbs-print.css.php'), true, 'print');
+echo link_html(multisite('css/mrbs-print.css.php'), true, 'print');
 
 echo "<!--[if IE]>\n";
-link('css/mrbs-ie.css', true);
+echo link_html('css/mrbs-ie.css', true);
 if (using_rtl_lang())
 {
-  link('css/mrbs-ie-rtl.css', true);
+  echo link_html('css/mrbs-ie-rtl.css', true);
 }
 echo "<![endif]-->\n";
 
 if (isset($custom_css_url))
 {
-  link($custom_css_url, true);
+  echo link_html($custom_css_url, true);
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 use Throwable;
@@ -14,10 +15,9 @@ function init_errors() : void
   // Check for both Windows and Unix style separators because Unix separators can be used
   // on Windows.
   $error_log = ini_get('error_log');
-  if (isset($error_log) &&
-    ($error_log !== '') &&
-    (utf8_strpos($error_log, '/') === false) &&
-    (utf8_strpos($error_log, '\\') === false))
+  if (($error_log !== '') &&
+      (utf8_strpos($error_log, '/') === false) &&
+      (utf8_strpos($error_log, '\\') === false))
   {
     ini_set('error_log', getcwd() . '/' . $error_log);
   }
@@ -41,7 +41,7 @@ function init_errors() : void
   {
     $error_level = -1;
     ini_set('display_errors', '1');
-    ini_set('display_startup_errors', true);
+    ini_set('display_startup_errors', '1');  // ini_set() only accepts non-string values from PHP 8.1.0
   }
 
   error_reporting ($error_level);
@@ -53,7 +53,7 @@ function init_errors() : void
 
 
 // Translate an error constant value into the name of the constant
-function get_error_name($errno)
+function get_error_name(int $errno) : string
 {
   $constants = get_defined_constants(true);
   $keys = array_keys($constants['Core'], $errno);
@@ -65,13 +65,20 @@ function get_error_name($errno)
 
 
 // Replace leading spaces in $string with non-breaking spaces
-function replace_leading_spaces($string)
+function replace_leading_spaces(string $string) : string
 {
-  return preg_replace('/\G /', '&nbsp;', $string);
+  $pattern = '/\G /';
+  $result = preg_replace($pattern, '&nbsp;', $string);
+  if (!isset($result))
+  {
+    // This should not happen
+    throw new Exception("preg_replace() failed - probably because of an error in the pattern '$pattern'.");
+  }
+  return $result;
 }
 
 
-function to_html($string)
+function to_html(string $string) : string
 {
   $lines = explode("\n", $string);
   $lines = array_map(__NAMESPACE__ . "\\replace_leading_spaces", $lines);
@@ -79,7 +86,7 @@ function to_html($string)
 }
 
 
-function get_arg_string($args)
+function get_arg_string(array $args) : string
 {
   $result = array();
 
@@ -116,7 +123,7 @@ function get_arg_string($args)
 
 // Generate a backtrace.  This function allows us to format the output slightly better
 // than debug_print_backtrace(), for example by replacing newlines with <br> tags.
-function generate_backtrace()
+function generate_backtrace() : string
 {
   global $debug;
 
@@ -164,7 +171,7 @@ function generate_backtrace()
 }
 
 
-function output_error($heading, $body, $show_data=false)
+function output_error(string $heading, string $body, bool $show_data=false) : void
 {
   global $debug, $auth, $get, $post;
 
@@ -231,14 +238,23 @@ function output_error($heading, $body, $show_data=false)
 }
 
 
-function error_handler($errno, $errstr, $errfile, $errline)
+// Converts an error into an exception
+function exception_thrower(int $errno, string $errstr)
+{
+  throw new \Exception($errstr, $errno);
+}
+
+
+// "If the function returns false then the normal error handler continues."
+// (https://www.php.net/manual/en/function.set-error-handler.php)
+function error_handler(int $errno, string $errstr, string $errfile, int $errline) : bool
 {
   // Check to see whether error reporting has been disabled by
   // the error suppression operator (@), because the custom error
   // handler is still called even if errors are suppressed.
   if (!(error_reporting() & $errno))
   {
-    return;
+    return true;
   }
 
   $heading = "\n" . get_error_name($errno) . " in $errfile at line $errline\n";
@@ -247,6 +263,8 @@ function error_handler($errno, $errstr, $errfile, $errline)
   $show_data = !in_array($errno, array(E_NOTICE, E_USER_NOTICE, E_USER_DEPRECATED));
 
   output_error($heading, $errstr, $show_data);
+
+  return true;
 }
 
 
@@ -290,7 +308,7 @@ function exception_handler(Throwable $exception) : void
 // errors without sending incomplete HTML pages. This is only used for
 // errors which "should never happen", not those caused by bad inputs.
 // Always outputs the bottom of the page and exits.
-function fatal_error($message)
+function fatal_error(string $message) : void
 {
   print_simple_header();
   echo "<p>\n". htmlspecialchars($message) . "</p>\n";
@@ -299,7 +317,7 @@ function fatal_error($message)
 }
 
 
-function shutdown_function()
+function shutdown_function() : void
 {
   $error = error_get_last();
 
@@ -322,6 +340,6 @@ function shutdown_function()
             "enabling the iconv extension. Consult your PHP server documentation for " .
             "more information about enabling iconv support.\n";
 
-    output_error($heading, $body, false);
+    output_error($heading, $body);
   }
 }
