@@ -1754,15 +1754,15 @@ function some_area_predicate_not(string $field) : string
 
 
 // Determines whether there is at least one area with the relevant $field
-// set (eg 'approval_enabled' or 'confirmation_enabled').   If $enabled
+// set (eg 'approval_enabled' or 'confirmation_enabled').   If $only_enabled
 // is TRUE then the search is limited to enabled areas
 //
 // Returns: boolean
-function some_area(string $field, bool $enabled=false, bool $not=false) : bool
+function some_area(string $field, bool $only_enabled=false, bool $not=false) : bool
 {
   $predicate = ($not) ? some_area_predicate_not($field) : some_area_predicate($field);
   $sql = "SELECT COUNT(*) FROM " . _tbl('area') . " WHERE $predicate";
-  $sql .= ($enabled) ? " AND disabled=0" : "";
+  $sql .= ($only_enabled) ? " AND disabled=0" : "";
   $sql .= " LIMIT 1";
 
   return (db()->query1($sql) > 0);
@@ -1770,18 +1770,18 @@ function some_area(string $field, bool $enabled=false, bool $not=false) : bool
 
 
 // Determines whether there is at least one area with periods enabled.
-// If $enabled is TRUE then the search is limited to enabled areas
-function periods_somewhere(bool $enabled=false) : bool
+// If $only_enabled is TRUE then the search is limited to enabled areas
+function periods_somewhere(bool $only_enabled=false) : bool
 {
-  return some_area('enable_periods', $enabled);
+  return some_area('enable_periods', $only_enabled);
 }
 
 
 // Determines whether there is at least one area with times enabled.
-// If $enabled is TRUE then the search is limited to enabled areas
-function times_somewhere(bool $enabled=false) : bool
+// If $only_enabled is TRUE then the search is limited to enabled areas
+function times_somewhere(bool $only_enabled=false) : bool
 {
-  return some_area('enable_periods', $enabled, true);
+  return some_area('enable_periods', $only_enabled, true);
 }
 
 
