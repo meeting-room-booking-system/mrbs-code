@@ -238,6 +238,23 @@ function check_simultaneous(array $booking, ?int $ignore_entry_id) : ?string
   static $existing = array();
   static $proposed = array();
   static $area_id = null;
+  static $check_complete = false;
+
+  // Check to see whether we are searching globally across a mixture of times and periods.
+  // This will lead to false clashes because (a) MRBS stores periods as one minute bookings
+  // starting at 12:00 and (b) MRBS does not know what times periods correspond to.
+  if ($simultaneous_ignore_other_areas && !$check_complete)
+  {
+    if (periods_somewhere(true)  && times_somewhere(true))
+    {
+      $message = 'It does not make sense to check the whole system for simultaneous bookings ' .
+                 'when there are some areas using periods and others using times. You should ' .
+                 'either change the value of the config setting $simultaneous_ignore_other_areas ' .
+                 'or change your area settings.';
+      trigger_error($message, E_USER_WARNING);
+    }
+    $check_complete = true;
+  }
 
   // Get the area id if we need it (it will be the same for all bookings, so
   // save it in a static variable).
