@@ -1526,8 +1526,8 @@ $private_somewhere = some_area('private_enabled') || some_area('private_mandator
 $approval_somewhere = some_area('approval_enabled');
 $confirmation_somewhere = some_area('confirmation_enabled');
 $registration_somewhere = registration_somewhere();
-$times_somewhere = (db()->query1("SELECT COUNT(*) FROM " . _tbl('area') . " WHERE enable_periods=0") > 0);
-$periods_somewhere = (db()->query1("SELECT COUNT(*) FROM " . _tbl('area') . " WHERE enable_periods!=0") > 0);
+$times_somewhere = times_somewhere();
+$periods_somewhere = periods_somewhere();
 
 
 // Build the report search field order
