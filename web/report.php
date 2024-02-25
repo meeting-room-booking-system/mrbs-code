@@ -494,7 +494,7 @@ function is_little_endian() : bool
 
 // Converts a string from the standard MRBS character set to the character set
 // to be used for CSV files
-function csv_conv(string $string)
+function csv_conv(string $string) : string
 {
   $in_charset = utf8_strtoupper(get_charset());
   $out_charset = utf8_strtoupper(get_csv_charset());
@@ -511,6 +511,11 @@ function csv_conv(string $string)
     }
 
     $result = iconv($in_charset, $out_charset, $string);
+    if ($result === false)
+    {
+      throw new Exception("iconv() failed converting from '$in_charset' to '$out_charset'");
+    }
+
     // iconv() will add in a BOM if the output encoding requires one, but as we are only
     // dealing with parts of a file we don't want any BOMs because we add them separately
     // at the beginning of the file.  So strip off anything that looks like a BOM.
@@ -533,8 +538,7 @@ function csv_conv(string $string)
   }
   else
   {
-    trigger_error("Cannot convert from $in_charset to $out_charset", E_USER_NOTICE);
-    $result = FALSE;
+    throw new Exception("Cannot convert from '$in_charset' to '$out_charset'");
   }
 
   return $result;
