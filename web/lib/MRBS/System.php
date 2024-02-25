@@ -1072,7 +1072,7 @@ class System
   }
 
 
-  public static function utf8ConvertFromLocale(string $string, ?string $locale=null)
+  public static function utf8ConvertFromLocale(string $string, ?string $locale=null) : string
   {
     $server_os = self::getServerOS();
 
@@ -1088,8 +1088,14 @@ class System
       if (isset(self::$lang_map_windows[$locale]) &&
           array_key_exists(self::$lang_map_windows[$locale], self::$winlocale_codepage_map))
       {
-        $string = iconv(self::$winlocale_codepage_map[self::$lang_map_windows[$locale]], 'utf-8',
-                        $string);
+        $from_encoding = self::$winlocale_codepage_map[self::$lang_map_windows[$locale]];
+        $to_encoding = 'utf-8';
+        $string = iconv($from_encoding, $to_encoding, $string);
+        if ($string === false)
+        {
+          $message = "iconv() failed converting from '$from_encoding' to '$to_encoding'";
+          throw new Exception($message);
+        }
       }
     }
     else if ($server_os == 'aix')
@@ -1194,10 +1200,14 @@ class System
     }
 
     // Convert string to UTF-8
-    $aix_string = iconv($aix_codepage, 'UTF-8', $string);
-
-    // Default to original string if conversion failed
-    $string = ($aix_string === false) ? $string : $aix_string;
+    $from_encoding = $aix_codepage;
+    $to_encoding = 'UTF-8';
+    $string = iconv($from_encoding, $to_encoding, $string);
+    if ($string === false)
+    {
+      $message = "iconv() failed converting from '$from_encoding' to '$to_encoding'";
+      throw new Exception($message);
+    }
 
     return $string;
   }
