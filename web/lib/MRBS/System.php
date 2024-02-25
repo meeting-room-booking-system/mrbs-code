@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace MRBS;
 
 use MRBS\Intl\Locale;
@@ -913,7 +913,7 @@ class System
   }
 
   // Checks whether $langtag is advertised as being available on this system
-  private static function isAdvertisedLocale(string $langtag) : string
+  private static function isAdvertisedLocale(string $langtag) : bool
   {
     if (!class_exists('\\ResourceBundle'))
     {
