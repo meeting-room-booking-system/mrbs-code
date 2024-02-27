@@ -277,9 +277,9 @@ abstract class DB
       // Don't use getAttribute(PDO::ATTR_SERVER_VERSION) because that will
       // sometimes also give you the version prefix (so-called "replication
       // version hack") with MariaDB.
-      $result = $this->query1("SELECT VERSION()");
+      $result = $this->query_single_non_bool("SELECT VERSION()");
 
-      $this->version_string = ($result == -1) ? '' : $result;
+      $this->version_string = ($result === false) ? '' : $result;
     }
 
     return $this->version_string;
