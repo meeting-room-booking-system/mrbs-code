@@ -926,6 +926,7 @@ function get_entries_by_area(int $area_id, int $interval_start, int $interval_en
 
   foreach ($result as &$row)
   {
+    row_cast_columns($row, 'entry');
     unpack_status($row);
   }
   unset($row);
@@ -955,6 +956,7 @@ function get_entries_by_room(int $room_id, int $interval_start, int $interval_en
 
   foreach ($result as &$row)
   {
+    row_cast_columns($row, 'entry');
     unpack_status($row);
   }
   unset($row);
