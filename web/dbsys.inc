@@ -101,9 +101,10 @@ function db_schema_version() : int
 {
   if (db()->table_exists(_tbl('variables')))
   {
-    $result = (int) db()->query1("SELECT variable_content
-                                 FROM " . _tbl('variables') . "
-                                 WHERE variable_name = 'db_version'");
+    $sql = "SELECT variable_content
+              FROM " . _tbl('variables') . "
+             WHERE variable_name = 'db_version'";
+    $result = db()->query1($sql);
   }
   else
   {
@@ -121,9 +122,10 @@ function db_schema_version_local() : int
 {
   if (db()->table_exists(_tbl('variables')))
   {
-    $result = (int) db()->query1("SELECT variable_content
-                                 FROM " . _tbl('variables') . "
-                                 WHERE variable_name = 'local_db_version'");
+    $sql = "SELECT variable_content
+              FROM " . _tbl('variables') . "
+             WHERE variable_name = 'local_db_version'";
+    $result = db()->query1($sql);
   }
   else
   {
