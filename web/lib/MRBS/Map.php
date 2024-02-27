@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace MRBS;
 
 // A class for building a map of bookings which can be used for constructing the calendar display
