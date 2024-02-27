@@ -184,6 +184,23 @@ abstract class DB
   }
 
 
+  // Execute an SQL query which should return a single value that can be anything other
+  // than a boolean (because the function returns FALSE if there is no value).
+  public function query_single_non_bool(string $sql, array $params = array())
+  {
+    try
+    {
+      $sth = $this->dbh->prepare($sql);
+      $sth->execute($params);
+      return $sth->fetchColumn();
+    }
+    catch (PDOException $e)
+    {
+      throw new DBException($e->getMessage(), 0, $e, $sql, $params);
+    }
+  }
+
+
   // Run an SQL query that returns a simple one dimensional array of results.
   // The SQL query must select only one column.   Returns an empty array if
   // no results; throws a DBException if there's an error
