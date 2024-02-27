@@ -102,9 +102,10 @@ function db_schema_version() : int
   // The table was renamed from 'variables' to 'variable' in Upgrade 76
   if (db()->table_exists(_tbl('variable')))
   {
-    $result = (int) db()->query1("SELECT variable_content
-                              FROM " . _tbl('variable') . "
-                             WHERE variable_name = 'db_version'");
+    $sql = "SELECT variable_content
+              FROM " . _tbl('variable') . "
+             WHERE variable_name = 'db_version'";
+    $result = db()->query1($sql);
   }
   elseif (db()->table_exists(_tbl('variables')))
   {
@@ -130,9 +131,10 @@ function db_schema_version_local() : int
   // The table was renamed from 'variables' to 'variable' in Upgrade 76
   if (db()->table_exists(_tbl('variable')))
   {
-    $result = (int) db()->query1("SELECT variable_content
-                              FROM " . _tbl('variable') . "
-                             WHERE variable_name = 'local_db_version'");
+    $sql = "SELECT variable_content
+              FROM " . _tbl('variable') . "
+             WHERE variable_name = 'local_db_version'";
+    $result = db()->query1($sql);
   }
   elseif (db()->table_exists(_tbl('variables')))
   {
