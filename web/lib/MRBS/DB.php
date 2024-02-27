@@ -149,38 +149,22 @@ abstract class DB
   }
 
 
-  // Execute an SQL query which should return a single non-negative number value.
+  // Execute an SQL query which should return a single non-negative integer value.
   // This is a lightweight alternative to query(), good for use with count(*)
   // and similar queries.
   // It returns -1 if the query returns no result, or a single NULL value, such as from
   // a MIN or MAX aggregate function applied over no rows.
   // Throws a DBException on error.
-  public function query1(string $sql, array $params = array())
+  public function query1(string $sql, array $params = array()) : int
   {
-    try {
-      $sth = $this->dbh->prepare($sql);
-      $sth->execute($params);
-    } catch (PDOException $e) {
-      throw new DBException($e->getMessage(), 0, $e, $sql, $params);
+    $result = $this->query_single_non_bool($sql, $params);
+
+    if (is_null($result) || ($result === false))
+    {
+      return -1;
     }
 
-    if ($sth->rowCount() > 1) {
-      throw new DBException("query1() returned more than one row.", 0, null, $sql, $params);
-    }
-
-    if ($sth->columnCount() > 1) {
-      throw new DBException("query1() returned more than one column.", 0, null, $sql, $params);
-    }
-
-    $row = $sth->fetch(PDO::FETCH_NUM);
-    if (($row === null) || ($row === false)) {
-      $result = -1;
-    }
-    else {
-      $result = $row[0];
-    }
-    $sth->closeCursor();
-    return $result;
+    return intval($result);
   }
 
 
