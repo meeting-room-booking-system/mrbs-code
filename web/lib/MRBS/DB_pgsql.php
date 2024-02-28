@@ -198,7 +198,14 @@ class DB_pgsql extends DB
   // Just returns a version number, eg "9.2.24"
   private function versionNumber() : string
   {
-    return $this->query1("SHOW SERVER_VERSION");
+    $result = $this->query_scalar_non_bool("SHOW SERVER_VERSION");
+
+    if ($result === false)
+    {
+      throw new Exception("Could not get PostgreSQL server version");
+    }
+
+    return $result;
   }
 
 
