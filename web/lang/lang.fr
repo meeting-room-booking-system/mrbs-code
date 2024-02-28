@@ -130,6 +130,12 @@ $vocab["start_after_end"]    = "Jour de début postérieur au jour de fin";
 $vocab["start_after_end_long"] = "Erreur : le jour de début est postérieur au jour de fin";
 $vocab["invalid_rep_interval"]     = "L'intervalle de r鰩tition doit 괲e sup鲩eur ࠺éro.";
 $vocab["type_reserved_for_admins"] = "Le type '%s' est réservé aux administrateurs";
+$vocab["allow_registration"] = "Autoriser les inscriptions";
+$vocab["registrant_limit_enabled"] = "Limiter le nombre d'inscriptions";
+$vocab["registrant_limit"] = "Capacité de l'évènement (en personnes)";
+$vocab["registration_opens"] = "Début des inscriptions";
+$vocab["registration_closes"] = "Fin des inscriptions";
+$vocab["in_advance_vocab"] = "Avant l'évènement";
 
 // Used in view_entry.php
 $vocab["description"]        = "Description";
@@ -166,6 +172,7 @@ $vocab["by"]                 = "par";                           // Used for the 
 $vocab["sent_at"]            = "Envoyée à ";
 $vocab["yes"]                = "Oui";
 $vocab["no"]                 = "Non";
+$vocab["n_registered"]       = "Actuellement inscrits";
 
 // Used in edit_entry_handler.php
 $vocab["error"]              = "Erreur";
