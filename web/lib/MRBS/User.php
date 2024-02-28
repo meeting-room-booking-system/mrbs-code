@@ -412,7 +412,7 @@ class User extends Table
         ':auth_type' => $auth_type
       );
 
-    $id = (int) db()->query1($sql, $sql_params);
+    $id = db()->query1($sql, $sql_params);
 
     return ($id < 0) ? null : $id;
   }
