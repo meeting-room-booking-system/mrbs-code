@@ -157,7 +157,7 @@ abstract class DB
   // Throws a DBException on error.
   public function query1(string $sql, array $params = array()) : int
   {
-    $result = $this->query_single_non_bool($sql, $params);
+    $result = $this->query_scalar_non_bool($sql, $params);
 
     if (is_null($result) || ($result === false))
     {
@@ -168,9 +168,9 @@ abstract class DB
   }
 
 
-  // Execute an SQL query which should return a single value that can be anything other
-  // than a boolean (because the function returns FALSE if there is no value).
-  public function query_single_non_bool(string $sql, array $params = array())
+  // Execute an SQL query which should return a single scalar value that can be anything
+  // other than a boolean (because the function returns FALSE if there is no value).
+  public function query_scalar_non_bool(string $sql, array $params = array())
   {
     try
     {
@@ -277,7 +277,7 @@ abstract class DB
       // Don't use getAttribute(PDO::ATTR_SERVER_VERSION) because that will
       // sometimes also give you the version prefix (so-called "replication
       // version hack") with MariaDB.
-      $result = $this->query_single_non_bool("SELECT VERSION()");
+      $result = $this->query_scalar_non_bool("SELECT VERSION()");
 
       $this->version_string = ($result === false) ? '' : $result;
     }
