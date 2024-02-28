@@ -107,7 +107,7 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
                WHERE id=:id
                LIMIT 1";
 
-      $result = db()->query_single_non_bool($sql, array(':id' => $id));
+      $result = db()->query_scalar_non_bool($sql, array(':id' => $id));
     }
     catch (DBException $e)
     {
