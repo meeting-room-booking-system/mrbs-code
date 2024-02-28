@@ -98,7 +98,7 @@ class Room extends Location
              WHERE id=?
              LIMIT 1";
 
-    $area_id = (int) db()->query1($sql, array($id));
+    $area_id = db()->query1($sql, array($id));
 
     return ($area_id < 0) ? null : $area_id;
   }
