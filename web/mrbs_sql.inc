@@ -1717,7 +1717,7 @@ function entry_has_registrants(int $entry_id) : bool
 
 
 // Check whether any entries in a series have users registered
-function series_has_registrants($repeat_id)
+function series_has_registrants($repeat_id) : bool
 {
   $sql = "SELECT COUNT(username)
             FROM " . _tbl('entry') . " E
