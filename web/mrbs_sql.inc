@@ -937,6 +937,7 @@ function get_entries_by_area(int $area_id, int $interval_start, int $interval_en
 
   foreach ($result as &$row)
   {
+    row_cast_columns($row, 'entry');
     unpack_status($row);
   }
   unset($row);
@@ -966,6 +967,7 @@ function get_entries_by_room(int $room_id, int $interval_start, int $interval_en
 
   foreach ($result as &$row)
   {
+    row_cast_columns($row, 'entry');
     unpack_status($row);
   }
   unset($row);
@@ -1728,7 +1730,7 @@ function entry_has_registrants(int $entry_id) : bool
 
 
 // Check whether any entries in a series have users registered
-function series_has_registrants($repeat_id)
+function series_has_registrants($repeat_id) : bool
 {
   $sql = "SELECT COUNT(username)
             FROM " . _tbl('entry') . " E

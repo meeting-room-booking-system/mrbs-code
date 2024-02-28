@@ -494,7 +494,7 @@ function is_little_endian() : bool
 
 // Converts a string from the standard MRBS character set to the character set
 // to be used for CSV files
-function csv_conv(string $string)
+function csv_conv(string $string) : string
 {
   $in_charset = utf8_strtoupper(get_charset());
   $out_charset = utf8_strtoupper(get_csv_charset());
@@ -511,6 +511,11 @@ function csv_conv(string $string)
     }
 
     $result = iconv($in_charset, $out_charset, $string);
+    if ($result === false)
+    {
+      throw new Exception("iconv() failed converting from '$in_charset' to '$out_charset'");
+    }
+
     // iconv() will add in a BOM if the output encoding requires one, but as we are only
     // dealing with parts of a file we don't want any BOMs because we add them separately
     // at the beginning of the file.  So strip off anything that looks like a BOM.
@@ -533,8 +538,7 @@ function csv_conv(string $string)
   }
   else
   {
-    trigger_error("Cannot convert from $in_charset to $out_charset", E_USER_NOTICE);
-    $result = FALSE;
+    throw new Exception("Cannot convert from '$in_charset' to '$out_charset'");
   }
 
   return $result;
@@ -1154,8 +1158,8 @@ function increment_count(&$array, $index1, $index2, $increment)
 // Collect summary statistics on one entry.
 // This also builds hash tables of all unique names and rooms. When sorted,
 // these will become the column and row headers of the summary table.
-function accumulate($row, &$count, &$hours, $report_start, $report_end,
-                    &$room_hash, &$name_hash)
+function accumulate_summary($row, &$count, &$hours, $report_start, $report_end,
+                            &$room_hash, &$name_hash)
 {
   global $output_format, $periods;
 
@@ -1541,8 +1545,8 @@ $private_somewhere = some_area('private_enabled') || some_area('private_mandator
 $approval_somewhere = some_area('approval_enabled');
 $confirmation_somewhere = some_area('confirmation_enabled');
 $registration_somewhere = registration_somewhere();
-$times_somewhere = (db()->query1("SELECT COUNT(*) FROM " . _tbl('area') . " WHERE enable_periods=0") > 0);
-$periods_somewhere = (db()->query1("SELECT COUNT(*) FROM " . _tbl('area') . " WHERE enable_periods!=0") > 0);
+$times_somewhere = times_somewhere();
+$periods_somewhere = periods_somewhere();
 
 
 // Build the report search field order
@@ -1961,9 +1965,9 @@ if ($phase == 2)
         while (false !== ($row = $res->next_row_keyed()))
         {
           unpack_status($row);
-          accumulate($row, $count, $hours,
-                     $report_start, $report_end,
-                     $room_hash, $name_hash);
+          accumulate_summary($row, $count, $hours,
+                             $report_start, $report_end,
+                             $room_hash, $name_hash);
         }
         do_summary($count, $hours, $room_hash, $name_hash);
       }

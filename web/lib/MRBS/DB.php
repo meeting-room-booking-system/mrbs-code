@@ -175,38 +175,48 @@ abstract class DB
   }
 
 
-  // Execute an SQL query which should return a single non-negative number value.
+  // Execute an SQL query which should return a single non-negative integer value.
   // This is a lightweight alternative to query(), good for use with count(*)
   // and similar queries.
   // It returns -1 if the query returns no result, or a single NULL value, such as from
   // a MIN or MAX aggregate function applied over no rows.
   // Throws a DBException on error.
-  public function query1(string $sql, array $params = array())
+  public function query1(string $sql, array $params = array()) : int
   {
-    try {
+    $result = $this->query_scalar_non_bool($sql, $params);
+
+    if (is_null($result) || ($result === false))
+    {
+      return -1;
+    }
+
+    // Check that the result looks like an integer, even though it may be a string, and then cast
+    // it to an integer.  For example "2" is OK, but "2.0" is not.
+    $result = filter_var($result, FILTER_VALIDATE_INT);
+
+    if ($result === false)
+    {
+      throw new \UnexpectedValueException("query1() found something that didn't look like an integer.  Check your SQL.");
+    }
+
+    return $result;
+  }
+
+
+  // Execute an SQL query which should return a single scalar value that can be anything
+  // other than a boolean (because the function returns FALSE if there is no value).
+  public function query_scalar_non_bool(string $sql, array $params = array())
+  {
+    try
+    {
       $sth = $this->dbh->prepare($sql);
       $sth->execute($params);
-    } catch (PDOException $e) {
+      return $sth->fetchColumn();
+    }
+    catch (PDOException $e)
+    {
       throw new DBException($e->getMessage(), 0, $e, $sql, $params);
     }
-
-    if ($sth->rowCount() > 1) {
-      throw new DBException("query1() returned more than one row.", 0, null, $sql, $params);
-    }
-
-    if ($sth->columnCount() > 1) {
-      throw new DBException("query1() returned more than one column.", 0, null, $sql, $params);
-    }
-
-    $row = $sth->fetch(PDO::FETCH_NUM);
-    if (($row === null) || ($row === false)) {
-      $result = -1;
-    }
-    else {
-      $result = $row[0];
-    }
-    $sth->closeCursor();
-    return $result;
   }
 
 
@@ -319,9 +329,9 @@ abstract class DB
       // Don't use getAttribute(PDO::ATTR_SERVER_VERSION) because that will
       // sometimes also give you the version prefix (so-called "replication
       // version hack") with MariaDB.
-      $result = $this->query1("SELECT VERSION()");
+      $result = $this->query_scalar_non_bool("SELECT VERSION()");
 
-      $this->version_string = ($result == -1) ? '' : $result;
+      $this->version_string = ($result === false) ? '' : $result;
     }
 
     return $this->version_string;

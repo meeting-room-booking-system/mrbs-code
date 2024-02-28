@@ -151,12 +151,16 @@ class DB_pgsql extends DB
   // Returns true if the lock is released successfully, otherwise false.
   public function mutex_unlock(string $name) : bool
   {
-    $result = $this->query1("SELECT pg_advisory_unlock(" . self::hash($name) . ")");
+    $sql = "SELECT pg_advisory_unlock(" . self::hash($name) . ")";
+    $res = $this->query($sql);
+    $row = $res->next_row();
 
-    if (!is_bool($result))
+    if ($row === false)
     {
-      $result = false;
+      throw new DBException("Unexpected pg_advisory_unlock() error");
     }
+
+    $result = $row[0];
 
     if ($result)
     {
@@ -173,7 +177,7 @@ class DB_pgsql extends DB
   // Release all mutual-exclusion locks.
   public function mutex_unlock_all() : void
   {
-    $this->query1("SELECT pg_advisory_unlock_all()");
+    $this->query("SELECT pg_advisory_unlock_all()");
   }
 
 
@@ -198,7 +202,14 @@ class DB_pgsql extends DB
   // Just returns a version number, eg "9.2.24"
   private function versionNumber() : string
   {
-    return $this->query1("SHOW SERVER_VERSION");
+    $result = $this->query_scalar_non_bool("SHOW SERVER_VERSION");
+
+    if ($result === false)
+    {
+      throw new Exception("Could not get PostgreSQL server version");
+    }
+
+    return $result;
   }
 
 

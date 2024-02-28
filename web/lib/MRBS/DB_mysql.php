@@ -500,9 +500,9 @@ class DB_mysql extends DB
   // Check if a table exists
   public function table_exists(string $table) : bool
   {
-    $res = $this->query1("SHOW TABLES LIKE ?", array($table));
+    $res = $this->query("SHOW TABLES LIKE ?", array($table));
 
-    return !($res == -1);
+    return ($res->count() > 0);
   }
 
 

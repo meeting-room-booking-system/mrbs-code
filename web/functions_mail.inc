@@ -192,7 +192,7 @@ function get_approvers_email($room_id) : string
 // Get the area_admin_email for an entry $id
 // If $series is set this is an entry in the repeat table, otherwise the entry table
 // Returns an empty string in the case of an error
-function get_area_admin_email($id, $series=FALSE)
+function get_area_admin_email($id, bool $series=false) : string
 {
   $id_table = ($series) ? "rep" : "e";
 
@@ -208,16 +208,16 @@ function get_area_admin_email($id, $series=FALSE)
              AND r.id={$id_table}.room_id
              AND a.id=r.area_id
            LIMIT 1";
-  $email = db()->query1($sql, array($id));
+  $email = db()->query_scalar_non_bool($sql, array($id));
 
-  return ($email == -1) ? '' : $email;
+  return ($email === false) ? '' : $email;
 }
 
 
 // Get the room_admin_email for an entry $id
 // If $series is set this is an entry in the repeat table, otherwise the entry table
 // Returns an empty string in the case of an error
-function get_room_admin_email($id, $series=FALSE)
+function get_room_admin_email($id, bool $series=false) : string
 {
   $id_table = ($series) ? "rep" : "e";
 
@@ -232,9 +232,9 @@ function get_room_admin_email($id, $series=FALSE)
   $sql .= "WHERE {$id_table}.id=?
              AND r.id={$id_table}.room_id
            LIMIT 1";
-  $email = db()->query1($sql, array($id));
+  $email = db()->query_scalar_non_bool($sql, array($id));
 
-  return ($email == -1) ? '' : $email;
+  return ($email === false) ? '' : $email;
 }
 
 

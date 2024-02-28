@@ -185,7 +185,7 @@ if ($type == "area")
            WHERE area_id=?";
 
   $n = db()->query1($sql, array($area));
-  if ($n == 0)
+  if ($n === 0)
   {
     // OK, nothing there, let's blast it away
     $sql = "DELETE FROM " . _tbl('area') . "

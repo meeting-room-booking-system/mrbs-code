@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace MRBS;
 
 use PDOException;
@@ -102,13 +102,13 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
                WHERE id=:id
                LIMIT 1";
 
-      $result = db()->query1($sql, array(':id' => $id));
+      $result = db()->query_scalar_non_bool($sql, array(':id' => $id));
     }
     catch (DBException $e)
     {
       // If the exception is because the sessions table doesn't exist, then that's
       // probably because we're in the middle of the upgrade that creates the
-      // sessions table, so just ignore it and return ''.   Otherwise re-throw
+      // sessions table, so just ignore it and return ''.   Otherwise, re-throw
       // the exception.
       if (!db()->table_exists(self::$table))
       {
@@ -117,7 +117,7 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
       throw $e;
     }
 
-    if (!isset($result) || ($result === -1))
+    if (!isset($result) || ($result === false))
     {
       return '';
     }
