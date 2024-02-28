@@ -192,7 +192,7 @@ function get_approvers_email($room_id) : string
 // Get the area_admin_email for an entry $id
 // If $series is set this is an entry in the repeat table, otherwise the entry table
 // Returns an empty string in the case of an error
-function get_area_admin_email($id, $series=FALSE)
+function get_area_admin_email($id, bool $series=false) : string
 {
   $id_table = ($series) ? "rep" : "e";
 
@@ -217,7 +217,7 @@ function get_area_admin_email($id, $series=FALSE)
 // Get the room_admin_email for an entry $id
 // If $series is set this is an entry in the repeat table, otherwise the entry table
 // Returns an empty string in the case of an error
-function get_room_admin_email($id, $series=FALSE)
+function get_room_admin_email($id, bool $series=false) : string
 {
   $id_table = ($series) ? "rep" : "e";
 
