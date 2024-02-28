@@ -164,7 +164,16 @@ abstract class DB
       return -1;
     }
 
-    return intval($result);
+    // Check that the result looks like an integer, even though it may be a string, and then cast
+    // it to an integer.  For example "2" is OK, but "2.0" is not.
+    $result = filter_var($result, FILTER_VALIDATE_INT);
+
+    if ($result === false)
+    {
+      throw new \UnexpectedValueException("query1() found something that didn't look like an integer.  Check your SQL.");
+    }
+
+    return $result;
   }
 
 
