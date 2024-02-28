@@ -151,12 +151,16 @@ class DB_pgsql extends DB
   // Returns true if the lock is released successfully, otherwise false.
   public function mutex_unlock(string $name) : bool
   {
-    $result = $this->query1("SELECT pg_advisory_unlock(" . self::hash($name) . ")");
+    $sql = "SELECT pg_advisory_unlock(" . self::hash($name) . ")";
+    $res = $this->query($sql);
+    $row = $res->next_row();
 
-    if (!is_bool($result))
+    if ($row === false)
     {
-      $result = false;
+      throw new DBException("Unexpected pg_advisory_unlock() error");
     }
+
+    $result = $row[0];
 
     if ($result)
     {
