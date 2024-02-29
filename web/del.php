@@ -159,6 +159,7 @@ if ($type == "room")
 
       while (false !== ($row = $res->next_row_keyed()))
       {
+        row_cast_columns($row, 'entry');
         echo "<li>".htmlspecialchars($row['name'])." (";
         echo time_date_string($row['start_time']) . " -> ";
         echo time_date_string($row['end_time']) . ")</li>\n";
