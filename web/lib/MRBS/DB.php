@@ -170,7 +170,7 @@ abstract class DB
 
     if ($result === false)
     {
-      throw new \UnexpectedValueException("query1() found something that didn't look like an integer.  Check your SQL.");
+      throw new \UnexpectedValueException("query1() should only be used for selecting integer values.");
     }
 
     return $result;
