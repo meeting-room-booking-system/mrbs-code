@@ -1686,7 +1686,7 @@ function get_registration_by_id(int $id) : ?array
   }
 
   $row = $res->next_row_keyed();
-  row_cast_columns($row, 'participants');
+  row_cast_columns($row, 'participant');
 
   return $row;
 }
