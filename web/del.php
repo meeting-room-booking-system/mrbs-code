@@ -115,13 +115,12 @@ if ($type == "room")
 
     // We tell them how bad what they're about to do is
     // Find out how many appointments would be deleted
-    $limit = 20;
-
     // Do a quick count of the number of entries
     $n_entries = get_n_entries_by_room($room);
 
     if ($n_entries > 0)
     {
+      $limit = 20;
       // Order in descending order because the latest bookings are probably the most important.
       $entries = get_entries_by_room($room, null, null, true, $limit);
       // There's a very small chance the number of entries may have changed between the two queries
