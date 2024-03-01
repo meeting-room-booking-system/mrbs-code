@@ -117,11 +117,7 @@ if ($type == "room")
     // Find out how many appointments would be deleted
     $limit = 20;
 
-    $sql = "SELECT COUNT(*)
-              FROM " . _tbl('entry') . "
-             WHERE room_id=?";
-
-    $n_entries = db()->query1($sql, array($room));
+    $n_entries = get_n_entries_by_room($room);
 
     // Order in descending order because the latest bookings are probably the most important.
     $entries = get_entries_by_room($room, null, null, true, $limit);
