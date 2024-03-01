@@ -935,9 +935,20 @@ function get_entries_by_area(int $area_id, int $interval_start, int $interval_en
 }
 
 
-// Get all the entries for the room with $room_id in the interval that starts at $interval_start
-// and ends at $interval_start (both Unix timestamps).  If $limit is set then only $limit entries
-// are returned.
+// Get the number of entries for the room with id $room_id
+function get_n_entries_by_room(int $room_id) : int
+{
+  $sql = "SELECT COUNT(*)
+            FROM " . _tbl('entry') . "
+           WHERE room_id=:room_id";
+
+  return db()->query1($sql, [':room_id' => $room_id]);
+}
+
+
+// Get all the entries for the room with $room_id in the interval that starts at $interval_start (if set)
+// and ends at $interval_start (if set) (both Unix timestamps).  The sort order is ASC by default, but
+// DESC if $desc is TRUE.  If $limit is set then only $limit entries are returned.
 // Returns an array of entries.   Each element of the array is itself an array with keys
 // corresponding to the entry table columns
 function get_entries_by_room(int $room_id, ?int $interval_start, ?int $interval_end, bool $desc=false, int $limit=null) : array
