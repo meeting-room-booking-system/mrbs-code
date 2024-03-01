@@ -936,21 +936,46 @@ function get_entries_by_area(int $area_id, int $interval_start, int $interval_en
 
 
 // Get all the entries for the room with $room_id in the interval that starts at $interval_start
-// and ends at $interval_start (both Unix timestamps).
+// and ends at $interval_start (both Unix timestamps).  If $limit is set then only $limit entries
+// are returned.
 // Returns an array of entries.   Each element of the array is itself an array with keys
 // corresponding to the entry table columns
-function get_entries_by_room(int $room_id, int $interval_start, int $interval_end) : array
+function get_entries_by_room(int $room_id, ?int $interval_start, ?int $interval_end, bool $desc=false, int $limit=null) : array
 {
+  $sql_params = [':room_id' => $room_id];
+
   // The GROUP BY is necessary to get n_registered to work
   $sql = "SELECT E.*, COUNT(P.entry_id) AS n_registered
             FROM " . _tbl('entry') . " E
        LEFT JOIN " . _tbl('participant') . " P ON P.entry_id = E.id
-           WHERE room_id = ?
-             AND start_time < ? AND end_time > ?
-        GROUP BY E.id
-        ORDER BY start_time, id";   // necessary so that multiple bookings appear in the right order
+           WHERE room_id = :room_id";
 
-  $res = db()->query($sql, array($room_id, $interval_end,  $interval_start));
+  if (isset($interval_start))
+  {
+    $sql_params[':interval_start'] = $interval_start;
+    $sql .= " AND end_time > :interval_start";
+  }
+  if (isset($interval_end))
+  {
+    $sql_params[':interval_end'] = $interval_end;
+    $sql .= " AND start_time < :interval_end";
+  }
+
+  $sql .= " GROUP BY E.id";
+  $order = ($desc) ? 'DESC' : 'ASC';
+  $sql .= " ORDER BY start_time $order, id $order"; // necessary so that multiple bookings appear in the right order
+
+  if (isset($limit))
+  {
+    // The LIMIT parameter should ideally be one of the parameters to the
+    // query, but MySQL throws an error at the moment because it gets bound
+    // as a string.  Doesn't matter in this case because we know $limit is
+    // an integer, but for the general case MRBS needs to provide the ability
+    // to bind it as an integer.
+    $sql .= " LIMIT $limit";
+  }
+
+  $res = db()->query($sql, $sql_params);
 
   $result = $res->all_rows_keyed();
 

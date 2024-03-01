@@ -131,25 +131,12 @@ if ($type == "room")
               FROM " . _tbl('entry') . "
              WHERE room_id=?";
 
-    $n_bookings = db()->query1($sql, array($room));
+    $n_entries = db()->query1($sql, array($room));
 
-    // The LIMIT parameter should ideally be one of the parameters to the
-    // query, but MySQL throws an error at the moment because it gets bound
-    // as a string.  Doesn't matter in this case because we know where $limit
-    // has come from, but for the general case MRBS needs to provide the ability
-    // to bind it as an integer.
-    //
-    // Order in descending order because the latest bookings are probably the most
-    // important.
-    $sql = "SELECT name, start_time, end_time
-              FROM " . _tbl('entry') . "
-             WHERE room_id=?
-          ORDER BY start_time DESC
-             LIMIT $limit";
+    // Order in descending order because the latest bookings are probably the most important.
+    $entries = get_entries_by_room($room, null, null, true, $limit);
 
-    $res = db()->query($sql, array($room));
-
-    if ($res->count() > 0)
+    if (count($entries) > 0)
     {
       echo "<p>\n";
       echo get_vocab("deletefollowing") . ":\n";
@@ -157,21 +144,20 @@ if ($type == "room")
 
       echo "<ul>\n";
 
-      while (false !== ($row = $res->next_row_keyed()))
+      foreach ($entries as $entry)
       {
-        row_cast_columns($row, 'entry');
-        echo "<li>".htmlspecialchars($row['name'])." (";
-        echo time_date_string($row['start_time']) . " -> ";
-        echo time_date_string($row['end_time']) . ")</li>\n";
+        echo "<li>".htmlspecialchars($entry['name'])." (";
+        echo time_date_string($entry['start_time']) . " -> ";
+        echo time_date_string($entry['end_time']) . ")</li>\n";
       }
 
       echo "</ul>\n";
     }
 
-    if ($n_bookings > $limit)
+    if ($n_entries > $limit)
     {
       echo "<p>";
-      echo get_vocab("and_n_more", number_format_locale($n_bookings - $limit)) . '.';
+      echo get_vocab("and_n_more", number_format_locale($n_entries - $limit)) . '.';
       echo "</p>";
     }
 
