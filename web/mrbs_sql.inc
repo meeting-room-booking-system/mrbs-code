@@ -293,7 +293,8 @@ function check_simultaneous(array $booking, ?int $ignore_entry_id) : ?string
   // Check whether this would break the rules
   if (($existing[$booking['start_time']] + $proposed[$booking['start_time']]) > $max_simultaneous_bookings)
   {
-    return get_vocab('no_simultaneous_bookings', $max_simultaneous_bookings);
+    // The number is sent as a string to allow words instead of numbers in the future, eg "two" instead of 2
+    return get_vocab('no_simultaneous_bookings', strval($max_simultaneous_bookings));
   }
 
   return null;
