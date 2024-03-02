@@ -136,9 +136,8 @@ if ($type == "room")
 
         foreach ($entries as $entry)
         {
-          echo "<li>" . htmlspecialchars($entry['name']) . " (";
-          echo time_date_string($entry['start_time']) . " -> ";
-          echo time_date_string($entry['end_time']) . ")</li>\n";
+          $interval = new EntryInterval($entry['start_time'], $entry['end_time']);
+          echo "<li>" . htmlspecialchars($entry['name']) . " (" . $interval . ")</li>\n";
         }
 
         echo "</ul>\n";
