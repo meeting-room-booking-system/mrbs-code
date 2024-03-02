@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace MRBS;
 
 use DateInterval;
+use OpenPsa\Ranger\Ranger;
 
 class EntryInterval
 {
@@ -28,17 +29,15 @@ class EntryInterval
   {
     global $datetime_formats;
 
-    $format = ($this->spansMultipleDays()) ? $datetime_formats['date_and_time'] : $datetime_formats['time'];
+    $ranger = new Ranger(get_mrbs_locale());
+    $ranger
+      ->setRangeSeparator(' - ')
+      ->setDateTimeSeparator(', ')
+      ->setDateType($datetime_formats['range_datetime']['date_type'])
+      ->setTimeType($datetime_formats['range_datetime']['time_type']);
+    $range = $ranger->format($this->start_timestamp, $this->end_timestamp);
 
-    $result = datetime_format($format, $this->start_timestamp) . " - " .
-              datetime_format($format, $this->end_timestamp);
-
-    if (!$this->spansMultipleDays())
-    {
-      $result .= ", " . datetime_format($datetime_formats['date'], $this->start_timestamp);
-    }
-
-    return $result;
+    return $range;
   }
 
 

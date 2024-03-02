@@ -674,6 +674,12 @@ $datetime_formats['day_name_edit'] = array(
   'pattern' => 'ccc'
 );
 
+// The format for ranges with both dates and times
+$datetime_formats['range_datetime'] = array(
+  'date_type' => IntlDateFormatter::MEDIUM,
+  'time_type' => IntlDateFormatter::SHORT
+);
+
 // The format used for times
 $datetime_formats['time'] = array(
   'date_type' => IntlDateFormatter::NONE,
