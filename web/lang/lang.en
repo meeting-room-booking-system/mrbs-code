@@ -707,6 +707,10 @@ $vocab["bad_timezone"]                = "Unknown or bad timezone '%s'";
 $vocab["events_imported"]             = "events imported";
 $vocab["events_not_imported"]         = "events not imported";
 
+// Used in EntryInterval.php
+$vocab["range_separator"]     = " - ";  // For separating two dates/times in a range
+$vocab["date_time_separator"] = ", ";   // For separating a date from a time
+
 // Used in DataTables
 $vocab["dt_all"]             = "All";
 $vocab["show_hide_columns"]  = "Show / hide columns";

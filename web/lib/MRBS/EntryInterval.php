@@ -3,6 +3,8 @@ declare(strict_types=1);
 namespace MRBS;
 
 use DateInterval;
+use MRBS\Intl\IntlDateFormatter;
+use OpenPsa\Ranger\Ranger;
 
 class EntryInterval
 {
@@ -10,6 +12,9 @@ class EntryInterval
   private $end_date;
   private $start_timestamp;
   private $end_timestamp;
+
+  private const DEFAULT_DATE_TYPE = IntlDateFormatter::MEDIUM;
+  private const DEFAULT_TIME_TYPE = IntlDateFormatter::SHORT;
 
 
   // $start_time and $end_time are Unix timestamps
@@ -28,17 +33,19 @@ class EntryInterval
   {
     global $datetime_formats;
 
-    $format = ($this->spansMultipleDays()) ? $datetime_formats['date_and_time'] : $datetime_formats['time'];
+    // Just in case they have been unset in the config file
+    $date_type = $datetime_formats['range_datetime']['date_type'] ?? self::DEFAULT_DATE_TYPE;
+    $time_type = $datetime_formats['range_datetime']['time_type'] ?? self::DEFAULT_TIME_TYPE;
 
-    $result = datetime_format($format, $this->start_timestamp) . " - " .
-              datetime_format($format, $this->end_timestamp);
+    $ranger = new Ranger(get_mrbs_locale());
+    $ranger
+      ->setRangeSeparator(get_vocab('range_separator'))
+      ->setDateTimeSeparator(get_vocab('date_time_separator'))
+      ->setDateType($date_type)
+      ->setTimeType($time_type);
+    $range = $ranger->format($this->start_timestamp, $this->end_timestamp);
 
-    if (!$this->spansMultipleDays())
-    {
-      $result .= ", " . datetime_format($datetime_formats['date'], $this->start_timestamp);
-    }
-
-    return $result;
+    return $range;
   }
 
 
