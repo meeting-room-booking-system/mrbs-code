@@ -2039,6 +2039,17 @@ function period_name_nominal(int $s) : string
 }
 
 
+// Returns the name of the period represented by the timestamp $timestamp
+function period_name_timestamp(int $timestamp) : string
+{
+  global $periods;
+
+  $index = period_index_timestamp($timestamp);
+
+  return $periods[$index] ?? unknown_period_name($index);
+}
+
+
 // Returns the name of a period that doesn't exist
 function unknown_period_name(int $index) : string
 {

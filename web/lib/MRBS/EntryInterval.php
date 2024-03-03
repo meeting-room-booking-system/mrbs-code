@@ -10,28 +10,35 @@ class EntryInterval
 {
   private $start_date;
   private $end_date;
-  private $start_timestamp;
-  private $end_timestamp;
+  private $is_periods_mode;
 
   private const DEFAULT_DATE_TYPE = IntlDateFormatter::MEDIUM;
   private const DEFAULT_TIME_TYPE = IntlDateFormatter::SHORT;
 
 
   // $start_time and $end_time are Unix timestamps
-  public function __construct(int $start_timestamp, int $end_timestamp)
+  public function __construct(int $start_timestamp, int $end_timestamp, bool $is_periods_mode)
   {
     $this->start_date = new DateTime();
     $this->start_date->setTimestamp($start_timestamp);
     $this->end_date = new DateTime();
     $this->end_date->setTimestamp($end_timestamp);
-    $this->start_timestamp = $start_timestamp;
-    $this->end_timestamp = $end_timestamp;
+    $this->is_periods_mode = $is_periods_mode;
   }
 
 
   public function __toString()
   {
     global $datetime_formats;
+
+    $start_time = $this->start_date->getTimestamp();
+    $end_time = $this->end_date->getTimestamp();
+    // If we're in periods mode, the last period is actually the one before the
+    // period that starts at the end time
+    if ($this->is_periods_mode)
+    {
+      $end_time = $end_time - 60;
+    }
 
     // Just in case they have been unset in the config file
     $date_type = $datetime_formats['range_datetime']['date_type'] ?? self::DEFAULT_DATE_TYPE;
@@ -43,7 +50,22 @@ class EntryInterval
       ->setDateTimeSeparator(get_vocab('date_time_separator'))
       ->setDateType($date_type)
       ->setTimeType($time_type);
-    $range = $ranger->format($this->start_timestamp, $this->end_timestamp);
+    $range = $ranger->format($start_time, $end_time);
+
+    // If we're in periods mode, substitute the period names for times
+    if ($this->is_periods_mode)
+    {
+      $format = ['date_type' => IntlDateFormatter::NONE, 'time_type' => $time_type];
+      $start_time_string = datetime_format($format, $start_time);
+      $start_period_name = period_name_timestamp($start_time);
+      $range = str_replace($start_time_string, $start_period_name, $range);
+      if ($start_time !== $end_time)
+      {
+        $end_time_string = datetime_format($format, $end_time);
+        $end_period_name = period_name_timestamp($end_time);
+        $range = str_replace($end_time_string, $end_period_name, $range);
+      }
+    }
 
     return $range;
   }
