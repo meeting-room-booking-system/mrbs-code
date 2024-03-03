@@ -13,6 +13,9 @@ class EntryInterval
   private $start_timestamp;
   private $end_timestamp;
 
+  private const DEFAULT_DATE_TYPE = IntlDateFormatter::MEDIUM;
+  private const DEFAULT_TIME_TYPE = IntlDateFormatter::SHORT;
+
 
   // $start_time and $end_time are Unix timestamps
   public function __construct(int $start_timestamp, int $end_timestamp)
@@ -31,8 +34,8 @@ class EntryInterval
     global $datetime_formats;
 
     // Just in case they have been unset in the config file
-    $date_type = $datetime_formats['range_datetime']['date_type'] ?? IntlDateFormatter::MEDIUM;
-    $time_type = $datetime_formats['range_datetime']['time_type'] ?? IntlDateFormatter::SHORT;
+    $date_type = $datetime_formats['range_datetime']['date_type'] ?? self::DEFAULT_DATE_TYPE;
+    $time_type = $datetime_formats['range_datetime']['time_type'] ?? self::DEFAULT_TIME_TYPE;
 
     $ranger = new Ranger(get_mrbs_locale());
     $ranger
