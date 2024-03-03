@@ -1549,7 +1549,7 @@ function clean_area_row(array $row) : array
   foreach ($columns as $column)
   {
     // Cast the pseudo-booleans to bools
-    if (($column->getNature() == Column::NATURE_INTEGER) && ($column->getLength() <=2))
+    if (isset($row[$column->name]) && ($column->getNature() == Column::NATURE_INTEGER) && ($column->getLength() <=2))
     {
       $row[$column->name] = (bool)$row[$column->name];
     }
@@ -2121,6 +2121,17 @@ function period_name_nominal(int $s) : string
   global $periods;
 
   return $periods[period_index_nominal($s)];
+}
+
+
+// Returns the name of the period represented by the timestamp $timestamp
+function period_name_timestamp(int $timestamp) : string
+{
+  global $periods;
+
+  $index = period_index_timestamp($timestamp);
+
+  return $periods[$index] ?? unknown_period_name($index);
 }
 
 
