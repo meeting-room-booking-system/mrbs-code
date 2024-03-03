@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace MRBS;
 
 use DateInterval;
+use MRBS\Intl\IntlDateFormatter;
 use OpenPsa\Ranger\Ranger;
 
 class EntryInterval
@@ -29,12 +30,16 @@ class EntryInterval
   {
     global $datetime_formats;
 
+    // Just in case they have been unset in the config file
+    $date_type = $datetime_formats['range_datetime']['date_type'] ?? IntlDateFormatter::MEDIUM;
+    $time_type = $datetime_formats['range_datetime']['time_type'] ?? IntlDateFormatter::SHORT;
+
     $ranger = new Ranger(get_mrbs_locale());
     $ranger
       ->setRangeSeparator(' - ')
       ->setDateTimeSeparator(', ')
-      ->setDateType($datetime_formats['range_datetime']['date_type'])
-      ->setTimeType($datetime_formats['range_datetime']['time_type']);
+      ->setDateType($date_type)
+      ->setTimeType($time_type);
     $range = $ranger->format($this->start_timestamp, $this->end_timestamp);
 
     return $range;
