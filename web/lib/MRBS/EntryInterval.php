@@ -39,8 +39,8 @@ class EntryInterval
 
     $ranger = new Ranger(get_mrbs_locale());
     $ranger
-      ->setRangeSeparator(' - ')
-      ->setDateTimeSeparator(', ')
+      ->setRangeSeparator(get_vocab('range_separator'))
+      ->setDateTimeSeparator(get_vocab('date_time_separator'))
       ->setDateType($date_type)
       ->setTimeType($time_type);
     $range = $ranger->format($this->start_timestamp, $this->end_timestamp);
