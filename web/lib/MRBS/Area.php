@@ -111,6 +111,16 @@ class Area extends Location
   {
     global $force_resolution, $area_defaults, $auth;
 
+    // Cast the pseudo-booleans to bools
+    $columns = Columns::getInstance(_tbl(self::TABLE_NAME));
+    foreach ($columns as $column)
+    {
+      if (($column->getNature() == Column::NATURE_INTEGER) && ($column->getLength() <= 2))
+      {
+        $row[$column->name] = (bool)$row[$column->name];
+      }
+    }
+
     // We cannot assume that any array keys exist as this may be called during an upgrade
     // process before the columns existed.
 
