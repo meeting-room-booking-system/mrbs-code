@@ -187,7 +187,7 @@ function check_simultaneous(array $booking, ?int $ignore_entry_id) : ?string
   // Check to see whether we are searching globally across a mixture of times and periods.
   // This will lead to false clashes because (a) MRBS stores periods as one minute bookings
   // starting at 12:00 and (b) MRBS does not know what times periods correspond to.
-  if ($simultaneous_ignore_other_areas && !$check_complete)
+  if (!$simultaneous_ignore_other_areas && !$check_complete)
   {
     if (periods_somewhere(true)  && times_somewhere(true))
     {
