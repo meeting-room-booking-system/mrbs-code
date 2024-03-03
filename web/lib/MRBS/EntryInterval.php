@@ -10,8 +10,6 @@ class EntryInterval
 {
   private $start_date;
   private $end_date;
-  private $start_timestamp;
-  private $end_timestamp;
 
   private const DEFAULT_DATE_TYPE = IntlDateFormatter::MEDIUM;
   private const DEFAULT_TIME_TYPE = IntlDateFormatter::SHORT;
@@ -24,8 +22,6 @@ class EntryInterval
     $this->start_date->setTimestamp($start_timestamp);
     $this->end_date = new DateTime();
     $this->end_date->setTimestamp($end_timestamp);
-    $this->start_timestamp = $start_timestamp;
-    $this->end_timestamp = $end_timestamp;
   }
 
 
@@ -43,7 +39,7 @@ class EntryInterval
       ->setDateTimeSeparator(get_vocab('date_time_separator'))
       ->setDateType($date_type)
       ->setTimeType($time_type);
-    $range = $ranger->format($this->start_timestamp, $this->end_timestamp);
+    $range = $ranger->format($this->start_date->getTimestamp(), $this->end_date->getTimestamp());
 
     return $range;
   }
