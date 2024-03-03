@@ -137,7 +137,7 @@ function mrbsCheckFree(array $booking, ?int $ignore_entry_id=null, ?int $ignore_
   while (false !== ($row = $res->next_row_keyed()))
   {
     unpack_status($row);
-    $existing_entry_interval = new EntryInterval($row['start_time'], $row['end_time']);
+    $existing_entry_interval = new EntryInterval($row['start_time'], $row['end_time'], $enable_periods);
 
     $existing_start_date = new DateTime();
     $existing_start_date->setTimestamp($row['start_time']);
@@ -579,7 +579,7 @@ function mrbsCheckPolicy(array $booking, ?int $ignore_entry_id=null, ?int $ignor
   // Check creation policies
   else
   {
-    $entryInterval = new EntryInterval($booking['start_time'], $booking['end_time']);
+    $entryInterval = new EntryInterval($booking['start_time'], $booking['end_time'], $enable_periods);
     // Check whether the user is trying to book on a holiday
     if ($prevent_booking_on_holidays)
     {
