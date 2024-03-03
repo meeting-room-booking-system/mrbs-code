@@ -115,7 +115,7 @@ class Area extends Location
     $columns = Columns::getInstance(_tbl(self::TABLE_NAME));
     foreach ($columns as $column)
     {
-      if (($column->getNature() == Column::NATURE_INTEGER) && ($column->getLength() <= 2))
+      if (isset($row[$column->name]) && ($column->getNature() == Column::NATURE_INTEGER) && ($column->getLength() <= 2))
       {
         $row[$column->name] = (bool)$row[$column->name];
       }
