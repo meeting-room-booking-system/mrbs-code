@@ -675,6 +675,8 @@ $datetime_formats['day_name_edit'] = array(
 );
 
 // The format for ranges with both dates and times
+// Note: this setting only accepts 'date_type' and 'time_type' keys
+// and ignores 'pattern' and 'skeleton' keys.
 $datetime_formats['range_datetime'] = array(
   'date_type' => IntlDateFormatter::MEDIUM,
   'time_type' => IntlDateFormatter::SHORT
@@ -716,6 +718,8 @@ $datetime_formats['view_week_day_date_month'] = array(
 );
 
 // The title of the week view calendar
+// Note: this setting only accepts 'date_type' and 'time_type' keys
+// and ignores 'pattern' and 'skeleton' keys.
 $datetime_formats['view_week'] = array(
   'date_type' => IntlDateFormatter::LONG,
   'time_type' => IntlDateFormatter::NONE
