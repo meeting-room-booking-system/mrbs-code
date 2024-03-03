@@ -19,6 +19,7 @@
 
 CREATE TABLE mrbs_area
 (
+  -- smallints in mrbs_area are assumed to represent booleans
   id                          serial primary key,
   disabled                    smallint DEFAULT 0 NOT NULL,
   area_name                   varchar(30),

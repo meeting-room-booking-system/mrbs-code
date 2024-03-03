@@ -1539,7 +1539,8 @@ function clean_area_row(array $row) : array
   // not make any assumptions about the existence of extra columns in
   // the area table.
 
-  // Cast the columns to their intended types
+  // Cast the columns to their intended types (the pseudo-booleans will
+  // be picked up later)
   row_cast_columns($row, 'area');
 
   // Get the default settings if necessary
@@ -1547,6 +1548,12 @@ function clean_area_row(array $row) : array
 
   foreach ($columns as $column)
   {
+    // Cast the pseudo-booleans to bools
+    if (($column->getNature() == Column::NATURE_INTEGER) && ($column->getLength() <=2))
+    {
+      $row[$column->name] = (bool)$row[$column->name];
+    }
+
     if (array_key_exists($column->name, $area_defaults))
     {
       // If the "per area" setting is in the database, then use that.  Otherwise
