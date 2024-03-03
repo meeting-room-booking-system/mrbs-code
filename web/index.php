@@ -360,6 +360,7 @@ function get_date_heading(string $view, int $year, int $month, int $day) : strin
       $our_day_of_week = ($day_of_week + DAYS_PER_WEEK - $weekstarts) % DAYS_PER_WEEK;
       $ranger = new Ranger(get_mrbs_locale());
       $ranger
+        ->setRangeSeparator(get_vocab('range_separator'))
         ->setDateType($datetime_formats['view_week']['date_type'] ?? IntlDateFormatter::LONG)
         ->setTimeType($datetime_formats['view_week']['time_type'] ?? IntlDateFormatter::NONE);
       $range = $ranger->format(
