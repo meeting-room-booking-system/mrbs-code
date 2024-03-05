@@ -386,7 +386,7 @@ class Ranger
 
         $esc_active = false;
         $part = ['content' => '', 'delimiter' => false];
-        foreach (mb_str_split($pattern) as $char) {
+        foreach (str_split($pattern) as $char) {
             if ($char == $this->escape_character) {
                 if ($esc_active) {
                     $esc_active = false;
