@@ -231,8 +231,12 @@ class Ranger
         $left_middle = '';
         $right_middle = '';
         for ($k = $i; $k <= $j; $k++) {
-            $left_middle .= $start_tokens[$k]['content'];
-            $right_middle .= $end_tokens[$k]['content'];
+            if ($start_tokens[$k]['content'] !== $this->virtual_separator) {
+                $left_middle .= $start_tokens[$k]['content'];
+            }
+            if ($end_tokens[$k]['content'] !== $this->virtual_separator) {
+                $right_middle .= $end_tokens[$k]['content'];
+            }
         }
 
         return $left . $left_middle . $this->get_range_separator($best_match) . $right_middle . $right;
@@ -386,7 +390,7 @@ class Ranger
 
         $esc_active = false;
         $part = ['content' => '', 'delimiter' => false];
-        foreach (mb_str_split($pattern) as $char) {
+        foreach (str_split($pattern) as $char) {
             if ($char == $this->escape_character) {
                 if ($esc_active) {
                     $esc_active = false;
