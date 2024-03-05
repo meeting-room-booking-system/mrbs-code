@@ -3,7 +3,7 @@ declare(strict_types=1);
 namespace MRBS;
 
 use DateInterval;
-use MRBS\Intl\IntlDateFormatter;
+use IntlDateFormatter;
 use OpenPsa\Ranger\Ranger;
 
 class EntryInterval
@@ -55,13 +55,13 @@ class EntryInterval
     // If we're in periods mode, substitute the period names for times
     if ($this->is_periods_mode)
     {
-      $format = ['date_type' => IntlDateFormatter::NONE, 'time_type' => $time_type];
-      $start_time_string = datetime_format($format, $start_time);
+      $formatter = new IntlDateFormatter(get_mrbs_locale(), IntlDateFormatter::NONE, $time_type);
+      $start_time_string = $formatter->format($start_time);
       $start_period_name = period_name_timestamp($start_time);
       $range = str_replace($start_time_string, $start_period_name, $range);
       if ($start_time !== $end_time)
       {
-        $end_time_string = datetime_format($format, $end_time);
+        $end_time_string = $formatter->format($end_time);
         $end_period_name = period_name_timestamp($end_time);
         $range = str_replace($end_time_string, $end_period_name, $range);
       }
