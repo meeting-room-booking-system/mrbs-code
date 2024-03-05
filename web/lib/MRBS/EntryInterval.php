@@ -55,15 +55,33 @@ class EntryInterval
     // If we're in periods mode, substitute the period names for times
     if ($this->is_periods_mode)
     {
+      // First of all substitute the start time
+      // Note that we are using the global IntlDateFormatter, rather than using the
+      // IntlDateFormatterFactory, because that's what Ranger will have used, so we
+      // want the same result, regardless of whether it's correct or not.
       $formatter = new IntlDateFormatter(get_mrbs_locale(), IntlDateFormatter::NONE, $time_type);
       $start_time_string = $formatter->format($start_time);
       $start_period_name = period_name_timestamp($start_time);
       $range = str_replace($start_time_string, $start_period_name, $range);
       if ($start_time !== $end_time)
       {
+        // Then do the end time if there is one
         $end_time_string = $formatter->format($end_time);
         $end_period_name = period_name_timestamp($end_time);
         $range = str_replace($end_time_string, $end_period_name, $range);
+        // Then because the Ranger will have missed out the AM/PM information for one of
+        // the times if it's the same for both times (eg 12:01 - 12:02pm, or 下午12:03 - 12:04),
+        // we need to work out what the strings would be without the AM/PM information is and
+        // substitute those.  So get the pattern, strip the AMPM symbols and modify the formatter.
+        $pattern = $formatter->getPattern();
+        $pattern_short = self::trimAMPM($pattern);
+        $formatter->setPattern($pattern_short);
+        // Now do the start time again, looking for the short string
+        $start_time_string_short = $formatter->format($start_time);
+        $range = str_replace($start_time_string_short, $start_period_name, $range);
+        // And then the end time again
+        $end_time_string_short = $formatter->format($end_time);
+        $range = str_replace($end_time_string_short, $end_period_name, $range);
       }
     }
 
@@ -125,6 +143,17 @@ class EntryInterval
   {
     $format = 'Y-m-d';
     return ($this->start_date->format($format) !== $this->end_date->format($format));
+  }
+
+
+  // Trim whitespace, including NBSP, and any AMPM symbols ('a', 'b' and 'B') from the pattern
+  private static function trimAMPM($pattern) : string
+  {
+    $result = trim($pattern, "abB \n\r\t\v\x00");
+    // And trim any non-breaking spaces which can occur between the time and AM/PM information
+    $result = preg_replace("/^\s+|\s+$/u", '', $result);
+
+    return $result;
   }
 
 }
