@@ -579,6 +579,13 @@ $state_duration = 0;
 // Whether to sort users by their last names or not
 $sort_users_by_last_name = false;
 
+// When viewing all rooms in the calendar in the week or month view, it can be very difficult
+// to pick out an individual slot for booking, as they can be as little as one pixel wide. So
+// if the number of slots in a day is greater than $max_slots_direct_to_booking the user is
+// taken to the day view first, where it's easier to pick out an individual booking.  Otherwise,
+// the user is taken direct to edit_entry.php.
+$max_slots_direct_to_booking = 1;
+
 
 /***********************
  * Date and time formats
