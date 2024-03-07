@@ -912,6 +912,7 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
   global $row_labels_both_sides, $column_labels_both_ends;
   global $weekstarts;
   global $resolution, $morningstarts, $morningstarts_minutes;
+  global $max_slots_direct_to_booking;
 
   // It's theoretically possible to display a transposed table with rooms along the top and days
   // down the side.  However it doesn't seem a very useful display and so hasn't yet been implemented.
@@ -1060,14 +1061,28 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
         }
         $tbody .= '>';
         $vars = array(
-            'view'      => 'day',
             'view_all'  => $view_all,
             'page_date' => format_iso_date($year, $month, $d),
             'area'      => $area_id,
             'room'      => $room['id']
           );
 
-        $link = "index.php?" . http_build_query($vars, '', '&');
+        // If there are more than a few slots then it's very difficult to pick out
+        // an individual one, which could be just one pixel wide, so we go to the
+        // day view first where it's easier to see what you are doing.  Otherwise,
+        // we go direct to edit_entry.php.
+        if ($n_time_slots > $max_slots_direct_to_booking)
+        {
+          $page = "index.php";
+          $vars['view'] = 'day';
+        }
+        else
+        {
+          $page = "edit_entry.php";
+          $vars['view'] = $view;
+        }
+
+        $link = "$page?" . http_build_query($vars, '', '&');
         $link = multisite($link);
         $tbody .= '<a href="' . htmlspecialchars($link) . "\">\n";
         $s = $morning_slot_seconds;
