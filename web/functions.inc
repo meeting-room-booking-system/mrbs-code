@@ -1919,14 +1919,18 @@ function hour_min(int $s) : string
 }
 
 
-function period_date_string(int $t, int $area_id, int $mod_time=0) : array
+function period_date_string(int $t, int $area_id, bool $previous_period=false) : array
 {
   global $datetime_formats;
 
   $period_names = get_period_names();
 
   $time = getdate($t);
-  $p_num = $time["minutes"] + $mod_time;
+  $p_num = $time["minutes"];
+  if ($previous_period)
+  {
+    $p_num = $p_num -1;
+  }
   if( $p_num < 0 )
   {
     $p_num = 0;
