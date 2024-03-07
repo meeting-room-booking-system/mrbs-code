@@ -1845,6 +1845,7 @@ function period_time_string(int $t, int $area_id, bool $previous_period=false) :
     $periods[$area_id] = Area::getById($area_id)->periods;
   }
 
+  $n_periods = count($periods[$area_id]);
   $time = getdate($t);
   $p = $time['minutes'];
   if ($previous_period)
@@ -1854,7 +1855,7 @@ function period_time_string(int $t, int $area_id, bool $previous_period=false) :
 
   // Make sure the period is valid
   $p = max($p, 0);
-  $p = min($p, count($periods[$area_id]) - 1);
+  $p = min($p, $n_periods - 1);
 
   return $periods[$area_id][$p];
 }
