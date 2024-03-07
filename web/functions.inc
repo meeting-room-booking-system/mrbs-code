@@ -1927,16 +1927,14 @@ function period_date_string(int $t, int $area_id, bool $previous_period=false) :
   $n_periods = count($period_names);
   $time = getdate($t);
   $p_num = $time["minutes"];
+
   if ($previous_period)
   {
     $p_num = $p_num - 1;
   }
-  if ($p_num < 0)
-  {
-    $p_num = 0;
-  }
 
-  $p_num = min($p_num, $n_periods -1);
+  $p_num = max($p_num, 0);
+  $p_num = min($p_num, $n_periods - 1);
 
   // The separator is a ',' as a '-' leads to an ambiguous
   // display in report.php when showing end times.
