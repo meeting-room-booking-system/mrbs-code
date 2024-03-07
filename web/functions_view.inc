@@ -223,7 +223,7 @@ function create_details_body(array $data, bool $as_html=false, bool $keep_privat
 
       case 'end_time':
         // End date
-        $end_date =  date_string($enable_periods, $data['end_time'], $data['area_id'], -1);
+        $end_date =  date_string($enable_periods, $data['end_time'], $data['area_id'], true);
         $tbody .= create_details_row(get_vocab("end_date"), $end_date, $as_html);
         break;
 

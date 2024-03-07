@@ -1836,7 +1836,7 @@ function hour_min(int $s) : string
 
 // Returns the name of the period represented by Unix timestamp $t for area $area_id.
 // $mod_time will get the period $mod_time units before or after.
-function period_time_string(int $t, int $area_id, int $mod_time=0) : string
+function period_time_string(int $t, int $area_id, bool $previous_period=false) : string
 {
   static $periods = array();
 
@@ -1846,7 +1846,12 @@ function period_time_string(int $t, int $area_id, int $mod_time=0) : string
   }
 
   $time = getdate($t);
-  $p = $time['minutes'] + $mod_time;
+  $p = $time['minutes'];
+  if ($previous_period)
+  {
+    $p--;
+  }
+
   // Make sure the period is valid
   $p = max($p, 0);
   $p = min($p, count($periods[$area_id]) - 1);
@@ -1855,13 +1860,13 @@ function period_time_string(int $t, int $area_id, int $mod_time=0) : string
 }
 
 
-function period_date_string(int $t, int $area_id, int $mod_time=0) : string
+function period_date_string(int $t, int $area_id, bool $previous_period=false) : string
 {
   global $datetime_formats;
 
   // The separator is a ',' as a '-' leads to an ambiguous
   // display in report.php when showing end times.
-  return period_time_string($t, $area_id, $mod_time) .
+  return period_time_string($t, $area_id, $previous_period) .
          ', ' . datetime_format($datetime_formats['date'], $t);
 }
 
@@ -1874,9 +1879,9 @@ function time_date_string(int $t) : string
 }
 
 
-function date_string($use_periods, $t, $area_id, $mod_time=0)
+function date_string($use_periods, $t, $area_id, bool $previous_period=false)
 {
-  return ($use_periods) ? period_date_string($t, $area_id, $mod_time=0) : time_date_string($t);
+  return ($use_periods) ? period_date_string($t, $area_id, $previous_period) : time_date_string($t);
 }
 
 
