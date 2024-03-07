@@ -583,6 +583,7 @@ if ($enable_periods)
 // on slot boundaries, but is left in for good measure).
 $am7 = get_start_first_slot($start_month, $start_day, $start_year);
 $start_time = round_t_down($start_time, $resolution, $am7);
+$am7 = get_start_first_slot($end_month, $end_day, $end_year);
 $end_time = round_t_up($end_time, $resolution, $am7);
 
 // If they asked for 0 minutes, and even after the rounding the slot length is still
