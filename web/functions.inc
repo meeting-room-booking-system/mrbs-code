@@ -1057,9 +1057,6 @@ function get_period_interval(int $start_time, int $end_time) : int
 
   $periods_per_day = count($periods);
 
-  // Need to use the MRBS version of DateTime to get round a bug in modify()
-  // in PHP before 5.3.6.  As we are in the MRBS namespace we will get the
-  // MRBS version.
   $startDate = new DateTime();
   $startDate->setTimestamp($start_time);
   $endDate = new DateTime();
