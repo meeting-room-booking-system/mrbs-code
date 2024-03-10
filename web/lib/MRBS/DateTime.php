@@ -161,6 +161,12 @@ class DateTime extends \DateTime
   }
 
 
+  public function getHour() : int
+  {
+    return intval($this->format('G'));
+  }
+
+
   public function getDay() : int
   {
     return intval($this->format('j'));
