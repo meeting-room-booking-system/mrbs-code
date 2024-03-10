@@ -1879,6 +1879,37 @@ function get_booking_info(int $id, bool $series, bool $silent=false)
   // Turn the last_updated column into an int (PostgreSQL will return a float)
   $row['last_updated'] = intval($row['last_updated']);
 
+  // Fix a problem in earlier versions of MRBS that caused the end time for periods bookings
+  // that crossed a DST boundary in areas with a single period to be incorrectly recorded in
+  // the database (see GitHub Issue #3628).  Round the endtime down to the end of the nearest
+  // valid period.
+  // TODO: This is only a temporary fix.  We should really do a one-off clean-up of the database
+  // TODO: via an upgrade, but this will probably have to wait until the roles branch is
+  // TODO: reintegrated.
+  if ($row['enable_periods'])
+  {
+    $period_names = get_period_names();
+    $n_periods = count($period_names[$row['area_id']]);
+    $end_date = new DateTime();
+    $end_date->setTimestamp($row['end_time']);
+    $hour = $end_date->getHour();
+    // If the time is between midnight and the start of the first period, then
+    // wind the end date back to the end of the previous day.
+    if ($hour < 12)
+    {
+      $end_date->setTime(23, 59);
+      $end_date->modify('-1 day');
+    }
+    // And if the time is now past the end of the last period, then wind it
+    // back to that point and adjust the end time.
+    $end_last_period = clone $end_date;
+    $end_last_period->setTime(12, $n_periods);
+    if ($end_date > $end_last_period)
+    {
+      $row['end_time'] = $end_last_period->getTimestamp();
+    }
+  }
+
   // Now get the duration.
   // Don't translate the units at this stage.   We'll translate them later.
   $d = get_duration($row['start_time'], $row['end_time'], $row['enable_periods'], $row['area_id'], false);
