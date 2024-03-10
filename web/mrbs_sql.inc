@@ -1891,8 +1891,7 @@ function get_booking_info(int $id, bool $series, bool $silent=false)
   // TODO: reintegrated.
   if ($row['enable_periods'])
   {
-    $period_names = get_period_names();
-    $n_periods = count($period_names[$row['area_id']]);
+    $n_periods = count(Area::getById($row['area_id'])->periods);
     $end_date = new DateTime();
     $end_date->setTimestamp($row['end_time']);
     $hour = $end_date->getHour();
