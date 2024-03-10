@@ -907,11 +907,13 @@ function multiday_header_rows(
 }
 
 
+// TODO: Handle the case where there is more than one booking per slot
 function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $year, int $month, int $day, int $area_id, int $room_id) : string
 {
   global $row_labels_both_sides, $column_labels_both_ends;
   global $weekstarts;
   global $resolution, $morningstarts, $morningstarts_minutes;
+  global $view_all_always_go_to_day_view;
 
   // It's theoretically possible to display a transposed table with rooms along the top and days
   // down the side.  However it doesn't seem a very useful display and so hasn't yet been implemented.
@@ -1060,14 +1062,39 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
         }
         $tbody .= '>';
         $vars = array(
-            'view'      => 'day',
             'view_all'  => $view_all,
             'page_date' => format_iso_date($year, $month, $d),
             'area'      => $area_id,
             'room'      => $room['id']
           );
 
-        $link = "index.php?" . http_build_query($vars, '', '&');
+        // If there is more than one slot per day then it can be very difficult to pick
+        // out an individual one, which could be just one pixel wide, so we go to the
+        // day view first where it's easier to see what you are doing.  Otherwise, we go
+        // direct to edit_entry.php if the slot is free, or view_entry.php if it is not.
+        // Note: the structure of the cell, with a single link and multiple flex divs,
+        // only allows us to direct to the booking if there's only one slot per day.
+        if ($view_all_always_go_to_day_view || ($n_time_slots > 1))
+        {
+          $page = 'index.php';
+          $vars['view'] = 'day';
+        }
+        else
+        {
+          $vars['view'] = $view;
+          $this_slot = $map->slot($room_id, $d, $morning_slot_seconds);
+          if (empty($this_slot))
+          {
+            $page = 'edit_entry.php';
+          }
+          else
+          {
+            $page = 'view_entry.php';
+            $vars['id'] = $this_slot[0]['id'];
+          }
+        }
+
+        $link = "$page?" . http_build_query($vars, '', '&');
         $link = multisite($link);
         $tbody .= '<a href="' . htmlspecialchars($link) . "\">\n";
         $s = $morning_slot_seconds;

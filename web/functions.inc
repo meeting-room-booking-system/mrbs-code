@@ -1024,9 +1024,6 @@ function get_period_interval(int $start_time, int $end_time) : int
 
   $periods_per_day = count($periods);
 
-  // Need to use the MRBS version of DateTime to get round a bug in modify()
-  // in PHP before 5.3.6.  As we are in the MRBS namespace we will get the
-  // MRBS version.
   $startDate = new DateTime();
   $startDate->setTimestamp($start_time);
   $endDate = new DateTime();
@@ -1539,7 +1536,8 @@ function clean_area_row(array $row) : array
   // not make any assumptions about the existence of extra columns in
   // the area table.
 
-  // Cast the columns to their intended types
+  // Cast the columns to their intended types (the pseudo-booleans will
+  // be picked up later)
   row_cast_columns($row, 'area');
 
   // Get the default settings if necessary
@@ -1547,6 +1545,12 @@ function clean_area_row(array $row) : array
 
   foreach ($columns as $column)
   {
+    // Cast the pseudo-booleans to bools
+    if (isset($row[$column->name]) && ($column->getNature() == Column::NATURE_INTEGER) && ($column->getLength() <=2))
+    {
+      $row[$column->name] = (bool)$row[$column->name];
+    }
+
     if (array_key_exists($column->name, $area_defaults))
     {
       // If the "per area" setting is in the database, then use that.  Otherwise
@@ -1912,25 +1916,26 @@ function hour_min(int $s) : string
 }
 
 
-function period_date_string(int $t, int $area_id, int $mod_time=0) : array
+function period_date_string(int $t, int $area_id, bool $previous_period=false) : array
 {
   global $datetime_formats;
 
   $period_names = get_period_names();
-
+  $n_periods = count($period_names);
   $time = getdate($t);
-  $p_num = $time["minutes"] + $mod_time;
-  if( $p_num < 0 )
+  $p = $time['minutes'];
+
+  if ($previous_period)
   {
-    $p_num = 0;
+    $p--;
   }
-  if( $p_num >= count($period_names[$area_id]) - 1 )
-  {
-    $p_num = count($period_names[$area_id]) - 1;
-  }
+
+  $p = max($p, 0);
+  $p = min($p, $n_periods - 1);
+
   // The separator is a ',' as a '-' leads to an ambiguous
   // display in report.php when showing end times.
-  return array($p_num, $period_names[$area_id][$p_num] . ', ' . datetime_format($datetime_formats['date'], $t));
+  return array($p, $period_names[$area_id][$p] . ', ' . datetime_format($datetime_formats['date'], $t));
 }
 
 
@@ -2114,6 +2119,17 @@ function period_name_nominal(int $s) : string
   global $periods;
 
   return $periods[period_index_nominal($s)];
+}
+
+
+// Returns the name of the period represented by the timestamp $timestamp
+function period_name_timestamp(int $timestamp) : string
+{
+  global $periods;
+
+  $index = period_index_timestamp($timestamp);
+
+  return $periods[$index] ?? unknown_period_name($index);
 }
 
 

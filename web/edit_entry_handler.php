@@ -615,9 +615,10 @@ if ($enable_periods)
 // Round down the starttime and round up the endtime to the nearest slot boundaries
 // (This step is probably unnecessary now that MRBS always returns times aligned
 // on slot boundaries, but is left in for good measure).
-$am7 = get_start_first_slot($start_month, $start_day, $start_year);
-$start_time = round_t_down($start_time, $resolution, $am7);
-$end_time = round_t_up($end_time, $resolution, $am7);
+$start_first_slot = get_start_first_slot($start_month, $start_day, $start_year);
+$start_time = round_t_down($start_time, $resolution, $start_first_slot);
+$start_first_slot = get_start_first_slot($end_month, $end_day, $end_year);
+$end_time = round_t_up($end_time, $resolution, $start_first_slot);
 
 // If they asked for 0 minutes, and even after the rounding the slot length is still
 // 0 minutes, push that up to 1 resolution unit.

@@ -240,7 +240,7 @@ function create_details_body(array $data, bool $as_html=false, bool $keep_privat
         // End date
         if ($enable_periods)
         {
-          list( , $end_date) =  period_date_string($data['end_time'], $data['area_id'], -1);
+          list( , $end_date) =  period_date_string($data['end_time'], $data['area_id'], true);
         }
         else
         {

@@ -251,7 +251,7 @@ $vocab["old_value"]               = "Old";
 $vocab["reason"]                  = "Reason";
 $vocab["info_requested"]          = "Information requested";
 $vocab["cannot_change_approved_bookings"] = "Bookings that have been approved cannot be edited or deleted";
-$vocab["no_simultaneous_bookings"]        = "You cannot have bookings for more than %d room(s) at the same time";
+$vocab["no_simultaneous_bookings"]        = "You cannot have bookings for more than %s room(s) at the same time";
 $vocab["no_bookings_on_holidays"] = "You have tried to make a booking on a holiday (%s)";
 $vocab["no_bookings_on_weekends"] = "You have tried to make a booking on a weekend day (%s)";
 $vocab["type_not_allowed"]        = 'Bookings of type %1$s are not allowed in %2$s';
@@ -670,6 +670,10 @@ $vocab["no_indefinite_repeats"]       = "Indefinite repeats not yet supported by
 $vocab["bad_timezone"]                = "Unknown or bad timezone '%s'";
 $vocab["events_imported"]             = "events imported";
 $vocab["events_not_imported"]         = "events not imported";
+
+// Used in EntryInterval.php
+$vocab["range_separator"]     = " - ";  // For separating two dates/times in a range
+$vocab["date_time_separator"] = ", ";   // For separating a date from a time
 
 // Used in DataTables
 $vocab["dt_all"]             = "All";

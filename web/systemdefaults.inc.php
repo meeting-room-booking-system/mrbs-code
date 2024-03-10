@@ -586,6 +586,12 @@ $state_duration = 0;
 // Whether to sort users by their last names or not
 $sort_users_by_last_name = false;
 
+// When viewing all rooms in the week or month views, it can be very difficult to pick out an individual
+// slot, which could be just one pixel wide.  Therefore, the user is taken to the day view first unless
+// there's only one slot per day.  If $view_all_always_go_to_day_view is set to true, then we always go to
+// the day view first, regardless of the number of slots.
+$view_all_always_go_to_day_view = false;
+
 
 /***********************
  * Date and time formats
@@ -674,6 +680,14 @@ $datetime_formats['day_name_edit'] = array(
   'pattern' => 'ccc'
 );
 
+// The format for ranges with both dates and times
+// Note: this setting only accepts 'date_type' and 'time_type' keys
+// and ignores 'pattern' and 'skeleton' keys.
+$datetime_formats['range_datetime'] = array(
+  'date_type' => IntlDateFormatter::MEDIUM,
+  'time_type' => IntlDateFormatter::SHORT
+);
+
 // The format used for times
 $datetime_formats['time'] = array(
   'date_type' => IntlDateFormatter::NONE,
@@ -710,6 +724,8 @@ $datetime_formats['view_week_day_date_month'] = array(
 );
 
 // The title of the week view calendar
+// Note: this setting only accepts 'date_type' and 'time_type' keys
+// and ignores 'pattern' and 'skeleton' keys.
 $datetime_formats['view_week'] = array(
   'date_type' => IntlDateFormatter::LONG,
   'time_type' => IntlDateFormatter::NONE

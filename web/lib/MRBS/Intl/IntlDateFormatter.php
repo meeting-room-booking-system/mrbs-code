@@ -253,6 +253,18 @@ class IntlDateFormatter
       case 'aaa':     // PM [abbrev]
       case 'aaaa':    // PM [wide]
       case 'aaaaa':   // p
+      // am, pm, noon, midnight
+      case 'b':       // mid.
+      case 'bb':      // mid.
+      case 'bbb':     // mid.
+      case 'bbbb':    // midnight
+      case 'bbbbb':   // md
+      // flexible day periods
+      case 'B':       // at night [abbrev]
+      case 'BB':      // at night [abbrev]
+      case 'BBB':     // at night [abbrev]
+      case 'BBBB':    // at night [wide]
+      case 'BBBBB':   // at night [narrow]
         $format = '%P';  // lower-case 'am' or 'pm' based on the given time
         break;
 
