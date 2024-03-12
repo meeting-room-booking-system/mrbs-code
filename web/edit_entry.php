@@ -1589,9 +1589,26 @@ else
 $duration = $tmp['value'];
 $dur_units = $tmp['units'];
 
+// $selected_rooms will be populated if we've come from a drag selection
+if (empty($selected_rooms))
+{
+  $selected_rooms = array($room_id);
+}
+
 // Now that we know all the data to fill the form with we start drawing it
 
-if (!getWritable($create_by, $room_id))
+// First of all, check that the user has write permission for these rooms.
+// Remove any rooms from the selection that they don't have permission for.
+foreach ($selected_rooms as $selected_room)
+{
+  if (!getWritable($create_by, $selected_room))
+  {
+    $key = array_search($selected_room, $selected_rooms);
+    unset($selected_rooms[$key]);
+  }
+}
+// If there are no rooms left then they are not allowed to write to any of them
+if (empty($selected_rooms))
 {
   showAccessDenied($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
   exit;
@@ -1736,11 +1753,6 @@ foreach ($edit_entry_field_order as $key)
 
     case 'room_id':
       $fieldset->addElement(get_field_areas($area_id));
-      // $selected_rooms will be populated if we've come from a drag selection
-      if (empty($selected_rooms))
-      {
-        $selected_rooms = array($room_id);
-      }
       $fieldset->addElement(get_field_rooms($selected_rooms));
       break;
 
