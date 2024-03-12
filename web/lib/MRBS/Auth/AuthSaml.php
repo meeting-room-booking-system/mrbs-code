@@ -82,6 +82,11 @@ class AuthSaml extends Auth
   {
     global $auth;
 
+    if (!isset($auth['saml']['admin']))
+    {
+      return $this->getDefaultLevel($username);
+    }
+
     $userData = \MRBS\session()->ssp->getAttributes();
     $current_username = \MRBS\session()->getUsername();
 
