@@ -2496,6 +2496,7 @@ div#site_faq_body {
 
 .view_entry #registrant_list {
   padding-left: 1em;
+  margin-bottom: 1em;
 }
 
 .view_entry #registrants thead th {

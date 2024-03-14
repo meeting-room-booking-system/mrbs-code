@@ -305,41 +305,47 @@ function generate_event_registration($row, $previous_page=null)
 
   // Display registration information and buttons for this user
   $mrbs_user = session()->getCurrentUser();
-  if (!$can_register_others && in_arrayi($mrbs_user->username,
-                                         array_column($row['registrants'], 'username')))
+  // Doesn't make sense to have anonymous registration at the moment.
+  // You'd have to have a different kind of registration form - and
+  // also think about who is allowed to cancel.
+  if (isset($mrbs_user) && ($mrbs_user->username !== ''))
   {
-    echo '<p>' . htmlspecialchars(get_vocab('already_registered')) . "</p>\n";
-    foreach ($row['registrants'] as $registrant)
+    if (!$can_register_others && in_arrayi($mrbs_user->username,
+        array_column($row['registrants'], 'username')))
     {
-      if (strcasecmp_locale($mrbs_user->username, $registrant['username']) === 0)
+      echo '<p>' . htmlspecialchars(get_vocab('already_registered')) . "</p>\n";
+      foreach ($row['registrants'] as $registrant)
       {
-        $this_registrant = $registrant;
-        break;
+        if (strcasecmp_locale($mrbs_user->username, $registrant['username']) === 0)
+        {
+          $this_registrant = $registrant;
+          break;
+        }
       }
-    }
-    // If they can see others they'll have a delete button against their name.  Otherwise
-    // we'll need to provide one for them.
-    if (!$can_see_others)
-    {
-      generate_cancel_registration_button(
+      // If they can see others they'll have a delete button against their name.  Otherwise
+      // we'll need to provide one for them.
+      if (!$can_see_others)
+      {
+        generate_cancel_registration_button(
           $row,
           $this_registrant,
           get_vocab('cancel_registration'),
           $previous_page,
           true
         );
-    }
-  }
-  else
-  {
-    if (empty($row['registrant_limit_enabled']) ||
-      ($row['registrant_limit'] > $n_registered))
-    {
-      generate_register_button($row, $previous_page);
+      }
     }
     else
     {
-      echo '<p>' . htmlspecialchars(get_vocab('event_full')) . "</p>\n";
+      if (empty($row['registrant_limit_enabled']) ||
+          ($row['registrant_limit'] > $n_registered))
+      {
+        generate_register_button($row, $previous_page);
+      }
+      else
+      {
+        echo '<p>' . htmlspecialchars(get_vocab('event_full')) . "</p>\n";
+      }
     }
   }
 
