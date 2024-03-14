@@ -1370,6 +1370,10 @@ $auth['saml']['attr']['username'] = 'sAMAccountName';
 $auth['saml']['attr']['mail'] = 'mail';
 $auth['saml']['attr']['givenName'] = 'givenname';
 $auth['saml']['attr']['surname'] = 'sn';
+// If you want to configure admins in the config file rather than by using SAML
+// attributes, then add the line
+// unset($auth['saml']['admin']);
+// to your config file.
 $auth['saml']['admin']['memberOf'] = ['CN=Domain Admins,CN=Users,DC=example,DC=com'];
 // Optional access control filter
 //$auth['saml']['user']['memberOf'] = ['CN=Calendar Users,CN=Users,DC=example,DC=com'];
