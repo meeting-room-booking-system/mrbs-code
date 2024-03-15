@@ -172,7 +172,7 @@ class AuthWordpress extends Auth
     $mrbs_roles = (array)$mrbs_roles;
 
     // Put the roles into the standard WordPress format
-    $mrbs_roles = array_map('self::standardise_role_name', $mrbs_roles);
+    $mrbs_roles = array_map(self::class . '::standardise_role_name', $mrbs_roles);
 
     return (count(array_intersect($wp_user->roles, $mrbs_roles)) > 0);
   }
