@@ -893,9 +893,11 @@ function utf8_substr_old(string $str, int $start, ?int $length=null) : string
 // UTF-8 compatible substr function
 function utf8_substr(string $str, int $start, ?int $length=null) : string
 {
-  // If we have mb_substr, use it - it's much quicker than our
-  // routines, as it's native code
-  if (function_exists('mb_substr'))
+  // If we have mb_substr, use it - it's much quicker than our routines, as it's native code.
+  // Note that we need to check for both 'mb_substr' and 'mb_detect_encoding' in case
+  // we are working with WordPress, which has a compatibility library that includes
+  // mb_substr() but not mb_detect_encoding().
+  if (function_exists('mb_substr') && function_exists('mb_detect_encoding'))
   {
     $encoding = mb_detect_encoding($str);
     return mb_substr($str, $start, $length, $encoding);
