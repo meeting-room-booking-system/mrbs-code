@@ -1025,6 +1025,7 @@ $csrf_cookie["secret"] = "This still isn't a very good secret!";
 // Configuration parameters for 'php' session scheme
 
 // The session name
+// Unset this in your config file if you want to use the default session name
 $auth["session_php"]["session_name"] = 'MRBS_SESSID';
 
 // The expiry time of a session cookie, in seconds.  Set it to 0 for the
