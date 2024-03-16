@@ -72,7 +72,11 @@ abstract class Session
       ini_set('session.gc_maxlifetime', max(ini_get('session.gc_maxlifetime'), $lifetime));
     }
 
-    session_name($auth['session_php']['session_name']);  // call before session_set_cookie_params() - see PHP manual
+    if (isset($auth['session_php']['session_name']))
+    {
+      // call before session_set_cookie_params() - see PHP manual
+      session_name($auth['session_php']['session_name']);
+    }
     session_set_cookie_params($lifetime, $cookie_path);
 
     $current_db_schema_version = db_schema_version();
