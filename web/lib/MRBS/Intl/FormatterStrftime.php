@@ -5,7 +5,9 @@ namespace MRBS\Intl;
 class FormatterStrftime implements Formatter
 {
 
-  public function convert(string $token): string
+  // Convert an ICU pattern token into the nearest equivalent token.
+  // Returns FALSE if there is no equivalent.
+  public function convert(string $token)
   {
     switch ($token) {
       // AM or PM
