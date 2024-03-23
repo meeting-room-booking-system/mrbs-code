@@ -3,6 +3,12 @@ namespace MRBS;
 
 require "../defaultincludes.inc";
 
+function get_date_format() : string
+{
+  return 'y-MM-dd';
+  return 'custom';
+}
+
 http_headers(array("Content-type: application/x-javascript"),
              60*30);  // 30 minute expiry
 
@@ -266,7 +272,7 @@ $(document).on('page_ready', function() {
       plugins: [iPadMobileFix()],
       dateFormat: 'Y-m-d',
       altInput: true,
-      altFormat: 'custom',
+      altFormat: <?php echo "'" . get_date_format() . "'" ?>,
       formatDate: formatDate,
       onDayCreate: onDayCreate,
       locale: {firstDayOfWeek: <?php echo $weekstarts ?>},
