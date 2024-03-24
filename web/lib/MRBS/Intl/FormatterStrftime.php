@@ -4,10 +4,9 @@ namespace MRBS\Intl;
 
 class FormatterStrftime implements Formatter
 {
-
   // Convert an ICU pattern token into the nearest equivalent token.
-  // Returns FALSE if there is no equivalent.
-  public function convert(string $token)
+  // Throws an exception if the token can't be converted.
+  public function convert(string $token) : string
   {
     switch ($token) {
       // AM or PM
@@ -172,7 +171,7 @@ class FormatterStrftime implements Formatter
         break;            // Windows: The %z and %Z modifiers both return the time zone name instead of the offset or abbreviation
 
       default:
-        $format = false;
+        throw new \MRBS\Exception("Could not convert '$token'");
         break;
     }
 

@@ -25,6 +25,7 @@ class IntlDatePatternConverter
     // quotes in a row, whether inside or outside a quoted sequence, represent a ‘real’
     // single quote."
     $format = '';
+    $token = '';
     $token_char = null;
     $in_quotes = false;
     // Split the string into an array of multibyte characters
@@ -46,26 +47,21 @@ class IntlDatePatternConverter
         {
           $token .= $char;
         }
-      }
-      // The end of a token
-      if (isset($token_char) && (($char !== $token_char) || empty($chars)))
-      {
-        $converted_token = $this->formatter->convert($token);
-        if ($converted_token === false)
+        // The end of a token and the beginning of a new one
+        else
         {
-          throw new \MRBS\Exception("Could not convert '$token'");
-        }
-        $format .= $converted_token;
-        if ($is_token_char)
-        {
-          // And the start of a new token
+          $format .= $this->formatter->convert($token);
           $token_char = $char;
           $token = $char;
         }
-        else
-        {
-          $token_char = null;
-        }
+      }
+      // Check to see if a token has just ended, ie we've either got
+      // a non-token character or there are no more characters left.
+      if (($token !== '') && (!$is_token_char || empty($chars)))
+      {
+        $format .= $this->formatter->convert($token);
+        $token = '';
+        $token_char = null;
       }
 
       // Quoted text
@@ -111,4 +107,5 @@ class IntlDatePatternConverter
 
     return $format;
   }
+
 }
