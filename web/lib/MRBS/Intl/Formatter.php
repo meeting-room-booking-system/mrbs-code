@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS\Intl;
 
+// An interface for converting ICU datetime patterns to another format, eg strftime
 interface Formatter
 {
   // Convert an ICU pattern token into the nearest equivalent token.
