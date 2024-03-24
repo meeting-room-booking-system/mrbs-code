@@ -633,6 +633,13 @@ $datetime_formats['date'] = array(
   'time_type' => IntlDateFormatter::NONE
 );
 
+// By default the datepickers use a date format appropriate to the locale.  If you want to
+// override this, set 'pattern' as required, eg to 'y-MM-dd' for ISO8601 format.  Note: only
+// the 'pattern' key is recognised.
+$datetime_formats['datepicker'] = array(
+  'pattern' => null
+);
+
 // The format used for dates with times
 $datetime_formats['date_and_time'] = array(
   'date_type' => IntlDateFormatter::FULL,
