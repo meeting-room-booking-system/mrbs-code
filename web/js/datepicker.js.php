@@ -1,11 +1,28 @@
 <?php
 namespace MRBS;
 
+use MRBS\Intl\FormatterFlatpickr;use MRBS\Intl\IntlDatePatternConverter;
+
 require "../defaultincludes.inc";
 
 function get_date_format() : string
 {
-  return 'y-MM-dd';
+  global $datetime_formats;
+
+  if (isset($datetime_formats['datepicker']['pattern']))
+  {
+    try
+    {
+      $converter = new IntlDatePatternConverter(new FormatterFlatpickr());
+      return $converter->convert($datetime_formats['datepicker']['pattern']);
+    }
+    catch (\Exception $e)
+    {
+      // Report the error and fall through to the 'custom' format
+      trigger_error($e->getMessage(), E_USER_WARNING);
+    }
+  }
+
   return 'custom';
 }
 
@@ -268,12 +285,21 @@ $(document).on('page_ready', function() {
 
   var lastValidDate = {};
 
+  <?php
+  $date_format = get_date_format();
+  ?>
+
   var config = {
       plugins: [iPadMobileFix()],
       dateFormat: 'Y-m-d',
       altInput: true,
       altFormat: <?php echo "'" . get_date_format() . "'" ?>,
-      formatDate: formatDate,
+      <?php
+      if ($date_format == 'custom')
+      {
+        echo "formatDate: formatDate,\n";
+      }
+      ?>
       onDayCreate: onDayCreate,
       locale: {firstDayOfWeek: <?php echo $weekstarts ?>},
       onChange: function(selectedDates, dateStr, instance) {
