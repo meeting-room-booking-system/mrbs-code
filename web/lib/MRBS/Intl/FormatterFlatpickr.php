@@ -4,6 +4,11 @@ namespace MRBS\Intl;
 
 class FormatterFlatpickr implements Formatter
 {
+  // See https://flatpickr.js.org/formatting/
+  private const FORMATTING_TOKENS = [
+    'd', 'D', 'l', 'j', 'J', 'w', 'W', 'F', 'm', 'n', 'M',
+    'U', 'y', 'Y', 'Z', 'H', 'h', 'G', 'i', 'S', 's', 'K'];
+
   // Convert an ICU pattern token into the nearest equivalent token.
   // Throws an exception if the token can't be converted.
   public function convert(string $token) : string
@@ -36,7 +41,7 @@ class FormatterFlatpickr implements Formatter
       case 'EEEE':    // Tuesday
         // local day of week
       case 'eeee':    // Tuesday
-        $format = '%A';  // A full textual representation of the day, eg Sunday through Saturday
+        $format = 'l';  // A full textual representation of the day, eg Sunday through Saturday
         break;
 
       // stand-alone local day of week
@@ -53,90 +58,82 @@ class FormatterFlatpickr implements Formatter
       case 'eee':     // Tue
       case 'eeeee':   // T
       case 'eeeeee':  // Tu
-        $format = '%a';   // An abbreviated textual representation of the day, eg Sun through Sat
+        $format = 'D';   // A textual representation of a day, eg	Mon through Sun
         break;
 
       // day in month
       case 'd':       // 2
-        $format = '%i';   // One/two digit day of the month, eg 1 to 31
+        $format = 'j';   // Day of the month without leading zeros, eg1 to 31
         break;
 
       // day in month
       case 'dd':      // 02
-        $format = '%d';   // Two-digit day of the month (with leading zeros), eg 01 to 31
-        break;
-
-      // day of year
-      case 'D':       // 189
-        $format = '%E';   // Day of the year without leading zeroes
+        $format = 'd';   // Day of the month, 2 digits with leading zeros, eg	01 to 31
         break;
 
       // hour in day (0~23)
       case 'H':       // 0
-        $format = '%k';   // Hour in 24-hour format, with a space preceding single digits, eg 0 through 23
-        break;
-
       // hour in day (0~23)
       case 'HH':      // 00
-        $format = '%H';   // Two digit representation of the hour in 24-hour format, eg 00 through 23
+        $format = 'H';   // Hours (24 hours), eg	00 to 23
         break;
 
       // hour in am/pm (1~12)
       case 'h':       // 7
-        $format = '%o';   // Hour in 12-hour format, with no space preceding single digits
+        $format = 'h';   // Hours	1 to 12
         break;
 
       // hour in am/pm (1~12)
       case 'hh':      // 07
-        $format = '%I';   // Two digit representation of the hour in 12-hour format, eg 01 through 12
+        $format = 'G';   // Hours, 2 digits with leading zeros	1 to 12
         break;
 
       // stand-alone month in year
       case 'L':       // 9
         // month in year
       case 'M':       // 9
-        $format = '%f';   // One/two digit representation of the month, eg 1 (for January) through 12 (for December)
+        $format = 'n';   // Numeric representation of a month, without leading zeros	1 through 12
         break;
 
       // stand-alone month in year
       case 'LL':      // 09
         // month in year
       case 'MM':      // 09
-        $format = '%m';   // Two digit representation of the month, eg 01 (for January) through 12 (for December)
+        $format = 'm';   // Numeric representation of a month, with leading zero	01 through 12
         break;
 
       // stand-alone month in year
       case 'LLL':     // Sep
         // month in year
       case 'MMM':     // Sep
-        $format = '%b';   // Abbreviated month name, based on the locale, eg Jan through Dec
+        $format = 'M';   // A short textual representation of a month	Jan through Dec
         break;
 
       // stand-alone month in year
       case 'LLLL':    // September
         // month in year
       case 'MMMM':    // September
-        $format = '%B';   // Full month name, based on the locale, eg January through December
+        $format = 'F';   // A full textual representation of a month	January through December
         break;
 
       // minute in hour
       case 'm':       // 4
-        $format = '%q';   // Minute in the hour, with no leading zero
+        $format = 'i';   // Minutes	00 to 59
         break;
 
       // minute in hour
       case 'mm':      // 04
-        $format = '%M';   // Minute in the hour, with leading zeroes
+        $format = 'i';   // Minutes	00 to 59
         break;
 
       // second in minute
       case 's':       // 5
-        $format = '%v';   // Seconds, with no leading zeroes
+        $format = 's';   // Seconds	0, 1 to 59
         break;
 
       // second in minute
       case 'ss':      // 05
-        $format = '%S';   // Two digit representation of the second, eg 00 through 59
+        $format = 'S';   // Seconds, 2 digits	00 to 59
         break;
 
       // week of year
@@ -144,11 +141,8 @@ class FormatterFlatpickr implements Formatter
       // dependent. In many locales it is the ISO week number, but in some locales it isn't.  It (partly?)
       // depends on the locale's first day of the week, which can be got from IntlCalendar::getFirstDayOfWeek().
       case 'w':       // 7
-        $format = '%J';   // ISO-8601:1988 week number of the given year without leading zeroes, eg 1 through 53
-        break;
-
       case 'ww':      // 07
-        $format = '%V';   // ISO-8601:1988 week number of the given year, eg 01 through 53
+        $format = 'W';   // Numeric representation of the week	0 (first week of the year) through 52 (last week of the year)
         break;
 
       // year
@@ -159,16 +153,8 @@ class FormatterFlatpickr implements Formatter
 
       // year
       case 'yy':      // 96
-        $format = '%y';   // Two digit representation of the year, eg 09 for 2009, 79 for 1979
+        $format = 'y';   // A two digit representation of a year	99 or 03
         break;
-
-      // Time Zone: specific non-location
-      case 'z':       // PDT
-      case 'zz':      // PDT
-      case 'zzz':     // PDT
-      case 'zzzz':    // Pacific Daylight Time
-        $format = '%Z';   // The time zone abbreviation, eg EST for Eastern Time
-        break;            // Windows: The %z and %Z modifiers both return the time zone name instead of the offset or abbreviation
 
       default:
         throw new \MRBS\Exception("Could not convert '$token'");
@@ -180,6 +166,11 @@ class FormatterFlatpickr implements Formatter
 
   public function escape(string $char): string
   {
-    return '\\' . $char;
+    if (in_array($char, self::FORMATTING_TOKENS))
+    {
+      return '\\\\' . $char;
+    }
+
+    return $char;
   }
 }
