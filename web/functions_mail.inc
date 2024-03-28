@@ -210,7 +210,7 @@ function get_area_admin_email($id, bool $series=false) : string
            LIMIT 1";
   $email = db()->query_scalar_non_bool($sql, array($id));
 
-  return ($email === false) ? '' : $email;
+  return (!isset($email) || ($email === false)) ? '' : $email;
 }
 
 
@@ -234,7 +234,7 @@ function get_room_admin_email($id, bool $series=false) : string
            LIMIT 1";
   $email = db()->query_scalar_non_bool($sql, array($id));
 
-  return ($email === false) ? '' : $email;
+  return (!isset($email) || ($email === false)) ? '' : $email;
 }
 
 
