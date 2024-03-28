@@ -5,6 +5,9 @@ use MRBS\Intl\FormatterFlatpickr;use MRBS\Intl\IntlDatePatternConverter;
 
 require "../defaultincludes.inc";
 
+// We use ICU datetime patterns in the config file rather than flatpickr formatting
+// tokens so that we can switch to a different datepicker if necessary, without
+// having to change the config settings.
 function get_date_format() : string
 {
   global $datetime_formats;
