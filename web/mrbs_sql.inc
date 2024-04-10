@@ -2173,7 +2173,7 @@ function get_room_details(int $room_id) : ?array
 // otherwise just the ones that are not disabled.
 // If $include_invisible is TRUE then all rooms are returned, whether or not they are visible,
 // otherwise just the ones that are visible to the current user.
-function get_rooms($area, $include_disabled=false, $include_invisible=false)
+function get_rooms($area, bool $include_disabled=false, bool $include_invisible=false) : array
 {
   $sql = "SELECT R.*
             FROM " . _tbl('room') . " R, " . _tbl('area') . " A
