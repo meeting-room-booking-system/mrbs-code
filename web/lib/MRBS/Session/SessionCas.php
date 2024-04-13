@@ -30,7 +30,10 @@ class SessionCas extends SessionWithLogin
 
   public function authGet(?string $target_url=null, ?string $returl=null, ?string $error=null, bool $raw=false) : void
   {
-    // Useless Method - CAS does it all
+    if (!phpCAS::isAuthenticated())
+    {
+      phpCAS::forceAuthentication();
+    }
   }
 
 
