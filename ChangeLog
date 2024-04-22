@@ -1,4 +1,3452 @@
-commit b3f0c2ed8 (HEAD -> main)
+commit 55fb35ab5 (HEAD -> main)
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Mon Apr 22 12:18:19 2024 +0100
+
+    Updated version number for release of 1.11.5
+
+ web/version_num.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit e657cf163 (origin/main)
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Apr 15 17:34:32 2024 +0100
+
+    Fix typo in comment
+
+ web/systemdefaults.inc.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit fd781c5c9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Apr 13 16:44:02 2024 +0100
+
+    Force authentication rather than giving an Access Denied message.  See GitHub Issue #3645.
+
+ web/lib/MRBS/Session/SessionCas.php | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+commit dfb21559a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Apr 10 15:33:25 2024 +0100
+
+    Add type declarations
+
+ web/mrbs_sql.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 26e278f20
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Apr 4 17:48:54 2024 +0100
+
+    Expand error message
+
+ web/language.inc | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit e21332092
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Mar 28 12:28:50 2024 +0000
+
+    Fix uncaught exception when the room or area admin email is null
+
+ web/functions_mail.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit d48372704
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Mar 24 17:36:49 2024 +0000
+
+    Add comment
+
+ web/js/datepicker.js.php | 3 +++
+ 1 file changed, 3 insertions(+)
+
+commit 89d3573a0
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Mar 24 17:26:54 2024 +0000
+
+    Add comment
+
+ web/systemdefaults.inc.php | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit 40a1b1c40
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Mar 24 17:24:43 2024 +0000
+
+    Add comment
+
+ web/lib/MRBS/Intl/Formatter.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit bf00cf199
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Mar 24 15:36:58 2024 +0000
+
+    All working
+
+ web/lib/MRBS/Intl/FormatterFlatpickr.php | 65 ++++++++++------------
+ 1 file changed, 28 insertions(+), 37 deletions(-)
+
+commit 708046f79
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Mar 24 14:52:33 2024 +0000
+
+    Fix bug when a token immediately follows another one just before the end of the string, eg 'aay'
+
+ web/lib/MRBS/Intl/Formatter.php              |  4 +--
+ web/lib/MRBS/Intl/FormatterFlatpickr.php     |  6 ++--
+ web/lib/MRBS/Intl/FormatterStrftime.php      |  7 ++---
+ .../MRBS/Intl/IntlDatePatternConverter.php   | 29 ++++++++----------
+ 4 files changed, 22 insertions(+), 24 deletions(-)
+
+commit 229422775
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Mar 24 12:31:19 2024 +0000
+
+    Started on Flatpickr formatter
+
+ web/js/datepicker.js.php                     |  30 ++-
+ .../MRBS/Intl/FormatterFlatpickr.php (new)   | 183 +++++++++++++++++
+ 2 files changed, 211 insertions(+), 2 deletions(-)
+
+commit 5e4b79104
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Mar 23 12:09:41 2024 +0000
+
+    Fix type declarations
+
+ web/lib/MRBS/Intl/Formatter.php         | 4 +++-
+ web/lib/MRBS/Intl/FormatterStrftime.php | 4 +++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+
+commit a16f47781
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Mar 23 12:03:18 2024 +0000
+
+    First working version of restructured code
+
+ web/lib/MRBS/Intl/FormatterStrftime.php      | 186 +++++++++++++++-
+ web/lib/MRBS/Intl/IntlDateFormatter.php      | 195 +----------------
+ .../MRBS/Intl/IntlDatePatternConverter.php   |  64 ++++--
+ 3 files changed, 227 insertions(+), 218 deletions(-)
+
+commit 2bb30e1ee
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Mar 23 11:30:04 2024 +0000
+
+    Interim commit
+
+ web/js/datepicker.js.php                     |  8 +-
+ web/lib/MRBS/Intl/Formatter.php (new)        | 10 ++
+ .../MRBS/Intl/FormatterStrftime.php (new)    | 17 ++++
+ web/lib/MRBS/Intl/IntlDateFormatter.php      | 85 ++--------------
+ .../Intl/IntlDatePatternConverter.php (new)  | 94 ++++++++++++++++++
+ web/systemdefaults.inc.php                   |  6 ++
+ 6 files changed, 140 insertions(+), 80 deletions(-)
+
+commit 0331359b2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Mar 16 15:14:18 2024 +0000
+
+    Allow the session name to be set to the default. (Problems have been otherwise observed when running with some WordPress plugins, eg Participants Database Version 2.5.7, which also use PHP sessions.)
+
+ web/lib/MRBS/Session/Session.php | 6 +++++-
+ web/systemdefaults.inc.php       | 1 +
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+commit 96389f33b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Mar 15 18:30:06 2024 +0000
+
+    Fix deprecation notice when running on PHP >= 8.2
+
+ web/lib/MRBS/Auth/AuthWordpress.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 72a58241e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Mar 15 18:17:19 2024 +0000
+
+    Fix fatal error when the auth type is WordPress and the mbstring extension is not enabled.
+
+ web/language.inc | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+commit f89540f4a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Mar 14 16:29:22 2024 +0000
+
+    Fix warning when view_entry.php can be accessed by unlogged-in users.  See GitHub Issue #3634.
+
+ web/css/mrbs.css.php |  1 +
+ web/view_entry.php   | 50 +++++++++++++++++++++++-------------------
+ 2 files changed, 29 insertions(+), 22 deletions(-)
+
+commit 06fb7f72f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Mar 14 12:16:20 2024 +0000
+
+    Add comment concerning configuring SAML admins in the config file.  See GitHub Issue #3431.
+
+ web/systemdefaults.inc.php | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+commit 933c16de5
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Mar 12 18:47:45 2024 +0000
+
+    Use config file for admins if $auth['saml']['admin'] is not set.  See GitHub Issue #3431.
+
+ web/lib/MRBS/Auth/AuthSaml.php | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+commit 59a7da42f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Mar 12 10:33:36 2024 +0000
+
+    Fix problem when drag selecting rooms and some rooms aren't writable.  See GitHub Issue #3632.
+
+ web/edit_entry.php | 26 +++++++++++++++++++-------
+ 1 file changed, 19 insertions(+), 7 deletions(-)
+
+commit 6eb686adc
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Mar 10 17:26:58 2024 +0000
+
+    Further fix for GitHub Issue #3628.
+
+ web/lib/MRBS/DateTime.php |  6 ++++++
+ web/mrbs_sql.inc          | 31 +++++++++++++++++++++++++++++++
+ 2 files changed, 37 insertions(+)
+
+commit 9cbacbf01
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Mar 10 13:54:19 2024 +0000
+
+    Remove redundant comment now that MRBS requires PHP >= 7.2.0
+
+ web/functions.inc | 3 ---
+ 1 file changed, 3 deletions(-)
+
+commit 61a66314d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Mar 7 18:32:58 2024 +0000
+
+    Simplify code
+
+ web/functions.inc | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+commit 8d4b101f1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Mar 7 18:19:01 2024 +0000
+
+    Simplify code
+
+ web/functions.inc | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+commit 635a1da21
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Mar 7 18:00:18 2024 +0000
+
+    Simplify code
+
+ web/functions.inc | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
+
+commit 256226558
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Mar 7 17:44:53 2024 +0000
+
+    Restructure
+
+ web/functions.inc      | 8 ++++++--
+ web/functions_view.inc | 2 +-
+ 2 files changed, 7 insertions(+), 3 deletions(-)
+
+commit 78c2579c8
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Mar 7 17:26:44 2024 +0000
+
+    Rename variables
+
+ web/edit_entry_handler.php | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 9e2976641
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Mar 7 16:31:04 2024 +0000
+
+    Fix bug when making a booking that crosses a DST boundary in an area with a single period.  See GitHub Issue #3628.
+
+ web/edit_entry_handler.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 3442d54b0
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Mar 7 12:18:38 2024 +0000
+
+    Fix problem with last commit.  See GitHub Issue #3629.
+
+ web/functions_table.inc    | 28 ++++++++++++++++++++--------
+ web/systemdefaults.inc.php | 11 +++++------
+ 2 files changed, 25 insertions(+), 14 deletions(-)
+
+commit 29c429b92
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Mar 7 10:40:48 2024 +0000
+
+    Add a configuration setting to allow bookings direct from the week and month views for all rooms without first going via the day view.  See GitHub Issue #3629.
+
+ web/functions_table.inc    | 19 +++++++++++++++++--
+ web/systemdefaults.inc.php |  7 +++++++
+ 2 files changed, 24 insertions(+), 2 deletions(-)
+
+commit c37d0fe78
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Mar 5 18:36:44 2024 +0000
+
+    Fix problem with periods not being substituted properly when the am/pm info is the same for the start and end, and therefore only given once by Ranger.
+
+ web/lib/MRBS/EntryInterval.php | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+
+commit 38805d1ac
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Mar 5 17:20:15 2024 +0000
+
+    Restructure
+
+ web/lib/MRBS/EntryInterval.php | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit ca97d12f0
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Mar 5 16:35:12 2024 +0000
+
+    Upgrade to latest version of Ranger, fixing problem with virtual separator appearing
+
+ web/lib/OpenPsa/Ranger/Ranger.php | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+commit d9c71a04e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Mar 5 16:25:24 2024 +0000
+
+    Fix directory structure
+
+ web/lib/OpenPsa/{ => Ranger}/Provider/DeProvider.php      | 0
+ web/lib/OpenPsa/{ => Ranger}/Provider/DefaultProvider.php | 0
+ web/lib/OpenPsa/{ => Ranger}/Provider/Provider.php        | 0
+ web/lib/OpenPsa/{ => Ranger}/Ranger.php                   | 0
+ 4 files changed, 0 insertions(+), 0 deletions(-)
+
+commit db4615f70
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Mar 5 14:45:29 2024 +0000
+
+    Upgrade to Release 0.5.8
+
+ web/lib/OpenPsa/Ranger.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit e0a1ec2e4
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Mar 4 21:35:15 2024 +0000
+
+    Add support for 'b' and 'B' symbols
+
+ web/lib/MRBS/Intl/IntlDateFormatter.php | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+commit 2fb53503f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Mar 4 21:26:00 2024 +0000
+
+    Add Ranger (not sure why - isn't it already there?)
+
+ .../OpenPsa/Provider/DeProvider.php (new)    |  31 ++
+ .../Provider/DefaultProvider.php (new)       |  25 +
+ web/lib/OpenPsa/Provider/Provider.php (new)  |  20 +
+ web/lib/OpenPsa/Ranger.php (new)             | 446 +++++++++++++++++
+ 4 files changed, 522 insertions(+)
+
+commit 19c455714
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Mar 4 17:31:18 2024 +0000
+
+    Updated to latest version of Ranger, fixing https://github.com/flack/ranger/issues/14
+
+ .../Ranger/Provider/DeProvider.php (gone)    |  31 --
+ .../Provider/DefaultProvider.php (gone)      |  25 -
+ .../Ranger/Provider/Provider.php (gone)      |  20 -
+ web/lib/OpenPsa/Ranger/Ranger.php (gone)     | 440 -----------------
+ 4 files changed, 516 deletions(-)
+
+commit adb0be6fa
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Mar 3 21:47:56 2024 +0000
+
+    Fix bug in check for simultaneous booking config settings
+
+ web/mrbs_sql.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit de106c16a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Mar 3 18:32:26 2024 +0000
+
+    Simplify code
+
+ web/mrbs_sql.inc | 58 +---------------------------------------------
+ 1 file changed, 1 insertion(+), 57 deletions(-)
+
+commit 28b98a5fa
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Mar 3 18:22:07 2024 +0000
+
+    Fix GitHub Issue #3626
+
+ web/del.php                    |  2 +-
+ web/lib/MRBS/EntryInterval.php | 30 ++++++++++++++++++++++++++++--
+ web/mrbs_sql.inc               |  4 ++--
+ 3 files changed, 31 insertions(+), 5 deletions(-)
+
+commit c3be0c97b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Mar 3 18:17:06 2024 +0000
+
+    Fix bug in previous commit
+
+ web/functions.inc | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+commit a842b7ead
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Mar 3 17:07:02 2024 +0000
+
+    Restructure
+
+ web/lib/MRBS/EntryInterval.php | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+commit 23618c3bf
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Mar 3 16:14:14 2024 +0000
+
+    Fix casting of booleans in the area table
+
+ tables.my.sql     | 1 +
+ tables.pg.sql     | 1 +
+ web/functions.inc | 9 ++++++++-
+ 3 files changed, 10 insertions(+), 1 deletion(-)
+
+commit cfd9f10d1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Mar 3 12:45:55 2024 +0000
+
+    Internationalise separator
+
+ web/index.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 0fae4e8f5
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Mar 3 12:33:32 2024 +0000
+
+    Internationalise separators
+
+ web/lang/lang.en               | 4 ++++
+ web/lib/MRBS/EntryInterval.php | 4 ++--
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+
+commit 435145e49
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Mar 3 12:24:35 2024 +0000
+
+    Restructure
+
+ web/lib/MRBS/EntryInterval.php | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+commit 1f1a6f2f9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Mar 3 12:16:33 2024 +0000
+
+    Add defaults
+
+ web/index.php | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+commit a9144cadb
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Mar 3 12:08:00 2024 +0000
+
+    Add defaults
+
+ web/lib/MRBS/EntryInterval.php | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+commit 75487b3e6
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Mar 3 12:07:42 2024 +0000
+
+    Add comments
+
+ web/systemdefaults.inc.php | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+commit 4bbab26fd
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Mar 2 18:39:20 2024 +0000
+
+    Improve localisation of date-time ranges
+
+ web/lib/MRBS/EntryInterval.php | 19 +++++++++----------
+ web/systemdefaults.inc.php     |  6 ++++++
+ 2 files changed, 15 insertions(+), 10 deletions(-)
+
+commit b4ccc1cba
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Mar 2 17:53:20 2024 +0000
+
+    Restructure
+
+ web/del.php | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+commit 5a944be7d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Mar 2 17:00:56 2024 +0000
+
+    Change number from integer to string to allow words instead of numbers in the future, eg "two" instead of 2
+
+ web/lang/lang.en    | 2 +-
+ web/lang/lang.pt-br | 2 +-
+ web/mrbs_sql.inc    | 3 ++-
+ 3 files changed, 4 insertions(+), 3 deletions(-)
+
+commit c28cfcfa1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Mar 2 09:51:01 2024 +0000
+
+    Fix bug introduced in recent commit
+
+ web/del.php | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit d8c13554e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Mar 1 19:17:48 2024 +0000
+
+    Restructure
+
+ web/del.php | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+commit 1d2c561aa
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Mar 1 19:15:10 2024 +0000
+
+    Minor optimisation
+
+ web/del.php | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+commit 9c1654715
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Mar 1 18:54:30 2024 +0000
+
+    Avoid double query if there are no entries in the room
+
+ web/del.php | 45 ++++++++++++++++++++++++---------------------
+ 1 file changed, 24 insertions(+), 21 deletions(-)
+
+commit fa38f400c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Mar 1 18:26:52 2024 +0000
+
+    Restructure
+
+ web/del.php      |  6 +-----
+ web/mrbs_sql.inc | 11 +++++++++++
+ 2 files changed, 12 insertions(+), 5 deletions(-)
+
+commit 248531750
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Mar 1 18:16:04 2024 +0000
+
+    Update comment
+
+ web/mrbs_sql.inc | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 085d92259
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Mar 1 18:10:00 2024 +0000
+
+    Restructure
+
+ web/del.php      | 34 ++++++++++------------------------
+ web/mrbs_sql.inc | 39 ++++++++++++++++++++++++++++++++-------
+ 2 files changed, 42 insertions(+), 31 deletions(-)
+
+commit 54b2462e3
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Mar 1 16:43:24 2024 +0000
+
+    Modify upgrade instructions to state that the new release should be uploaded to a new directory, rather than overwriting the existing directory.  See GitHub Issue #3623.
+
+ UPGRADE | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+commit fd7652886
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Feb 29 18:45:49 2024 +0000
+
+    Fix TypeError.
+
+ web/mrbs_sql.inc | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+commit 0078bb2bb
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Feb 29 18:09:49 2024 +0000
+
+    Fix TypeError.  See GitHub Issue #3625.
+
+ web/del.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 46dfbbd7f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Feb 29 17:14:29 2024 +0000
+
+    Improve error message.
+
+ web/lib/MRBS/DB.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 2ceeacda9
+Merge: 73861ebc5 0b2d4e0dc
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Feb 28 18:31:40 2024 +0000
+
+    Merge pull request #3621 from ouafnico/ouafnico/lang_fr_update
+    
+    Update french translation
+
+commit 73861ebc5
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Feb 28 18:18:20 2024 +0000
+
+    Add validation of integers in query1()
+
+ web/lib/MRBS/DB.php | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+commit 3342eff92
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Feb 28 17:39:45 2024 +0000
+
+    Add type declaration
+
+ web/mrbs_sql.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 5d8ee3c14
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Feb 28 16:54:32 2024 +0000
+
+    Fix incorrect use of query1()
+
+ web/lib/MRBS/DB_pgsql.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 6a62751d1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Feb 28 16:51:30 2024 +0000
+
+    Fix incorrect use of query1()
+
+ web/lib/MRBS/DB_pgsql.php | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+commit fafec0269
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Feb 28 16:32:22 2024 +0000
+
+    Fix incorrect use of query1()
+
+ web/lib/MRBS/DB_pgsql.php | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+commit 0b2d4e0dc
+Author: Nicolas Repentin <nicolas.repentin@i-run.fr>
+Date:   Wed Feb 28 17:29:56 2024 +0100
+
+    Update french translation
+
+ web/lang/lang.fr | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+commit 285472f96
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Feb 28 16:14:20 2024 +0000
+
+    Add type declarations
+
+ web/functions_mail.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 9af094964
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Feb 28 16:09:30 2024 +0000
+
+    Fix incorrect use of query1()
+
+ web/functions_mail.inc | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 036c2e732
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Feb 28 15:57:04 2024 +0000
+
+    Rename method
+
+ web/lib/MRBS/DB.php               | 10 +++++-----
+ web/lib/MRBS/SessionHandlerDb.php |  2 +-
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+commit ded8b1fb6
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Feb 27 17:29:21 2024 +0000
+
+    Change == to === now that the result of query1() is an int
+
+ web/del.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 9ecf46f02
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Feb 27 17:18:59 2024 +0000
+
+    Fix incorrect use of query1()
+
+ web/lib/MRBS/DB.php       | 4 ++--
+ web/lib/MRBS/DB_mysql.php | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+commit 24ac0e83b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Feb 27 16:40:53 2024 +0000
+
+    Remove redundant casts
+
+ web/dbsys.inc | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+commit f11b4ba65
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Feb 27 16:33:16 2024 +0000
+
+    Simplify code and add type declaration
+
+ web/lib/MRBS/DB.php | 30 +++++++-----------------------
+ 1 file changed, 7 insertions(+), 23 deletions(-)
+
+commit 07d2dc94a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Feb 27 15:47:55 2024 +0000
+
+    Declare strict_types
+
+ web/lib/MRBS/SessionHandlerDb.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 263121d4f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Feb 27 15:42:48 2024 +0000
+
+    Fix incorrect use of query1()
+
+ web/lib/MRBS/DB.php               | 17 +++++++++++++++++
+ web/lib/MRBS/SessionHandlerDb.php |  6 +++---
+ 2 files changed, 20 insertions(+), 3 deletions(-)
+
+commit 8eda21c1b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Feb 27 15:25:53 2024 +0000
+
+    Better fix for GitHub Issue #3619.
+
+ web/lib/MRBS/Map.php | 1 +
+ web/mrbs_sql.inc     | 2 ++
+ 2 files changed, 3 insertions(+)
+
+commit 59065bd5f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Feb 27 10:48:55 2024 +0000
+
+    Revert strict_types.  See GitHub Issue #3619.
+
+ web/lib/MRBS/Map.php | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit bcaa98100
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Feb 26 18:24:54 2024 +0000
+
+    Declare strict_types
+
+ web/reset_password_handler.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 5acfff639
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Feb 26 18:09:40 2024 +0000
+
+    Rename function
+
+ web/report.php | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+commit e6c0c0794
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Feb 25 21:41:17 2024 +0000
+
+    Fix type declaration and declare strict types
+
+ web/lib/MRBS/System.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 6e606a330
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Feb 25 19:02:56 2024 +0000
+
+    Improve error handling and add type declarations
+
+ web/lib/MRBS/System.php | 24 +++++++++++++++++-------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
+
+commit 7af6c79db
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Feb 25 18:23:57 2024 +0000
+
+    Improve error handling and add type declarations
+
+ web/report.php | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+commit 3ef67377b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Feb 24 13:39:16 2024 +0000
+
+    Make use of new functions
+
+ web/report.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit be12075f2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Feb 24 13:35:13 2024 +0000
+
+    Make variable names clearer
+
+ web/functions.inc | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+commit 40c831704
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Feb 24 12:53:25 2024 +0000
+
+    Add sanity check of config settings
+
+ web/functions.inc | 39 ++++++++++++++++++++++++++++++++++++---
+ web/mrbs_sql.inc  | 17 +++++++++++++++++
+ 2 files changed, 53 insertions(+), 3 deletions(-)
+
+commit 1b43feb1e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Feb 24 10:04:26 2024 +0000
+
+    Update translation of 'no_simultaneous_bookings' following recent changes.
+
+ web/lang/lang.pt-br | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 734d46e55
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Feb 23 18:40:38 2024 +0000
+
+    Fix comment
+
+ web/systemdefaults.inc.php | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit 4e0717cc8
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Feb 23 18:33:02 2024 +0000
+
+    Fix comment
+
+ web/systemdefaults.inc.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 32505e45b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Feb 23 18:31:10 2024 +0000
+
+    Add comment
+
+ web/systemdefaults.inc.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 9131912ae
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Feb 23 18:16:56 2024 +0000
+
+    Add type declaration
+
+ web/mrbs_sql.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 1d7d8bb30
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Feb 23 18:13:27 2024 +0000
+
+    Add type declaration
+
+ web/mrbs_sql.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit bc79183d8
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Feb 23 18:10:29 2024 +0000
+
+    Fix comment
+
+ web/mrbs_sql.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit bcf6c1974
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Feb 23 18:04:22 2024 +0000
+
+    Fix bug causing disabled areas to be included when counting simultaneous bookings
+
+ web/mrbs_sql.inc | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit a4c2bab0a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Feb 23 17:55:37 2024 +0000
+
+    Set default private timezone property (though it's not used at the moment)
+
+ web/lib/MRBS/Intl/IntlDateFormatter.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 25d6ec014
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Feb 23 12:33:53 2024 +0000
+
+    Add a config setting to allow the number of simultaneous bookings to be evaluated globally or just in the area. See GitHib Issue #3617.
+
+ web/mrbs_sql.inc           | 21 +++++++++++++++++++--
+ web/systemdefaults.inc.php |  3 +++
+ 2 files changed, 22 insertions(+), 2 deletions(-)
+
+commit 1c1459fab
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Feb 22 18:27:36 2024 +0000
+
+    Extend the prevention of simultaneous bookings to include a config setting ($max_simultaneous_bookings) specifying the maximum number of simultaneous bookings allowed.  See GitHib Issue #3617.
+
+ web/lang/lang.en           |  2 +-
+ web/mrbs_sql.inc           | 86 ++++++++++++++++++++----------------
+ web/systemdefaults.inc.php |  5 ++-
+ 3 files changed, 52 insertions(+), 41 deletions(-)
+
+commit 57188d8bb
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Feb 20 21:08:04 2024 +0000
+
+    Simplify code
+
+ web/mrbs_sql.inc | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
+
+commit a273e8a60
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Feb 20 21:01:54 2024 +0000
+
+    Simplify code
+
+ web/registration_handler.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 8228b24fd
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Feb 20 19:08:21 2024 +0000
+
+    Restructure
+
+ web/registration_handler.php | 58 ++++++++++++++++++----------------
+ 1 file changed, 30 insertions(+), 28 deletions(-)
+
+commit 20550ef98
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Feb 20 18:50:42 2024 +0000
+
+    Declare strict_types
+
+ web/registration_handler.php | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+commit eed5d48d6
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Feb 20 18:44:38 2024 +0000
+
+    Add type declarations
+
+ web/registration_handler.php | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+commit 8a0ae661c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Feb 20 18:29:52 2024 +0000
+
+    Add type declarations
+
+ web/mrbs_sql.inc             |  7 +------
+ web/registration_handler.php | 11 +++++++++--
+ 2 files changed, 10 insertions(+), 8 deletions(-)
+
+commit 7494a4368
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Feb 20 17:43:16 2024 +0000
+
+    Rename functions
+
+ web/language.inc             | 2 +-
+ web/registration_handler.php | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+commit 7724c2991
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Feb 19 17:27:15 2024 +0000
+
+    Declare strict types and associated fixes
+
+ web/import.php            | 3 ++-
+ web/lib/MRBS/DB.php       | 2 +-
+ web/lib/MRBS/DB_mysql.php | 4 ++--
+ web/lib/MRBS/DB_pgsql.php | 4 ++--
+ 4 files changed, 7 insertions(+), 6 deletions(-)
+
+commit 4629290d0
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Feb 19 17:08:01 2024 +0000
+
+    Add type declarations
+
+ web/import.php | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit a58106393
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Feb 19 17:01:52 2024 +0000
+
+    Add type declaration
+
+ web/import.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 4ac4528b9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Feb 18 21:46:52 2024 +0000
+
+    Declare strict_types
+
+ web/functions.inc | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit b4f6e56fe
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Feb 18 21:43:48 2024 +0000
+
+    Fix potential TypeErrors
+
+ web/functions.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 69c98a62c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Feb 18 21:35:37 2024 +0000
+
+    Fix potential TypeErrors
+
+ web/functions.inc | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+commit 8e41982b5
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Feb 18 21:24:39 2024 +0000
+
+    Fix potential TypeError
+
+ web/functions.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit ca5766fbd
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Feb 18 21:19:58 2024 +0000
+
+    Fix potential TypeError
+
+ web/functions.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 6d797e4ff
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Feb 18 18:58:36 2024 +0000
+
+    Add type declaration
+
+ web/functions.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 45eb9f26e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Feb 18 18:45:53 2024 +0000
+
+    Add type declaration
+
+ web/functions.inc       | 2 +-
+ web/functions_table.inc | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit ac0ec483e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Feb 18 18:33:07 2024 +0000
+
+    Add type declaration
+
+ web/functions.inc         | 2 +-
+ web/lib/MRBS/DateTime.php | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 9ad0e204a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Feb 18 18:23:16 2024 +0000
+
+    Add type declaration
+
+ web/functions.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit e68541909
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Feb 18 18:09:57 2024 +0000
+
+    Simplify code
+
+ web/functions.inc | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
+commit b91d08674
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Feb 18 18:06:12 2024 +0000
+
+    Add type declaration
+
+ web/functions.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 9b97723c5
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Feb 18 18:03:20 2024 +0000
+
+    Add type declaration
+
+ web/functions.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit b8ed5ec73
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Feb 18 17:51:38 2024 +0000
+
+    Declare strict_types
+
+ web/lib/MRBS/Map.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 63adaeaab
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Feb 17 18:25:48 2024 +0000
+
+    Rename function
+
+ web/js.inc | 42 +++++++++++++++++++++---------------------
+ 1 file changed, 21 insertions(+), 21 deletions(-)
+
+commit d6502e373
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Feb 17 18:19:55 2024 +0000
+
+    Rename function to avoid clash with PHP standard function
+
+ web/style.inc | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
+
+commit 47ccb9c0f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Feb 17 17:46:24 2024 +0000
+
+    Remove redundant global declarations
+
+ web/js.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 7a3e40d39
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Feb 17 17:42:31 2024 +0000
+
+    Restructure
+
+ web/js.inc | 51 +++++++++++++++++++++++++++------------------------
+ 1 file changed, 27 insertions(+), 24 deletions(-)
+
+commit c79e09c87
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Feb 17 17:23:27 2024 +0000
+
+    Add comment
+
+ web/style.inc | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit b859aec2e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Feb 17 17:20:46 2024 +0000
+
+    Declare strict_types
+
+ web/style.inc | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 9fae1088c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Feb 17 17:18:43 2024 +0000
+
+    Restructure
+
+ web/style.inc | 34 ++++++++++++++++++----------------
+ 1 file changed, 18 insertions(+), 16 deletions(-)
+
+commit faef537cd
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Feb 17 17:11:57 2024 +0000
+
+    Add type declarations
+
+ web/style.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit cf90a0aa3
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Feb 17 16:57:58 2024 +0000
+
+    Remove redundant argument
+
+ web/functions_error.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit b78c4afed
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Feb 17 16:54:49 2024 +0000
+
+    Remove redundant condition
+
+ web/functions_error.inc | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+commit 1ab5c5851
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Feb 17 16:42:09 2024 +0000
+
+    Fix bug when running in debug mode on systems with PHP versions before 8.1.0
+
+ web/functions_error.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 795ae23a8
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Feb 15 18:25:06 2024 +0000
+
+    Declare strict_types
+
+ web/functions_error.inc | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit d697dbfdb
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Feb 15 18:23:22 2024 +0000
+
+    Add type declarations
+
+ web/functions_error.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 90b75e5f1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Feb 15 18:20:48 2024 +0000
+
+    Add type declarations
+
+ web/functions_error.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit abdb909ce
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Feb 15 18:18:16 2024 +0000
+
+    Add type declarations
+
+ web/functions_error.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 395452d8a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Feb 15 18:09:42 2024 +0000
+
+    Add type declarations
+
+ web/functions_error.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit eb332b994
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Feb 15 18:05:24 2024 +0000
+
+    Add type declarations
+
+ web/functions_error.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 39e887200
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Feb 14 18:38:03 2024 +0000
+
+    Add type declarations
+
+ web/functions_error.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 911125e95
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Feb 14 18:28:58 2024 +0000
+
+    Add type declarations and improve error handling
+
+ web/functions_error.inc | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+commit d0f85e0e8
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Feb 14 18:04:31 2024 +0000
+
+    Add type declarations
+
+ web/functions_error.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit c34bbdacf
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Feb 14 18:02:41 2024 +0000
+
+    Add type declarations
+
+ web/functions_error.inc | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+commit ace65b929
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Feb 9 19:09:53 2024 +0000
+
+    Add comment
+
+ web/js/datatables.js.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit e3c53029c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Feb 9 18:57:36 2024 +0000
+
+    Fix bug introduced in recent commit that caused only the currently visible page to be exported.
+
+ web/js/datatables.js.php | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+commit 5422ebdb6
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Feb 6 20:18:33 2024 +0000
+
+    Fix bug introduced in recent commit that destroyed the last insert id and therefore caused repeating bookings (amongst other things) not to work.
+
+ web/dbsys.inc | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
+
+commit 633b312bc
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Feb 5 16:54:12 2024 +0000
+
+    Fix errors that are generated when the MySQL wait_timeout variable is less than the time needed for some operations, eg large reports retrieving user data from an external server, resulting in the MySQL connection being dropped before the operation finishes.  Typical error messages are "SQLSTATE[HY000]: General error: 2006 MySQL server has gone away" and "Packets out of order. Expected 1 received 0. Packet size=145".
+
+ web/dbsys.inc           | 25 ++++++++++++++++++++++---
+ web/functions_error.inc |  7 +++++++
+ web/lib/MRBS/DB.php     |  7 ++++++-
+ 3 files changed, 35 insertions(+), 4 deletions(-)
+
+commit 776e1aaa3
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Feb 4 11:17:27 2024 +0000
+
+    Fix TypeError
+
+ web/functions_ical.inc | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+commit 2c422d3f2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Jan 29 10:04:00 2024 +0000
+
+    Fix bug and update comment
+
+ web/lib/MRBS/Intl/IntlDateFormatterFactory.php | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+commit bf381d5e3
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Jan 28 14:58:35 2024 +0000
+
+    Restructure
+
+ web/language.inc                             |  2 +-
+ .../MRBS/Intl/IntlDatePatternGenerator.php   | 64 +++++++++++-------
+ 2 files changed, 41 insertions(+), 25 deletions(-)
+
+commit 778b905f7
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Jan 28 14:46:51 2024 +0000
+
+    Restructure
+
+ web/lib/{ => MRBS/Intl}/IntlDatePatternGenerator.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit d670c7c64
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Jan 28 14:44:14 2024 +0000
+
+    Delete redundant class
+
+ web/lib/Locale.php (gone) | 7 -------
+ 1 file changed, 7 deletions(-)
+
+commit 1293839b9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Jan 28 14:40:31 2024 +0000
+
+    Fix comment.
+
+ web/lib/Locale.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 572838be9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Jan 28 14:39:33 2024 +0000
+
+    Provide config variable for forcing the use of the IntlDateFormatter emulation.  See GitHub Issue #3559.
+
+ web/language.inc                             |  5 +--
+ web/lib/Locale.php                           |  2 +-
+ web/lib/MRBS/Intl/IntlDateFormatter.php      |  7 +---
+ .../Intl/IntlDateFormatterFactory.php (new)  | 32 ++++++++++++++++++
+ web/systemdefaults.inc.php                   |  5 +++
+ 5 files changed, 42 insertions(+), 9 deletions(-)
+
+commit 023bf7353
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Jan 28 10:03:25 2024 +0000
+
+    Fix bug and comment
+
+ web/lib/IntlDateFormatter.php (new) | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+commit d31d3451e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Jan 28 09:52:42 2024 +0000
+
+    Restructure
+
+ web/lib/{ => MRBS/Intl}/IntlDateFormatter.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit f63f595c1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jan 27 18:52:57 2024 +0000
+
+    Add a getCalendar() method
+
+ web/lib/IntlDateFormatter.php | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+commit eefb5bdee
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jan 27 18:47:13 2024 +0000
+
+    Fix comment
+
+ web/lib/IntlDateFormatter.php | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+commit 09d614b40
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jan 27 18:44:25 2024 +0000
+
+    Eliminate redundant code and provide config option for week date format.
+
+ web/index.php              | 27 ++-------------------------
+ web/systemdefaults.inc.php | 18 ++----------------
+ 2 files changed, 4 insertions(+), 41 deletions(-)
+
+commit aa1b22693
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jan 27 17:55:56 2024 +0000
+
+    Fix bug
+
+ web/index.php                                |  2 +-
+ web/language.inc                             |  4 +-
+ web/lib/IntlDatePatternGenerator.php (new)   | 40 ++++++++++++
+ .../Intl/IntlDatePatternGenerator.php (gone) | 57 ------------------
+ web/systemdefaults.inc.php                   |  2 +-
+ 5 files changed, 44 insertions(+), 61 deletions(-)
+
+commit b5a42dd8d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jan 27 17:43:54 2024 +0000
+
+    Provide global emulation of Locale class and flesh out emulations sufficiently for Ranger
+
+ web/lib/IntlDateFormatter.php | 33 +++++++++++++++++++++++++++++++++
+ web/lib/Locale.php (new)      |  7 +++++++
+ web/lib/MRBS/Intl/Locale.php  |  2 ++
+ 3 files changed, 42 insertions(+)
+
+commit 83d0bbe2b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jan 27 16:10:52 2024 +0000
+
+    Move IntlDateFormatter class so that it can be picked up by Ranger
+
+ web/lib/IntlDateFormatter.php (new)          | 599 ++++++++++++++++
+ .../MRBS/Intl/IntlDateFormatter.php (gone)   | 607 -----------------
+ 2 files changed, 599 insertions(+), 607 deletions(-)
+
+commit 8efd0a583
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jan 27 15:30:57 2024 +0000
+
+    Convert to using Ranger to construct date ranges
+
+ web/index.php | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
+
+commit 2bd8b1e7b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jan 27 15:05:01 2024 +0000
+
+    Add Ranger version 0.5.7
+
+ .../Ranger/Provider/DeProvider.php (new)     |  31 ++
+ .../Provider/DefaultProvider.php (new)       |  25 +
+ .../Ranger/Provider/Provider.php (new)       |  20 +
+ web/lib/OpenPsa/Ranger/Ranger.php (new)      | 440 +++++++++++++++++
+ 4 files changed, 516 insertions(+)
+
+commit 9e35d0254
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jan 20 13:57:22 2024 +0000
+
+    Fix TypeError
+
+ web/Themes/default/header.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 1ac213c06
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jan 19 16:52:24 2024 +0000
+
+    Fix bug causing some fields to be duplicated on DataTables export (eg to Excel).
+
+ web/js/datatables.js.php | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
+commit 1f81a38f1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Jan 9 17:19:17 2024 +0000
+
+    Fix type error in week and month views.  See GitHub Issue #3591.
+
+ web/standard_vars.inc.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit b6f9a24aa
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Jan 9 15:24:04 2024 +0000
+
+    Fix type errors.  See GitHub Issue #3591.
+
+ web/mrbs_sql.inc | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit 046647844
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Jan 9 15:16:19 2024 +0000
+
+    Fix potential type error problem
+
+ web/dbsys.inc | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+commit 5fb13f241
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Jan 9 14:15:18 2024 +0000
+
+    Update comment
+
+ web/lib/MRBS/Intl/Locale.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 09d3d1e95
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Jan 9 14:13:31 2024 +0000
+
+    Fix bug when MRBS has been upgraded by overwriting the web folder leaving old files in place.
+
+ web/lib/MRBS/Intl/IntlDateFormatter.php        | 8 ++++++--
+ web/lib/MRBS/Intl/IntlDatePatternGenerator.php | 7 ++++++-
+ 2 files changed, 12 insertions(+), 3 deletions(-)
+
+commit 67204bf6c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Jan 9 10:05:30 2024 +0000
+
+    Fix bug in last commit causing patterns for the 'zh-CN' and 'zh-TW' locales to be omitted.
+
+ generate_pattern_files.php       | 8 ++++----
+ web/intl/skeletons/MMMMy.ini     | 2 ++
+ web/intl/skeletons/d.ini         | 2 ++
+ web/intl/skeletons/dEMMM.ini     | 2 ++
+ web/intl/skeletons/dMMM.ini      | 2 ++
+ web/intl/skeletons/dMMMM.ini     | 2 ++
+ web/intl/types/full_full.ini     | 2 ++
+ web/intl/types/full_long.ini     | 2 ++
+ web/intl/types/full_medium.ini   | 2 ++
+ web/intl/types/full_none.ini     | 2 ++
+ web/intl/types/full_short.ini    | 2 ++
+ web/intl/types/long_full.ini     | 2 ++
+ web/intl/types/long_long.ini     | 2 ++
+ web/intl/types/long_medium.ini   | 2 ++
+ web/intl/types/long_none.ini     | 2 ++
+ web/intl/types/long_short.ini    | 2 ++
+ web/intl/types/medium_full.ini   | 2 ++
+ web/intl/types/medium_long.ini   | 2 ++
+ web/intl/types/medium_medium.ini | 2 ++
+ web/intl/types/medium_none.ini   | 2 ++
+ web/intl/types/medium_short.ini  | 2 ++
+ web/intl/types/none_full.ini     | 2 ++
+ web/intl/types/none_long.ini     | 2 ++
+ web/intl/types/none_medium.ini   | 2 ++
+ web/intl/types/none_short.ini    | 2 ++
+ web/intl/types/short_full.ini    | 2 ++
+ web/intl/types/short_long.ini    | 2 ++
+ web/intl/types/short_medium.ini  | 2 ++
+ web/intl/types/short_none.ini    | 2 ++
+ web/intl/types/short_short.ini   | 2 ++
+ 30 files changed, 62 insertions(+), 4 deletions(-)
+
+commit e3ee6a67a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Jan 8 21:41:29 2024 +0000
+
+    Better fix for locales that are also ini file keywords
+
+ generate_pattern_files.php       |   36 +-
+ web/intl/skeletons/MMMMy.ini     | 1609 ++++++++++++++--------------
+ web/intl/skeletons/d.ini         | 1609 ++++++++++++++--------------
+ web/intl/skeletons/dEMMM.ini     | 1609 ++++++++++++++--------------
+ web/intl/skeletons/dMMM.ini      | 1609 ++++++++++++++--------------
+ web/intl/skeletons/dMMMM.ini     | 1609 ++++++++++++++--------------
+ web/intl/types/full_full.ini     | 1609 ++++++++++++++--------------
+ web/intl/types/full_long.ini     | 1609 ++++++++++++++--------------
+ web/intl/types/full_medium.ini   | 1609 ++++++++++++++--------------
+ web/intl/types/full_none.ini     | 1609 ++++++++++++++--------------
+ web/intl/types/full_short.ini    | 1609 ++++++++++++++--------------
+ web/intl/types/long_full.ini     | 1609 ++++++++++++++--------------
+ web/intl/types/long_long.ini     | 1609 ++++++++++++++--------------
+ web/intl/types/long_medium.ini   | 1609 ++++++++++++++--------------
+ web/intl/types/long_none.ini     | 1609 ++++++++++++++--------------
+ web/intl/types/long_short.ini    | 1609 ++++++++++++++--------------
+ web/intl/types/medium_full.ini   | 1609 ++++++++++++++--------------
+ web/intl/types/medium_long.ini   | 1609 ++++++++++++++--------------
+ web/intl/types/medium_medium.ini | 1609 ++++++++++++++--------------
+ web/intl/types/medium_none.ini   | 1609 ++++++++++++++--------------
+ web/intl/types/medium_short.ini  | 1609 ++++++++++++++--------------
+ web/intl/types/none_full.ini     | 1609 ++++++++++++++--------------
+ web/intl/types/none_long.ini     | 1609 ++++++++++++++--------------
+ web/intl/types/none_medium.ini   | 1609 ++++++++++++++--------------
+ web/intl/types/none_short.ini    | 1609 ++++++++++++++--------------
+ web/intl/types/short_full.ini    | 1609 ++++++++++++++--------------
+ web/intl/types/short_long.ini    | 1609 ++++++++++++++--------------
+ web/intl/types/short_medium.ini  | 1609 ++++++++++++++--------------
+ web/intl/types/short_none.ini    | 1609 ++++++++++++++--------------
+ web/intl/types/short_short.ini   | 1609 ++++++++++++++--------------
+ 30 files changed, 23371 insertions(+), 23326 deletions(-)
+
+commit 3be9fdde7
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Jan 8 19:09:47 2024 +0000
+
+    Fix bug introduced in recent commit caused by the addition of patterns for "no" which causes a "syntax error, unexpected BOOL_FALSE" warning when parsed.  Fuller fix to follow.
+
+ web/intl/skeletons/MMMMy.ini     | 1612 ++++++++++++++--------------
+ web/intl/skeletons/d.ini         | 1612 ++++++++++++++--------------
+ web/intl/skeletons/dEMMM.ini     | 1612 ++++++++++++++--------------
+ web/intl/skeletons/dMMM.ini      | 1612 ++++++++++++++--------------
+ web/intl/skeletons/dMMMM.ini     | 1612 ++++++++++++++--------------
+ web/intl/types/full_full.ini     | 1612 ++++++++++++++--------------
+ web/intl/types/full_long.ini     | 1612 ++++++++++++++--------------
+ web/intl/types/full_medium.ini   | 1612 ++++++++++++++--------------
+ web/intl/types/full_none.ini     | 1612 ++++++++++++++--------------
+ web/intl/types/full_short.ini    | 1612 ++++++++++++++--------------
+ web/intl/types/long_full.ini     | 1612 ++++++++++++++--------------
+ web/intl/types/long_long.ini     | 1612 ++++++++++++++--------------
+ web/intl/types/long_medium.ini   | 1612 ++++++++++++++--------------
+ web/intl/types/long_none.ini     | 1612 ++++++++++++++--------------
+ web/intl/types/long_short.ini    | 1612 ++++++++++++++--------------
+ web/intl/types/medium_full.ini   | 1612 ++++++++++++++--------------
+ web/intl/types/medium_long.ini   | 1612 ++++++++++++++--------------
+ web/intl/types/medium_medium.ini | 1612 ++++++++++++++--------------
+ web/intl/types/medium_none.ini   | 1612 ++++++++++++++--------------
+ web/intl/types/medium_short.ini  | 1612 ++++++++++++++--------------
+ web/intl/types/none_full.ini     | 1612 ++++++++++++++--------------
+ web/intl/types/none_long.ini     | 1612 ++++++++++++++--------------
+ web/intl/types/none_medium.ini   | 1612 ++++++++++++++--------------
+ web/intl/types/none_short.ini    | 1612 ++++++++++++++--------------
+ web/intl/types/short_full.ini    | 1612 ++++++++++++++--------------
+ web/intl/types/short_long.ini    | 1612 ++++++++++++++--------------
+ web/intl/types/short_medium.ini  | 1612 ++++++++++++++--------------
+ web/intl/types/short_none.ini    | 1612 ++++++++++++++--------------
+ web/intl/types/short_short.ini   | 1612 ++++++++++++++--------------
+ 29 files changed, 23345 insertions(+), 23403 deletions(-)
+
+commit 1b8212db8
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Jan 8 16:35:48 2024 +0000
+
+    Update intl types and skeletons with latest patterns
+
+ web/intl/skeletons/MMMMy.ini     | 159 ++++--
+ web/intl/skeletons/d.ini         |  91 +++-
+ web/intl/skeletons/dEMMM.ini     | 137 ++++--
+ web/intl/skeletons/dMMM.ini      | 121 ++++-
+ web/intl/skeletons/dMMMM.ini     | 145 ++++--
+ web/intl/types/full_full.ini     | 701 ++++++++++++++------------
+ web/intl/types/full_long.ini     | 709 +++++++++++++++------------
+ web/intl/types/full_medium.ini   | 713 +++++++++++++++------------
+ web/intl/types/full_none.ini     | 221 ++++++---
+ web/intl/types/full_short.ini    | 713 +++++++++++++++------------
+ web/intl/types/long_full.ini     | 697 ++++++++++++++------------
+ web/intl/types/long_long.ini     | 705 ++++++++++++++------------
+ web/intl/types/long_medium.ini   | 705 ++++++++++++++------------
+ web/intl/types/long_none.ini     | 205 +++++---
+ web/intl/types/long_short.ini    | 705 ++++++++++++++------------
+ web/intl/types/medium_full.ini   | 761 ++++++++++++++++-------------
+ web/intl/types/medium_long.ini   | 739 +++++++++++++++-------------
+ web/intl/types/medium_medium.ini | 743 +++++++++++++++-------------
+ web/intl/types/medium_none.ini   | 187 ++++---
+ web/intl/types/medium_short.ini  | 743 +++++++++++++++-------------
+ web/intl/types/none_full.ini     | 373 ++++++++------
+ web/intl/types/none_long.ini     | 357 ++++++++------
+ web/intl/types/none_medium.ini   | 361 ++++++++------
+ web/intl/types/none_short.ini    | 361 ++++++++------
+ web/intl/types/short_full.ini    | 623 ++++++++++++-----------
+ web/intl/types/short_long.ini    | 603 +++++++++++++----------
+ web/intl/types/short_medium.ini  | 603 +++++++++++++----------
+ web/intl/types/short_none.ini    | 139 ++++--
+ web/intl/types/short_short.ini   | 603 +++++++++++++----------
+ 29 files changed, 8020 insertions(+), 5903 deletions(-)
+
+commit e56895e42
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Jan 7 17:09:49 2024 +0000
+
+    Fix bug converting a pattern into a strftime format when the pattern contains two consecutive tokens.  See GitHub Issue #3589.
+
+ web/lib/MRBS/Intl/IntlDateFormatter.php | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+commit a046e4c02
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 31 23:53:25 2023 +0000
+
+    Eliminate error suppression operator
+
+ web/theme.inc | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+commit 7393ca1a1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 31 23:05:47 2023 +0000
+
+    Declare strict_types
+
+ web/theme.inc | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit d90500d0c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 31 22:59:21 2023 +0000
+
+    Declare strict_types
+
+ web/internalconfig.inc.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit b8ca5ff30
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 31 22:57:49 2023 +0000
+
+    Simplify code
+
+ web/internalconfig.inc.php | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit cc1b4beaf
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 31 22:55:06 2023 +0000
+
+    Simplify code
+
+ web/internalconfig.inc.php | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 0628dc01f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 31 22:51:39 2023 +0000
+
+    Declare strict_types
+
+ web/init.inc | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit b4bfc4e29
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 31 22:44:55 2023 +0000
+
+    Declare strict_types
+
+ web/index.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 2bfa1f9f1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 31 22:40:51 2023 +0000
+
+    Declare strict_types
+
+ web/help.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit f3804b230
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 31 22:38:37 2023 +0000
+
+    Declare strict_types
+
+ web/grab_globals.inc.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 9cba27f15
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 31 22:34:22 2023 +0000
+
+    Fix typo in comment
+
+ web/grab_globals.inc.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 5bfaff94a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 31 22:33:16 2023 +0000
+
+    Fix type declaration in last commit
+
+ web/grab_globals.inc.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 4db1d9e8f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 31 22:30:05 2023 +0000
+
+    Add type declaration
+
+ web/grab_globals.inc.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 6351c44f6
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 24 16:48:56 2023 +0000
+
+    Declare strict_types
+
+ web/js.inc | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 90baefb9a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 24 16:47:47 2023 +0000
+
+    Add type declaration
+
+ web/js.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit d861296eb
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 24 15:52:35 2023 +0000
+
+    Remove redundant code
+
+ web/edit_entry.php | 10 ----------
+ 1 file changed, 10 deletions(-)
+
+commit abfee0206
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 24 15:23:06 2023 +0000
+
+    Declare strict_types
+
+ web/edit_area_handler.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit eade6878e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 24 15:13:06 2023 +0000
+
+    Remove unnecessary curly braces
+
+ web/edit_area_handler.php | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 1a790465b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 24 15:02:19 2023 +0000
+
+    Replace with ?? operator
+
+ web/edit_area.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 73dc9f2ea
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 24 14:58:18 2023 +0000
+
+    Remove unnecessary curly braces
+
+ web/edit_area.php | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 2ce4ca999
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 24 14:55:50 2023 +0000
+
+    Remove unnecessary local variable
+
+ web/edit_area.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 9c4cb79f9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 24 14:53:33 2023 +0000
+
+    Declare strict_types
+
+ web/edit_area.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 93aaf4411
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 24 14:21:38 2023 +0000
+
+    Add type declarations
+
+ web/edit_area.php | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
+
+commit caa5896bc
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 24 14:14:16 2023 +0000
+
+    Add type declarations
+
+ web/edit_area.php | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit b0a6f2780
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 24 14:07:57 2023 +0000
+
+    Declare strict_types
+
+ web/del_entry.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit d811ecc61
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 24 14:07:42 2023 +0000
+
+    Fix TypeError uncaught exception
+
+ web/edit_entry.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 8fee659d5
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 24 13:42:55 2023 +0000
+
+    Replace with ?? operator
+
+ web/del.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit a4c6891f4
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 24 13:40:47 2023 +0000
+
+    Declare strict_types
+
+ web/del.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 67b8ae6e3
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 24 13:37:50 2023 +0000
+
+    Add type declarations
+
+ web/del.php | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit e234e36ba
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 24 13:35:16 2023 +0000
+
+    Declare strict_types
+
+ web/defaultincludes.inc | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit ba76880c5
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 24 13:32:24 2023 +0000
+
+    Declare strict_types
+
+ web/dbsys.inc | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 2e324d4da
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 24 13:29:56 2023 +0000
+
+    Add type declarations
+
+ web/dbsys.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit d994c8282
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Dec 22 18:27:51 2023 +0000
+
+    Simplify code
+
+ web/admin.php | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+commit f2b4101de
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Dec 22 17:52:30 2023 +0000
+
+    Declare strict_types
+
+ web/admin.php | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit e5c260595
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Dec 22 17:37:09 2023 +0000
+
+    Add type declarations
+
+ web/admin.php | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 410cab189
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Dec 22 17:31:39 2023 +0000
+
+    Add type declarations
+
+ web/add.php   | 1 +
+ web/admin.php | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+commit fe6107e84
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Dec 22 17:26:03 2023 +0000
+
+    Declare strict_types
+
+ web/standard_vars.inc.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit ace9b8587
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Dec 22 17:23:15 2023 +0000
+
+    Change type of parameter passed to version_compare from float to string
+
+ web/Themes/default/header.inc | 2 +-
+ web/functions.inc             | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit a7d270e85
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Dec 22 17:10:43 2023 +0000
+
+    Declare strict_types
+
+ web/Themes/default/header.inc | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+commit 116e90ad0
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Dec 22 16:57:57 2023 +0000
+
+    Add type declarations
+
+ web/Themes/default/header.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 0c1b68cc8
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Dec 22 16:50:28 2023 +0000
+
+    Add type declarations
+
+ web/Themes/default/header.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit bb9d786c5
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Dec 22 16:49:05 2023 +0000
+
+    Add type declarations and handle case when query sting is empty
+
+ web/Themes/default/header.inc | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+commit 84d9fc7c3
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Dec 21 17:57:03 2023 +0000
+
+    Correct typo in comment
+
+ web/Themes/default/header.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 8b5fda345
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Dec 21 17:55:43 2023 +0000
+
+    Add type declarations
+
+ web/Themes/default/header.inc | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+commit 823c43f4f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Dec 21 17:51:32 2023 +0000
+
+    Remove unused variable
+
+ web/Themes/default/header.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit d14e9d2ad
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Dec 21 17:50:44 2023 +0000
+
+    Add type declarations
+
+ web/Themes/default/header.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit aa1ef94d3
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Dec 21 17:48:32 2023 +0000
+
+    Add type declarations
+
+ web/Themes/default/header.inc | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 9432767c9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Dec 21 17:40:18 2023 +0000
+
+    Simplify code
+
+ web/admin.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 0b1607d02
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Dec 21 17:38:42 2023 +0000
+
+    Simplify code
+
+ web/site_config.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 5a42283f8
+Merge: 7bbc2c354 11b00872a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 17 16:20:34 2023 +0000
+
+    Merge branch 'main' into message
+
+commit 7bbc2c354
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 17 12:24:00 2023 +0000
+
+    Add a message start date
+
+ web/admin.php                | 12 ++++-
+ web/edit_message.php         | 10 ++++
+ web/edit_message_handler.php |  3 +-
+ web/lang/lang.en             |  3 ++
+ web/lib/MRBS/Message.php     | 97 +++++++++++++++++++++++++++++++---
+ 5 files changed, 116 insertions(+), 9 deletions(-)
+
+commit 212fa4aec
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Dec 16 18:30:25 2023 +0000
+
+    Allow booking admins to edit the message
+
+ web/admin.php                | 2 +-
+ web/edit_message.php         | 7 +++++++
+ web/edit_message_handler.php | 7 +++++++
+ web/mrbs_auth.inc            | 4 ++--
+ 4 files changed, 17 insertions(+), 3 deletions(-)
+
+commit 11b00872a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Dec 15 15:55:42 2023 +0000
+
+    Fix a problem on systems, eg altervista.org, where php_uname() has been disabled for security reasons.  See GitHub Issue #3579.
+
+ web/help.php            |  2 +-
+ web/lib/MRBS/System.php | 11 +++++++++++
+ 2 files changed, 12 insertions(+), 1 deletion(-)
+
+commit aae094254
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Dec 15 15:33:01 2023 +0000
+
+    Add support for the altervista.org database type.  See GitHub Issue #3579.
+
+ web/lib/MRBS/DB_mysql.php | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+commit 7e257bdaa
+Merge: 6775cb2b7 36795a0e1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Dec 14 14:51:08 2023 +0000
+
+    Merge branch 'main' into message
+
+commit 6775cb2b7
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Dec 14 14:50:59 2023 +0000
+
+    Improve layout
+
+ web/css/mrbs.css.php | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+commit 9956c27fb
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Dec 14 14:29:29 2023 +0000
+
+    Link edit_message into the navigation
+
+ web/add.php                  |  1 -
+ web/admin.php                | 33 ++++++++++++++++++++++++++++++++
+ web/css/mrbs.css.php         |  7 +++++++
+ web/edit_message.php         |  4 ++++
+ web/edit_message_handler.php | 11 +++++++++--
+ web/index.php                | 17 ++++-------------
+ web/lang/lang.en             |  3 +++
+ web/lib/MRBS/Message.php     | 35 ++++++++++++++++++++++++++++++++++
+ 8 files changed, 95 insertions(+), 16 deletions(-)
+
+commit d90b80d51
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Dec 13 15:42:47 2023 +0000
+
+    Fix typo
+
+ web/lib/MRBS/Message.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 6d852fc12
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Dec 13 15:36:59 2023 +0000
+
+    Add comment
+
+ web/lib/MRBS/Message.php | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit ffc7ee7b0
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Dec 13 15:35:27 2023 +0000
+
+    Complete the restructuring
+
+ web/index.php            | 24 +++++++++---------------
+ web/lib/MRBS/Message.php | 23 +++++++++++++++++++++++
+ web/mrbs_sql.inc         | 13 -------------
+ 3 files changed, 32 insertions(+), 28 deletions(-)
+
+commit 36795a0e1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Dec 13 14:32:37 2023 +0000
+
+    Correct typo in comment
+
+ web/systemdefaults.inc.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit b9634bfae
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Dec 13 14:27:33 2023 +0000
+
+    Correct typo in comment
+
+ web/systemdefaults.inc.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 7417cd1d0
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Dec 13 14:25:50 2023 +0000
+
+    Restructure - partially
+
+ web/edit_message.php           |  24 ++----
+ web/edit_message_handler.php   |  28 +------
+ web/lib/MRBS/Message.php (new) | 128 +++++++++++++++++++++++++++++++
+ web/mrbs_sql.inc               |  14 ----
+ 4 files changed, 136 insertions(+), 58 deletions(-)
+
+commit a30b328c9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Dec 12 17:37:18 2023 +0000
+
+    Add ability to edit an existing message
+
+ web/edit_message.php | 49 +++++++++++++++++++++++++++++++++---------
+ 1 file changed, 39 insertions(+), 10 deletions(-)
+
+commit 52f2d6544
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Dec 12 16:57:16 2023 +0000
+
+    Change format of saved date to include a time
+
+ web/edit_message_handler.php | 20 ++++++++++++++++++++
+ web/index.php                |  9 +++++++--
+ 2 files changed, 27 insertions(+), 2 deletions(-)
+
+commit 7bb1eb413
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 10 17:46:54 2023 +0000
+
+    Add comment
+
+ web/lib/MRBS/SessionHandlerDb.php | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+commit 312f4dc71
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 10 13:56:02 2023 +0000
+
+    Fix typo in comment
+
+ web/lib/MRBS/DB_mysql.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 21d02078e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Dec 7 18:47:59 2023 +0000
+
+    Add expiry date
+
+ web/edit_message.php         | 20 ++++++++++++--------
+ web/edit_message_handler.php |  4 +++-
+ web/index.php                | 11 +++++++++++
+ web/lang/lang.en             |  1 +
+ 4 files changed, 27 insertions(+), 9 deletions(-)
+
+commit 68f4b1797
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Dec 5 18:02:59 2023 +0000
+
+    Display the message
+
+ web/css/mrbs.css.php |  4 ++++
+ web/index.php        | 14 ++++++++++++++
+ 2 files changed, 18 insertions(+)
+
+commit 5f84fccf2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Dec 5 17:42:18 2023 +0000
+
+    Save message to database
+
+ web/edit_message.php               |  2 +-
+ web/edit_message_handler.php (new) | 21 +++++++++++++++++++++
+ web/mrbs_sql.inc                   | 27 +++++++++++++++++++++++++++
+ 3 files changed, 49 insertions(+), 1 deletion(-)
+
+commit 97441f18a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Dec 5 14:56:35 2023 +0000
+
+    Add submit buttons
+
+ web/edit_message.php | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+
+commit 17586ac90
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Dec 5 14:45:12 2023 +0000
+
+    Add message field
+
+ web/edit_message.php | 7 +++++++
+ web/lang/lang.en     | 1 +
+ 2 files changed, 8 insertions(+)
+
+commit f4159ce98
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Dec 5 14:30:41 2023 +0000
+
+    Set up form stub
+
+ web/edit_message.php (new) | 41 ++++++++++++++++++++++++++++++++++++
+ web/lang/lang.en           |  3 +++
+ web/mrbs_auth.inc          |  2 ++
+ 3 files changed, 46 insertions(+)
+
+commit c7b4edac0
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 3 17:27:05 2023 +0000
+
+    Correct typo in comment
+
+ web/lib/MRBS/MailQueue.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 257641556
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 3 17:25:15 2023 +0000
+
+    Move content ID generation into sending
+
+ web/functions_mail.inc       | 12 ++++--------
+ web/lib/MRBS/Auth/AuthDb.php |  2 +-
+ web/lib/MRBS/MailQueue.php   | 12 ++++++------
+ 3 files changed, 11 insertions(+), 15 deletions(-)
+
+commit f3165fc65
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Dec 3 17:05:39 2023 +0000
+
+    Move content ID generation into sending
+
+ web/functions_mail.inc       |  6 ++----
+ web/lib/MRBS/Auth/AuthDb.php |  4 +---
+ web/lib/MRBS/MailQueue.php   | 14 ++++++--------
+ 3 files changed, 9 insertions(+), 15 deletions(-)
+
+commit 18eb022cd
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Dec 2 18:59:48 2023 +0000
+
+    Add comment
+
+ web/lib/MRBS/MailQueue.php | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit 980c351a5
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Dec 2 16:47:27 2023 +0000
+
+    Add languages which should have been added in the upgrade to PHPMailer 6.9.1
+
+ .../language/phpmailer.lang-as.php (new)     | 35 ++++++++++++++++++
+ .../language/phpmailer.lang-bn.php (new)     | 35 ++++++++++++++++++
+ 2 files changed, 70 insertions(+)
+
+commit 552831091
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Dec 2 16:45:23 2023 +0000
+
+    Upgrade to latest version of pear/File_Passwd
+
+ web/File/Passwd.php                 |  33 ++++-----
+ web/File/Passwd/Authbasic.php       |  56 ++++++--------
+ web/File/Passwd/Authdigest.php      |  41 ++++-------
+ web/File/Passwd/Common.php          |  57 ++++++---------
+ web/File/Passwd/Custom.php          |  47 ++++++------
+ web/File/Passwd/Cvs.php             |  23 +++---
+ web/File/Passwd/Exception.php (new) |   2 +
+ web/File/Passwd/Smb.php             |  67 +++++++----------
+ web/File/Passwd/Unix.php            | 101 ++++++++++++--------------
+ 9 files changed, 182 insertions(+), 245 deletions(-)
+
+commit 1099f499c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Dec 2 16:31:08 2023 +0000
+
+    Upgrade to latest version of PEAR.php
+
+ web/PEAR.php | 31 +++++++++++++++++++++++++++----
+ 1 file changed, 27 insertions(+), 4 deletions(-)
+
+commit 03a9be0cb
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Dec 2 16:19:46 2023 +0000
+
+    Upgrade to latest version of Mail_Mime package
+
+ web/Mail/mime.php     | 332 +++++++++++++++++++---------------------
+ web/Mail/mimePart.php |  96 +++++++-----
+ 2 files changed, 216 insertions(+), 212 deletions(-)
+
+commit 5949ef8c6
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Dec 2 14:45:48 2023 +0000
+
+    Upgrade to PHPMailer Version 6.9.1
+
+ web/lib/PHPMailer/README.md                  |   5 +-
+ web/lib/PHPMailer/VERSION                    |   2 +-
+ web/lib/PHPMailer/composer.json              |   1 +
+ .../PHPMailer/language/phpmailer.lang-da.php |   1 +
+ .../PHPMailer/language/phpmailer.lang-pl.php |   9 +-
+ web/lib/PHPMailer/src/PHPMailer.php          | 130 ++++++++++++++++-
+ web/lib/PHPMailer/src/POP3.php               |   2 +-
+ web/lib/PHPMailer/src/SMTP.php               |  33 ++++-
+ 8 files changed, 175 insertions(+), 8 deletions(-)
+
+commit fe8a4929d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Nov 30 18:19:57 2023 +0000
+
+    Remove unused local variables
+
+ web/admin.php      | 2 +-
+ web/edit_entry.php | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 379c8648d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Nov 30 18:15:49 2023 +0000
+
+    Add type declaration
+
+ web/lib/MRBS/Form/Form.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 305959b53
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Nov 23 17:33:36 2023 +0000
+
+    Fix problem introduced in recent commit
+
+ web/lib/MRBS/Session/Session.php     | 7 ++++++-
+ web/lib/MRBS/Session/SessionCas.php  | 2 ++
+ web/lib/MRBS/Session/SessionSaml.php | 2 ++
+ 3 files changed, 10 insertions(+), 1 deletion(-)
+
+commit 6071b6d28
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Nov 23 14:27:15 2023 +0000
+
+    Fix problem resulting in element just consisting of <input type="hidden">
+
+ web/lib/MRBS/Form/ElementInputHidden.php | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+commit 3e0bd34e9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Nov 23 13:55:33 2023 +0000
+
+    Fix fatal error when saving a form with a protected date field that is null.
+
+ web/edit_users.php | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
+
+commit ce808b1af
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Nov 18 18:45:20 2023 +0000
+
+    Increase the strength of the session id
+
+ web/lib/MRBS/Session/Session.php | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+commit 133b664c5
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Nov 18 17:51:13 2023 +0000
+
+    Set secure session cookie properties.  See GitHub Issue #3568.
+
+ web/lib/MRBS/Session/Session.php | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+commit 4391d6f15
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Nov 17 17:20:26 2023 +0000
+
+    Add a class of 'today' to cell if it's the current day.  See GitHub Issue #3564.
+
+ web/functions_table.inc   | 4 ++++
+ web/lib/MRBS/DateTime.php | 7 +++++++
+ 2 files changed, 11 insertions(+)
+
+commit 54215911a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Nov 16 17:48:05 2023 +0000
+
+    Remove empty class attribute
+
+ web/functions_table.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit a0719066c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Nov 13 17:56:19 2023 +0000
+
+    Tweak to example in comment.
+
+ web/systemdefaults.inc.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 77844a154
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Nov 13 17:53:39 2023 +0000
+
+    Fix problem with recent PR granting level 1 access to all users, whether or not $auth['saml']['user'] is set.  See GitHub PR #3560.
+
+ web/lib/MRBS/Auth/AuthSaml.php | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+commit 914feaa8d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Nov 12 17:14:21 2023 +0000
+
+    Fix syntax error
+
+ web/lib/MRBS/Auth/AuthSaml.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit aef943b57
+Merge: c631aaa12 59b150205
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Nov 12 18:12:07 2023 +0100
+
+    Merge pull request #3560 from jagapen/main
+    
+    SAML Access Control Filter
+
+commit c631aaa12
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Nov 10 15:43:33 2023 +0000
+
+    Made it easier to force MRBS to use strftime() instead of the intl extension. See GitHub Issue #3559.
+
+ web/language.inc                             |   7 +-
+ web/lib/IntlDateFormatter.php (gone)         | 609 -----------------
+ web/lib/IntlDatePatternGenerator.php (gone)  |  45 --
+ web/lib/MRBS/Auth/AuthCas.php                |   4 +-
+ .../MRBS/Intl/IntlDateFormatter.php (new)    | 596 ++++++++++++++++
+ .../Intl/IntlDatePatternGenerator.php (new)  |  52 ++
+ web/lib/MRBS/{ => Intl}/Locale.php           |  32 +-
+ web/lib/MRBS/System.php                      |   1 +
+ web/systemdefaults.inc.php                   |   2 +-
+ 9 files changed, 681 insertions(+), 667 deletions(-)
+
+commit 59b150205
+Author: Jonathan Gapen <jagapen@wisc.edu>
+Date:   Thu Nov 9 11:40:02 2023 -0600
+
+    Add an optional access control filter that requires users to be a member of a configurable group in order to access the calendar.
+
+ AUTHENTICATION                 | 13 ++++++++-----
+ web/lib/MRBS/Auth/AuthSaml.php | 21 +++++++++++++++++++++
+ web/systemdefaults.inc.php     |  2 ++
+ 3 files changed, 31 insertions(+), 5 deletions(-)
+
+commit 119880e15
+Merge: 5d852997c 8c8783a52
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Thu Nov 9 08:18:03 2023 +0000
+
+    Merge pull request #3557 from raff4el/main
+    
+    fix missing table in grant.pg.sql
+
+commit 5d852997c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Nov 8 18:15:15 2023 +0000
+
+    Add the ability to override ICU values for week numbering - useful when the ICU library can't be updated.
+
+ web/language.inc           | 29 ++++++++++++++++++++++++++++-
+ web/lib/MRBS/DateTime.php  | 31 +++++++++++++++++++++++++++----
+ web/systemdefaults.inc.php | 20 ++++++++++++++++++++
+ 3 files changed, 75 insertions(+), 5 deletions(-)
+
+commit 8c8783a52
+Author: raff4el <74510259+raff4el@users.noreply.github.com>
+Date:   Wed Nov 8 15:33:24 2023 +0000
+
+    fix missing table in grant
+
+ grant.pg.sql | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 38bf057a0
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Nov 2 18:44:30 2023 +0000
+
+    Restructure
+
+ web/functions_mail.inc      | 16 ++++++++--------
+ web/language.inc            | 22 ++++++++++++++++++----
+ web/lib/MRBS/RepeatRule.php |  2 +-
+ 3 files changed, 27 insertions(+), 13 deletions(-)
+
+commit 56925f7a0
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Nov 2 17:36:44 2023 +0000
+
+    Fix bug causing times in emails to be in am/pm format not 24-hour.  See GitHub Issue #3550.
+
+ web/language.inc           | 7 +++++--
+ web/systemdefaults.inc.php | 7 ++++++-
+ 2 files changed, 11 insertions(+), 3 deletions(-)
+
+commit 905b0e215
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Nov 2 16:44:50 2023 +0000
+
+    Add comment on the 'w' pattern
+
+ web/lib/IntlDateFormatter.php | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit 1af44b858
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Nov 1 17:48:12 2023 +0000
+
+    Use the IntlCalendar extension if possible to find the first day of the week in the user's locale.  The week numbers in MRBS are based on the week number in the locale, which won't necessarily be the ISO week number.
+
+ web/functions_table.inc    |  5 +++--
+ web/index.php              |  8 ++++----
+ web/js/datepicker.js.php   |  4 ++--
+ web/lib/MRBS/DateTime.php  | 34 ++++++++++++++++++++++++++++++++++
+ web/systemdefaults.inc.php | 18 ++++++++++--------
+ 5 files changed, 53 insertions(+), 16 deletions(-)
+
+commit d944be8ea
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Oct 31 17:05:49 2023 +0000
+
+    Restructure
+
+ web/lib/MRBS/Auth/AuthJoomla.php       | 4 ++--
+ web/lib/MRBS/{ => Joomla}/JFactory.php | 4 ++--
+ web/lib/MRBS/{ => Joomla}/JUser.php    | 2 +-
+ web/lib/MRBS/Session/SessionJoomla.php | 2 +-
+ 4 files changed, 6 insertions(+), 6 deletions(-)
+
+commit 95275e691
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Oct 31 10:16:38 2023 +0000
+
+    Fix bug when approving series.  See GitHub Issue #3549.
+
+ web/functions_ical.inc | 29 +++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
+
+commit c632983c9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Oct 31 09:34:33 2023 +0000
+
+    Correct typo in comment
+
+ web/functions_ical.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit bd356f361
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Oct 30 18:13:49 2023 +0000
+
+    Further fix for authentication against Joomla Version 5. See GitHub Issue #3547.
+
+ web/lib/MRBS/Auth/AuthJoomla.php | 28 +++++++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
+
+commit 6937eb16f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Oct 30 17:50:39 2023 +0000
+
+    Fix authentication against Joomla Version 5. See GitHub Issue #3547.
+
+ web/lib/MRBS/Auth/AuthJoomla.php       | 29 +++++++++++++++++++++---
+ web/lib/MRBS/JFactory.php              | 17 +++++++-------
+ web/lib/MRBS/JUser.php                 |  5 ++--
+ web/lib/MRBS/Session/SessionJoomla.php |  9 +++++++-
+ 4 files changed, 46 insertions(+), 14 deletions(-)
+
+commit 16492e1af
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Oct 26 17:37:30 2023 +0100
+
+    Simplify code
+
+ web/edit_entry_handler.php | 18 +++++-------------
+ 1 file changed, 5 insertions(+), 13 deletions(-)
+
+commit 6fdff11a2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Oct 26 16:26:01 2023 +0100
+
+    Revert "Remove redundant code"
+    
+    This reverts commit 1919deac6bcebc86cbfa022961998e9f199de595.
+
+ web/edit_entry_handler.php | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+commit 1919deac6
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Oct 26 16:17:22 2023 +0100
+
+    Remove redundant code
+
+ web/edit_entry_handler.php | 17 -----------------
+ 1 file changed, 17 deletions(-)
+
+commit e731c8a80
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Oct 26 16:07:58 2023 +0100
+
+    Fix bug causing the repeat end date to be a day too early if the current time is earlier than the time of the booking.
+
+ web/edit_entry_handler.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 3308cfd4b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Oct 26 15:41:22 2023 +0100
+
+    Simplify code
+
+ web/report.php | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+commit 2d547983d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Oct 25 16:32:11 2023 +0100
+
+    Fix bug causing the search to start from the current time on the search start date rather than 00:00.  See GitHub Issue #3544.
+
+ web/search.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit feb6b764d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 21 14:03:13 2023 +0100
+
+    Add client-side validation of the file upload size
+
+ web/js/general.js.php | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
+
+commit 0bf50edfe
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 21 09:39:53 2023 +0100
+
+    Improve internationalisation of error message
+
+ web/import.php           | 2 +-
+ web/lang/lang.cs         | 2 +-
+ web/lang/lang.de         | 2 +-
+ web/lang/lang.en         | 2 +-
+ web/lang/lang.es         | 2 +-
+ web/lang/lang.fi         | 2 +-
+ web/lang/lang.fr         | 2 +-
+ web/lang/lang.id         | 2 +-
+ web/lang/lang.it         | 2 +-
+ web/lang/lang.ja         | 2 +-
+ web/lang/lang.ms         | 2 +-
+ web/lang/lang.nb         | 2 +-
+ web/lang/lang.nl         | 2 +-
+ web/lang/lang.nn         | 2 +-
+ web/lang/lang.no         | 2 +-
+ web/lang/lang.pt-br      | 2 +-
+ web/lang/lang.ro         | 2 +-
+ web/lang/lang.sk         | 2 +-
+ web/lang/lang.sr-latn-rs | 2 +-
+ web/lang/lang.sv         | 2 +-
+ web/lang/lang.zh-cn      | 2 +-
+ 21 files changed, 21 insertions(+), 21 deletions(-)
+
+commit d672d6c05
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 21 08:39:24 2023 +0100
+
+    Add a MAX_FILE_SIZE hidden input to forms
+
+ web/lib/MRBS/Form/Form.php | 44 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+
+commit e74cb65bf
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 21 08:38:17 2023 +0100
+
+    Improve code
+
+ web/import.php | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit ae1d4454e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Oct 20 18:17:43 2023 +0100
+
+    Improve error handing of file uploading
+
+ web/import.php                         | 55 ++++++++++++---------
+ web/lib/MRBS/UploadException.php (new) | 62 ++++++++++++++++++++++++
+ 2 files changed, 94 insertions(+), 23 deletions(-)
+
+commit a909d216b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Oct 19 14:00:51 2023 +0100
+
+    Change 'file' nature to 'binary'
+
+ web/lib/MRBS/DB_mysql.php | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit ab1ee35fd
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Oct 18 17:53:03 2023 +0100
+
+    Add 'file' nature for blob types
+
+ web/lib/MRBS/DB_mysql.php | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+commit 80f4640b0
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Oct 16 15:38:49 2023 +0100
+
+    Fix Joomla >= 4.3.0 authentication properly
+
+ web/auth/cms/joomla.inc                | 12 ------------
+ web/lib/MRBS/Auth/AuthJoomla.php       | 17 +----------------
+ web/lib/MRBS/Session/SessionJoomla.php | 15 +++++++++++++--
+ 3 files changed, 14 insertions(+), 30 deletions(-)
+
+commit 8b8f737ef
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 14 14:55:35 2023 +0100
+
+    Add strict_types
+
+ web/lib/MRBS/ICalendar/Series.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 906109ed7
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 14 14:33:33 2023 +0100
+
+    Restructure
+
+ web/lib/MRBS/ICalendar/Series.php | 17 ++---------------
+ web/mrbs_sql.inc                  | 12 ++++++++++++
+ 2 files changed, 14 insertions(+), 15 deletions(-)
+
+commit d8d709376
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 14 14:26:46 2023 +0100
+
+    Add type declarations
+
+ web/lib/MRBS/ICalendar/Series.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit bc48529b1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 14 14:22:53 2023 +0100
+
+    Restructure
+
+ web/lib/MRBS/ICalendar/Series.php | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+
+commit 133eea5bf
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 14 14:18:11 2023 +0100
+
+    Fix bug when exporting series that have been changed.
+
+ web/functions_ical.inc            | 18 ++----
+ web/lib/MRBS/ICalendar/Series.php | 91 ++++++++++++++++++++---------
+ web/report.php                    |  4 +-
+ web/view_entry.php                |  2 +-
+ 4 files changed, 72 insertions(+), 43 deletions(-)
+
+commit 57b39d90f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Oct 11 17:47:59 2023 +0100
+
+    Fix bug introduced in recent commit preventing bulk deletion from working
+
+ web/js/report.js.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 59e1d7364
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Oct 11 15:47:23 2023 +0100
+
+    Restructure
+
+ web/functions_ical.inc             | 12 ++++++------
+ web/internalconfig.inc.php         |  7 -------
+ web/lib/MRBS/ICalendar/RFC5545.php |  5 +++--
+ web/lib/MRBS/RepeatRule.php        |  2 +-
+ web/mrbs_sql.inc                   |  4 +++-
+ 5 files changed, 13 insertions(+), 17 deletions(-)
+
+commit 5a6a32762
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Oct 11 15:34:30 2023 +0100
+
+    Restructure
+
+ web/functions_ical.inc             | 377 ++-------------------------
+ web/import.php                     |  11 +-
+ web/internalconfig.inc.php         |   2 +-
+ web/lib/MRBS/ICalendar/RFC5545.php | 343 +++++++++++++++++++++++-
+ 4 files changed, 371 insertions(+), 362 deletions(-)
+
+commit 7e08f5b4a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Oct 11 13:51:59 2023 +0100
+
+    Allow the target_url to be a GET or POST value to help password managers (the target_url can be stored as a query string parameter in the password manager).
+
+ web/lib/MRBS/Session/SessionWithLogin.php | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+commit 468738534
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Oct 10 18:29:07 2023 +0100
+
+    Add comment
+
+ web/functions_ical.inc | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit e1991b4f8
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Oct 10 17:38:34 2023 +0100
+
+    Restructure
+
+ web/mrbs_sql.inc | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
+
+commit 630aa80b9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Oct 10 17:35:27 2023 +0100
+
+    Improve performance
+
+ web/mrbs_sql.inc | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
+
+commit cf83de052
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Oct 10 17:13:44 2023 +0100
+
+    Restructure
+
+ web/functions_ical.inc            | 14 ++++++++------
+ web/lib/MRBS/ICalendar/Series.php | 26 ++++++++++++++++++++++----
+ 2 files changed, 30 insertions(+), 10 deletions(-)
+
+commit 5dd77eab2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Oct 10 16:26:44 2023 +0100
+
+    Add new function entry_has_registrants()
+
+ web/mrbs_sql.inc | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+commit 0f5044144
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Oct 10 16:07:27 2023 +0100
+
+    Restructure
+
+ web/import.php   |  9 +--------
+ web/mrbs_sql.inc | 12 ++++++++++++
+ 2 files changed, 13 insertions(+), 8 deletions(-)
+
+commit 41a2878ee
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Oct 10 15:55:32 2023 +0100
+
+    Restructure
+
+ web/import.php               |  4 +---
+ web/mrbs_sql.inc             | 10 ++++++----
+ web/registration_handler.php |  6 +++++-
+ 3 files changed, 12 insertions(+), 8 deletions(-)
+
+commit e169a49e4
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Oct 10 14:03:20 2023 +0100
+
+    Add import of registrants (single entry only at the moment)
+
+ web/import.php               | 82 ++++++++++++++++++++++------------
+ web/mrbs_sql.inc             | 16 +++++++
+ web/registration_handler.php | 12 +----
+ 3 files changed, 71 insertions(+), 39 deletions(-)
+
+commit 5f5e0225a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Oct 9 18:15:04 2023 +0100
+
+    Add export of registrants (single entry only at the moment)
+
+ web/functions_ical.inc | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+commit 0cde30bf2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Oct 9 17:35:08 2023 +0100
+
+    Correct typo in comment
+
+ web/registration_handler.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 88450c370
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Oct 8 17:19:35 2023 +0100
+
+    Replace qualifier with import
+
+ web/lib/MRBS/ICalendar/Series.php | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit a08afa9ee
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 7 17:34:26 2023 +0100
+
+    Add comment.
+
+ web/lib/MRBS/Auth/AuthJoomla.php | 3 +++
+ 1 file changed, 3 insertions(+)
+
+commit 8a7a8fac1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Oct 6 17:55:19 2023 +0100
+
+    Fix problem with Joomla authentication when the Joomla LDAP authentication plugin is enabled.  See GitHub Issues #3521.
+
+ web/auth/cms/joomla.inc | 3 +++
+ 1 file changed, 3 insertions(+)
+
+commit 3c1ab84a0
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 28 18:47:25 2023 +0100
+
+    Fix bug preventing Auth::sortUsers() from working properly when using the Norwegian locale (and no doubt others) on Windows servers.
+
+ web/lib/MRBS/System.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 6e82f6d12
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 28 15:33:25 2023 +0100
+
+    Make Report table full created by column respect locale when sorting. See GitHub Issues #3518.
+
+ web/report.php | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+commit 15b1302e3
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 28 15:14:48 2023 +0100
+
+    Add comment.
+
+ web/report.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 940251ba8
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 28 15:00:46 2023 +0100
+
+    Make Report table full description column respect locale when sorting. See GitHub Issues #3518.
+
+ web/report.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 3273e2512
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 28 14:55:58 2023 +0100
+
+    Make Report table brief area name and room name columns respect locale when sorting. See GitHub Issues #3518.
+
+ web/report.php | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+commit ff1c40d33
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 28 14:38:16 2023 +0100
+
+    Make Report table brief description column respect locale when sorting. See GitHub Issues #3518.
+
+ web/report.php | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+commit de338366c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 27 17:31:39 2023 +0100
+
+    Make Search table columns respect locale when sorting. See GitHub Issues #3518.
+
+ web/search.php | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit a0a818e06
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 27 16:55:55 2023 +0100
+
+    Localise sorting of string custom fields. See GitHub Issues #3518.
+
+ web/edit_users.php | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+commit 31de78c04
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 27 16:25:17 2023 +0100
+
+    Fix comment
+
+ web/admin.php | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit e6366b335
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 27 15:35:17 2023 +0100
+
+    Fix visibility of name header cell (bug introduced in recent commit)
+
+ web/admin.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 1c22ecf74
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 27 15:30:31 2023 +0100
+
+    Fix comment
+
+ web/admin.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit cd0df1ea9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 27 15:23:56 2023 +0100
+
+    Localise sorting of string custom fields. See GitHub Issues #3518.
+
+ web/admin.php | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+commit 3cebc556e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 27 15:06:49 2023 +0100
+
+    Localise sorting of invalid_types column. See GitHub Issues #3518.
+
+ web/admin.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 357cd926f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 27 14:46:21 2023 +0100
+
+    Localise sorting of room_admin_email column and fix bug in previous commit. See GitHub Issues #3518.
+
+ web/admin.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 8937ee26a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 27 14:17:53 2023 +0100
+
+    Localised sorting of description column. See GitHub Issues #3518.
+
+ web/admin.php | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+commit 2b2324b50
+Merge: f13cbe26b fbb7368a6
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 27 12:41:49 2023 +0100
+
+    Merge pull request #3522 from meeting-room-booking-system/localised_sorting
+    
+    Localised sorting
+
+commit fbb7368a6
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 27 12:26:36 2023 +0100
+
+    Respect locale when sorting rooms
+
+ web/admin.php       |  7 +++----
+ web/js/admin.js.php | 10 +++++++---
+ 2 files changed, 10 insertions(+), 7 deletions(-)
+
+commit 4cc2381c3
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 27 11:57:55 2023 +0100
+
+    Add comment
+
+ web/edit_users.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 6b06fc065
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 27 11:50:27 2023 +0100
+
+    Add localised sorting for first two columns in user table
+
+ web/edit_users.php               | 10 +++++-----
+ web/jquery/datatables/plugins.js | 21 +++++++++++++++++----
+ web/js/datatables.js.php         |  4 ++++
+ 3 files changed, 26 insertions(+), 9 deletions(-)
+
+commit f13cbe26b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Sep 26 18:41:09 2023 +0100
+
+    Fix undefined variable warning when sending mail.
+
+ web/functions_mail.inc | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
+
+commit 38a790634
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Sep 25 08:32:08 2023 +0100
+
+    Fix bug causing user searches from the user name in the header not to start from the current date, as they did in MRBS 1.11.0.  See GitHub Issues #3514.
+
+ web/Themes/default/header.inc | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+commit a39f4278c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Sep 24 19:04:17 2023 +0100
+
+    Further fix of incorrect translation for Norwegian Bokmål in datepickers.  See GitHub Issues #3517.
+
+ web/js/flatpickr/l10n/nb.js | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 645976f1c
+Merge: f55d8c6b8 c297098fc
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Sep 24 19:01:01 2023 +0100
+
+    Merge remote-tracking branch 'origin/main'
+
+commit f55d8c6b8
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Sep 24 18:59:17 2023 +0100
+
+    Fix incorrect translation for Norwegian Bokmål in datepickers.  See GitHub Issues #3517.
+
+ web/js/flatpickr/l10n/nb.js | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+commit c297098fc (tag: v1.11.4)
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Sun Sep 24 16:42:38 2023 +0100
+
+    Updated ChangeLog and NEWS for release of 1.11.4
+
+ ChangeLog | 18713 ++++++++++++++++++++++++++++----------------------
+ NEWS      |   131 +-
+ 2 files changed, 10684 insertions(+), 8160 deletions(-)
+
+commit b3f0c2ed8
 Author: John Beranek <jberanek@users.sourceforge.net>
 Date:   Sun Sep 24 16:23:33 2023 +0100
 
@@ -7,7 +3455,7 @@ Date:   Sun Sep 24 16:23:33 2023 +0100
  web/version_num.inc | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit 03bddb58c (origin/main)
+commit 03bddb58c
 Merge: d9c276e7e 9f3ffa761
 Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
 Date:   Sun Sep 24 10:24:24 2023 +0100

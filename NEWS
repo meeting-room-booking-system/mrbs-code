@@ -7,6 +7,138 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.11.5 (Mon 22nd April 2024):
+
+[-] Fix incorrect translation for Norwegian Bokmål in datepickers.  See GitHub Issues #3517.
+
+[-] Fix bug causing user searches from the user name in the header not
+ to start from the current date, as they did in MRBS 1.11.0.  See GitHub
+ Issues #3514.
+
+[-] Fix undefined variable warning when sending mail.
+
+[*] Add localised sorting for first two columns in user table.
+
+[+] Respect locale when sorting in data tables See GitHub Issues #3518.
+
+[-] Fix bug preventing Auth::sortUsers() from working properly when
+ using the Norwegian locale (and no doubt others) on Windows servers.
+
+[-] Fix problem with Joomla authentication when the Joomla LDAP authentication plugin is
+ enabled.  See GitHub Issues #3521.
+
+[+] Add export of registrants (single entry only at the moment).
+
+[+] Add import of registrants (single entry only at the moment).
+
+[-] Fix Joomla >= 4.3.0 authentication properly.
+
+[*] Various improvements for file uploads.
+
+[-] Fix bug causing the search to start from the current time on the search start date
+ rather than 00:00.  See GitHub Issue #3544.
+
+[-] Fix authentication against Joomla Version 5. See GitHub Issue #3547.
+
+[-] Fix bug when approving series.  See GitHub Issue #3549.
+
+[*] Use the IntlCalendar extension if possible to find the first day of the week in the
+ user's locale.  The week numbers in MRBS are based on the week number in the locale,
+ which won't necessarily be the ISO week number.
+
+[-] Fix bug causing times in emails to be in am/pm format not 24-hour.  See GitHub Issue #3550.
+
+[*] Add the ability to override ICU values for week numbering - useful when the ICU
+ library can't be updated.
+
+[-] Fix missing table in grant for PostgreSQL, thanks to PR #3557 by 'raff4el'.
+
+[*] SAML auth: Add an optional access control filter that requires users to be a member of
+ a configurable group in order to access the calendar. Thanks to Jonathan Gapen.
+
+[*] Made it easier to force MRBS to use strftime() instead of the intl extension. See
+ GitHub Issue #3559.
+
+[*] Add a class of 'today' to cell if it's the current day.  See GitHub Issue #3564.
+
+[*] Set secure session cookie properties.  See GitHub Issue #3568.
+
+[*] Increase the strength of the session id.
+
+[-] Fix fatal error when saving a form with a protected date field that is null.
+
+[*] Upgrade to PHPMailer Version 6.9.1.
+
+[*] Upgrade to latest version of Mail_Mime package.
+
+[*] Upgrade to latest version of PEAR.php.
+
+[*] Upgrade to latest version of pear/File_Passwd.
+
+[*] Move content ID generation into sending.
+
+[+] Add support for the altervista.org database type.  See GitHub Issue #3579.
+
+[*] Lots of updates to add strict typing.
+
+[-] Fix bug converting a pattern into a strftime format when the pattern contains
+ two consecutive tokens.  See GitHub Issue #3589.
+
+[*] Update intl types and skeletons with latest patterns.
+
+[-] Fix type error in week and month views.  See GitHub Issue #3591.
+
+[-] Fix bug causing some fields to be duplicated on DataTables export (eg to Excel).
+
+[*] Provide config variable for forcing the use of the IntlDateFormatter emulation.
+ See GitHub Issue #3559.
+
+[-]     Fix errors that are generated when the MySQL wait_timeout variable is less than
+ the time needed for some operations, eg large reports retrieving user data from an external
+ server, resulting in the MySQL connection being dropped before the operation finishes.
+ Typical error messages are "SQLSTATE[HY000]: General error: 2006 MySQL server has gone
+ away" and "Packets out of order. Expected 1 received 0. Packet size=145".
+
+[-] Fix bug when running in debug mode on systems with PHP versions before 8.1.0.
+
+[*] Extend the prevention of simultaneous bookings to include a config setting
+ ($max_simultaneous_bookings) specifying the maximum number of simultaneous bookings
+ allowed.  See GitHib Issue #3617.
+
+[*] Updated French translation.
+
+[*] Modify upgrade instructions to state that the new release should be uploaded to a
+ new directory, rather than overwriting the existing directory.  See GitHub Issue #3623.
+
+[+] Add a configuration setting to allow bookings direct from the week and month views
+ for all rooms without first going via the day view.  See GitHub Issue #3629.
+
+[-] Fix bug when making a booking that crosses a DST boundary in an area with a
+ single period.  See GitHub Issue #3628.
+
+[-] Fix problem when drag selecting rooms and some rooms aren't writable.  See GitHub
+ Issue #3632.
+
+[*] Use config file for admins if $auth['saml']['admin'] is not set.  See GitHub Issue
+ #3431.
+
+[-] Fix warning when view_entry.php can be accessed by unlogged-in users.  See GitHub
+ Issue #3634.
+
+[-] Fix fatal error when the auth type is WordPress and the mbstring extension is
+ not enabled.
+
+[*] Fix deprecation notice when running on PHP >= 8.2.
+
+[*] Allow the session name to be set to the default. (Problems have been otherwise
+ observed when running with some WordPress plugins, eg Participants Database Version
+ 2.5.7, which also use PHP sessions.)
+
+[*] CAS sessions: Force authentication rather than giving an Access Denied message.
+ See GitHub Issue #3645.
+
+
+-------------------------------------------------------------------------------
 Version 1.11.4 (Sun 24th September 2023):
 
 [-] Fix problem with not being able to press the Import button on the Import form.
