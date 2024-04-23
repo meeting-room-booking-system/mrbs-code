@@ -1129,7 +1129,7 @@ $auth['cas']['no_server_validation'] = false;
 
 // Filtering by attribute
 // The next two settings allow you to use CAS attributes to require that a user must have certain
-// attributes, otherwise their access level will be zero.  In other words unless they ahave the required
+// attributes, otherwise their access level will be zero.  In other words unless they have the required
 // attributes they will be able to log in successfully, but then won't have any more rights than an
 // unlogged in user.
 // $auth['cas']['filter_attr_name'] = ''; // eg 'department'
