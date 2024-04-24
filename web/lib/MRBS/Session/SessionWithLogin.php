@@ -153,7 +153,8 @@ abstract class SessionWithLogin extends Session
     #[\SensitiveParameter]
     ?string $password) : string
   {
-    if (($valid_username = auth()->validateUser($this->form['username'], $this->form['password'])) === false)
+    if (!isset($this->form['password']) ||
+        (($valid_username = auth()->validateUser($this->form['username'], $this->form['password'])) === false))
     {
       $this->authGet($this->form['target_url'], $this->form['returl'], get_vocab('unknown_user'));
       exit(); // unnecessary because authGet() exits, but just included for clarity
