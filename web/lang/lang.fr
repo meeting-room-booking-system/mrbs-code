@@ -139,7 +139,7 @@ $vocab["missing_mandatory_field"] = "Vous n'avez pas fourni de valeur pour un ch
 $vocab["confirmed"]          = "Confirmé";
 $vocab["start_after_end"]    = "Jour de début postérieur au jour de fin";
 $vocab["start_after_end_long"] = "Erreur : le jour de début est postérieur au jour de fin";
-$vocab["invalid_rep_interval"]     = "L'intervalle de r鰩tition doit 괲e sup鲩eur ࠺éro.";
+$vocab["invalid_rep_interval"]     = "L'intervalle de répétition doit être supérieur à zéro.";
 $vocab["confirm_rep_end_date"]     = "Il semble que vous ayez oublié de définir la date de fin de " .
                                      "répétition. Voulez-vous quand même continuer ?";
 $vocab["type_reserved_for_admins"] = "Le type '%s' est réservé aux administrateurs";
