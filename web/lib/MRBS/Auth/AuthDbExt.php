@@ -90,13 +90,9 @@ class AuthDbExt extends Auth
     switch ($this->password_format)
     {
       case 'md5':
-        return (md5($password) == $hash);
-        break;
       case 'sha1':
-        return (sha1($password) == $hash);
-        break;
       case 'sha256':
-        return (hash('sha256', $password) == $hash);
+        return (hash($this->password_format, $password) == $hash);
         break;
       case 'crypt':
         return ($hash == crypt($password, $hash));
