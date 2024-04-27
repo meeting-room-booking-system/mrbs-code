@@ -77,58 +77,40 @@ class AuthDbExt extends Auth
     if ($stmt->count() == 1) // force a unique match
     {
       $row = $stmt->next_row();
-
-      switch ($this->password_format)
-      {
-        case 'md5':
-          if (md5($pass) == $row[0])
-          {
-            $retval = $user;
-          }
-          break;
-
-        case 'sha1':
-          if (sha1($pass) == $row[0])
-          {
-            $retval = $user;
-          }
-          break;
-
-        case 'sha256':
-          if (hash('sha256', $pass) == $row[0])
-          {
-            $retval = $user;
-          }
-          break;
-
-        case 'crypt':
-          $recrypt = crypt($pass,$row[0]);
-          if ($row[0] == $recrypt)
-          {
-            $retval = $user;
-          }
-          break;
-
-        case 'password_hash':
-          if (password_verify($pass, $row[0]))
-          {
-            // Should we call password_needs_rehash() ?
-            // Probably not as we may not have UPDATE rights on the external database.
-            $retval = $user;
-          }
-          break;
-
-        default:
-          // Otherwise assume plaintext
-          if ($pass == $row[0])
-          {
-            $retval = $user;
-          }
-          break;
-      }
+      $retval = ($this->password_check($pass, $row[0])) ? $user : false;
     }
 
     return $retval;
+  }
+
+
+  // Checks that a password matches a hash
+  protected function password_check(string $password, string $hash) : bool
+  {
+    switch ($this->password_format)
+    {
+      case 'md5':
+        return (md5($password) == $hash);
+        break;
+      case 'sha1':
+        return (sha1($password) == $hash);
+        break;
+      case 'sha256':
+        return (hash('sha256', $password) == $hash);
+        break;
+      case 'crypt':
+        return ($hash == crypt($password, $hash));
+        break;
+      case 'password_hash':
+        // Should we call password_needs_rehash() ?
+        // Probably not as we may not have UPDATE rights on the external database.
+        return (password_verify($password, $hash));
+        break;
+      default:
+        // Otherwise assume plaintext
+        return ($password == $hash);
+        break;
+    }
   }
 
 
