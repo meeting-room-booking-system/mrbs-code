@@ -92,7 +92,7 @@ class AuthDbExt extends Auth
       case 'md5':
       case 'sha1':
       case 'sha256':
-        return (hash($this->password_format, $password) == $hash);
+        return hash_equals($hash, hash($this->password_format, $password));
         break;
       case 'crypt':
       case 'password_hash':
@@ -102,7 +102,7 @@ class AuthDbExt extends Auth
         break;
       default:
         // Otherwise assume plaintext
-        return ($password == $hash);
+        return hash_equals($hash, $password);
         break;
     }
   }
