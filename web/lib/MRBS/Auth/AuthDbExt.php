@@ -3,6 +3,7 @@ namespace MRBS\Auth;
 
 use MRBS\DBFactory;
 use MRBS\User;
+use ValueError;
 
 class AuthDbExt extends Auth
 {
@@ -89,20 +90,24 @@ class AuthDbExt extends Auth
   {
     switch ($this->password_format)
     {
-      case 'md5':
-      case 'sha1':
-      case 'sha256':
-        return hash_equals($hash, hash($this->password_format, $password));
-        break;
       case 'crypt':
       case 'password_hash':
-        // Should we call password_needs_rehash() ?
-        // Probably not as we may not have UPDATE rights on the external database.
+        // Don't call password_needs_rehash() as (a) we may not have UPDATE rights on the external
+        // database and (b) whether the password needs to be updated will depend on the PHP version
+        // on the external system, not this one.
         return (password_verify($password, $hash));
         break;
-      default:
-        // Otherwise assume plaintext
+      case 'plaintext':
         return hash_equals($hash, $password);
+        break;
+      default:
+        // Check we've got a valid hashing algorithm.  From PHP 8.0.0 hash() will do this.
+        if ((version_compare(PHP_VERSION, '8.0.0') < 0) &&
+            !in_array($this->password_format, hash_algos()))
+        {
+          throw new ValueError("'$this->password_format' is not a valid hashing algorithm");
+        }
+        return hash_equals($hash, hash($this->password_format, $password));
         break;
     }
   }
