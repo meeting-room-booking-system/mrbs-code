@@ -115,8 +115,6 @@ class AuthDbExt extends Auth
 
   protected function getUserFresh(string $username) : ?User
   {
-    global $auth;
-
     $sql_params = array();
 
     // Only retrieve the columns we need (a) to minimise the query and (b) to avoid
