@@ -1188,7 +1188,8 @@ $auth['db_ext']['column_name_password'] = 'password';
 $auth['db_ext']['column_name_email'] = 'email';
 // Below is an example if you want to put the MRBS user level in the DB
 //$auth['db_ext']['column_name_level'] = 'mrbs_level';
-// Either 'password_hash' (from PHP 5.5.0), 'md5', 'sha1', 'sha256', 'crypt' or 'plaintext'
+// Can be 'password_hash', 'crypt', 'plaintext' or any algorithm supported
+// by the PHP hash() function, eg 'md5', 'sha1', 'sha256'.
 $auth['db_ext']['password_format'] = 'md5';
 
 // 'auth_ldap' configuration settings

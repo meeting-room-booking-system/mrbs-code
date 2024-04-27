@@ -89,20 +89,17 @@ class AuthDbExt extends Auth
   {
     switch ($this->password_format)
     {
-      case 'md5':
-      case 'sha1':
-      case 'sha256':
-        return hash_equals($hash, hash($this->password_format, $password));
-        break;
       case 'crypt':
       case 'password_hash':
         // Should we call password_needs_rehash() ?
         // Probably not as we may not have UPDATE rights on the external database.
         return (password_verify($password, $hash));
         break;
-      default:
-        // Otherwise assume plaintext
+      case 'plaintext':
         return hash_equals($hash, $password);
+        break;
+      default:
+        return hash_equals($hash, hash($this->password_format, $password));
         break;
     }
   }
