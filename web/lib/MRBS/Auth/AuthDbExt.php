@@ -95,8 +95,6 @@ class AuthDbExt extends Auth
         return (hash($this->password_format, $password) == $hash);
         break;
       case 'crypt':
-        return ($hash == crypt($password, $hash));
-        break;
       case 'password_hash':
         // Should we call password_needs_rehash() ?
         // Probably not as we may not have UPDATE rights on the external database.
