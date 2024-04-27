@@ -91,8 +91,9 @@ class AuthDbExt extends Auth
     {
       case 'crypt':
       case 'password_hash':
-        // Should we call password_needs_rehash() ?
-        // Probably not as we may not have UPDATE rights on the external database.
+        // Don't call password_needs_rehash() as (a) we may not have UPDATE rights on the external
+        // database and (b) whether the password needs to be updated will depend on the PHP version
+        // on the external system, not this one.
         return (password_verify($password, $hash));
         break;
       case 'plaintext':
