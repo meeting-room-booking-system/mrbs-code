@@ -60,28 +60,29 @@ class AuthDbExt extends Auth
     #[\SensitiveParameter]
     ?string $pass)
   {
-    $retval = false;
-
     // syntax_casesensitive_equals() modifies our SQL params array for us.   We need an exact match -
     // MySQL allows trailing spaces when using an '=' comparison, eg 'john' = 'john '
 
     $sql_params = array();
 
     $query = "SELECT " . $this->connection()->quote($this->column_name_password) .
-             "FROM " . $this->connection()->quote($this->db_table) .
-             "WHERE " . $this->connection()->syntax_casesensitive_equals($this->column_name_username,
-                                                                        $user,
-                                                                        $sql_params);
+               "FROM " . $this->connection()->quote($this->db_table) .
+              "WHERE " . $this->connection()->syntax_casesensitive_equals($this->column_name_username,
+                                                                          $user,
+                                                                          $sql_params);
 
     $stmt = $this->connection()->query($query, $sql_params);
 
-    if ($stmt->count() == 1) // force a unique match
+    if ($stmt->count() === 1) // force a unique match
     {
       $row = $stmt->next_row();
-      $retval = ($this->password_check($pass, $row[0])) ? $user : false;
+      if ($this->password_check($pass, $row[0]))
+      {
+        return $user;
+      }
     }
 
-    return $retval;
+    return false;
   }
 
 
