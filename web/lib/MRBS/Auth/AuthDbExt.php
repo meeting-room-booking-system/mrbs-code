@@ -3,6 +3,7 @@ namespace MRBS\Auth;
 
 use MRBS\DBFactory;
 use MRBS\User;
+use ValueError;
 
 class AuthDbExt extends Auth
 {
@@ -104,7 +105,7 @@ class AuthDbExt extends Auth
         if ((version_compare(PHP_VERSION, '8.0.0') < 0) &&
             !in_array($this->password_format, hash_algos()))
         {
-          throw new \ValueError("'$this->password_format' is not a valid hashing algorithm");
+          throw new ValueError("'$this->password_format' is not a valid hashing algorithm");
         }
         return hash_equals($hash, hash($this->password_format, $password));
         break;
