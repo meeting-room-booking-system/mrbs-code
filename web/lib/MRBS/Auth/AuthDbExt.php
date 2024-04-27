@@ -73,16 +73,8 @@ class AuthDbExt extends Auth
 
     $stmt = $this->connection()->query($query, $sql_params);
 
-    if ($stmt->count() === 1) // force a unique match
-    {
-      $row = $stmt->next_row();
-      if ($this->password_check($pass, $row[0]))
-      {
-        return $user;
-      }
-    }
-
-    return false;
+    // Check whether (a) there's just one result and (b) that password matches
+    return (($stmt->count() === 1) && $this->password_check($pass, $stmt->next_row()[0])) ? $user : false;
   }
 
 
