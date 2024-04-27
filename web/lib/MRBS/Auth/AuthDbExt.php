@@ -99,6 +99,12 @@ class AuthDbExt extends Auth
         return hash_equals($hash, $password);
         break;
       default:
+        // Check we've got a valid hashing algorithm.  From PHP 8.0.0 hash() will do this.
+        if ((version_compare(PHP_VERSION, '8.0.0') < 0) &&
+            !in_array($this->password_format, hash_algos()))
+        {
+          throw new \ValueError("'$this->password_format' is not a valid hashing algorithm");
+        }
         return hash_equals($hash, hash($this->password_format, $password));
         break;
     }
