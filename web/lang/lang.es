@@ -145,7 +145,7 @@ $vocab["edit_entry_nonexistent_room"] = "Está intentando crear o editar una res
                                         "marcadores que apunten directamente al formulario de reserva. " .
                                         "Es recomendable acceder al formulario de reserva desde la vista " .
                                         "de calendario.";
-$vocab["home"]                        = "Home";
+$vocab["home"]                        = "Inicio";
 
 // Used in view_entry.php
 $vocab["description"]         = "Descripción";
@@ -183,11 +183,11 @@ $vocab["no_request_yet"]      = "Todavía no se ha enviado ninguna solicitud"; /
 $vocab["last_request"]        = "Última solicitud enviada a ";                // Used for the title tooltip on More Info button
 $vocab["by"]                  = "por";                                        // Used for the title tooltip on More Info button
 $vocab["sent_at"]             = "Enviada a ";
-$vocab["yes"]                 = "Si";
+$vocab["yes"]                 = "Sí";
 $vocab["no"]                      = "No";
 $vocab["event_registration"]      = "Registro en evento";
 $vocab["event_details"]           = "Detalles del evento";
-$vocab["already_registered"]      = "Te has registrado para este evento";
+$vocab["already_registered"]      = "Ya estas registrado para este evento";
 $vocab["register"]                = "Registro";
 $vocab["cancel_registration"]     = "Cancelar registro";
 $vocab["registered_by"]           = "Registrado por";
@@ -208,7 +208,7 @@ $vocab["policy"]                 = "Política";
 $vocab["conflicts_with_self"]    = "Esta serie contiene entradas que se solapan. Revise las fechas de fin " .
                                    "y de fin de repetición.";
 $vocab["too_many_entries"]       = "Una serie no puede tener más de %d entradas";
-$vocab["returncal"]              = "Volver a Vista de Calendario";
+$vocab["returncal"]              = "Volver a vista de calendario";
 $vocab["failed_to_acquire"]      = "Error al obtener acceso a la Base de Datos";
 $vocab["invalid_booking"]        = "Reserva no válida";
 $vocab["must_set_description"]   = "Debes introducir una breve descripción para la Reserva. Por favor, vuelve atrás e introduce una.";
@@ -293,8 +293,8 @@ $vocab["password_reset_body"]       = 'Alguien ha generado una solicitud de rese
                                       'Si no has sido tú, puedes ignorar este correo electrónico. Si has sido tú, ' .
                                       'haz clic en el enlace de abajo para resetear tu contraseña. ' .
                                       'El enlace caducará en %1$d %2$s.';
-$vocab["enter_username"]            = "Por favor escribe tu numbre de usuario.";
-$vocab["enter_username_or_email"]   = "Por favor escribe tu numbre de usuario o correo electrónico.";
+$vocab["enter_username"]            = "Por favor escribe tu nombre de usuario.";
+$vocab["enter_username_or_email"]   = "Por favor escribe tu nombre de usuario o correo electrónico.";
 $vocab["will_be_sent_instructions"] = "Te enviaremos un correo con instrucciones sobre como cambiar tu contraseña.";
 $vocab["reset_password"]            = "Resetea tu contraseña";
 $vocab["pwd_check_email"]           = "Gracias. Si existe una cuenta de usuario que se corresponda con los detalles especificados  " .
