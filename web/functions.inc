@@ -1920,7 +1920,7 @@ function period_date_string(int $t, int $area_id, bool $previous_period=false) :
 {
   global $datetime_formats;
 
-  $period_names = get_period_names();
+  $period_names = get_period_names()[$area_id];
   $n_periods = count($period_names);
   $time = getdate($t);
   $p = $time['minutes'];
@@ -1935,7 +1935,7 @@ function period_date_string(int $t, int $area_id, bool $previous_period=false) :
 
   // The separator is a ',' as a '-' leads to an ambiguous
   // display in report.php when showing end times.
-  return array($p, $period_names[$area_id][$p] . ', ' . datetime_format($datetime_formats['date'], $t));
+  return array($p, $period_names[$p] . ', ' . datetime_format($datetime_formats['date'], $t));
 }
 
 
