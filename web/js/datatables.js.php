@@ -95,7 +95,9 @@ var extractEmailAddresses = function(dt, columnSelector, sort) {
   $.each(dt.columns(columnSelector).data(), function (i, column) {
     $.each(column, function (j, value) {
       try {
-        var href = $(value).attr('href');
+        var valueObject = $(value);
+        <?php // Need to search for an href in both this element and its descendants ?>
+        var href = valueObject.find('a').add(valueObject.filter('a')).attr('href');
         if ((href !== undefined) && href.startsWith(scheme)) {
           var address = href.substring(scheme.length);
           if ((address !== '') && !result.includes(address)) {
