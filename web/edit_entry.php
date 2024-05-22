@@ -1612,6 +1612,9 @@ $res = db()->query($sql);
 
 while (false !== ($row = $res->next_row_keyed()))
 {
+  // Cast the columns to their correct types
+  row_cast_columns($row, 'area');
+
   // We don't want areas that have no enabled rooms because it doesn't make sense
   // to try and select them for a booking.
   if (empty($rooms[$row['id']]))
@@ -1629,7 +1632,7 @@ while (false !== ($row = $res->next_row_keyed()))
     $row['resolution'] = 60;
   }
   // Generate some derived settings
-  $row['max_duration_qty']     = $row['max_duration_secs'];
+  $row['max_duration_qty'] = $row['max_duration_secs'];
   toTimeString($row['max_duration_qty'], $row['max_duration_units']);
   // Get the start and end of the booking day
   if ($row['enable_periods'])

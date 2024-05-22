@@ -730,6 +730,8 @@ function get_entry_by_id(int $id) : ?array
   else
   {
     $result = $res->next_row_keyed();
+    // Cast the columns to their correct types
+    row_cast_columns($result, 'entry');
     // Unpack the status bits
     unpack_status($result);
   }
