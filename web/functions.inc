@@ -944,7 +944,7 @@ function print_footer(bool $and_exit=false) : void
 // is used to specify a maximum size of unit to use.  For example if
 // it is set to 'minutes', 3600 seconds will give 60 minutes rather
 // than 1 hour.
-function to_time_string(int $seconds, bool $translate=true, $max_unit=null)
+function to_time_string(int $seconds, bool $translate=true, string $max_unit=null)
 {
   $value = $seconds;
 
