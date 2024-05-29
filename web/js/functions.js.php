@@ -52,6 +52,13 @@ function isMobile()
 
 $.fn.reverse = [].reverse;
 
+$.fn.isHScrollable = function () {
+  return this[0].scrollWidth > this[0].clientWidth;
+};
+
+$.fn.isVScrollable = function () {
+  return this[0].scrollHeight > this[0].clientHeight;
+};
 
 jQuery.fn.extend({
 
