@@ -20,6 +20,54 @@ var refreshListenerAdded = false;
 var intervalId;
 
 <?php
+// If the table container hasn't already been scrolled, and it's scrollable,
+// then scroll so that the current time is visible.
+?>
+function scrollToCurrentSlot() {
+  var table = $('.dwm_main');
+  var timelineVertical = table.find('thead').data('timeline-vertical');
+  var container = table.parent();
+  var scroll, scrollTo, scrollable;
+
+  if (timelineVertical)
+  {
+    scroll = container.scrollLeft();
+    scrollable = container.isHScrollable();
+  }
+  else
+  {
+    scroll = container.scrollTop();
+    scrollable = container.isVScrollable();
+  }
+
+  if ((scroll === 0) && scrollable)
+  {
+    var slots = table.find('thead').data('slots');
+    var nowSlotIndices = Timeline.search(slots);
+    if (nowSlotIndices.length > 1)
+    {
+      <?php // Show the row/column just before the current slot ?>
+      var index = Math.max(0, nowSlotIndices[0] - 1);
+    }
+    if (index > 0) <?php // No point in scrolling to where we already are ?>
+    {
+      if (timelineVertical)
+      {
+        var cols = table.find('thead th:not(.first_last)');
+        scrollTo = cols.eq(index).offset().left - cols.eq(0).offset().left;
+        container.scrollLeft(scrollTo);
+      }
+      else
+      {
+        var rows = table.find('tbody tr');
+        scrollTo = rows.eq(index).offset().top - rows.eq(0).offset().top;
+        container.scrollTop(scrollTo);
+      }
+    }
+  }
+}
+
+<?php
 // Make the columns in the calendar views of equal size.   We can't use an inline style,
 // because this would cause an error on those servers that have a Content Security Policy of
 // "default-src 'self'" or "script-src 'self'".  And we can't use a CSS file because we don't
@@ -543,50 +591,7 @@ $(document).on('page_ready', function() {
       var bottom = $('.dwm_main thead tr:first th:first').outerHeight();
       $('.dwm_main thead tr:nth-child(2) th').css('top', bottom + 'px');
 
-      <?php
-      // If the table container hasn't already been scrolled, and it's scrollable,
-      // then scroll so that the current time is visible.
-      ?>
-      var timelineVertical = $(this).find('thead').data('timeline-vertical');
-      var container = $(this).parent();
-      var scroll, scrollTo, scrollable;
-
-      if (timelineVertical)
-      {
-        scroll = container.scrollLeft();
-        scrollable = container.isHScrollable();
-      }
-      else
-      {
-        scroll = container.scrollTop();
-        scrollable = container.isVScrollable();
-      }
-
-      if ((scroll === 0) && scrollable)
-      {
-        var slots = $(this).find('thead').data('slots');
-        var nowSlotIndices = Timeline.search(slots);
-        if (nowSlotIndices.length > 1)
-        {
-          <?php // Show the row/column just before the current slot ?>
-          var index = Math.max(0, nowSlotIndices[0] - 1);
-        }
-        if (index > 0) <?php // No point in scrolling to where we already are ?>
-        {
-          if (timelineVertical)
-          {
-            var cols = $(this).find('thead th:not(.first_last)');
-            scrollTo = cols.eq(index).offset().left - cols.eq(0).offset().left;
-            container.scrollLeft(scrollTo);
-          }
-          else
-          {
-            var rows = $(this).find('tbody tr');
-            scrollTo = rows.eq(index).offset().top - rows.eq(0).offset().top;
-            container.scrollTop(scrollTo);
-          }
-        }
-      }
+      scrollToCurrentSlot();
 
     }).trigger('tableload');
 
