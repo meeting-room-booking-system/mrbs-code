@@ -443,7 +443,7 @@ var Timeline = {
       {
         <?php // The delay is half the slot length in seconds divided by the slot width/height in pixels ?>
         delay = (slot[1] - slot[0])/(2 * slotSize);
-        delay = parseInt(delay * 1000, 10); <?php // Convert to milliseconds ?>
+        delay = Math.round(delay * 1000); <?php // Convert to milliseconds ?>
         delay = Math.max(delay, 1000);
       }
       <?php // If we still haven't got one, or else it's zero, then set a sensible default delay ?>
