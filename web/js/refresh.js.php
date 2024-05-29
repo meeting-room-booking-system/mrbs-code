@@ -222,11 +222,13 @@ var Timeline = {
   ?>
   getFirstNonZeroSlotSize: function() {
     var slotSize;
+    var table = $('#day_main');
+
     <?php
     if ($times_along_top)
     {
       ?>
-      $('#day_main').find('thead th').not('.first_last').each(function () {
+      table.find('thead th').not('.first_last').each(function () {
           slotSize = $(this).outerWidth();
           if (slotSize)
           {
@@ -238,7 +240,7 @@ var Timeline = {
     else
     {
       ?>
-      $('#day_main').find('tbody tr').each(function () {
+      table.find('tbody tr').each(function () {
           slotSize = $(this).outerHeight();
           if (slotSize)
           {
