@@ -80,12 +80,13 @@ var sizeColumns = function() {
 
 
 var refreshPage = function refreshPage() {
+    var table = $('table.dwm_main');
     <?php
     // Allow refreshing if we're on a metered connection and in kiosk
     // mode, because kiosk mode relies on regular refreshing.
     ?>
     if (!isHidden() &&
-        !$('table.dwm_main').hasClass('resizing') &&
+        !table.hasClass('resizing') &&
         (args.kiosk || !isMeteredConnection()) &&
         !refreshPage.disabled)
     {
@@ -115,7 +116,7 @@ var refreshPage = function refreshPage() {
       // class to the table we ensure that this can't happen, because if the user moves to a
       // different day the new HTML won't have the class.
       ?>
-      $('table.dwm_main').addClass('refreshable');
+      table.addClass('refreshable');
 
       if(args.site)
       {
