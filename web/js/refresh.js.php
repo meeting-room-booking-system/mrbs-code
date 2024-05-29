@@ -206,6 +206,7 @@ var Timeline = {
   // Searches for time within the slots array and returns the result as an array consisting of the
   // index of the time slot and, if there is one (ie if it's the week view), the index of the day.
   // If time isn't within any of the slots then returns an empty array.
+  // time defaults to the current time.
   ?>
   search: function(slots, time) {
     <?php
@@ -263,6 +264,11 @@ var Timeline = {
 
     var result = [];
 
+    if ((typeof time === 'undefined'))
+    {
+      time = Math.floor(Date.now() / 1000);
+    }
+
     <?php // Only look for an index if we know that the time is possibly within the slots somewhere ?>
     if ((typeof slots !== 'undefined') && within(slots, time))
     {
@@ -294,7 +300,7 @@ var Timeline = {
     var top, left, borderLeftWidth, borderRightWidth, width, height;
     var headers, headersFirstLast, headersNormal, headerFirstSize, headerLastSize;
 
-    nowSlotIndices = Timeline.search(slots, now);
+    nowSlotIndices = Timeline.search(slots);
 
     if (nowSlotIndices.length > 1)
     {
@@ -558,9 +564,8 @@ $(document).on('page_ready', function() {
 
       if ((scroll === 0) && scrollable)
       {
-        var now = Math.floor(Date.now() / 1000);
         var slots = $(this).find('thead').data('slots');
-        var nowSlotIndices = Timeline.search(slots, now);
+        var nowSlotIndices = Timeline.search(slots);
         if (nowSlotIndices.length > 1)
         {
           <?php // Show the row/column just before the current slot ?>
