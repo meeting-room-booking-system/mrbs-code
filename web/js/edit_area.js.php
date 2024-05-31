@@ -229,7 +229,13 @@ $(document).on('page_ready', function() {
   // delete symbol appearing for a moment and then being removed).
   ?>
   checkForLastPeriodName();
-  $('.delete_period').css('visibility', 'visible');
+  $('.delete_period')
+    .css('visibility', 'visible')
+    .on('click', function() {
+      <?php // Delete a period name input field ?>
+      $(this).parent().remove();
+      checkForLastPeriodName();
+    });
 
   <?php
   // When the Add Period button is clicked, duplicate the last period
@@ -243,12 +249,6 @@ $(document).on('page_ready', function() {
       clone.find('input').val('');
       clone.insertAfter(lastPeriodName).find('input').trigger('focus');
       $('.delete_period').show();
-    });
-
-  <?php // Delete a period name input field ?>
-  $('.delete_period').on('click', function() {
-      $(this).parent().remove();
-      checkForLastPeriodName();
     });
 
   <?php // Disable the default duration if "All day" is checked. ?>
