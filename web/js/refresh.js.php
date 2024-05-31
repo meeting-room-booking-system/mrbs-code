@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 // Implements Ajax refreshing of the calendar view.   Only necessary, obviously,
