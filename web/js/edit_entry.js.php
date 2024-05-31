@@ -1341,6 +1341,7 @@ $(document).on('page_ready', function() {
 
   var form = $('#main'),
       areaSelect = $('#area'),
+      startAndEndDates = $('#start_date, #end_date'),
       startSelect,
       endSelect,
       allDay;
@@ -1599,18 +1600,21 @@ $(document).on('page_ready', function() {
   <?php
   // Actions to take when the start and end datepickers are closed
   ?>
-  $('#start_date, #end_date').on('change', function() {
+  startAndEndDates.on('change', function() {
 
     <?php
     // (1) If the end_datepicker isn't visible and we change the start_datepicker,
     //     then set the end date to be the same as the start date.  (This will be
-    //     the case if multiday bookings are not allowed)
+    //     the case if multi-day bookings are not allowed)
     ?>
+
+    var endDate = $('#end_date');
+
     if ($(this).attr('id') === 'start_date')
     {
-      if ($('#end_date').css('visibility') === 'hidden')
+      if (endDate.css('visibility') === 'hidden')
       {
-        $('#end_date').val($('#start_date').val());
+        endDate.val($(this).val());
       }
     }
 
@@ -1621,17 +1625,9 @@ $(document).on('page_ready', function() {
     ?>
     if (getDateDifference() < 0)
     {
-      var fp;
-      if ($(this).attr('id') === 'start_date')
-      {
-        fp = document.querySelector("#end_date")._flatpickr;
-        fp.setDate($('#start_date').val());
-      }
-      else
-      {
-        fp = document.querySelector("#start_date")._flatpickr;
-        fp.setDate($('#end_date').val());
-      }
+      var selector = ($(this).attr('id') === 'start_date') ? '#end_date' : '#start_date';
+      var fp = document.querySelector(selector)._flatpickr;
+      fp.setDate($(this).val());
     }
 
     <?php
@@ -1654,7 +1650,7 @@ $(document).on('page_ready', function() {
 
   });
 
-  $('#start_date, #end_date').each(function() {
+  startAndEndDates.each(function() {
       checkTimeSlots($(this));
     });
 
