@@ -1607,11 +1607,14 @@ $(document).on('page_ready', function() {
     //     then set the end date to be the same as the start date.  (This will be
     //     the case if multiday bookings are not allowed)
     ?>
+
+    var endDate = $('#end_date');
+
     if ($(this).attr('id') === 'start_date')
     {
-      if ($('#end_date').css('visibility') === 'hidden')
+      if (endDate.css('visibility') === 'hidden')
       {
-        $('#end_date').val($('#start_date').val());
+        endDate.val($('#start_date').val());
       }
     }
 
