@@ -35,10 +35,17 @@ function base64Decode(string)
   return decoder.decode(bytes);
 }
 
+<?php
 // Fix for iOS 13 where the User Agent string has been changed.
 // See https://github.com/flatpickr/flatpickr/issues/1992
+?>
 function isIos()
 {
+  <?php
+  // Note that the platform property is deprecated, but is used here
+  // as a last resort for older browsers. When it is removed from newer
+  // browsers it will just be undefined and the code should still work.
+  ?>
   return (window.navigator.userAgent.match(/iPad/i) ||
           window.navigator.userAgent.match(/iPhone/i) ||
           /iPad|iPhone|iPod/.test(navigator.platform) ||
