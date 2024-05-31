@@ -1625,15 +1625,8 @@ $(document).on('page_ready', function() {
     ?>
     if (getDateDifference() < 0)
     {
-      var fp;
-      if ($(this).attr('id') === 'start_date')
-      {
-        fp = document.querySelector("#end_date")._flatpickr;
-      }
-      else
-      {
-        fp = document.querySelector("#start_date")._flatpickr;
-      }
+      var selector = ($(this).attr('id') === 'start_date') ? '#end_date' : '#start_date';
+      var fp = document.querySelector(selector)._flatpickr;
       fp.setDate($(this).val());
     }
 
