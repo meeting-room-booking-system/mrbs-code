@@ -1614,7 +1614,7 @@ $(document).on('page_ready', function() {
     {
       if (endDate.css('visibility') === 'hidden')
       {
-        endDate.val($('#start_date').val());
+        endDate.val($(this).val());
       }
     }
 
