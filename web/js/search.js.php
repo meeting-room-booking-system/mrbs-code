@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 require "../defaultincludes.inc";
@@ -15,18 +16,18 @@ if ($use_strict)
 
 
 $(document).on('page_ready', function() {
-  
+
   var searchForm = $('#search_form'),
       table = $('#search_results'),
       tableOptions;
-  
+
   <?php
   // Turn the list of users into a dataTable, provided that we can use
   // an Ajax source.  Otherwise they just get the old style search page
   // with "Next" and "Prev" buttons to get new pages from the server.
 
   // Add in a hidden input to the search form so that we can tell if we are using DataTables
-  // (which will be if JavaScript is enabled).   We need to know this because when we're using an 
+  // (which will be if JavaScript is enabled).   We need to know this because when we're using an
   // Ajax data source we don't want to send the HTML version of the table data.
   ?>
 
@@ -35,7 +36,7 @@ $(document).on('page_ready', function() {
       name: 'datatable',
       value: '1'
     }).appendTo(searchForm);
-    
+
   if (table.length)
   {
     tableOptions = {ajax: {url: 'search.php' + ((args.site) ? '?site=' + args.site : ''),
@@ -51,12 +52,12 @@ $(document).on('page_ready', function() {
                                data.csrf_token = getCSRFToken();
                                return data;
                              }}};
-    
+
     <?php // Get the types and feed those into dataTables ?>
     tableOptions.columnDefs = getTypes(table);
-      
+
     makeDataTable('#search_results', tableOptions, {"leftColumns": 1});
   }
-    
+
 });
 
