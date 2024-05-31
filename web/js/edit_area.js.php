@@ -195,7 +195,7 @@ function generateLastSlotSelect()
 // disable the delete button, to make sure there's always at least one
 // period.  (We could in theory have no period names, but it doesn't
 // have a practical use.  Besides, always having at least one makes the
-// code a little simpler because there will always be something to clone.
+// code a little simpler because there will always be something to clone.)
 ?>
 function checkForLastPeriodName()
 {
