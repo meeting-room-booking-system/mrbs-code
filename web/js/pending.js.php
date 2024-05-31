@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 require "../defaultincludes.inc";
@@ -29,38 +30,38 @@ $(document).on('page_ready', function() {
       pendingDataTable,
       i,
       colVisIncludeCols;
-  
+
   <?php
   // Add a '-' control to the subtables and make them close on clicking it
   ?>
   maintable.find('table.sub th.control')
            .text('-');
- 
-  
+
+
   $(document).on('click', 'table.sub th.control', function () {
       var nTr = $(this).closest('.table_container').parent().prev(),
           serial = $(this).parent().parent().parent().attr('id').replace('subtable_', '');
-          
+
       $('#subtable_' + serial + '_wrapper').slideUp( function () {
           pendingDataTable.row(nTr).child.hide();
           nTr.show();
         });
     });
-    
+
   <?php
   // Detach all the subtables from the DOM (detach keeps a copy) so that they
   // don't appear, but so that we've got the data when we want to "open" a row
   ?>
   subtables = maintable.find('tr.sub_table').detach();
-  
+
   <?php
   // Set up a click event that "opens" the table row and inserts the subtable
   ?>
   maintable.find('td.control')
            .text('+');
-           
+
   $(document).on('click', 'td.control', function () {
-      
+
       var nTr = $(this).parent(),
           serial = nTr.attr('id').replace('row_', ''),
           subtableId = 'subtable_' + serial,
@@ -71,13 +72,13 @@ $(document).on('page_ready', function() {
       <?php
       // We want the columns in the main and sub tables to align.  So
       // find the widths of the main table columns and use those values
-      // to set the widths of the subtable columns. 
+      // to set the widths of the subtable columns.
       ?>
       maintable.find('tr').eq(0).find('th').each(function(i){
           columnDefs.push({width: ($(this).outerWidth()) + "px",
                            targets: i});
         });
-      
+
       columnDefs.push({orderable: false, targets: 0});
       columnDefs = columnDefs.concat(getTypes(subtable));
 
@@ -93,7 +94,7 @@ $(document).on('page_ready', function() {
 
       $('#subtable_' + serial + '_wrapper').hide().slideDown();
     });
-                
+
   <?php // Turn the table into a datatable ?>
   tableOptions = {order: [[startTimeCol, 'asc']]};
   tableOptions.columnDefs = [{orderable: false, targets: 0}];
@@ -104,7 +105,7 @@ $(document).on('page_ready', function() {
   // this on the dataTables forum.  In the meantime we comment out the FixedColumns.
   ?>
   tableOptions.stateSave = false;
-  
+
   <?php
   // Remove the first column from the column visibility
   // list because it is the control column
@@ -121,5 +122,5 @@ $(document).on('page_ready', function() {
   ?>
   tableOptions.colReorder = {"fixedColumnsLeft": 1};
   pendingDataTable = makeDataTable('#pending_table', tableOptions);
-  
+
 });
