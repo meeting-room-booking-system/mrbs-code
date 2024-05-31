@@ -1605,7 +1605,7 @@ $(document).on('page_ready', function() {
     <?php
     // (1) If the end_datepicker isn't visible and we change the start_datepicker,
     //     then set the end date to be the same as the start date.  (This will be
-    //     the case if multiday bookings are not allowed)
+    //     the case if multi-day bookings are not allowed)
     ?>
 
     var endDate = $('#end_date');
