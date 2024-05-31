@@ -1629,13 +1629,12 @@ $(document).on('page_ready', function() {
       if ($(this).attr('id') === 'start_date')
       {
         fp = document.querySelector("#end_date")._flatpickr;
-        fp.setDate($('#start_date').val());
       }
       else
       {
         fp = document.querySelector("#start_date")._flatpickr;
-        fp.setDate($('#end_date').val());
       }
+      fp.setDate($(this).val());
     }
 
     <?php
