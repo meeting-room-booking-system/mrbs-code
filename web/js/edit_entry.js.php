@@ -1341,6 +1341,7 @@ $(document).on('page_ready', function() {
 
   var form = $('#main'),
       areaSelect = $('#area'),
+      startAndEndDates = $('#start_date, #end_date'),
       startSelect,
       endSelect,
       allDay;
@@ -1599,7 +1600,7 @@ $(document).on('page_ready', function() {
   <?php
   // Actions to take when the start and end datepickers are closed
   ?>
-  $('#start_date, #end_date').on('change', function() {
+  startAndEndDates.on('change', function() {
 
     <?php
     // (1) If the end_datepicker isn't visible and we change the start_datepicker,
@@ -1654,7 +1655,7 @@ $(document).on('page_ready', function() {
 
   });
 
-  $('#start_date, #end_date').each(function() {
+  startAndEndDates.each(function() {
       checkTimeSlots($(this));
     });
 
