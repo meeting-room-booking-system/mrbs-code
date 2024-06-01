@@ -1,12 +1,12 @@
 <?php
-
+declare(strict_types=1);
 namespace MRBS\Form;
 
 class ElementInputDatalist extends ElementInput
 {
   private static $list_prefix = "mrbs_";
   private static $list_number = 1;
-  
+
   public function __construct()
   {
     // One problem with using a datalist with an input element is the way different browsers
@@ -20,34 +20,34 @@ class ElementInputDatalist extends ElementInput
     // tied to the visible input, but this isn't as important for a text input as it is, say, for a checkbox
     // or radio button.
     parent::__construct();
-    
+
     // Provide a unique id to link the list with the input.
     // Doesn't matter what it is as it won't be used elsewhere.
     $list_id = self::$list_prefix . self::$list_number;
     self::$list_number++;
-    
+
     $this->setAttributes(array('type' => 'text',
                                'list' => $list_id));
-                         
+
     $datalist = new ElementDatalist();
     $datalist->setAttribute('id', $list_id);
-    
+
     $this->next($datalist);
   }
-  
-  
+
+
   public function addDatalistOptions(array $options, $associative=null)
-  { 
+  {
     // Put a <select> wrapper around the options so that browsers that don't
     // support <datalist> will still have the options in their DOM and then
     // the JavaScript polyfill can find them and do something with them
     $select = new ElementSelect();
     $select->addClass('none');
     $select->addSelectOptions($options, null, $associative);
-    
+
     $this->next($this->next()->addElement($select));
-    
+
     return $this;
   }
- 
+
 }

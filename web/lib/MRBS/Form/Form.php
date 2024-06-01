@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace MRBS\Form;
 
 use function MRBS\fatal_error;

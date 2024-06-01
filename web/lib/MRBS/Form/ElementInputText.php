@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace MRBS\Form;
 
 class ElementInputText extends ElementInput
@@ -10,5 +10,5 @@ class ElementInputText extends ElementInput
     parent::__construct();
     $this->setAttribute('type', 'text');
   }
- 
+
 }

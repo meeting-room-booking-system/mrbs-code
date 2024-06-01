@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace MRBS\Form;
 
 // This is a limited implementation of the HTML5 DOM and is optimised for use by
@@ -397,7 +397,17 @@ class Element
       if (isset($value) && ($value !== true))
       {
         // boolean attributes, eg 'required', don't need a value
-        $html .= '="' . htmlspecialchars($value) . '"';
+        $html .= '="';
+        if (is_int($value))
+        {
+          // No need to escape these
+          $html .= $value;
+        }
+        else
+        {
+          $html .= htmlspecialchars($value);
+        }
+        $html .= '"';
       }
     }
 
@@ -448,7 +458,12 @@ class Element
 
   private static function escapeText($text, $raw=false)
   {
-    return ($raw) ? $text : htmlspecialchars($text);
+    if ($raw || is_int($text))
+    {
+      return $text;
+    }
+
+    return htmlspecialchars($text);
   }
 
 }

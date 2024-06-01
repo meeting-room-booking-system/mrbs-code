@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace MRBS\Form;
 
 class ElementInputImage extends ElementInput
@@ -10,5 +10,5 @@ class ElementInputImage extends ElementInput
     parent::__construct();
     $this->setAttribute('type', 'image');
   }
- 
+
 }

@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace MRBS\Form;
 
 class ElementInputCheckbox extends ElementInput
@@ -10,8 +10,8 @@ class ElementInputCheckbox extends ElementInput
     parent::__construct();
     $this->setAttribute('type', 'checkbox');
   }
-  
-  
+
+
   public function setChecked($checked=true)
   {
     if ($checked)
@@ -22,8 +22,8 @@ class ElementInputCheckbox extends ElementInput
     {
       $this->removeAttribute('checked');
     }
-    
+
     return $this;
   }
- 
+
 }
