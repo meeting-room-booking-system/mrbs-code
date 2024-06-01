@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 // Modifications to the standard CSS when using RTL languages (eg Hebrew)
@@ -31,7 +32,7 @@ form.form_admin, .form_admin div, div#div_custom_html,
   float: right;
 }
 
-.form_admin label, .form_admin fieldset, .form_admin input, 
+.form_admin label, .form_admin fieldset, .form_admin input,
 div#area_form, div#room_form {
   float: inherit;
 }
