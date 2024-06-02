@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace MRBS\Form;
 
 // This is a limited implementation of the HTML5 DOM and is optimised for use by
@@ -38,7 +38,7 @@ class Element
 
   // If $raw is true then the text will not be put through htmlspecialchars().  Only to
   // be used for trusted text.
-  public function setText($text, $text_at_start=false, $raw=false)
+  public function setText($text, $text_at_start=false, bool $raw=false)
   {
     if ($this->self_closing)
     {
@@ -397,7 +397,17 @@ class Element
       if (isset($value) && ($value !== true))
       {
         // boolean attributes, eg 'required', don't need a value
-        $html .= '="' . htmlspecialchars($value) . '"';
+        $html .= '="';
+        if (is_numeric($value))
+        {
+          // No need to escape these
+          $html .= $value;
+        }
+        else
+        {
+          $html .= htmlspecialchars($value);
+        }
+        $html .= '"';
       }
     }
 
@@ -446,9 +456,14 @@ class Element
   }
 
 
-  private static function escapeText($text, $raw=false)
+  private static function escapeText($text, bool $raw=false)
   {
-    return ($raw) ? $text : htmlspecialchars($text);
+    if ($raw || is_numeric($text))
+    {
+      return $text;
+    }
+
+    return htmlspecialchars($text);
   }
 
 }

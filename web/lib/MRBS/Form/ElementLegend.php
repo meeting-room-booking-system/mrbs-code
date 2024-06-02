@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace MRBS\Form;
 
 class ElementLegend extends Element
@@ -9,5 +9,5 @@ class ElementLegend extends Element
   {
     parent::__construct('legend');
   }
- 
+
 }

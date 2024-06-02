@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace MRBS\Form;
 
 class ElementDiv extends Element
@@ -9,5 +9,5 @@ class ElementDiv extends Element
   {
     parent::__construct('div');
   }
- 
+
 }

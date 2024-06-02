@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace MRBS\Form;
 
 class ElementDatalist extends Element
@@ -9,5 +9,5 @@ class ElementDatalist extends Element
   {
     parent::__construct('datalist');
   }
- 
+
 }

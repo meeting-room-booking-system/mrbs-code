@@ -1,17 +1,17 @@
 <?php
-
+declare(strict_types=1);
 namespace MRBS\Form;
 
 
 class ElementFieldset extends Element
 {
-  
+
   public function __construct()
   {
     parent::__construct('fieldset');
   }
-  
-  
+
+
   // $legend can be
   //    (a) an ElementLegend object, or
   //    (b) another element, or
@@ -27,7 +27,7 @@ class ElementFieldset extends Element
     else
     {
       $element = new ElementLegend();
-      
+
       if (is_string($legend))
       {
         $element->setText($legend);
@@ -38,9 +38,9 @@ class ElementFieldset extends Element
         $element->addElement($legend);
       }
     }
-    
+
     $this->addElement($element);
     return $this;
   }
-  
+
 }

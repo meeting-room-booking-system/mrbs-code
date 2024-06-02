@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace MRBS\Form;
 
 class ElementInputUrl extends ElementInput
@@ -10,5 +10,5 @@ class ElementInputUrl extends ElementInput
     parent::__construct();
     $this->setAttribute('type', 'url');
   }
- 
+
 }

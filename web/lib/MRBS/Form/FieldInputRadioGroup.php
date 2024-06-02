@@ -1,11 +1,11 @@
 <?php
-
+declare(strict_types=1);
 namespace MRBS\Form;
 
 
 class FieldInputRadioGroup extends Field
 {
-  
+
   public function __construct()
   {
     parent::__construct();
@@ -13,8 +13,8 @@ class FieldInputRadioGroup extends Field
          ->setControlAttributes(array('class' => 'group'));
     $this->is_group = true;
   }
-  
-  
+
+
   public function addRadioOptions(array $options, $name, $checked=null, $associative=null, $disabled=false)
   {
     $element = $this->getControl();
@@ -22,5 +22,5 @@ class FieldInputRadioGroup extends Field
     $this->setControl($element);
     return $this;
   }
-  
+
 }
