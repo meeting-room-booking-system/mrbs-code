@@ -398,7 +398,7 @@ class Element
       {
         // boolean attributes, eg 'required', don't need a value
         $html .= '="';
-        if (is_int($value))
+        if (is_numeric($value))
         {
           // No need to escape these
           $html .= $value;
@@ -458,7 +458,7 @@ class Element
 
   private static function escapeText($text, $raw=false)
   {
-    if ($raw || is_int($text))
+    if ($raw || is_numeric($text))
     {
       return $text;
     }
