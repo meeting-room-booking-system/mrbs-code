@@ -200,6 +200,7 @@ if ($display_mincals_above)
 .index :not(.simple) + .contents {
   display: -ms-flexbox;
   display: flex;
+  overflow-y: hidden;
 }
 
 .view_container {
@@ -207,6 +208,9 @@ if ($display_mincals_above)
   flex-grow: 1;
   width: 100%;
   overflow-x: auto;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 img {
@@ -726,6 +730,13 @@ div#div_custom_html {
 
 
 /* ------------ INDEX.PHP ------------------*/
+
+body.index {
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+}
 
 .date_nav {
   float: left;
