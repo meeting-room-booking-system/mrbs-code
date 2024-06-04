@@ -152,10 +152,7 @@ if ($display_mincals_above)
 
     .minicalendars.formed {
       display: flex;
-      flex-wrap: wrap;
       justify-content: center;
-      max-height: 18em;
-      overflow: hidden;
       margin-right: 0;
     }
 
