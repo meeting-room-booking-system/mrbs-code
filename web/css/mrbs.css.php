@@ -781,10 +781,10 @@ body.index {
 // Normally the scrolling is confined to the table container, but this doesn't
 // work on short screens when you can lose the table altogether in the flex box.
 // So for short screens we allow scrolling on both the table container and the
-// body and set a mex height for the table container/
+// body and set a max height for the table container.
 // TODO: is there something better we can do for short screens?
 ?>
-@media screen and (max-height: 30rem) {
+@media screen and (max-height: 50rem), screen and (max-width: 30rem) {
   body.index {
     max-height: none;
     overflow-y: visible;
