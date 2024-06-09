@@ -111,7 +111,7 @@ button.image {
   float: left;
   width: 100%;
   box-sizing: border-box;
-  padding-bottom: 3rem;
+  padding-bottom: 2rem;
 }
 
 h1 {
