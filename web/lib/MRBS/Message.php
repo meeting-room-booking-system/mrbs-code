@@ -71,7 +71,7 @@ class Message
         'until' => $this->until
       ])
     );
-    $sql = db()->syntax_upsert($data, _tbl('variable'), $sql_params, 'id', ['id'], true);
+    $sql = db()->syntax_upsert($data, _tbl('variable'), $sql_params, 'variable_name', ['id'], true);
 
     return (0 < db()->command($sql, $sql_params));
   }
