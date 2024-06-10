@@ -21,27 +21,17 @@ var refreshListenerAdded = false;
 var intervalId;
 
 <?php
-// If the table container hasn't already been scrolled, and it's scrollable,
-// then scroll so that the current time is visible.
+// If the table container is scrollable, then scroll so that the current time is visible.
 ?>
 function scrollToCurrentSlot() {
   var table = $('.dwm_main');
   var timelineVertical = table.find('thead').data('timeline-vertical');
   var container = table.parent();
-  var scroll, scrollTo, scrollable;
+  var scrollTo, scrollable;
 
-  if (timelineVertical)
-  {
-    scroll = container.scrollLeft();
-    scrollable = container.isHScrollable();
-  }
-  else
-  {
-    scroll = container.scrollTop();
-    scrollable = container.isVScrollable();
-  }
+  scrollable = (timelineVertical) ? container.isHScrollable() : container.isVScrollable();
 
-  if ((scroll === 0) && scrollable)
+  if (scrollable)
   {
     var slots = table.find('thead').data('slots');
     var nowSlotIndices = Timeline.search(slots);
