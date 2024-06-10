@@ -595,9 +595,14 @@ $(document).on('page_ready', function() {
       var bottom = $('.dwm_main thead tr:first th:first').outerHeight();
       $('.dwm_main thead tr:nth-child(2) th').css('top', bottom + 'px');
 
-      scrollToCurrentSlot();
-
     }).trigger('tableload');
+
+  <?php
+  // Do this on page_ready, rather than tableload, so that the scrolling doesn't happen after
+  // every automatic refresh.  That would be a problem if the user has deliberately scrolled
+  // somewhere else after the automatic scroll.
+  ?>
+  scrollToCurrentSlot();
 
 });
 
