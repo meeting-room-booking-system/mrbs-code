@@ -127,8 +127,21 @@ class AuthJoomla extends Auth
       {
         $user = Factory::getUser((int)$user_id);
       }
-      $result[] = array('username'     => $user->username,
-                        'display_name' => $user->name);
+      // Check to see that the user has a username. The result of getUser() on a user_id that doesn't exist is,
+      // strangely, a user object with all properties set to null.  In theory (?) all the user_ids returned by
+      // getUsersByGroup() should exist, but there has been a case where this is not so.  See
+      // https://github.com/meeting-room-booking-system/mrbs-code/issues/3682 .
+      if (isset($user->username))
+      {
+        $result[] = array(
+          'username' => $user->username,
+          'display_name' => $user->name
+        );
+      }
+      else
+      {
+        trigger_error("The Joomla user with id $user_id appears in Joomla groups but not in Joomla users.", E_USER_WARNING);
+      }
     }
 
     // Need to sort the users
