@@ -152,10 +152,7 @@ if ($display_mincals_above)
 
     .minicalendars.formed {
       display: flex;
-      flex-wrap: wrap;
       justify-content: center;
-      max-height: 18em;
-      overflow: hidden;
       margin-right: 0;
     }
 
@@ -200,6 +197,7 @@ if ($display_mincals_above)
 .index :not(.simple) + .contents {
   display: -ms-flexbox;
   display: flex;
+  overflow-y: hidden;
 }
 
 .view_container {
@@ -207,6 +205,9 @@ if ($display_mincals_above)
   flex-grow: 1;
   width: 100%;
   overflow-x: auto;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 img {
@@ -727,6 +728,13 @@ div#div_custom_html {
 
 /* ------------ INDEX.PHP ------------------*/
 
+body.index {
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+}
+
 .date_nav {
   float: left;
   width: 100%;
@@ -766,18 +774,43 @@ div#div_custom_html {
 .table_container {
   overflow: auto;
   position: relative;
+  margin: 1em 0;
+}
+
+<?php
+// Normally the scrolling is confined to the table container, but this doesn't
+// work on short screens when you can lose the table altogether in the flex box.
+// So for short screens we allow scrolling on both the table container and the
+// body and set a max height for the table container.
+// TODO: is there something better we can do for short screens?
+?>
+@media screen and (max-height: 50rem), screen and (max-width: 30rem) {
+  body.index {
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  .index :not(.simple) + .contents {
+    overflow-y: visible;
+  }
+
+  .view_container {
+    overflow-y: visible;
+  }
+
+  .table_container {
   <?php
   // A height is necessary to make sticky headers work. Set the maximum height to be the viewport's,
   // less a fixed amount, which allows for a small space at the top and bottom, giving a little bit
   // of context and making it easier to position the table container in the viewport.
   ?>
-  max-height: calc(100vh - 4em);
+    max-height: calc(100vh - 4em);
   <?php
   // For those browsers that support the max() function ensure that the maximum height is at least
   // a certain height, otherwise the element becomes too small to be meaningful.
   ?>
-  max-height: max(calc(100vh - 4em), 8em);
-  margin: 1em 0;
+    max-height: max(calc(100vh - 4em), 8em);
+  }
 }
 
 div.timeline {
