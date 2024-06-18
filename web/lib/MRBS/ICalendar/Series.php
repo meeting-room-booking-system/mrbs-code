@@ -120,10 +120,10 @@ class Series
   {
     // Construct the repeat rule and add it to the row
     $repeat_rule = new RepeatRule();
-    $repeat_rule->setType($row['rep_type']);
-    $repeat_rule->setInterval($row['rep_interval']);
+    $repeat_rule->setType((int)$row['rep_type']);
+    $repeat_rule->setInterval((int)$row['rep_interval']);
     $repeat_end_date = new DateTime();
-    $repeat_end_date->setTimestamp($row['end_date']);
+    $repeat_end_date->setTimestamp((int)$row['end_date']);
     $repeat_rule->setEndDate($repeat_end_date);
     $repeat_rule->setDaysFromOpt($row['rep_opt']);
 

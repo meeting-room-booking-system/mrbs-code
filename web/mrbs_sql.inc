@@ -1518,7 +1518,14 @@ function get_repeat(int $repeat_id) : ?array
 
   $res = db()->query($sql, array(':repeat_id' => $repeat_id));
 
-  return ($res->count() == 0) ? null : $res->next_row_keyed();
+  if (($res->count() == 0))
+  {
+    return null;
+  }
+  $row = $res->next_row_keyed();
+  row_cast_columns($row, 'repeat');
+
+  return $row;
 }
 
 // Update the time of last reminding.
