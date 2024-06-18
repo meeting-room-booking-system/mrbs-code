@@ -246,7 +246,7 @@ function get_vtimezone(string $tz)
 
 
 // Gets a username given an ORGANIZER value.   Returns NULL if none found
-function get_create_by(string $organizer)
+function get_create_by(string $organizer) : ?string
 {
   global $auth, $mail_settings;
 
