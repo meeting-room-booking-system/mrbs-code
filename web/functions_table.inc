@@ -1346,9 +1346,9 @@ function week_room_table_innerhtml(string $view, int $view_all, int $year, int $
     $format = $datetime_formats['view_week_day_date_month'];
     // with times along the top and days of the week down the side
     // See note above: weekday==0 is day $weekstarts, not necessarily Sunday.
-    for ($thisday = 0; $thisday < DAYS_PER_WEEK; $thisday++)
+    for ($d = 0; $d < DAYS_PER_WEEK; $d++)
     {
-      if (is_hidden_day(($thisday + $weekstarts) % DAYS_PER_WEEK))
+      if (is_hidden_day(($d + $weekstarts) % DAYS_PER_WEEK))
       {
         // These days are to be hidden in the display: don't display a row
         continue;
@@ -1356,36 +1356,36 @@ function week_room_table_innerhtml(string $view, int $view_all, int $year, int $
 
       $tbody .= "<tr>\n";
 
-      $wt = mktime( 12, 0, 0, $month, $day_start_week + $thisday, $year );
-      $wday = date('d', $wt);
-      $wmonth = date('m', $wt);
-      $wyear = date('Y', $wt);
-      $wdate = date('Y-n-d', $wt);
+      $this_date = new DateTime();
+      $this_date->setDate($year, $month, $day_start_week + $d);
+      $this_day = $this_date->getDay();
+      $this_month = $this_date->getMonth();
+      $this_year = $this_date->getYear();
 
-      $day_cell_text = datetime_format($format, $wt);
+      $day_cell_text = datetime_format($format, $this_date->getTimestamp());
 
       $vars = array('view'     => 'day',
                     'view_all' => $view_all,
-                    'year'     => date('Y', $wt),
-                    'month'    => date('m', $wt),
-                    'day'      => date('d', $wt),
+                    'year'     => $this_year,
+                    'month'    => $this_month,
+                    'day'      => $this_day,
                     'area'     => $area_id,
                     'room'     => $room_id);
 
       $day_cell_link = 'index.php?' . http_build_query($vars, '', '&');
       $day_cell_link = multisite($day_cell_link);
-      $row_label = day_cell_html($day_cell_text, $day_cell_link, $wdate);
+      $row_label = day_cell_html($day_cell_text, $day_cell_link, $this_date->getISODate());
       $tbody .= $row_label;
 
       for ($s = $morning_slot_seconds;
            $s <= $evening_slot_seconds;
            $s += $resolution)
       {
-        $is_invalid = $is_possibly_invalid[$thisday] && is_invalid_datetime(0, 0, $s, $wmonth, $wday, $wyear);
+        $is_invalid = $is_possibly_invalid[$d] && is_invalid_datetime(0, 0, $s, $this_month, $this_day, $this_year);
         // set up the query vars to be used for the link in the cell
-        $query_vars = get_query_vars($view, $area_id, $room_id, $wmonth, $wday, $wyear, $s);
+        $query_vars = get_query_vars($view, $area_id, $room_id, $this_month, $this_day, $this_year, $s);
         // and then draw the cell
-        $tbody .= cell_html($map->slot($room_id, $thisday, $s), $query_vars, $is_invalid);
+        $tbody .= cell_html($map->slot($room_id, $d, $s), $query_vars, $is_invalid);
       }  // end looping through the time slots
       if ($row_labels_both_sides)
       {
@@ -1438,24 +1438,25 @@ function week_room_table_innerhtml(string $view, int $view_all, int $year, int $
 
 
       // See note above: weekday==0 is day $weekstarts, not necessarily Sunday.
-      for ($thisday = 0; $thisday < DAYS_PER_WEEK; $thisday++)
+      for ($d = 0; $d < DAYS_PER_WEEK; $d++)
       {
-        if (is_hidden_day(($thisday + $weekstarts) % DAYS_PER_WEEK))
+        if (is_hidden_day(($d + $weekstarts) % DAYS_PER_WEEK))
         {
           // These days are to be hidden in the display
           continue;
         }
 
         // set up the query vars to be used for the link in the cell
-        $wt = mktime(12, 0, 0, $month, $day_start_week+$thisday, $year);
-        $wday = date("d", $wt);
-        $wmonth = date("m", $wt);
-        $wyear = date("Y", $wt);
-        $is_invalid = $is_possibly_invalid[$thisday] && is_invalid_datetime(0, 0, $s, $wmonth, $wday, $wyear);
-        $query_vars = get_query_vars($view, $area_id, $room_id, $wmonth, $wday, $wyear, $s);
+        $this_date = new DateTime();
+        $this_date->setDate($year, $month, $day_start_week + $d);
+        $this_day = $this_date->getDay();
+        $this_month = $this_date->getMonth();
+        $this_year = $this_date->getYear();
+        $is_invalid = $is_possibly_invalid[$d] && is_invalid_datetime(0, 0, $s, $this_month, $this_day, $this_year);
+        $query_vars = get_query_vars($view, $area_id, $room_id, $this_month, $this_day, $this_year, $s);
 
         // and then draw the cell
-        $tbody .= cell_html($map->slot($room_id, $thisday, $s), $query_vars, $is_invalid);
+        $tbody .= cell_html($map->slot($room_id, $d, $s), $query_vars, $is_invalid);
       }
 
       // next lines to display times on right side
