@@ -37,8 +37,6 @@ use function MRBS\url_base;
 
 class SessionSaml extends SessionWithLogin
 {
-  protected const SAMESITE = self::SAMESITE_LAX;
-
   public $ssp;
 
 
@@ -66,6 +64,7 @@ class SessionSaml extends SessionWithLogin
     $authSource = $auth['saml']['authsource'] ?? 'default-sp';
 
     $this->ssp = new \SimpleSAML\Auth\Simple($authSource);
+    $this->samesite = self::SAMESITE_LAX;
     parent::__construct();
   }
 

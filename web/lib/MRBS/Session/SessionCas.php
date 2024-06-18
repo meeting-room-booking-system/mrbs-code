@@ -11,12 +11,11 @@ use function MRBS\this_page;
 
 class SessionCas extends SessionWithLogin
 {
-  protected const SAMESITE = self::SAMESITE_LAX;
-
 
   public function __construct()
   {
     $this->checkTypeMatchesSession();
+    $this->samesite = self::SAMESITE_LAX;
     auth()->init();  // Initialise CAS
     parent::__construct();
   }

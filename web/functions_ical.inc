@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 use MRBS\ICalendar\RFC5545;
@@ -705,6 +706,7 @@ function export_icalendar(DBStatement $res, bool $keep_private, int $export_end=
 
   for ($i=0; (false !== ($row = $res->next_row_keyed())); $i++)
   {
+    row_cast_columns($row, 'entry');
     unpack_status($row);
     // If this is an individual entry, then construct an event
     if (!isset($row['rep_type']) || ($row['rep_type'] == RepeatRule::NONE))

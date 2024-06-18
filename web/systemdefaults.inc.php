@@ -1041,6 +1041,13 @@ $auth["session_php"]["session_expire_time"] = (60*60*24*30); // 30 days
 // be the case if you have JavaScript disabled on the client.
 $auth["session_php"]["inactivity_expire_time"] = 0; // seconds
 
+// Normally, provided the server is running PHP 7.3 or above,  the session cookies
+// are issued with SameSite attribute of "Strict", unless the session type requires
+// "Lax", eg for CAS and Saml. However, this can be inconvenient for users who might
+// access MRBS from more than one site and expect their login status to be retained.
+// By setting the variable below to true, the attribute can be relaxed to "Lax",
+// although this does trade off some security.
+$cookie_samesite_lax = false;
 
 // Cookie path override. If this value is set it will be used by the
 // 'php' and 'cookie' session schemes to override the default behaviour
