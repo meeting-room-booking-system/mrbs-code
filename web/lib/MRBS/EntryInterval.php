@@ -89,6 +89,31 @@ class EntryInterval
   }
 
 
+  // Checks whether the interval overlaps any of an array of days (0=Sunday, etc).
+  // Returns FALSE if it doesn't, or the first overlapped day as an MRBS\DateTime object if it does.
+  public function overlapsDays(array $days)
+  {
+    // Zero the $date and $end times so that the while condition works.
+    $date = clone $this->start_date;
+    $date->setTime(0,0);
+    $end = clone $this->end_date;
+    $end->setTime(0, 0);
+    $i = 0;
+
+    while (($date <= $end) && ($i < DAYS_PER_WEEK))
+    {
+      if (in_array($date->format('w'), $days))
+      {
+        return $date;
+      }
+      $date->add(new DateInterval('P1D'));
+      $i++;
+    }
+
+    return false;
+  }
+
+
   // Checks whether the interval overlaps a holiday.  Returns FALSE if it doesn't,
   // or the first overlapped holiday as an MRBS\DateTime object if it does.
   public function overlapsHoliday()

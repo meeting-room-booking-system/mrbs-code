@@ -251,6 +251,7 @@ $vocab["no_simultaneous_bookings"]        = "You cannot have bookings for more t
 $vocab["no_bookings_on_holidays"] = "You have tried to make a booking on a holiday (%s)";
 $vocab["no_bookings_on_weekends"] = "You have tried to make a booking on a weekend day (%s)";
 $vocab["type_not_allowed"]        = 'Bookings of type %1$s are not allowed in %2$s';
+$vocab["type_not_allowed_day"]    = 'Bookings of type %1$s are not allowed on %2$ss';
 $vocab["min_create_time_before"]  = 'You cannot create a booking which starts in less than %1$d %2$s';
 $vocab["max_create_time_before"]  = 'You cannot create a booking which ends in more than %1$d %2$s';
 $vocab["max_create_time_before_start"]  = 'You cannot create a booking which starts in more than %1$d %2$s';

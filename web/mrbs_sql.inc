@@ -468,7 +468,7 @@ function mrbsCheckPolicy(array $booking, ?int $ignore_entry_id=null, ?int $ignor
   global $max_secs_per_interval_global_enabled, $max_secs_per_interval_area_enabled;
   global $interval_types, $datetime_formats;
   global $approved_bookings_cannot_be_changed, $approval_enabled;
-  global $prevent_simultaneous_bookings, $prevent_invalid_types;
+  global $prevent_simultaneous_bookings, $prevent_invalid_types, $invalid_types_days;
   global $prevent_booking_on_holidays, $prevent_booking_on_weekends;
   global $periods_booking_opens, $measure_max_to_start_time;
 
@@ -551,15 +551,23 @@ function mrbsCheckPolicy(array $booking, ?int $ignore_entry_id=null, ?int $ignor
       }
     }
 
-    // Check whether this booking type is allowed in this room
+    // Check whether this booking type is allowed ...
     if ($prevent_invalid_types)
     {
+      // ... in this room
       $room_details = get_room_details($booking['room_id']);
       if (isset($room_details['invalid_types']) &&
           in_array($booking['type'], $room_details['invalid_types']))
       {
         // TODO: is this the best place for the htmlspecialchars()?  Should it go closer to the output?
         $violations[] = get_vocab('type_not_allowed', get_type_vocab($booking['type']), htmlspecialchars($room_details['room_name']));
+      }
+      // ... on this day
+      if (!empty($invalid_types_days[$booking['type']]))
+      {
+        $overlap_date = $entryInterval->overlapsDays($invalid_types_days[$booking['type']]);
+        $overlap_day = datetime_format(['pattern' => 'cccc'], $overlap_date->getTimestamp());
+        $violations[] = get_vocab('type_not_allowed_day', get_type_vocab($booking['type']), $overlap_day);
       }
     }
 
