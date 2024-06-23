@@ -341,8 +341,13 @@ $max_simultaneous_bookings = 1;
 // is only one area.
 $simultaneous_ignore_other_areas = false;
 
-// Set this to true if you want to prevent bookings of a type that is invalid for a room
+// Set this to true if you want to prevent bookings of a type that is invalid for a room or day of the week
 $prevent_invalid_types = true;
+
+// Provided $prevent_invalid_types is set to true, this can be used to specify a set of days of the
+// week (0 = Sunday) that are invalid for a certain type.  For example
+// $invalid_types_days['I'] = [1, 3] means that bookings of type 'I' cannot be made on Mondays or Wednesdays.
+$invalid_types_days = array();
 
 // When setting max_create_ahead and max_delete_ahead policies, the time interval is normally
 // measured to the end time of the booking.  This is to prevent users cheating the system by
