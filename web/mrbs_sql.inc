@@ -566,8 +566,11 @@ function mrbsCheckPolicy(array $booking, ?int $ignore_entry_id=null, ?int $ignor
       if (!empty($invalid_types_days[$booking['type']]))
       {
         $overlap_date = $entryInterval->overlapsDays($invalid_types_days[$booking['type']]);
-        $overlap_day = datetime_format(['pattern' => 'cccc'], $overlap_date->getTimestamp());
-        $violations[] = get_vocab('type_not_allowed_day', get_type_vocab($booking['type']), $overlap_day);
+        if ($overlap_date !== false)
+        {
+          $overlap_day = datetime_format(['pattern' => 'cccc'], $overlap_date->getTimestamp());
+          $violations[] = get_vocab('type_not_allowed_day', get_type_vocab($booking['type']), $overlap_day);
+        }
       }
     }
 
