@@ -119,7 +119,7 @@ function get_field_create_by(string $create_by, bool $disabled=false)
 }
 
 
-function get_field_name($value, $disabled=false)
+function get_field_name(string $value, $disabled=false)
 {
   $params = array('label'    => get_vocab('namebooker'),
                   'name'     => 'name',
@@ -132,7 +132,7 @@ function get_field_name($value, $disabled=false)
 }
 
 
-function get_field_description($value, $disabled=false)
+function get_field_description(string $value, $disabled=false)
 {
   global $is_mandatory_field;
 
@@ -1466,7 +1466,7 @@ else
     {
       $end_date = $start_date;
     }
-    list($end_year, $end_month, $end_day) = explode('-', $end_date);
+    list($end_year, $end_month, $end_day) = array_map('intval', explode('-', $end_date));
     $end_time = mktime($end_hour, $end_minute, 0, $end_month, $end_day, $end_year);
     $duration = $end_time - $start_time - cross_dst($start_time, $end_time);
   }
