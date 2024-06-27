@@ -1,4 +1,5 @@
 <?php // -*-mode: PHP; coding:utf-8;-*-
+declare(strict_types=1);
 namespace MRBS;
 
 use IntlDateFormatter;

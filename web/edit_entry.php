@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 use MRBS\Form\ElementDiv;
@@ -569,7 +570,7 @@ function get_field_type(string $value, bool $disabled=false) : ?FieldSelect
 }
 
 
-function get_field_confirmation_status(int $value, bool $disabled=false) : ?FieldInputRadioGroup
+function get_field_confirmation_status(bool $value, bool $disabled=false) : ?FieldInputRadioGroup
 {
   global $confirmation_enabled;
 
