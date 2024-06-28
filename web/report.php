@@ -1935,6 +1935,7 @@ if ($phase == 2)
       $body_rows = array();
       while (false !== ($row = $res->next_row_keyed()))
       {
+        row_cast_columns($row, 'entry');
         unpack_status($row);
         report_row($body_rows, $row);
       }
