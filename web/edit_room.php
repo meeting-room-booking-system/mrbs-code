@@ -122,7 +122,7 @@ function get_custom_fields(Room $room)
 }
 
 
-function get_fieldset_errors($errors)
+function get_fieldset_errors(array $errors) : ElementFieldset
 {
   $fieldset = new ElementFieldset();
   $fieldset->addLegend('')
