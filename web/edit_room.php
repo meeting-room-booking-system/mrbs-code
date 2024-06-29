@@ -139,7 +139,7 @@ function get_fieldset_errors(array $errors) : ElementFieldset
 }
 
 
-function get_fieldset_general(Room $room)
+function get_fieldset_general(Room $room) : ElementFieldset
 {
   global $auth;
 
