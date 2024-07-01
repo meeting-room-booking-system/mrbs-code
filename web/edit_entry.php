@@ -1342,6 +1342,7 @@ if (isset($id))
     }
 
     $row = $res->next_row_keyed();
+    row_cast_columns($row, 'repeat');
     unset($res);
 
     $rep_type = $row['rep_type'];
