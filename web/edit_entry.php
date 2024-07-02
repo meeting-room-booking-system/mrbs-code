@@ -1364,24 +1364,14 @@ if (isset($id))
 
   if(($entry_type == ENTRY_RPT_ORIGINAL) || ($entry_type == ENTRY_RPT_CHANGED))
   {
-    $sql = "SELECT rep_type, start_time, end_time, end_date, rep_opt, rep_interval,
-                   month_absolute, month_relative
-              FROM " . _tbl('repeat') . "
-             WHERE id=?
-             LIMIT 1";
+    $repeat = get_repeat($rep_id);
 
-    $res = db()->query($sql, array($rep_id));
-
-    if ($res->count() != 1)
+    if (!isset($repeat))
     {
       fatal_error(get_vocab("repeat_id") . $rep_id . get_vocab("not_found"));
     }
 
-    $row = $res->next_row_keyed();
-    row_cast_columns($row, 'repeat');
-    unset($res);
-
-    $rep_type = $row['rep_type'];
+    $rep_type = $repeat['rep_type'];
 
     if (!isset($rep_type))
     {
@@ -1391,40 +1381,40 @@ if (isset($id))
     // If it's a repeating entry get the repeat details
     if ($rep_type != RepeatRule::NONE)
     {
-      $rep_interval = $row['rep_interval'];
+      $rep_interval = $repeat['rep_interval'];
 
       // If we're editing the series we want the start_time and end_time to be the
       // start and of the first entry of the series, not the start of this entry
       if ($edit_series)
       {
-        $start_time = $row['start_time'];
-        $end_time = $row['end_time'];
+        $start_time = $repeat['start_time'];
+        $end_time = $repeat['end_time'];
       }
 
       $rep_end_date = new DateTime();
-      $rep_end_date->setTimestamp($row['end_date']);
+      $rep_end_date->setTimestamp($repeat['end_date']);
 
       switch ($rep_type)
       {
         case RepeatRule::WEEKLY:
           for ($i=0; $i<DAYS_PER_WEEK; $i++)
           {
-            if ($row['rep_opt'][$i])
+            if ($repeat['rep_opt'][$i])
             {
               $rep_days[] = $i;
             }
           }
           break;
         case RepeatRule::MONTHLY:
-          if (isset($row['month_absolute']))
+          if (isset($repeat['month_absolute']))
           {
             $month_type = RepeatRule::MONTHLY_ABSOLUTE;
-            $month_absolute = $row['month_absolute'];
+            $month_absolute = $repeat['month_absolute'];
           }
-          elseif (isset($row['month_relative']))
+          elseif (isset($repeat['month_relative']))
           {
             $month_type = RepeatRule::MONTHLY_RELATIVE;
-            $month_relative = $row['month_relative'];
+            $month_relative = $repeat['month_relative'];
           }
           else
           {
