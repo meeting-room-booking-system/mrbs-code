@@ -52,13 +52,13 @@ class DBStatement
   }
 
   // Return the number of rows returned by a statement from query().
-  public function count()
+  public function count() : int
   {
     return $this->statement->rowCount();
   }
 
   // Returns the number of fields in a statement.
-  public function num_fields()
+  public function num_fields() : int
   {
     return $this->statement->columnCount();
   }
