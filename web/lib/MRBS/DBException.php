@@ -2,10 +2,12 @@
 declare(strict_types=1);
 namespace MRBS;
 
-class DBException extends \PDOException
+use PDOException;
+
+class DBException extends PDOException
 {
 
-  public function __construct($message, $code=0, \PDOException $previous=null, $sql=null, $params=null)
+  public function __construct($message, $code=0, PDOException $previous=null, $sql=null, $params=null)
   {
     if (isset($sql))
     {
