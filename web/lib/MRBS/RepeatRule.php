@@ -249,7 +249,7 @@ class RepeatRule
 
   // Returns an array of start times for the entries in this series given a start time
   // for the beginning of the series.  Optionally limited to $limit entries.
-  public function getRepeatStartTimes(int $start_time, int $limit=null) : array
+  public function getRepeatStartTimes(int $start_time, ?int $limit=null) : array
   {
     $entries = array();
 
