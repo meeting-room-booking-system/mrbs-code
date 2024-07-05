@@ -25,7 +25,7 @@ class Series
   // Constructs a new Series object and adds $row to it.
   // $limit is the limiting UNIX timestamp for the series.  This may be before the actual end
   // of the series.   Defaults to null, ie no limit.  This enables the series extract to be truncated.
-  public function __construct(array $row, int $limit=null)
+  public function __construct(array $row, ?int $limit=null)
   {
     $row = self::fixUpRow($row);
 
