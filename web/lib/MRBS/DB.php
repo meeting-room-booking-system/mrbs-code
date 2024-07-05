@@ -490,7 +490,7 @@ abstract class DB
 
   // Prepares $data for an SQL query. If $table is given then it will also sanitize values,
   // eg by trimming and truncating strings and converting booleans into 0/1.
-  private function prepareData(array $data, string $table=null, array $ignore_columns=[]): array
+  private function prepareData(array $data, ?string $table=null, array $ignore_columns=[]): array
   {
     $columns = array();
     $values = array();
