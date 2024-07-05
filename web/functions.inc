@@ -918,7 +918,7 @@ function print_footer(bool $and_exit=false) : void
 // is used to specify a maximum size of unit to use.  For example if
 // it is set to 'minutes', 3600 seconds will give 60 minutes rather
 // than 1 hour.
-function toTimeString(int &$dur, &$units, bool $translate=true, string $max_unit=null)
+function toTimeString(int &$dur, &$units, bool $translate=true, ?string $max_unit=null)
 {
   if (!isset($max_unit))
   {
@@ -1838,7 +1838,7 @@ function validate_iso_date(string $date) : bool
 
 
 // Get the local day name based on language.
-function day_name(int $day_number, array $format=null, string $locale=null) : string
+function day_name(int $day_number, ?array $format=null, ?string $locale=null) : string
 {
   global $datetime_formats;
 
