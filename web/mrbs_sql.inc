@@ -909,7 +909,7 @@ function get_n_entries_by_room(int $room_id) : int
 // DESC if $desc is TRUE.  If $limit is set then only $limit entries are returned.
 // Returns an array of entries.   Each element of the array is itself an array with keys
 // corresponding to the entry table columns
-function get_entries_by_room(int $room_id, ?int $interval_start, ?int $interval_end, bool $desc=false, int $limit=null) : array
+function get_entries_by_room(int $room_id, ?int $interval_start, ?int $interval_end, bool $desc=false, ?int $limit=null) : array
 {
   $sql_params = [':room_id' => $room_id];
 
