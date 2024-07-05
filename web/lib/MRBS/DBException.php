@@ -7,7 +7,7 @@ use PDOException;
 class DBException extends PDOException
 {
 
-  public function __construct(string $message, int $code=0, PDOException $previous=null, string $sql=null, array $params=null)
+  public function __construct(string $message, int $code=0, ?PDOException $previous=null, ?string $sql=null, ?array $params=null)
   {
     if (isset($sql))
     {
