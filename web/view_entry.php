@@ -130,7 +130,7 @@ function get_returl(?string $previous_page=null) : string
 }
 
 
-function generate_cancel_registration_button(array $row, array $registrant, $label_text, $previous_page=null, $as_field=false)
+function generate_cancel_registration_button(array $row, array $registrant, string $label_text, ?string $previous_page=null, bool $as_field=false) : void
 {
   global $area, $room;
 
@@ -362,7 +362,7 @@ function generate_event_registration($row, $previous_page=null)
 //
 //    Optional parameters
 //      button_attributes   An array of attributes to be used for the button.
-function generate_button(array $params, array $button_attributes=array())
+function generate_button(array $params, array $button_attributes=array()) : void
 {
   // Note that until IE supports the form attribute on the button tag, we can't
   // use a <button> here and have to use the <input type="submit"> to create the
