@@ -112,7 +112,7 @@ class Element
   }
 
 
-  public function addElement(Element $element=null, $key=null)
+  public function addElement(?Element $element=null, $key=null)
   {
     if (isset($element))
     {
@@ -147,7 +147,7 @@ class Element
   }
 
 
-  public function next(Element $element=null)
+  public function next(?Element $element=null)
   {
     if (isset($element))
     {
@@ -165,7 +165,7 @@ class Element
   }
 
 
-  public function prev(Element $element=null)
+  public function prev(?Element $element=null)
   {
     if (isset($element))
     {

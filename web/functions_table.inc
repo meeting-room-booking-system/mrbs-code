@@ -784,7 +784,7 @@ function day_table_innerhtml(string $view, int $year, int $month, int $day, int 
 //    $classes  A scalar or array giving the class or classes to be used in the class attribute
 //    $title    The value of the title attribute
 //    $text     The value of the text to be used in the div
-function get_flex_div(int $slots, $classes, string $title=null, string $text=null) : string
+function get_flex_div(int $slots, $classes, ?string $title=null, ?string $text=null) : string
 {
   $result = "<div style=\"flex: $slots\"";
 

@@ -4,7 +4,7 @@ namespace MRBS;
 
 
 // Generates the HTML for a <link> element
-function link_html(string $href, bool $add_version=false, string $media=null) : string
+function link_html(string $href, bool $add_version=false, ?string $media=null) : string
 {
   $html = '<link rel="stylesheet" type="text/css" href="';
   $value = ($add_version) ? add_version($href) : $href;
