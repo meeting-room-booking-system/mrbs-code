@@ -296,7 +296,7 @@ function get_lang_preferences() : array
 // Note: the first time this function is called, it should be called with a $locale.
 // Subsequent calls will just return the static $lang variable which was calculated on
 // the first call
-function get_mrbs_lang(string $locale=null)
+function get_mrbs_lang(?string $locale=null)
 {
   global $disable_automatic_language_changing,
          $default_language_tokens,
@@ -466,7 +466,7 @@ function get_langtags(string $dir, string $prefix='', string $suffix='') : array
 //
 // The file names are assumed to be of the form $prefix . $lang . $suffix, eg
 // 'datepicker-en-GB.js'
-function get_best_lang_file(string $dir, string $prefix='', string $suffix='', array $default_langtags=null, array $lang_map=null) : ?string
+function get_best_lang_file(string $dir, string $prefix='', string $suffix='', ?array $default_langtags=null, ?array $lang_map=null) : ?string
 {
   if (!is_dir($dir))
   {
@@ -788,7 +788,7 @@ function get_loc_field_name(string $table, string $name) : string
 }
 
 
-function datetime_format(array $format, int $timestamp=null, string $locale=null) : string
+function datetime_format(array $format, ?int $timestamp=null, ?string $locale=null) : string
 {
   global $icu_override, $timezone;
 
@@ -846,7 +846,7 @@ function datetime_format(array $format, int $timestamp=null, string $locale=null
 
 // Determines whether a locale (default the current locale) uses a 12-hour clock.
 // Returns NULL if it can't be determined.
-function is_ampm(string $locale=null) : ?bool
+function is_ampm(?string $locale=null) : ?bool
 {
   global $datetime_formats;
 
