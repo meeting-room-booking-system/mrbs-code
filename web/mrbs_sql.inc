@@ -1905,6 +1905,16 @@ function get_booking_info(int $id, bool $series, bool $silent=false)
 
   // Cast the columns to their intended types
   row_cast_columns($row, ($series) ? 'repeat' : 'entry');
+  // These two columns need special casting as they have been renamed
+  if (isset($row['entry_info_time']))
+  {
+    $row['entry_info_time'] = intval($row['entry_info_time']);
+  }
+  if (isset($row['repeat_info_time']))
+  {
+    $row['repeat_info_time'] = intval($row['repeat_info_time']);
+  }
+
   $row['area_id'] = intval($row['area_id']); // Necessary for some databases
 
   // Turn the last_updated column into an int (PostgreSQL will return a float)
