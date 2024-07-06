@@ -1708,7 +1708,15 @@ function get_registrants(int $id, bool $series) : ?array
 
   $res = db()->query($sql, array(':entry_id' => $id));
 
-  return $res->all_rows_keyed();
+  $result = array();
+
+  while (false !== ($row = $res->next_row_keyed()))
+  {
+    row_cast_columns($row, 'participants');
+    $result[] = $row;
+  }
+
+  return $result;
 }
 
 

@@ -94,7 +94,7 @@ function generate_registrant_table(array $row, ?string $previous_page=null) : vo
     }
     // Time of registration
     $time = time_date_string($registrant['registered']);
-    echo '<td data-order="' . htmlspecialchars($registrant['registered']) . '">' . htmlspecialchars($time) . '</td>';
+    echo '<td data-order="' . intval($registrant['registered']) . '">' . htmlspecialchars($time) . '</td>';
     echo "</tr>\n";
   }
 
@@ -289,7 +289,7 @@ function generate_event_registration(array $row, ?string $previous_page=null) : 
 
   echo '<tr>';
   echo '<td>' . htmlspecialchars(get_vocab('n_registered')) . '</td>';
-  echo '<td>' . htmlspecialchars($n_registered) . '</td>';
+  echo '<td>' . intval($n_registered) . '</td>';  // Redundant escaping, just in case
   echo "</tr>\n";
   echo "</tbody>\n";
   echo "</table>\n";
@@ -390,7 +390,7 @@ function generate_button(array $params, array $button_attributes=array()) : void
 
 
 // Generates the Approve, Reject and More Info buttons
-function generateApproveButtons($id, $series)
+function generateApproveButtons(int $id, bool $series) : void
 {
   global $returl;
   global $entry_info_time, $entry_info_user, $repeat_info_time, $repeat_info_user;
@@ -451,7 +451,7 @@ function generateApproveButtons($id, $series)
   echo "</tr>\n";
 }
 
-function generateOwnerButtons($id, $series)
+function generateOwnerButtons(int $id, bool $series) : void
 {
   global $mrbs_username, $create_by, $awaiting_approval, $area;
   global $reminders_enabled, $last_reminded, $reminder_interval;
@@ -505,7 +505,7 @@ function generateTextArea($form_action, $id, $series, $action_type, $returl, $su
 
   // Hidden inputs
   $hidden_inputs = array('id'     => $id,
-                         'series' => $series,
+                         'series' => ($series) ? 1 : 0,
                          'returl' => $returl,
                          'action' => $action_type);
   $form->addHiddenInputs($hidden_inputs);
@@ -539,7 +539,7 @@ function generateTextArea($form_action, $id, $series, $action_type, $returl, $su
 // If $series is TRUE, it means that the $id is the id of an
 // entry in the repeat table.  Otherwise it's from the entry table.
 $id = get_form_var('id', 'int');
-$series = get_form_var('series', 'bool');
+$series = get_form_var('series', 'bool', false);
 $action = get_form_var('action', 'string');
 $returl = get_form_var('returl', 'string');
 $error = get_form_var('error', 'string');
@@ -629,7 +629,7 @@ $keep_private = (is_private_event($private) && !$writeable);
 $last_reminded = (empty($row['reminded'])) ? $row['last_updated'] : $row['reminded'];
 
 
-if ($series == 1)
+if ($series)
 {
   $repeat_id = $id;  // Save the repeat_id
   // I also need to set $id to the value of a single entry as it is a
@@ -746,15 +746,6 @@ $context = array(
   );
 
 print_header($context);
-
-if (empty($series))
-{
-  $series = 0;
-}
-else
-{
-  $series = 1;
-}
 
 // Now that we know all the data we start drawing it
 
@@ -880,7 +871,7 @@ if (!$room_disabled)
     // reason in a tooltip, rather than a complete list.  [Note: if the entry is
     // deletable but the series is not, the series button will not be disabled.  This
     // is something that needs to be fixed in the future.]
-    $violations = mrbsCheckPolicy($row, false, false, true);
+    $violations = mrbsCheckPolicy($row, null, null, true);
 
     if (empty($violations['errors']))
     {
