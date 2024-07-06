@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 use MRBS\Form\ElementFieldset;
@@ -417,6 +418,7 @@ if (!$ajax_capable || $is_ajax)
 
   while (false !== ($row = $result->next_row_keyed()))
   {
+    row_cast_columns($row, 'entry');
     output_row($row, $returl);
   }
 }
