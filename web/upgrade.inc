@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 use MRBS\Form\ElementFieldset;
@@ -52,7 +53,7 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
     }
     else
     {
-      $admin_handle = DBFactory::create($dbsys, $db_host, $db_admin_username, $db_admin_password, $db_database, 0, $db_port, $db_options);
+      $admin_handle = DBFactory::create($dbsys, $db_host, $db_admin_username, $db_admin_password, $db_database, false, $db_port, $db_options);
     }
   }
 
