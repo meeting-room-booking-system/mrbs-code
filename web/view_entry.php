@@ -78,18 +78,14 @@ function generate_registrant_table(array $row, ?string $previous_page=null) : vo
         }
       }
       $sort_name = get_sortable_name($display_name);
-      $have_email = isset($email) && ($email !== '');
       echo '<td data-order="' . htmlspecialchars($sort_name) . '">';
+      $display_name_html = htmlspecialchars($display_name);
       // Add a mailto: link if we've got an email address
-      if ($have_email)
+      if (isset($email) && ($email !== ''))
       {
-        echo '<a href="mailto:' . htmlspecialchars($email) . '">';
+        $display_name_html = '<a href="mailto:' . htmlspecialchars($email) . '">' . $display_name_html . '</a>';
       }
-      echo htmlspecialchars($display_name);
-      if ($have_email)
-      {
-        echo '</a>';
-      }
+      echo $display_name_html;
       echo '</td>';
     }
     // Time of registration
