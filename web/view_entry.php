@@ -94,7 +94,7 @@ function generate_registrant_table(array $row, ?string $previous_page=null) : vo
     }
     // Time of registration
     $time = time_date_string($registrant['registered']);
-    echo '<td data-order="' . htmlspecialchars($registrant['registered']) . '">' . htmlspecialchars($time) . '</td>';
+    echo '<td data-order="' . intval($registrant['registered']) . '">' . htmlspecialchars($time) . '</td>';
     echo "</tr>\n";
   }
 
@@ -289,7 +289,7 @@ function generate_event_registration(array $row, ?string $previous_page=null) : 
 
   echo '<tr>';
   echo '<td>' . htmlspecialchars(get_vocab('n_registered')) . '</td>';
-  echo '<td>' . $n_registered . '</td>';  // $n_registered is an int, so no need to escape
+  echo '<td>' . intval($n_registered) . '</td>';  // Redundant escaping, just in case
   echo "</tr>\n";
   echo "</tbody>\n";
   echo "</table>\n";
