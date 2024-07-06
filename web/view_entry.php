@@ -289,7 +289,7 @@ function generate_event_registration(array $row, ?string $previous_page=null) : 
 
   echo '<tr>';
   echo '<td>' . htmlspecialchars(get_vocab('n_registered')) . '</td>';
-  echo '<td>' . htmlspecialchars($n_registered) . '</td>';
+  echo '<td>' . $n_registered . '</td>';  // $n_registered is an int, so no need to escape
   echo "</tr>\n";
   echo "</tbody>\n";
   echo "</table>\n";
