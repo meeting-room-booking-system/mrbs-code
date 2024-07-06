@@ -1,14 +1,15 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
-use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\FieldInputPassword;
-use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldInputSubmit;
+use MRBS\Form\FieldInputText;
+use MRBS\Form\Form;
 
 // This file checks to see whether the database schema versions (both global and local)
-// are up to date, and if not performs the necessary upgrades.
+// are up-to-date, and if not performs the necessary upgrades.
 
 // Sanity check:  check that we can access the MRBS tables.  If we can't, it's
 // either because they don't exist or we don't have permission.
@@ -52,7 +53,7 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
     }
     else
     {
-      $admin_handle = DBFactory::create($dbsys, $db_host, $db_admin_username, $db_admin_password, $db_database, 0, $db_port, $db_options);
+      $admin_handle = DBFactory::create($dbsys, $db_host, $db_admin_username, $db_admin_password, $db_database, false, $db_port, $db_options);
     }
   }
 
