@@ -490,7 +490,7 @@ function generateOwnerButtons(int $id, bool $series) : void
   }
 }
 
-function generateTextArea($form_action, $id, $series, $action_type, $returl, $submit_value, $caption, $value='')
+function generateTextArea(string $form_action, int $id, bool $series, string $action_type, string $returl, string $submit_value, string $caption, string $value='') : void
 {
   echo "<tr><td id=\"caption\" colspan=\"2\">$caption</td></tr>\n";
   echo "<tr>\n";
