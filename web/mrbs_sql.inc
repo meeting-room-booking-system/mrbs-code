@@ -1712,7 +1712,7 @@ function get_registrants(int $id, bool $series) : ?array
 
   while (false !== ($row = $res->next_row_keyed()))
   {
-    row_cast_columns($row, 'participants');
+    row_cast_columns($row, 'participant');
     $result[] = $row;
   }
 
