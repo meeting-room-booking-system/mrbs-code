@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 use MRBS\Form\ElementFieldset;
@@ -184,7 +185,7 @@ function generate_cancel_registration_button(array $row, array $registrant, stri
 }
 
 
-function generate_register_button($row, $previous_page=null)
+function generate_register_button(array $row, ?string $previous_page=null) : void
 {
   global $area, $room;
 
@@ -243,7 +244,7 @@ function generate_register_button($row, $previous_page=null)
 }
 
 
-function generate_event_registration($row, $previous_page=null)
+function generate_event_registration(array $row, ?string $previous_page=null) : void
 {
   global $auth;
 
