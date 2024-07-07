@@ -41,6 +41,7 @@ class DB_mysql extends DB
   );
 
   private $db_type = null;
+  private $returns_native_types = null;
   private $supports_multiple_locks = null;
   private $version_comment = null;
 
@@ -208,9 +209,37 @@ class DB_mysql extends DB
   }
 
 
+  // Checks the attribute PDO::ATTR_STRINGIFY_FETCHES
+  private function getStringifyFetches() : bool
+  {
+    // Not all drivers support PDO::ATTR_STRINGIFY_FETCHES
+    try {
+      return $this->getAttribute(PDO::ATTR_STRINGIFY_FETCHES);
+    }
+    catch (PDOException $e) {
+      return false;
+    }
+  }
+
+
+  // Determines whether the driver returns native types (eg a PHP int
+  // for an SQL INT).
   public function returnsNativeTypes() : bool
   {
-    return false;
+    if (!isset($this->returns_native_types))
+    {
+      // MySQL will return native types if PDO::ATTR_STRINGIFY_FETCHES is false
+      // and we're using a native driver and (the PHP version is at least 8.1 or
+      // PDO::ATTR_EMULATE_PREPARES is false).
+      // See https://stackoverflow.com/questions/1197005/how-to-get-numeric-types-from-mysql-using-pdo
+      // and https://stackoverflow.com/questions/20079320/how-do-i-return-integer-and-numeric-columns-from-mysql-as-integers-and-numerics
+      $this->returns_native_types =
+        !$this->getStringifyFetches()&&
+        str_contains($this->getAttribute(PDO::ATTR_CLIENT_VERSION), 'mysqlnd') &&
+        ((version_compare(PHP_VERSION, '8.1.0') >= 0) || !$this->getAttribute(PDO::ATTR_EMULATE_PREPARES));
+    }
+
+    return $this->returns_native_types;
   }
 
   // Determines whether the database supports multiple locks.

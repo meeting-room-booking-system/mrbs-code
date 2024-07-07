@@ -444,6 +444,9 @@ abstract class DB
     bool $has_id_column=false
   ) : string;
 
+
+  // Determines whether the driver returns native types (eg a PHP int
+  // for an SQL INT).
   public function returnsNativeTypes() : bool
   {
     return true;
