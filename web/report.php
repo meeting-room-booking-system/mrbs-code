@@ -1062,12 +1062,12 @@ function report_row(&$rows, $data)
           // Process the duration and then fall through to the end_time
           // Include the duration in a seconds as a title in an empty span so
           // that the column can be sorted and filtered properly
-          $d_string = '<span title="' . htmlspecialchars($duration_seconds) . '"></span>' . $d_string;
+          $d_string = '<span title="' . intval($duration_seconds) . '"></span>' . $d_string;  // Cast to int as a precaution
         case 'start_time':
         case 'last_updated':
           // Include the numeric time as a title in an empty span so
           // that the column can be sorted and filtered properly
-          $value = '<span title="' . htmlspecialchars($data[$field]) . '"></span>' . $value;
+          $value = '<span title="' . intval($data[$field]) . '"></span>' . $value;
           break;
         case 'area_name':
           // TODO Use orthogonal data instead of a span
@@ -1936,6 +1936,7 @@ if ($phase == 2)
       while (false !== ($row = $res->next_row_keyed()))
       {
         row_cast_columns($row, 'entry');
+        row_cast_columns($row, 'area');
         $row['area_id'] = intval($row['area_id']);  // This won't have been covered by row_cast_columns()
         unpack_status($row);
         report_row($body_rows, $row);
