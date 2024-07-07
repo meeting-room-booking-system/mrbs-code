@@ -1936,8 +1936,12 @@ if ($phase == 2)
       while (false !== ($row = $res->next_row_keyed()))
       {
         row_cast_columns($row, 'entry');
-        row_cast_columns($row, 'area');
-        $row['area_id'] = intval($row['area_id']);  // This won't have been covered by row_cast_columns()
+        // These won't have been covered by row_cast_columns()
+        $row['area_id'] = (int) $row['area_id'];
+        $row['last_updated'] = (int) $row['last_updated'];
+        $row['approval_enabled'] = (bool) $row['approval_enabled'];
+        $row['confirmation_enabled'] = (bool) $row['confirmation_enabled'];
+        $row['enable_periods'] = (bool) $row['enable_periods'];
         unpack_status($row);
         report_row($body_rows, $row);
       }
