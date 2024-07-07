@@ -15,7 +15,7 @@ use MRBS\Form\Form;
 require "defaultincludes.inc";
 
 
-function generate_reset_request_form($result=null)
+function generate_reset_request_form(?string $result=null) : void
 {
   $can_reset_by_email = auth()->canResetByEmail();
 
@@ -77,7 +77,7 @@ function generate_reset_request_form($result=null)
 }
 
 
-function generate_reset_form(array $usernames, $key, $error=null)
+function generate_reset_form(array $usernames, ?string $key, ?string $error=null) : bool
 {
   global $pwd_policy;
 
@@ -189,20 +189,20 @@ function generate_reset_form(array $usernames, $key, $error=null)
 }
 
 
-function generate_invalid_link()
+function generate_invalid_link() : void
 {
   echo "<h2>" . get_vocab('invalid_link') . "</h2>\n";
   echo "<p>" . get_vocab('link_invalid') . "</p>\n";
 }
 
 
-function generate_request_sent()
+function generate_request_sent() : void
 {
   echo "<h2>" . get_vocab('password_reset') . "</h2>\n";
   echo "<p>" . get_vocab('pwd_check_email') . "</p>\n";
 }
 
-function generate_reset_success()
+function generate_reset_success() : void
 {
   echo "<h2>" . get_vocab('password_reset') . "</h2>\n";
   echo "<p>" . get_vocab('pwd_reset_success') . "</p>\n";
