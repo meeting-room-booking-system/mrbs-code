@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 use DateInterval;
@@ -942,10 +943,9 @@ function report_row(&$rows, $data)
         $d_string = $d['duration'] . ' ' . $d['dur_units'];
         $d_string = escape($d_string);
       case 'start_time':
-        $mod_time = ($field == 'start_time') ? 0 : -1;
         if ($data['enable_periods'])
         {
-          list( , $date) =  period_date_string($value, $data['area_id'], $mod_time);
+          list( , $date) =  period_date_string($value, $data['area_id']);
         }
         else
         {
@@ -1048,14 +1048,14 @@ function report_row(&$rows, $data)
           break;
         case 'name':
           // Add a link to the entry and also a data-id value for the Bulk Delete JavaScript
-          $href = multisite('view_entry.php?id=' . urlencode($data['id']));
+          $href = multisite('view_entry.php?id=' . intval($data['id']));  // Cast to int as a precaution
           // Put an invisible <span> at the beginning for sorting.
           // TODO This should really be done by putting a data-order attribute in the <td> element,
           // TODO but we can't do that with Ajax loading.  The solution is to switch to use DataTables'
           // TODO orthogonal data.
           $value = "<span>$value</span>" .
                    '<a href="' . htmlspecialchars($href) . '"' .
-                   ' data-id="' . htmlspecialchars($data['id']) . '"' .
+                   ' data-id="' . intval($data['id']) . '"' .  // Cast to int as a precaution
                    $value . '">' . $value . '</a>';  // $value already escaped
           break;
         case 'end_time':
@@ -1936,6 +1936,7 @@ if ($phase == 2)
       while (false !== ($row = $res->next_row_keyed()))
       {
         row_cast_columns($row, 'entry');
+        $row['area_id'] = intval($row['area_id']);  // This won't have been covered by row_cast_columns()
         unpack_status($row);
         report_row($body_rows, $row);
       }
