@@ -6,13 +6,11 @@ use MRBS\ICalendar\RFC5545;
 define('INTERVAL_DAY', 0);
 
 
-// Some database systems (eg MySQL) return strings for ints and floats.  This function
+// Some database drivers (eg MySQL in certain cases) return strings for ints and floats.  This function
 // casts them to their intended types.
 function row_cast_columns(array &$row, string $table_short_name) : void
 {
-  global $dbsys;
-
-  if ($dbsys == 'pgsql')
+  if (db()->returnsNativeTypes())
   {
     return;
   }

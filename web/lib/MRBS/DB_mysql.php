@@ -208,6 +208,11 @@ class DB_mysql extends DB
   }
 
 
+  public function returnsNativeTypes() : bool
+  {
+    return false;
+  }
+
   // Determines whether the database supports multiple locks.
   // This method should not be called for the first time while
   // locks are in place, because it will release them.
