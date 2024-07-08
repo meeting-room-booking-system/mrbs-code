@@ -203,7 +203,17 @@ class Form extends Element
 
   private static function getStoredToken() : ?string
   {
-    return session()->get(self::TOKEN_NAME);
+    $result = session()->get(self::TOKEN_NAME);
+
+    // For some unknown reason the integer value 0 is sometimes stored in the session
+    // variable.  It's not clear how this can happen.
+    if (isset($result) && !is_string($result))
+    {
+      trigger_error("Stored token is of type " . gettype($result) . ", value $result", E_USER_WARNING);
+      $result = strval($result);
+    }
+
+    return $result;
   }
 
 
