@@ -127,6 +127,21 @@ class DB_pgsql extends DB
   }
 
 
+  // Determines whether the driver returns native types (eg a PHP int
+  // for an SQL INT).
+  public function returnsNativeTypes() : bool
+  {
+    return true;
+  }
+
+
+  // Determines whether the database supports multiple locks
+  public function supportsMultipleLocks(): bool
+  {
+    return true;
+  }
+
+
   // Acquire a mutual-exclusion lock.
   // Returns true if the lock is acquired successfully, otherwise false.
   public function mutex_lock(string $name) : bool

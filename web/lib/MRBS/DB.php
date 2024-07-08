@@ -347,12 +347,6 @@ abstract class DB
   // Must be called right after an insert on that table!
   abstract public function insert_id(string $table, string $field) : int;
 
-  // Determines whether the database supports multiple locks
-  public function supportsMultipleLocks(): bool
-  {
-    return true;
-  }
-
   // Acquire a mutual-exclusion lock.
   // Returns true if the lock is acquired successfully, otherwise false.
   abstract public function mutex_lock(string $name): bool;
@@ -447,10 +441,10 @@ abstract class DB
 
   // Determines whether the driver returns native types (eg a PHP int
   // for an SQL INT).
-  public function returnsNativeTypes() : bool
-  {
-    return true;
-  }
+  abstract public function returnsNativeTypes() : bool;
+
+  // Determines whether the database supports multiple locks
+  abstract public function supportsMultipleLocks(): bool;
 
   // Returns the syntax for an "upsert" query.  Unfortunately getting the id of the
   // last row differs between MySQL and PostgreSQL.   In PostgreSQL the query will
