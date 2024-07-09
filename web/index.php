@@ -56,7 +56,6 @@ function make_area_select_html(string $view, int $year, int $month, int $day, in
     $form = new Form();
 
     $form->setAttributes(array('class'  => 'areaChangeForm',
-                               'method' => 'get',
                                'action' => multisite(this_page())));
 
     $form->addHiddenInputs(array('view'      => $view,
@@ -121,7 +120,6 @@ function make_room_select_html (string $view, int $view_all, int $year, int $mon
     $form = new Form();
 
     $form->setAttributes(array('class'  => 'roomChangeForm',
-                               'method' => 'get',
                                'action' => multisite(this_page())));
 
     $form->addHiddenInputs(array('view'      => $view,

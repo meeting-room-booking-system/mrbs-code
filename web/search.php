@@ -14,9 +14,8 @@ require "defaultincludes.inc";
 
 function get_search_nav_button(array $hidden_inputs, string $value, bool $disabled=false) : string
 {
-  $form = new Form();
-  $form->setAttributes(array('action' => multisite(this_page()),
-                             'method' => 'post'));
+  $form = new Form(Form::METHOD_POST);
+  $form->setAttributes(array('action' => multisite(this_page())));
   $form->addHiddenInputs($hidden_inputs);
   $submit = new ElementInputSubmit();
   $submit->setAttributes(array('value'    => $value,
@@ -180,11 +179,12 @@ if (!$is_ajax) {
 
   print_header($context);
 
-  $form = new Form();
-  $form->setAttributes(array('class' => 'standard',
+  $form = new Form(Form::METHOD_POST);
+  $form->setAttributes(array(
+    'class' => 'standard',
     'id' => 'search_form',
-    'method' => 'post',
-    'action' => multisite(this_page())));
+    'action' => multisite(this_page()))
+  );
 
   $fieldset = new ElementFieldset();
   $fieldset->addLegend(get_vocab('search'));

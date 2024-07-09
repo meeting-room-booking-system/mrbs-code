@@ -19,6 +19,7 @@ namespace MRBS\Session;
 //                    $auth['remote_user']['logout_link'] = '/logout/link.html';
 
 
+use MRBS\Form\Form;
 use MRBS\User;
 use function MRBS\auth;
 
@@ -54,7 +55,7 @@ class SessionRemoteUser extends SessionWithLogin
     {
       return array(
           'action' => $auth['remote_user']['login_link'],
-          'method' => 'get'
+          'method' => Form::METHOD_GET,
         );
     }
     else
@@ -72,7 +73,7 @@ class SessionRemoteUser extends SessionWithLogin
     {
       return array(
           'action' => $auth['remote_user']['logout_link'],
-          'method' => 'get'
+          'method' => Form::METHOD_GET
         );
     }
     else

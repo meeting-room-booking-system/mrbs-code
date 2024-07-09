@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS\Form;
 
+use MRBS\Exception;
 use function MRBS\fatal_error;
 use function MRBS\generate_token;
 use function MRBS\get_form_var;
@@ -11,28 +12,44 @@ use function MRBS\session;
 
 class Form extends Element
 {
+  public const METHOD_GET = 0;
+  public const METHOD_POST = 1;
   private const TOKEN_NAME = 'csrf_token';
 
   private static $token = null;
   private static $cookie_set = false;
 
 
-  public function __construct()
+  public function __construct(int $method=self::METHOD_GET)
   {
     parent::__construct('form');
-    // Add a MAX_FILE_SIZE hidden input for use by forms that have a file
-    // upload input.  This hidden input must come before the file input
-    // element if it is to be used by PHP. Although at the time of writing
-    // it is not used by any browsers, we can add some JavaScript to check
-    // the file size when it is selected and thus save a failed upload attempt.
-    $max_file_size = ini_get('upload_max_filesize');
-    if ($max_file_size !== false)
+
+    if ($method === self::METHOD_GET)
     {
-      $max_file_size = self::convertToBytes($max_file_size);
-      $this->addHiddenInput('MAX_FILE_SIZE', $max_file_size);
+      // No need to do anything more: "GET" is the default method for HTML forms
+      return;
     }
-    // Add a CSRF token
-    $this->addCSRFToken();
+
+    if ($method === self::METHOD_POST)
+    {
+      $this->setAttribute('method', 'post');
+      // Add a MAX_FILE_SIZE hidden input for use by forms that have a file
+      // upload input.  This hidden input must come before the file input
+      // element if it is to be used by PHP. Although at the time of writing
+      // it is not used by any browsers, we can add some JavaScript to check
+      // the file size when it is selected and thus save a failed upload attempt.
+      $max_file_size = ini_get('upload_max_filesize');
+      if ($max_file_size !== false)
+      {
+        $max_file_size = self::convertToBytes($max_file_size);
+        $this->addHiddenInput('MAX_FILE_SIZE', $max_file_size);
+      }
+      // Add a CSRF token
+      $this->addCSRFToken();
+      return;
+    }
+
+    throw new Exception("Unknown method $method");
   }
 
 

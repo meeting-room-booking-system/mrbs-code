@@ -1,6 +1,7 @@
 <?php
 namespace MRBS\Session;
 
+use MRBS\Form\Form;
 use MRBS\User;
 use SimpleSAML\Auth\Simple;
 use function MRBS\auth;
@@ -123,7 +124,7 @@ class SessionSaml extends SessionWithLogin
 
     $result = array(
         'action' => $baseURL,
-        'method' => 'get'
+        'method' => Form::METHOD_GET
       );
 
     if (!empty($params))
@@ -144,7 +145,7 @@ class SessionSaml extends SessionWithLogin
 
     $result = array(
         'action' => $baseURL,
-        'method' => 'get'
+        'method' => Form::METHOD_GET
       );
 
     if (!empty($params))
