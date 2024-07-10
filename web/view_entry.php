@@ -279,7 +279,7 @@ function generate_event_registration(array $row, ?string $previous_page=null) : 
   {
     echo '<tr>';
     echo '<td>' . htmlspecialchars(get_vocab('registrant_limit')) . '</td>';
-    echo '<td>' . htmlspecialchars($row['registrant_limit']) . '</td>';
+    echo '<td>' . intval($row['registrant_limit']) . '</td>';  // Redundant escaping, just in case
     echo "</tr>\n";
   }
 
