@@ -934,12 +934,9 @@ else
 
 echo "<div id=\"submit_buttons\">\n";
 
-$form = new Form();
+$form = new Form(Form::METHOD_POST);
 
-$form->setAttributes(array(
-    'method' => 'post',
-    'action' => multisite(this_page())
-  ));
+$form->setAttributes(array('action' => multisite(this_page())));
 
 // Back button
 $submit = new ElementInputSubmit();

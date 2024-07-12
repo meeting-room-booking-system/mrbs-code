@@ -101,13 +101,12 @@ $message = Message::getInstance();
 $message->load();
 
 // Construct the form
-$form = new Form();
+$form = new Form(Form::METHOD_POST);
 
 $form->setAttributes(array(
   'class'  => 'standard',
   'id'     => 'message',
-  'action' => multisite('edit_message_handler.php'),
-  'method' => 'post')
+  'action' => multisite('edit_message_handler.php'))
 );
 
 $form->addHiddenInput('returl', $returl);

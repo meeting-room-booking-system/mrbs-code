@@ -19,11 +19,10 @@ function generate_reset_request_form(?string $result=null) : void
 {
   $can_reset_by_email = auth()->canResetByEmail();
 
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
   $form->setAttributes(array(
       'class'  => 'standard',
       'id'     => 'lost_password',
-      'method' => 'post',
       'action' => multisite('reset_password_handler.php')
     ));
 
@@ -98,11 +97,10 @@ function generate_reset_form(array $usernames, ?string $key, ?string $error=null
   }
 
   // Construct the form
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
   $form->setAttributes(array(
       'class'  => 'standard',
       'id'     => 'lost_password',
-      'method' => 'post',
       'action' => multisite('reset_password_handler.php')
     ));
 

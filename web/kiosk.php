@@ -76,13 +76,12 @@ function print_enter_form() : void
   global $kiosk_default_mode;
   global $area, $room;
 
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
 
   $form->setAttributes(array(
       'class'   => 'standard',
       'id'      => 'kiosk_enter',  // This id is used by the Javascript
-      'action'  => multisite(this_page()),
-      'method'  => 'post')
+      'action'  => multisite(this_page()))
     );
 
   $fieldset = new ElementFieldset();
@@ -152,13 +151,12 @@ function print_enter_form() : void
 
 function print_exit_form() : void
 {
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
 
   $form->setAttributes(array(
       'class'   => 'standard',
       'id'      => 'kiosk_exit',  // This id is used by the Javascript
-      'action'  => multisite(this_page()),
-      'method'  => 'post')
+      'action'  => multisite(this_page()))
   );
 
   $fieldset = new ElementFieldset();

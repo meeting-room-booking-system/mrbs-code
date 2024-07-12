@@ -137,7 +137,6 @@ function print_goto_date(array $context) : void
 
   $form->setAttributes(array('id'     => $form_id,
                              'class'  => 'js_hidden',
-                             'method' => 'get',
                              'action' => multisite('index.php')))
        ->addHiddenInput('view', $context['view']);
 
@@ -258,11 +257,10 @@ function print_search(array $context) : void
 
   echo "<div>\n";
 
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
 
   $form->setAttributes(array(
           'id'     => 'header_search',
-          'method' => 'post',
           'action' => multisite('search.php'))
         )
        ->addHiddenInputs(array(
@@ -333,10 +331,9 @@ function print_report_link(User $user) : void
   }
 
   // We're authorised for either Report or Search so print the form.
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
 
   $attributes['id'] = 'show_my_entries';
-  $attributes['method'] = 'post';
   $form->setAttributes($attributes)
        ->addHiddenInputs($hidden_inputs);
 
@@ -351,14 +348,13 @@ function print_report_link(User $user) : void
 
 function print_logonoff_button(array $params, string $value) : void
 {
-  $form = new Form();
-  $form->setAttributes(array('method' => $params['method'],
-                             'action' => $params['action']));
+  $form = new Form($params['method']);
+  $form->setAttributes(array('action' => $params['action']));
 
   // A Get method will replace the query string in the action URL with a query
   // string made up of the hidden inputs.  So put any parameters in the action
   // query string into hidden inputs.
-  if (utf8_strtolower($params['method']) == 'get')
+  if ($params['method'] == Form::METHOD_GET)
   {
     $query_string = parse_url($params['action'], PHP_URL_QUERY);
     if (isset($query_string))

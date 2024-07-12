@@ -48,7 +48,7 @@ class SessionCas extends SessionWithLogin
 
     return array(
         'action' => $target_url,
-        'method' => 'post',
+        'method' => Form::METHOD_POST,
         'hidden_inputs' =>  array('target_url' => $target_url,
                                   'action'     => 'QueryName')
       );

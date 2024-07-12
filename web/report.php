@@ -1845,7 +1845,7 @@ if ($output_form)
 {
   echo "<div class=\"screenonly\">\n";
 
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
 
   // Search variables
   $search_var_keys = array('from_date', 'to_date',
@@ -1870,8 +1870,7 @@ if ($output_form)
 
   $attributes = array('id'     => 'report_form',
                       'class'  => 'standard',
-                      'action' => multisite(this_page()),
-                      'method' => 'post');
+                      'action' => multisite(this_page()));
 
   $form->setAttributes($attributes)
        ->addHiddenInput('phase', '2');

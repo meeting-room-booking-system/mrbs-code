@@ -74,7 +74,7 @@ abstract class SessionWithLogin extends Session
   {
     return array(
         'action' => multisite('admin.php'),
-        'method' => 'post',
+        'method' => Form::METHOD_POST,
         'hidden_inputs' =>  array('target_url' => this_page(true),
                                   'action'     => 'QueryName')
       );
@@ -88,7 +88,7 @@ abstract class SessionWithLogin extends Session
   {
     return array(
         'action' => multisite('admin.php'),
-        'method' => 'post',
+        'method' => Form::METHOD_POST,
         'hidden_inputs' =>  array('target_url' => this_page(true),
                                   'action'     => 'SetName',
                                   'username'   => '',
@@ -187,10 +187,9 @@ abstract class SessionWithLogin extends Session
   // If $raw is true then the message is not HTML escaped
   private function printLoginForm(string $action, ?string $target_url, ?string $returl, ?string $error=null, bool $raw=false) : void
   {
-    $form = new Form();
+    $form = new Form(Form::METHOD_POST);
     $form->setAttributes(array('class'  => 'standard',
                                'id'     => 'logon',
-                               'method' => 'post',
                                'action' => $action));
 
     // Hidden inputs

@@ -785,12 +785,11 @@ if (!isset($area) || is_null($area_object = Area::getById($area)))
 $errors = get_form_var('errors', 'array');
 
 // Generate the form
-$form = new Form();
+$form = new Form(Form::METHOD_POST);
 
 $attributes = array('id'     => 'edit_area',
                     'class'  => 'standard',
-                    'action' => multisite('edit_area_handler.php'),
-                    'method' => 'post');
+                    'action' => multisite('edit_area_handler.php'));
 
 $form->setAttributes($attributes)
      ->addHiddenInput('area', $area);

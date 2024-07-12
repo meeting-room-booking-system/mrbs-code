@@ -1180,10 +1180,9 @@ foreach ($compression_wrappers as $compression_wrapper)
 }
 echo "</ul>\n";
 
-$form = new Form();
+$form = new Form(Form::METHOD_POST);
 
 $form->setAttributes(array('class'   => 'standard',
-                           'method'  => 'post',
                            'enctype' => 'multipart/form-data',
                            'action'  => multisite(this_page())));
 

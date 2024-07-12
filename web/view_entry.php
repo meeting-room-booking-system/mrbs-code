@@ -194,10 +194,9 @@ function generate_register_button(array $row, ?string $previous_page=null) : voi
   $mrbs_user = session()->getCurrentUser();
   $can_register_others = can_register_others($row['room_id']);
 
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
   $form->setAttributes(array('action' => multisite('registration_handler.php'),
-                             'class'  => 'standard',
-                             'method' => 'post'));
+                             'class'  => 'standard'));
 
   // Hidden inputs
   $form->addHiddenInputs(array(
@@ -365,10 +364,9 @@ function generate_button(array $params, array $button_attributes=array()) : void
   // use a <button> here and have to use the <input type="submit"> to create the
   // button.   This unfortunately means that styling options on the button are limited.
 
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
 
-  $attributes = array('action' => $params['action'],
-                      'method' => 'post');
+  $attributes = array('action' => $params['action']);
 
   $form->setAttributes($attributes);
 
@@ -493,10 +491,9 @@ function generateTextArea(string $form_action, int $id, bool $series, string $ac
   echo "<tr>\n";
   echo "<td id=\"note\" class=\"no_suffix\" colspan=\"2\">\n";
 
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
 
-  $attributes = array('action' => $form_action,
-                      'method' => 'post');
+  $attributes = array('action' => $form_action);
 
   $form->setAttributes($attributes);
 

@@ -10,10 +10,9 @@ require "defaultincludes.inc";
 
 function generate_no_form(int $room, int $area) : void
 {
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
 
-  $attributes = array('action' => multisite('admin.php'),
-                      'method' => 'post');
+  $attributes = array('action' => multisite('admin.php'));
 
   $form->setAttributes($attributes);
 
@@ -33,10 +32,9 @@ function generate_no_form(int $room, int $area) : void
 
 function generate_yes_form(int $room, int $area) : void
 {
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
 
-  $attributes = array('action' => multisite('del.php'),
-                      'method' => 'post');
+  $attributes = array('action' => multisite('del.php'));
 
   $form->setAttributes($attributes);
 
