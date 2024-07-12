@@ -20,10 +20,9 @@ require "defaultincludes.inc";
 
 function generate_room_delete_form(int $room, int $area) : void
 {
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
 
-  $attributes = array('action' => multisite('del.php'),
-                      'method' => 'post');
+  $attributes = array('action' => multisite('del.php'));
 
   $form->setAttributes($attributes);
 
@@ -51,11 +50,10 @@ function generate_area_change_form(array $enabled_areas, array $disabled_areas) 
 {
   global $area, $day, $month, $year;
 
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
 
   $attributes = array('class'  => 'areaChangeForm',
-                      'action' => multisite(this_page()),
-                      'method' => 'post');
+                      'action' => multisite(this_page()));
 
   $form->setAttributes($attributes);
 
@@ -128,12 +126,11 @@ function generate_area_change_form(array $enabled_areas, array $disabled_areas) 
 
 function generate_new_area_form() : void
 {
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
 
   $attributes = array('id'     => 'add_area',
                       'class'  => 'form_admin standard',
-                      'action' => multisite('add.php'),
-                      'method' => 'post');
+                      'action' => multisite('add.php'));
 
   $form->setAttributes($attributes);
 
@@ -169,12 +166,11 @@ function generate_new_room_form() : void
 {
   global $area;
 
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
 
   $attributes = array('id'     => 'add_room',
                       'class'  => 'form_admin standard',
-                      'action' => multisite('add.php'),
-                      'method' => 'post');
+                      'action' => multisite('add.php'));
 
   $form->setAttributes($attributes);
 
@@ -304,11 +300,10 @@ if (is_book_admin())
   }
   // Add an edit button
   $url = 'edit_message.php?' . http_build_query($context,  '', '&');
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
   $form->setAttributes(array(
       'id'     => 'edit_message',
-      'action' => multisite($url),
-      'method' => 'post'
+      'action' => multisite($url)
     )
   );
   $submit = new ElementInputSubmit();

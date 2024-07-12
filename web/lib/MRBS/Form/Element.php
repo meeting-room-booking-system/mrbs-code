@@ -61,7 +61,7 @@ class Element
 
   // A value of true allows for the setting of boolean attributes such as
   // 'required' and 'disabled'
-  public function setAttribute($name, $value=true)
+  public function setAttribute(string $name, $value=true) : Element
   {
     $this->attributes[$name] = $value;
     return $this;

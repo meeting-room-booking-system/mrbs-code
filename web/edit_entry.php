@@ -1684,12 +1684,11 @@ else
   $token = ($edit_series) ? 'editseries' : 'editentry';
 }
 
-$form = new Form();
+$form = new Form(Form::METHOD_POST);
 
 $form->setAttributes(array('class'  => 'standard js_hidden',
                            'id'     => 'main',
-                           'action' => multisite('edit_entry_handler.php'),
-                           'method' => 'post'));
+                           'action' => multisite('edit_entry_handler.php')));
 
 if (!empty($back_button))
 {

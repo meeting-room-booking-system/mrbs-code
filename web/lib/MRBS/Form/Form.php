@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS\Form;
 
+use MRBS\Exception;
 use function MRBS\fatal_error;
 use function MRBS\generate_token;
 use function MRBS\get_form_var;
@@ -11,28 +12,117 @@ use function MRBS\session;
 
 class Form extends Element
 {
+  public const METHOD_GET = 0;
+  public const METHOD_POST = 1;
   private const TOKEN_NAME = 'csrf_token';
 
   private static $token = null;
   private static $cookie_set = false;
 
 
-  public function __construct()
+  // Creates a new form, automatically adding a CSRF token and a MAX_FILE_SIZE value
+  // as hidden inputs if the method is POST.  The GET method should only be used for
+  // navigating between pages and not for submitting form data which could change the
+  // database contents or reveal data to which the user is not entitled.
+  public function __construct(int $method=self::METHOD_GET)
   {
     parent::__construct('form');
-    // Add a MAX_FILE_SIZE hidden input for use by forms that have a file
-    // upload input.  This hidden input must come before the file input
-    // element if it is to be used by PHP. Although at the time of writing
-    // it is not used by any browsers, we can add some JavaScript to check
-    // the file size when it is selected and thus save a failed upload attempt.
-    $max_file_size = ini_get('upload_max_filesize');
-    if ($max_file_size !== false)
+    $this->setMethod($method);
+  }
+
+
+  // Sets the form method.  If the method is POST then a CSRF token and a MAX_FILE_SIZE
+  // value are also added as hidden inputs.  If the method is GET then these hidden
+  // inputs are removed because, in the case of the CSRF token we don't want it to
+  // appear in the URL for security reasons, and in the case of MAX_FILE_SIZE it should
+  // only be needed for POST requests.
+  // TODO: if this method is called after the constructor then make sure the MAX_FILE_SIZE
+  // TODO: hidden input is at the beginning, before any possible file input elements.
+  private function setMethod(int $method) : Element
+  {
+    if ($method === self::METHOD_GET)
     {
-      $max_file_size = self::convertToBytes($max_file_size);
-      $this->addHiddenInput('MAX_FILE_SIZE', $max_file_size);
+      $this->removeHiddenInput('MAX_FILE_SIZE');
+      $this->removeHiddenInput(self::TOKEN_NAME);
     }
-    // Add a CSRF token
-    $this->addCSRFToken();
+
+    elseif ($method === self::METHOD_POST)
+    {
+      // Add a MAX_FILE_SIZE hidden input for use by forms that have a file
+      // upload input.  This hidden input must come before the file input
+      // element if it is to be used by PHP. Although at the time of writing
+      // it is not used by any browsers, we can add some JavaScript to check
+      // the file size when it is selected and thus save a failed upload attempt.
+      $max_file_size = ini_get('upload_max_filesize');
+      if ($max_file_size !== false)
+      {
+        $max_file_size = self::convertToBytes($max_file_size);
+        $this->addHiddenInput('MAX_FILE_SIZE', $max_file_size);
+      }
+      // Add a CSRF token
+      $this->addCSRFToken();
+    }
+
+    return parent::setAttribute('method', self::methodToString($method));
+  }
+
+
+  // Converts a method string (eg 'get' or 'GET') to a method constant (eg self::METHOD_GET)
+  private static function methodToInt(string $string) : int
+  {
+    if (strcasecmp($string, 'get') === 0)
+    {
+      return self::METHOD_GET;
+    }
+
+    if (strcasecmp($string, 'post') === 0)
+    {
+      return self::METHOD_POST;
+    }
+
+    throw new Exception("Unsupported method $string");
+  }
+
+
+  // Converts a method constant (eg self::METHOD_GET) to a method string (eg 'get')
+  private static function methodToString(int $int) : string
+  {
+    if ($int === self::METHOD_GET)
+    {
+      return 'get';
+    }
+
+    if ($int === self::METHOD_POST)
+    {
+      return 'post';
+    }
+
+    throw new Exception("Unsupported method constant $int");
+  }
+
+
+  // Sets a form attribute, taking special action in the case of the
+  // method attribute to set/unset the CSRF token and MAX_FILE_SIZE
+  // hidden inputs.  Can cope with either string or integer method values.
+  public function setAttribute(string $name, $value=true): Element
+  {
+    if (strcasecmp($name, 'method') === 0)
+    {
+      if (is_string($value))
+      {
+        $value = self::methodToInt($value);
+      }
+      if ($value === self::METHOD_POST)
+      {
+        $message = "Changing the form method after the form has been created may result " .
+                   "in the MAX_FILE_SIZE hidden input coming after a file input, thus " .
+                   "making it unusable by the server.";
+        trigger_error($message, E_USER_WARNING);
+      }
+      return $this->setMethod($value);
+    }
+
+    return parent::setAttribute($name, $value);
   }
 
 
@@ -40,7 +130,7 @@ class Form extends Element
   public function addHiddenInput(string $name, $value) : Form
   {
     $element = new ElementInputHidden($name, $value);
-    $this->addElement($element);
+    $this->addElement($element, $name);
     return $this;
   }
 
@@ -52,6 +142,14 @@ class Form extends Element
     {
       $this->addHiddenInput($key, $value);
     }
+    return $this;
+  }
+
+
+  // Removes a hidden input from the form.
+  private function removeHiddenInput(string $name) : Form
+  {
+    $this->removeElement($name);
     return $this;
   }
 

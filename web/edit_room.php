@@ -300,12 +300,11 @@ if (empty($room) || is_null($data = get_room_details($room)))
 $errors = get_form_var('errors', 'array');
 
 // Generate the form
-$form = new Form();
+$form = new Form(Form::METHOD_POST);
 
 $attributes = array('id'     => 'edit_room',
                     'class'  => 'standard',
-                    'action' => multisite('edit_room_handler.php'),
-                    'method' => 'post');
+                    'action' => multisite('edit_room_handler.php'));
 
 // Non-admins will only be allowed to view room details, not change them
 $legend = (is_admin()) ? get_vocab('editroom') : get_vocab('viewroom');

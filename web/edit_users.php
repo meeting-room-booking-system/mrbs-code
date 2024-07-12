@@ -159,9 +159,8 @@ function output_row($row)
   // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
   if (can_edit_user($row['name']))
   {
-    $form = new Form();
-    $form->setAttributes(array('method' => 'post',
-                               'action' => multisite(this_page())));
+    $form = new Form(Form::METHOD_POST);
+    $form->setAttributes(array('action' => multisite(this_page())));
     $form->addHiddenInput('id', $row['id']);
     $submit = new ElementInputSubmit();
     $submit->setAttributes(array('class' => 'link',
@@ -820,11 +819,10 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
     }
   }
 
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
 
   $form->setAttributes(array('id'     => 'form_edit_users',
                              'class'  => 'standard',
-                             'method' => 'post',
                              'action' => multisite(this_page())));
 
   if (isset($id))
@@ -1311,10 +1309,9 @@ if (!$is_ajax)
 
   if (is_user_admin()) /* Administrators get the right to add new users */
   {
-    $form = new Form();
+    $form = new Form(Form::METHOD_POST);
 
     $form->setAttributes(array('id'     => 'add_new_user',
-                               'method' => 'post',
                                'action' => multisite(this_page())));
 
     $form->addHiddenInput('action', 'add');
