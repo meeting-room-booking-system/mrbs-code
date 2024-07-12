@@ -289,13 +289,12 @@ function generate_room_form($room_id, $errors=null)
   }
 
   // Generate the form
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
 
   $attributes = array(
       'id'     => 'edit_room',
       'class'  => 'standard',
-      'action' => multisite('edit_room_handler.php'),
-      'method' => 'post'
+      'action' => multisite('edit_room_handler.php')
     );
 
   // Non-admins will only be allowed to view room details, not change them

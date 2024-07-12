@@ -17,11 +17,10 @@ require "defaultincludes.inc";
 
 function generate_add_role_form($error=null, $name=null)
 {
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
   $form->addHiddenInput('action', 'add')
        ->setAttributes(array('action' => multisite('edit_role_handler.php'),
-                             'class'  => 'standard',
-                             'method' => 'post'));
+                             'class'  => 'standard'));
 
   // Name field
   $fieldset = new ElementFieldset();
@@ -67,12 +66,11 @@ function generate_add_role_form($error=null, $name=null)
 
 function generate_add_area_rule_button(Role $role)
 {
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
   $form->addHiddenInputs(array('action' => 'add_area_rule',
                                'role_id' => $role->id))
        ->setAttributes(array('action' => multisite(this_page()),
-                             'class'  => 'standard',
-                             'method' => 'post'));
+                             'class'  => 'standard'));
 
   // Submit button
   $fieldset = new ElementFieldset();
@@ -92,12 +90,11 @@ function generate_add_area_rule_button(Role $role)
 
 function generate_add_room_rule_button(Role $role)
 {
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
   $form->addHiddenInputs(array('action' => 'add_room_rule',
                                'role_id' => $role->id))
-    ->setAttributes(array('action' => multisite(this_page()),
-                         'class'  => 'standard',
-                         'method' => 'post'));
+       ->setAttributes(array('action' => multisite(this_page()),
+                             'class'  => 'standard'));
 
   // Submit button
   $fieldset = new ElementFieldset();
@@ -117,12 +114,11 @@ function generate_add_room_rule_button(Role $role)
 
 function generate_add_area_rule_form(Role $role, $error, $area_id)
 {
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
   $form->addHiddenInputs(array('action' => 'add_area_rule',
                                'role_id' => $role->id))
        ->setAttributes(array('action' => multisite('edit_role_handler.php'),
-                             'class'  => 'standard',
-                             'method' => 'post'));
+                             'class'  => 'standard'));
 
   $fieldset = new ElementFieldset();
 
@@ -183,12 +179,11 @@ function generate_add_area_rule_form(Role $role, $error, $area_id)
 
 function generate_add_room_rule_form(Role $role, $error, $room_id)
 {
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
   $form->addHiddenInputs(array('action' => 'add_room_rule',
                                'role_id' => $role->id))
        ->setAttributes(array('action' => multisite('edit_role_handler.php'),
-                             'class'  => 'standard',
-                             'method' => 'post'));
+                             'class'  => 'standard'));
 
   $fieldset = new ElementFieldset();
 
@@ -249,9 +244,8 @@ function generate_add_room_rule_form(Role $role, $error, $room_id)
 
 function generate_delete_role_button(Role $role)
 {
-  $form = new Form();
-  $form->setAttributes(array('action' => multisite('edit_role_handler.php'),
-                             'method' => 'post'));
+  $form = new Form(Form::METHOD_POST);
+  $form->setAttributes(array('action' => multisite('edit_role_handler.php')));
 
   // Hidden inputs
   $form->addHiddenInputs(array(
@@ -331,9 +325,8 @@ function generate_empty_row(Area $area)
 
 function generate_delete_rule_button(LocationRule $rule)
 {
-  $form = new Form();
-  $form->setAttributes(array('action' => multisite('edit_role_handler.php'),
-                             'method' => 'post'));
+  $form = new Form(Form::METHOD_POST);
+  $form->setAttributes(array('action' => multisite('edit_role_handler.php')));
 
   // Hidden inputs
   $form->addHiddenInputs(array(
@@ -442,11 +435,10 @@ function generate_area_roles_table(Role $role)
   $permission_options = AreaRule::getPermissionOptions();
   $state_options = AreaRule::getStateOptions();
 
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
   $form->setAttributes(array(
       'class' => 'roles_table_form',
-      'action' => multisite('edit_role_handler.php'),
-      'method' => 'post'
+      'action' => multisite('edit_role_handler.php')
     ));
   $form->addHiddenInputs(array(
       'role_id' => $role->id,

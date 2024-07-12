@@ -14,11 +14,10 @@ require "defaultincludes.inc";
 
 function generate_add_group_form($error=null, $name=null)
 {
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
   $form->addHiddenInput('action', 'add')
     ->setAttributes(array('action' => multisite('edit_group_handler.php'),
-                          'class'  => 'standard',
-                          'method' => 'post'));
+                          'class'  => 'standard'));
 
   // Name field
   $fieldset = new ElementFieldset();
@@ -122,11 +121,10 @@ function generate_groups_table()
 
 function generate_edit_group_form(Group $group)
 {
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
   $form->addHiddenInputs(array('group_id' => $group->id))
        ->setAttributes(array('class' => 'standard',
-                             'action' => multisite('edit_group_handler.php'),
-                             'method' => 'post'));
+                             'action' => multisite('edit_group_handler.php')));
 
   $roles = new Roles();
   $form->addElement($roles->getFieldset($group->roles));

@@ -146,9 +146,8 @@ function output_row(User $user)
   // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
   if (can_edit_user($user->name))
   {
-    $form = new Form();
-    $form->setAttributes(array('method' => 'post',
-                               'action' => multisite(this_page())));
+    $form = new Form(Form::METHOD_POST);
+    $form->setAttributes(array('action' => multisite(this_page())));
     $form->addHiddenInput('id', $user->id);
     $submit = new ElementInputSubmit();
     $submit->setAttributes(array('class' => 'link',
@@ -845,11 +844,10 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
     }
   }
   // TODO: rewrite all of this
-  $form = new Form();
+  $form = new Form(Form::METHOD_POST);
 
   $form->setAttributes(array('id'     => 'form_edit_user',
                              'class'  => 'standard',
-                             'method' => 'post',
                              'action' => multisite('edit_user_handler.php')));
 
   if (isset($id))
@@ -1004,11 +1002,12 @@ if (!$is_ajax)
     // Add button for the 'db' auth type or where we can't get all the users
     if (($auth['type'] == 'db') || !method_exists(auth(), 'getUsers'))
     {
-      $form = new Form();
+      $form = new Form(Form::METHOD_POST);
 
-      $form->setAttributes(array('id' => 'add_new_user',
-        'method' => 'post',
-        'action' => multisite(this_page())));
+      $form->setAttributes(array(
+        'id' => 'add_new_user',
+        'action' => multisite(this_page()))
+      );
 
       $form->addHiddenInput('action', 'add');
 
@@ -1020,9 +1019,8 @@ if (!$is_ajax)
     // Sync button otherwise
     else
     {
-      $form = new Form();
+      $form = new Form(Form::METHOD_POST);
       $form->setAttributes(array('id' => 'sync',
-                                 'method' => 'post',
                                  'action' => multisite(this_page())));
 
       $form->addHiddenInput('action', 'sync');
