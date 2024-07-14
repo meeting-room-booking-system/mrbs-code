@@ -332,9 +332,10 @@ function getParameterByName(name, url)
 												rec.right - wPosition.left > 0  && rec.right < vpWidth + wPosition.left  :
 												rec.right > 0 && rec.right <= vpWidth,
                 vVisible   = partial ? tViz || bViz : tViz && bViz,
-                hVisible   = partial ? lViz || rViz : lViz && rViz,
-		vVisible = (rec.top < 0 && rec.bottom > vpHeight) ? true : vVisible,
-                hVisible = (rec.left < 0 && rec.right > vpWidth) ? true : hVisible;
+                hVisible   = partial ? lViz || rViz : lViz && rViz;
+
+            vVisible = (rec.top < 0 && rec.bottom > vpHeight) ? true : vVisible;
+            hVisible = (rec.left < 0 && rec.right > vpWidth) ? true : hVisible;
 
             if(direction === 'both')
                 return clientSize && vVisible && hVisible;
