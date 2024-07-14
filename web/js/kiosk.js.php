@@ -6,33 +6,30 @@ require "../defaultincludes.inc";
 
 http_headers(array("Content-type: application/x-javascript"),
              60*30);  // 30 minute expiry
-
-if ($use_strict)
-{
-  echo "'use strict';\n";
-}
-
 ?>
 
+'use strict';
 
 $(document).on('page_ready', function() {
+
+  function resetTimer()
+  {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(whenUserIdle, <?php echo $kiosk_exit_page_timeout ?>*1000);
+  }
+
+  function whenUserIdle()
+  {
+    window.location.replace('index.php');
+  }
+
+  var idleTimer;
 
   <?php
   // If it's the exit page then (a) disable everything except the exit form and
   // (b) set a timeout on the page.
   ?>
   if ($('#kiosk_exit').length) {
-
-    var idleTimer;
-
-    function resetTimer() {
-      clearTimeout(idleTimer);
-      idleTimer = setTimeout(whenUserIdle, <?php echo $kiosk_exit_page_timeout ?>*1000);
-    }
-
-    function whenUserIdle() {
-      window.location.replace('index.php');
-    }
 
     $(document.body).on('click keydown mousemove', resetTimer)
                     .on('click keydown', function (e) {
