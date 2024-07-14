@@ -6,12 +6,11 @@ require '../defaultincludes.inc';
 
 http_headers(array("Content-type: application/x-javascript"),
              60*30);  // 30 minute expiry
+?>
 
-if ($use_strict)
-{
-  echo "'use strict';\n";
-}
+'use strict';
 
+<?php
 // Check whether the calendar navigation bar has wrapped, and if so add a class of
 // 'wrapped' so that CSS can be used to change its styling.
 ?>
