@@ -492,11 +492,3 @@ $area_defaults['max_secs_per_future']           = $max_secs_per_interval_area['f
 
 // Interval types used in booking policies
 $interval_types = array('day', 'week', 'month', 'year', 'future');
-
-
-/********************************************************
- * JavaScript - internal use, do not change
- ********************************************************/
-
-// Puts Javascript into strict mode
-$use_strict = true;
