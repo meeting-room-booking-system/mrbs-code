@@ -6,12 +6,11 @@ require "../defaultincludes.inc";
 
 http_headers(array("Content-type: application/x-javascript"),
              60*30);  // 30 minute expiry
+?>
 
-if ($use_strict)
-{
-  echo "'use strict';\n";
-}
+'use strict';
 
+<?php
 // Show or Hide the settings for Times and the note about Periods as
 // appropriate.  Also toggle the required property on the area_periods[]
 // inputs: if they are left as required when they are hidden, then the

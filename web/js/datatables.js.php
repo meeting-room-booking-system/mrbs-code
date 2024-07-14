@@ -7,11 +7,6 @@ require "../defaultincludes.inc";
 http_headers(array("Content-type: application/x-javascript"),
   60*30);  // 30 minute expiry
 
-if ($use_strict)
-{
-  echo "'use strict';\n";
-}
-
 // See https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.pagesetup?view=openxml-2.8.1
 define('EXCEL_PAGE_SIZES', array(
   1 =>  'LETTER',
@@ -37,7 +32,11 @@ else
 {
   $excel_paper_size = $excel_default_paper;
 }
+?>
 
+'use strict';
+
+<?php
 // Actions to take once the datatable's initialisation is complete.
 // Remember that some of the table initialisation operations, eg loading of the
 // language file, are asynchronous.

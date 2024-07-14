@@ -32,12 +32,11 @@ function get_date_format() : string
 
 http_headers(array("Content-type: application/x-javascript"),
              60*30);  // 30 minute expiry
+?>
 
-if ($use_strict)
-{
-  echo "'use strict';\n";
-}
+'use strict';
 
+<?php
 // Fix for iOS 13 where the User Agent string has been changed.
 // See https://github.com/flatpickr/flatpickr/issues/1992
 ?>

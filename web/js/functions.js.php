@@ -6,13 +6,9 @@ require "../defaultincludes.inc";
 
 http_headers(array("Content-type: application/x-javascript"),
              60*30);  // 30 minute expiry
-
-if ($use_strict)
-{
-  echo "'use strict';\n";
-}
-
 ?>
+
+'use strict';
 
 // Decodes a base64 encoded string.  Returns false if it can't be decoded.
 // See https://stackoverflow.com/questions/30106476/using-javascripts-atob-to-decode-base64-doesnt-properly-decode-utf-8-strings

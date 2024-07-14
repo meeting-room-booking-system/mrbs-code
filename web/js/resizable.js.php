@@ -6,16 +6,12 @@ require "../defaultincludes.inc";
 
 http_headers(array("Content-type: application/x-javascript"),
              60*30);  // 30 minute expiry
-
-if ($use_strict)
-{
-  echo "'use strict';\n";
-}
-
-// function to reverse a collection of jQuery objects
 ?>
-$.fn.reverse = [].reverse;
 
+'use strict';
+
+<?php // function to reverse a collection of jQuery objects ?>
+$.fn.reverse = [].reverse;
 
 <?php
 // Get the sides, optionally including the border, of the rectangle represented by

@@ -6,12 +6,11 @@ require "../defaultincludes.inc";
 
 http_headers(array("Content-type: application/x-javascript"),
              60*30);  // 30 minute expiry
+?>
 
-if ($use_strict)
-{
-  echo "'use strict';\n";
-}
+'use strict';
 
+<?php
 global $autocomplete_length_breaks;
 
 // Function to determine whether the browser supports the HTML5
