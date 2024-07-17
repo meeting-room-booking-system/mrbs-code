@@ -429,7 +429,7 @@ $kiosk_mode_enabled = false;
 $kiosk_default_mode = 'room';
 
 // Whether to show a QR code in kiosk mode
-// Note that PHP 7.4 or greater is required for a QR code
+// Note that PHP 7.4 or greater and the mbstring extension are required for a QR code
 $kiosk_QR_code = true;
 
 // Timeout if the exit kiosk mode dialog is not acted upon

@@ -7,14 +7,18 @@
  * @copyright    2018 Smiley
  * @license      MIT
  */
+declare(strict_types=1);
 
 namespace chillerlan\Settings;
 
+use JsonException;
 use ReflectionClass;
 use ReflectionProperty;
+use function array_keys;
 use function get_object_vars;
 use function json_decode;
 use function json_encode;
+use function json_last_error_msg;
 use function method_exists;
 use function property_exists;
 use const JSON_THROW_ON_ERROR;
@@ -23,8 +27,10 @@ abstract class SettingsContainerAbstract implements SettingsContainerInterface{
 
 	/**
 	 * SettingsContainerAbstract constructor.
+	 *
+	 * @phpstan-param array<string, mixed> $properties
 	 */
-	public function __construct(iterable $properties = null){
+	public function __construct(?iterable $properties = null){
 
 		if(!empty($properties)){
 			$this->fromIterable($properties);
@@ -124,7 +130,13 @@ abstract class SettingsContainerAbstract implements SettingsContainerInterface{
 	 * @inheritdoc
 	 */
 	public function toArray():array{
-		return get_object_vars($this);
+		$properties = [];
+
+		foreach(array_keys(get_object_vars($this)) as $key){
+			$properties[$key] = $this->__get($key);
+		}
+
+		return $properties;
 	}
 
 	/**
@@ -142,14 +154,21 @@ abstract class SettingsContainerAbstract implements SettingsContainerInterface{
 	/**
 	 * @inheritdoc
 	 */
-	public function toJSON(int $jsonOptions = null):string{
-		return json_encode($this, $jsonOptions ?? 0);
+	public function toJSON(?int $jsonOptions = null):string{
+		$json = json_encode($this, ($jsonOptions ?? 0));
+
+		if($json === false){
+			throw new JsonException(json_last_error_msg());
+		}
+
+		return $json;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	public function fromJSON(string $json):SettingsContainerInterface{
+		/** @phpstan-var array<string, mixed> $data */
 		$data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 
 		return $this->fromIterable($data);
@@ -157,6 +176,7 @@ abstract class SettingsContainerAbstract implements SettingsContainerInterface{
 
 	/**
 	 * @inheritdoc
+	 * @return array<string, mixed>
 	 */
 	#[\ReturnTypeWillChange]
 	public function jsonSerialize():array{

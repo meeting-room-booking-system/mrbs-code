@@ -2,9 +2,7 @@
 /**
  * Class QRMatrix
  *
- * @filesource   QRMatrix.php
  * @created      15.11.2017
- * @package      chillerlan\QRCode\Data
  * @author       Smiley <smiley@chillerlan.net>
  * @copyright    2017 Smiley
  * @license      MIT
@@ -12,215 +10,128 @@
 
 namespace chillerlan\QRCode\Data;
 
-use chillerlan\QRCode\QRCode;
-use Closure;
+use chillerlan\QRCode\Common\{BitBuffer, EccLevel, MaskPattern, Version};
 use function array_fill;
-use function array_key_exists;
-use function array_push;
-use function array_unshift;
+use function array_map;
+use function array_reverse;
 use function count;
-use function floor;
-use function in_array;
-use function max;
-use function min;
-use function range;
+use function intdiv;
 
 /**
- * Holds a numerical representation of the final QR Code;
+ * Holds an array representation of the final QR Code that contains numerical values for later output modifications;
  * maps the ECC coded binary data and applies the mask pattern
  *
  * @see http://www.thonky.com/qr-code-tutorial/format-version-information
  */
-final class QRMatrix{
+class QRMatrix{
+
+	/*
+	 * special values
+	 */
 
 	/** @var int */
-	public const M_NULL       = 0x00;
+	public const IS_DARK            = 0b100000000000;
 	/** @var int */
-	public const M_DARKMODULE = 0x02;
+	public const M_NULL             = 0b000000000000;
 	/** @var int */
-	public const M_DATA       = 0x04;
+	public const M_LOGO             = 0b001000000000;
 	/** @var int */
-	public const M_FINDER     = 0x06;
+	public const M_LOGO_DARK        = 0b101000000000;
+
+	/*
+	 * light values
+	 */
+
 	/** @var int */
-	public const M_SEPARATOR  = 0x08;
+	public const M_DATA             = 0b000000000010;
 	/** @var int */
-	public const M_ALIGNMENT  = 0x0a;
+	public const M_FINDER           = 0b000000000100;
 	/** @var int */
-	public const M_TIMING     = 0x0c;
+	public const M_SEPARATOR        = 0b000000001000;
 	/** @var int */
-	public const M_FORMAT     = 0x0e;
+	public const M_ALIGNMENT        = 0b000000010000;
 	/** @var int */
-	public const M_VERSION    = 0x10;
+	public const M_TIMING           = 0b000000100000;
 	/** @var int */
-	public const M_QUIETZONE  = 0x12;
+	public const M_FORMAT           = 0b000001000000;
 	/** @var int */
-	public const M_LOGO       = 0x14;
+	public const M_VERSION          = 0b000010000000;
 	/** @var int */
-	public const M_FINDER_DOT = 0x16;
+	public const M_QUIETZONE        = 0b000100000000;
+
+	/*
+	 * dark values
+	 */
+
 	/** @var int */
-	public const M_TEST       = 0xff;
+	public const M_DARKMODULE       = 0b100000000001;
+	/** @var int */
+	public const M_DATA_DARK        = 0b100000000010;
+	/** @var int */
+	public const M_FINDER_DARK      = 0b100000000100;
+	/** @var int */
+	public const M_ALIGNMENT_DARK   = 0b100000010000;
+	/** @var int */
+	public const M_TIMING_DARK      = 0b100000100000;
+	/** @var int */
+	public const M_FORMAT_DARK      = 0b100001000000;
+	/** @var int */
+	public const M_VERSION_DARK     = 0b100010000000;
+	/** @var int */
+	public const M_FINDER_DOT       = 0b110000000000;
+
+	/*
+	 * values used for reversed reflectance
+	 */
+
+	/** @var int */
+	public const M_DARKMODULE_LIGHT = 0b000000000001;
+	/** @var int */
+	public const M_FINDER_DOT_LIGHT = 0b010000000000;
+	/** @var int */
+	public const M_SEPARATOR_DARK   = 0b100000001000;
+	/** @var int */
+	public const M_QUIETZONE_DARK   = 0b100100000000;
 
 	/**
-	 * ISO/IEC 18004:2000 Annex E, Table E.1 - Row/column coordinates of center module of Alignment Patterns
+	 * Map of flag => coord
 	 *
-	 * version -> pattern
+	 * @see \chillerlan\QRCode\Data\QRMatrix::checkNeighbours()
 	 *
-	 * @var int[][]
+	 * @var array
 	 */
-	protected const alignmentPattern = [
-		1  => [],
-		2  => [6, 18],
-		3  => [6, 22],
-		4  => [6, 26],
-		5  => [6, 30],
-		6  => [6, 34],
-		7  => [6, 22, 38],
-		8  => [6, 24, 42],
-		9  => [6, 26, 46],
-		10 => [6, 28, 50],
-		11 => [6, 30, 54],
-		12 => [6, 32, 58],
-		13 => [6, 34, 62],
-		14 => [6, 26, 46, 66],
-		15 => [6, 26, 48, 70],
-		16 => [6, 26, 50, 74],
-		17 => [6, 30, 54, 78],
-		18 => [6, 30, 56, 82],
-		19 => [6, 30, 58, 86],
-		20 => [6, 34, 62, 90],
-		21 => [6, 28, 50, 72,  94],
-		22 => [6, 26, 50, 74,  98],
-		23 => [6, 30, 54, 78, 102],
-		24 => [6, 28, 54, 80, 106],
-		25 => [6, 32, 58, 84, 110],
-		26 => [6, 30, 58, 86, 114],
-		27 => [6, 34, 62, 90, 118],
-		28 => [6, 26, 50, 74,  98, 122],
-		29 => [6, 30, 54, 78, 102, 126],
-		30 => [6, 26, 52, 78, 104, 130],
-		31 => [6, 30, 56, 82, 108, 134],
-		32 => [6, 34, 60, 86, 112, 138],
-		33 => [6, 30, 58, 86, 114, 142],
-		34 => [6, 34, 62, 90, 118, 146],
-		35 => [6, 30, 54, 78, 102, 126, 150],
-		36 => [6, 24, 50, 76, 102, 128, 154],
-		37 => [6, 28, 54, 80, 106, 132, 158],
-		38 => [6, 32, 58, 84, 110, 136, 162],
-		39 => [6, 26, 54, 82, 110, 138, 166],
-		40 => [6, 30, 58, 86, 114, 142, 170],
+	protected const neighbours = [
+		0b00000001 => [-1, -1],
+		0b00000010 => [ 0, -1],
+		0b00000100 => [ 1, -1],
+		0b00001000 => [ 1,  0],
+		0b00010000 => [ 1,  1],
+		0b00100000 => [ 0,  1],
+		0b01000000 => [-1,  1],
+		0b10000000 => [-1,  0],
 	];
 
 	/**
-	 * ISO/IEC 18004:2000 Annex D, Table D.1 - Version information bit stream for each version
+	 * the matrix version - always set in QRMatrix, may be null in BitMatrix
+	 */
+	protected ?Version $version = null;
+
+	/**
+	 * the current ECC level - always set in QRMatrix, may be null in BitMatrix
+	 */
+	protected ?EccLevel $eccLevel = null;
+
+	/**
+	 * the mask pattern that was used in the most recent operation, set via:
 	 *
-	 * no version pattern for QR Codes < 7
-	 *
-	 * @var int[]
+	 * - QRMatrix::setFormatInfo()
+	 * - QRMatrix::mask()
+	 * - BitMatrix::readFormatInformation()
 	 */
-	protected const versionPattern = [
-		7  => 0b000111110010010100,
-		8  => 0b001000010110111100,
-		9  => 0b001001101010011001,
-		10 => 0b001010010011010011,
-		11 => 0b001011101111110110,
-		12 => 0b001100011101100010,
-		13 => 0b001101100001000111,
-		14 => 0b001110011000001101,
-		15 => 0b001111100100101000,
-		16 => 0b010000101101111000,
-		17 => 0b010001010001011101,
-		18 => 0b010010101000010111,
-		19 => 0b010011010100110010,
-		20 => 0b010100100110100110,
-		21 => 0b010101011010000011,
-		22 => 0b010110100011001001,
-		23 => 0b010111011111101100,
-		24 => 0b011000111011000100,
-		25 => 0b011001000111100001,
-		26 => 0b011010111110101011,
-		27 => 0b011011000010001110,
-		28 => 0b011100110000011010,
-		29 => 0b011101001100111111,
-		30 => 0b011110110101110101,
-		31 => 0b011111001001010000,
-		32 => 0b100000100111010101,
-		33 => 0b100001011011110000,
-		34 => 0b100010100010111010,
-		35 => 0b100011011110011111,
-		36 => 0b100100101100001011,
-		37 => 0b100101010000101110,
-		38 => 0b100110101001100100,
-		39 => 0b100111010101000001,
-		40 => 0b101000110001101001,
-	];
+	protected ?MaskPattern $maskPattern = null;
 
 	/**
-	 * ISO/IEC 18004:2000 Section 8.9 - Format Information
-	 *
-	 * ECC level -> mask pattern
-	 *
-	 * @var int[][]
-	 */
-	protected const formatPattern = [
-		[ // L
-			0b111011111000100,
-			0b111001011110011,
-			0b111110110101010,
-			0b111100010011101,
-			0b110011000101111,
-			0b110001100011000,
-			0b110110001000001,
-			0b110100101110110,
-		],
-		[ // M
-			0b101010000010010,
-			0b101000100100101,
-			0b101111001111100,
-			0b101101101001011,
-			0b100010111111001,
-			0b100000011001110,
-			0b100111110010111,
-			0b100101010100000,
-		],
-		[ // Q
-			0b011010101011111,
-			0b011000001101000,
-			0b011111100110001,
-			0b011101000000110,
-			0b010010010110100,
-			0b010000110000011,
-			0b010111011011010,
-			0b010101111101101,
-		],
-		[ // H
-			0b001011010001001,
-			0b001001110111110,
-			0b001110011100111,
-			0b001100111010000,
-			0b000011101100010,
-			0b000001001010101,
-			0b000110100001100,
-			0b000100000111011,
-		],
-	];
-
-	/**
-	 * the current QR Code version number
-	 */
-	protected int $version;
-
-	/**
-	 * the current ECC level
-	 */
-	protected int $eclevel;
-
-	/**
-	 * the used mask pattern, set via QRMatrix::mapData()
-	 */
-	protected int $maskPattern = QRCode::MASK_PATTERN_AUTO;
-
-	/**
-	 * the size (side length) of the matrix
+	 * the size (side length) of the matrix, including quiet zone (if created)
 	 */
 	protected int $moduleCount;
 
@@ -233,37 +144,33 @@ final class QRMatrix{
 
 	/**
 	 * QRMatrix constructor.
-	 *
-	 * @throws \chillerlan\QRCode\Data\QRCodeDataException
 	 */
-	public function __construct(int $version, int $eclevel){
-
-		if(!in_array($version, range(1, 40), true)){
-			throw new QRCodeDataException('invalid QR Code version');
-		}
-
-		if(!array_key_exists($eclevel, QRCode::ECC_MODES)){
-			throw new QRCodeDataException('invalid ecc level');
-		}
-
+	public function __construct(Version $version, EccLevel $eccLevel){
 		$this->version     = $version;
-		$this->eclevel     = $eclevel;
-		$this->moduleCount = $this->version * 4 + 17;
-		$this->matrix      = array_fill(0, $this->moduleCount, array_fill(0, $this->moduleCount, $this::M_NULL));
+		$this->eccLevel    = $eccLevel;
+		$this->moduleCount = $this->version->getDimension();
+		$this->matrix      = $this->createMatrix($this->moduleCount, $this::M_NULL);
 	}
 
 	/**
-	 * shortcut to initialize the matrix
+	 * Creates a 2-dimensional array (square) of the given $size
 	 */
-	public function init(int $maskPattern, bool $test = null):QRMatrix{
+	protected function createMatrix(int $size, int $value):array{
+		return array_fill(0, $size, array_fill(0, $size, $value));
+	}
+
+	/**
+	 * shortcut to initialize the functional patterns
+	 */
+	public function initFunctionalPatterns():self{
 		return $this
 			->setFinderPattern()
 			->setSeparators()
 			->setAlignmentPattern()
 			->setTimingPattern()
-			->setVersionNumber($test)
-			->setFormatInfo($maskPattern, $test)
 			->setDarkModule()
+			->setVersionNumber()
+			->setFormatInfo()
 		;
 	}
 
@@ -272,44 +179,76 @@ final class QRMatrix{
 	 *
 	 * @return int[][]|bool[][]
 	 */
-	public function matrix(bool $boolean = false):array{
+	public function getMatrix(?bool $boolean = null):array{
 
-		if(!$boolean){
+		if($boolean !== true){
 			return $this->matrix;
 		}
 
-		$matrix = [];
+		$matrix = $this->matrix;
 
-		foreach($this->matrix as $y => $row){
-			$matrix[$y] = [];
-
-			foreach($row as $x => $val){
-				$matrix[$y][$x] = ($val >> 8) > 0;
-			}
+		foreach($matrix as &$row){
+			$row = array_map([$this, 'isDark'], $row);
 		}
 
 		return $matrix;
 	}
 
 	/**
+	 * @deprecated 5.0.0 use QRMatrix::getMatrix() instead
+	 * @see \chillerlan\QRCode\Data\QRMatrix::getMatrix()
+	 * @codeCoverageIgnore
+	 */
+	public function matrix(?bool $boolean = null):array{
+		return $this->getMatrix($boolean);
+	}
+
+	/**
 	 * Returns the current version number
 	 */
-	public function version():int{
+	public function getVersion():?Version{
 		return $this->version;
+	}
+
+	/**
+	 * @deprecated 5.0.0 use QRMatrix::getVersion() instead
+	 * @see \chillerlan\QRCode\Data\QRMatrix::getVersion()
+	 * @codeCoverageIgnore
+	 */
+	public function version():?Version{
+		return $this->getVersion();
 	}
 
 	/**
 	 * Returns the current ECC level
 	 */
-	public function eccLevel():int{
-		return $this->eclevel;
+	public function getEccLevel():?EccLevel{
+		return $this->eccLevel;
+	}
+
+	/**
+	 * @deprecated 5.0.0 use QRMatrix::getEccLevel() instead
+	 * @see \chillerlan\QRCode\Data\QRMatrix::getEccLevel()
+	 * @codeCoverageIgnore
+	 */
+	public function eccLevel():?EccLevel{
+		return $this->getEccLevel();
 	}
 
 	/**
 	 * Returns the current mask pattern
 	 */
-	public function maskPattern():int{
+	public function getMaskPattern():?MaskPattern{
 		return $this->maskPattern;
+	}
+
+	/**
+	 * @deprecated 5.0.0 use QRMatrix::getMaskPattern() instead
+	 * @see \chillerlan\QRCode\Data\QRMatrix::getMaskPattern()
+	 * @codeCoverageIgnore
+	 */
+	public function maskPattern():?MaskPattern{
+		return $this->getMaskPattern();
 	}
 
 	/**
@@ -317,48 +256,168 @@ final class QRMatrix{
 	 *
 	 * size = version * 4 + 17 [ + 2 * quietzone size]
 	 */
-	public function size():int{
+	public function getSize():int{
 		return $this->moduleCount;
 	}
 
 	/**
-	 * Returns the value of the module at position [$x, $y]
+	 * @deprecated 5.0.0 use QRMatrix::getSize() instead
+	 * @see \chillerlan\QRCode\Data\QRMatrix::getSize()
+	 * @codeCoverageIgnore
+	 */
+	public function size():int{
+		return $this->getSize();
+	}
+
+	/**
+	 * Returns the value of the module at position [$x, $y] or -1 if the coordinate is outside the matrix
 	 */
 	public function get(int $x, int $y):int{
+
+		if(!isset($this->matrix[$y][$x])){
+			return -1;
+		}
+
 		return $this->matrix[$y][$x];
 	}
 
 	/**
 	 * Sets the $M_TYPE value for the module at position [$x, $y]
 	 *
-	 *   true  => $M_TYPE << 8
+	 *   true  => $M_TYPE | 0x800
 	 *   false => $M_TYPE
 	 */
-	public function set(int $x, int $y, bool $value, int $M_TYPE):QRMatrix{
-		$this->matrix[$y][$x] = $M_TYPE << ($value ? 8 : 0);
+	public function set(int $x, int $y, bool $value, int $M_TYPE):self{
+
+		if(isset($this->matrix[$y][$x])){
+			// we don't know whether the input is dark, so we remove the dark bit
+			$M_TYPE &= ~$this::IS_DARK;
+
+			if($value === true){
+				$M_TYPE |= $this::IS_DARK;
+			}
+
+			$this->matrix[$y][$x] = $M_TYPE;
+		}
 
 		return $this;
 	}
 
 	/**
-	 * Checks whether a module is true (dark) or false (light)
-	 *
-	 *   true  => $value >> 8 === $M_TYPE
-	 *            $value >> 8 > 0
-	 *
-	 *   false => $value === $M_TYPE
-	 *            $value >> 8 === 0
+	 * Fills an area of $width * $height, from the given starting point [$startX, $startY] (top left) with $value for $M_TYPE.
 	 */
-	public function check(int $x, int $y):bool{
-		return ($this->matrix[$y][$x] >> 8) > 0;
+	public function setArea(int $startX, int $startY, int $width, int $height, bool $value, int $M_TYPE):self{
+
+		for($y = $startY; $y < ($startY + $height); $y++){
+			for($x = $startX; $x < ($startX + $width); $x++){
+				$this->set($x, $y, $value, $M_TYPE);
+			}
+		}
+
+		return $this;
 	}
 
+	/**
+	 * Flips the value of the module at ($x, $y)
+	 */
+	public function flip(int $x, int $y):self{
+
+		if(isset($this->matrix[$y][$x])){
+			$this->matrix[$y][$x] ^= $this::IS_DARK;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Checks whether the module at ($x, $y) is of the given $M_TYPE
+	 *
+	 *   true => $value & $M_TYPE === $M_TYPE
+	 *
+	 * Also, returns false if the given coordinates are out of range.
+	 */
+	public function checkType(int $x, int $y, int $M_TYPE):bool{
+
+		if(isset($this->matrix[$y][$x])){
+			return ($this->matrix[$y][$x] & $M_TYPE) === $M_TYPE;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Checks whether the module at ($x, $y) is in the given array of $M_TYPES,
+	 * returns true if a match is found, otherwise false.
+	 */
+	public function checkTypeIn(int $x, int $y, array $M_TYPES):bool{
+
+		foreach($M_TYPES as $type){
+			if($this->checkType($x, $y, $type)){
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Checks whether the module at ($x, $y) is true (dark) or false (light)
+	 *
+	 * Also, returns false if the given coordinates are out of range.
+	 */
+	public function check(int $x, int $y):bool{
+
+		if(isset($this->matrix[$y][$x])){
+			return $this->isDark($this->matrix[$y][$x]);
+		}
+
+		return false;
+	}
+
+	/**
+	 * Checks whether the given $M_TYPE is a dark value
+	 */
+	public function isDark(int $M_TYPE):bool{
+		return ($M_TYPE & $this::IS_DARK) === $this::IS_DARK;
+	}
+
+	/**
+	 * Checks the status of the neighbouring modules for the module at ($x, $y) and returns a bitmask with the results.
+	 *
+	 * The 8 flags of the bitmask represent the status of each of the neighbouring fields,
+	 * starting with the lowest bit for top left, going clockwise:
+	 *
+	 *   0 1 2
+	 *   7 # 3
+	 *   6 5 4
+	 */
+	public function checkNeighbours(int $x, int $y, ?int $M_TYPE = null):int{
+		$bits = 0;
+
+		foreach($this::neighbours as $bit => [$ix, $iy]){
+			$ix += $x;
+			$iy += $y;
+
+			// $M_TYPE is given, skip if the field is not the same type
+			if($M_TYPE !== null && !$this->checkType($ix, $iy, $M_TYPE)){
+				continue;
+			}
+
+			if($this->checkType($ix, $iy, $this::IS_DARK)){
+				$bits |= $bit;
+			}
+		}
+
+		return $bits;
+	}
 
 	/**
 	 * Sets the "dark module", that is always on the same position 1x1px away from the bottom left finder
+	 *
+	 * 4 * version + 9 or moduleCount - 8
 	 */
-	public function setDarkModule():QRMatrix{
-		$this->set(8, 4 * $this->version + 9, true, $this::M_DARKMODULE);
+	public function setDarkModule():self{
+		$this->set(8, ($this->moduleCount - 8), true, $this::M_DARKMODULE);
 
 		return $this;
 	}
@@ -368,31 +427,20 @@ final class QRMatrix{
 	 *
 	 * ISO/IEC 18004:2000 Section 7.3.2
 	 */
-	public function setFinderPattern():QRMatrix{
+	public function setFinderPattern():self{
 
 		$pos = [
 			[0, 0], // top left
-			[$this->moduleCount - 7, 0], // bottom left
-			[0, $this->moduleCount - 7], // top right
+			[($this->moduleCount - 7), 0], // top right
+			[0, ($this->moduleCount - 7)], // bottom left
 		];
 
 		foreach($pos as $c){
-			for($y = 0; $y < 7; $y++){
-				for($x = 0; $x < 7; $x++){
-					// outer (dark) 7*7 square
-					if($x === 0 || $x === 6 || $y === 0 || $y === 6){
-						$this->set($c[0] + $y, $c[1] + $x, true, $this::M_FINDER);
-					}
-					// inner (light) 5*5 square
-					elseif($x === 1 || $x === 5 || $y === 1 || $y === 5){
-						$this->set($c[0] + $y, $c[1] + $x, false, $this::M_FINDER);
-					}
-					// 3*3 dot
-					else{
-						$this->set($c[0] + $y, $c[1] + $x, true, $this::M_FINDER_DOT);
-					}
-				}
-			}
+			$this
+				->setArea( $c[0]     ,  $c[1]     , 7, 7, true, $this::M_FINDER)
+				->setArea(($c[0] + 1), ($c[1] + 1), 5, 5, false, $this::M_FINDER)
+				->setArea(($c[0] + 2), ($c[1] + 2), 3, 3, true, $this::M_FINDER_DOT)
+			;
 		}
 
 		return $this;
@@ -403,24 +451,24 @@ final class QRMatrix{
 	 *
 	 * ISO/IEC 18004:2000 Section 7.3.3
 	 */
-	public function setSeparators():QRMatrix{
+	public function setSeparators():self{
 
 		$h = [
 			[7, 0],
-			[$this->moduleCount - 8, 0],
-			[7, $this->moduleCount - 8],
+			[($this->moduleCount - 8), 0],
+			[7, ($this->moduleCount - 8)],
 		];
 
 		$v = [
 			[7, 7],
-			[$this->moduleCount - 1, 7],
-			[7, $this->moduleCount - 8],
+			[($this->moduleCount - 1), 7],
+			[7, ($this->moduleCount - 8)],
 		];
 
 		for($c = 0; $c < 3; $c++){
 			for($i = 0; $i < 8; $i++){
-				$this->set($h[$c][0]     , $h[$c][1] + $i, false, $this::M_SEPARATOR);
-				$this->set($v[$c][0] - $i, $v[$c][1]     , false, $this::M_SEPARATOR);
+				$this->set( $h[$c][0]      , ($h[$c][1] + $i), false, $this::M_SEPARATOR);
+				$this->set(($v[$c][0] - $i),  $v[$c][1]      , false, $this::M_SEPARATOR);
 			}
 		}
 
@@ -433,23 +481,22 @@ final class QRMatrix{
 	 *
 	 * ISO/IEC 18004:2000 Section 7.3.5
 	 */
-	public function setAlignmentPattern():QRMatrix{
+	public function setAlignmentPattern():self{
+		$alignmentPattern = $this->version->getAlignmentPattern();
 
-		foreach($this::alignmentPattern[$this->version] as $y){
-			foreach($this::alignmentPattern[$this->version] as $x){
+		foreach($alignmentPattern as $y){
+			foreach($alignmentPattern as $x){
 
 				// skip existing patterns
 				if($this->matrix[$y][$x] !== $this::M_NULL){
 					continue;
 				}
 
-				for($ry = -2; $ry <= 2; $ry++){
-					for($rx = -2; $rx <= 2; $rx++){
-						$v = ($ry === 0 && $rx === 0) || $ry === 2 || $ry === -2 || $rx === 2 || $rx === -2;
-
-						$this->set($x + $rx, $y + $ry, $v, $this::M_ALIGNMENT);
-					}
-				}
+				$this
+					->setArea(($x - 2), ($y - 2), 5, 5, true, $this::M_ALIGNMENT)
+					->setArea(($x - 1), ($y - 1), 3, 3, false, $this::M_ALIGNMENT)
+					->set($x, $y, true, $this::M_ALIGNMENT)
+				;
 
 			}
 		}
@@ -463,15 +510,15 @@ final class QRMatrix{
 	 *
 	 * ISO/IEC 18004:2000 Section 7.3.4
 	 */
-	public function setTimingPattern():QRMatrix{
+	public function setTimingPattern():self{
 
-		foreach(range(8, $this->moduleCount - 8 - 1) as $i){
+		for($i = 8; $i < ($this->moduleCount - 8); $i++){
 
 			if($this->matrix[6][$i] !== $this::M_NULL || $this->matrix[$i][6] !== $this::M_NULL){
 				continue;
 			}
 
-			$v = $i % 2 === 0;
+			$v = ($i % 2) === 0;
 
 			$this->set($i, 6, $v, $this::M_TIMING); // h
 			$this->set(6, $i, $v, $this::M_TIMING); // v
@@ -485,15 +532,15 @@ final class QRMatrix{
 	 *
 	 * ISO/IEC 18004:2000 Section 8.10
 	 */
-	public function setVersionNumber(bool $test = null):QRMatrix{
-		$bits = $this::versionPattern[$this->version] ?? false;
+	public function setVersionNumber():self{
+		$bits = $this->version->getVersionPattern();
 
-		if($bits !== false){
+		if($bits !== null){
 
 			for($i = 0; $i < 18; $i++){
-				$a = (int)floor($i / 3);
-				$b = $i % 3 + $this->moduleCount - 8 - 3;
-				$v = !$test && (($bits >> $i) & 1) === 1;
+				$a = intdiv($i, 3);
+				$b = (($i % 3) + ($this->moduleCount - 8 - 3));
+				$v = (($bits >> $i) & 1) === 1;
 
 				$this->set($b, $a, $v, $this::M_VERSION); // ne
 				$this->set($a, $b, $v, $this::M_VERSION); // sw
@@ -505,39 +552,42 @@ final class QRMatrix{
 	}
 
 	/**
-	 * Draws the format info along the finder patterns
+	 * Draws the format info along the finder patterns. If no $maskPattern, all format info modules will be set to false.
 	 *
 	 * ISO/IEC 18004:2000 Section 8.9
 	 */
-	public function setFormatInfo(int $maskPattern, bool $test = null):QRMatrix{
-		$bits = $this::formatPattern[QRCode::ECC_MODES[$this->eclevel]][$maskPattern] ?? 0;
+	public function setFormatInfo(?MaskPattern $maskPattern = null):self{
+		$this->maskPattern = $maskPattern;
+		$bits              = 0; // sets all format fields to false (test mode)
+
+		if($this->maskPattern instanceof MaskPattern){
+			$bits = $this->eccLevel->getformatPattern($this->maskPattern);
+		}
 
 		for($i = 0; $i < 15; $i++){
-			$v = !$test && (($bits >> $i) & 1) === 1;
+			$v = (($bits >> $i) & 1) === 1;
 
 			if($i < 6){
 				$this->set(8, $i, $v, $this::M_FORMAT);
 			}
 			elseif($i < 8){
-				$this->set(8, $i + 1, $v, $this::M_FORMAT);
+				$this->set(8, ($i + 1), $v, $this::M_FORMAT);
 			}
 			else{
-				$this->set(8, $this->moduleCount - 15 + $i, $v, $this::M_FORMAT);
+				$this->set(8, ($this->moduleCount - 15 + $i), $v, $this::M_FORMAT);
 			}
 
 			if($i < 8){
-				$this->set($this->moduleCount - $i - 1, 8, $v, $this::M_FORMAT);
+				$this->set(($this->moduleCount - $i - 1), 8, $v, $this::M_FORMAT);
 			}
 			elseif($i < 9){
-				$this->set(15 - $i, 8, $v, $this::M_FORMAT);
+				$this->set(((15 - $i)), 8, $v, $this::M_FORMAT);
 			}
 			else{
-				$this->set(15 - $i - 1, 8, $v, $this::M_FORMAT);
+				$this->set((15 - $i - 1), 8, $v, $this::M_FORMAT);
 			}
 
 		}
-
-		$this->set(8, $this->moduleCount - 8, !$test, $this::M_FORMAT);
 
 		return $this;
 	}
@@ -549,30 +599,62 @@ final class QRMatrix{
 	 *
 	 * @throws \chillerlan\QRCode\Data\QRCodeDataException
 	 */
-	public function setQuietZone(int $size = null):QRMatrix{
+	public function setQuietZone(int $quietZoneSize):self{
 
-		if($this->matrix[$this->moduleCount - 1][$this->moduleCount - 1] === $this::M_NULL){
+		// early exit if there's nothing to add
+		if($quietZoneSize < 1){
+			return $this;
+		}
+
+		if($this->matrix[($this->moduleCount - 1)][($this->moduleCount - 1)] === $this::M_NULL){
 			throw new QRCodeDataException('use only after writing data');
 		}
 
-		$size = $size !== null
-			? max(0, min($size, floor($this->moduleCount / 2)))
-			: 4;
+		// create a matrix with the new size
+		$newSize   = ($this->moduleCount + ($quietZoneSize * 2));
+		$newMatrix = $this->createMatrix($newSize, $this::M_QUIETZONE);
 
-		for($y = 0; $y < $this->moduleCount; $y++){
-			for($i = 0; $i < $size; $i++){
-				array_unshift($this->matrix[$y], $this::M_QUIETZONE);
-				array_push($this->matrix[$y], $this::M_QUIETZONE);
+		// copy over the current matrix
+		foreach($this->matrix as $y => $row){
+			foreach($row as $x => $val){
+				$newMatrix[($y + $quietZoneSize)][($x + $quietZoneSize)] = $val;
 			}
 		}
 
-		$this->moduleCount += ($size * 2);
+		// set the new values
+		$this->moduleCount = $newSize;
+		$this->matrix      = $newMatrix;
 
-		$r = array_fill(0, $this->moduleCount, $this::M_QUIETZONE);
+		return $this;
+	}
 
-		for($i = 0; $i < $size; $i++){
-			array_unshift($this->matrix, $r);
-			array_push($this->matrix, $r);
+	/**
+	 * Rotates the matrix by 90 degrees clock wise
+	 */
+	public function rotate90():self{
+		/** @phan-suppress-next-line PhanParamTooFewInternalUnpack */
+		$this->matrix = array_map((fn(int ...$a):array => array_reverse($a)), ...$this->matrix);
+
+		return $this;
+	}
+
+	/**
+	 * Inverts the values of the whole matrix
+	 *
+	 * ISO/IEC 18004:2015 Section 6.2 - Reflectance reversal
+	 */
+	public function invert():self{
+
+		foreach($this->matrix as $y => $row){
+			foreach($row as $x => $val){
+
+				// skip null fields
+				if($val === $this::M_NULL){
+					continue;
+				}
+
+				$this->flip($x, $y);
+			}
 		}
 
 		return $this;
@@ -580,10 +662,14 @@ final class QRMatrix{
 
 	/**
 	 * Clears a space of $width * $height in order to add a logo or text.
+	 * If no $height is given, the space will be assumed a square of $width.
 	 *
-	 * Additionally, the logo space can be positioned within the QR Code - respecting the main functional patterns -
-	 * using $startX and $startY. If either of these are null, the logo space will be centered in that direction.
+	 * Additionally, the logo space can be positioned within the QR Code using $startX and $startY.
+	 * If either of these are null, the logo space will be centered in that direction.
 	 * ECC level "H" (30%) is required.
+	 *
+	 * The coordinates of $startX and $startY do not include the quiet zone:
+	 * [0, 0] is always the top left module of the top left finder pattern, negative values go into the quiet zone top and left.
 	 *
 	 * Please note that adding a logo space minimizes the error correction capacity of the QR Code and
 	 * created images may become unreadable, especially when printed with a chance to receive damage.
@@ -596,11 +682,25 @@ final class QRMatrix{
 	 *
 	 * @throws \chillerlan\QRCode\Data\QRCodeDataException
 	 */
-	public function setLogoSpace(int $width, int $height, int $startX = null, int $startY = null):QRMatrix{
+	public function setLogoSpace(int $width, ?int $height = null, ?int $startX = null, ?int $startY = null):self{
+		$height ??= $width;
 
-		// for logos we operate in ECC H (30%) only
-		if($this->eclevel !== QRCode::ECC_H){
+		// if width and height happen to be negative or 0 (default value), just return - nothing to do
+		if($width <= 0 || $height <= 0){
+			return $this; // @codeCoverageIgnore
+		}
+
+		// for logos, we operate in ECC H (30%) only
+		if($this->eccLevel->getLevel() !== EccLevel::H){
 			throw new QRCodeDataException('ECC level "H" required to add logo space');
+		}
+
+		// $this->moduleCount includes the quiet zone (if created), we need the QR size here
+		$dimension = $this->version->getDimension();
+
+		// throw if the size exceeds the qrcode size
+		if($width > $dimension || $height > $dimension){
+			throw new QRCodeDataException('logo dimensions exceed matrix size');
 		}
 
 		// we need uneven sizes to center the logo space, adjust if needed
@@ -612,36 +712,29 @@ final class QRMatrix{
 			$height++;
 		}
 
-		// $this->moduleCount includes the quiet zone (if created), we need the QR size here
-		$length = $this->version * 4 + 17;
-
 		// throw if the logo space exceeds the maximum error correction capacity
-		if($width * $height > floor($length * $length * 0.2)){
+		if(($width * $height) > (int)($dimension * $dimension * 0.25)){
 			throw new QRCodeDataException('logo space exceeds the maximum error correction capacity');
 		}
 
-		// quiet zone size
-		$qz    = ($this->moduleCount - $length) / 2;
-		// skip quiet zone and the first 9 rows/columns (finder-, mode-, version- and timing patterns)
-		$start = $qz + 9;
-		// skip quiet zone
-		$end   = $this->moduleCount - $qz;
+		$quietzone = (($this->moduleCount - $dimension) / 2);
+		$end       = ($this->moduleCount - $quietzone);
 
 		// determine start coordinates
-		$startX = ($startX !== null ? $startX : ($length - $width) / 2) + $qz;
-		$startY = ($startY !== null ? $startY : ($length - $height) / 2) + $qz;
+		$startX ??= (($dimension - $width) / 2);
+		$startY ??= (($dimension - $height) / 2);
+		$endX     = ($quietzone + $startX + $width);
+		$endY     = ($quietzone + $startY + $height);
 
 		// clear the space
-		foreach($this->matrix as $y => $row){
-			foreach($row as $x => $val){
+		for($y = ($quietzone + $startY); $y < $endY; $y++){
+			for($x = ($quietzone + $startX); $x < $endX; $x++){
 				// out of bounds, skip
-				if($x < $start || $y < $start ||$x >= $end || $y >= $end){
+				if($x < $quietzone || $y < $quietzone ||$x >= $end || $y >= $end){
 					continue;
 				}
-				// a match
-				if($x >= $startX && $x < ($startX + $width) && $y >= $startY && $y < ($startY + $height)){
-					$this->set($x, $y, false, $this::M_LOGO);
-				}
+
+				$this->set($x, $y, false, $this::M_LOGO);
 			}
 		}
 
@@ -649,100 +742,75 @@ final class QRMatrix{
 	}
 
 	/**
-	 * Maps the binary $data array from QRDataInterface::maskECC() on the matrix,
-	 * masking the data using $maskPattern (ISO/IEC 18004:2000 Section 8.8)
-	 *
-	 * @see \chillerlan\QRCode\Data\QRDataAbstract::maskECC()
-	 *
-	 * @param int[] $data
-	 * @param int   $maskPattern
-	 *
-	 * @return \chillerlan\QRCode\Data\QRMatrix
+	 * Maps the interleaved binary $data on the matrix
 	 */
-	public function mapData(array $data, int $maskPattern):QRMatrix{
-		$this->maskPattern = $maskPattern;
-		$byteCount         = count($data);
-		$y                 = $this->moduleCount - 1;
-		$inc               = -1;
-		$byteIndex         = 0;
-		$bitIndex          = 7;
-		$mask              = $this->getMask($this->maskPattern);
+	public function writeCodewords(BitBuffer $bitBuffer):self{
+		$data      = (new ReedSolomonEncoder($this->version, $this->eccLevel))->interleaveEcBytes($bitBuffer);
+		$byteCount = count($data);
+		$iByte     = 0;
+		$iBit      = 7;
+		$direction = true;
 
-		for($i = $y; $i > 0; $i -= 2){
+		for($i = ($this->moduleCount - 1); $i > 0; $i -= 2){
 
+			// skip vertical alignment pattern
 			if($i === 6){
 				$i--;
 			}
 
-			while(true){
-				for($c = 0; $c < 2; $c++){
-					$x = $i - $c;
+			for($count = 0; $count < $this->moduleCount; $count++){
+				$y = $count;
 
-					if($this->matrix[$y][$x] === $this::M_NULL){
-						$v = false;
+				if($direction){
+					$y = ($this->moduleCount - 1 - $count);
+				}
 
-						if($byteIndex < $byteCount){
-							$v = (($data[$byteIndex] >> $bitIndex) & 1) === 1;
-						}
+				for($col = 0; $col < 2; $col++){
+					$x = ($i - $col);
 
-						if($mask($x, $y) === 0){
-							$v = !$v;
-						}
+					// skip functional patterns
+					if($this->matrix[$y][$x] !== $this::M_NULL){
+						continue;
+					}
 
-						$this->matrix[$y][$x] = $this::M_DATA << ($v ? 8 : 0);
-						$bitIndex--;
+					$this->matrix[$y][$x] = $this::M_DATA;
 
-						if($bitIndex === -1){
-							$byteIndex++;
-							$bitIndex = 7;
-						}
+					if($iByte < $byteCount && (($data[$iByte] >> $iBit--) & 1) === 1){
+						$this->matrix[$y][$x] |= $this::IS_DARK;
+					}
 
+					if($iBit === -1){
+						$iByte++;
+						$iBit = 7;
 					}
 				}
-
-				$y += $inc;
-
-				if($y < 0 || $this->moduleCount <= $y){
-					$y   -=  $inc;
-					$inc  = -$inc;
-
-					break;
-				}
-
 			}
+
+			$direction = !$direction; // switch directions
 		}
 
 		return $this;
 	}
 
 	/**
+	 * Applies/reverses the mask pattern
+	 *
 	 * ISO/IEC 18004:2000 Section 8.8.1
-	 *
-	 * Note that some versions of the QR code standard have had errors in the section about mask patterns.
-	 * The information below has been corrected. (https://www.thonky.com/qr-code-tutorial/mask-patterns)
-	 *
-	 * @see \chillerlan\QRCode\QRMatrix::mapData()
-	 *
-	 * @internal
-	 *
-	 * @throws \chillerlan\QRCode\Data\QRCodeDataException
 	 */
-	protected function getMask(int $maskPattern):Closure{
+	public function mask(MaskPattern $maskPattern):self{
+		$this->maskPattern = $maskPattern;
+		$mask              = $this->maskPattern->getMask();
 
-		if((0b111 & $maskPattern) !== $maskPattern){
-			throw new QRCodeDataException('invalid mask pattern'); // @codeCoverageIgnore
+		foreach($this->matrix as $y => $row){
+			foreach($row as $x => $val){
+				// skip non-data modules
+				if(($val & $this::M_DATA) === $this::M_DATA && $mask($x, $y)){
+					$this->flip($x, $y);
+				}
+			}
 		}
 
-		return [
-			0b000 => fn($x, $y):int => ($x + $y) % 2,
-			0b001 => fn($x, $y):int => $y % 2,
-			0b010 => fn($x, $y):int => $x % 3,
-			0b011 => fn($x, $y):int => ($x + $y) % 3,
-			0b100 => fn($x, $y):int => ((int)($y / 2) + (int)($x / 3)) % 2,
-			0b101 => fn($x, $y):int => (($x * $y) % 2) + (($x * $y) % 3),
-			0b110 => fn($x, $y):int => ((($x * $y) % 2) + (($x * $y) % 3)) % 2,
-			0b111 => fn($x, $y):int => ((($x * $y) % 3) + (($x + $y) % 2)) % 2,
-		][$maskPattern];
+		return $this;
 	}
 
 }
