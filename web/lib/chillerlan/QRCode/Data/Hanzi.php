@@ -1,10 +1,10 @@
 <?php
 /**
- * Class Kanji
+ * Class Hanzi
  *
- * @created      25.11.2015
- * @author       Smiley <smiley@chillerlan.net>
- * @copyright    2015 Smiley
+ * @created      19.11.2020
+ * @author       smiley <smiley@chillerlan.net>
+ * @copyright    2020 smiley
  * @license      MIT
  */
 
@@ -26,30 +26,37 @@ use function sprintf;
 use function strlen;
 
 /**
- * Kanji mode: 13-bit double-byte characters from the Shift-JIS character set
+ * Hanzi (simplified Chinese) mode, GBT18284-2000: 13-bit double-byte characters from the GB2312/GB18030 character set
  *
- * ISO/IEC 18004:2000 Section 8.3.5
- * ISO/IEC 18004:2000 Section 8.4.5
+ * Please note that this is not part of the QR Code specification and may not be supported by all readers (ZXing-based ones do).
  *
- * @see https://en.wikipedia.org/wiki/Shift_JIS#As_defined_in_JIS_X_0208:1997
- * @see http://www.rikai.com/library/kanjitables/kanji_codes.sjis.shtml
- * @see https://gist.github.com/codemasher/d07d3e6e9346c08e7a41b8b978784952
+ * @see https://en.wikipedia.org/wiki/GB_2312
+ * @see http://www.herongyang.com/GB2312/Introduction-of-GB2312.html
+ * @see https://en.wikipedia.org/wiki/GBK_(character_encoding)#Encoding
+ * @see https://gist.github.com/codemasher/91da33c44bfb48a81a6c1426bb8e4338
+ * @see https://github.com/zxing/zxing/blob/dfb06fa33b17a9e68321be151c22846c7b78048f/core/src/main/java/com/google/zxing/qrcode/decoder/DecodedBitStreamParser.java#L172-L209
+ * @see https://www.chinesestandard.net/PDF/English.aspx/GBT18284-2000
  */
-final class Kanji extends QRDataModeAbstract{
+final class Hanzi extends QRDataModeAbstract{
 
 	/**
-	 * possible values: SJIS, SJIS-2004
-	 *
-	 * SJIS-2004 may produce errors in PHP < 8
+	 * possible values: GB2312, GB18030
 	 *
 	 * @var string
 	 */
-	public const ENCODING = 'SJIS';
+	public const ENCODING = 'GB18030';
+
+	/**
+	 * @todo: other subsets???
+	 *
+	 * @var int
+	 */
+	public const GB2312_SUBSET = 0b0001;
 
 	/**
 	 * @inheritDoc
 	 */
-	public const DATAMODE = Mode::KANJI;
+	public const DATAMODE = Mode::HANZI;
 
 	/**
 	 * @inheritDoc
@@ -69,7 +76,7 @@ final class Kanji extends QRDataModeAbstract{
 	 * @inheritDoc
 	 */
 	public static function convertEncoding(string $string):string{
-		mb_detect_order([mb_internal_encoding(), 'UTF-8', 'SJIS', 'SJIS-2004']);
+		mb_detect_order([mb_internal_encoding(), 'UTF-8', 'GB2312', 'GB18030', 'CP936', 'EUC-CN', 'HZ']);
 
 		$detected = mb_detect_encoding($string, null, true);
 
@@ -84,14 +91,14 @@ final class Kanji extends QRDataModeAbstract{
 		$string = mb_convert_encoding($string, self::ENCODING, $detected);
 
 		if(!is_string($string)){
-			throw new QRCodeDataException(sprintf('invalid encoding: %s', $detected));
+			throw new QRCodeDataException('mb_convert_encoding error');
 		}
 
 		return $string;
 	}
 
 	/**
-	 * checks if a string qualifies as SJIS Kanji
+	 * checks if a string qualifies as Hanzi/GB2312
 	 */
 	public static function validateString(string $string):bool{
 
@@ -112,13 +119,13 @@ final class Kanji extends QRDataModeAbstract{
 			$byte1 = ord($string[$i]);
 			$byte2 = ord($string[($i + 1)]);
 
-			// byte 1 unused and vendor ranges
-			if($byte1 < 0x81 || ($byte1 > 0x84 && $byte1 < 0x88) || ($byte1 > 0x9f && $byte1 < 0xe0) ||  $byte1 > 0xea){
+			// byte 1 unused ranges
+			if($byte1 < 0xa1 || ($byte1 > 0xa9 && $byte1 < 0xb0) || $byte1 > 0xf7){
 				return false;
 			}
 
 			// byte 2 unused ranges
-			if($byte2 < 0x40 || $byte2 === 0x7f || $byte2 > 0xfc){
+			if($byte2 < 0xa1 || $byte2 > 0xfe){
 				return false;
 			}
 
@@ -136,6 +143,7 @@ final class Kanji extends QRDataModeAbstract{
 
 		$bitBuffer
 			->put(self::DATAMODE, 4)
+			->put($this::GB2312_SUBSET, 4)
 			->put($this->getCharCount(), $this::getLengthBits($versionNumber))
 		;
 
@@ -144,17 +152,17 @@ final class Kanji extends QRDataModeAbstract{
 		for($i = 0; ($i + 1) < $len; $i += 2){
 			$c = (((0xff & ord($this->data[$i])) << 8) | (0xff & ord($this->data[($i + 1)])));
 
-			if($c >= 0x8140 && $c <= 0x9ffc){
-				$c -= 0x8140;
+			if($c >= 0xa1a1 && $c <= 0xaafe){
+				$c -= 0x0a1a1;
 			}
-			elseif($c >= 0xe040 && $c <= 0xebbf){
-				$c -= 0xc140;
+			elseif($c >= 0xb0a1 && $c <= 0xfafe){
+				$c -= 0x0a6a1;
 			}
 			else{
 				throw new QRCodeDataException(sprintf('illegal char at %d [%d]', ($i + 1), $c));
 			}
 
-			$bitBuffer->put((((($c >> 8) & 0xff) * 0xc0) + ($c & 0xff)), 13);
+			$bitBuffer->put((((($c >> 8) & 0xff) * 0x060) + ($c & 0xff)), 13);
 		}
 
 		if($i < $len){
@@ -165,29 +173,35 @@ final class Kanji extends QRDataModeAbstract{
 	}
 
 	/**
-	 * @inheritDoc
+	 * See specification GBT 18284-2000
 	 *
 	 * @throws \chillerlan\QRCode\Data\QRCodeDataException
 	 */
 	public static function decodeSegment(BitBuffer $bitBuffer, int $versionNumber):string{
+
+		// Hanzi mode contains a subset indicator right after mode indicator
+		if($bitBuffer->read(4) !== self::GB2312_SUBSET){
+			throw new QRCodeDataException('ecpected subset indicator for Hanzi mode');
+		}
+
 		$length = $bitBuffer->read(self::getLengthBits($versionNumber));
 
 		if($bitBuffer->available() < ($length * 13)){
-			throw new QRCodeDataException('not enough bits available');  // @codeCoverageIgnore
+			throw new QRCodeDataException('not enough bits available');
 		}
 
-		// Each character will require 2 bytes. Read the characters as 2-byte pairs and decode as SJIS afterwards
+		// Each character will require 2 bytes. Read the characters as 2-byte pairs and decode as GB2312 afterwards
 		$buffer = [];
 		$offset = 0;
 
 		while($length > 0){
 			// Each 13 bits encodes a 2-byte character
 			$twoBytes          = $bitBuffer->read(13);
-			$assembledTwoBytes = ((intdiv($twoBytes, 0x0c0) << 8) | ($twoBytes % 0x0c0));
+			$assembledTwoBytes = ((intdiv($twoBytes, 0x060) << 8) | ($twoBytes % 0x060));
 
-			$assembledTwoBytes += ($assembledTwoBytes < 0x01f00)
-				? 0x08140  // In the 0x8140 to 0x9FFC range
-				: 0x0c140; // In the 0xE040 to 0xEBBF range
+			$assembledTwoBytes += ($assembledTwoBytes < 0x00a00) // 0x003BF
+				? 0x0a1a1  // In the 0xA1A1 to 0xAAFE range
+				: 0x0a6a1; // In the 0xB0A1 to 0xFAFE range
 
 			$buffer[$offset]       = chr(0xff & ($assembledTwoBytes >> 8));
 			$buffer[($offset + 1)] = chr(0xff & $assembledTwoBytes);

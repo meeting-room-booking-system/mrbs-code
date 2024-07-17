@@ -2,26 +2,26 @@
 /**
  * Class QRFpdf
  *
- * https://github.com/chillerlan/php-qrcode/pull/49
- *
- * @filesource   QRFpdf.php
  * @created      03.06.2020
- * @package      chillerlan\QRCode\Output
  * @author       Maximilian Kresse
- *
  * @license      MIT
+ *
+ * @see https://github.com/chillerlan/php-qrcode/pull/49
  */
 
 namespace chillerlan\QRCode\Output;
 
 use chillerlan\QRCode\Data\QRMatrix;
-use chillerlan\QRCode\QRCodeException;
 use chillerlan\Settings\SettingsContainerInterface;
 use FPDF;
 use function array_values;
 use function class_exists;
 use function count;
+use function intval;
 use function is_array;
+use function is_numeric;
+use function max;
+use function min;
 
 /**
  * QRFpdf output module (requires fpdf)
@@ -31,12 +31,23 @@ use function is_array;
  */
 class QRFpdf extends QROutputAbstract{
 
+	public const MIME_TYPE = 'application/pdf';
+
+	protected FPDF   $fpdf;
+	protected ?array $prevColor = null;
+
+	/**
+	 * QRFpdf constructor.
+	 *
+	 * @throws \chillerlan\QRCode\Output\QRCodeOutputException
+	 */
 	public function __construct(SettingsContainerInterface $options, QRMatrix $matrix){
 
 		if(!class_exists(FPDF::class)){
 			// @codeCoverageIgnoreStart
-			throw new QRCodeException(
-				'The QRFpdf output requires FPDF as dependency but the class "\FPDF" couldn\'t be found.'
+			throw new QRCodeOutputException(
+				'The QRFpdf output requires FPDF (https://github.com/Setasign/FPDF)'.
+				' as dependency but the class "\\FPDF" couldn\'t be found.'
 			);
 			// @codeCoverageIgnoreEnd
 		}
@@ -47,22 +58,68 @@ class QRFpdf extends QROutputAbstract{
 	/**
 	 * @inheritDoc
 	 */
-	protected function setModuleValues():void{
+	public static function moduleValueIsValid($value):bool{
 
-		foreach($this::DEFAULT_MODULE_VALUES as $M_TYPE => $defaultValue){
-			$v = $this->options->moduleValues[$M_TYPE] ?? null;
+		if(!is_array($value) || count($value) < 3){
+			return false;
+		}
 
-			if(!is_array($v) || count($v) < 3){
-				$this->moduleValues[$M_TYPE] = $defaultValue
-					? [0, 0, 0]
-					: [255, 255, 255];
+		// check the first 3 values of the array
+		foreach(array_values($value) as $i => $val){
+
+			if($i > 2){
+				break;
 			}
-			else{
-				$this->moduleValues[$M_TYPE] = array_values($v);
+
+			if(!is_numeric($val)){
+				return false;
 			}
 
 		}
 
+		return true;
+	}
+
+	/**
+	 * @param array $value
+	 *
+	 * @inheritDoc
+	 * @throws \chillerlan\QRCode\Output\QRCodeOutputException
+	 */
+	protected function prepareModuleValue($value):array{
+		$values = [];
+
+		foreach(array_values($value) as $i => $val){
+
+			if($i > 2){
+				break;
+			}
+
+			$values[] = max(0, min(255, intval($val)));
+		}
+
+		if(count($values) !== 3){
+			throw new QRCodeOutputException('invalid color value');
+		}
+
+		return $values;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function getDefaultModuleValue(bool $isDark):array{
+		return ($isDark) ? [0, 0, 0] : [255, 255, 255];
+	}
+
+	/**
+	 * Initializes an FPDF instance
+	 */
+	protected function initFPDF():FPDF{
+		$fpdf =  new FPDF('P', $this->options->fpdfMeasureUnit, $this->getOutputDimensions());
+		$fpdf->AddPage();
+
+		return $fpdf;
 	}
 
 	/**
@@ -70,46 +127,59 @@ class QRFpdf extends QROutputAbstract{
 	 *
 	 * @return string|\FPDF
 	 */
-	public function dump(string $file = null){
-		$file ??= $this->options->cachefile;
+	public function dump(?string $file = null, ?FPDF $fpdf = null){
+		$this->fpdf = ($fpdf ?? $this->initFPDF());
 
-		$fpdf = new FPDF('P', $this->options->fpdfMeasureUnit, [$this->length, $this->length]);
-		$fpdf->AddPage();
+		if($this::moduleValueIsValid($this->options->bgColor)){
+			$bgColor          = $this->prepareModuleValue($this->options->bgColor);
+			[$width, $height] = $this->getOutputDimensions();
 
-		$prevColor = null;
+			/** @phan-suppress-next-line PhanParamTooFewUnpack */
+			$this->fpdf->SetFillColor(...$bgColor);
+			$this->fpdf->Rect(0, 0, $width, $height, 'F');
+		}
 
-		foreach($this->matrix->matrix() as $y => $row){
+		$this->prevColor = null;
 
+		foreach($this->matrix->getMatrix() as $y => $row){
 			foreach($row as $x => $M_TYPE){
-				/** @var int $M_TYPE */
-				$color = $this->moduleValues[$M_TYPE];
-
-				if($prevColor === null || $prevColor !== $color){
-					/** @phan-suppress-next-line PhanParamTooFewUnpack */
-					$fpdf->SetFillColor(...$color);
-					$prevColor = $color;
-				}
-
-				$fpdf->Rect($x * $this->scale, $y * $this->scale, 1 * $this->scale, 1 * $this->scale, 'F');
+				$this->module($x, $y, $M_TYPE);
 			}
-
 		}
 
 		if($this->options->returnResource){
-			return $fpdf;
+			return $this->fpdf;
 		}
 
-		$pdfData = $fpdf->Output('S');
+		$pdfData = $this->fpdf->Output('S');
 
-		if($file !== null){
-			$this->saveToFile($pdfData, $file);
-		}
+		$this->saveToFile($pdfData, $file);
 
-		if($this->options->imageBase64){
-			$pdfData = sprintf('data:application/pdf;base64,%s', base64_encode($pdfData));
+		if($this->options->outputBase64){
+			$pdfData = $this->toBase64DataURI($pdfData);
 		}
 
 		return $pdfData;
+	}
+
+	/**
+	 * Renders a single module
+	 */
+	protected function module(int $x, int $y, int $M_TYPE):void{
+
+		if(!$this->drawLightModules && !$this->matrix->isDark($M_TYPE)){
+			return;
+		}
+
+		$color = $this->getModuleValue($M_TYPE);
+
+		if($color !== null && $color !== $this->prevColor){
+			/** @phan-suppress-next-line PhanParamTooFewUnpack */
+			$this->fpdf->SetFillColor(...$color);
+			$this->prevColor = $color;
+		}
+
+		$this->fpdf->Rect(($x * $this->scale), ($y * $this->scale), $this->scale, $this->scale, 'F');
 	}
 
 }
