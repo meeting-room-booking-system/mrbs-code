@@ -471,10 +471,12 @@ function print_banner(?array $context, $simple=false, $omit_login=false) : void
     echo "</nav>\n";
 
     // Add in a QR code for kiosk mode
-    // (The QR code library requires PHP 7.4 or greater)
+    // (The QR code library requires PHP 7.4 or greater and the mbstring extension)
     if (isset($context['kiosk']) &&
         $kiosk_QR_code &&
-        (version_compare(PHP_VERSION, '7.4') >= 0))
+        (version_compare(PHP_VERSION, '7.4') >= 0) &&
+        //Check for a Mbstring constant rather than using extension_loaded, which is sometimes disabled
+        defined('MB_CASE_UPPER'))
     {
       $url = multisite(url_base() . "/index.php?$query");
       echo '<nav class="qr" title="' . htmlspecialchars($url) . "\">\n";
