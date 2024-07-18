@@ -72,6 +72,16 @@ class SessionPhp extends SessionWithLogin
 
   public function getCurrentUser() : ?User
   {
+    $result = $_SESSION['user'] ?? null;
+
+    // For some unknown reason the integer value 0 is sometimes stored in the session
+    // variable.  It's not clear how this can happen.
+    if (isset($result) && !(is_object($result) && is_a($result, 'MRBS\User')))
+    {
+      trigger_error('$_SESSION["user"] is expected to be a User object, not ' . json_encode($result), E_USER_WARNING);
+      $result = null;
+    }
+
     return $_SESSION['user'] ?? parent::getCurrentUser();
   }
 
