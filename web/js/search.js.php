@@ -51,6 +51,22 @@ $(document).on('page_ready', function() {
     <?php // Get the types and feed those into dataTables ?>
     tableOptions.columnDefs = getTypes(table);
 
+    tableOptions.buttons = [
+      {
+        <?php // The first button is assumed to be the colvis button ?>
+        extend: 'colvis'
+      },
+      {
+        <?php
+        // Add in an extra button to export the results as an iCalendar (.ics) file.
+        ?>
+        text: '<?php echo escape_js(get_vocab('export_as_ics')) ?>',
+        action: function (e, dt, node, config) {
+          alert('Button activated');
+        }
+      }
+    ]
+
     makeDataTable('#search_results', tableOptions, {"leftColumns": 1});
   }
 
