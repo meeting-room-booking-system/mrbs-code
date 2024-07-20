@@ -412,7 +412,7 @@ if (!($is_ajax || $ics))
 
 if ($ics)
 {
-  $filename = 'search.ics';
+  $filename = "$search_filename.ics";
   $content_type = "application/ics; charset=" . get_charset() . "; name=\"$filename\"";
   http_headers(array(
     "Content-Type: $content_type",
