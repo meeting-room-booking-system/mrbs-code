@@ -62,7 +62,8 @@ $(document).on('page_ready', function() {
         ?>
         text: '<?php echo escape_js(get_vocab('export_as_ics')) ?>',
         action: function (e, dt, node, config) {
-          alert('Button activated');
+          var data = $('#search_form').serializeArray();
+          $.post(window.location.href, data);
         }
       }
     ]
