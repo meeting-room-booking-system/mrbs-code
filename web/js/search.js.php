@@ -53,6 +53,7 @@ $(document).on('page_ready', function() {
         text: '<?php echo escape_js(get_vocab('export_as_ics')) ?>',
         action: function (e, dt, node, config) {
           var data = $('#search_form').serializeArray();
+          data.push({name: 'ics', value: 1});
           $.post(window.location.href, data);
         }
       }
