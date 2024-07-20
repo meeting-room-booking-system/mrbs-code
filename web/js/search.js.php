@@ -20,17 +20,7 @@ $(document).on('page_ready', function() {
   // Turn the list of users into a dataTable, provided that we can use
   // an Ajax source.  Otherwise they just get the old style search page
   // with "Next" and "Prev" buttons to get new pages from the server.
-
-  // Add in a hidden input to the search form so that we can tell if we are using DataTables
-  // (which will be if JavaScript is enabled).   We need to know this because when we're using an
-  // Ajax data source we don't want to send the HTML version of the table data.
   ?>
-
-  $('<input>').attr({
-      type: 'hidden',
-      name: 'datatable',
-      value: '1'
-    }).appendTo(searchForm);
 
   if (table.length)
   {
