@@ -412,6 +412,12 @@ if (!($is_ajax || $ics))
 
 if ($ics)
 {
+  $filename = 'search.ics';
+  $content_type = "application/ics; charset=" . get_charset() . "; name=\"$filename\"";
+  http_headers(array(
+    "Content-Type: $content_type",
+    "Content-Disposition: attachment; filename=\"$filename\"")
+  );
   // We set $keep_private to FALSE here because we excluded all private
   // events in the SQL query
   export_icalendar($result, false);
