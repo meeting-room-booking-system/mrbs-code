@@ -393,8 +393,10 @@ class DB_pgsql extends DB
   public function syntax_timestamp_to_unix(string $fieldname) : string
   {
     // A PostgreSQL timestamp can be a float.  We need to round it
-    // to the nearest integer.
-    return " ROUND(DATE_PART('epoch', $fieldname)) ";
+    // to the nearest integer.  Note that ROUND still returns a float type
+    // even though the value is an integer, so we need to cast it as well.
+    // (But the casting may round as well?  If so the round is redundant.)
+    return " CAST(ROUND(DATE_PART('epoch', $fieldname)) AS integer) ";
   }
 
 
