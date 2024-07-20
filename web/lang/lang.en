@@ -439,6 +439,7 @@ $vocab["entry"]              = "Entry";
 $vocab["search_button"]      = "Search";
 $vocab["search_for"]         = "Search for";
 $vocab["from"]               = "From";
+$vocab["export_as_ics"]      = ".ics";
 
 // Used in report.php
 $vocab["report_on"]             = "Report on Meetings";

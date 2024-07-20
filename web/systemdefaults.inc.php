@@ -1850,6 +1850,7 @@ $default_sumby = 'd';
 
 // Default file names
 $report_filename  = "report";
+$search_filename  = "search";
 $summary_filename = "summary";
 
 // CSV format
