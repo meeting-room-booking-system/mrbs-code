@@ -618,6 +618,10 @@ function get_field_custom(string $key, bool $disabled=false)
     // HTML5 does not allow a pattern attribute for the textarea element
     $class = 'FieldTextarea';
   }
+  elseif ($custom_field['type'] == 'date')
+  {
+    $class = 'FieldInputDate';
+  }
   // Otherwise check if it's an integer field
   elseif ((($custom_field['nature'] == 'integer') && ($custom_field['length'] > 2)) ||
           ($custom_field['nature'] == 'decimal'))
