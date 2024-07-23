@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 function print_theme_footer()
@@ -7,4 +8,3 @@ function print_theme_footer()
   echo "</body>\n";
   echo "</html>\n";
 }
- 

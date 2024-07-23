@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 // CLASSIC MRBS 1.2.6 THEME
