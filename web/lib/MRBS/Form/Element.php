@@ -68,7 +68,7 @@ class Element
   }
 
 
-  public function setAttributes(array $attributes)
+  public function setAttributes(array $attributes) : Element
   {
     foreach ($attributes as $name => $value)
     {
@@ -79,7 +79,7 @@ class Element
   }
 
 
-  public function removeAttribute($name)
+  public function removeAttribute(string $name) : Element
   {
     unset($this->attributes[$name]);
     return $this;
@@ -92,7 +92,7 @@ class Element
   }
 
 
-  public function setElement($key, Element $element)
+  public function setElement($key, Element $element) : Element
   {
     $this->elements[$key] = $element;
     return $this;
@@ -105,7 +105,7 @@ class Element
   }
 
 
-  public function setElements(array $elements)
+  public function setElements(array $elements) : Element
   {
     $this->elements = $elements;
     return $this;
