@@ -24,7 +24,7 @@ class Element
   private $text = null;
   private $raw = false;
   private $text_at_start = false;
-  private $elements = array();
+  private $elements = [];
   private $next = null;
   private $prev = null;
 
@@ -99,7 +99,7 @@ class Element
   }
 
 
-  public function getElements()
+  public function getElements() : array
   {
     return $this->elements;
   }
@@ -112,7 +112,7 @@ class Element
   }
 
 
-  public function addElement(?Element $element=null, $key=null)
+  public function addElement(?Element $element=null, $key=null) : Element
   {
     if (isset($element))
     {
@@ -130,7 +130,7 @@ class Element
   }
 
 
-  public function addElements(array $elements)
+  public function addElements(array $elements) : Element
   {
     foreach ($elements as $element)
     {
