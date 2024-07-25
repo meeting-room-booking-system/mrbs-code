@@ -183,7 +183,7 @@ class Element
   }
 
 
-  public function addClass($class)
+  public function addClass($class) : Element
   {
     $classes = $this->getAttribute('class');
 
