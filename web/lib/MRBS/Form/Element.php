@@ -38,7 +38,7 @@ class Element
 
   // If $raw is true then the text will not be put through htmlspecialchars().  Only to
   // be used for trusted text.
-  public function setText($text, bool $text_at_start=false, bool $raw=false)
+  public function setText(string $text, bool $text_at_start=false, bool $raw=false) : Element
   {
     if ($this->self_closing)
     {
@@ -251,7 +251,7 @@ class Element
           $option->setAttribute('value', $key);
         }
 
-        $option->setText($value);
+        $option->setText(strval($value));
 
         if (!$associative)
         {
@@ -310,7 +310,7 @@ class Element
       }
 
       $label = new ElementLabel();
-      $label->setText($value)
+      $label->setText(strval($value))
             ->addElement($checkbox);
 
       $this->addElement($label);
@@ -348,7 +348,7 @@ class Element
         $radio->setAttribute('checked');
       }
       $label = new ElementLabel();
-      $label->setText($value)
+      $label->setText(strval($value))
             ->addElement($radio);
 
       $this->addElement($label);
