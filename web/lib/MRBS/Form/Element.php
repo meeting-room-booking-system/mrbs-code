@@ -140,14 +140,14 @@ class Element
   }
 
 
-  public function removeElement($key)
+  public function removeElement($key) : Element
   {
     unset($this->elements[$key]);
     return $this;
   }
 
 
-  public function next(?Element $element=null)
+  public function next(?Element $element=null) : ?Element
   {
     if (isset($element))
     {
@@ -165,7 +165,7 @@ class Element
   }
 
 
-  public function prev(?Element $element=null)
+  public function prev(?Element $element=null): ?Element
   {
     if (isset($element))
     {
