@@ -15,7 +15,7 @@ class FieldInputCheckboxGroup extends Field
   }
 
 
-  public function addCheckboxOptions(array $options, $name, $checked=null, $associative=null, $disabled=false): Element
+  public function addCheckboxOptions(array $options, string $name, $checked=null, $associative=null, bool $disabled=false): Element
   {
     $element = $this->getControl();
     $element->addCheckboxOptions($options, $name, $checked, $associative, $disabled);

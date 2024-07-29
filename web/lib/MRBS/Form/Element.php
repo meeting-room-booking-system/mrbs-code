@@ -272,7 +272,7 @@ class Element
 
 
   // $checked is either a scalar or an array of keys that are checked
-  public function addCheckboxOptions(array $options, $name, $checked=null, $associative=null, $disabled=false): Element
+  public function addCheckboxOptions(array $options, string $name, $checked=null, $associative=null, bool $disabled=false): Element
   {
     // Trivial case
     if (empty($options))
@@ -320,7 +320,7 @@ class Element
   }
 
 
-  public function addRadioOptions(array $options, $name, $checked=null, $associative=null, $disabled=false): Element
+  public function addRadioOptions(array $options, string $name, $checked=null, $associative=null, bool $disabled=false): Element
   {
     // Trivial case
     if (empty($options))
@@ -358,7 +358,7 @@ class Element
   }
 
 
-  public function render()
+  public function render() : void
   {
     echo $this->toHTML();
   }
@@ -369,7 +369,7 @@ class Element
   // closing tags.   This is useful for structures such as
   // <label><input>text</label> where whitespace after the <input> tag would
   // affect what the browser displays on the screen.
-  public function toHTML($no_whitespace=false): string
+  public function toHTML(bool $no_whitespace=false): string
   {
     $html = "";
 
