@@ -29,7 +29,7 @@ class Element
   private $prev = null;
 
 
-  public function __construct($tag, $self_closing=false)
+  public function __construct(string $tag, bool $self_closing=false)
   {
     $this->tag = $tag;
     $this->self_closing = $self_closing;
@@ -53,7 +53,7 @@ class Element
   }
 
 
-  public function getAttribute($name)
+  public function getAttribute(string $name)
   {
     return (isset($this->attributes[$name])) ? $this->attributes[$name] : null;
   }
@@ -86,13 +86,13 @@ class Element
   }
 
 
-  public function getElement($key)
+  public function getElement(string $key) : Element
   {
     return $this->elements[$key];
   }
 
 
-  public function setElement($key, Element $element) : Element
+  public function setElement(string $key, Element $element) : Element
   {
     $this->elements[$key] = $element;
     return $this;
@@ -112,7 +112,7 @@ class Element
   }
 
 
-  public function addElement(?Element $element=null, $key=null) : Element
+  public function addElement(?Element $element=null, ?string $key=null) : Element
   {
     if (isset($element))
     {
@@ -140,7 +140,7 @@ class Element
   }
 
 
-  public function removeElement($key) : Element
+  public function removeElement(string $key) : Element
   {
     unset($this->elements[$key]);
     return $this;
@@ -183,7 +183,7 @@ class Element
   }
 
 
-  public function addClass($class) : Element
+  public function addClass(string $class) : Element
   {
     $classes = $this->getAttribute('class');
 
@@ -209,7 +209,7 @@ class Element
   //                      true    treat as an associative array
   //                      false   treat as a simple array
   //                      null    auto-detect
-  public function addSelectOptions(array $options, $selected=null, $associative=null)
+  public function addSelectOptions(array $options, $selected=null, ?bool $associative=null) : Element
   {
     // Trivial case
     if (empty($options))
@@ -272,7 +272,7 @@ class Element
 
 
   // $checked is either a scalar or an array of keys that are checked
-  public function addCheckboxOptions(array $options, $name, $checked=null, $associative=null, $disabled=false)
+  public function addCheckboxOptions(array $options, string $name, $checked=null, $associative=null, bool $disabled=false): Element
   {
     // Trivial case
     if (empty($options))
@@ -320,7 +320,7 @@ class Element
   }
 
 
-  public function addRadioOptions(array $options, $name, $checked=null, $associative=null, $disabled=false)
+  public function addRadioOptions(array $options, string $name, $checked=null, $associative=null, bool $disabled=false): Element
   {
     // Trivial case
     if (empty($options))
@@ -358,7 +358,7 @@ class Element
   }
 
 
-  public function render()
+  public function render() : void
   {
     echo $this->toHTML();
   }
@@ -369,7 +369,7 @@ class Element
   // closing tags.   This is useful for structures such as
   // <label><input>text</label> where whitespace after the <input> tag would
   // affect what the browser displays on the screen.
-  public function toHTML($no_whitespace=false)
+  public function toHTML(bool $no_whitespace=false): string
   {
     $html = "";
 
