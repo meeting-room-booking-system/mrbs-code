@@ -16,6 +16,8 @@ namespace MRBS\Form;
 // If structures like these are required ten they can usually be achieved by wrapping the raw
 // text nodes in a <span>.
 
+use function MRBS\is_assoc;
+
 class Element
 {
   private $tag = null;
@@ -219,7 +221,7 @@ class Element
 
     if (!isset($associative))
     {
-      $associative = \MRBS\is_assoc($options);
+      $associative = is_assoc($options);
     }
 
     // It's possible to have multiple options selected
@@ -287,7 +289,7 @@ class Element
 
     if (!isset($associative))
     {
-      $associative = \MRBS\is_assoc($options);
+      $associative = is_assoc($options);
     }
 
     foreach ($options as $key => $value)
@@ -330,7 +332,7 @@ class Element
 
     if (!isset($associative))
     {
-      $associative = \MRBS\is_assoc($options);
+      $associative = is_assoc($options);
     }
 
     foreach ($options as $key => $value)
