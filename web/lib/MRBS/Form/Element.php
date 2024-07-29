@@ -209,7 +209,7 @@ class Element
   //                      true    treat as an associative array
   //                      false   treat as a simple array
   //                      null    auto-detect
-  public function addSelectOptions(array $options, $selected=null, $associative=null)
+  public function addSelectOptions(array $options, $selected=null, $associative=null) : Element
   {
     // Trivial case
     if (empty($options))
@@ -272,7 +272,7 @@ class Element
 
 
   // $checked is either a scalar or an array of keys that are checked
-  public function addCheckboxOptions(array $options, $name, $checked=null, $associative=null, $disabled=false)
+  public function addCheckboxOptions(array $options, $name, $checked=null, $associative=null, $disabled=false): Element
   {
     // Trivial case
     if (empty($options))
@@ -320,7 +320,7 @@ class Element
   }
 
 
-  public function addRadioOptions(array $options, $name, $checked=null, $associative=null, $disabled=false)
+  public function addRadioOptions(array $options, $name, $checked=null, $associative=null, $disabled=false): Element
   {
     // Trivial case
     if (empty($options))
@@ -369,7 +369,7 @@ class Element
   // closing tags.   This is useful for structures such as
   // <label><input>text</label> where whitespace after the <input> tag would
   // affect what the browser displays on the screen.
-  public function toHTML($no_whitespace=false)
+  public function toHTML($no_whitespace=false): string
   {
     $html = "";
 
