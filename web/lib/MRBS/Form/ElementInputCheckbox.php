@@ -12,7 +12,7 @@ class ElementInputCheckbox extends ElementInput
   }
 
 
-  public function setChecked($checked=true)
+  public function setChecked($checked=true): ElementInputCheckbox
   {
     if ($checked)
     {

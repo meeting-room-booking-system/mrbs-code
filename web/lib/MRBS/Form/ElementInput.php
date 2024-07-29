@@ -7,7 +7,7 @@ abstract class ElementInput extends Element
 
   public function __construct()
   {
-    parent::__construct('input', $self_closing=true);
+    parent::__construct('input', true);
     $this->setAttribute('type', 'text');
   }
 
