@@ -76,7 +76,7 @@ abstract class Session
     // We don't want the session garbage collector to delete the session before it has expired
     if ($lifetime !== 0)
     {
-
+      assert(version_compare(MRBS_MIN_PHP_VERSION, '8.1') < 0, 'The strval() in the line below is no longer required.');
       ini_set('session.gc_maxlifetime', strval(max(ini_get('session.gc_maxlifetime'), $lifetime)));
     }
 
