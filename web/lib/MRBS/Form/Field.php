@@ -25,27 +25,27 @@ abstract class Field extends Element
   }
 
 
-  public function addControl(Element $element)
+  public function addControl(Element $element): Field
   {
     $this->addElement($element, 'control');
     return $this;
   }
 
 
-  public function getControl()
+  public function getControl(): Element
   {
     return $this->getElement('control');
   }
 
 
-  public function setControl(Element $element)
+  public function setControl(Element $element): Field
   {
     $this->setElement('control', $element);
     return $this;
   }
 
 
-  public function removeControl()
+  public function removeControl(): Field
   {
     $this->removeElement('control');
     return $this;
@@ -54,7 +54,7 @@ abstract class Field extends Element
 
   // If $raw is true then the text will not be put through htmlspecialchars().  Only to
   // be used for trusted text.
-  public function setLabel($text, bool $text_at_start=false, bool $raw=false)
+  public function setLabel($text, bool $text_at_start=false, bool $raw=false): Field
   {
     $label = $this->getElement('label');
     $label->setText($text, $text_at_start, $raw);
@@ -68,7 +68,7 @@ abstract class Field extends Element
   // using the 'id' if one is given, or if not, by assuming that the 'id'
   // is the same as the 'name' (unless $add_id is FALSE, in which case an id
   // won't be added).
-  public function setControlAttribute($name, $value=true, $add_id=true)
+  public function setControlAttribute(string $name, $value=true, bool $add_id=true): Field
   {
     $elements = $this->getElements();
 
@@ -94,7 +94,7 @@ abstract class Field extends Element
 
 
   // Sets the attributes for the field control.
-  public function setControlAttributes(array $attributes, $add_id=true)
+  public function setControlAttributes(array $attributes, bool $add_id=true): Field
   {
     foreach ($attributes as $key => $value)
     {
@@ -104,7 +104,7 @@ abstract class Field extends Element
   }
 
 
-  public function addControlClass($class)
+  public function addControlClass(string $class): Field
   {
     $elements = $this->getElements();
     $elements['control']->addClass($class);
@@ -113,7 +113,7 @@ abstract class Field extends Element
   }
 
 
-  public function addLabelClass($class)
+  public function addLabelClass(string $class): Field
   {
     $elements = $this->getElements();
     $elements['label']->addClass($class);
@@ -122,7 +122,7 @@ abstract class Field extends Element
   }
 
 
-  public function setControlChecked($checked=true)
+  public function setControlChecked($checked=true): Field
   {
     $elements = $this->getElements();
     $elements['control']->setChecked($checked);
@@ -131,7 +131,7 @@ abstract class Field extends Element
   }
 
 
-  public function setControlText($text)
+  public function setControlText(string $text): Field
   {
     $elements = $this->getElements();
     $elements['control']->setText($text);
@@ -140,7 +140,7 @@ abstract class Field extends Element
   }
 
 
-  public function addControlElement(Element $element)
+  public function addControlElement(Element $element): Field
   {
     $elements = $this->getElements();
     $elements['control']->addElement($element);
@@ -149,7 +149,7 @@ abstract class Field extends Element
   }
 
 
-  public function addLabelElement(Element $element)
+  public function addLabelElement(Element $element): Field
   {
     $elements = $this->getElements();
     $elements['label']->addElement($element);
@@ -158,7 +158,7 @@ abstract class Field extends Element
   }
 
 
-  public function setLabelAttribute($name, $value=true)
+  public function setLabelAttribute(string $name, $value=true): Field
   {
     $elements = $this->getElements();
     $elements['label']->setAttribute($name, $value);
@@ -169,8 +169,8 @@ abstract class Field extends Element
 
   // Sets the attributes for the field label.  No need to do
   // the 'for' attribute, as that is done automatically when you
-  // set the 'id' in the control attrributes.
-  public function setLabelAttributes(array $attributes)
+  // set the 'id' in the control attributes.
+  public function setLabelAttributes(array $attributes): Field
   {
     $elements = $this->getElements();
 
@@ -184,7 +184,7 @@ abstract class Field extends Element
   }
 
 
-  public function removeLabelAttribute($name)
+  public function removeLabelAttribute(string $name): Field
   {
     $elements = $this->getElements();
     $elements['label']->removeAttribute($name);
