@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace MRBS;
 
 use MRBS\Auth\AuthFactory;
+use MRBS\Session\Session;
 use MRBS\Session\SessionFactory;
 
 
@@ -23,7 +24,7 @@ function auth()
 
 
 // Convenience wrapper function to provide access to a Session object
-function session()
+function session() : Session
 {
   global $auth;
 
@@ -179,7 +180,7 @@ function get_page_level($page)
  *   false - The user does not have the required access
  *   true  - The user has the required access
  */
-function getAuthorised($level, $returl)
+function getAuthorised($level, $returl) : bool
 {
   // If the minimum level is zero (or not set) then they are
   // authorised, whoever they are
@@ -382,7 +383,7 @@ function showAccessDenied($view=null, $view_all=null, $year=null, $month=null, $
 
 
 // Checks whether the current user has admin rights
-function is_admin()
+function is_admin() : bool
 {
   $mrbs_user = session()->getCurrentUser();
   return (isset($mrbs_user) && ($mrbs_user->isAdmin()));
@@ -401,7 +402,7 @@ function is_admin()
 //
 // Returns:  TRUE if the user is allowed has booking admin rights for
 //           the room(s); otherwise FALSE
-function is_book_admin($room_ids=null, $all=true)
+function is_book_admin($room_ids=null, $all=true) : bool
 {
   // You need to be logged in in order to be a booking admin
   $mrbs_user = session()->getCurrentUser();
@@ -468,7 +469,7 @@ function is_book_admin($room_ids=null, $all=true)
 
 
 // Checks whether the current user has user editing rights
-function is_user_admin()
+function is_user_admin() : bool
 {
   global $min_user_editing_level;
 
