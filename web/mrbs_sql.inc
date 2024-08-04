@@ -1912,7 +1912,8 @@ function get_booking_info(int $id, bool $series, bool $silent=false)
 
   $row['area_id'] = intval($row['area_id']); // Necessary for some databases
 
-  // Turn the last_updated column into an int (PostgreSQL will return a float)
+  // Turn the last_updated column into an int (some MySQL drivers will return a string,
+  // and it won't have been caught by row_cast_columns as it's a derived result).
   $row['last_updated'] = intval($row['last_updated']);
 
   // Fix a problem in earlier versions of MRBS that caused the end time for periods bookings
