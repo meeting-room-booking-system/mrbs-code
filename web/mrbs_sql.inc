@@ -1102,6 +1102,7 @@ function mrbsDelEntry(int $id, bool $series, bool $all)
 
   while (false !== ($row = $res->next_row_keyed()))
   {
+    row_cast_columns($row, 'entry');
     unpack_status($row);
 
     if(!getWritable($row['create_by'], $room_id))
