@@ -727,7 +727,7 @@ class AuthLdap extends Auth
     $res = ldap_search($ldap, $base_dn, $filter, array_values_recursive($attributes));
     $t = self::getProfileClock();
 
-    if ($res == false)
+    if ($res === false)
     {
       self::debug("ldap_search failed: " . self::ldapError($ldap));
       return false;
