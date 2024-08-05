@@ -2051,7 +2051,7 @@ function get_booking_info(int $id, bool $series, bool $silent=false)
 
 // Gets the id of an area with a given name.
 // Returns NULL or the id.
-function get_area_id($area_name)
+function get_area_id(string $area_name) : ?int
 {
   $sql = "SELECT id
             FROM " . _tbl('area') . "
@@ -2060,7 +2060,7 @@ function get_area_id($area_name)
 
   $res = db()->query($sql, array($area_name));
 
-  return ($res->count() == 0) ? null : $res->next_row()[0];
+  return ($res->count() == 0) ? null : intval($res->next_row()[0]);
 }
 
 
