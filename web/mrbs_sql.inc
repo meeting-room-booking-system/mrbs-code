@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 use MRBS\ICalendar\RFC5545;
@@ -1915,6 +1916,7 @@ function get_booking_info(int $id, bool $series, bool $silent=false)
   }
 
   $row['area_id'] = intval($row['area_id']); // Necessary for some databases
+  $row['enable_periods'] = boolval($row['enable_periods']);
 
   // Turn the last_updated column into an int (some MySQL drivers will return a string,
   // and it won't have been caught by row_cast_columns as it's a derived result).
