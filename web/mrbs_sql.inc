@@ -2113,7 +2113,7 @@ function get_area_names(bool $all=false) : array
 
 // Get all the area details for $area_id.
 // Returns NULL if $area_id does not exist.
-function get_area_details($area_id)
+function get_area_details(int $area_id) : ?array
 {
   $sql = "SELECT *
             FROM " . _tbl('area') . "
