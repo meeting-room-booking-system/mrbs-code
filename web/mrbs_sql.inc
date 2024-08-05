@@ -2067,7 +2067,7 @@ function get_area_id(string $area_name) : ?int
 // Get the name of the area with id $id.   If $all is set to TRUE then all areas
 // are searched, otherwise just those which have not been disabled
 // Returns FALSE if there is an error, NULL if the id does not exist
-function get_area_name($id, $all=FALSE)
+function get_area_name(int $id, bool $all=false) : ?string
 {
   $id = (int)$id;
 
