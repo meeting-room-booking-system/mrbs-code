@@ -2161,7 +2161,7 @@ function get_room_name(int $room_id, bool $all=false) : ?string
 // Gets an array of room names in an area indexed by room id.
 // If $all=TRUE then all areas are returned, otherwise just the ones that
 // are not disabled
-function get_room_names($area_id, $all=FALSE)
+function get_room_names(int $area_id, bool $all=false) : array
 {
   $rooms = array();
 
