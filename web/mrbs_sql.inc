@@ -2122,7 +2122,15 @@ function get_area_details(int $area_id) : ?array
 
   $res = db()->query($sql, array($area_id));
 
-  return ($res->count() == 0) ? null : $res->next_row_keyed();
+  if ($res->count() == 0)
+  {
+    return null;
+  }
+
+  $row = $res->next_row_keyed();
+  row_cast_columns($row, 'area');
+
+  return $row;
 }
 
 
