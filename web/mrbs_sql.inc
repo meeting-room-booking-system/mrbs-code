@@ -1154,7 +1154,7 @@ function mrbsDelEntry(int $id, bool $series, bool $all)
  *   0        - An error occurred while inserting the entry
  *   non-zero - The entry's ID
  */
-function mrbsCreateEntry(string $table, array $data)
+function mrbsCreateEntry(string $table, array $data) : int
 {
   global $standard_fields;
 
@@ -1351,7 +1351,7 @@ function mrbsCreateEntry(string $table, array $data)
  *   0        - An error occurred while inserting the entry
  *   non-zero - The entry's ID
  */
-function mrbsCreateSingleEntry(array $data)
+function mrbsCreateSingleEntry(array $data) : int
 {
   // Make sure that any entry is of a positive duration.
   // This is to trap potential negative duration created when DST comes
@@ -2437,7 +2437,7 @@ function mrbsAddRoom($name, $area, &$error, $description='', $capacity='', $room
 }
 
 
-function update_participants(int $old_id, $new_id)
+function update_participants(int $old_id, int $new_id) : bool
 {
   $sql = "UPDATE " . _tbl('participants') . "
              SET entry_id=:new_id
