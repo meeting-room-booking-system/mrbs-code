@@ -2137,7 +2137,7 @@ function get_area_details(int $area_id) : ?array
 // Get the name of the room with id $room_id.   If $all is set to TRUE then all rooms
 // are searched, otherwise just those which have not been disabled
 // Returns NULL if the id does not exist
-function get_room_name($room_id, $all=FALSE)
+function get_room_name(int $room_id, bool $all=false) : ?string
 {
   $room_id = (int)$room_id;
 
