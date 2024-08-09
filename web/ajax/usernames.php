@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 // Returns an object containing all the usernames available for use by the Select2

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 // An Ajax page to update the current page in the server. Called by the client when it switches URL

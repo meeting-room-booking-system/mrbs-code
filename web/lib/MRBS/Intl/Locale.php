@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS\Intl;
 
 // A partial emulation of the \Locale class.   We use the emulation because
