@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS\Intl;
 
 // A class which is just a wrapper for the standard PHP class if it's available; otherwise it
