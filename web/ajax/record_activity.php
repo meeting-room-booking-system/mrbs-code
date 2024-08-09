@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 // An Ajax function to record user activity on the client side.   (If there is some activity then
