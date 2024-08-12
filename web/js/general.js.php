@@ -455,6 +455,20 @@ $(document).on('page_ready', function() {
       }
     }
   });
+
+  <?php
+  // There is a bug in some versions of Safari that means that the value
+  // of a form input field of type 'email' is not shown when the multiple
+  // attribute is set.  To get round this we convert those fields to type
+  // 'text', which forces the value to be displayed, and then convert them
+  // back again to 'email'.  See GitHub Issues #3716 and #3717.  See also
+  // https://stackoverflow.com/questions/78403943/safari-issues-with-input-type-email-and-multiple-attribute
+  // This workaround can be removed once Safari has been fixed.
+  ?>
+  $('input[type="email"][multiple]').each(function() {
+    $(this).attr('type', 'text').attr('type', 'email');
+  });
+
 });
 
 <?php // We define our own page ready event so that we can trigger it after an Ajax load ?>
