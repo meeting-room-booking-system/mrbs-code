@@ -1588,6 +1588,7 @@ $res = db()->query($sql);
 
 while (false !== ($row = $res->next_row_keyed()))
 {
+  row_cast_columns($row, 'room');
   // Only use rooms which are visible and for which the user has write access
   if (getWritable($create_by, $row['id']) && is_visible($row['id']))
   {
