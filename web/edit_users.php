@@ -376,8 +376,7 @@ function get_field_email($params, $disabled=false)
   $field->setLabel($params['label'])
         ->setControlAttributes(array('name'     => $params['name'],
                                      'value'    => $params['value'],
-                                     'disabled' => $disabled,
-                                     'multiple' => true));
+                                     'disabled' => $disabled));
 
   if (null !== ($maxlength = maxlength('users.email')))
   {
