@@ -135,6 +135,7 @@ function mrbsCheckFree(array $booking, ?int $ignore_entry_id=null, ?int $ignore_
 
   while (false !== ($row = $res->next_row_keyed()))
   {
+    row_cast_columns($row, 'entry');
     unpack_status($row);
     $existing_entry_interval = new EntryInterval($row['start_time'], $row['end_time'], $enable_periods);
 
