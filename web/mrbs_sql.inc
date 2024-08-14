@@ -1082,6 +1082,7 @@ function mrbsDelEntry(int $id, bool $series, bool $all)
     return FALSE;
   }
   $row = $res->next_row_keyed();
+  row_cast_columns($row, 'entry');
   $repeat_id = $row['repeat_id'];
   $room_id = $row['room_id'];
 
