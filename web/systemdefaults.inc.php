@@ -806,6 +806,10 @@ $show_plus_link = false;   // Change to true to always show the (+) link as in
 // each name when needed.
 $get_display_names_all_at_once = true;
 
+// HTML tags that are allowed to be used in the message above the calendar.
+// This should be an array of tags, eg ['a', 'span'].
+$message_allowed_tags = [];
+
 // PRIVATE BOOKINGS SETTINGS
 
 // Note:  some settings for private bookings can be set on a per-area basis and
@@ -839,7 +843,6 @@ $reminder_interval = 60*60*24*2;  // 2 working days
 
 // Days of the week that are working days (Sunday = 0, etc.)
 $working_days = array(1,2,3,4,5);  // Mon-Fri
-
 
 // SETTINGS FOR BOOKING CONFIRMATION
 

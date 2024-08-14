@@ -292,7 +292,7 @@ if (is_book_admin())
       $text = (empty($until_string)) ? get_vocab("this_message_from", $from_string) : get_vocab("this_message_from_until", $from_string, $until_string);
     }
     echo '<p>' . htmlspecialchars($text) . "</p>\n";
-    echo '<p class="message_top">' . htmlspecialchars($message->getText()) . "</p>\n";
+    echo '<p class="message_top">' . $message->getEscapedText() . "</p>\n";
   }
   else
   {
