@@ -398,7 +398,7 @@ function message_html() : string
 
   if ($message->hasSomethingToDisplay())
   {
-    return '<p class="message_top">' . htmlspecialchars($message->getText()) . "</p>\n";
+    return '<p class="message_top">' . $message->getEscapedText() . "</p>\n";
   }
 
   return '';

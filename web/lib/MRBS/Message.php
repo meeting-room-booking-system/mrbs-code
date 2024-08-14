@@ -84,6 +84,18 @@ class Message
   }
 
 
+  public function getEscapedText() : string
+  {
+    global $message_allowed_tags;
+
+    if (empty($message_allowed_tags))
+    {
+      return htmlspecialchars($this->text);
+    }
+
+    return self::stripTags($this->text, $message_allowed_tags);
+  }
+
   // Gets the message end date
   public function getFromDate() : string
   {
@@ -270,4 +282,24 @@ class Message
     $this->until = $date_time_string;
   }
 
+
+  // Wrapper for PHP's strip_tags() function which converts $allowed tags to a string
+  // if PHP < 7.4.0
+  private static function stripTags(string $string, array $allowed_tags) : string
+  {
+    assert(version_compare(MRBS_MIN_PHP_VERSION, '7.4.0', '<'), "This method is now redundant.");
+
+    if (version_compare(PHP_VERSION, '7.4.0', '>='))
+    {
+      return strip_tags($string, $allowed_tags);
+    }
+
+    $tag_string = '';
+    foreach ($allowed_tags as $tag)
+    {
+      $tag_string .= "<$tag>";
+    }
+
+    return strip_tags($string, $tag_string);
+  }
 }
