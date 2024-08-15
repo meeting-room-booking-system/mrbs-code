@@ -1023,7 +1023,7 @@ function report_row(&$rows, $data)
         }
         break;
     }
-    $value = escape($value ?? '');
+    $value = escape(strval($value ?? ''));
 
     // For HTML output we take special action for some fields
     if ($output_format == OUTPUT_HTML)
