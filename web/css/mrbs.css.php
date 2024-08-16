@@ -935,18 +935,18 @@ table.dwm_main {
   background-clip: padding-box; <?php // to keep Edge happy when using position: sticky ?>
 }
 
-.style_weekends .dwm_main thead th.weekend,
-.style_weekends .dwm_main tfoot th.weekend {
+.style_weekends .dwm_main thead th.weekend:not(.highlight),
+.style_weekends .dwm_main tfoot th.weekend:not(.highlight) {
   background-color: <?php echo $row_even_color_weekend ?>
 }
 
-.dwm_main thead th.holiday,
-.dwm_main tfoot th.holiday {
+.dwm_main thead th.holiday:not(.highlight),
+.dwm_main tfoot th.holiday:not(.highlight) {
   background-color: <?php echo $row_even_color_holiday ?>
 }
 
-.style_weekends .dwm_main thead th.weekend.holiday,
-.style_weekends .dwm_main tfoot th.weekend.holiday {
+.style_weekends .dwm_main thead th.weekend.holiday:not(.highlight),
+.style_weekends .dwm_main tfoot th.weekend.holiday:not(.highlight) {
   background-color: <?php echo $row_even_color_weekend_holiday ?>
 }
 
@@ -1416,11 +1416,13 @@ tbody th a:hover {
   background-color: <?php echo $row_highlight_color ?>;
 }
 
-.dwm_main tbody tr:hover th {
+.dwm_main tbody tr:hover th,
+.dwm_main th.highlight {
   background-color: <?php echo $row_highlight_color ?>;
 }
 
-.dwm_main tbody tr:hover th a {
+.dwm_main tbody tr:hover th a,
+.dwm_main th.highlight a {
   color: #ffffff;
 }
 

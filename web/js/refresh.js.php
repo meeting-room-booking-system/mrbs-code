@@ -582,6 +582,18 @@ $(document).on('page_ready', function() {
       var bottom = $('.dwm_main thead tr:first th:first').outerHeight();
       $('.dwm_main thead tr:nth-child(2) th').css('top', bottom + 'px');
 
+      <?php
+      // Highlight the column header cells in the table and foot.
+      // TODO: this only works when the mouse is moved; the highlighting is lost when the
+      // TODO: page is automatically refreshed.
+      ?>
+      $('table.all_rooms td').on('mouseenter mouseleave', function(event) {
+        $('table.all_rooms')
+          .find('thead, tfoot')
+          .find('th:nth-child(' + ($(this).index() + 1) + ')')
+          .toggleClass('highlight', (event.type === 'mouseenter'));
+      });
+
     }).trigger('tableload');
 
   <?php
