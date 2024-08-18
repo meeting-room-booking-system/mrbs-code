@@ -102,7 +102,7 @@ function get_custom_fields($data)
         $field->setLabel($label)
               ->setControlAttributes(array('name'     => $name,
                                            'disabled' => $disabled))
-              ->setControlText($value);
+              ->setControlText($value ?? '');
       }
       // Otherwise output a text input
       else
