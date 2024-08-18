@@ -102,7 +102,7 @@ function get_custom_fields(Room $room)
         $field->setLabel($label)
               ->setControlAttributes(array('name'     => $name,
                                            'disabled' => $disabled))
-              ->setControlText($value);
+              ->setControlText($value ?? '');
       }
       // Otherwise output a text input
       else
@@ -245,7 +245,7 @@ function get_fieldset_general(Room $room) : ElementFieldset
     $field->setLabel(get_vocab('custom_html'))
           ->setLabelAttribute('title', get_vocab('custom_html_note'))
           ->setControlAttribute('name', 'custom_html')
-          ->setControlText($room->custom_html);
+          ->setControlText($room->custom_html ?? '');
     $fieldset->addElement($field);
   }
 
