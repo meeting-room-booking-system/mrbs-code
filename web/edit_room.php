@@ -245,7 +245,7 @@ function get_fieldset_general(array $data) : ElementFieldset
     $field->setLabel(get_vocab('custom_html'))
           ->setLabelAttribute('title', get_vocab('custom_html_note'))
           ->setControlAttribute('name', 'custom_html')
-          ->setControlText($data['custom_html']);
+          ->setControlText($data['custom_html'] ?? '');
     $fieldset->addElement($field);
   }
 
