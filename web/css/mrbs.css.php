@@ -279,10 +279,6 @@ tr:nth-child(even) td.new.holiday,
   background-color: <?php echo $row_even_color_weekend_holiday ?>;
 }
 
-.all_rooms td {
-  height: 100%; <?php // for Firefox ?>
-}
-
 .dwm_main.all_rooms td a {
   display: flex;
   height: 100%;
