@@ -966,7 +966,7 @@ function adjustSlotSelectors()
       oldEndValue = parseInt(endSelect.data('previous'), 10);
 
   var nbsp = '\u00A0',
-      startValue, endValue, lastValue, optionClone;
+      startValue, endValue, firstValue, lastValue, optionClone;
 
   if (startSelect.length === 0)
   {
@@ -1061,7 +1061,7 @@ function adjustSlotSelectors()
     startValue = parseInt(startSelect.val(), 10);
     endValue = parseInt(endSelect.val(), 10);
     <?php
-    // If the start value has changed then we adjust the endvalue
+    // If the start value has changed then we adjust the end value
     // to keep the duration the same.  (If the end value has changed
     // then the duration will be changed when we recalculate durations below)
     ?>
@@ -1197,8 +1197,26 @@ function adjustSlotSelectors()
       }
     });
 
+  firstValue = parseInt(endSelect.find('option').first().val(), 10);
   lastValue = parseInt(endSelect.find('option').last().val(), 10);
-  endValue = isNaN(endValue) ? lastValue : Math.min(endValue, lastValue);
+  if (isNaN(endValue)) <?php // Is this possible? ?>
+  {
+    endValue = lastValue;
+  }
+  else
+  {
+    <?php
+    // We constrain the end value to stay on the same day, but it might be
+    // better to move the end date selector back one day if the new end value
+    // would be before the beginning of the day, and similarly forward one day
+    // if it would be after the end of the day.  This is what some other calendar
+    // systems, eg Outlook, do, but it gets a little more complicated when the
+    // booking day is less than 24 hours, as it is by default in MRBS.
+    ?>
+    endValue = Math.max(endValue, firstValue);
+    endValue = Math.min(endValue, lastValue);
+  }
+
   endSelect.val(endValue);
   endSelect.data('current', endValue);
 
