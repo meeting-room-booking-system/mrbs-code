@@ -1,209 +1,698 @@
-<?php // -*-mode: PHP; coding:utf-8;-*-
+<?php // -*-mode: PHP; codificació: utf-8;-*-
 
-// This file contains PHP code that specifies language specific strings
-// The default strings come from lang.en, and anything in a locale 
-// specific file will overwrite the default. This is a Catalan file.
+// FBM: Traduït amb google translator
+// Aquest fitxer conté codi PHP que especifica cadenes específiques d'idioma
+// Les cadenes per defecte provenen de lang.en, i qualsevol cosa en una configuració regional
+// un fitxer específic sobreescriurà el per defecte. Aquest és un fitxer anglès dels EUA/Regne Unit.
 //
 //
-//
-//
-// This file is PHP code. Treat it as such.
+// Aquest fitxer és codi PHP. Tractar-ho com a tal.
 
-// Used in style.inc
-$vocab["mrbs"]               = "Reserva de sales";
+// S'utilitza a style.inc
+$vocab["mrbs"] = "Sistema de reserva de sales de reunions";
+$vocab["mrbs_abbr"] = "MRBS";
 
-// Used in functions.inc
-$vocab["report"]             = "Informes";
-$vocab["admin"]              = "Administració";
-$vocab["help"]               = "Ajuda";
-$vocab["search"]             = "Cerca";
+// S'utilitza a functions.inc
+$vocab["report"] = "Informe";
+$vocab["admin"] = "Administrador";
+$vocab["help"] = "Ajuda";
+$vocab["search"] = "Cerca";
+$vocab["outstanding"] = "%d reserves pendents";
 
-// Used in index.php
-$vocab["bookingsfor"]        = "Reserves per a";
-$vocab["bookingsforpost"]    = ""; // Goes after the date
-$vocab["areas"]              = "Famílies";
-$vocab["daybefore"]          = "Dia anterior";
-$vocab["dayafter"]           = "Dia següent";
-$vocab["gototoday"]          = "Dia actual";
-$vocab["goto"]               = "Anar a";
-$vocab["nav_day"]            = "Dia";
-$vocab["nav_week"]           = "Setmana";
-$vocab["nav_month"]          = "Mes";
-$vocab["highlight_line"]     = "Destacar aquesta línia";
-$vocab["click_to_reserve"]   = "Clicar per fer una reserva.";
-$vocab["weekbefore"]         = "Anar a la setmana anterior";
-$vocab["weekafter"]          = "Anar a la setmana posterior";
-$vocab["gotothisweek"]       = "Anar a la setmana actual";
-$vocab["monthbefore"]        = "Anar al mes anterior";
-$vocab["monthafter"]         = "Anar al mes posterior";
-$vocab["gotothismonth"]      = "Anar al mes actual";
-$vocab["no_rooms_for_area"]  = "No hi ha recursos definits per aquest edifici";
+// S'utilitza a index.php
+$vocab["bookingsfor"] = "Reserves per a";
+$vocab["bookingsforpost"] = ""; // Va després de la data
+$vocab["areas"] = "Àrees";
+$vocab["today"] = "Avui";
+$vocab["daybefore"] = "Anar al dia abans";
+$vocab["dayafter"] = "Vés al dia després";
+$vocab["gototoday"] = "Anar a avui";
+$vocab["goto"] = "Vés a";
+$vocab["nav_day"] = "Dia";
+$vocab["nav_week"] = "Setmana";
+$vocab["nav_month"] = "Mes";
+$vocab["highlight_line"] = "Resalta aquesta línia";
+$vocab["click_to_reserve"] = "Feu clic a la cel·la per fer una reserva.";
+$vocab["timezone"] = "Fs horària";
+$vocab["weekbefore"] = "Vés a la setmana abans";
+$vocab["weekafter"] = "Vés a la setmana després";
+$vocab["gotothisweek"] = "Vés a aquesta setmana";
+$vocab["monthbefore"] = "Anar al mes abans";
+$vocab["monthafter"] = "Vés al mes després";
+$vocab["gotothismonth"] = "Anar a aquest mes";
+$vocab["no_rooms_for_area"] = "No hi ha habitacions definides per a aquesta àrea";
+$vocab["loading"] = "S'està carregant";
+$vocab["saving"] = "Desant";
+$vocab["week_number"] = "Setmana %s | ";
+$vocab["create_new_booking"] = "Crea una nova reserva";
+$vocab["select_area"] = "Selecciona l'àrea";
+$vocab["select_room"] = "Selecciona habitació";
+$vocab["all"] = "<tot>";
+$vocab["registration_level_limited"] = '[%1$d/%2$d]';
+$vocab["registration_level_limited_with_names"] = '[%1$d/%2$d: %3$s]';
+$vocab["registration_level_unlimited"] = '[%1$d]';
+$vocab["registration_level_unlimited_with_names"] = '[%1$d: %2$s]';
+$vocab["exit_kiosk_mode_confirm"] = "Surt del mode quiosc?";
+$vocab["close"] = "Tancar";
+$vocab["ok"] = "D'acord";
+$vocab["cancel"] = "Cancel·la";
 
-// Used in trailer.inc
-$vocab["viewday"]            = "Veure dia";
-$vocab["viewweek"]           = "Veure setmana";
-$vocab["viewmonth"]          = "Veure mes";
-$vocab["ppreview"]           = "Imprimir vista prèvia.";
+// S'utilitza a trailer.inc
+$vocab["viewday"] = "Veure el dia";
+$vocab["viewweek"] = "Mostra la setmana";
+$vocab["viewmonth"] = "Mostra el mes";
+$vocab["ppreview"] = "Previsualització d'impressió";
 
-// Used in edit_entry.php
-$vocab["addentry"]           = "Nova reserva";
-$vocab["editentry"]          = "Editar reserva";
-$vocab["editseries"]         = "Editar series";
-$vocab["namebooker"]         = "Nom";
-$vocab["fulldescription"]    = "Descripció";
-$vocab["date"]               = "Data";
-$vocab["start_date"]         = "Data d'inici";
-$vocab["end_date"]           = "Data de fi";
-$vocab["time"]               = "Hora";
-$vocab["period"]             = "Període";
-$vocab["duration"]           = "Duració";
-$vocab["seconds"]            = "segons";
-$vocab["minutes"]            = "minuts";
-$vocab["hours"]              = "hores";
-$vocab["days"]               = "dies";
-$vocab["weeks"]              = "setmanes";
-$vocab["years"]              = "anys";
-$vocab["periods"]            = "períodes";
-$vocab["all_day"]            = "Dia complet";
-$vocab["type"]               = "Entitat";
-$vocab["save"]               = "Guardar";
-$vocab["rep_type"]           = "Tipus de repetició";
-$vocab["rep_type_0"]         = "Cap";
-$vocab["rep_type_1"]         = "Diària";
-$vocab["rep_type_2"]         = "Setmanal";
-$vocab["rep_type_3"]         = "Mensual";
-$vocab["rep_type_4"]         = "Anual";
-$vocab["rep_end_date"]       = "Data màxima Repetició";
-$vocab["rep_rep_day"]        = "Dia de repetició";
-$vocab["ctrl_click"]         = "Control-Clic per seleccionar més d'un recurs";
-$vocab["entryid"]            = "ID d'entrada";
-$vocab["repeat_id"]          = "ID de repetició";
-$vocab["brief_description"]  = "Breu descriptció.";
+// S'utilitza a edit_entry.php
+$vocab["addentry"] = "Afegeix una entrada";
+$vocab["editentry"] = "Edita l'entrada";
+$vocab["copyentry"] = "Copia l'entrada";
+$vocab["editseries"] = "Edita la sèrie";
+$vocab["copyseries"] = "Copia la sèrie";
+$vocab["namebooker"] = "Breu descripció";
+$vocab["fulldescription"] = "Descripció completa";
+$vocab["date"] = "Data";
+$vocab["start"] = "Inici";
+$vocab["end"] = "Fi";
+$vocab["start_date"] = "Hora d'inici";
+$vocab["end_date"] = "Hora de finalització";
+$vocab["time"] = "Hora";
+$vocab["period"] = "Període";
+$vocab["unknown_period"] = "<Període %d>";
+$vocab["duration"] = "Durada";
+$vocab["second_lc"] = "segon";
+$vocab["seconds"] = "segons";
+$vocab["minute_lc"] = "minut";
+$vocab["minutes"] = "minuts";
+$vocab["hour_lc"] = "hora";
+$vocab["hours"] = "hores";
+$vocab["day"] = "dia";
+$vocab["days"] = "dies";
+$vocab["week"] = "setmana";
+$vocab["weeks"] = "setmanes";
+$vocab["month"] = "mes";
+$vocab["months"] = "mesos";
+$vocab["year_lc"] = "any";
+$vocab["years"] = "anys";
+$vocab["period_lc"] = "període";
+$vocab["periods"] = "períodes";
+$vocab["all_day"] = "Tot el dia";
+$vocab["area"] = "Àrea";
+$vocab["type"] = "Tipus";
+$vocab["allow_registration"] = "Permetre el registre";
+$vocab["registrant_limit_enabled"] = "Estableix la capacitat d'esdeveniments";
+$vocab["registrant_limit"] = "Capacitat d'esdeveniment";
+$vocab["registration_opens"] = "El registre s'obre";
+$vocab["registration_closes"] = "El registre es tanca";
+$vocab["in_advance"] = "per avançat";
+$vocab["in_advance_periods"] = "abans de %s"; // una hora, per exemple, 09:00 o 9:00
+$vocab["n_registered"] = "Actualment registrat";
+$vocab["save"] = "Desa";
+$vocab["rep_type"] = "Tipus de repetició";
+$vocab["rep_type_0"] = "Cap";
+$vocab["rep_type_1"] = "Diari";
+$vocab["rep_type_2"] = "Setmanalment";
+$vocab["rep_type_3"] = "Mensualment";
+$vocab["rep_type_4"] = "Anualment";
+$vocab["ord_1"] = "primer";
+$vocab["ord_2"] = "segon";
+$vocab["ord_3"] = "tercer";
+$vocab["ord_4"] = "quart";
+$vocab["ord_5"] = "cinquè";
+$vocab["ord_-1"] = "últim";
+$vocab["ord_-2"] = "últim segon";
+$vocab["ord_-3"] = "tercer últim";
+$vocab["ord_-4"] = "quart darrer";
+$vocab["ord_-5"] = "cinquè darrer";
+$vocab["rep_end_date"] = "Repetir la data de finalització";
+$vocab["rep_rep_day"] = "Repetir el dia";
+$vocab["rep_interval"] = "Repeteix cada";
+$vocab["month_absolute"] = "El dia";
+$vocab["month_relative"] = "Al";
+$vocab["skip_conflicts"] = "Omet els conflictes passats";
+$vocab["no_mail"] = "No envieu correu electrònic";
+$vocab["ctrl_click"] = "Utilitza Control-Clic per seleccionar més d'una habitació";
+$vocab["entryid"] = "ID d'entrada ";
+$vocab["repeat_id"] = "Repetiu l'ID ";
+$vocab["brief_description"] = "Breu descripció.";
+$vocab["status"] = "Estat";
+$vocab["public"] = "Públic";
+$vocab["private"] = "Privat";
+$vocab["unavailable"] = "Privat";
+$vocab["is_mandatory_field"] = "és un camp obligatori, proporcioneu un valor.";
+$vocab["missing_mandatory_field"] = "No heu proporcionat cap valor per al camp obligatori";
+$vocab["confirmed"] = "Confirmat";
+$vocab["start_after_end"] = "Comença dia rere dia final";
+$vocab["start_after_end_long"] = "Error: el dia d'inici no pot ser posterior al dia de finalització.";
+$vocab["invalid_rep_interval"] = "L'interval de repetició ha de ser superior a zero.";
+$vocab["confirm_rep_end_date"] = "Sembla que potser us heu oblidat d'establir la repetició " .
+"data de finalització. Vols continuar igualment?";
+$vocab["type_reserved_for_admins"] = "El tipus '%s' està reservat per als administradors";
+$vocab["multiroom_not_allowed"] = "No teniu permís per fer una reserva per a diverses habitacions.";
+$vocab["edit_entry_nonexistent_room"] = "Esteu intentant crear o editar una entrada per a una sala " .
+"això no existeix. Això podria ser perquè esteu utilitzant " .
+"un marcador que ja no és vàlid. Generalment no ho és".
+"Es recomana utilitzar marcadors que us portin directament a " .
+"el formulari de reserva. En canvi, és millor anar al " .
+"formulari de reserva des de la vista del calendari.";
+$vocab["home"] = "Inici";
 
-// Used in view_entry.php
-$vocab["description"]        = "Descripció";
-$vocab["room"]               = "Recurs";
-$vocab["createdby"]          = "Creada per";
-$vocab["lastupdate"]         = "Última actualizació";
-$vocab["deleteentry"]        = "Esborrar reserva";
-$vocab["deleteseries"]       = "Esborrar sèrie";
-$vocab["confirmdel"]         = "Segur que desitja esborrar aquesta reserva?";
-$vocab["returnprev"]         = "Tornar a la pàgina anterior";
-$vocab["invalid_entry_id"]   = "Valor d'entrada invàlid.";
-$vocab["invalid_series_id"]  = "Valor de sèrie invàlid.";
+// S'utilitza a view_entry.php
+$vocab["description"] = "Descripció";
+$vocab["room"] = "Habitació";
+$vocab["createdby"] = "Creat per";
+$vocab["modifiedby"] = "Modificat per";
+$vocab["lastupdate"] = "Darrera actualització";
+$vocab["repeat_on"] = "Repetir el dia";
+$vocab["deleteentry"] = "Suprimeix l'entrada";
+$vocab["deleteseries"] = "Suprimeix la sèrie";
+$vocab["exportentry"] = "Exporta l'entrada";
+$vocab["exportseries"] = "Exporta la sèrie";
+$vocab["confirmdel"] = "Esteu segur que voleu eliminar aquesta entrada?";
+$vocab["confirmdel_series"] = "Estàs segur que vols suprimir aquesta sèrie?";
+$vocab["confirm_edit_series"] = "ADVERTIMENT! Els usuaris s'han registrat per a un o més esdeveniments d'aquesta sèrie i " .
+"L'edició de la sèrie farà que es perdin els seus noms. Si voleu".
+"per mantenir els seus noms, llavors hauríeu d'editar la sèrie una entrada a una".
+"hora utilitzant 'Edita l'entrada'. Esteu segur que voleu continuar?";
+$vocab["returnprev"] = "Tornar a la pàgina anterior";
+$vocab["invalid_entry_id"] = "Identificador d'entrada no vàlid.";
+$vocab["invalid_series_id"] = "Identificador de sèrie no vàlid.";
+$vocab["confirmation_status"] = "Estat de confirmació";
+$vocab["tentative"] = "Provativa";
+$vocab["approval_status"] = "Estat d'aprovació";
+$vocab["approved"] = "Aprovat";
+$vocab["awaiting_approval"] = "Esperant aprovació";
+$vocab["approve"] = "Aprovar";
+$vocab["reject"] = "Rebutjar";
+$vocab["more_info"] = "Més informació";
+$vocab["remind_admin"] = "Recorda a l'administrador";
+$vocab["series"] = "Sèrie";
+$vocab["request_more_info"] = "Enumereu la informació addicional que necessiteu";
+$vocab["reject_reason"] = "Si us plau, indiqueu un motiu pel qual rebutgeu aquesta sol·licitud de reserva";
+$vocab["send"] = "Enviar";
+$vocab["approve_failed"] = "La reserva no s'ha pogut aprovar.";
+$vocab["no_request_yet"] = "Encara no s'ha enviat cap sol·licitud"; // S'utilitza per a la informació sobre eines del títol al botó Més informació
+$vocab["last_request"] = "Darrera sol·licitud enviada a"; // S'utilitza per a la informació sobre eines del títol al botó Més informació
+$vocab["by"] = "per"; // S'utilitza per a la informació sobre eines del títol al botó Més informació
+$vocab["sent_at"] = "Enviat a ";
+$vocab["yes"] = "Sí";
+$vocab["no"] = "No";
+$vocab["event_registration"] = "Registre de l'esdeveniment";
+$vocab["event_details"] = "Detalls de l'esdeveniment";
+$vocab["already_registered"] = "T'has registrat per a aquest esdeveniment";
+$vocab["register"] = "Registrar-se";
+$vocab["cancel_registration"] = "Cancel·la el registre";
+$vocab["registered_by"] = "Registrat per";
+$vocab["registered_on"] = "Registrat a";
+$vocab["event_full"] = "Aquest esdeveniment està ple.";
+$vocab["confirm_del_registrant"] = "Esteu segur que voleu eliminar el registre de '%s'?";
 
-// Used in edit_entry_handler.php
-$vocab["error"]              = "Error";
-$vocab["sched_conflict"]     = "Conflicte de planificació";
-$vocab["conflict"]           = "La nova reserva entra en conflicte amb le(s) següent(s) entrade(s)";
-$vocab["too_many_entries"]   = "Les opcions sel·leccionades crearan mases entrades.<br>Si us plau, revisi les opcions";
-$vocab["returncal"]          = "Tornar a la vista del calendari";
-$vocab["failed_to_acquire"]  = "Fallada en l'intent d'obtenir accés a la base de dades"; 
+// S'utilitza a edit_entry_handler.php
+$vocab["error"] = "Error";
+$vocab["sched_conflict"] = "Conflicte de programació";
+$vocab["conflict"] = "La nova reserva entrarà en conflicte amb les entrades següents:";
+$vocab["no_conflicts"] = "No hi ha conflictes de programació";
+$vocab["rules_broken"] = "La nova reserva entrarà en conflicte amb les polítiques següents:";
+$vocab["rules_broken_notices"] = "[Només informació] La nova reserva entraria en conflicte amb les polítiques següents:";
+$vocab["no_rules_broken"] = "No hi ha conflictes de política";
+$vocab["schedule"] = "Programació";
+$vocab["policy"] = "Política";
+$vocab["conflicts_with_self"] = "Aquesta sèrie conté entrades que se superposen. Comproveu el final de l'entrada " .
+"data i la data de finalització repetida.";
+$vocab["too_many_entries"] = "Una sèrie no pot constar de més de %d entrades";
+$vocab["returncal"] = "Torna a la vista del calendari";
+$vocab["failed_to_acquire"] = "No s'ha pogut adquirir l'accés exclusiu a la base de dades";
+$vocab["invalid_booking"] = "Reserva no vàlida";
+$vocab["must_set_description"] = "Heu d'establir una breu descripció per a la reserva. Torneu enrere i introduïu-ne una.";
+$vocab["no_rooms_selected"] = "Has de seleccionar una habitació.";
+$vocab["mail_subject_approved"] = "Entrada aprovada per a %s MRBS"; // $mrbs_company
+$vocab["mail_subject_rejected"] = "Entrada rebutjada per a %s MRBS"; // $mrbs_company
+$vocab["mail_subject_more_info"] = "%s MRBS: més informació sol·licitada"; // $mrbs_company
+$vocab["mail_subject_reminder"] = "Recordatori per a %s MRBS"; // $mrbs_company
+$vocab["mail_body_approved"] = "Una entrada ha estat aprovada per %s; aquí teniu els detalls:";
+$vocab["mail_body_rej_entry"] = "Una entrada ha estat rebutjada per %s, aquí teniu els detalls:";
+$vocab["mail_body_more_info"] = "%s requereix més informació sobre una entrada; aquí teniu els detalls:";
+$vocab["mail_body_reminder"] = "Recordatori: una entrada està pendent d'aprovació; aquí teniu els detalls:";
+$vocab["mail_body_repeats_booked"] = "S'han reservat les dates següents:";
+$vocab["mail_body_repeats_deleted"] = "S'han suprimit les reserves següents:";
+$vocab["mail_body_exceptions"] = "No s'han pogut reservar les dates següents a causa de conflictes:";
+$vocab["mail_subject_new_entry"] = "Entrada afegida per a %s MRBS"; // $mrbs_company
+$vocab["mail_subject_changed_entry"] = "L'entrada ha canviat per a %s MRBS"; // $mrbs_company
+$vocab["mail_subject_delete"] = "Entrada suprimida per a %s MRBS"; // $mrbs_company
+$vocab["mail_body_new_entry"] = "%s ha reservat una nova entrada, aquí teniu els detalls:";
+$vocab["mail_body_changed_entry"] = "Una entrada ha estat modificada per %s, aquí teniu els detalls:";
+$vocab["mail_body_del_entry"] = "Una entrada ha estat esborrada per %s, aquí teniu els detalls:";
+$vocab["new_value"] = "Nou";
+$vocab["old_value"] = "Antic";
+$vocab["reason"] = "Raó";
+$vocab["info_requested"] = "Informació sol·licitada";
+$vocab["cannot_change_approved_bookings"] = "Les reserves que s'han aprovat no es poden editar ni suprimir";
+$vocab["no_simultaneous_bookings"] = "No podeu tenir reserves per a més de %s habitacions al mateix temps";
+$vocab["no_bookings_on_holidays"] = "Has intentat fer una reserva en un dia festiu (%s)";
+$vocab["no_bookings_on_weekends"] = "Has provat de fer una reserva un dia de cap de setmana (%s)";
+$vocab["type_not_allowed"] = 'No es permeten reserves del tipus %1$s a %2$s';
+$vocab["min_create_time_before"] = 'No podeu crear una reserva que comenci en menys de %1$d %2$s';
+$vocab["max_create_time_before"] = 'No podeu crear una reserva que acabi en més de %1$d %2$s';
+$vocab["max_create_time_before_start"] = 'No podeu crear una reserva que comenci en més de %1$d %2$s';
+$vocab["min_delete_time_before"] = 'No podeu editar ni eliminar una reserva que comenci en menys de %1$d %2$s';
+$vocab["max_delete_time_before"] = 'No podeu editar ni eliminar una reserva que acabi en més de %1$d %2$s';
+$vocab["max_delete_time_before_start"] = 'No podeu editar ni eliminar una reserva que comenci en més de %1$d %2$s';
+$vocab["earliest_booking_date"] = "La data de reserva més antiga és %s";
+$vocab["latest_booking_date"] = "La darrera data de reserva és %s";
+$vocab["max_booking_duration"] = "La durada màxima d'una reserva és";
+$vocab["max_per_day_global"] = "El nombre màxim de reserves per dia per usuari a tot el sistema és";
+$vocab["max_per_week_global"] = "El nombre màxim de reserves per setmana per usuari a tot el sistema és";
+$vocab["max_per_month_global"] = "El nombre màxim de reserves al mes per usuari a tot el sistema és";
+$vocab["max_per_year_global"] = "El nombre màxim de reserves per any per usuari a tot el sistema és";
+$vocab["max_per_future_global"] = "El nombre màxim de reserves pendents per usuari a tot el sistema és";
+$vocab["max_per_day_area"] = "El nombre màxim de reserves per dia per usuari en aquesta àrea és";
+$vocab["max_per_week_area"] = "El nombre màxim de reserves per setmana per usuari en aquesta àrea és";
+$vocab["max_per_month_area"] = "El nombre màxim de reserves per mes per usuari en aquesta àrea és";
+$vocab["max_per_year_area"] = "El nombre màxim de reserves per any per usuari en aquesta àrea és";
+$vocab["max_per_future_area"] = "El nombre màxim de reserves pendents per usuari en aquesta àrea és";
+$vocab["max_secs_per_day_global"] = 'La durada total màxima de les reserves per dia per usuari a tot el sistema és %1$s %2$s'; // p. ex. 2 hores
+$vocab["max_secs_per_week_global"] = 'La durada total màxima de les reserves per setmana per usuari a tot el sistema és %1$s %2$s';
+$vocab["max_secs_per_month_global"] = 'La durada total màxima de les reserves per mes per usuari a tot el sistema és %1$s %2$s';
+$vocab["max_secs_per_year_global"] = 'La durada total màxima de les reserves per any per usuari a tot el sistema és %1$s %2$s';
+$vocab["max_secs_per_future_global"] = 'La durada total màxima de les reserves pendents per usuari a tot el sistema és %1$s %2$s';
+$vocab["max_secs_per_day_area"] = 'La durada total màxima de les reserves per dia per usuari en aquesta àrea és %1$s %2$s';
+$vocab["max_secs_per_week_area"] = 'La durada total màxima de les reserves per setmana per usuari en aquesta àrea és %1$s %2$s';
+$vocab["max_secs_per_month_area"] = 'La durada total màxima de les reserves per mes per usuari en aquesta àrea és %1$s %2$s';
+$vocab["max_secs_per_year_area"] = 'La durada total màxima de les reserves per any per usuari en aquesta àrea és %1$s %2$s';
+$vocab["max_secs_per_future_area"] = 'La durada total màxima de les reserves pendents per usuari en aquesta àrea és %1$s %2$s';
+$vocab["skip_and_book"] = "Omet i reserva";
+$vocab["skip_and_book_note"] = "Continua amb la reserva, saltant les entrades en conflicte";
 
-// Authentication stuff
-$vocab["accessdenied"]       = "Accés denegat";
-$vocab["norights"]           = "No te autorizació per modificar aquesta dada.";
-$vocab["please_login"]       = "Si us plau, iniciï la sessió";
-$vocab["users.name"]          = "Nom";
-$vocab["users.password"]      = "Contrasenya";
-$vocab["users.level"]         = "Drets";
-$vocab["unknown_user"]       = "Usuari desconegut";
-$vocab["login"]              = "Connectar";
-$vocab["logoff"]             = "Desconectar";
-$vocab["username_or_email"]  = "Nom d'usuari o adreça de correu electrònic";
+// S'utilitza a edit_message.php
+$vocab["edit_message"] = "Edita el missatge";
+$vocab["message"] = "Missatge";
+$vocab["display_from"] = "Mostrar des del començament de";
+$vocab["display_until"] = "Mostra fins al final de";
 
-// Authentication database
-$vocab["user_list"]          = "Llista d'usuaris";
-$vocab["edit_user"]          = "Editar usuari";
-$vocab["delete_user"]        = "Eliminar aquest usuari";
-//$vocab["users.name"]         = Use the same as above, for consistency.
-//$vocab["users.password"]     = Use the same as above, for consistency.
-$vocab["users.email"]         = "Adreça de correu";
-$vocab["password_twice"]     = "Si vols canviar la contrasenya, introdueix-la dues vegades";
-$vocab["passwords_not_eq"]   = "Error: Les contrasenyes no són 
-iguals.";
-$vocab["add_new_user"]       = "Afegir nou usuari";
-$vocab["action"]             = "Acció";
-$vocab["user"]               = "Usuari";
-$vocab["administrator"]      = "Administrador";
-$vocab["unknown"]            = "Desconegut";
-$vocab["ok"]                 = "D'acord";
-$vocab["show_my_entries"]    = "Fer Clic per mostar tots els events pròxims";
+// S'utilitza a kiosk.php
+$vocab["enter"] = "Entra";
+$vocab["exit"] = "Surt";
+$vocab["enter_kiosk_intro"] = "Estableix una contrasenya que serà necessària per sortir del mode quiosc.";
+$vocab["exit_kiosk_intro"] = "Introduïu la contrasenya que vau establir quan vau entrar al mode quiosc.";
+$vocab["enter_kiosk_mode"] = "Entreu al mode quiosc";
+$vocab["exit_kiosk_mode"] = "Surt del mode quiosc";
+$vocab["kiosk"] = "Quiosc";
+$vocab["kiosk_password"] = "Contrasenya del quiosc";
 
-// Used in search.php
-$vocab["invalid_search"]     = "Cadena de cerca buida o incorrecte.";
-$vocab["search_results"]     = "Cercar resultats de";
-$vocab["nothing_found"]      = "No s'han trobat coincidencies";
-$vocab["records"]            = "Registres ";
-$vocab["through"]            = " a través ";
-$vocab["of"]                 = " de ";
-$vocab["previous"]           = "Anterior";
-$vocab["next"]               = "Següent";
-$vocab["entry"]              = "Entrada";
-$vocab["search_button"]      = "Cerca";
-$vocab["search_for"]         = "Cerca per";
-$vocab["from"]               = "De";
+// S'utilitza a pending.php
+$vocab["pending"] = "Reserves pendents d'aprovació";
+$vocab["none_outstanding"] = "No teniu cap reserva pendent d'aprovació.";
 
-// Used in report.php
-$vocab["report_on"]          = "Informe de reunions";
-$vocab["report_start"]       = "Data des de";
-$vocab["report_end"]         = "Data fins a";
-$vocab["match_area"]         = "Trobar famila";
-$vocab["match_room"]         = "Trobar recurs";
-$vocab["match_type"]         = "Trobar tipus";
-$vocab["ctrl_click_type"]    = "Fes servir control-clic per sel·leccionar múltiples elements";
-$vocab["match_entry"]        = "Trobar descripció breu";
-$vocab["match_descr"]        = "Encontar descripció completa";
-$vocab["summarize_by"]       = "Resumir per";
-$vocab["sum_by_descrip"]     = "Descripció breu";
-$vocab["sum_by_creator"]     = "Creador";
-$vocab["entry_found"]        = "registre trobat";
-$vocab["entries_found"]      = "registres trobats";
-$vocab["summary_header"]     = "Resum de (Registres) Hores";
-$vocab["summary_header_per"] = "Resum de (Registres) Periodes";
-$vocab["total"]              = "Total";
-$vocab["submitquery"]        = "Executar informe";
-$vocab["sort_rep"]           = "Ordenar informe per";
-$vocab["sort_rep_time"]      = "Inici data/hora";
+// Coses d'autenticació
+$vocab["accessdenied"] = "Accés denegat";
+$vocab["norights"] = "No teniu els drets necessaris per veure aquesta pàgina.";
+$vocab["please_login"] = "Si us plau, inicieu sessió";
+$vocab["users.name"] = "Nom d'usuari";
+$vocab["users.display_name"] = "Nom";
+$vocab["users.password"] = "Contrasenya";
+$vocab["users.level"] = "Drets";
+$vocab["users.timestamp"] = "Darrera actualització";
+$vocab["users.last_login"] = "Últim inici de sessió";
+$vocab["unknown_user"] = "Usuari desconegut";
+$vocab["login"] = "Iniciar sessió";
+$vocab["logoff"] = "Tancar sessió";
+$vocab["username_or_email"] = "Nom d'usuari o adreça de correu electrònic";
+$vocab["lost_password"] = "Heu perdut la contrasenya?";
+$vocab["get_new_password"] = "Obtenir una nova contrasenya";
+$vocab["password_reset"] = "Restabliment de la contrasenya";
+$vocab["password_reset_subject"] = "Sol·licitud de restabliment de la contrasenya";
+$vocab["password_reset_body"] = 'Algú ha generat una sol·licitud de restabliment de la contrasenya per a %3$s. ' .
+				'Si no vas ser tu, pots ignorar aquest correu electrònic. En cas contrari ' .
+				'Heu de seguir l"enllaç següent per restablir la vostra contrasenya. ' .
+				'L"enllaç caducarà d"aquí a %1$d %2$s.';
+$vocab["enter_username"] = "Introduïu aquí el vostre nom d'usuari.";
+$vocab["enter_username_or_email"] = "Introduïu aquí el vostre nom d'usuari o adreça de correu electrònic.";
+$vocab["will_be_sent_instructions"] = "Se us enviarà un missatge de correu electrònic amb instruccions sobre com restablir la vostra contrasenya. " .
+"Si no teniu una adreça de correu electrònic, haureu de contactar amb el vostre administrador.";
+$vocab["reset_password"] = "Restableix la contrasenya";
+$vocab["pwd_check_email"] = "Gràcies. Si hi ha un compte d'usuari corresponent a aquests detalls, llavors vostè " .
+"En breu rebrà un correu electrònic amb instruccions per restablir la contrasenya. " .
+"No us oblideu de comprovar la vostra carpeta de correu brossa/correcció no desitjada si no arriba.";
+$vocab["invalid_link"] = "Enllaç no vàlid";
+$vocab["pwd_request_failed"] = "No s'ha pogut enviar un correu electrònic a aquest usuari.";
+$vocab["link_invalid"] = "L'enllaç de restabliment de la contrasenya no és vàlid o ha caducat.";
+$vocab["enter_new_password"] = "Introdueix la teva nova contrasenya dues vegades a continuació.";
+$vocab["pwd_must_contain"] = "La contrasenya ha de contenir almenys:";
+$vocab["pwd_reset_success"] = "La vostra contrasenya s'ha restablert correctament.";
 
-// Used in admin.php
-$vocab["edit"]               = "Editar";
-$vocab["delete"]             = "Esborrar";
-$vocab["rooms"]              = "Recursos";
-$vocab["in"]                 = "a";
-$vocab["noareas"]            = "No hi ha famílies";
-$vocab["addarea"]            = "Afegir família";
-$vocab["name"]               = "Nombre";
-$vocab["noarea"]             = "No ha sel·leccionat família";
-$vocab["browserlang"]        = "El seu visor està configurat per els llenguatges";
-$vocab["addroom"]            = "Afegir recurs";
-$vocab["capacity"]           = "Capacitat (persones)";
-$vocab["norooms"]            = "No hi han recursos.";
-$vocab["administration"]     = "Administració";
+// Codi d'actualització de la base de dades
+$vocab["database_login"] = "Inici de sessió a la base de dades";
+$vocab["upgrade_required"] = "Per completar l'actualització, ara cal actualitzar la base de dades. Si us plau, feu una còpia de seguretat de la vostra base de dades abans de continuar.";
+$vocab["supply_userpass"] = "Si us plau, proporcioneu un nom d'usuari i una contrasenya de la base de dades amb drets d'administrador.";
+$vocab["contact_admin"] = "Si no sou l'administrador de MRBS, poseu-vos en contacte amb %s."; // $mrbs_admin
+$vocab["upgrading_site"] = "Actualitzant el lloc '%s'"; // nom del lloc
+$vocab["upgrading_main_site"] = "Actualització del lloc principal";
+$vocab["no_tables_found"] = "No s'han trobat taules";
+$vocab["upgrade_to_version"] = "Actualització a la versió de la base de dades";
+$vocab["upgrade_to_local_version"] = "Actualització a la versió local de la base de dades";
+$vocab["upgrade_completed"] = "Actualització de la base de dades completada.";
 
-// Used in edit_area.php and/or edit_room.php
-$vocab["editarea"]           = "Editar familia";
-$vocab["change"]             = "Canviar";
-$vocab["editroom"]           = "Editar recurs";
-$vocab["not_found"]          = " no trobat";
-$vocab["room_admin_email"]   = "Recuros admin email";
-$vocab["area_admin_email"]   = "Area admin email";
-$vocab["invalid_email"]      = "email invàlid!";
+// Nivells d'accés de l'usuari
+$vocab["level_0"] = "cap";
+$vocab["level_1"] = "usuari";
+$vocab["level_2"] = "administrador";
+$vocab["level_3"] = "administrador d'usuari";
 
-// Used in del.php
-$vocab["deletefollowing"]    = "Aixó esborra les següents agendes";
-$vocab["sure"]               = "ESTA SEGUR?";
-$vocab["YES"]                = "SÍ";
-$vocab["NO"]                 = "NO";
-$vocab["delarea"]            = "S'han d'esborrar tots els recursos d'aquesta família per poder esborrar-lo<p>";
+// Base de dades d'autenticació
+$vocab["user_list"] = "Usuaris";
+$vocab["edit_user"] = "Edita l'usuari";
+$vocab["delete_user"] = "Suprimeix aquest usuari";
+//$vocab["users.name"] = Utilitzeu el mateix que l'anterior, per a la coherència.
+//$vocab["users.password"] = Utilitzeu el mateix que l'anterior, per a la coherència.
+$vocab["users.email"] = "Adreça de correu electrònic";
+$vocab["password_twice"] = "Si voleu canviar la contrasenya, escriviu la nova contrasenya dues vegades";
+$vocab["passwords_not_eq"] = "Les contrasenyes no coincideixen!";
+$vocab["password_invalid"] = "La contrasenya no s'ajusta a la política. Ha de contenir almenys:";
+$vocab["policy_length"] = "%d caràcter(s)";
+$vocab["policy_alpha"] = "%d lletra(s)";
+$vocab["policy_lower"] = "%d lletres minúscules";
+$vocab["policy_upper"] = "%d lletres majúscules";
+$vocab["policy_numeric"] = "%d caràcters numèrics";
+$vocab["policy_special"] = "%d caràcters especials";
+$vocab["add_new_user"] = "Afegeix un usuari nou";
+$vocab["action"] = "Acció";
+$vocab["user"] = "Usuari";
+$vocab["administrator"] = "Administrador";
+$vocab["unknown"] = "Desconegut";
+$vocab["ok"] = "D'acord";
+$vocab["show_my_entries"] = "Feu clic per mostrar les meves entrades properes";
+$vocab["no_users_initial"] = "Benvingut a MRBS!";
+$vocab["no_users_create_first_admin"] = "Abans de poder fer qualsevol altra cosa que necessiteu per crear un administrador " .
+"usuari. A continuació, inicieu la sessió com a usuari i creeu més usuaris i creeu" .
+"zones i habitacions.";
+$vocab["warning_last_admin"] = "Avís! Aquest és l'últim administrador i, per tant, no podeu suprimir aquest usuari ni eliminar els drets d'administrador, en cas contrari quedareu bloquejat fora del sistema.";
+$vocab["copy_email_addresses"] = "Copia les adreces de correu electrònic";
 
-// Used in help.php
-$vocab["about_mrbs"]         = "Sobre l'MRBS";
-$vocab["database"]           = "Base de dades";
-$vocab["system"]             = "Sistema";
-$vocab["please_contact"]     = "Si us plau contacta %s per a altres consultes.";
+// S'utilitza a search.php
+$vocab["invalid_search"] = "Cadena de cerca buida o no vàlida.";
+$vocab["search_results"] = 'Resultats de la cerca de \'%1$s\' de %2$s';
+$vocab["search_results_unlimited"] = "Resultats de la cerca de '%s'";
+$vocab["nothing_found"] = "No s'ha trobat cap entrada coincident.";
+$vocab["records"] = "Registres ";
+$vocab["through"] = "a través de ";
+$vocab["of"] = "de ";
+$vocab["previous"] = "Anterior";
+$vocab["next"] = "Següent";
+$vocab["entry"] = "Entrada";
+$vocab["search_button"] = "Cerca";
+$vocab["search_for"] = "Cerca";
+$vocab["from"] = "Des de";
 
-// Entry types
-$vocab["type.I"]             = "Intern";
-$vocab["type.E"]             = "Extern";
+// S'utilitza a report.php
+$vocab["report_on"] = "Informe sobre les reunions";
+$vocab["report_start"] = "Data d'inici de l'informe";
+$vocab["report_end"] = "Data de finalització de l'informe";
+$vocab["match_area"] = "Àrea de concordança";
+$vocab["match_room"] = "Coincidir amb la sala";
+$vocab["match_type"] = "Tipus de concordança";
+$vocab["ctrl_click_type"] = "Utilitzeu Control-Clic per seleccionar més d'un tipus";
+$vocab["match_entry"] = "Concorda amb una breu descripció";
+$vocab["match_descr"] = "Concorda amb la descripció completa";
+$vocab["output"] = "Sortida";
+$vocab["summary"] = "Resum";
+$vocab["format"] = "Format";
+$vocab["html"] = "HTML";
+$vocab["csv"] = "CSV";
+$vocab["ical"] = "iCalendar (fitxer .ics) - sense punts";
+$vocab["combination_not_supported"] = "Aquesta sortida no és compatible amb aquest format";
+$vocab["summarize_by"] = "Resumeix per";
+$vocab["sum_by_descrip"] = "Breu descripció";
+$vocab["sum_by_creator"] = "Creador";
+$vocab["sum_by_type"] = "Tipus";
+$vocab["entry_found"] = "entrada trobada";
+$vocab["entries_found"] = "entrades trobades";
+$vocab["summary_header"] = "Resum de les hores (entrades)";
+$vocab["summary_header_per"] = "Resum dels períodes (entrades)";
+$vocab["summary_header_both"] = "Resum de (entrades) hores/períodes";
+$vocab["entries"] = "entrades";
+$vocab["total"] = "Total";
+$vocab["submitquery"] = "Executar informe";
+$vocab["sort_rep"] = "Ordena l'informe per";
+$vocab["sort_rep_time"] = "Data/hora d'inici";
+$vocab["sort_room"] = "Sala";
+$vocab["fulldescription_short"] = "Descripció completa";
+$vocab["both"] = "Tots";
+$vocab["with"] = "Amb";
+$vocab["without"] = "Sense";
+$vocab["privacy_status"] = "Estat de privadesa";
+$vocab["search_criteria"] = "Criteris de cerca";
+$vocab["presentation_options"] = "Opcions de sortida";
+$vocab["delete_entries"] = "Eliminar entrades";
+$vocab["delete_entries_warning"] = "ADVERTIMENT! Això esborrarà totes les entrades que coincideixin " .
+"els criteris de cerca. L'operació no es pot desfer. Són " .
+"Estàs segur que vols continuar?\n\n" .
+"Nombre total d'entrades que s'eliminaran: %%s"; // El signe % s'escapa perquè la substitució de la cadena la fa JavaScript
+$vocab["deleting_n_entries"] = "S'estan suprimint %%d entrades..."; // El signe % s'escapa perquè la substitució de números la fa JavaScript
+$vocab["delete_entries_failed"] = "No s'han pogut suprimir les entrades.";
+$vocab["cancel"] = "Cancel·la";
+$vocab["registered"] = "Registrat";
+$vocab["na"] = "[N/A]";
+$vocab["compound_name"] = '%1$s (%2$s)'; // 1: nom d'usuari, 2: nom de visualització
+$vocab["registrant_registered_by"] = '%1$s (per %2$s)'; // 1: Registrant, 2: Registrat per
+$vocab["registrant_username_and_registered_by"] = '%1$s (%2$s) (per %3$s)'; // 2: Nom d'usuari del registrant, 2: Nom de visualització del registrant, 3: Registrat per
+$vocab["unique_addresses_copied"] = "%%d adreces de correu electrònic úniques copiades al porta-retalls."; // Substitució de l'especificador feta en JavaScript, així que escapa del '%'
+$vocab["clipboard_copy_failed"] = "Ha fallat la còpia del porta-retalls.";
 
+// S'utilitza a admin.php
+$vocab["no_message"] = "Actualment no hi ha cap missatge per mostrar a sobre del calendari.";
+$vocab["this_message"] = "El missatge següent es mostrarà a sobre del calendari.";
+$vocab["this_message_from"] = "El missatge següent es mostrarà a sobre del calendari de %s.";
+$vocab["this_message_until"] = "El missatge següent es mostrarà a sobre del calendari fins a %s.";
+$vocab["this_message_from_until"] = 'El missatge següent es mostrarà a sobre del calendari des de %1$s fins a %2$s.';
+$vocab["edit"] = "Edita";
+$vocab["delete"] = "Suprimeix";
+$vocab["rooms"] = "Habitacions";
+$vocab["in"] = "en";
+$vocab["noareas"] = "No s'ha definit cap àrea.";
+$vocab["noareas_enabled"] = "No s'ha habilitat cap àrea.";
+$vocab["addarea"] = "Afegeix una àrea";
+$vocab["name"] = "Nom";
+$vocab["noarea"] = "No s'ha seleccionat cap àrea";
+$vocab["browserlang"] = "El vostre navegador està configurat amb el següent ordre de preferència d'idioma";
+$vocab["addroom"] = "Afegeix una habitació";
+$vocab["capacity"] = "Capacitat";
+$vocab["norooms"] = "No s'ha definit cap sala.";
+$vocab["norooms_enabled"] = "No s'ha habilitat cap sala.";
+$vocab["administration"] = "Detalls de l'habitació";
+$vocab["invalid_area_name"] = "Aquest nom d'àrea ja s'ha utilitzat!";
+$vocab["empty_name"] = "No heu introduït cap nom!";
+
+// S'utilitza a edit_area.php i/o edit_room.php
+$vocab["editarea"] = "Edita l'àrea";
+$vocab["change"] = "Canviar";
+$vocab["editroom"] = "Edita la sala";
+$vocab["viewroom"] = "Veure la sala";
+$vocab["not_found"] = "no trobat";
+$vocab["room_admin_email"] = "Correus de notificació";
+$vocab["area_admin_email"] = "Correus de notificació";
+$vocab["area_first_slot_start"] = "Inici del primer espai";
+$vocab["area_last_slot_start"] = "Inici de l'últim espai";
+$vocab["area_res_mins"] = "Resolució (minuts)";
+$vocab["area_def_duration_mins"] = "Durada per defecte (minuts)";
+$vocab["times_along_top"] = "Temps a la part superior";
+$vocab["invalid_area"] = "Àrea no vàlida!";
+$vocab["invalid_room"] = "L'habitació no és vàlida!";
+$vocab["invalid_room_name"] = "Aquest nom de sala ja s'ha utilitzat a l'àrea!";
+$vocab["invalid_email"] = "Adreça de correu electrònic no vàlida!";
+$vocab["invalid_time_format"] = "Les hores han de tenir el format 'hh:mm'";
+$vocab["invalid_resolution"] = "Combinació no vàlida del primer espai, el darrer espai i la resolució!";
+$vocab["general_settings"] = "General";
+$vocab["time_settings"] = "Hores d'espai";
+$vocab["period_settings"] = "Noms de períodes";
+$vocab["add_period"] = "Afegeix un període";
+$vocab["confirmation_settings"] = "Configuració de confirmació";
+$vocab["allow_confirmation"] = "Permetre reserves provisionals";
+$vocab["default_settings_conf"] = "Configuració per defecte";
+$vocab["default_confirmed"] = "Confirmat";
+$vocab["default_tentative"] = "Provativa";
+$vocab["approval_settings"] = "Configuració d'aprovació";
+$vocab["enable_approval"] = "Requereix que les reserves siguin aprovades";
+$vocab["enable_reminders"] = "Permetre als usuaris recordar als administradors";
+$vocab["private_settings"] = "Configuració de privadesa";
+$vocab["allow_private"] = "Permetre reserves privades";
+$vocab["force_private"] = "Forçar reserves privades";
+$vocab["default_settings"] = "Configuració per defecte/forçada";
+$vocab["default_private"] = "Privat";
+$vocab["default_public"] = "Públic";
+$vocab["private_display"] = "Configuració de privadesa (visualització)";
+$vocab["private_display_label"] = "Com s'han de mostrar les reserves privades?";
+$vocab["private_display_caution"] = "ATENCIÓ: penseu bé en les implicacions de privadesa abans de canviar aquesta configuració!";
+$vocab["treat_respect"] = "Respecte la configuració de privadesa de la reserva";
+$vocab["treat_private"] = "Trata totes les reserves com a privades, ignorant la seva configuració de privadesa";
+$vocab["treat_public"] = "Trata totes les reserves com a públiques, ignorant la seva configuració de privadesa";
+$vocab["sort_key"] = "Clau d'ordenació";
+$vocab["sort_key_note"] = "Aquesta és la clau que s'utilitza per demanar habitacions";
+$vocab["booking_policies"] = "Política de reserves";
+$vocab["booking_creation"] = "Creació de reserves";
+$vocab["booking_deletion"] = "Supressió de la reserva";
+$vocab["booking_limits"] = "Límits al nombre de reserves per usuari";
+$vocab["booking_limits_secs"] = "Límits a la durada total de les reserves per usuari (només en mode de temps)";
+$vocab["booking_durations"] = "Límits a la durada de les reserves";
+$vocab["max_duration"] = "Durada màxima";
+$vocab["min_book_ahead"] = "Reserva anticipada - mínim";
+$vocab["max_book_ahead"] = "Reserva anticipada - màxim";
+$vocab["this_area"] = "Aquesta àrea";
+$vocab["whole_system"] = "Tot el sistema";
+$vocab["whole_system_note"] = "Els valors per a tot el sistema s'estableixen al fitxer de configuració";
+$vocab["max_per_day"] = "Número màxim per dia";
+$vocab["max_per_week"] = "Número màxim per setmana";
+$vocab["max_per_month"] = "Número màxim per mes";
+$vocab["max_per_year"] = "Número màxim per any";
+$vocab["max_per_future"] = "Número màxim en el futur";
+$vocab["max_secs_per_day"] = "Temps màxim per dia";
+$vocab["max_secs_per_week"] = "Temps màxim per setmana";
+$vocab["max_secs_per_month"] = "Temps màxim al mes";
+$vocab["max_secs_per_year"] = "Temps màxim per any";
+$vocab["max_secs_per_future"] = "Temps màxim en el futur";
+$vocab["custom_html"] = "HTML personalitzat";
+$vocab["custom_html_note"] = "Aquest camp es pot utilitzar per mostrar el vostre propi HTML, per exemple un mapa de Google incrustat";
+$vocab["email_list_note"] = "Introduïu una llista d'adreces de correu electrònic separades per comes";
+$vocab["mode"] = "Mode";
+$vocab["mode_periods"] = "Períodes";
+$vocab["mode_times"] = "Temps";
+$vocab["times_only"] = "Només en mode Times";
+$vocab["enabled"] = "Activat";
+$vocab["disabled"] = "Desactivat";
+$vocab["disabled_area_note"] = "Si aquesta àrea està desactivada, no apareixerà a les vistes del calendari " .
+"i no hi serà possible reservar habitacions. No obstant això les reserves existents".
+"es conservarà i serà visible als resultats de la cerca i dels informes.";
+$vocab["disabled_room_note"] = "Si aquesta sala està desactivada, no apareixerà a les visualitzacions del calendari " .
+"i no es podrà reservar. No obstant això les reserves existents".
+"es conservarà i serà visible als resultats de la cerca i dels informes.";
+$vocab["book_ahead_note_periods"] = "Quan s'utilitzen punts, els temps de reserva anticipada s'arrodoneixen al dia sencer més proper.";
+$vocab["invalid_types"] = "Tipus no vàlids";
+$vocab["invalid_types_note"] = "Aquests són tipus que no es poden utilitzar en aquesta sala.";
+$vocab["select_note"] = "Utilitza Control-Clic per seleccionar/desmarcar una opció";
+
+// S'utilitza a edit_users.php
+$vocab["name_empty"] = "Has d'introduir un nom.";
+$vocab["name_not_unique"] = "Ja existeix. Trieu un altre nom.";
+$vocab["invalid_date"] = "El camp '%s' ha de contenir una data vàlida en el format AAAA-MM-DD.";
+$vocab["confirm_delete_user"] = "Esteu segur que voleu suprimir aquest usuari?";
+$vocab["confirm_delete_user_plus"] = "Esteu segur que voleu suprimir aquest usuari? Estan involucrats en " .
+"reserves com a creador, modificador o registrant i eliminació de l'usuari".
+"perdrà informació com ara el seu nom de visualització i adreça electrònica.";
+
+// S'utilitza a del.php
+$vocab["deletefollowing"] = "Això suprimirà les reserves següents";
+$vocab["and_n_more"] = "i %s més"; // %s en lloc de %d perquè n és la sortida de number_format()
+$vocab["sure"] = "Estàs segur?";
+$vocab["YES"] = "SÍ";
+$vocab["NO"] = "NO";
+$vocab["delarea"] = "Has de suprimir totes les sales d'aquesta àrea abans de poder-la suprimir<p>";
+
+// S'utilitza a help.php
+$vocab["about_mrbs"] = "Quant a MRBS";
+$vocab["mrbs_version"] = "Versió MRBS";
+$vocab["db_schema_version"] = "Versió de l'esquema de la base de dades";
+$vocab["db_local_schema_version"] = "Versió de l'esquema local de la base de dades";
+$vocab["config_details"] = "Detalls de configuració";
+$vocab["server_details"] = "Detalls del servidor";
+$vocab["database"] = "Base de dades";
+$vocab["system"] = "Sistema";
+$vocab["servertime"] = "Hora del servidor";
+$vocab["server_software"] = "Programari de servidor";
+$vocab["extensions"] = "Extensions";
+$vocab["please_contact"] = "Contacteu amb %s per a qualsevol pregunta que no es respongui aquí.";
+
+// S'utilitza a import.php
+$vocab["import_icalendar"] = "Importa un fitxer iCalendar";
+$vocab["source"] = "Font";
+$vocab["area_room_settings"] = "Àrees i sales";
+$vocab["other_settings"] = "Altres configuracions";
+$vocab["import_intro"] = "Aquest formulari us permet importar un iCalendar compatible amb RFC 5545 " .
+"a MRBS des d'un fitxer o URL. Només aquells esdeveniments que es repeteixen".
+"que tenen una regla de recurrència amb un tipus de repetició equivalent a " .
+"S'importarà MRBS.";
+$vocab["supported_file_types"] = "S'admeten els tipus de fitxers següents:";
+$vocab["import_text_file"] = "fitxers iCalendar sense comprimir";
+$vocab["import_zip"] = "Arxius zip, inclosos diversos fitxers en un arxiu";
+$vocab["import_gzip"] = "fitxers gzip";
+$vocab["import_bzip2"] = "fitxers bzip2";
+$vocab["source_type"] = "Tipus de font";
+$vocab["file"] = "Fitxer";
+$vocab["file_name"] = "Fitxer";
+$vocab["url"] = "URL";
+$vocab["invalid_url"] = "URL no vàlid";
+$vocab["import"] = "Importar";
+$vocab["upload_failed"] = "Ha fallat la pujada";
+$vocab["max_allowed_file_size"] = "La mida màxima permesa del fitxer és %s bytes";
+$vocab["no_file"] = "No s'ha carregat cap fitxer";
+$vocab["could_not_process"] = "La importació ha fallat: no s'ha pogut processar el fitxer";
+$vocab["badly_formed_ics"] = "Fitxer VCALENDAR mal format";
+$vocab["default_room"] = "Sala per defecte";
+$vocab["default_room_note"] = "L'habitació que s'utilitzarà si no s'especifica cap propietat LOCATION";
+$vocab["ignore_location"] = "Utilitza l'habitació per defecte en lloc de LOCATION";
+$vocab["add_location"] = "Afegeix la LOCALITZACIÓ al";
+$vocab["expanded_name"] = '%1$s [%2$s]'; // 1$ - RESUM, 2$ - LOCALITZACIÓ
+$vocab["expanded_empty_name"] = '[%s]'; // LOCALITZACIÓ
+$vocab["expanded_description"] = '%1$s [%2$s]'; // 1$ - DESCRIPCIÓ, 2$ - LOCALITZACIÓ
+$vocab["expanded_empty_description"] = '[%s]'; // LOCALITZACIÓ
+$vocab["area_room_order"] = "Comanda";
+$vocab["area_room_order_note"] = "L'ordre dels noms de l'àrea i de les habitacions a la propietat LOCATION";
+$vocab["area_room"] = "Àrea-Sala";
+$vocab["room_area"] = "Àrea de l'habitació";
+$vocab["area_room_delimiter"] = "Delimitador";
+$vocab["area_room_delimiter_note"] = "La cadena que separa els noms d'àrea i de sala a la propietat LOCATION. " .
+"Si no es troba cap delimitador, MRBS buscarà una habitació única amb la mateixa".
+"nom com a LOCALITZACIÓ";
+$vocab["area_room_create"] = "Creeu sales si cal";
+$vocab["import_past"] = "Importa reserves anteriors";
+$vocab["default_type"] = "Tipus predeterminat";
+$vocab["room_does_not_exist_no_area"] = "L'habitació no existeix i no es pot afegir - no s'ha donat cap àrea";
+$vocab["room_not_unique_no_area"] = "El nom de l'habitació no és únic. No es pot triar quina sense àrea.";
+$vocab["area_does_not_exist"] = "Àrea inexistent:";
+$vocab["room_does_not_exist"] = "Sala inexistent:";
+$vocab["creating_new_area"] = "S'està creant una àrea nova:";
+$vocab["creating_new_room"] = "S'està creant una habitació nova:";
+$vocab["could_not_create_area"] = "No s'ha pogut crear l'àrea";
+$vocab["could_not_create_room"] = "No s'ha pogut crear l'habitació";
+$vocab["could_not_find_room"] = "No s'ha pogut trobar espai";
+$vocab["could_not_import"] = 'No s"ha pogut importar "%1$s" (UID: %2$s)'; // 1$ nom, 2$ UID
+$vocab["import_no_SUMMARY"] = "Esdeveniment importat - no hi ha RESUM disponible"; // Aquesta cadena no pot estar buida
+$vocab["no_LOCATION"] = "El VEVENT no va incloure cap propietat LOCATION";
+$vocab["invalid_RRULE"] = "RRULE no vàlid: falta part FREQ";
+$vocab["invalid_RFC5545_day"] = "Dia '%s' no vàlid";
+$vocab["more_than_one_BYDAY"] = "MRBS no admet més d'un valor BYDAY quan FREQ=";
+$vocab["BYDAY_equals_5"] = "MRBS no admet un valor BYDAY de 5";
+$vocab["unsupported_FREQ"] = "MRBS no admet FREQ=";
+$vocab["unsupported_COUNT"] = "COUNT encara no suportat per MRBS";
+$vocab["no_indefinite_repeats"] = "Repeticions indefinides encara no suportades per MRBS";
+$vocab["bad_timezone"] = "Fus horària '%s' desconegut o incorrecte";
+$vocab["events_imported"] = "esdeveniments importats";
+$vocab["events_not_imported"] = "esdeveniments no importats";
+
+// S'utilitza a EntryInterval.php
+$vocab["range_separator"] = " - "; // Per separar dues dates/hores en un interval
+$vocab["date_time_separator"] = ", "; // Per separar una data d'una hora
+
+// S'utilitza a les taules de dades
+$vocab["dt_all"] = "Tot";
+$vocab["show_hide_columns"] = "Mostrar/amagar columnes";
+$vocab["copy"] = "Còpia";
+// "csv" ja definit anteriorment
+$vocab["excel"] = "Excel";
+$vocab["pdf"] = "PDF";
+$vocab["print"] = "Imprimeix";
+$vocab["restore_original"] = "Restaura l'original";
+
+// Tipus d'entrada
+$vocab["type."] = "Seleccioneu un tipus";
+$vocab["type.I"] = "Intern";
+$vocab["type.E"] = "Extern";
+
+// General
+$vocab["fatal_error"] = "Vaja! Malauradament, MRBS ha trobat un error fatal. Consulteu l'administrador del vostre sistema.";
+$vocab["resize_error"] = "Vaja! Malauradament, MRBS ha trobat un error mentre intentava modificar aquesta reserva. Si això " .
+"continua passant si us plau, consulteu el vostre administrador del sistema.";
+$vocab["fatal_db_error"] = "Error fatal: malauradament la base de dades no està disponible en aquest moment.";
+$vocab["fatal_no_tables"] = "Error fatal: les taules MRBS no existeixen o no es pot accedir.";
+$vocab["session_expired"] = "La vostra sessió ha caducat.";
+$vocab["browser_not_supported"] = "Lamentablement, el vostre navegador no és compatible amb %s. Haureu d'actualitzar a un altre " .
+"versió recent, o bé utilitzeu un altre navegador.";
+$vocab["back"] = "Enrere";
