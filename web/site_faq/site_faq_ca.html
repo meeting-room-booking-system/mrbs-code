@@ -1,0 +1,179 @@
+<!-- -*-mode: HTML; coding:utf-8;-*- -->
+
+<div lang="ca">
+<div id="site_faq_contents">
+  <a id="top"></a><h4>Autenticació</h4>
+<ul>
+<li><a href="#authenticate">Com puc iniciar la sessió?</a></li>
+<li><a href="#meeting_delete">Per què no puc suprimir/alterar una reunió?</a></li>
+</ul>
+<h4>Fer/Alterar reunions</h4>
+<ul>
+<li><a href="#create">Com puc crear una reunió?</a></li>
+<li><a href="#fifth">Quina diferència hi ha entre <q>cinquè</q> i <q>últim</q>?</a></li>
+<li><a href="#repeating_delete">Com puc suprimir una instància d'una reunió recurrent?</a></li>
+<li><a href="#multiple_sites">Com puc programar sales a diferents llocs?</a></li>
+<li><a href="#too_many">La meva reunió no s'ha pogut crear perquè hi ha <q>massa entrades</q>!</a></li>
+<li><a href="#multiple_users">Què passa si diverses persones programen la mateixa reunió?</a></li>
+</ul>
+<h4>Diversos</h4>
+<ul>
+<li><a href="#internal_external">Quina diferència hi ha entre <q>Intern</q> i <q>Extern</q>?</a></li>
+</ul>
+<h4>Sobre el sistema de reserves de sales de reunions</h4>
+<ul>
+<li><a href="#how_much">Quant va costar el sistema?</a></li>
+<li><a href="#about">Com funciona el sistema i qui l'ha escrit?</a></li>
+</ul>
+</div>
+<div id="site_faq_body">
+<div id="autenticar">
+<h4>Com puc iniciar la sessió?</h4>
+<p>
+El sistema es pot configurar per utilitzar un dels diversos mètodes d'autenticació,
+incloent LDAP, Netware i SMB. Consulteu el vostre administrador del sistema si ho feu
+Teniu problemes per iniciar sessió. Algunes funcions estan restringides a determinades
+usuaris, i altres usuaris rebran el missatge <q>No teniu drets d'accés
+modificar aquest element</q>. Consulteu el vostre administrador del sistema si això no funciona
+correctament per a tu.
+Si el sistema està configurat per utilitzar l'autenticació LDAP, això vol dir que vostè
+inicieu sessió amb el mateix nom d'usuari i contrasenya que utilitzeu per rebre el correu electrònic
+p. ex. <q>Mark Belanger</q> i <q>MyPassword</q>.
+</p>
+<a href="#top">Amunt</a>
+</div>
+<div id="meeting_delete">
+<h4>Per què no puc suprimir/alterar una reunió?</h4>
+<p>
+Per suprimir o modificar una reunió, heu d'iniciar sessió com a
+mateixa persona que va fer la reunió. Contacta amb un de la sala de reunions
+administradors o la persona que inicialment va fer la reunió
+fer-lo esborrar o canviar.
+</p>
+<a href="#top">Amunt</a>
+</div>
+<div id="crear">
+<h4>Com puc crear una reunió?</h4>
+<p>
+Si feu clic a l'hora desitjada, us portarà a la pantalla de reserva. Ompliu
+els detalls i feu clic a "Desa".
+</p>
+<p>
+En lloc de fer clic a l'hora desitjada, podeu seleccionar un interval de temps i
+també una habitació o un interval de dies arrossegant el cursor per sobre d'un grup de cel·les del
+visualitzacions diàries o setmanals. Quan deixeu anar el ratolí, se us portarà a
+pantalla de reserva i les franges horàries i l'habitació o interval de dies hauran estat
+omplert per tu.
+</p>
+<a href="#top">Amunt</a>
+</div>
+<div id="cinquè">
+<h4>Quina diferència hi ha entre <q>cinquè</q> i <q>últim</q>?</h4>
+<p>
+Quan feu una reserva periòdica mensual, el <q>cinquè</q> dia feiner de cada mes
+és només això. Si un mes no té un cinquè dia laborable, no hi haurà reserva
+fet per a aquell mes. Si trieu el <q>últim</q> dia feiner del mes, a
+la reserva es farà el quart dia laborable si no hi ha un cinquè dia laborable.
+</p>
+<p>
+<q>Finth last</q> funciona de manera similar, però comptant enrere des del final de
+el mes. Si feu servir <q>primer</q>, us donarà el quart darrer dia feiner del mes
+si no hi ha un cinquè l'últim dia feiner.
+</p>
+<a href="#top">Amunt</a>
+</div>
+<div id="repeating_delete">
+<h4>Com puc suprimir una instància d'una reunió recurrent?</h4>
+<p>
+Seleccioneu el dia/habitació/hora que voleu suprimir i seleccioneu <dfn>Suprimeix l'entrada</dfn>.
+</p>
+<a href="#top">Amunt</a>
+</div>
+<div id="llocs_múltiples">
+<h4>Com puc programar sales a diferents llocs?</h4>
+<p>
+Tu no. Actualment el sistema no pot reservar dues habitacions diferents simultàniament.
+Cal programar cadascun per separat. Assegureu-vos que el temps que voleu
+està disponible als dos llocs abans de fer una reserva.
+</p>
+<a href="#top">Amunt</a>
+</div>
+<div id="too_many">
+<h4>La meva reunió no s'ha pogut crear perquè hi ha <q>massa entrades</q>!</h4>
+<p>
+Cap reunió pot crear més de 365 entrades. Cal que hi hagi un límit en el nombre de reunions creades.
+Aquest nombre es pot augmentar si cal.
+</p>
+<a href="#top">Amunt</a>
+</div>
+<div id="múltiples_usuaris">
+<h4>Què passa si diverses persones programen la mateixa reunió?</h4>
+<p>
+La resposta breu és: la primera persona a fer clic
+el botó <dfn>Envia</dfn> guanya.
+Darrere de les escenes, el sistema utilitza un multiusuari adequat i multifils
+base de dades relacional que pot gestionar molts milers d'usuaris simultanis.
+</p>
+<a href="#top">Amunt</a>
+</div>
+<div id="internal_external">
+<h4>Quina diferència hi ha entre <q>Intern</q> i <q>Extern</q>?</h4>
+<p>
+Per defecte, MRBS defineix dos tipus de reunió. <dfn>Intern</dfn> significa que el
+a la reunió només hi assistiran els treballadors. Una reunió <dfn>externa</dfn>
+També hi poden assistir clients, venedors, inversors, etc. El vostre lloc
+pot definir fins a un total de 10 tipus de reunions, segons les vostres necessitats.
+Les reunions es destaquen a la vista del calendari principal amb un color corresponent
+al seu tipus i a la part inferior es mostra una clau de color de tots els tipus definits
+de la vista principal del calendari.
+</p>
+<a href="#top">Amunt</a>
+</div>
+<div id="quant_quant">
+<a></a><h4>Quant va costar el sistema?</h4>
+<p>
+Res. Consulteu la secció següent per obtenir més informació.
+</p>
+<a href="#top">Amunt</a>
+</div>
+<div id="sobre">
+<h4>Com funciona el sistema i qui l'ha escrit?</h4>
+<p>
+El <a href="https://sourceforge.net/projects/mrbs/">Sistema de reserves de sales de reunions</a>
+és un programari de codi obert que es distribueix sota la Gnu Public License (GPL).
+Això vol dir que el programari és lliure d'utilitzar, distribuir i modificar.
+</p>
+<p>
+El sistema està escrit principalment en <a href="https://www.php.net/">PHP</a>,
+que és un llenguatge de programació de codi obert que es pot incrustar a la web
+pàgines similars en concepte a les pàgines del servidor actiu de Microsoft. PHP és especialment
+bo per accedir a bases de dades.
+</p>
+<p>
+La base de dades utilitzada per al sistema és qualsevol
+<a href="https://www.mysql.com/">MySQL</a>
+o <a href="https://www.postgresql.org/">PostgreSQL</a>.
+MySQL és un sistema molt ràpid, multifils, multiusuari i robust
+Servidor de bases de dades SQL (Structured Query Language) que també és GPL.
+PostgreSQL és un Object Relational SQL de codi obert multiusuari amb totes les funcions
+servidor de bases de dades.
+</p>
+<p>
+El sistema funcionarà en diverses plataformes, inclosa l'arquitectura de PC
+utilitzant el sistema operatiu <a href="http://www.linux.com">Linux</a>.
+Linux, és un sistema operatiu gratuït, de codi obert, semblant a Unix.
+</p>
+<p>
+El servidor web que s'utilitza és una altra peça de codi obert i gratuït
+programari. El servidor web <a href="http://www.apache.org">Apache</a> és
+el servidor web més popular del món.
+</p>
+<p>
+La conclusió és: <strong>cada peça d'aquest sistema, des del sistema operatiu fins a l'aplicació,
+és completament gratuït: codi font i tot</strong>.
+</p>
+<a href="#top">Amunt</a>
+</div>
+</div>
+</div>
+
