@@ -2870,7 +2870,7 @@ function get_bookings_in_series(?int $repeat_id) : array
 
     foreach ($res as $id)
     {
-      $booking = get_entry_by_id($id);
+      $booking = get_entry_by_id((int)$id);
       if (isset($booking))
       {
         $bookings[] = $booking;
