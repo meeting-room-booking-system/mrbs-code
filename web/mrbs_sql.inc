@@ -2863,18 +2863,18 @@ function get_bookings_in_series(?int $repeat_id) : array
 
   if (isset($repeat_id))
   {
-    $sql = "SELECT id
-           FROM " . _tbl('entry') . "
-          WHERE repeat_id = ?";
-    $res = db()->query_array($sql, array($repeat_id));
+    $sql = "SELECT *
+              FROM " . _tbl('entry') . "
+             WHERE repeat_id = ?";
+    $res = db()->query($sql, array($repeat_id));
 
-    foreach ($res as $id)
+    while (false !== ($row = $res->next_row_keyed()))
     {
-      $booking = get_entry_by_id((int)$id);
-      if (isset($booking))
-      {
-        $bookings[] = $booking;
-      }
+      // Cast the columns to their correct types
+      row_cast_columns($row, 'entry');
+      // Unpack the status bits
+      unpack_status($row);
+      $bookings[] = $row;
     }
   }
 
