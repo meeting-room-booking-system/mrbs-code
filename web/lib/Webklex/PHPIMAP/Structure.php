@@ -50,11 +50,11 @@ class Structure {
     public array $parts = [];
 
     /**
-     * Config holder
+     * Options holder
      *
-     * @var array $config
+     * @var array $options
      */
-    protected array $config = [];
+    protected array $options = [];
 
     /**
      * Structure constructor.
@@ -67,7 +67,7 @@ class Structure {
     public function __construct($raw_structure, Header $header) {
         $this->raw = $raw_structure;
         $this->header = $header;
-        $this->config = ClientManager::get('options');
+        $this->options = $header->getConfig()->get('options');
         $this->parse();
     }
 
@@ -110,12 +110,17 @@ class Structure {
         $headers = substr($context, 0, strlen($body) * -1);
         $body = substr($body, 0, -2);
 
-        $headers = new Header($headers);
+        $config = $this->header->getConfig();
+        $headers = new Header($headers, $config);
         if (($boundary = $headers->getBoundary()) !== null) {
-            return $this->detectParts($boundary, $body, $part_number);
+            $parts = $this->detectParts($boundary, $body, $part_number);
+
+            if(count($parts) > 1) {
+                return $parts;
+            }
         }
 
-        return [new Part($body, $headers, $part_number)];
+        return [new Part($body, $this->header->getConfig(), $headers, $part_number)];
     }
 
     /**
@@ -159,6 +164,6 @@ class Structure {
             return $this->detectParts($boundary, $this->raw);
         }
 
-        return [new Part($this->raw, $this->header)];
+        return [new Part($this->raw, $this->header->getConfig(), $this->header)];
     }
 }
