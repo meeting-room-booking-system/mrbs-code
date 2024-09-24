@@ -36,8 +36,31 @@ namespace MRBS\Auth;
  * $auth["admin"][] = "imapuser2";
  */
 
+use MRBS\Exception;
+use Webklex\PHPIMAP\ClientManager;
+use Webklex\PHPIMAP\Exceptions\AuthFailedException;
+use Webklex\PHPIMAP\Exceptions\ImapServerErrorException;
+
 class AuthImapPhp extends Auth
 {
+  private $canUseWebklex;
+
+  public function __construct()
+  {
+    assert(
+      version_compare(MRBS_MIN_PHP_VERSION, '8.0') < 0,
+      'The code below is no longer required.'
+    );
+    // The imap extension was removed in PHP 8.4 and so we use the Webklex/PHPIMAP library
+    // instead. However this requires PHP 8.0 or greater.
+    $this->canUseWebklex = (version_compare(PHP_VERSION, '8.0') >= 0);
+
+    if (!$this->canUseWebklex && !function_exists('imap_open'))
+    {
+      throw new Exception("The imap extension is not installed on this server.");
+    }
+  }
+
   /* validateUser($user, $pass)
    *
    * Checks if the specified username/password pair are valid
@@ -72,6 +95,64 @@ class AuthImapPhp extends Auth
         return false;
       }
     }
+
+    if (!$this->canUseWebklex)
+    {
+      return $this->validateUserLegacy($user, $pass);
+    }
+
+    $cm = new ClientManager();
+
+    $config = [
+      'host'          => $auth['imap_php']['hostname'],
+      'username'      => $user,
+      'password'      => $pass,
+      'protocol'      => 'imap'
+    ];
+
+    // The defaults are chosen to be compatible with the legacy behaviour.
+    $config['port'] = $auth['imap_php']['port'] ?? 143;
+    $config['validate_cert'] = empty($auth['imap_php']['novalidate-cert']);
+    if (!empty($auth['imap_php']['ssl']))
+    {
+      $config['encryption'] = 'ssl';
+    }
+    elseif (!empty($auth['imap_php']['tls']))
+    {
+      $config['encryption'] = 'tls';
+    }
+    else
+    {
+      $config['encryption'] = '';
+    }
+
+    try {
+      $client = $cm->make($config);
+      $client->connect();  //Connect to the IMAP Server
+      return $user;
+    }
+    catch (ImapServerErrorException | AuthFailedException $e) {
+      // Don't do anything with these exceptions: they are normal when
+      // authentication fails.
+    }
+    catch (\Exception $e) {
+      // We weren't expecting any other exceptions so trigger an error.
+      $message = "Caught exception '" . get_class($e) . "'\n";
+      $message .= $e->getMessage() . "\n" . $e->getTraceAsString();
+      trigger_error($message, E_USER_WARNING);
+    }
+
+    return false;
+  }
+
+
+  private function validateUserLegacy(
+    #[\SensitiveParameter]
+    ?string $user,
+    #[\SensitiveParameter]
+    ?string $pass)
+  {
+    global $auth;
 
     $location = '{' . $auth['imap_php']['hostname'];
 
