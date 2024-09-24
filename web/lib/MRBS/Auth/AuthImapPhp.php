@@ -88,7 +88,7 @@ class AuthImapPhp extends Auth
         return false;
       }
 
-      list($local_part, $domain) = explode('@', $user);
+      list(, $domain) = explode('@', $user);
 
       if ($domain != $auth['imap_php']['user_domain'])
       {
