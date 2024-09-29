@@ -1882,6 +1882,8 @@ $csv_col_sep = ",";   // Separator between columns/fields
 $csv_charset = 'utf-8';
 $csv_bom = false;
 
+// Set this to true to allow unauthenticated GET requests to report.php
+$report_unauthenticated_get_enabled = false;
 
 /*************
  * iCalendar

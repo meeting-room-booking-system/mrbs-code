@@ -1497,7 +1497,7 @@ if (!in_array($sumby, ['c', 'd', 't']))
 
 $is_ajax = is_ajax();
 
-if ($cli_mode)
+if ($cli_mode || $report_unauthenticated_get_enabled)
 {
   // If we're running in CLI mode we're passing the parameters in from the command line
   // not the form and we want to go straight to Phase 2 (producing the report)
