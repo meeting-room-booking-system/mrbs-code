@@ -1175,9 +1175,11 @@ function accumulate_summary($row, &$count, &$hours, $report_start, $report_end,
     $endDate->setTimestamp($report_end)->modify('12:00');
     $endDate->sub(new DateInterval('P1D'));  // Go back one day because the $report_end is at 00:00 the day after
     $endDate->add(new DateInterval('PT' . $periods_per_day . 'M'));
-
-    $increment = get_period_interval(max($row['start_time'], $startDate->getTimestamp()),
-                                     min($row['end_time'], $endDate->getTimestamp()));
+    $increment = get_period_interval(
+      max($row['start_time'], $startDate->getTimestamp()),
+      min($row['end_time'], $endDate->getTimestamp()),
+      $row['area_id']
+    );
     $room_hash[$room] = MODE_PERIODS;
   }
   else
