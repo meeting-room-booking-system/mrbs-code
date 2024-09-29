@@ -132,7 +132,7 @@ function get_fieldset_general(Area $area) : ElementFieldset
     $field->setLabel(get_vocab('custom_html'))
       ->setLabelAttribute('title', get_vocab('custom_html_note'))
       ->setControlAttribute('name', 'custom_html')
-      ->setControlText($area->custom_html) ?? '';
+      ->setControlText($area->custom_html ?? '');
     $fieldset->addElement($field);
   }
 
