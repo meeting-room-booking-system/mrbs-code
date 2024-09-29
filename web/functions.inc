@@ -1051,9 +1051,14 @@ function from_time_string(array $duration)
 
 // Gets the interval in periods for a booking with $start_time and $end_time
 // Takes account of DST
-function get_period_interval(int $start_time, int $end_time) : int
+function get_period_interval(int $start_time, int $end_time, int $area_id) : int
 {
-  global $periods;
+  static $periods = array();
+
+  if (!isset($periods[$area_id]))
+  {
+    $periods[$area_id] = Area::getById($area_id)->periods;
+  }
 
   $periods_per_day = count($periods);
 
@@ -1082,11 +1087,11 @@ function get_period_interval(int $start_time, int $end_time) : int
   {
     // Otherwise we calculate the number of periods on the first day
     $startDate->add(new DateInterval('PT' . $periods_per_day . 'M'));
-    $result = get_period_interval($start_time, $startDate->getTimestamp());
+    $result = get_period_interval($start_time, $startDate->getTimestamp(), $area_id);
     // Add in the number of whole days worth of periods in between
     $result += ($interval_days - 1) * $periods_per_day;
     // And add in the number of periods on the last day
-    $result += get_period_interval($endDate->getTimestamp(), $end_time);
+    $result += get_period_interval($endDate->getTimestamp(), $end_time, $area_id);
   }
 
   return (int) $result;
@@ -1423,7 +1428,7 @@ function get_duration(int $start_time, int $end_time, bool $enable_periods, int 
   if ($enable_periods)
   {
     $periods_per_day = count($periods[$area_id]);
-    $n_periods = get_period_interval($start_time, $end_time);  // this handles DST
+    $n_periods = get_period_interval($start_time, $end_time, $area_id);  // this handles DST
     if (($n_periods % $periods_per_day) == 0)
     {
       $result['value'] =  intval($n_periods/$periods_per_day);
