@@ -1020,19 +1020,30 @@ function fromTimeString(&$units, $dur_units)
 // Takes account of DST
 function get_period_interval(int $start_time, int $end_time, int $area_id) : int
 {
-  $period_names = get_period_names();
-  $periods_per_day = count($period_names[$area_id]);
+  static $area_details = [];
 
+  if (!isset($area_details[$area_id]))
+  {
+    $area_details[$area_id] = get_area_details($area_id);
+  }
+
+  $periods_per_day = count(json_decode($area_details[$area_id]['periods']));
+  $area_timezone = $area_details[$area_id]['timezone'];
+
+  // Create start and end dates and set both dates to noon so that we can compare them
+  // and get an integral number of days difference.  Noon also happens to be when
+  // periods start, so will be useful in a moment.
   $startDate = new DateTime();
-  $startDate->setTimestamp($start_time);
-  $endDate = new DateTime();
-  $endDate->setTimestamp($end_time);
+  $startDate
+    ->setTimezone(new DateTimeZone($area_timezone))
+    ->setTimestamp($start_time)
+    ->modify('12:00');
 
-  // Set both dates to noon so that we can compare them and get an integral
-  // number of days difference.  Noon also happens to be when periods start,
-  // so will be useful in a moment.
-  $startDate->modify('12:00');
-  $endDate->modify('12:00');
+  $endDate = new DateTime();
+  $endDate
+    ->setTimezone(new DateTimeZone($area_timezone))
+    ->setTimestamp($end_time)
+    ->modify('12:00');;
 
   // Calculate the difference in days
   $interval = $startDate->diff($endDate);
