@@ -1076,7 +1076,7 @@ function get_period_interval(int $start_time, int $end_time, int $area_id) : int
   $endDate
     ->setTimezone(new DateTimeZone($area_timezone))
     ->setTimestamp($end_time)
-    ->modify('12:00');;
+    ->modify('12:00');
 
   // Calculate the difference in days
   $interval = $startDate->diff($endDate);
