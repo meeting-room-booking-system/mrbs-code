@@ -1049,7 +1049,7 @@ function get_period_interval(int $start_time, int $end_time, int $area_id) : int
   $interval = $startDate->diff($endDate);
   $interval_days = $interval->format('%a');
 
-  if ($interval_days == 0)
+  if ($interval_days === '0')
   {
     // If the interval starts and ends on the same day, then we just calculate the number
     // of periods by calculating the number of minutes between the start and end times.
