@@ -1061,20 +1061,20 @@ function get_period_interval(int $start_time, int $end_time, int $area_id) : int
   }
 
   $periods_per_day = count($areas[$area_id]->periods);
-  $area_timezone = $areas[$area_id]->timezone;
+  $date_time_zone = new DateTimeZone($areas[$area_id]->timezone);
 
   // Create start and end dates and set both dates to noon so that we can compare them
   // and get an integral number of days difference.  Noon also happens to be when
   // periods start, so will be useful in a moment.
   $startDate = new DateTime();
   $startDate
-    ->setTimezone(new DateTimeZone($area_timezone))
+    ->setTimezone($date_time_zone)
     ->setTimestamp($start_time)
     ->modify('12:00');
 
   $endDate = new DateTime();
   $endDate
-    ->setTimezone(new DateTimeZone($area_timezone))
+    ->setTimezone($date_time_zone)
     ->setTimestamp($end_time)
     ->modify('12:00');
 
