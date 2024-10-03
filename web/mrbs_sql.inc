@@ -2149,7 +2149,7 @@ function update_participants(int $old_id, int $new_id) : bool
 function mrbsMakeBookings(array $bookings, ?int $id=null, bool $just_check=false, bool $skip=false, ?int $original_room_id=null, bool $send_mail=false, bool $edit_series=false)
 {
   global $max_rep_entrys, $enable_periods, $resolution, $mail_settings;
-  global $prevent_simultaneous_bookings, $auth;
+  global $auth;
 
   // All the data, except for the status and room id, will be common
   // across the bookings
