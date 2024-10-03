@@ -2458,7 +2458,11 @@ function mrbsMakeBookings(array $bookings, ?int $id=null, bool $just_check=false
     }
     else
     {
-      // Create the entry:
+      // Make sure the keys below are set properly for a single entry (they might not
+      // be if we've been editing a series and changed its repeat type to "none").
+      $booking['repeat_id'] = null;
+      $booking['entry_type'] = ENTRY_SINGLE;
+      // Create the entry
       $new_id = mrbsCreateSingleEntry($booking);
       // Update the participant table
       if (isset($id))
