@@ -1533,8 +1533,8 @@ $(document).on('page_ready', function() {
   var tabsHTML =
 '<div id="check_tabs">' +
 '<ul id="details_tabs">' +
-'<li><a href="#schedule_details"><?php echo get_vocab('schedule') ?></a></li>' +
-'<li><a href="#policy_details"><?php echo get_vocab('policy') ?></a></li>' +
+'<li><a href="#schedule_details"><?php echo escape_js(get_vocab('schedule')) ?></a></li>' +
+'<li><a href="#policy_details"><?php echo escape_js(get_vocab('policy')) ?></a></li>' +
 '<li id="ui-tab-dialog-close"></li>' +
 '</ul>' +
 '<div id="schedule_details"></div>' +
