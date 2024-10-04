@@ -119,11 +119,11 @@ var extractEmailAddresses = function(dt, columnSelector, sort) {
 
   navigator.clipboard.writeText(result.join(', '))
     .then(() => {
-      message = '<?php echo get_vocab('unique_addresses_copied')?>';
+      message = '<?php echo escape_js(get_vocab('unique_addresses_copied'))?>';
       message = message.replace('%d', result.length.toString());
     })
     .catch((err) => {
-      message = '<?php echo get_vocab('clipboard_copy_failed')?>';
+      message = '<?php echo escape_js(get_vocab('clipboard_copy_failed'))?>';
       console.error(err);
     })
     .finally(() => {

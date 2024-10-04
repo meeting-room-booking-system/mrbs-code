@@ -162,7 +162,7 @@ var updateBody = function(event) {
     }
 
     <?php // Add a "Loading ..." message ?>
-    $('h2.date').text('<?php echo get_vocab('loading')?>')
+    $('h2.date').text('<?php echo escape_js(get_vocab('loading'))?>')
                 .addClass('loading');
 
     if (updateBody.prefetched && updateBody.prefetched[href])

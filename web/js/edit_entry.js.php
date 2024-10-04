@@ -96,16 +96,16 @@ var changeRepIntervalUnits = function changeRepIntervalUnits() {
     switch (repType)
     {
       case <?php echo RepeatRule::DAILY ?>:
-        text = (repInterval === 1) ? '<?php echo get_vocab('day') ?>' : '<?php echo get_vocab('days') ?>';
+        text = (repInterval === 1) ? '<?php echo escape_js(get_vocab('day')) ?>' : '<?php echo escape_js(get_vocab('days')) ?>';
         break;
       case <?php echo RepeatRule::WEEKLY ?>:
-        text = (repInterval === 1) ? '<?php echo get_vocab('week') ?>' : '<?php echo get_vocab('weeks') ?>';
+        text = (repInterval === 1) ? '<?php echo escape_js(get_vocab('week')) ?>' : '<?php echo escape_js(get_vocab('weeks')) ?>';
         break;
       case <?php echo RepeatRule::MONTHLY ?>:
-        text = (repInterval === 1) ? '<?php echo get_vocab('month') ?>' : '<?php echo get_vocab('months') ?>';
+        text = (repInterval === 1) ? '<?php echo escape_js(get_vocab('month')) ?>' : '<?php echo escape_js(get_vocab('months')) ?>';
         break;
       case <?php echo RepeatRule::YEARLY ?>:
-        text = (repInterval === 1) ? '<?php echo get_vocab('year_lc') ?>' : '<?php echo get_vocab('years') ?>';
+        text = (repInterval === 1) ? '<?php echo escape_js(get_vocab('year_lc')) ?>' : '<?php echo escape_js(get_vocab('years')) ?>';
         break;
       default:
         text = units.text();
@@ -1533,8 +1533,8 @@ $(document).on('page_ready', function() {
   var tabsHTML =
 '<div id="check_tabs">' +
 '<ul id="details_tabs">' +
-'<li><a href="#schedule_details"><?php echo get_vocab('schedule') ?></a></li>' +
-'<li><a href="#policy_details"><?php echo get_vocab('policy') ?></a></li>' +
+'<li><a href="#schedule_details"><?php echo escape_js(get_vocab('schedule')) ?></a></li>' +
+'<li><a href="#policy_details"><?php echo escape_js(get_vocab('policy')) ?></a></li>' +
 '<li id="ui-tab-dialog-close"></li>' +
 '</ul>' +
 '<div id="schedule_details"></div>' +
