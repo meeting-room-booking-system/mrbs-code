@@ -89,6 +89,8 @@ class DB_mysql extends DB
         // errors of the type "Syntax error or access violation: 1055 'mrbs.E.start_time' isn't in GROUP BY".
         // TODO: However the proper solution is probably to rewrite the offending queries.
         $this->command("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
+        // Set STRICT_TRANS_TABLES so that we can detect invalid values being inserted in the database
+        $this->command("SET SESSION sql_mode = 'STRICT_TRANS_TABLES'");
       }
       catch (PDOException $e)
       {
