@@ -703,7 +703,7 @@ function get_bom(string $charset) : string
 // [Maybe in the future we should switch to using the MessageFormatter
 //  class as it is more powerful.   However the Intl extension isn't present
 //  in all PHP installations and so the class would have to be emulated]
-function get_vocab(string $tag) : string
+function get_vocab(string $tag, ...$values) : string
 {
   global $vocab;
 
@@ -713,10 +713,12 @@ function get_vocab(string $tag) : string
     return $tag;
   }
 
-  $args = func_get_args();
-  $args[0] = $vocab[$tag];
+  if (count($values) === 0)
+  {
+    return $vocab[$tag];
+  }
 
-  return call_user_func_array('sprintf', $args);
+  return sprintf($vocab[$tag], ...$values);
 }
 
 
