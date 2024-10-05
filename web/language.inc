@@ -703,7 +703,7 @@ function get_bom(string $charset) : string
 // [Maybe in the future we should switch to using the MessageFormatter
 //  class as it is more powerful.   However the Intl extension isn't present
 //  in all PHP installations and so the class would have to be emulated]
-function get_vocab(string $tag) : string
+function get_vocab(string $tag, ...$values) : string
 {
   global $vocab;
 
@@ -713,10 +713,7 @@ function get_vocab(string $tag) : string
     return $tag;
   }
 
-  $args = func_get_args();
-  $args[0] = $vocab[$tag];
-
-  return call_user_func_array('sprintf', $args);
+  return (count($values) === 0) ? $vocab[$tag] : sprintf($vocab[$tag], ...$values);
 }
 
 
@@ -736,8 +733,15 @@ function get_mail_lang() : ?string
 }
 
 
+// Same as get_vocab(), but escapes the result for use in JavaScript
+function get_js_vocab(string $tag, ...$values) : string
+{
+  return escape_js(get_vocab($tag, ...$values));
+}
+
+
 // Same as get_vocab(), but uses the mailing language
-function get_mail_vocab(string $tag) : string
+function get_mail_vocab(string $tag, ...$values) : string
 {
   global $vocab;
 
@@ -758,9 +762,7 @@ function get_mail_vocab(string $tag) : string
     return $tag;
   }
 
-  $args = func_get_args();
-  $args[0] = $mail_vocab[$tag];
-  $result = call_user_func_array('sprintf', $args);
+  $result = (count($values) === 0) ? $mail_vocab[$tag] : sprintf($mail_vocab[$tag], ...$values);
 
   return str_replace('&nbsp;', ' ', $result);
 }

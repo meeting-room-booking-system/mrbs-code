@@ -397,7 +397,7 @@ $(document).on('page_ready', function() {
                  e.target.setCustomValidity('');
                  if (!e.target.validity.valid)
                  {
-                   e.target.setCustomValidity('<?php echo escape_js(get_vocab('invalid_time_format'))?>');
+                   e.target.setCustomValidity('<?php echo get_js_vocab('invalid_time_format')?>');
                  }
                });
     }
@@ -443,7 +443,7 @@ $(document).on('page_ready', function() {
   <?php // Add client-side validation of the file upload size ?>
   $('input[type="file"]').on('change input', function(e) {
     var maxFileSize = $(this).closest('form').find('[name="MAX_FILE_SIZE"]').val();
-    var message = '<?php echo escape_js(get_vocab("max_allowed_file_size", ini_get('upload_max_filesize')))?>'
+    var message = '<?php echo get_js_vocab("max_allowed_file_size", ini_get('upload_max_filesize'))?>'
     <?php // Check that we know MAX_FILE_SIZE and for browser support ?>
     if(maxFileSize && e.target.files && e.target.files.length === 1) {
       if (e.target.files[0].size > maxFileSize) {
