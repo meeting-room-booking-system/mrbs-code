@@ -1187,7 +1187,7 @@ $(document).on('page_ready', function() {
         // then any opacity rule that is applied to the parent will also apply to the child.
         ?>
         booking.addClass('saving')
-               .after('<span class="saving"><?php echo escape_js(get_vocab('saving')); ?></span>');
+               .after('<span class="saving"><?php echo get_js_vocab('saving'); ?></span>');
 
         if(args.site)
         {
@@ -1247,7 +1247,7 @@ $(document).on('page_ready', function() {
             $('table.dwm_main').trigger('tableload');
             <?php // Allow some time for the changes above to complete and then alert the user ?>
             setTimeout(function() {
-                alert("<?php echo escape_js(get_vocab('resize_error'))?>");
+                alert("<?php echo get_js_vocab('resize_error')?>");
               }, 250
             );
 

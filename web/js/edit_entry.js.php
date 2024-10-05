@@ -96,16 +96,16 @@ var changeRepIntervalUnits = function changeRepIntervalUnits() {
     switch (repType)
     {
       case <?php echo RepeatRule::DAILY ?>:
-        text = (repInterval === 1) ? '<?php echo escape_js(get_vocab('day')) ?>' : '<?php echo escape_js(get_vocab('days')) ?>';
+        text = (repInterval === 1) ? '<?php echo get_js_vocab('day') ?>' : '<?php echo get_js_vocab('days') ?>';
         break;
       case <?php echo RepeatRule::WEEKLY ?>:
-        text = (repInterval === 1) ? '<?php echo escape_js(get_vocab('week')) ?>' : '<?php echo escape_js(get_vocab('weeks')) ?>';
+        text = (repInterval === 1) ? '<?php echo get_js_vocab('week') ?>' : '<?php echo get_js_vocab('weeks') ?>';
         break;
       case <?php echo RepeatRule::MONTHLY ?>:
-        text = (repInterval === 1) ? '<?php echo escape_js(get_vocab('month')) ?>' : '<?php echo escape_js(get_vocab('months')) ?>';
+        text = (repInterval === 1) ? '<?php echo get_js_vocab('month') ?>' : '<?php echo get_js_vocab('months') ?>';
         break;
       case <?php echo RepeatRule::YEARLY ?>:
-        text = (repInterval === 1) ? '<?php echo escape_js(get_vocab('year_lc')) ?>' : '<?php echo escape_js(get_vocab('years')) ?>';
+        text = (repInterval === 1) ? '<?php echo get_js_vocab('year_lc') ?>' : '<?php echo get_js_vocab('years') ?>';
         break;
       default:
         text = units.text();
@@ -319,7 +319,7 @@ function validationMessages()
       {
         validationMessages.vocab[key] = label.text();
         validationMessages.vocab[key] = '"' + validationMessages.vocab[key] + '" ';
-        validationMessages.vocab[key] += '<?php echo escape_js(get_vocab("is_mandatory_field")) ?>';
+        validationMessages.vocab[key] += '<?php echo get_js_vocab("is_mandatory_field") ?>';
 
         field = document.getElementById(key);
         if (field.setCustomValidity && field.willValidate)
@@ -476,7 +476,7 @@ function validate(form)
   var dateDiff = getDateDifference();
   if (dateDiff < 0)
   {
-    window.alert("<?php echo escape_js(get_vocab('start_after_end_long'))?>");
+    window.alert("<?php echo get_js_vocab('start_after_end_long')?>");
     return false;
   }
 
@@ -491,7 +491,7 @@ function validate(form)
     if ((!("min" in testInput) || !(("step" in testInput))) &&
         (form.find('#rep_interval').val() < 1))
     {
-      window.alert("<?php echo escape_js(get_vocab('invalid_rep_interval')) ?>");
+      window.alert("<?php echo get_js_vocab('invalid_rep_interval') ?>");
       return false;
     }
     <?php
@@ -500,7 +500,7 @@ function validate(form)
     ?>
     if ($('input[name="rep_end_date"]').val() === $('input[name="end_date"]').val())
     {
-      if (!window.confirm("<?php echo escape_js(get_vocab('confirm_rep_end_date')) ?>"))
+      if (!window.confirm("<?php echo get_js_vocab('confirm_rep_end_date') ?>"))
       {
         return false;
       }
@@ -740,14 +740,14 @@ function checkConflicts(optional)
 // minutes, hours and days
 ?>
 var vocab = {};
-vocab.periods = {singular: '<?php echo escape_js(get_vocab("period_lc")) ?>',
-                 plural:   '<?php echo escape_js(get_vocab("periods")) ?>'};
-vocab.minutes = {singular: '<?php echo escape_js(get_vocab("minute_lc")) ?>',
-                 plural:   '<?php echo escape_js(get_vocab("minutes")) ?>'};
-vocab.hours   = {singular: '<?php echo escape_js(get_vocab("hour_lc")) ?>',
-                 plural:   '<?php echo escape_js(get_vocab("hours")) ?>'};
-vocab.days    = {singular: '<?php echo escape_js(get_vocab("day")) ?>',
-                 plural:   '<?php echo escape_js(get_vocab("days")) ?>'};
+vocab.periods = {singular: '<?php echo get_js_vocab("period_lc") ?>',
+                 plural:   '<?php echo get_js_vocab("periods") ?>'};
+vocab.minutes = {singular: '<?php echo get_js_vocab("minute_lc") ?>',
+                 plural:   '<?php echo get_js_vocab("minutes") ?>'};
+vocab.hours   = {singular: '<?php echo get_js_vocab("hour_lc") ?>',
+                 plural:   '<?php echo get_js_vocab("hours") ?>'};
+vocab.days    = {singular: '<?php echo get_js_vocab("day") ?>',
+                 plural:   '<?php echo get_js_vocab("days") ?>'};
 
 
 <?php
@@ -1158,7 +1158,7 @@ function adjustSlotSelectors()
             if (i === 0)
             {
               endSelect.append($(this).val(thisValue).text(nbsp));
-              var errorMessage = '<?php echo escape_js(get_vocab("max_booking_duration")) ?>' + nbsp;
+              var errorMessage = '<?php echo get_js_vocab("max_booking_duration") ?>' + nbsp;
               if (enablePeriods)
               {
                 errorMessage += maxDurationPeriods + nbsp;
@@ -1185,7 +1185,7 @@ function adjustSlotSelectors()
         optionClone = $(this).clone();
         if (dateDifference < 0)
         {
-          optionClone.text('<?php echo escape_js(get_vocab("start_after_end"))?>');
+          optionClone.text('<?php echo get_js_vocab("start_after_end")?>');
         }
         else
         {
@@ -1533,8 +1533,8 @@ $(document).on('page_ready', function() {
   var tabsHTML =
 '<div id="check_tabs">' +
 '<ul id="details_tabs">' +
-'<li><a href="#schedule_details"><?php echo escape_js(get_vocab('schedule')) ?></a></li>' +
-'<li><a href="#policy_details"><?php echo escape_js(get_vocab('policy')) ?></a></li>' +
+'<li><a href="#schedule_details"><?php echo get_js_vocab('schedule') ?></a></li>' +
+'<li><a href="#policy_details"><?php echo get_js_vocab('policy') ?></a></li>' +
 '<li id="ui-tab-dialog-close"></li>' +
 '</ul>' +
 '<div id="schedule_details"></div>' +

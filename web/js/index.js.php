@@ -162,7 +162,7 @@ var updateBody = function(event) {
     }
 
     <?php // Add a "Loading ..." message ?>
-    $('h2.date').text('<?php echo escape_js(get_vocab('loading'))?>')
+    $('h2.date').text('<?php echo get_js_vocab('loading')?>')
                 .addClass('loading');
 
     if (updateBody.prefetched && updateBody.prefetched[href])
@@ -331,7 +331,7 @@ $(document).on('page_ready', function() {
       {
         dialog.dialog({
           buttons: [
-            {text: "<?php echo escape_js(get_vocab('ok'))?>",
+            {text: "<?php echo get_js_vocab('ok')?>",
               click: function() {
                 var href = 'kiosk.php?kiosk=' + encodeURIComponent(args.kiosk);
                 href += '&area=' + encodeURIComponent(args.area);
@@ -343,7 +343,7 @@ $(document).on('page_ready', function() {
                 $.redirect(href, {'csrf_token': getCSRFToken()});
               }
             },
-            {text: "<?php echo escape_js(get_vocab('cancel'))?>",
+            {text: "<?php echo get_js_vocab('cancel')?>",
               click: function() {
                 dialog.dialog('close');
               }
@@ -353,12 +353,12 @@ $(document).on('page_ready', function() {
             <?php // Clear the timeout so that a dialog being reopened gets a new timeout ?>
             clearTimeout(timeout);
           },
-          closeText: "<?php echo escape_js(get_vocab('close'))?>",
+          closeText: "<?php echo get_js_vocab('close')?>",
           modal: true,
           open: function(event, ui){
             timeout = setTimeout(dialogClose, <?php echo $kiosk_exit_dialog_timeout; ?> *1000);
           },
-          title: "<?php echo escape_js(get_vocab('exit_kiosk_mode_confirm'))?>"
+          title: "<?php echo get_js_vocab('exit_kiosk_mode_confirm')?>"
         });
       }
       <?php // Don't open a dialog if the event came from one ?>

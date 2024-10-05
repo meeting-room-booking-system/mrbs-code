@@ -33,7 +33,7 @@ $(document).on('page_ready', function() {
       // that they can be pasted into an address field in an email client.
       ?>
       extend: 'copy',
-      text: '<?php echo escape_js(get_vocab('copy_email_addresses')) ?>',
+      text: '<?php echo get_js_vocab('copy_email_addresses') ?>',
       header: false,
       title: null,
       customize: function(data) {

@@ -733,6 +733,13 @@ function get_mail_lang() : ?string
 }
 
 
+// Same as get_vocab(), but escapes the result for use in JavaScript
+function get_js_vocab(string $tag, ...$values) : string
+{
+  return escape_js(get_vocab($tag, ...$values));
+}
+
+
 // Same as get_vocab(), but uses the mailing language
 function get_mail_vocab(string $tag, ...$values) : string
 {

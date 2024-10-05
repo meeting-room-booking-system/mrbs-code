@@ -50,7 +50,7 @@ $(document).on('page_ready', function() {
         <?php
         // Add in an extra button to export the results as an iCalendar (.ics) file.
         ?>
-        text: '<?php echo escape_js(get_vocab('export_as_ics')) ?>',
+        text: '<?php echo get_js_vocab('export_as_ics') ?>',
         action: function (e, dt, node, config) {
           <?php // Get the form data, which will already include a CSRF token ?>
           var data = $('#search_form').serializeArray();

@@ -114,7 +114,7 @@ $(document).on('page_ready', function() {
       <?php // Initialise the delete button and progress bar ?>
       function initDeleteButton()
       {
-        var title = '<?php echo escape_js(get_vocab("deleting_n_entries")) ?>';
+        var title = '<?php echo get_js_vocab("deleting_n_entries") ?>';
         data = reportTable.rows({filter: 'applied'}).data().toArray();
         nEntries = data.length;
         requests = [];
@@ -160,11 +160,11 @@ $(document).on('page_ready', function() {
       ?>
       progressContainer.append('<span></span>')
         .append('<progress></progress>')
-        .append('<button id="cancel_deletions"><?php echo escape_js(get_vocab("cancel")) ?></button>')
+        .append('<button id="cancel_deletions"><?php echo get_js_vocab("cancel") ?></button>')
         .insertAfter('#report_table_paginate');
 
       <?php // Add a delete button ?>
-      $('<button id="delete_button"><?php echo escape_js(get_vocab("delete_entries")) ?><\/button>')
+      $('<button id="delete_button"><?php echo get_js_vocab("delete_entries") ?><\/button>')
         .on('click', function() {
             if (nEntries === 0) {
               return;
@@ -213,7 +213,7 @@ $(document).on('page_ready', function() {
                       }
                       ?>
                       if (!success) {
-                        window.alert("<?php echo escape_js(get_vocab('delete_entries_failed')) ?>");
+                        window.alert("<?php echo get_js_vocab('delete_entries_failed') ?>");
                       }
                       reloadReport();
                     }
@@ -222,7 +222,7 @@ $(document).on('page_ready', function() {
               )
             }
 
-            var message = "<?php echo escape_js(get_vocab('delete_entries_warning')) ?>";
+            var message = "<?php echo get_js_vocab('delete_entries_warning') ?>";
             message = message.replace('%s', nEntries.toLocaleString());
             if (!window.confirm(message)) {
               return;
@@ -352,7 +352,7 @@ $(document).on('page_ready', function() {
         // list so that they can be pasted into an address field in an email client.
         // Useful for sending messages to those booked on a certain day or in a certain room.
         ?>
-        text: '<?php echo escape_js(get_vocab('copy_email_addresses')) ?>',
+        text: '<?php echo get_js_vocab('copy_email_addresses') ?>',
         action: function (e, dt, node, config) {
           extractEmailAddresses(dt, '#col_create_by', true);
         }
