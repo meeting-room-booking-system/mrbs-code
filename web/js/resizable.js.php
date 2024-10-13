@@ -724,7 +724,7 @@ $(document).on('page_ready', function() {
               {
                 ?>
                 var slotHeight = jqTarget.outerHeight();
-                downHandler.maxHeight = true;
+                downHandler.maxHeightSet = true;
                 downHandler.box.css('max-height', slotHeight + 'px');
                 <?php
               }
@@ -732,7 +732,7 @@ $(document).on('page_ready', function() {
               {
                 ?>
                 var slotWidth = jqTarget.outerWidth();
-                downHandler.maxWidth = true;
+                downHandler.maxWidthSet = true;
                 downHandler.box.css('max-width', slotWidth + 'px');
                 <?php
               }
@@ -755,8 +755,8 @@ $(document).on('page_ready', function() {
           // Check to see if we're only allowed to go one slot wide/high
           // and have gone over that limit.  If so, do nothing and return
           ?>
-          if ((downHandler.maxWidth && (e.pageX < downHandler.origin.left)) ||
-              (downHandler.maxHeight && (e.pageY < downHandler.origin.top)))
+          if ((downHandler.maxWidthSet && (e.pageX < downHandler.origin.left)) ||
+              (downHandler.maxHeightSet && (e.pageY < downHandler.origin.top)))
           {
             return;
           }
