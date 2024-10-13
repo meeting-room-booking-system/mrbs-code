@@ -539,6 +539,10 @@ var Table = {
         {
           gap = bottomRight - topLeft;
 
+          <?php
+          // If we're forcing to the top or left side, or else the gap
+          // to the top or left side is within snapping distance ...
+          ?>
           if ((force && ((side === 'top') || (side === 'left'))) ||
               ((gapTopLeft <= gap/2) && (gapTopLeft < snapGap)))
           {
@@ -580,6 +584,11 @@ var Table = {
             }
             return;
           }
+
+          <?php
+          // If we're forcing to the bottom or right side, or else the gap
+          // to the bottom or right side is within snapping distance ...
+          ?>
           if ((force && ((side === 'bottom') || (side === 'right'))) ||
               ((gapBottomRight <= gap/2) && (gapBottomRight < snapGap)))
           {
