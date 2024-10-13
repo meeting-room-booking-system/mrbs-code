@@ -698,13 +698,10 @@ $(document).on('page_ready', function() {
           {
             jqTarget = jqTarget.parent();
           }
+
           downHandler.origin = jqTarget.offset();
-          <?php
-          // Save the coordinates of the first rectangle: which ones we'll need will
-          // depend on the direction of mouse drag.
-          ?>
-          downHandler.firstRectangle = jqTarget[0].getBoundingClientRect();
           downHandler.firstPosition = {x: e.pageX, y: e.pageY};
+
           <?php
           // Get the original link in case we need it later.    We can't be sure whether
           // the target was the <a> or the <td> so play safe and get all possibilities
