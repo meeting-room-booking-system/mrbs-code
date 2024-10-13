@@ -729,7 +729,6 @@ $(document).on('page_ready', function() {
                 var slotHeight = jqTarget.outerHeight();
                 downHandler.maxHeight = true;
                 downHandler.box.css('max-height', slotHeight + 'px');
-                downHandler.box.css('min-height', slotHeight + 'px');
                 <?php
               }
               else
@@ -738,7 +737,6 @@ $(document).on('page_ready', function() {
                 var slotWidth = jqTarget.outerWidth();
                 downHandler.maxWidth = true;
                 downHandler.box.css('max-width', slotWidth + 'px');
-                downHandler.box.css('min-width', slotWidth + 'px');
                 <?php
               }
               ?>
