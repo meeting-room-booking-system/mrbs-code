@@ -539,7 +539,8 @@ var Table = {
         {
           gap = bottomRight - topLeft;
 
-          if ((gapTopLeft <= gap/2) && (force || (gapTopLeft < snapGap)))
+          if ((force && ((side === 'top') || (side === 'left'))) ||
+              ((gapTopLeft <= gap/2) && (gapTopLeft < snapGap)))
           {
             switch (side)
             {
@@ -579,7 +580,8 @@ var Table = {
             }
             return;
           }
-          else if ((gapBottomRight <= gap/2) && (force || (gapBottomRight < snapGap)))
+          if ((force && ((side === 'bottom') || (side === 'right'))) ||
+              ((gapBottomRight <= gap/2) && (gapBottomRight < snapGap)))
           {
             switch (side)
             {
@@ -688,6 +690,11 @@ $(document).on('page_ready', function() {
             jqTarget = jqTarget.parent();
           }
           downHandler.origin = jqTarget.offset();
+          <?php
+          // Save the coordinates of the first rectangle: which ones we'll need will
+          // depend on the direction of mouse drag.
+          ?>
+          downHandler.firstRectangle = jqTarget[0].getBoundingClientRect();
           downHandler.firstPosition = {x: e.pageX, y: e.pageY};
           <?php
           // Get the original link in case we need it later.    We can't be sure whether
@@ -750,31 +757,38 @@ $(document).on('page_ready', function() {
             return;
           }
           <?php // Otherwise redraw the box ?>
-          if (e.pageX < downHandler.origin.left)
+          if (e.pageX < downHandler.firstPosition.x)
           {
-            if (e.pageY < downHandler.origin.top)
+            if (e.pageY < downHandler.firstPosition.y)
             {
               box.offset({top: e.pageY, left: e.pageX});
             }
             else
             {
-              box.offset({top: downHandler.origin.top, left: e.pageX});
+              box.offset({top: downHandler.firstPosition.y, left: e.pageX});
             }
           }
-          else if (e.pageY < downHandler.origin.top)
+          else if (e.pageY < downHandler.firstPosition.y)
           {
-            box.offset({top: e.pageY, left: downHandler.origin.left});
+            box.offset({top: e.pageY, left: downHandler.firstPosition.x});
           }
           else
           {
-            box.offset(downHandler.origin);
+            box.offset({top: downHandler.firstPosition.y, left: downHandler.firstPosition.x});
           }
-          box.width(Math.abs(e.pageX - downHandler.origin.left));
-          box.height(Math.abs(e.pageY - downHandler.origin.top));
-          Table.snapToGrid(box, 'top');
-          Table.snapToGrid(box, 'bottom');
-          Table.snapToGrid(box, 'right');
-          Table.snapToGrid(box, 'left');
+          box.width(Math.abs(e.pageX - downHandler.firstPosition.x));
+          box.height(Math.abs(e.pageY - downHandler.firstPosition.y));
+          <?php
+          // Snap the box to grid boundaries if it's close, and even if it's not
+          // if you're dragging away from that edge.
+          ?>
+          var draggingDown = (e.pageY > downHandler.firstPosition.y);
+          var draggingRight = (e.pageX > downHandler.firstPosition.x);
+          Table.snapToGrid(box, 'top', draggingDown);
+          Table.snapToGrid(box, 'left', draggingRight);
+          Table.snapToGrid(box, 'bottom', !draggingDown);
+          Table.snapToGrid(box, 'right', !draggingRight);
+
           <?php
           // If the new box overlaps a booked cell, then undo the changes
           // We set stopAtFirst=true because we just want to know if there is
