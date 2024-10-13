@@ -544,26 +544,14 @@ var Table = {
           {
             switch (side)
             {
-              case 'left':
-                obj.offset({top: rectangle.top, left: topLeft});
-                obj.outerWidth(outerWidth + gapTopLeft);
-                break;
-
-              case 'right':
-                <?php // Don't let the width become zero. ?>
-                if ((outerWidth - gapTopLeft) < tolerance)
-                {
-                  obj.outerWidth(outerWidth + gapBottomRight);
-                }
-                else
-                {
-                  obj.outerWidth(outerWidth - gapTopLeft);
-                }
-                break;
-
               case 'top':
                 obj.offset({top: topLeft, left: rectangle.left});
                 obj.outerHeight(outerHeight + gapTopLeft);
+                break;
+
+              case 'left':
+                obj.offset({top: rectangle.top, left: topLeft});
+                obj.outerWidth(outerWidth + gapTopLeft);
                 break;
 
               case 'bottom':
@@ -577,6 +565,18 @@ var Table = {
                   obj.outerHeight(outerHeight - gapTopLeft);
                 }
                 break;
+
+              case 'right':
+                <?php // Don't let the width become zero. ?>
+                if ((outerWidth - gapTopLeft) < tolerance)
+                {
+                  obj.outerWidth(outerWidth + gapBottomRight);
+                }
+                else
+                {
+                  obj.outerWidth(outerWidth - gapTopLeft);
+                }
+                break;
             }
             return;
           }
@@ -585,24 +585,6 @@ var Table = {
           {
             switch (side)
             {
-              case 'left':
-                <?php // Don't let the width become zero.  ?>
-                if ((outerWidth - gapBottomRight) < tolerance)
-                {
-                  obj.offset({top: rectangle.top, left: topLeft});
-                  obj.outerWidth(outerWidth + gapTopLeft);
-                }
-                else
-                {
-                  obj.offset({top: rectangle.top, left: bottomRight});
-                  obj.outerWidth(outerWidth - gapBottomRight);
-                }
-                break;
-
-              case 'right':
-                obj.outerWidth(outerWidth + gapBottomRight);
-                break;
-
               case 'top':
                 <?php // Don't let the height become zero.  ?>
                 if ((outerHeight - gapBottomRight) < tolerance)
@@ -617,8 +599,26 @@ var Table = {
                 }
                 break;
 
+              case 'left':
+                <?php // Don't let the width become zero.  ?>
+                if ((outerWidth - gapBottomRight) < tolerance)
+                {
+                  obj.offset({top: rectangle.top, left: topLeft});
+                  obj.outerWidth(outerWidth + gapTopLeft);
+                }
+                else
+                {
+                  obj.offset({top: rectangle.top, left: bottomRight});
+                  obj.outerWidth(outerWidth - gapBottomRight);
+                }
+                break;
+
               case 'bottom':
                 obj.outerHeight(outerHeight + gapBottomRight);
+                break;
+
+              case 'right':
+                obj.outerWidth(outerWidth + gapBottomRight);
                 break;
             }
             return;
