@@ -918,9 +918,9 @@ $(document).on('page_ready', function() {
         }
 
         <?php
-        // Get the sides of the desired resired rectangle and also the direction(s)
-        // of resize.  Note that the desired rectangle may be being moved in two
-        // directions at once (eg nw) if a corner has been grabbed.  Use Math.round
+        // Get the sides of the desired rectangle and also the direction(s) of
+        // resize.  Note that the desired rectangle may be being moved in two
+        // directions at once (eg nw) if a corner has been grabbed. Use Math.round
         // to avoid problems with floats.
         ?>
         if (Math.round(ui.position.top - ui.originalPosition.top) === 0)
