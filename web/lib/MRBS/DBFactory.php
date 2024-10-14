@@ -27,17 +27,20 @@ class DBFactory
     {
       case 'mysql':
       case 'mysqli':
-        return new DB_mysql($db_host, $db_username, $db_password, $db_name, $persist, $db_port, $db_options);
+        $class_name = 'DB_mysql';
         break;
 
       case 'pgsql':
-        return new DB_pgsql($db_host, $db_username, $db_password, $db_name, $persist, $db_port, $db_options);
+        $class_name = 'DB_pgsql';
         break;
 
       default:
         throw new Exception("Unsupported database driver '$db_system'");
         break;
     }
+
+    $class_name = __NAMESPACE__ . '\\' . $class_name;
+    return new $class_name($db_host, $db_username, $db_password, $db_name, $persist, $db_port, $db_options);
   }
 
 
