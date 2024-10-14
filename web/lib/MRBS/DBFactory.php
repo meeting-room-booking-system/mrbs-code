@@ -25,23 +25,21 @@ class DBFactory
     {
       case 'mysql':
       case 'mysqli':
-        try
+        // Check that the PDO MySQL extension is enabled.
+        $constant_name = 'PDO::MYSQL_ATTR_FOUND_ROWS';
+        if(!defined($constant_name))
         {
-          return new DB_mysql($db_host, $db_username, $db_password, $db_name, $persist, $db_port, $db_options);
+          $message = "Undefined constant $constant_name.  Check that the PDO MySQL extension is enabled " .
+                     "in your php.ini file.";
+          throw new Exception($message);
         }
-        catch (\Throwable $e)
-        {
-          $message = $e->getMessage();
-          if ($e->getMessage() == "Undefined constant PDO::MYSQL_ATTR_FOUND_ROWS")
-          {
-            $message .= ".  Check that the PDO MySQL driver is enabled in your php.ini file.";
-          }
-          throw new Exception($message, $e->getCode());
-        }
+        return new DB_mysql($db_host, $db_username, $db_password, $db_name, $persist, $db_port, $db_options);
         break;
+
       case 'pgsql':
         return new DB_pgsql($db_host, $db_username, $db_password, $db_name, $persist, $db_port, $db_options);
         break;
+
       default:
         throw new Exception("Unsupported database driver '$db_system'");
         break;
