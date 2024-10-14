@@ -21,18 +21,12 @@ class DBFactory
     ?int $db_port=null,
     array $db_options=[])
   {
+    self::checkExtensionEnabled($db_system);
+
     switch ($db_system)
     {
       case 'mysql':
       case 'mysqli':
-        // Check that the PDO MySQL extension is enabled.
-        $constant_name = 'PDO::MYSQL_ATTR_FOUND_ROWS';
-        if(!defined($constant_name))
-        {
-          $message = "Undefined constant $constant_name.  Check that the PDO MySQL extension is enabled " .
-                     "in your php.ini file.";
-          throw new Exception($message);
-        }
         return new DB_mysql($db_host, $db_username, $db_password, $db_name, $persist, $db_port, $db_options);
         break;
 
@@ -43,6 +37,38 @@ class DBFactory
       default:
         throw new Exception("Unsupported database driver '$db_system'");
         break;
+    }
+  }
+
+
+  // Check that the appropriate PDO extension is enabled.  This can't always be
+  // done in the constructor of the class itself because the class can refer to a
+  // driver-specific constant.
+  private static function checkExtensionEnabled(string $db_system) : void
+  {
+    // Check for the existence of a driver-specific constant
+    switch ($db_system)
+    {
+      case 'mysql':
+      case 'mysqli':
+        $constant_name = 'PDO::MYSQL_ATTR_FOUND_ROWS';
+        $extension = 'pdo_mysql';
+        break;
+
+      case 'pgsql':
+        $constant_name = 'PDO::PGSQL_ATTR_DISABLE_PREPARES';
+        $extension = 'pdo_pgsql';
+        break;
+
+      default:
+        return;
+    }
+
+    if (!defined($constant_name))
+    {
+      $message = "Undefined constant $constant_name.  Check that the $extension extension is enabled " .
+                 "in your php.ini file.";
+      throw new Exception($message);
     }
   }
 }
