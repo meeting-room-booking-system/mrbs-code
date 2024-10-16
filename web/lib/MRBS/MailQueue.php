@@ -2,6 +2,7 @@
 namespace MRBS;
 
 use Mail_mimePart;
+use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
@@ -16,6 +17,26 @@ class MailQueue
   protected static $mails = array();
 
 
+  /**
+   * Add an email to the queue for sending
+   *
+   * @param array       $addresses    an array of addresses, each being a comma
+   *                                  separated list of email addresses.  Indexed by
+   *                                    'from'
+   *                                    'reply_to'
+   *                                    'to'
+   *                                    'cc'
+   *                                    'bcc'
+   * @param string      $subject      email subject
+   * @param string      $text_body    text part of body
+   * @param string|null $html_body    HTML part of body
+   * @param array|null  $attachment   file to attach.   An array consisting of
+   *                                    'content' the file or data to attach
+   *                                    'method'  the iCalendar METHOD
+   *                                    'name'    the name to give it
+   * @param string      $charset      character set used in body
+   * @return void
+   */
   public static function add(
       array $addresses,
       string $subject,
@@ -86,21 +107,23 @@ class MailQueue
   /**
    * Send an email
    *
-   * @param array   $addresses        an array of addresses, each being a comma
+   * @param array       $addresses    an array of addresses, each being a comma
    *                                  separated list of email addresses.  Indexed by
    *                                    'from'
+   *                                    'reply_to'
    *                                    'to'
    *                                    'cc'
    *                                    'bcc'
-   * @param string  $subject          email subject
-   * @param string  $text_body        text part of body
-   * @param ?string $html_body        HTML part of body
-   * @param array   $attachment       file to attach.   An array consisting of
+   * @param string      $subject      email subject
+   * @param string      $text_body    text part of body
+   * @param string|null $html_body    HTML part of body
+   * @param array|null  $attachment   file to attach.   An array consisting of
    *                                    'content' the file or data to attach
    *                                    'method'  the iCalendar METHOD
    *                                    'name'    the name to give it
-   * @param string  $charset          character set used in body
+   * @param string      $charset      character set used in body
    * @return bool                     TRUE on success, FALSE on failure
+   * @throws Exception
    */
   protected static function sendMail(
       array $addresses,
