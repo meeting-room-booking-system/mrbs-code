@@ -19,7 +19,7 @@ class DBFactory
     string $db_name,
     bool $persist=false,
     ?int $db_port=null,
-    array $db_options=[])
+    array $db_options=[]) : DB
   {
     self::checkExtensionEnabled($db_system);
 
