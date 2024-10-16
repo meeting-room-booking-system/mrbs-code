@@ -666,6 +666,8 @@ $(document).on('page_ready', function() {
   ?>
   $(Table.selector).on('tableload', function() {
       var table = $(this);
+      var tableContainer = table.parent();
+      var thead = table.find('thead');
 
       <?php
       // Don't do anything if this is an empty table, or the all-rooms week view,
@@ -750,6 +752,7 @@ $(document).on('page_ready', function() {
           var oldBoxOffset = box.offset();
           var oldBoxWidth = box.outerWidth();
           var oldBoxHeight = box.outerHeight();
+          var scrollGap = 20;
 
           <?php
           // Check to see if we're only allowed to go one slot wide/high
@@ -760,6 +763,16 @@ $(document).on('page_ready', function() {
           {
             return;
           }
+
+          <?php // Scroll the table if necessary ?>
+          if ((e.pageY - (tableContainer.offset().top + thead.outerHeight())) < scrollGap)
+          {
+            var scroll = Math.min(scrollGap, tableContainer.scrollTop());
+            downHandler.firstPosition.y += scroll;
+            tableContainer.scrollTop(tableContainer.scrollTop() - scroll);
+            Table.size();
+          }
+
           <?php // Otherwise redraw the box ?>
           if (e.pageX < downHandler.firstPosition.x)
           {
