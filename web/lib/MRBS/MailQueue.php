@@ -23,6 +23,7 @@ class MailQueue
    * @param array       $addresses    an array of addresses, each being a comma
    *                                  separated list of email addresses.  Indexed by
    *                                    'from'
+   *                                    'reply_to'
    *                                    'to'
    *                                    'cc'
    *                                    'bcc'
@@ -109,6 +110,7 @@ class MailQueue
    * @param array       $addresses    an array of addresses, each being a comma
    *                                  separated list of email addresses.  Indexed by
    *                                    'from'
+   *                                    'reply_to'
    *                                    'to'
    *                                    'cc'
    *                                    'bcc'
