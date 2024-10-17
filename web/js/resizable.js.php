@@ -743,8 +743,8 @@ $(document).on('page_ready', function() {
             }
           }
 
-          <?php // Attach the element to the document before setting the offset ?>
-          $(document.body).append(downHandler.box);
+          <?php // Attach the element to the table container before setting the offset ?>
+          tableContainer.append(downHandler.box);
           downHandler.box.offset(downHandler.origin);
         };
 
@@ -815,6 +815,8 @@ $(document).on('page_ready', function() {
           // if you're dragging away from that edge.
           ?>
           var draggingDown = (e.pageY > downHandler.firstPosition.y);
+          console.log(draggingDown);
+          console.log(box.height());
           var draggingRight = (e.pageX > downHandler.firstPosition.x);
           Table.snapToGrid(box, 'top', draggingDown);
           Table.snapToGrid(box, 'left', draggingRight);
