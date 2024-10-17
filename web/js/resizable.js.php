@@ -544,7 +544,7 @@ var Table = {
           // to the top or left side is within snapping distance ...
           ?>
           if ((force && ((side === 'top') || (side === 'left'))) ||
-              ((gapTopLeft <= gap/2) && (gapTopLeft < snapGap)))
+              (!force && (gapTopLeft <= gap/2) && (gapTopLeft < snapGap)))
           {
             switch (side)
             {
@@ -590,7 +590,7 @@ var Table = {
           // to the bottom or right side is within snapping distance ...
           ?>
           if ((force && ((side === 'bottom') || (side === 'right'))) ||
-              ((gapBottomRight <= gap/2) && (gapBottomRight < snapGap)))
+              (!force && (gapBottomRight <= gap/2) && (gapBottomRight < snapGap)))
           {
             switch (side)
             {
@@ -623,6 +623,7 @@ var Table = {
                 break;
 
               case 'bottom':
+                console.log(gapBottomRight);
                 obj.outerHeight(outerHeight + gapBottomRight);
                 break;
 
