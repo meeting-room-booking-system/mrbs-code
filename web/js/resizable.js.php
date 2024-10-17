@@ -668,6 +668,7 @@ $(document).on('page_ready', function() {
       var table = $(this);
       var tableContainer = table.parent();
       var thead = table.find('thead');
+      var tfoot = table.find('tfoot');
 
       <?php
       // Don't do anything if this is an empty table, or the all-rooms week view,
@@ -753,6 +754,7 @@ $(document).on('page_ready', function() {
           var oldBoxWidth = box.outerWidth();
           var oldBoxHeight = box.outerHeight();
           var scrollGap = 20;
+          var scroll;
 
           <?php
           // Check to see if we're only allowed to go one slot wide/high
@@ -764,10 +766,23 @@ $(document).on('page_ready', function() {
             return;
           }
 
-          <?php // Scroll the table if necessary ?>
+          <?php
+          // Scroll the table if necessary.
+          // First check whether we are approaching the top.
+          ?>
           if ((e.pageY - (tableContainer.offset().top + thead.outerHeight())) < scrollGap)
           {
-            var scroll = Math.min(scrollGap, tableContainer.scrollTop());
+            scroll = Math.min(scrollGap, tableContainer.scrollTop());
+          }
+          <?php
+          // Then whether we are approaching the bottom.
+          ?>
+          else if ((tableContainer.offset().top + tableContainer.outerHeight() - tfoot.outerHeight() - e.pageY) < scrollGap)
+          {
+            scroll = -scrollGap;
+          }
+          if (scroll !== undefined)
+          {
             downHandler.firstPosition.y += scroll;
             tableContainer.scrollTop(tableContainer.scrollTop() - scroll);
             Table.size();
