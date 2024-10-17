@@ -769,6 +769,7 @@ $(document).on('page_ready', function() {
 
           <?php
           // Scroll the table if necessary.
+        // TODO Check for horizontal scrolling
           // First check whether we are approaching the top.
           ?>
           if ((e.pageY - (tableContainer.offset().top + thead.outerHeight())) < scrollGap)
@@ -780,13 +781,13 @@ $(document).on('page_ready', function() {
           ?>
           else if ((tableContainer.offset().top + tableContainer.outerHeight() - tfoot.outerHeight() - e.pageY) < scrollGap)
           {
-            scroll = -scrollGap;
+            scroll = -scrollGap;  // TODO: don't go beyond bottom
           }
           if (scroll !== undefined)
           {
             downHandler.firstPosition.y += scroll;
             tableContainer.scrollTop(tableContainer.scrollTop() - scroll);
-            Table.size();
+            Table.size();  // TODO: optimise by just recording delta?
           }
 
           <?php // Otherwise redraw the box ?>
