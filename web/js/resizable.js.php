@@ -623,7 +623,6 @@ var Table = {
                 break;
 
               case 'bottom':
-                console.log(gapBottomRight);
                 obj.outerHeight(outerHeight + gapBottomRight);
                 break;
 
@@ -774,6 +773,7 @@ $(document).on('page_ready', function() {
           ?>
           if ((e.pageY - (tableContainer.offset().top + thead.outerHeight())) < scrollGap)
           {
+            <?php // Don't go beyond the top ?>
             scroll = Math.min(scrollGap, tableContainer.scrollTop());
           }
           <?php
@@ -781,9 +781,13 @@ $(document).on('page_ready', function() {
           ?>
           else if ((tableContainer.offset().top + tableContainer.outerHeight() - tfoot.outerHeight() - e.pageY) < scrollGap)
           {
-            scroll = -scrollGap;  // TODO: don't go beyond bottom
+            <?php // Don't go beyond the bottom ?>
+            scroll = Math.min(scrollGap, table.outerHeight() - tableContainer.outerHeight() - tableContainer.scrollTop());
+            scroll = Math.max(scroll, 0);
+            scroll = -scroll;
           }
-          if (scroll !== undefined)
+
+          if (scroll)
           {
             downHandler.firstPosition.y += scroll;
             tableContainer.scrollTop(tableContainer.scrollTop() - scroll);
@@ -817,8 +821,6 @@ $(document).on('page_ready', function() {
           // if you're dragging away from that edge.
           ?>
           var draggingDown = (e.pageY > downHandler.firstPosition.y);
-          console.log(draggingDown);
-          console.log(box.height());
           var draggingRight = (e.pageX > downHandler.firstPosition.x);
           Table.snapToGrid(box, 'top', draggingDown);
           Table.snapToGrid(box, 'left', draggingRight);
