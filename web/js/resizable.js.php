@@ -755,6 +755,7 @@ $(document).on('page_ready', function() {
           var oldBoxHeight = box.outerHeight();
           var scrollGap = 20;
           var scroll;
+          var constrainedPageY;
 
           <?php
           // Check to see if we're only allowed to go one slot wide/high
@@ -765,6 +766,9 @@ $(document).on('page_ready', function() {
           {
             return;
           }
+
+          constrainedPageY = Math.max(e.pageY, tableContainer.offset().top + thead.outerHeight());
+          constrainedPageY = Math.min(constrainedPageY, tableContainer.offset().top + tableContainer.outerHeight() - tfoot.outerHeight());
 
           <?php
           // Scroll the table if necessary.
@@ -784,9 +788,17 @@ $(document).on('page_ready', function() {
             <?php // Don't go beyond the bottom ?>
             scroll = Math.min(scrollGap, table.outerHeight() - tableContainer.outerHeight() - tableContainer.scrollTop());
             scroll = Math.max(scroll, 0);
+            <?php
+            // In Chrome, when the browser is zoomed the pixel numbers can be floating, so round down anything less than 1.
+            // See https://stackoverflow.com/questions/5828275/how-to-check-if-a-div-is-scrolled-all-the-way-to-the-bottom-with-jquery
+            ?>
+            if (scroll < 1)
+            {
+              scroll = 0;
+            }
             scroll = -scroll;
           }
-
+          // TODO:
           if (scroll)
           {
             downHandler.firstPosition.y += scroll;
@@ -799,7 +811,7 @@ $(document).on('page_ready', function() {
           {
             if (e.pageY < downHandler.firstPosition.y)
             {
-              box.offset({top: e.pageY, left: e.pageX});
+              box.offset({top: constrainedPageY, left: e.pageX});
             }
             else
             {
@@ -808,14 +820,14 @@ $(document).on('page_ready', function() {
           }
           else if (e.pageY < downHandler.firstPosition.y)
           {
-            box.offset({top: e.pageY, left: downHandler.firstPosition.x});
+            box.offset({top: constrainedPageY, left: downHandler.firstPosition.x});
           }
           else
           {
             box.offset({top: downHandler.firstPosition.y, left: downHandler.firstPosition.x});
           }
           box.width(Math.abs(e.pageX - downHandler.firstPosition.x));
-          box.height(Math.abs(e.pageY - downHandler.firstPosition.y));
+          box.height(Math.abs(constrainedPageY - downHandler.firstPosition.y));
           <?php
           // Snap the box to grid boundaries if it's close, and even if it's not
           // if you're dragging away from that edge.
