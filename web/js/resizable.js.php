@@ -683,12 +683,13 @@ $(document).on('page_ready', function() {
       var thead = table.find('thead');
       var tfoot = table.find('tfoot');
       var tfootHeight = (tfoot.length) ? tfoot.outerHeight() : 0;
+      var tbodyFirstRow = table.find('tbody tr').first();
+      var tbodyLeftThWidth = tbodyFirstRow.find('th').first().outerWidth();
       var tbodyViewport = {
         top: tableContainer.offset().top + thead.outerHeight(),
+        left: tableContainer.offset().left + tbodyLeftThWidth,
         bottom: tableContainer.offset().top + tableContainer.outerHeight() - tfootHeight
       };
-
-
 
       <?php
       // Don't do anything if this is an empty table, or the all-rooms week view,
@@ -774,7 +775,8 @@ $(document).on('page_ready', function() {
           var oldBoxWidth = box.outerWidth();
           var oldBoxHeight = box.outerHeight();
           var scrollGap = 20;
-          var yDelta;
+          var xDelta = 0,
+              yDelta = 0;
 
           <?php
           // Check to see if we're only allowed to go one slot wide/high
@@ -816,10 +818,17 @@ $(document).on('page_ready', function() {
             }
           }
 
-          if (yDelta)
+          if ((e.pageX - tbodyViewport.left) < scrollGap)
           {
+            <?php // Don't go beyond the left hand side ?>
+            xDelta = -Math.min(scrollGap, tableContainer.scrollLeft());
+          }
+
+          if (xDelta || yDelta)
+          {
+            downHandler.firstPosition.x -= xDelta;
             downHandler.firstPosition.y -= yDelta;
-            Table.scrollContainerBy(0, yDelta);
+            Table.scrollContainerBy(xDelta, yDelta);
             Table.size();  // TODO: optimise by just recording delta?
           }
 
