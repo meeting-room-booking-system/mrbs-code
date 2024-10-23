@@ -768,7 +768,7 @@ $(document).on('page_ready', function() {
           var oldBoxWidth = box.outerWidth();
           var oldBoxHeight = box.outerHeight();
           var scrollGap = 20;
-          var scrollTopDelta;
+          var yDelta;
 
           <?php
           // Check to see if we're only allowed to go one slot wide/high
@@ -789,7 +789,7 @@ $(document).on('page_ready', function() {
           if ((e.pageY - (tableContainer.offset().top + thead.outerHeight())) < scrollGap)
           {
             <?php // Don't go beyond the top ?>
-            scrollTopDelta = -Math.min(scrollGap, tableContainer.scrollTop());
+            yDelta = -Math.min(scrollGap, tableContainer.scrollTop());
           }
           <?php
           // Then whether we are approaching the bottom.
@@ -798,22 +798,22 @@ $(document).on('page_ready', function() {
           else if ((tableContainer.offset().top + tableContainer.outerHeight() - tfootHeight - e.pageY) < scrollGap)
           {
             <?php // Don't go beyond the bottom ?>
-            scrollTopDelta = Math.min(scrollGap, table.outerHeight() - tableContainer.outerHeight() - tableContainer.scrollTop());
-            scrollTopDelta = Math.max(scrollTopDelta, 0);
+            yDelta = Math.min(scrollGap, table.outerHeight() - tableContainer.outerHeight() - tableContainer.scrollTop());
+            yDelta = Math.max(yDelta, 0);
             <?php
             // In Chrome, when the browser is zoomed the pixel numbers can be floating, so round down anything less than 1.
             // See https://stackoverflow.com/questions/5828275/how-to-check-if-a-div-is-scrolled-all-the-way-to-the-bottom-with-jquery
             ?>
-            if (scrollTopDelta < 1)
+            if (yDelta < 1)
             {
-              scrollTopDelta = 0;
+              yDelta = 0;
             }
           }
 
-          if (scrollTopDelta)
+          if (yDelta)
           {
-            downHandler.firstPosition.y -= scrollTopDelta;
-            Table.scrollContainerBy(0, scrollTopDelta);
+            downHandler.firstPosition.y -= yDelta;
+            Table.scrollContainerBy(0, yDelta);
             Table.size();  // TODO: optimise by just recording delta?
           }
 
