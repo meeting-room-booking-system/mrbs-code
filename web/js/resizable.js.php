@@ -683,12 +683,14 @@ $(document).on('page_ready', function() {
       var thead = table.find('thead');
       var tfoot = table.find('tfoot');
       var tfootHeight = (tfoot.length) ? tfoot.outerHeight() : 0;
-      var tbodyFirstRow = table.find('tbody tr').first();
-      var tbodyLeftThWidth = tbodyFirstRow.find('th').first().outerWidth();
+      var tbodyFirstRowTh = table.find('tbody tr:first th');
+      var tbodyRightTh = tbodyFirstRowTh.eq(2);
+      var tbodyRightThWidth = (tbodyRightTh.length) ? tbodyRightTh.outerWidth() : 0;
       var tbodyViewport = {
         top: tableContainer.offset().top + thead.outerHeight(),
-        left: tableContainer.offset().left + tbodyLeftThWidth,
-        bottom: tableContainer.offset().top + tableContainer.outerHeight() - tfootHeight
+        left: tableContainer.offset().left + tbodyFirstRowTh.first().outerWidth(),
+        bottom: tableContainer.offset().top + tableContainer.outerHeight() - tfootHeight,
+        right: tableContainer.offset().left + tableContainer.outerWidth() - tbodyRightThWidth
       };
 
       <?php
@@ -822,6 +824,21 @@ $(document).on('page_ready', function() {
           {
             <?php // Don't go beyond the left hand side ?>
             xDelta = -Math.min(scrollGap, tableContainer.scrollLeft());
+          }
+
+          else if ((tbodyViewport.right - e.pageX) < scrollGap)
+          {
+            <?php // Don't go beyond the bottom ?>
+            xDelta = Math.min(scrollGap, table.outerWidth() - tableContainer.outerWidth() - tableContainer.scrollLeft());
+            xDelta = Math.max(xDelta, 0);
+            <?php
+            // In Chrome, when the browser is zoomed the pixel numbers can be floating, so round down anything less than 1.
+            // See https://stackoverflow.com/questions/5828275/how-to-check-if-a-div-is-scrolled-all-the-way-to-the-bottom-with-jquery
+            ?>
+            if (xDelta < 1)
+            {
+              xDelta = 0;
+            }
           }
 
           if (xDelta || yDelta)
