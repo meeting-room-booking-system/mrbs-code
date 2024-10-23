@@ -683,6 +683,12 @@ $(document).on('page_ready', function() {
       var thead = table.find('thead');
       var tfoot = table.find('tfoot');
       var tfootHeight = (tfoot.length) ? tfoot.outerHeight() : 0;
+      var tbodyViewport = {
+        top: tableContainer.offset().top + thead.outerHeight(),
+        bottom: tableContainer.offset().top + tableContainer.outerHeight() - tfootHeight
+      };
+
+
 
       <?php
       // Don't do anything if this is an empty table, or the all-rooms week view,
@@ -786,7 +792,7 @@ $(document).on('page_ready', function() {
           // First check whether we are approaching the top.
           ?>
 
-          if ((e.pageY - (tableContainer.offset().top + thead.outerHeight())) < scrollGap)
+          if ((e.pageY - tbodyViewport.top) < scrollGap)
           {
             <?php // Don't go beyond the top ?>
             yDelta = -Math.min(scrollGap, tableContainer.scrollTop());
@@ -795,7 +801,7 @@ $(document).on('page_ready', function() {
           // Then whether we are approaching the bottom.
           ?>
 
-          else if ((tableContainer.offset().top + tableContainer.outerHeight() - tfootHeight - e.pageY) < scrollGap)
+          else if ((tbodyViewport.bottom - e.pageY) < scrollGap)
           {
             <?php // Don't go beyond the bottom ?>
             yDelta = Math.min(scrollGap, table.outerHeight() - tableContainer.outerHeight() - tableContainer.scrollTop());
