@@ -776,7 +776,7 @@ $(document).on('page_ready', function() {
           if ((e.pageY - (tableContainer.offset().top + thead.outerHeight())) < scrollGap)
           {
             <?php // Don't go beyond the top ?>
-            scrollTopDelta = Math.min(scrollGap, tableContainer.scrollTop());
+            scrollTopDelta = -Math.min(scrollGap, tableContainer.scrollTop());
           }
           <?php
           // Then whether we are approaching the bottom.
@@ -795,13 +795,12 @@ $(document).on('page_ready', function() {
             {
               scrollTopDelta = 0;
             }
-            scrollTopDelta = -scrollTopDelta;
           }
 
           if (scrollTopDelta)
           {
-            downHandler.firstPosition.y += scrollTopDelta;
-            tableContainer.scrollTop(tableContainer.scrollTop() - scrollTopDelta);
+            downHandler.firstPosition.y -= scrollTopDelta;
+            tableContainer.scrollTop(tableContainer.scrollTop() + scrollTopDelta);
             Table.size();  // TODO: optimise by just recording delta?
           }
 
