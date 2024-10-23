@@ -374,6 +374,19 @@ var Table = {
       el.css('clip-path', path);
     },
 
+  scrollContainerBy: function(xCoord, yCoord) {
+    var container = $(Table.selector).parent();
+    <?php
+    // If we use 'smooth' behavior then the code has to be more complicated
+    // in order to prevent another mousemove set of actions being triggered
+    // before the scrolling has completed.
+    ?>
+    container[0].scrollBy({
+      top: yCoord,
+      left: xCoord,
+      behavior: 'instant'
+    });
+  },
 
   size: function() {
       <?php // Don't do anything if this is the all-rooms week view ?>
@@ -800,7 +813,7 @@ $(document).on('page_ready', function() {
           if (scrollTopDelta)
           {
             downHandler.firstPosition.y -= scrollTopDelta;
-            tableContainer.scrollTop(tableContainer.scrollTop() + scrollTopDelta);
+            Table.scrollContainerBy(0, scrollTopDelta);
             Table.size();  // TODO: optimise by just recording delta?
           }
 
