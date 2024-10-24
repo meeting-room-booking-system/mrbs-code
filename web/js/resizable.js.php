@@ -686,6 +686,10 @@ $(document).on('page_ready', function() {
       var tbodyFirstRowTh = table.find('tbody tr:first th');
       var tbodyRightTh = tbodyFirstRowTh.eq(2);
       var tbodyRightThWidth = (tbodyRightTh.length) ? tbodyRightTh.outerWidth() : 0;
+      <?php
+      // Get the boundaries of the visible part of the tbody. We will need them to decide
+      // whether we need to scroll.
+      ?>
       var tbodyViewport = {
         top: tableContainer.offset().top + thead.outerHeight(),
         left: tableContainer.offset().left + tbodyFirstRowTh.first().outerWidth(),
@@ -776,7 +780,12 @@ $(document).on('page_ready', function() {
           var oldBoxOffset = box.offset();
           var oldBoxWidth = box.outerWidth();
           var oldBoxHeight = box.outerHeight();
-          var scrollGap = 20;
+          <?php
+          // Set the distance from the edge of the visible tbody at which we should start scrolling.
+          // It should not be more than half the height/width of the visible tbody
+          ?>
+          var scrollGapX = Math.min(20, Math.floor((tbodyViewport.right - tbodyViewport.left)/2));
+          var scrollGapY = Math.min(20, Math.floor((tbodyViewport.bottom - tbodyViewport.top)/2));
           var xDelta = 0,
               yDelta = 0;
 
@@ -792,23 +801,21 @@ $(document).on('page_ready', function() {
 
           <?php
           // Scroll the table if necessary.
-        // TODO Check for horizontal scrolling
           // First check whether we are approaching the top.
           ?>
-
-          if ((e.pageY - tbodyViewport.top) < scrollGap)
+          if ((e.pageY - tbodyViewport.top) < scrollGapY)
           {
             <?php // Don't go beyond the top ?>
-            yDelta = -Math.min(scrollGap, tableContainer.scrollTop());
+            yDelta = -Math.min(scrollGapY, tableContainer.scrollTop());
           }
+
           <?php
           // Then whether we are approaching the bottom.
           ?>
-
-          else if ((tbodyViewport.bottom - e.pageY) < scrollGap)
+          else if ((tbodyViewport.bottom - e.pageY) < scrollGapY)
           {
             <?php // Don't go beyond the bottom ?>
-            yDelta = Math.min(scrollGap, table.outerHeight() - tableContainer.outerHeight() - tableContainer.scrollTop());
+            yDelta = Math.min(scrollGapY, table.outerHeight() - tableContainer.outerHeight() - tableContainer.scrollTop());
             yDelta = Math.max(yDelta, 0);
             <?php
             // In Chrome, when the browser is zoomed the pixel numbers can be floating, so round down anything less than 1.
@@ -820,16 +827,18 @@ $(document).on('page_ready', function() {
             }
           }
 
-          if ((e.pageX - tbodyViewport.left) < scrollGap)
+          <?php // Then the left hand side ?>
+          if ((e.pageX - tbodyViewport.left) < scrollGapX)
           {
             <?php // Don't go beyond the left hand side ?>
-            xDelta = -Math.min(scrollGap, tableContainer.scrollLeft());
+            xDelta = -Math.min(scrollGapX, tableContainer.scrollLeft());
           }
 
-          else if ((tbodyViewport.right - e.pageX) < scrollGap)
+          <?php // And finally the right ?>
+          else if ((tbodyViewport.right - e.pageX) < scrollGapX)
           {
             <?php // Don't go beyond the bottom ?>
-            xDelta = Math.min(scrollGap, table.outerWidth() - tableContainer.outerWidth() - tableContainer.scrollLeft());
+            xDelta = Math.min(scrollGapX, table.outerWidth() - tableContainer.outerWidth() - tableContainer.scrollLeft());
             xDelta = Math.max(xDelta, 0);
             <?php
             // In Chrome, when the browser is zoomed the pixel numbers can be floating, so round down anything less than 1.
@@ -846,7 +855,11 @@ $(document).on('page_ready', function() {
             downHandler.firstPosition.x -= xDelta;
             downHandler.firstPosition.y -= yDelta;
             Table.scrollContainerBy(xDelta, yDelta);
-            Table.size();  // TODO: optimise by just recording delta?
+            // Need to resize the table after a scroll because the coordinates
+            // of the grid lines and booked cells will have changed.
+            // TODO: Optimise performance by just recording the cumulative x- and
+            // TODO: y-deltas and then use those in snapToGrid() etc.?
+            Table.size();
           }
 
           <?php // Otherwise redraw the box ?>
