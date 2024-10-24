@@ -1,7 +1,7 @@
 <?php // -*-mode: PHP; coding:utf-8;-*-
 namespace MRBS;
 
-$timezone = "Europe/London";
+$timezone = "Asia/Aden";
 $dbsys = "mysql";
 $db_host = "db";
 $db_database = "mrbs";

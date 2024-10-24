@@ -771,6 +771,7 @@ body.index {
   overflow: auto;
   position: relative;
   margin: 1em 0;
+  font-size: 20px;
 }
 
 <?php
@@ -922,7 +923,7 @@ table.dwm_main {
 ?>
 .dwm_main thead th,
 .dwm_main tfoot th {
-  font-size: small;
+  font-size: normal;
   font-weight: normal;
   vertical-align: top;
   padding: 0.2em;
@@ -2157,7 +2158,7 @@ form#show_my_entries input.link[type="submit"] {
 
 
 header input[type="search"] {
-  width: 10em;
+  width: 15em;
 }
 
 .banner .outstanding a {

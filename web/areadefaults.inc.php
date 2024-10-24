@@ -77,10 +77,10 @@ $default_duration_all_day = FALSE;  // DEFAULT VALUE FOR NEW AREAS
 
 // The beginning of the first slot of the day (DEFAULT VALUES FOR NEW AREAS)
 $morningstarts         = 7;   // must be integer in range 0-23
-$morningstarts_minutes = 0;   // must be integer in range 0-59
+$morningstarts_minutes = 30;   // must be integer in range 0-59
 
 // The beginning of the last slot of the day (DEFAULT VALUES FOR NEW AREAS)
-$eveningends           = 18;  // must be integer in range 0-23
+$eveningends           = 22;  // must be integer in range 0-23
 $eveningends_minutes   = 30;   // must be integer in range 0-59
 
 // Example 1.

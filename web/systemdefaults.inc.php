@@ -165,8 +165,8 @@ $mrbs_admin_email = "admin_email@your.org";
 // The company name is mandatory.   It is used in the header and also for email notifications.
 // The company logo, additional information and URL are all optional.
 
-$mrbs_company = "Your Company";   // This line must always be uncommented ($mrbs_company is used in various places)
-
+// $mrbs_company = "Your Company";   // This line must always be uncommented ($mrbs_company is used in various places)
+$mrbs_company = "Instituto Federal do Rio Grande do Sul Campus Restinga";
 // Uncomment this next line to use a logo instead of text for your organisation in the header
 //$mrbs_company_logo = "your_logo.gif";    // name of your logo file.   This example assumes it is in the MRBS directory
 

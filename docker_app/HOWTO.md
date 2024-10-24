@@ -8,6 +8,7 @@ This docker setup is supposed to get a running system for local development.
   ~~~
   cd docker_app 
   docker-compose up -d
+  docker-compose up --build
   ~~~
   (Linux users may need `sudo` or `docker login`)
 
