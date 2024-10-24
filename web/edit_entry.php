@@ -586,8 +586,7 @@ function get_field_privacy_status(bool $value, bool $disabled=false) : ?FieldInp
 function get_field_custom(string $key, bool $disabled=false)
 {
   global $custom_fields, $custom_fields_map;
-  global $is_mandatory_field, $text_input_max;
-  global $select_options, $datalist_options;
+  global $is_mandatory_field;
 
   // TODO: have a common way of generating custom fields for all tables
 
