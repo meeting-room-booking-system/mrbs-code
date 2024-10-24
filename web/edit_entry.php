@@ -643,17 +643,6 @@ function get_field_custom(string $key, bool $disabled=false)
   {
     $class = 'FieldInputCheckbox';
   }
-  // Output a textarea if it's a character string longer than the limit for a
-  // text input and it's not a select or datalist element
-  elseif (($custom_field['nature'] == 'character') &&
-           isset($custom_field['length']) &&
-           ($custom_field['length'] > $text_input_max) &&
-           empty($select_options["entry.$key"]) &&
-           empty($datalist_options["entry.$key"]))
-  {
-    // HTML5 does not allow a pattern attribute for the textarea element
-    $class = 'FieldTextarea';
-  }
   elseif ($custom_field['type'] == 'date')
   {
     $class = 'FieldInputDate';
@@ -664,8 +653,8 @@ function get_field_custom(string $key, bool $disabled=false)
   {
     $class = 'FieldInputNumber';
   }
-  // Otherwise it's a text input of some kind (which includes <select>s and
-  // <datalist>s)
+  // Otherwise it's a text input of some kind (which includes <select>s,
+  // <datalist>s and <textarea>s)
   else
   {
     $params = array('label'    => get_loc_field_name(_tbl('entry'), $key),

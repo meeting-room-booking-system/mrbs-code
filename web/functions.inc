@@ -4,6 +4,7 @@ namespace MRBS;
 
 use DateInterval;
 use DateTimeZone;
+use MRBS\Form\Field;
 use MRBS\Form\FieldSelect;
 use MRBS\ICalendar\RFC5545;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -2498,9 +2499,9 @@ function get_server_software() : string
 
 
 
-function get_field_entry_input(array $params)
+function get_field_entry_input(array $params) : Field
 {
-  global $select_options, $datalist_options;
+  global $select_options, $datalist_options, $text_input_max;
 
   if (isset($params['field']))
   {
@@ -2512,13 +2513,21 @@ function get_field_entry_input(array $params)
     {
       $class = 'FieldInputDatalist';
     }
-    elseif ($params['field'] == 'entry.description')
-    {
-      $class = 'FieldTextarea';
-    }
     else
     {
-      $class = 'FieldInputText';
+      $columns = Columns::getInstance(_tbl('entry'));
+      $column_name = preg_replace('/^entry./', '', $params['field']);
+      $column = $columns->getColumnByName($column_name);
+      if (!in_array($column_name, ['name', 'create_by']) &&  // special cases
+          ($column->getNature() === Column::NATURE_CHARACTER) &&
+          ($column->getLength() > $text_input_max))
+      {
+        $class = 'FieldTextarea';
+      }
+      else
+      {
+        $class = 'FieldInputText';
+      }
     }
   }
   else
@@ -2564,7 +2573,7 @@ function get_field_entry_input(array $params)
     case 'FieldTextarea':
       if ($class == 'FieldTextarea')
       {
-        $field->setControlText($params['value']);
+        $field->setControlText($params['value'] ?? '');
       }
       else
       {
