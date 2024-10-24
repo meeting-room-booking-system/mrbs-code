@@ -784,8 +784,8 @@ $(document).on('page_ready', function() {
           // Set the distance from the edge of the visible tbody at which we should start scrolling.
           // It should not be more than half the height/width of the visible tbody
           ?>
-          var scrollGapX = Math.min(20, Math.floor((tbodyViewport.right - tbodyViewport.left)/2));
-          var scrollGapY = Math.min(20, Math.floor((tbodyViewport.bottom - tbodyViewport.top)/2));
+          var scrollGapX = Math.min(30, Math.floor((tbodyViewport.right - tbodyViewport.left)/2));
+          var scrollGapY = Math.min(30, Math.floor((tbodyViewport.bottom - tbodyViewport.top)/2));
           var xDelta = 0,
               yDelta = 0;
 
