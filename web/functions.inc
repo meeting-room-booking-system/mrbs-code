@@ -4,6 +4,7 @@ namespace MRBS;
 
 use DateInterval;
 use DateTimeZone;
+use MRBS\Form\Field;
 use MRBS\Form\FieldSelect;
 use MRBS\ICalendar\RFC5545;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -2578,7 +2579,7 @@ function get_server_software() : string
 
 
 
-function get_field_entry_input(array $params)
+function get_field_entry_input(array $params) : Field
 {
   global $select_options, $datalist_options, $text_input_max;
 
