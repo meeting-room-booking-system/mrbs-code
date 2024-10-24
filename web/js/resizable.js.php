@@ -852,14 +852,22 @@ $(document).on('page_ready', function() {
 
           if (xDelta || yDelta)
           {
-            downHandler.firstPosition.x -= xDelta;
-            downHandler.firstPosition.y -= yDelta;
             Table.scrollContainerBy(xDelta, yDelta);
+            <?php
             // Need to resize the table after a scroll because the coordinates
             // of the grid lines and booked cells will have changed.
             // TODO: Optimise performance by just recording the cumulative x- and
             // TODO: y-deltas and then use those in snapToGrid() etc.?
+            ?>
             Table.size();
+            <?php
+            // Because we've scrolled we need to correct the positions of
+            // downHandler.firstPosition and oldBoxOffset.
+            ?>
+            downHandler.firstPosition.x -= xDelta;
+            downHandler.firstPosition.y -= yDelta;
+            oldBoxOffset.left -= xDelta;
+            oldBoxOffset.top -= yDelta;
           }
 
           <?php // Otherwise redraw the box ?>
