@@ -374,6 +374,19 @@ var Table = {
       el.css('clip-path', path);
     },
 
+  scrollContainerBy: function(xCoord, yCoord) {
+    var container = $(Table.selector).parent();
+    <?php
+    // If we use 'smooth' behavior then the code has to be more complicated
+    // in order to prevent another mousemove set of actions being triggered
+    // before the scrolling has completed.
+    ?>
+    container[0].scrollBy({
+      top: yCoord,
+      left: xCoord,
+      behavior: 'instant'
+    });
+  },
 
   size: function() {
       <?php // Don't do anything if this is the all-rooms week view ?>
@@ -544,7 +557,7 @@ var Table = {
           // to the top or left side is within snapping distance ...
           ?>
           if ((force && ((side === 'top') || (side === 'left'))) ||
-              ((gapTopLeft <= gap/2) && (gapTopLeft < snapGap)))
+              (!force && (gapTopLeft <= gap/2) && (gapTopLeft < snapGap)))
           {
             switch (side)
             {
@@ -590,7 +603,7 @@ var Table = {
           // to the bottom or right side is within snapping distance ...
           ?>
           if ((force && ((side === 'bottom') || (side === 'right'))) ||
-              ((gapBottomRight <= gap/2) && (gapBottomRight < snapGap)))
+              (!force && (gapBottomRight <= gap/2) && (gapBottomRight < snapGap)))
           {
             switch (side)
             {
@@ -666,6 +679,23 @@ $(document).on('page_ready', function() {
   ?>
   $(Table.selector).on('tableload', function() {
       var table = $(this);
+      var tableContainer = table.parent();
+      var thead = table.find('thead');
+      var tfoot = table.find('tfoot');
+      var tfootHeight = (tfoot.length) ? tfoot.outerHeight() : 0;
+      var tbodyFirstRowTh = table.find('tbody tr:first th');
+      var tbodyRightTh = tbodyFirstRowTh.eq(2);
+      var tbodyRightThWidth = (tbodyRightTh.length) ? tbodyRightTh.outerWidth() : 0;
+      <?php
+      // Get the boundaries of the visible part of the tbody. We will need them to decide
+      // whether we need to scroll.
+      ?>
+      var tbodyViewport = {
+        top: tableContainer.offset().top + thead.outerHeight(),
+        left: tableContainer.offset().left + tbodyFirstRowTh.first().outerWidth(),
+        bottom: tableContainer.offset().top + tableContainer.outerHeight() - tfootHeight,
+        right: tableContainer.offset().left + tableContainer.outerWidth() - tbodyRightThWidth
+      };
 
       <?php
       // Don't do anything if this is an empty table, or the all-rooms week view,
@@ -740,8 +770,8 @@ $(document).on('page_ready', function() {
             }
           }
 
-          <?php // Attach the element to the document before setting the offset ?>
-          $(document.body).append(downHandler.box);
+          <?php // Attach the element to the table container before setting the offset ?>
+          tableContainer.append(downHandler.box);
           downHandler.box.offset(downHandler.origin);
         };
 
@@ -750,6 +780,14 @@ $(document).on('page_ready', function() {
           var oldBoxOffset = box.offset();
           var oldBoxWidth = box.outerWidth();
           var oldBoxHeight = box.outerHeight();
+          <?php
+          // Set the distance from the edge of the visible tbody at which we should start scrolling.
+          // It should not be more than half the height/width of the visible tbody
+          ?>
+          var scrollGapX = Math.min(30, Math.floor((tbodyViewport.right - tbodyViewport.left)/2));
+          var scrollGapY = Math.min(30, Math.floor((tbodyViewport.bottom - tbodyViewport.top)/2));
+          var xDelta = 0,
+              yDelta = 0;
 
           <?php
           // Check to see if we're only allowed to go one slot wide/high
@@ -760,6 +798,78 @@ $(document).on('page_ready', function() {
           {
             return;
           }
+
+          <?php
+          // Scroll the table if necessary.
+          // First check whether we are approaching the top.
+          ?>
+          if ((e.pageY - tbodyViewport.top) < scrollGapY)
+          {
+            <?php // Don't go beyond the top ?>
+            yDelta = -Math.min(scrollGapY, tableContainer.scrollTop());
+          }
+
+          <?php
+          // Then whether we are approaching the bottom.
+          ?>
+          else if ((tbodyViewport.bottom - e.pageY) < scrollGapY)
+          {
+            <?php // Don't go beyond the bottom ?>
+            yDelta = Math.min(scrollGapY, table.outerHeight() - tableContainer.outerHeight() - tableContainer.scrollTop());
+            yDelta = Math.max(yDelta, 0);
+            <?php
+            // In Chrome, when the browser is zoomed the pixel numbers can be floating, so round down anything less than 1.
+            // See https://stackoverflow.com/questions/5828275/how-to-check-if-a-div-is-scrolled-all-the-way-to-the-bottom-with-jquery
+            ?>
+            if (yDelta < 1)
+            {
+              yDelta = 0;
+            }
+          }
+
+          <?php // Then the left hand side ?>
+          if ((e.pageX - tbodyViewport.left) < scrollGapX)
+          {
+            <?php // Don't go beyond the left hand side ?>
+            xDelta = -Math.min(scrollGapX, tableContainer.scrollLeft());
+          }
+
+          <?php // And finally the right ?>
+          else if ((tbodyViewport.right - e.pageX) < scrollGapX)
+          {
+            <?php // Don't go beyond the bottom ?>
+            xDelta = Math.min(scrollGapX, table.outerWidth() - tableContainer.outerWidth() - tableContainer.scrollLeft());
+            xDelta = Math.max(xDelta, 0);
+            <?php
+            // In Chrome, when the browser is zoomed the pixel numbers can be floating, so round down anything less than 1.
+            // See https://stackoverflow.com/questions/5828275/how-to-check-if-a-div-is-scrolled-all-the-way-to-the-bottom-with-jquery
+            ?>
+            if (xDelta < 1)
+            {
+              xDelta = 0;
+            }
+          }
+
+          if (xDelta || yDelta)
+          {
+            Table.scrollContainerBy(xDelta, yDelta);
+            <?php
+            // Need to resize the table after a scroll because the coordinates
+            // of the grid lines and booked cells will have changed.
+            // TODO: Optimise performance by just recording the cumulative x- and
+            // TODO: y-deltas and then use those in snapToGrid() etc.?
+            ?>
+            Table.size();
+            <?php
+            // Because we've scrolled we need to correct the positions of
+            // downHandler.firstPosition and oldBoxOffset.
+            ?>
+            downHandler.firstPosition.x -= xDelta;
+            downHandler.firstPosition.y -= yDelta;
+            oldBoxOffset.left -= xDelta;
+            oldBoxOffset.top -= yDelta;
+          }
+
           <?php // Otherwise redraw the box ?>
           if (e.pageX < downHandler.firstPosition.x)
           {
