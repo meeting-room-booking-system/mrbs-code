@@ -156,7 +156,7 @@ function make_room_select_html (string $view, int $view_all, int $year, int $mon
 
 
 // Gets the link to the next/previous day/week/month
-function get_adjacent_link(string $view, int $view_all, int $year, int $month, int $day, int $area, int $room, bool $next=false) : string
+function get_adjacent_link(string $view, int $view_all, int $year, int $month, int $day, int $area, int $room, int $increment) : string
 {
   $date = new DateTime();
   $date->setDate($year, $month, $day);
@@ -164,7 +164,7 @@ function get_adjacent_link(string $view, int $view_all, int $year, int $month, i
   switch ($view)
   {
     case 'day':
-      $modifier = ($next) ? '+1 day' : '-1 day';
+      $modifier = "$increment day";
       // find the next non-hidden day
       $i = 0;
       do {
@@ -173,12 +173,11 @@ function get_adjacent_link(string $view, int $view_all, int $year, int $month, i
       } while ($date->isHiddenDay() && ($i < DAYS_PER_WEEK)); // break the loop if all days are hidden
       break;
     case 'week':
-      $modifier = ($next) ? '+1 week' : '-1 week';
+      $modifier = "$increment week";
       $date->modify($modifier);
       break;
     case 'month':
-      $n = ($next) ? 1 : -1;
-      $date->modifyMonthsNoOverflow($n);
+      $date->modifyMonthsNoOverflow($increment);
       break;
     default:
       throw new \Exception("Unknown view '$view'");
@@ -292,9 +291,9 @@ function get_arrow_nav(string $view, int $view_all, int $year, int $month, int $
   $title_prev = htmlspecialchars($title_prev);
   $title_next = htmlspecialchars($title_next);
 
-  $link_prev = get_adjacent_link($view, $view_all, $year, $month, $day, $area, $room, false);
+  $link_prev = get_adjacent_link($view, $view_all, $year, $month, $day, $area, $room, -1);
   $link_today = get_today_link($view, $view_all, $area, $room);
-  $link_next = get_adjacent_link($view, $view_all, $year, $month, $day, $area, $room, true);
+  $link_next = get_adjacent_link($view, $view_all, $year, $month, $day, $area, $room, 1);
 
   $link_prev = multisite($link_prev);
   $link_today = multisite($link_today);
