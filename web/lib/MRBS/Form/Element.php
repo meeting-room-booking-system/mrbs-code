@@ -190,8 +190,11 @@ class Element
     $classes = $this->getAttribute('class');
 
     $classes = (isset($classes)) ? explode(' ', $classes) : array();
-    $classes[] = $class;
-    $this->setAttribute('class', implode(' ', $classes));
+    if (!in_array($class, $classes))
+    {
+      $classes[] = $class;
+      $this->setAttribute('class', implode(' ', $classes));
+    }
 
     return $this;
   }
