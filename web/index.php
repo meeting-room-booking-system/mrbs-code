@@ -313,14 +313,14 @@ function get_arrow_nav(string $view, int $view_all, int $year, int $month, int $
   $html .= "<nav class=\"arrow\">\n";
   if ($view == 'day')
   {
-    $html .= "<a class=\"prev_week symbol\" title=\"$title_prev_week\" aria-label=\"$title_prev_week\" href=\"" . htmlspecialchars($link_prev_week) . "\"></a>";
+    $html .= "<a class=\"prev_week symbol prefetch\" title=\"$title_prev_week\" aria-label=\"$title_prev_week\" href=\"" . htmlspecialchars($link_prev_week) . "\"></a>";
   }
-  $html .= "<a class=\"prev symbol\" title=\"$title_prev\" aria-label=\"$title_prev\" href=\"" . htmlspecialchars($link_prev) . "\"></a>";
+  $html .= "<a class=\"prev symbol prefetch\" title=\"$title_prev\" aria-label=\"$title_prev\" href=\"" . htmlspecialchars($link_prev) . "\"></a>";
   $html .= "<a title= \"$title_this\" aria-label=\"$title_this\" href=\"" . htmlspecialchars($link_today) . "\">" . get_vocab('today') . "</a>";
-  $html .= "<a class=\"next symbol\" title=\"$title_next\" aria-label=\"$title_next\" href=\"" . htmlspecialchars($link_next) . "\"></a>";
+  $html .= "<a class=\"next symbol prefetch\" title=\"$title_next\" aria-label=\"$title_next\" href=\"" . htmlspecialchars($link_next) . "\"></a>";
   if ($view == 'day')
   {
-    $html .= "<a class=\"next_week symbol\" title=\"$title_next_week\" aria-label=\"$title_next_week\" href=\"" . htmlspecialchars($link_next_week) . "\"></a>";
+    $html .= "<a class=\"next_week symbol prefetch\" title=\"$title_next_week\" aria-label=\"$title_next_week\" href=\"" . htmlspecialchars($link_next_week) . "\"></a>";
   }
   $html .= "</nav>";
 

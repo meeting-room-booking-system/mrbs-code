@@ -218,8 +218,8 @@ var prefetch = function() {
 
   var delay = <?php echo $prefetch_refresh_rate?> * 1000;
   var hrefs = [];
-  ['a.prev', 'a.next'].forEach(function(anchor) {
-      var a = $(anchor);
+  $('a.prefetch').each(function() {
+      var a = $(this);
       <?php
       // Don't waste time prefetching data for links that aren't visible, which
       // they won't be if we are in kiosk mode.
