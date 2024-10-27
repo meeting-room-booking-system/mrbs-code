@@ -399,7 +399,7 @@ class Element
       }
 
       $html .= " $key";
-      if (isset($value) && ($value !== true))
+      if ($value !== true)
       {
         // boolean attributes, eg 'required', don't need a value
         $html .= '="';
