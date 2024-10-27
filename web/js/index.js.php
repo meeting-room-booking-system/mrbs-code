@@ -216,8 +216,10 @@ var prefetch = function() {
     return;
   }
 
+  var activeConnections = 0;
   var delay = <?php echo $prefetch_refresh_rate?> * 1000;
   var hrefs = [];
+
   $('a.prefetch').each(function() {
       var a = $(this);
       <?php
@@ -248,19 +250,21 @@ var prefetch = function() {
   }
 
   hrefs.forEach(function(href) {
+    activeConnections++;
     $.get({url: href, dataType: 'html'})
       .fail(function() {
           <?php // Don't do anything if the request failed ?>
         })
       .done(function(response) {
           updateBody.prefetched[href] = response;
+          activeConnections--;
           <?php // Once we've got all the responses back set off another timeout ?>
-          if (Object.keys(updateBody.prefetched).length === hrefs.length)
+          if (activeConnections === 0)
           {
             <?php
-            // Only set another timeout if the request was successful.  There's no point
-            // in doing so if it failed: it will probably fail again and just fill up
-            // the PHP error log.
+            // Only set another timeout if all the requests were successful.  There's no
+            // point in doing so if one failed: it will probably fail again and just fill
+            // up the PHP error log.
             ?>
             prefetch.timeoutId = setTimeout(prefetch, delay);
           }
