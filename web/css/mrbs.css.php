@@ -644,12 +644,32 @@ nav.arrow a:focus {
   text-decoration: none;
 }
 
-nav a.prev::before {
-  content: '\00276e';  /* HEAVY LEFT-POINTING ANGLE QUOTATION MARK ORNAMENT */
+nav a.symbol::before {
+  font-size: large;
+  line-height: 0;
 }
 
-nav a.next::after {
-  content: '\00276f';  /* HEAVY RIGHT-POINTING ANGLE QUOTATION MARK ORNAMENT */
+nav a.prev::before {
+  content: '\002039';  /* Single left-pointing angle quotation mark */
+}
+
+nav a.next::before {
+  content: '\00203a';  /* Single left-pointing angle quotation mark */
+}
+
+nav a.prev.week::before {
+  content: '\0000ab';  /* Left-pointing double angle quotation mark */
+}
+
+nav a.next.week::before {
+  content: '\0000bb';  /* Right-pointing double angle quotation mark */
+}
+
+<?php // Don't display the << and >> buttons on narrow screens ?>
+@media (max-width: 30rem) {
+  nav a.week {
+    display: none;
+  }
 }
 
 .message_top {

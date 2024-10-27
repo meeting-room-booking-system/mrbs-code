@@ -157,7 +157,7 @@ function make_room_select_html (string $view, int $view_all, int $year, int $mon
 
 
 // Gets the link to the next/previous day/week/month
-function get_adjacent_link(string $view, int $view_all, int $year, int $month, int $day, int $area, int $room, bool $next=false) : string
+function get_adjacent_link(string $view, int $view_all, int $year, int $month, int $day, int $area, int $room, int $increment) : string
 {
   $date = new DateTime();
   $date->setDate($year, $month, $day);
@@ -165,21 +165,25 @@ function get_adjacent_link(string $view, int $view_all, int $year, int $month, i
   switch ($view)
   {
     case 'day':
-      $modifier = ($next) ? '+1 day' : '-1 day';
-      // find the next non-hidden day
-      $i = 0;
-      do {
-        $i++;
-        $date->modify($modifier);
-      } while ($date->isHiddenDay() && ($i < DAYS_PER_WEEK)); // break the loop if all days are hidden
+      $modifier = "$increment day";
+      $date->modify($modifier);
+      if ($increment === 1)
+      {
+        // find the next non-hidden day
+        $i = 0;
+        while ($date->isHiddenDay() && ($i < DAYS_PER_WEEK)) // break the loop if all days are hidden
+        {
+          $i++;
+          $date->modify($modifier);
+        }
+      }
       break;
     case 'week':
-      $modifier = ($next) ? '+1 week' : '-1 week';
+      $modifier = "$increment week";
       $date->modify($modifier);
       break;
     case 'month':
-      $n = ($next) ? 1 : -1;
-      $date->modifyMonthsNoOverflow($n);
+      $date->modifyMonthsNoOverflow($increment);
       break;
     default:
       throw new \Exception("Unknown view '$view'");
@@ -274,6 +278,10 @@ function get_arrow_nav(string $view, int $view_all, int $year, int $month, int $
       $title_prev = get_vocab('daybefore');
       $title_this = get_vocab('gototoday');
       $title_next = get_vocab('dayafter');
+      $title_prev_week = get_vocab('weekbefore');
+      $title_next_week = get_vocab('weekafter');
+      $link_prev_week = get_adjacent_link($view, $view_all, $year, $month, $day, $area, $room, -7);
+      $link_next_week = get_adjacent_link($view, $view_all, $year, $month, $day, $area, $room, +7);
       break;
     case 'week':
       $title_prev = get_vocab('weekbefore');
@@ -293,18 +301,28 @@ function get_arrow_nav(string $view, int $view_all, int $year, int $month, int $
   $title_prev = htmlspecialchars($title_prev);
   $title_next = htmlspecialchars($title_next);
 
-  $link_prev = get_adjacent_link($view, $view_all, $year, $month, $day, $area, $room, false);
+  $link_prev = get_adjacent_link($view, $view_all, $year, $month, $day, $area, $room, -1);
   $link_today = get_today_link($view, $view_all, $area, $room);
-  $link_next = get_adjacent_link($view, $view_all, $year, $month, $day, $area, $room, true);
+  $link_next = get_adjacent_link($view, $view_all, $year, $month, $day, $area, $room, 1);
 
   $link_prev = multisite($link_prev);
   $link_today = multisite($link_today);
   $link_next = multisite($link_next);
 
+  // For the day view we also offer buttons to go back/forward by one week.
+  // The links without any text have their content filled by CSS.
   $html .= "<nav class=\"arrow\">\n";
-  $html .= "<a class=\"prev\" title=\"$title_prev\" aria-label=\"$title_prev\" href=\"" . htmlspecialchars($link_prev) . "\"></a>";  // Content will be filled in by CSS
+  if ($view == 'day')
+  {
+    $html .= "<a class=\"prev week symbol prefetch\" title=\"$title_prev_week\" aria-label=\"$title_prev_week\" href=\"" . htmlspecialchars($link_prev_week) . "\"></a>";
+  }
+  $html .= "<a class=\"prev symbol prefetch\" title=\"$title_prev\" aria-label=\"$title_prev\" href=\"" . htmlspecialchars($link_prev) . "\"></a>";
   $html .= "<a title= \"$title_this\" aria-label=\"$title_this\" href=\"" . htmlspecialchars($link_today) . "\">" . get_vocab('today') . "</a>";
-  $html .= "<a class=\"next\" title=\"$title_next\" aria-label=\"$title_next\" href=\"" . htmlspecialchars($link_next) . "\"></a>";  // Content will be filled in by CSS
+  $html .= "<a class=\"next symbol prefetch\" title=\"$title_next\" aria-label=\"$title_next\" href=\"" . htmlspecialchars($link_next) . "\"></a>";
+  if ($view == 'day')
+  {
+    $html .= "<a class=\"next week symbol prefetch\" title=\"$title_next_week\" aria-label=\"$title_next_week\" href=\"" . htmlspecialchars($link_next_week) . "\"></a>";
+  }
   $html .= "</nav>";
 
   return $html;
