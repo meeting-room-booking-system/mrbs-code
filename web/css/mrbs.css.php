@@ -657,12 +657,19 @@ nav a.next::before {
   content: '\00203a';  /* Single left-pointing angle quotation mark */
 }
 
-nav a.prev_week::before {
+nav a.prev.week::before {
   content: '\0000ab';  /* Left-pointing double angle quotation mark */
 }
 
-nav a.next_week::before {
+nav a.next.week::before {
   content: '\0000bb';  /* Right-pointing double angle quotation mark */
+}
+
+<?php // Don't display the << and >> buttons on narrow screens ?>
+@media (max-width: 30rem) {
+  nav a.week {
+    display: none;
+  }
 }
 
 .message_top {
