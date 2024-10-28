@@ -36,7 +36,7 @@ class ElementInputDatalist extends ElementInput
   }
 
 
-  public function addDatalistOptions(array $options, $associative=null): ElementInputDatalist
+  public function addDatalistOptions(array $options, ?bool $associative=null): ElementInputDatalist
   {
     // Put a <select> wrapper around the options so that browsers that don't
     // support <datalist> will still have the options in their DOM and then
