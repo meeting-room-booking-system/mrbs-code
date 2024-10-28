@@ -20,8 +20,8 @@ use function MRBS\is_assoc;
 
 class Element
 {
-  private $tag = null;
-  private $self_closing = false;
+  private $tag;
+  private $self_closing;
   private $attributes = array();
   private $text = null;
   private $raw = false;
