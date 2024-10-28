@@ -17,7 +17,7 @@ class ElementFieldset extends Element
   //    (b) another element, or
   //    (c) a string
   // If it is (b) or (c) then it is wrapped inside a Legend element.
-  public function addLegend($legend)
+  public function addLegend($legend) : ElementFieldset
   {
     if (is_object($legend) &&
         (__NAMESPACE__ . "\\ElementLegend" == get_class($legend)))
