@@ -383,11 +383,11 @@ if (isset($month_relative_ord) && isset($month_relative_day))
 // the default applies, whether or not the user is an admin.
 if ($private_enabled)
 {
-  $isprivate = (!is_book_admin() && $private_mandatory) ? $private_default : (bool) $private;
+  $is_private = (!is_book_admin() && $private_mandatory) ? $private_default : (bool) $private;
 }
 else
 {
-  $isprivate = ($private_mandatory) ? $private_default : false;
+  $is_private = ($private_mandatory) ? $private_default : false;
 }
 
 // Make sure the area corresponds to the room that is being booked
@@ -794,7 +794,7 @@ foreach ($rooms as $room_id)
   // (Note: the statuses fields are the only ones that can differ by room)
 
   // Privacy status
-  $booking['private'] = (bool) $isprivate;
+  $booking['private'] = (bool) $is_private;
 
   // If we are using booking approvals then we need to work out whether the
   // status of this booking is approved.   If the user is allowed to approve
