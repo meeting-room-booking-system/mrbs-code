@@ -196,7 +196,7 @@ function get_adjacent_link(string $view, int $view_all, int $year, int $month, i
                 'area'      => $area,
                 'room'      => $room);
 
-  return 'index.php?' . http_build_query($vars, '', '&');
+  return multisite('index.php?' . http_build_query($vars, '', '&'));
 }
 
 
@@ -211,7 +211,7 @@ function get_today_link(string $view, int $view_all, int $area, int $room) : str
                 'area'      => $area,
                 'room'      => $room);
 
-  return 'index.php?' . http_build_query($vars, '', '&');
+  return multisite('index.php?' . http_build_query($vars, '', '&'));
 }
 
 
@@ -304,10 +304,6 @@ function get_arrow_nav(string $view, int $view_all, int $year, int $month, int $
   $link_prev = get_adjacent_link($view, $view_all, $year, $month, $day, $area, $room, -1);
   $link_today = get_today_link($view, $view_all, $area, $room);
   $link_next = get_adjacent_link($view, $view_all, $year, $month, $day, $area, $room, 1);
-
-  $link_prev = multisite($link_prev);
-  $link_today = multisite($link_today);
-  $link_next = multisite($link_next);
 
   // For the day view we also offer buttons to go back/forward by one week.
   // The links without any text have their content filled by CSS.
