@@ -657,9 +657,9 @@ if ($repeat_rule->getType() != RepeatRule::NONE)
   // other words make sure that the first starttime defines an actual
   // entry.   We need to do this because if we are going to construct an iCalendar
   // object, RFC 5545 demands that the start time is the first event of
-  // a series.  ["The "DTSTART" property for a "VEVENT" specifies the inclusive
+  // a series.  ['The "DTSTART" property for a "VEVENT" specifies the inclusive
   // start of the event.  For recurring events, it also specifies the very first
-  // instance in the recurrence set."]
+  // instance in the recurrence set.']
 
   // Get the first entry in the series and make that the start time
   $reps = $repeat_rule->getRepeatStartTimes($start_time, 1);
