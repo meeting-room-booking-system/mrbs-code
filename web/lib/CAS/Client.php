@@ -938,7 +938,7 @@ class CAS_Client
         $server_uri,
         $service_base_url,
         $changeSessionID = true,
-        \SessionHandlerInterface $sessionHandler = null
+        ?\SessionHandlerInterface $sessionHandler = null
     ) {
         // Argument validation
         if (gettype($server_version) != 'string')
@@ -972,11 +972,6 @@ class CAS_Client
                 // skip Session Handling for logout requests and if don't want it
                 session_start();
                 phpCAS :: trace("Starting a new session " . session_id());
-            }
-            // init phpCAS session array
-            if (!isset($_SESSION[static::PHPCAS_SESSION_PREFIX])
-                || !is_array($_SESSION[static::PHPCAS_SESSION_PREFIX])) {
-                $_SESSION[static::PHPCAS_SESSION_PREFIX] = array();
             }
         }
 
@@ -1198,7 +1193,19 @@ class CAS_Client
     {
         $this->validateSession($key);
 
+        $this->ensureSessionArray();
         $_SESSION[static::PHPCAS_SESSION_PREFIX][$key] = $value;
+    }
+
+    /**
+     * Ensure that the session array is initialized before writing to it.
+     */
+    protected function ensureSessionArray() {
+      // init phpCAS session array
+      if (!isset($_SESSION[static::PHPCAS_SESSION_PREFIX])
+          || !is_array($_SESSION[static::PHPCAS_SESSION_PREFIX])) {
+          $_SESSION[static::PHPCAS_SESSION_PREFIX] = array();
+      }
     }
 
     /**
