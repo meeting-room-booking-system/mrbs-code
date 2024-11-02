@@ -734,6 +734,20 @@ $vars = array('view'      => $view ?? $default_view,
               'area'      => $area,
               'room'      => $room);
 
+// If we're going back to the index page then add any scroll positions to the
+// query string so that the JavaScript can scroll back to the same position.
+if ('index.php' == basename(parse_url($returl, PHP_URL_PATH)))
+{
+  foreach (['top', 'left'] as $var)
+  {
+    $$var = get_form_var($var, 'string');
+    if (isset($$var))
+    {
+      $vars[$var] = $$var;
+    }
+  }
+}
+
 $returl .= '?' . http_build_query($vars, '', '&');
 
 

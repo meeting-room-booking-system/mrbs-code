@@ -1693,6 +1693,20 @@ $hidden_inputs = array('returl'      => $returl,
                        'rep_id'      => $rep_id,
                        'edit_series' => $edit_series);
 
+// If we're going back to the index page then add any scroll positions to the
+// hidden inputs so that the JavaScript can scroll back to the same position.
+if ('index.php' == basename(parse_url($returl, PHP_URL_PATH)))
+{
+  foreach (['top', 'left'] as $var)
+  {
+    $$var = get_form_var($var, 'string');
+    if (isset($$var))
+    {
+      $hidden_inputs[$var] = $$var;
+    }
+  }
+}
+
 $form->addHiddenInputs($hidden_inputs);
 
 // The original_room_id will only be set if this was an existing booking.

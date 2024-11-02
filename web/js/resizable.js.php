@@ -652,6 +652,26 @@ var Table = {
 };
 
 
+<?php
+// Add scroll positions, if any, of a jQuery object to the location.
+// This enables the scroll position to be preserved after a booking
+// has been made.
+?>
+function addScrollPosition(location, object)
+{
+  if (object.isHScrollable())
+  {
+    location += '&left=' + encodeURIComponent(object.scrollLeft());
+  }
+  if (object.isVScrollable())
+  {
+    location += '&top=' + encodeURIComponent(object.scrollTop());
+  }
+
+  return location;
+}
+
+
 $(document).on('page_ready', function() {
 
   <?php // Don't do anything if we're in kiosk mode ?>
@@ -953,7 +973,6 @@ $(document).on('page_ready', function() {
           $(document).off('mousemove',moveHandler);
           $(document).off('mouseup', upHandler);
 
-
           <?php
           // If the user has released the button while outside the table it means
           // they want to cancel, so just return.
@@ -975,7 +994,7 @@ $(document).on('page_ready', function() {
           {
             if (downHandler.originalLink !== undefined)
             {
-              window.location = downHandler.originalLink;
+              window.location = addScrollPosition(downHandler.originalLink, tableContainer);
             }
             else
             {
@@ -1009,7 +1028,7 @@ $(document).on('page_ready', function() {
           {
             queryString += '&site=' + encodeURIComponent(args.site);
           }
-          window.location = 'edit_entry.php?' + queryString;
+          window.location = addScrollPosition('edit_entry.php?' + queryString, tableContainer);
         };
 
 
