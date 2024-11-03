@@ -605,6 +605,9 @@ $(document).on('page_ready', function() {
   // Do this on page_ready, rather than tableload, so that the scrolling doesn't happen after
   // every automatic refresh.  That would be a problem if the user has deliberately scrolled
   // somewhere else after the automatic scroll.
+  //
+  // TODO: Make sure that the booking that has just been made is visible in the table and
+  // TODO: scroll as necessary if not.
   ?>
   const searchParams = new URLSearchParams(window.location.search);
   const top = searchParams.get('top');
