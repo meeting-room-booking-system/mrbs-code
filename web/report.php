@@ -1514,7 +1514,7 @@ if (!in_array($sumby, ['c', 'd', 't']))
 
 $is_ajax = is_ajax();
 
-if ($cli_mode || $report_unauthenticated_get_enabled)
+if ($cli_mode)
 {
   // If we're running in CLI mode we're passing the parameters in from the command line
   // not the form and we want to go straight to Phase 2 (producing the report)
@@ -1528,9 +1528,13 @@ else
     Form::checkToken(true);
   }
 
-  // Check the user is authorised for this page
-  checkAuthorised(this_page());
-  $mrbs_user = session()->getCurrentUser();
+  // Check the user is authorised for this page, unless we're allowing unauthenticated
+  // GET requests, this is a GET request, and we're in Phase 2.
+  if (!($report_unauthenticated_get_enabled && is_get_request() && ($phase == 2)))
+  {
+    checkAuthorised(this_page());
+    $mrbs_user = session()->getCurrentUser();
+  }
 }
 
 // Set up for Ajax.   We need to know whether we're capable of dealing with Ajax
