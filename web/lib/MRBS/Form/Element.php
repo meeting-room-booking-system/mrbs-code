@@ -20,8 +20,8 @@ use function MRBS\is_assoc;
 
 class Element
 {
-  private $tag = null;
-  private $self_closing = false;
+  private $tag;
+  private $self_closing;
   private $attributes = array();
   private $text = null;
   private $raw = false;
@@ -190,8 +190,11 @@ class Element
     $classes = $this->getAttribute('class');
 
     $classes = (isset($classes)) ? explode(' ', $classes) : array();
-    $classes[] = $class;
-    $this->setAttribute('class', implode(' ', $classes));
+    if (!in_array($class, $classes))
+    {
+      $classes[] = $class;
+      $this->setAttribute('class', implode(' ', $classes));
+    }
 
     return $this;
   }
@@ -396,7 +399,7 @@ class Element
       }
 
       $html .= " $key";
-      if (isset($value) && ($value !== true))
+      if ($value !== true)
       {
         // boolean attributes, eg 'required', don't need a value
         $html .= '="';

@@ -2478,7 +2478,7 @@ function update_participants(int $old_id, int $new_id) : bool
 function mrbsMakeBookings(array $bookings, ?int $id=null, bool $just_check=false, bool $skip=false, ?int $original_room_id=null, bool $send_mail=false, bool $edit_series=false)
 {
   global $max_rep_entrys, $enable_periods, $resolution, $mail_settings;
-  global $prevent_simultaneous_bookings, $auth;
+  global $auth;
 
   // All the data, except for the status and room id, will be common
   // across the bookings
@@ -2784,7 +2784,11 @@ function mrbsMakeBookings(array $bookings, ?int $id=null, bool $just_check=false
     }
     else
     {
-      // Create the entry:
+      // Make sure the keys below are set properly for a single entry (they might not
+      // be if we've been editing a series and changed its repeat type to "none").
+      $booking['repeat_id'] = null;
+      $booking['entry_type'] = ENTRY_SINGLE;
+      // Create the entry
       $new_id = mrbsCreateSingleEntry($booking);
       // Update the participants table
       if (isset($id))

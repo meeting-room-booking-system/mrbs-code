@@ -19,32 +19,59 @@ class DBFactory
     string $db_name,
     bool $persist=false,
     ?int $db_port=null,
-    array $db_options=[])
+    array $db_options=[]) : DB
   {
+    self::checkExtensionEnabled($db_system);
+
     switch ($db_system)
     {
       case 'mysql':
       case 'mysqli':
-        try
-        {
-          return new DB_mysql($db_host, $db_username, $db_password, $db_name, $persist, $db_port, $db_options);
-        }
-        catch (\Throwable $e)
-        {
-          $message = $e->getMessage();
-          if ($e->getMessage() == "Undefined constant PDO::MYSQL_ATTR_FOUND_ROWS")
-          {
-            $message .= ".  Check that the PDO MySQL driver is enabled in your php.ini file.";
-          }
-          throw new Exception($message, $e->getCode());
-        }
+        $class_name = 'DB_mysql';
         break;
+
       case 'pgsql':
-        return new DB_pgsql($db_host, $db_username, $db_password, $db_name, $persist, $db_port, $db_options);
+        $class_name = 'DB_pgsql';
         break;
+
       default:
         throw new Exception("Unsupported database driver '$db_system'");
         break;
+    }
+
+    $class_name = __NAMESPACE__ . '\\' . $class_name;
+    return new $class_name($db_host, $db_username, $db_password, $db_name, $persist, $db_port, $db_options);
+  }
+
+
+  // Check that the appropriate PDO extension is enabled.  This can't always be
+  // done in the constructor of the class itself because the class can refer to a
+  // driver-specific constant.
+  private static function checkExtensionEnabled(string $db_system) : void
+  {
+    // Check for the existence of a driver-specific constant
+    switch ($db_system)
+    {
+      case 'mysql':
+      case 'mysqli':
+        $constant_name = 'PDO::MYSQL_ATTR_FOUND_ROWS';
+        $extension = 'pdo_mysql';
+        break;
+
+      case 'pgsql':
+        $constant_name = 'PDO::PGSQL_ATTR_DISABLE_PREPARES';
+        $extension = 'pdo_pgsql';
+        break;
+
+      default:
+        return;
+    }
+
+    if (!defined($constant_name))
+    {
+      $message = "Undefined constant $constant_name.  Check that the $extension extension is enabled " .
+                 "in your php.ini file.";
+      throw new Exception($message);
     }
   }
 }

@@ -119,11 +119,11 @@ var extractEmailAddresses = function(dt, columnSelector, sort) {
 
   navigator.clipboard.writeText(result.join(', '))
     .then(() => {
-      message = '<?php echo get_vocab('unique_addresses_copied')?>';
+      message = '<?php echo get_js_vocab('unique_addresses_copied')?>';
       message = message.replace('%d', result.length.toString());
     })
     .catch((err) => {
-      message = '<?php echo get_vocab('clipboard_copy_failed')?>';
+      message = '<?php echo get_js_vocab('clipboard_copy_failed')?>';
       console.error(err);
     })
     .finally(() => {
@@ -231,9 +231,9 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   <?php // Set up the default options ?>
   defaultOptions = {
     buttons: [{extend: 'colvis',
-               text: '<?php echo escape_js(get_vocab("show_hide_columns")) ?>'}],
+               text: '<?php echo get_js_vocab("show_hide_columns") ?>'}],
     deferRender: true,
-    lengthMenu: [ [10, 25, 50, 100, -1], [10, 25, 50, 100, '<?php echo escape_js(get_vocab('dt_all')) ?>'] ],
+    lengthMenu: [ [10, 25, 50, 100, -1], [10, 25, 50, 100, '<?php echo get_js_vocab('dt_all') ?>'] ],
     paging: true,
     pageLength: 25,
     pagingType: 'full_numbers',
@@ -267,15 +267,15 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     defaultOptions.buttons = defaultOptions.buttons.concat(
       $.extend(true, {}, buttonCommon, {
         extend: 'copy',
-        text: '<?php echo escape_js(get_vocab('copy')) ?>'
+        text: '<?php echo get_js_vocab('copy') ?>'
       }),
       $.extend(true, {}, buttonCommon, {
         extend: 'csv',
-        text: '<?php echo escape_js(get_vocab('csv')) ?>'
+        text: '<?php echo get_js_vocab('csv') ?>'
       }),
       $.extend(true, {}, buttonCommon, {
         extend: 'excel',
-        text: '<?php echo escape_js(get_vocab('excel')) ?>',
+        text: '<?php echo get_js_vocab('excel') ?>',
         customize: customizeExcel
       }),
       $.extend(true, {}, buttonCommon, {
@@ -284,13 +284,13 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
         // https://github.com/meeting-room-booking-system/mrbs-code/issues/3512
         ?>
         extend: 'pdfHtml5',
-        text: '<?php echo escape_js(get_vocab('pdf')) ?>',
+        text: '<?php echo get_js_vocab('pdf') ?>',
         orientation: '<?php echo $pdf_default_orientation ?>',
         pageSize: '<?php echo $pdf_default_paper ?>'
       }),
       $.extend(true, {}, buttonCommon, {
         extend: 'print',
-        text: '<?php echo escape_js(get_vocab('print')) ?>'
+        text: '<?php echo get_js_vocab('print') ?>'
       })
     );
   }

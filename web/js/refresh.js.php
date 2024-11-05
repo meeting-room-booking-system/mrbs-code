@@ -501,6 +501,7 @@ var Timeline = {
 
 $(document).on('page_ready', function() {
 
+  var table = $('table.dwm_main');
   Timeline.clear();
 
   <?php
@@ -509,7 +510,7 @@ $(document).on('page_ready', function() {
   // whole window.   For example if we've got the datepicker open we don't want that
   // to be reset.
   ?>
-  $('table.dwm_main').on('tableload', function() {
+  table.on('tableload', function() {
 
       var refreshRate;
 
@@ -597,11 +598,36 @@ $(document).on('page_ready', function() {
     }).trigger('tableload');
 
   <?php
+  // If we've been given scroll positions in the URL query string, scroll to them so that we
+  // go back to the scroll position the user started with.  Otherwise, scroll so that the
+  // current timeslot is visible.
+  //
   // Do this on page_ready, rather than tableload, so that the scrolling doesn't happen after
   // every automatic refresh.  That would be a problem if the user has deliberately scrolled
   // somewhere else after the automatic scroll.
+  //
+  // TODO: Make sure that the booking that has just been made is visible in the table and
+  // TODO: scroll as necessary if not.
   ?>
-  scrollToCurrentSlot();
+  const searchParams = new URLSearchParams(window.location.search);
+  const top = searchParams.get('top');
+  const left = searchParams.get('left');
+  if ((top == null) && (left === null))
+  {
+    scrollToCurrentSlot();
+  }
+  else
+  {
+    let tableContainer = table.parent();
+    if (top !== null)
+    {
+      tableContainer.scrollTop(top);
+    }
+    if (left !== null)
+    {
+      tableContainer.scrollLeft(left);
+    }
+  }
 
 });
 

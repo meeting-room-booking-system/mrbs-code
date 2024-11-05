@@ -903,7 +903,7 @@ if (!$room_disabled)
           isset($repeat_id) &&
           series_has_registrants($repeat_id))
       {
-        $button_attributes['onclick'] = "return confirm('" . escape_js(get_vocab("confirm_edit_series")) . "');";
+        $button_attributes['onclick'] = "return confirm('" . get_js_vocab("confirm_edit_series") . "');";
       }
       generate_button($params, $button_attributes);
       echo "</div>\n";
@@ -922,7 +922,7 @@ if (!$room_disabled)
       echo "<div>\n";
       if (empty($button_attributes['disabled']))
       {
-        $button_attributes['onclick'] = "return confirm('" . escape_js(get_vocab('confirmdel')) . "');";
+        $button_attributes['onclick'] = "return confirm('" . get_js_vocab('confirmdel') . "');";
       }
       $params = array(
           'action' => multisite('del_entry.php'),
@@ -940,7 +940,7 @@ if (!$room_disabled)
       echo "<div>\n";
       if (empty($button_attributes['disabled']))
       {
-        $button_attributes['onclick'] = "return confirm('" . escape_js(get_vocab('confirmdel_series')) . "');";
+        $button_attributes['onclick'] = "return confirm('" . get_js_vocab('confirmdel_series') . "');";
       }
       $params = array(
           'action' => multisite("del_entry.php?day=$day&month=$month&year=$year"),

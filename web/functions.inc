@@ -4,6 +4,7 @@ namespace MRBS;
 
 use DateInterval;
 use DateTimeZone;
+use MRBS\Form\Field;
 use MRBS\Form\FieldSelect;
 use MRBS\ICalendar\RFC5545;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -1018,28 +1019,38 @@ function fromTimeString(&$units, $dur_units)
 
 // Gets the interval in periods for a booking with $start_time and $end_time
 // Takes account of DST
-function get_period_interval(int $start_time, int $end_time) : int
+function get_period_interval(int $start_time, int $end_time, int $area_id) : int
 {
-  global $periods;
+  static $area_details = [];
 
-  $periods_per_day = count($periods);
+  if (!isset($area_details[$area_id]))
+  {
+    $area_details[$area_id] = get_area_details($area_id);
+  }
 
+  $periods_per_day = count(json_decode($area_details[$area_id]['periods']));
+  $date_time_zone = new DateTimeZone($area_details[$area_id]['timezone']);
+
+  // Create start and end dates and set both dates to noon so that we can compare them
+  // and get an integral number of days difference.  Noon also happens to be when
+  // periods start, so will be useful in a moment.
   $startDate = new DateTime();
-  $startDate->setTimestamp($start_time);
-  $endDate = new DateTime();
-  $endDate->setTimestamp($end_time);
+  $startDate
+    ->setTimezone($date_time_zone)
+    ->setTimestamp($start_time)
+    ->modify('12:00');
 
-  // Set both dates to noon so that we can compare them and get an integral
-  // number of days difference.  Noon also happens to be when periods start,
-  // so will be useful in a moment.
-  $startDate->modify('12:00');
-  $endDate->modify('12:00');
+  $endDate = new DateTime();
+  $endDate
+    ->setTimezone($date_time_zone)
+    ->setTimestamp($end_time)
+    ->modify('12:00');
 
   // Calculate the difference in days
   $interval = $startDate->diff($endDate);
-  $interval_days = $interval->format('%a');
+  $interval_days = intval($interval->format('%a'));
 
-  if ($interval_days == 0)
+  if ($interval_days === 0)
   {
     // If the interval starts and ends on the same day, then we just calculate the number
     // of periods by calculating the number of minutes between the start and end times.
@@ -1049,11 +1060,11 @@ function get_period_interval(int $start_time, int $end_time) : int
   {
     // Otherwise we calculate the number of periods on the first day
     $startDate->add(new DateInterval('PT' . $periods_per_day . 'M'));
-    $result = get_period_interval($start_time, $startDate->getTimestamp());
+    $result = get_period_interval($start_time, $startDate->getTimestamp(), $area_id);
     // Add in the number of whole days worth of periods in between
     $result += ($interval_days - 1) * $periods_per_day;
     // And add in the number of periods on the last day
-    $result += get_period_interval($endDate->getTimestamp(), $end_time);
+    $result += get_period_interval($endDate->getTimestamp(), $end_time, $area_id);
   }
 
   return (int) $result;
@@ -1373,7 +1384,7 @@ function get_duration(int $start_time, int $end_time, bool $enable_periods, int 
   if ($enable_periods)
   {
     $periods_per_day = count($period_names[$area_id]);
-    $n_periods = get_period_interval($start_time, $end_time);  // this handles DST
+    $n_periods = get_period_interval($start_time, $end_time, $area_id);  // this handles DST
     if (($n_periods % $periods_per_day) == 0)
     {
       $result['duration'] =  intval($n_periods/$periods_per_day);
@@ -2568,9 +2579,9 @@ function get_server_software() : string
 
 
 
-function get_field_entry_input(array $params)
+function get_field_entry_input(array $params) : Field
 {
-  global $select_options, $datalist_options;
+  global $select_options, $datalist_options, $text_input_max;
 
   if (isset($params['field']))
   {
@@ -2582,13 +2593,21 @@ function get_field_entry_input(array $params)
     {
       $class = 'FieldInputDatalist';
     }
-    elseif ($params['field'] == 'entry.description')
-    {
-      $class = 'FieldTextarea';
-    }
     else
     {
-      $class = 'FieldInputText';
+      $columns = Columns::getInstance(_tbl('entry'));
+      $column_name = preg_replace('/^entry./', '', $params['field']);
+      $column = $columns->getColumnByName($column_name);
+      if (!in_array($column_name, ['name', 'create_by']) &&  // special cases
+          ($column->getNature() === Column::NATURE_CHARACTER) &&
+          ($column->getLength() > $text_input_max))
+      {
+        $class = 'FieldTextarea';
+      }
+      else
+      {
+        $class = 'FieldInputText';
+      }
     }
   }
   else
@@ -2634,7 +2653,7 @@ function get_field_entry_input(array $params)
     case 'FieldTextarea':
       if ($class == 'FieldTextarea')
       {
-        $field->setControlText($params['value']);
+        $field->setControlText($params['value'] ?? '');
       }
       else
       {

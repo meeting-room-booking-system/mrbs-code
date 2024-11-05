@@ -501,7 +501,7 @@ function get_field_custom($custom_field, $params, $disabled=false)
     case 'FieldTextarea':
       if ($class == 'FieldTextarea')
       {
-        $field->setControlText($params['value']);
+        $field->setControlText($params['value'] ?? '');
       }
       else
       {

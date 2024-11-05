@@ -583,6 +583,21 @@ function type_wrap(string $string, string $data_type) : string
 }
 
 
+function clean_row(array $row) : array
+{
+  row_cast_columns($row, 'entry');
+  // These won't have been covered by row_cast_columns()
+  $row['area_id'] = (int) $row['area_id'];
+  $row['last_updated'] = (int) $row['last_updated'];
+  $row['approval_enabled'] = (bool) $row['approval_enabled'];
+  $row['confirmation_enabled'] = (bool) $row['confirmation_enabled'];
+  $row['enable_periods'] = (bool) $row['enable_periods'];
+  unpack_status($row);
+
+  return $row;
+}
+
+
 // Gets the indices of the columns that should be sorted
 function get_sort_columns(string $sortby) : array
 {
@@ -1175,9 +1190,11 @@ function accumulate_summary($row, &$count, &$hours, $report_start, $report_end,
     $endDate->setTimestamp($report_end)->modify('12:00');
     $endDate->sub(new DateInterval('P1D'));  // Go back one day because the $report_end is at 00:00 the day after
     $endDate->add(new DateInterval('PT' . $periods_per_day . 'M'));
-
-    $increment = get_period_interval(max($row['start_time'], $startDate->getTimestamp()),
-                                     min($row['end_time'], $endDate->getTimestamp()));
+    $increment = get_period_interval(
+      max($row['start_time'], $startDate->getTimestamp()),
+      min($row['end_time'], $endDate->getTimestamp()),
+      $row['area_id']
+    );
     $room_hash[$room] = MODE_PERIODS;
   }
   else
@@ -1934,14 +1951,7 @@ if ($phase == 2)
       $body_rows = array();
       while (false !== ($row = $res->next_row_keyed()))
       {
-        row_cast_columns($row, 'entry');
-        // These won't have been covered by row_cast_columns()
-        $row['area_id'] = (int) $row['area_id'];
-        $row['last_updated'] = (int) $row['last_updated'];
-        $row['approval_enabled'] = (bool) $row['approval_enabled'];
-        $row['confirmation_enabled'] = (bool) $row['confirmation_enabled'];
-        $row['enable_periods'] = (bool) $row['enable_periods'];
-        unpack_status($row);
+        $row = clean_row($row);
         report_row($body_rows, $row);
       }
       output_body_rows($body_rows, $output_format);
@@ -1955,7 +1965,7 @@ if ($phase == 2)
       {
         while (false !== ($row = $res->next_row_keyed()))
         {
-          unpack_status($row);
+          $row = clean_row($row);
           accumulate_summary($row, $count, $hours,
                              $report_start, $report_end,
                              $room_hash, $name_hash);

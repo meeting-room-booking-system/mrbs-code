@@ -375,15 +375,19 @@ if (isset($month_relative_ord) && isset($month_relative_day))
   $month_relative = $month_relative_ord . $month_relative_day;
 }
 
-// Handle private booking
-// Enforce config file settings if needed
-if ($private_mandatory && !is_book_admin())
+// Handle private bookings.
+// If the area settings allow users to make private bookings then use the value from
+// the form, unless the privacy status is forced and the user is not an admin (admins
+// are allowed to make public bookings if they want, even if the status is forced).
+// Otherwise the booking is not private, unless the status is forced, in which case
+// the default applies, whether or not the user is an admin.
+if ($private_enabled)
 {
-  $isprivate = $private_default;
+  $is_private = (!is_book_admin() && $private_mandatory) ? $private_default : (bool) $private;
 }
 else
 {
-  $isprivate = (bool) $private;
+  $is_private = ($private_mandatory) ? $private_default : false;
 }
 
 // Make sure the area corresponds to the room that is being booked
@@ -644,9 +648,9 @@ if ($repeat_rule->getType() != RepeatRule::NONE)
   // other words make sure that the first starttime defines an actual
   // entry.   We need to do this because if we are going to construct an iCalendar
   // object, RFC 5545 demands that the start time is the first event of
-  // a series.  ["The "DTSTART" property for a "VEVENT" specifies the inclusive
+  // a series.  ['The "DTSTART" property for a "VEVENT" specifies the inclusive
   // start of the event.  For recurring events, it also specifies the very first
-  // instance in the recurrence set."]
+  // instance in the recurrence set.']
 
   // Get the first entry in the series and make that the start time
   $reps = $repeat_rule->getRepeatStartTimes($start_time, 1);
@@ -730,6 +734,20 @@ $vars = array('view'      => $view ?? $default_view,
               'area'      => $area,
               'room'      => $room);
 
+// If we're going back to the index page then add any scroll positions to the
+// query string so that the JavaScript can scroll back to the same position.
+if ('index.php' == basename(parse_url($returl, PHP_URL_PATH)))
+{
+  foreach (['top', 'left'] as $var)
+  {
+    $$var = get_form_var($var, 'string');
+    if (isset($$var))
+    {
+      $vars[$var] = $$var;
+    }
+  }
+}
+
 $returl .= '?' . http_build_query($vars, '', '&');
 
 
@@ -790,7 +808,7 @@ foreach ($rooms as $room_id)
   // (Note: the statuses fields are the only ones that can differ by room)
 
   // Privacy status
-  $booking['private'] = (bool) $isprivate;
+  $booking['private'] = (bool) $is_private;
 
   // If we are using booking approvals then we need to work out whether the
   // status of this booking is approved.   If the user is allowed to approve
