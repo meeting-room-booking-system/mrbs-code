@@ -1885,8 +1885,10 @@ $csv_bom = false;
 // Set this to true to allow unauthenticated GET requests to report.php
 $report_unauthenticated_get_enabled = false;
 
-$report_open_areas = [];
-$report_open_rooms = [];
+// If unauthenticated GET requests are allowed then only bookings in rooms
+// or areas that are open will be shown.
+$report_open_areas = []; // An array of integer area ids
+$report_open_rooms = []; // An array of integer room ids
 
 /*************
  * iCalendar

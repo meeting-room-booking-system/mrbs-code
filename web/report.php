@@ -1377,17 +1377,6 @@ function do_summary($count, $hours, &$room_hash, &$name_hash)
 }
 
 
-function get_list_condition(string $column_name, array $list) : string
-{
-  if (count($list) === 0)
-  {
-    return 'FALSE';
-  }
-
-  return "$column_name IN (" . implode(',', array_fill(0, count($list), '?')) . ")";
-}
-
-
 function get_match_condition(string $full_column_name, ?string $match, array &$sql_params) : string
 {
   global $select_options, $field_natures, $field_lengths;
@@ -1793,10 +1782,14 @@ if ($phase == 2)
     }
   }
 
+  // If we're allowing unauthenticated requests and this is one then check that the
+  // room is in the list of open rooms or the area is in the list of open areas.
   if ($report_unauthenticated_get_enabled && is_get_request())
   {
-    $sql .= " AND (" . get_list_condition('A.id', $report_open_areas) . " OR " . get_list_condition('R.id', $report_open_rooms) . ")";
-    $sql_params = array_merge($sql_params, $report_open_areas);
+    $sql .= " AND (";
+    $sql .= db()->syntax_in_list('A.id', $report_open_areas, $sql_params) . " OR ";
+    $sql .= db()->syntax_in_list('R.id', $report_open_rooms, $sql_params);
+    $sql .= ")";
   }
 
   if ($output_format == OUTPUT_ICAL)

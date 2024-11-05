@@ -414,6 +414,20 @@ abstract class DB
   // Returns the syntax for a bitwise XOR operator
   abstract public function syntax_bitwise_xor(): string;
 
+  // Returns the syntax for a column being in a list of values
+  public function syntax_in_list(string $column_name, array $list, array &$params) : string
+  {
+    // Empty lists aren't allowed.
+    if (count($list) === 0)
+    {
+      return 'FALSE';
+    }
+
+    $params = array_merge($params, $list);
+
+    return $this->quote($column_name) . " IN (" . implode(',', array_fill(0, count($list), '?')) . ")";
+  }
+
   // Returns the syntax for a simple split of a column's value into two
   // parts, separated by a delimiter.  $part can be 1 or 2.
   // Also takes a required pass-by-reference parameter to modify the SQL
