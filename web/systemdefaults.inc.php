@@ -1886,6 +1886,7 @@ $csv_bom = false;
 $report_unauthenticated_get_enabled = false;
 
 $report_open_areas = [];
+$report_open_rooms = [];
 
 /*************
  * iCalendar
