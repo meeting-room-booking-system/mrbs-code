@@ -7,6 +7,145 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.11.6 (Wed 6th November 2024):
+
+[*] Updated French translations.
+
+[*] Move password checking into a separate method in order to simplify
+ extending the class.  See GitHub Issue #3662.
+
+[*] db_ext auth scheme updated to allow any password hashing algorithm that
+ is supported by hash().
+
+[*] Updated Spanish translations.
+
+[-] Fix bug introduced in commit 15b1302e preventing "Copy email addresses"
+ button working on the Report page.
+
+[-] Fix bug causing the period to be reported incorrectly under certain
+ circumstances
+
+[-] Fix TypeError.  See GitHub Issue #3675.
+
+[*] Added all locales to Docker image (#3673)
+
+[*] Made clicking "Today" scroll to the current timeslot.
+
+[*] Code updated to declare strict types and use type declarations in
+ many places.
+
+[-] Fix uncaught exception when editing a message and using PostgreSQL.  See
+ GitHub Issue #3680.
+
+[-] Check that we have a valid Joomla user.  See GitHub Issue #3682.
+
+[*] Introduce a new config variable ($cookie_samesite_lax) allowing the
+ session cookie SameSite attribute to be relaxed from "Strict" to "Lax".
+
+[+] Add the ability to specify a set of days that cannot be used for making
+ bookings of a certain type.
+
+[*] Session token is no longer exposed in the URL, addressing a security
+ concern.
+
+[*] Updated to latest qrcode v5.0.x to fix PHP 8.4 deprecation notices.
+
+[*] Update to latest source from settings container v2.x-php7.4 branch to fix
+ PHP 8.4 deprecation notices
+
+[*] Add requirement for mbstring extension to be loaded for QR code to work.
+
+[-] Add a fix for a TypeError when $_SESSION['user'] somehow contains a zero.
+
+[+] Added ability to export bookings as ICS format from search page.
+
+[+] Add support for custom date fields in the entry table.  See GitHub Issue
+ #3701.
+
+[-] Remove multiple attribute from email field. A user can only have one
+ email address.  See also GitHub Issue #3716.
+
+[-] Add a workaround for a bug in Safari that prevents the value of an email
+ input being shown when the multiple attribute is set.  See GitHub Issue
+ #3716.
+
+[+] Add the ability to allow specified HTML tags in the calendar message.
+ See GitHub Issue #3718.
+
+[*] Remove use of deprecated in PHP 8.4 ini_set setting of
+ session.sid_bits_per_character. See
+ https://wiki.php.net/rfc/deprecations_php_8_4#sessionsid_length_and_sessionsid_bits_per_character
+
+[*] Highlight the column cell header in the all rooms view. See GitHub Issue
+ #3720.
+
+[-] Fix issue with the first row in the all rooms view being very high in
+ Firefox.  See GitHub Issue #3726.  (Not quite sure what problem that CSS
+ rule was trying to solve in the first place and why it's no longer
+ necessary.)
+
+[-] Fix bug resulting in an empty end slot selector in certain
+ circumstances.  See GitHub Issue #3741.
+
+[*] Update Catalan translation.  See GitHub Issues #3747 and #3748.
+
+[*] Add Catalan site_faq.  See GitHub Issue #3748.
+
+[*] Reduce get_bookings_in_series() to a single SQL query.
+
+[+] Added implementation of AuthImapPhp using library code instead of the
+ PHP imap extension which has been removed from PHP 8.4.
+
+[-] Fix bug resulting in incorrect period durations in reports when areas
+ have different numbers of periods.
+
+[-] Fix potential bug resulting in incorrect period durations in reports
+ when a booking spans a DST transition and areas have different numbers of
+ periods.
+
+[-] Fix bug that causes a booking to be deleted completely when editing a
+ series and changing its repeat type to "none"
+
+[-] Fix bug causing datepicker not to change dates when using Catalan
+ translation.  See GitHub Issue #3752.
+
+[-] Add missing escaping of text strings in some Javascript code.
+
+[*] In MySQL DB class, set STRICT_TRANS_TABLES so that we can detect invalid
+ values being inserted in the database.
+
+[*] Upgrade to PHPMailer Version 6.9.2.
+
+[-] Fix bug causing drag-select not to select the original cell when dragging
+ up or left.
+
+[-] Fix bug when booking is constrained to a single row or column.
+
+[*] Add check for pdo_pgsql extension.
+
+[*] Various improvements to drag booking changes.
+
+[-] Fix bug causing placeholders not to be displayed for custom fields that
+ are textareas.  See GitHub Issue #3763.
+
+[+] Add buttons in the day view to go back/forward by a week.
+
+[-] Fix bug when an admin user makes a booking and bookings are forced to be
+ private.  See GitHub Issue #3770.
+
+[*] Upgrade to latest version of phpCAS from the fork
+ https://github.com/campbell-m/phpCAS, fixing deprecation notices running
+ under PHP 8.4 (https://github.com/apereo/phpCAS is no longer maintained).
+
+[*] Upgrade to latest version of PHPIMAP from the fork
+ https://github.com/campbell-m/php-imap, fixing deprecation notices running
+ under PHP 8.4 (https://github.com/Webklex/php-imap seems not to be
+ maintained).
+
+[*] Preserve scroll position after making a booking.
+
+
+-------------------------------------------------------------------------------
 Version 1.11.5 (Mon 22nd April 2024):
 
 [-] Fix incorrect translation for Norwegian Bokmål in datepickers.  See GitHub Issues #3517.
