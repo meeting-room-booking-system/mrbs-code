@@ -1528,9 +1528,20 @@ else
     Form::checkToken(true);
   }
 
-  // Check the user is authorised for this page, unless we're allowing unauthenticated
-  // GET requests, this is a GET request, and we're in Phase 2.
-  if (!($report_unauthenticated_get_enabled && is_get_request() && ($phase == 2)))
+  // Check the user is authorised for this page.
+  if ($report_unauthenticated_get_enabled && is_get_request() && ($phase == 2))
+  {
+    if ($report_keys_enabled)
+    {
+      $key = get_form_var('key', 'string');
+      if (!in_array($key, $report_keys))
+      {
+        http_response_code(403);
+        exit;
+      }
+    }
+  }
+  else
   {
     checkAuthorised(this_page());
     $mrbs_user = session()->getCurrentUser();
