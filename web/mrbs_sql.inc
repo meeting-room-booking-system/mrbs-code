@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use DateTimeImmutable;
 use MRBS\ICalendar\RFC5545;
 
 define('INTERVAL_DAY', 0);
@@ -623,20 +624,19 @@ function mrbsCheckPolicy(array $booking, ?int $ignore_entry_id=null, ?int $ignor
   // Check max_booking_date
   if ($max_booking_date_enabled && !$delete)
   {
-    list($y, $m, $d) = explode('-', $max_booking_date);
-    if (isset($y) && isset($m) && isset($d) && checkdate($m, $d, $y))
+    // Use DateTimeImmutable because we will need the original date for the error message
+    $date_immutable = DateTimeImmutable::createFromFormat($format='Y-m-d', $max_booking_date);
+    // Check that the date is valid (createFromFormat will allow, for example, months > 12)
+    if (($date_immutable === false) || ($date_immutable->format($format) !== $max_booking_date))
     {
-      if ($booking['end_time'] > mktime(0, 0, 0, $m, $d+1, $y))
-      {
-        $violations[] = get_vocab(
-          'latest_booking_date',
-          datetime_format($datetime_formats['date'], mktime(0, 0, 0, $m, $d, $y))
-        );
-      }
+      throw new \Exception('MRBS config error: invalid $max_booking_date ' . "'$max_booking_date'");
     }
-    else
+    if ($booking['end_time'] > $date_immutable->setTime(0, 0)->modify('+1 day')->getTimestamp())
     {
-      trigger_error("Invalid max_book_ahead_date", E_USER_NOTICE);
+      $violations[] = get_vocab(
+        'latest_booking_date',
+        datetime_format($datetime_formats['date'], $date_immutable->getTimestamp())
+      );
     }
   }
 
