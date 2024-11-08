@@ -1393,22 +1393,6 @@ function mrbsCreateRepeatEntry(array $data)
 }
 
 
-function trimToEndOfMonth(&$month, &$day, &$year)
-{
-  // Make the month valid so that we can use checkdate()
-  while ($month > 12)
-  {
-    $month -= 12;
-    $year++;
-  }
-  // Make the date valid if day is more than number of days in month:
-  while (!checkdate($month, $day, $year) && ($day > 1))
-  {
-    $day--;
-  }
-}
-
-
 /** mrbsCreateRepeatingEntrys()
  *
  * Creates a repeat entry in the database + all the repeating entries
