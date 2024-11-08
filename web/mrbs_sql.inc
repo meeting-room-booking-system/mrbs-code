@@ -153,7 +153,7 @@ function mrbsCheckFree(array $booking, ?int $ignore_entry_id=null, ?int $ignore_
     }
 
     // enclose the viewday etc. links in a span to make it easier for JavaScript to strip them out
-    $vars = array('page_date' => $existing_start_date->format('Y-m-d'),
+    $vars = array('page_date' => $existing_start_date->getISODate(),
                   'area'  => $area,
                   'room'  => $room_id);
 
@@ -602,7 +602,7 @@ function mrbsCheckPolicy(array $booking, ?int $ignore_entry_id=null, ?int $ignor
   if ($min_booking_date_enabled && !$delete)
   {
     // Use DateTimeImmutable because we will need the original date for the error message
-    $date_immutable = DateTimeImmutable::createFromFormat($format='Y-m-d', $min_booking_date);
+    $date_immutable = DateTimeImmutable::createFromFormat($format=DateTime::ISO8601_DATE, $min_booking_date);
     // Check that the date is valid (createFromFormat will allow, for example, months > 12)
     if (($date_immutable === false) || ($date_immutable->format($format) !== $min_booking_date))
     {
@@ -621,7 +621,7 @@ function mrbsCheckPolicy(array $booking, ?int $ignore_entry_id=null, ?int $ignor
   if ($max_booking_date_enabled && !$delete)
   {
     // Use DateTimeImmutable because we will need the original date for the error message
-    $date_immutable = DateTimeImmutable::createFromFormat($format='Y-m-d', $max_booking_date);
+    $date_immutable = DateTimeImmutable::createFromFormat($format=DateTime::ISO8601_DATE, $max_booking_date);
     // Check that the date is valid (createFromFormat will allow, for example, months > 12)
     if (($date_immutable === false) || ($date_immutable->format($format) !== $max_booking_date))
     {

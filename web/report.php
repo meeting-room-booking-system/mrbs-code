@@ -1477,8 +1477,8 @@ if ($cli_mode)
 
 $default_from_time = mktime(0, 0, 0, $month, $day, $year);
 $default_to_time = mktime(0, 0, 0, $month, $day + $default_report_days, $year);
-$default_from_date = date('Y-m-d', $default_from_time);
-$default_to_date = date('Y-m-d', $default_to_time);
+$default_from_date = date(DateTime::ISO8601_DATE, $default_from_time);
+$default_to_date = date(DateTime::ISO8601_DATE, $default_to_time);
 
 // Get non-standard form variables
 $from_date = get_form_var('from_date', 'string', $default_from_date);
@@ -1647,16 +1647,16 @@ $field_order_list[] = 'last_updated';
 if ($phase == 2)
 {
   // Start and end times are also used to clip the times for summary info.
-  // createFromFormat('Y-m-d') gives the current time.  We want the report to
+  // createFromFormat() gives the current time.  We want the report to
   // start at the beginning of the start day and end of the day, so set the
   // times accordingly.
-  if (false === ($report_start = DateTime::createFromFormat('Y-m-d', $from_date)))
+  if (false === ($report_start = DateTime::createFromFormat(DateTime::ISO8601_DATE, $from_date)))
   {
     throw new Exception("Invalid from_date '$from_date'");
   }
   $report_start = $report_start->setTime(0, 0)->getTimestamp();
 
-  if (false === ($report_end = DateTime::createFromFormat('Y-m-d', $to_date)))
+  if (false === ($report_end = DateTime::createFromFormat(DateTime::ISO8601_DATE, $to_date)))
   {
     throw new Exception("Invalid to_date '$to_date'");
   }
