@@ -90,7 +90,6 @@ class DateTime extends \DateTime
   }
 
 
-  // TODO: replace usages of byday_to_day() with this method
   // TODO: make $relative an object?
   // Sets the day to $relative, where relative is an RFC5545 relative day,
   // eg "-2SU".  Returns FALSE if the relative day doesn't exist in this
