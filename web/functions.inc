@@ -1765,15 +1765,8 @@ function times_somewhere(bool $only_enabled=false) : bool
 // to make sure it's a valid date
 function format_iso_date(int $year, int $month, int $day) : string
 {
-  if (!checkdate($month, $day, $year))
-  {
-    $date = getdate(mktime(12, 0, 0, $month, $day, $year));
-    $year = $date['year'];
-    $month = $date['mon'];
-    $day = $date['mday'];
-  }
-
-  return sprintf("%04d-%02d-%02d", $year, $month, $day);
+  $date = new DateTime();
+  return $date->setDate($year, $month, $day)->format('Y-m-d');
 }
 
 
