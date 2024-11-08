@@ -166,8 +166,7 @@ class EntryInterval
   // Checks whether an entry spans more than one calendar (not booking) day
   public function spansMultipleDays() : bool
   {
-    $format = 'Y-m-d';
-    return ($this->start_date->format($format) !== $this->end_date->format($format));
+    return ($this->start_date->getISODate() !== $this->end_date->getISODate());
   }
 
 

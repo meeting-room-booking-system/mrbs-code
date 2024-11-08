@@ -1183,7 +1183,7 @@ if (isset($start_date))
     // The end date that came through from the drag select is actually the repeat end
     // date, and the real end date will actually be the start date.
     $rep_type = RepeatRule::DAILY;
-    $rep_end_date = DateTime::createFromFormat('Y-m-d', $end_date);
+    $rep_end_date = DateTime::createFromFormat(DateTime::ISO8601_DATE, $end_date);
     $end_date = $start_date;
   }
 }

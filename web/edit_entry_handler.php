@@ -628,7 +628,7 @@ if ($repeat_rule->getType() != RepeatRule::NONE)
   }
   if (isset($rep_end_date))
   {
-    $repeat_end_date = DateTime::createFromFormat('Y-m-d', $rep_end_date);
+    $repeat_end_date = DateTime::createFromFormat(DateTime::ISO8601_DATE, $rep_end_date);
     if ($repeat_end_date === false)
     {
       throw new Exception("Could not create repeat end date");
