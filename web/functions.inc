@@ -1680,15 +1680,8 @@ function times_somewhere(bool $only_enabled=false) : bool
 // to make sure it's a valid date
 function format_iso_date(int $year, int $month, int $day) : string
 {
-  if (!checkdate($month, $day, $year))
-  {
-    $date = getdate(mktime(12, 0, 0, $month, $day, $year));
-    $year = $date['year'];
-    $month = $date['mon'];
-    $day = $date['mday'];
-  }
-
-  return sprintf("%04d-%02d-%02d", $year, $month, $day);
+  $date = new DateTime();
+  return $date->setDate($year, $month, $day)->format(DateTime::ISO8601_DATE);
 }
 
 
@@ -1697,7 +1690,7 @@ function format_iso_date(int $year, int $month, int $day) : string
 // on failure.
 function split_iso_date(string $iso_date)
 {
-  if (false === ($date = DateTime::createFromFormat('Y-m-d', $iso_date)))
+  if (false === ($date = DateTime::createFromFormat(DateTime::ISO8601_DATE, $iso_date)))
   {
     return false;
   }
@@ -1717,7 +1710,7 @@ function validate_iso_date(string $date) : bool
   // the inverse operation gives the original string then it is
   // valid.  (This is to check that, for example, 2021-09-31 hasn't
   // been converted into 2021-10-01).
-  $format = 'Y-m-d';
+  $format = DateTime::ISO8601_DATE;
   $datetime = DateTime::createFromFormat($format, $date);
 
   return ($datetime && ($datetime->format($format) === $date));

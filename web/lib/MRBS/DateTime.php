@@ -11,6 +11,7 @@ class DateTime extends \DateTime
   private static $isHoliday = array();
   private static $validHolidays = array();
 
+  public const ISO8601_DATE = 'Y-m-d';
   private const HOLIDAY_RANGE_OPERATOR = '..';
 
 
@@ -187,7 +188,7 @@ class DateTime extends \DateTime
   // Returns a date in ISO 8601 format ('yyyy-mm-dd')
   public function getISODate() : string
   {
-    return $this->format('Y-m-d');
+    return $this->format(self::ISO8601_DATE);
   }
 
 
@@ -329,7 +330,7 @@ class DateTime extends \DateTime
     global $holidays;
 
     $year = $this->format('Y');
-    $iso_date = $this->format('Y-m-d');
+    $iso_date = $this->getISODate();
 
     // Only need to check if a date is a holiday once, so store the answer in a
     // static property
@@ -398,7 +399,7 @@ class DateTime extends \DateTime
   public function isToday() : bool
   {
     $today = new DateTime();
-    return ($this->format('Y-m-d') == $today->format('Y-m-d'));
+    return ($this->getISODate() == $today->getISODate());
   }
 
 
