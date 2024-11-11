@@ -12,6 +12,7 @@ use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementLabel;
 use MRBS\Form\ElementSelect;
 use MRBS\Form\ElementSpan;
+use MRBS\Form\Field;
 use MRBS\Form\FieldDiv;
 use MRBS\Form\FieldInputCheckbox;
 use MRBS\Form\FieldInputCheckboxGroup;
@@ -106,7 +107,7 @@ foreach ($fields as $field)
 }
 
 
-function get_field_create_by(string $create_by, bool $disabled=false)
+function get_field_create_by(string $create_by, bool $disabled=false) : Field
 {
   $params = array('label'    => get_vocab('createdby'),
                   'name'     => 'create_by',
@@ -119,7 +120,7 @@ function get_field_create_by(string $create_by, bool $disabled=false)
 }
 
 
-function get_field_name(string $value, bool $disabled=false)
+function get_field_name(string $value, bool $disabled=false) : Field
 {
   $params = array('label'    => get_vocab('namebooker'),
                   'name'     => 'name',
