@@ -2654,7 +2654,7 @@ function get_field_entry_input(array $params) : Field
 //    field       the field name, eg 'entry.create_by'
 //    label       the field label
 //    name        the field name
-function get_user_field(array $params, bool $datalist=false)
+function get_user_field(array $params, bool $datalist=false) : Field
 {
   if (method_exists(auth(), 'getUsernames'))
   {
