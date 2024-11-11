@@ -133,7 +133,7 @@ function get_field_name(string $value, bool $disabled=false) : Field
 }
 
 
-function get_field_description(string $value, bool $disabled=false)
+function get_field_description(string $value, bool $disabled=false) : Field
 {
   global $is_mandatory_field;
 
