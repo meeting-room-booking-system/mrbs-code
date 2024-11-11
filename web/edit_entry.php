@@ -119,7 +119,7 @@ function get_field_create_by(string $create_by, bool $disabled=false)
 }
 
 
-function get_field_name(string $value, $disabled=false)
+function get_field_name(string $value, bool $disabled=false)
 {
   $params = array('label'    => get_vocab('namebooker'),
                   'name'     => 'name',
@@ -132,7 +132,7 @@ function get_field_name(string $value, $disabled=false)
 }
 
 
-function get_field_description(string $value, $disabled=false)
+function get_field_description(string $value, bool $disabled=false)
 {
   global $is_mandatory_field;
 
