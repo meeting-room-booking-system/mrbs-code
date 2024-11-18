@@ -1807,8 +1807,13 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
             $html .= "error: unknown parameter";
           }
         }
+        $title_text = $full_text;
+        if (isset($entry['description']) && ($entry['description'] !== ''))
+        {
+          $title_text .= "\n\n" . $entry['description'];
+        }
         $html .= '<a href="' . htmlspecialchars($booking_link) . '"' .
-                 ' title="' . htmlspecialchars($full_text) . '">';
+                 ' title="' . htmlspecialchars($title_text) . '">';
         $html .= htmlspecialchars($display_text) . '</a>';
         $html .= "</div>\n";
       }
