@@ -293,11 +293,13 @@ final class FinderPatternFinder{
 
 		// Now also count down, right from center
 		$i = 1;
+		// phpcs:ignore
 		while(($centerI + $i) < $dimension && ($centerJ + $i) < $dimension && $this->matrix->check(($centerJ + $i), ($centerI + $i))){
 			$stateCount[2]++;
 			$i++;
 		}
 
+		// phpcs:ignore
 		while(($centerI + $i) < $dimension && ($centerJ + $i) < $dimension && !$this->matrix->check(($centerJ + $i), ($centerI + $i))){
 			$stateCount[3]++;
 			$i++;
@@ -307,6 +309,7 @@ final class FinderPatternFinder{
 			return false;
 		}
 
+		// phpcs:ignore
 		while(($centerI + $i) < $dimension && ($centerJ + $i) < $dimension && $this->matrix->check(($centerJ + $i), ($centerI + $i))){
 			$stateCount[4]++;
 			$i++;
