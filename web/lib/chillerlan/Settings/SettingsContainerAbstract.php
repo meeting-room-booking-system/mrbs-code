@@ -11,16 +11,8 @@ declare(strict_types=1);
 
 namespace chillerlan\Settings;
 
-use JsonException;
-use ReflectionClass;
-use ReflectionProperty;
-use function array_keys;
-use function get_object_vars;
-use function json_decode;
-use function json_encode;
-use function json_last_error_msg;
-use function method_exists;
-use function property_exists;
+use JsonException, ReflectionClass, ReflectionProperty;
+use function array_keys, get_object_vars, json_decode, json_encode, json_last_error_msg, method_exists, property_exists;
 use const JSON_THROW_ON_ERROR;
 
 abstract class SettingsContainerAbstract implements SettingsContainerInterface{
