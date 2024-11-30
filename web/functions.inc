@@ -2469,6 +2469,15 @@ function is_cli() : bool
 }
 
 
+// Determine whether this is a GET request
+function is_get_request() : bool
+{
+  global $server;
+
+  return ($server['REQUEST_METHOD'] === 'GET');
+}
+
+
 // Determines whether we are in kiosk mode
 function is_kiosk_mode() : bool
 {

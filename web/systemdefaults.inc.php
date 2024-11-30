@@ -1882,6 +1882,24 @@ $csv_col_sep = ",";   // Separator between columns/fields
 $csv_charset = 'utf-8';
 $csv_bom = false;
 
+// UNAUTHENTICATED GET REQUESTS TO REPORT.PHP
+// These allow calendar programs to subscribe to MRBS, by using for example
+// path_to_mrbs/report.php?phase=2&output_format=2
+
+// Set this to true to allow unauthenticated GET requests to report.php
+$report_unauthenticated_get_enabled = false;
+
+// Set this to TRUE to require a key in the query string for unauthenticated
+// GET requests to report.php.  For example report.php?phase=2&output_format=2&key=secret
+$report_keys_enabled = false;
+
+// An array of valid keys
+$report_keys = [];  // An array of strings
+
+// If unauthenticated GET requests are allowed then only bookings in rooms
+// or areas that are open will be shown.
+$report_open_areas = []; // An array of integer area ids
+$report_open_rooms = []; // An array of integer room ids
 
 /*************
  * iCalendar
