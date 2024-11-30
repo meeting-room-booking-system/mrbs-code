@@ -312,7 +312,7 @@ class QRCode{
 			throw new QRCodeOutputException('invalid output module');
 		}
 
-		if(!in_array(QROutputInterface::class, class_implements($outputInterface))){
+		if(!in_array(QROutputInterface::class, class_implements($outputInterface), true)){
 			throw new QRCodeOutputException('output module does not implement QROutputInterface');
 		}
 
@@ -471,8 +471,6 @@ class QRCode{
 
 	/**
 	 * Reads a QR Code from a given file
-	 *
-	 * @noinspection PhpUndefinedMethodInspection
 	 */
 	public function readFromFile(string $path):DecoderResult{
 		return $this->readFromSource($this->luminanceSourceFQN::fromFile($path, $this->options));
@@ -480,8 +478,6 @@ class QRCode{
 
 	/**
 	 * Reads a QR Code from the given data blob
-	 *
-	 *  @noinspection PhpUndefinedMethodInspection
 	 */
 	public function readFromBlob(string $blob):DecoderResult{
 		return $this->readFromSource($this->luminanceSourceFQN::fromBlob($blob, $this->options));
