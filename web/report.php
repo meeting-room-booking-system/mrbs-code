@@ -1528,9 +1528,24 @@ else
     Form::checkToken(true);
   }
 
-  // Check the user is authorised for this page
-  checkAuthorised(this_page());
-  $mrbs_user = session()->getCurrentUser();
+  // Check the user is authorised for this page.
+  if ($report_unauthenticated_get_enabled && is_get_request() && ($phase == 2))
+  {
+    if ($report_keys_enabled)
+    {
+      $key = get_form_var('key', 'string');
+      if (!in_array($key, $report_keys))
+      {
+        http_response_code(403);
+        exit;
+      }
+    }
+  }
+  else
+  {
+    checkAuthorised(this_page());
+    $mrbs_user = session()->getCurrentUser();
+  }
 }
 
 // Set up for Ajax.   We need to know whether we're capable of dealing with Ajax
@@ -1776,6 +1791,16 @@ if ($phase == 2)
       $sql .= " AND ((A.private_override='public') OR
                      ((A.private_override='none') AND (E.status&" . STATUS_PRIVATE . "=0)))";
     }
+  }
+
+  // If we're allowing unauthenticated requests and this is one then check that the
+  // room is in the list of open rooms or the area is in the list of open areas.
+  if ($report_unauthenticated_get_enabled && is_get_request())
+  {
+    $sql .= " AND (";
+    $sql .= db()->syntax_in_list('A.id', $report_open_areas, $sql_params) . " OR ";
+    $sql .= db()->syntax_in_list('R.id', $report_open_rooms, $sql_params);
+    $sql .= ")";
   }
 
   if ($output_format == OUTPUT_ICAL)

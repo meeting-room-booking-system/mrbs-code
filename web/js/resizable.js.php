@@ -498,156 +498,244 @@ var Table = {
         });
     }, <?php // size() ?>
 
+
   <?php
-  // Given the jQuery object 'obj', snap the side specified (can be 'left', 'right', 'top'
-  // or 'bottom') to the nearest grid line, if the side is within the snapping range.
+  // Given an object 'obj', calculate the changes that must be made to its position,
+  // width and height to snap the side 'side' to the grid. ('side' can be 'left',
+  // 'right', 'top' or 'bottom'.)  If 'force' is true, then the side is snapped regardless
+  // of where it is.
   //
-  // If force is true, then the side is snapped regardless of where it is.
-  //
-  // We have to provide our own snapToGrid function instead of using the grid
-  // option in the jQuery UI resize widget because our table may not have uniform
-  // row heights and column widths - so we can't specify a grid in terms of a simple
-  // array as required by the resize widget.
+  // Returns an object with properties 'top', 'left', 'width' and 'height'.
   ?>
-  snapToGrid: function (obj, side, force) {
-      var snapGap = 35, <?php // px ?>
+  snapDelta: function (obj, side, force) {
+    <?php // Check the side argument is valid ?>
+    if (!['top', 'left', 'bottom', 'right'].includes(side))
+    {
+      throw new Error("Invalid argument '" + side + "' for parameter side.")
+    }
+
+    <?php // Initialise the result object.  By default, no change. ?>
+    let result = {
+      top: 0,
+      left: 0,
+      width: 0,
+      height: 0
+    };
+
+    const snapGap = 35, <?php // px ?>
           tolerance = 2, <?php // px ?>
           isLR = (side === 'left') || (side === 'right'),
-          data = (isLR) ? Table.grid.x.data : Table.grid.y.data,
-          topLeft, bottomRight, gap, gapTopLeft, gapBottomRight;
+          data = (isLR) ? Table.grid.x.data : Table.grid.y.data;
 
-      var rectangle = obj.offset();
-          rectangle.bottom = rectangle.top + obj.innerHeight();
-          rectangle.right = rectangle.left + obj.innerWidth();
+    let topLeft, bottomRight, gap, gapTopLeft, gapBottomRight;
 
-      var outerWidth = rectangle.right - rectangle.left,
+    let rectangle = obj.offset();
+        rectangle.bottom = rectangle.top + obj.innerHeight();
+        rectangle.right = rectangle.left + obj.innerWidth();
+
+    const outerWidth = rectangle.right - rectangle.left,
           outerHeight = rectangle.bottom - rectangle.top,
           thisCoord = rectangle[side];
 
-      for (var i=0; i<(data.length -1); i++)
+    for (let i=0; i<(data.length -1); i++)
+    {
+      topLeft = data[i].coord;
+      bottomRight = data[i+1].coord;
+      <?php
+      // Allow for the borders: .offset() includes borders.
+      ?>
+      if (side === 'left')
       {
-        topLeft = data[i].coord;
-        bottomRight = data[i+1].coord;
+        topLeft += Table.borderLeftWidth;
+        bottomRight += Table.borderLeftWidth;
+      }
+      else if (side === 'top')
+      {
+        topLeft += Table.borderTopWidth;
+        bottomRight += Table.borderTopWidth;
+      }
+
+      gapTopLeft = thisCoord - topLeft;
+      gapBottomRight = bottomRight - thisCoord;
+
+      if (((gapTopLeft > 0) && (gapBottomRight > 0)) ||
+          <?php // containment tests ?>
+          ((i === 0) && (gapTopLeft < 0)) ||
+          ((i === (data.length-2)) && (gapBottomRight < 0)) )
+      {
+        gap = bottomRight - topLeft;
+
         <?php
-        // Allow for the borders: .offset() includes borders.
+        // If we're forcing to the top or left side, or else the gap
+        // to the top or left side is within snapping distance ...
         ?>
-        if (side === 'left')
+        if ((force && ((side === 'top') || (side === 'left'))) ||
+            (!force && (gapTopLeft <= gap/2) && (gapTopLeft < snapGap)))
         {
-          topLeft += Table.borderLeftWidth;
-          bottomRight += Table.borderLeftWidth;
-        }
-        else if (side === 'top')
-        {
-          topLeft += Table.borderTopWidth;
-          bottomRight += Table.borderTopWidth;
-        }
-
-        gapTopLeft = thisCoord - topLeft;
-        gapBottomRight = bottomRight - thisCoord;
-
-        if (((gapTopLeft > 0) && (gapBottomRight > 0)) ||
-            <?php // containment tests ?>
-            ((i === 0) && (gapTopLeft < 0)) ||
-            ((i === (data.length-2)) && (gapBottomRight < 0)) )
-        {
-          gap = bottomRight - topLeft;
-
-          <?php
-          // If we're forcing to the top or left side, or else the gap
-          // to the top or left side is within snapping distance ...
-          ?>
-          if ((force && ((side === 'top') || (side === 'left'))) ||
-              (!force && (gapTopLeft <= gap/2) && (gapTopLeft < snapGap)))
+          switch (side)
           {
-            switch (side)
-            {
-              case 'top':
-                obj.offset({top: topLeft, left: rectangle.left});
-                obj.outerHeight(outerHeight + gapTopLeft);
-                break;
+            case 'top':
+              result.top = topLeft - rectangle.top;
+              result.height = gapTopLeft;
+              break;
 
-              case 'left':
-                obj.offset({top: rectangle.top, left: topLeft});
-                obj.outerWidth(outerWidth + gapTopLeft);
-                break;
+            case 'left':
+              result.left = topLeft - rectangle.left;
+              result.width = gapTopLeft;
+              break;
 
-              case 'bottom':
-                <?php // Don't let the height become zero. ?>
-                if ((outerHeight - gapTopLeft) < tolerance)
-                {
-                  obj.outerHeight(outerHeight + gapBottomRight);
-                }
-                else
-                {
-                  obj.outerHeight(outerHeight - gapTopLeft);
-                }
-                break;
+            case 'bottom':
+              <?php // Don't let the height become zero. ?>
+              if ((outerHeight - gapTopLeft) < tolerance)
+              {
+                result.height = gapBottomRight;
+              }
+              else
+              {
+                result.height = -gapTopLeft;
+              }
+              break;
 
-              case 'right':
-                <?php // Don't let the width become zero. ?>
-                if ((outerWidth - gapTopLeft) < tolerance)
-                {
-                  obj.outerWidth(outerWidth + gapBottomRight);
-                }
-                else
-                {
-                  obj.outerWidth(outerWidth - gapTopLeft);
-                }
-                break;
-            }
-            return;
+            case 'right':
+              <?php // Don't let the width become zero. ?>
+              if ((outerWidth - gapTopLeft) < tolerance)
+              {
+                result.width = gapBottomRight;
+              }
+              else
+              {
+                result.width = -gapTopLeft;
+              }
+              break;
           }
-
-          <?php
-          // If we're forcing to the bottom or right side, or else the gap
-          // to the bottom or right side is within snapping distance ...
-          ?>
-          if ((force && ((side === 'bottom') || (side === 'right'))) ||
-              (!force && (gapBottomRight <= gap/2) && (gapBottomRight < snapGap)))
-          {
-            switch (side)
-            {
-              case 'top':
-                <?php // Don't let the height become zero.  ?>
-                if ((outerHeight - gapBottomRight) < tolerance)
-                {
-                  obj.offset({top: topLeft, left: rectangle.left});
-                  obj.outerHeight(outerHeight + gapTopLeft);
-                }
-                else
-                {
-                  obj.offset({top: bottomRight, left: rectangle.left});
-                  obj.outerHeight(outerHeight - gapBottomRight);
-                }
-                break;
-
-              case 'left':
-                <?php // Don't let the width become zero.  ?>
-                if ((outerWidth - gapBottomRight) < tolerance)
-                {
-                  obj.offset({top: rectangle.top, left: topLeft});
-                  obj.outerWidth(outerWidth + gapTopLeft);
-                }
-                else
-                {
-                  obj.offset({top: rectangle.top, left: bottomRight});
-                  obj.outerWidth(outerWidth - gapBottomRight);
-                }
-                break;
-
-              case 'bottom':
-                obj.outerHeight(outerHeight + gapBottomRight);
-                break;
-
-              case 'right':
-                obj.outerWidth(outerWidth + gapBottomRight);
-                break;
-            }
-            return;
-          }
+          return result;
         }
-      }  <?php // for ?>
-    }  <?php // snapToGrid() ?>
+
+        <?php
+        // If we're forcing to the bottom or right side, or else the gap
+        // to the bottom or right side is within snapping distance ...
+        ?>
+        if ((force && ((side === 'bottom') || (side === 'right'))) ||
+            (!force && (gapBottomRight <= gap/2) && (gapBottomRight < snapGap)))
+        {
+          switch (side)
+          {
+            case 'top':
+              <?php // Don't let the height become zero.  ?>
+              if ((outerHeight - gapBottomRight) < tolerance)
+              {
+                result.top = topLeft - rectangle.top;
+                result.height = gapTopLeft;
+              }
+              else
+              {
+                result.top = bottomRight - rectangle.top;
+                result.height = -gapBottomRight;
+              }
+              break;
+
+            case 'left':
+              <?php // Don't let the width become zero.  ?>
+              if ((outerWidth - gapBottomRight) < tolerance)
+              {
+                result.left = topLeft - rectangle.left;
+                result.width = gapTopLeft;
+              }
+              else
+              {
+                result.left = bottomRight - rectangle.left;
+                result.width = -gapBottomRight;
+              }
+              break;
+
+            case 'bottom':
+              result.height = gapBottomRight;
+              break;
+
+            case 'right':
+              result.width = gapBottomRight;
+              break;
+          }
+          return result;
+        }
+      }
+    }  <?php // for ?>
+
+    return result;
+  },  <?php // snapDelta() ?>
+
+
+  <?php
+  // Given the jQuery object 'obj', snap the side specified (can be 'left', 'right', 'top'
+  // or 'bottom') to the nearest grid line, if the side is within the snapping range.
+  // If force is true, then the side is snapped regardless of where it is.
+  ?>
+  snapToGrid: function (obj, side, force) {
+      <?php
+      // Get the changes that must be made to the object and apply them as necessary.
+      ?>
+      const delta = this.snapDelta(obj, side, force);
+
+      if ((delta.top !== 0) || (delta.left !==0))
+      {
+        const offset = obj.offset();
+        obj.offset({top: offset.top + delta.top, left: offset.left + delta.left});
+      }
+
+      if (delta.width !== 0)
+      {
+        obj.outerWidth(obj.outerWidth() + delta.width);
+      }
+
+      if (delta.height !== 0)
+      {
+        obj.outerHeight(obj.outerHeight() + delta.height);
+      }
+
+    },  <?php // snapToGrid() ?>
+
+
+  <?php
+  // Snap a jQuery UI object to the grid.  Snap the side specified (can be 'left', 'right',
+  // 'top' or 'bottom') to the nearest grid line, if the side is within the snapping range.
+  // If force is true, then the side is snapped regardless of where it is.
+  //
+  // We have to provide our own snapUiToGrid function instead of using the grid
+  // option in the jQuery UI resize widget because our table may not have uniform
+  // row heights and column widths - either because overflow: hidden isn't being
+  // used, or just because of the way the browser lays out the table - so we can't
+  // specify a grid in terms of a simple array as required by the resize widget.
+  ?>
+  snapUiToGrid: function (ui, side, force) {
+    <?php
+    // The object ui.element is only altered when the resize stops, so we can only
+    // get its current position and size using ui.position and ui.size. We therefore
+    // create a new element in the DOM and give it the same position and size as
+    // ui.element and pass that object to snapDelta().  (We could of course modify
+    // snapDelta() so that it takes position and size as parameters instead of an object.)
+    ?>
+    const obj = $('<div></div>')
+      .css('position', 'absolute')
+      .appendTo($('body'))
+      .offset(ui.position)
+      .width(ui.size.width)
+      .height(ui.size.height);
+
+    <?php
+    // Get the changes that must be made to the UI element and apply them by updating
+    // ui.position and ui.size.  The Helper element will automatically follow the
+    // new position and size.
+    ?>
+    const delta = this.snapDelta(obj, side, force);
+
+    ui.position.top += delta.top;
+    ui.position.left += delta.left;
+    ui.size.width += delta.width;
+    ui.size.height += delta.height;
+
+    <?php // Remove the object we've created so it doesn't clutter the DOM. ?>
+    obj.remove();
+  }
 
 };
 
@@ -1180,22 +1268,22 @@ $(document).on('page_ready', function() {
         <?php // left edge ?>
         if (sides.w)
         {
-          Table.snapToGrid(ui.helper, 'left');
+          Table.snapUiToGrid(ui, 'left');
         }
         <?php // right edge ?>
         if (sides.e)
         {
-          Table.snapToGrid(ui.helper, 'right');
+          Table.snapUiToGrid(ui, 'right');
         }
         <?php // top edge ?>
         if (sides.n)
         {
-          Table.snapToGrid(ui.helper, 'top');
+          Table.snapUiToGrid(ui, 'top');
         }
         <?php // bottom edge ?>
         if (sides.s)
         {
-          Table.snapToGrid(ui.helper, 'bottom');
+          Table.snapUiToGrid(ui, 'bottom');
         }
 
         resize.lastRectangle = $.extend({}, rectangle);
@@ -1240,8 +1328,7 @@ $(document).on('page_ready', function() {
         // regardless of where they are.
         ?>
         ['left', 'right', 'top', 'bottom'].forEach(function(side) {
-            Table.snapToGrid(ui.helper, side, true);
-            Table.snapToGrid(ui.element, side, true);
+            Table.snapUiToGrid(ui, side, true);
           });
 
         if (rectanglesIdentical(resizeStart.originalRectangle, getSides(ui.helper)))
