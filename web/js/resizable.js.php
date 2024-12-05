@@ -351,27 +351,20 @@ var Table = {
 
 
   <?php
-  // Clip the element (typically the ui.helper) so that it doesn't protrude above the top
-  // of the table body
+  // Clip the ui.helper so that it doesn't protrude above the top of the table body
   ?>
-  setClipPath: function(el) {
-      var path = 'none';
+  setClipPath: function(ui) {
+      let path;
       <?php
       // Because we have shifted the th cells using JavaScript to give the effect of a sticky
       // header, we have to look at the th cells rather than the thead.
       ?>
-      var th = $(Table.selector).find('thead tr:last-child th:first-child');
-      var theadBottom = th.offset().top + th.outerHeight();
-      var elTop = el.offset().top;
-      var elHeight = el.outerHeight();
-      var above = theadBottom - elTop;
+      const th = $(Table.selector).find('thead tr:last-child th:first-child');
+      const theadBottom = th.offset().top + th.outerHeight();
+      const above = theadBottom - ui.position.top;
 
-      if (above > 0)
-      {
-        path = 'inset(' + above + 'px 0 0 0)';
-      }
-
-      el.css('clip-path', path);
+      path = (above > 0) ? 'inset(' + above + 'px 0 0 0)' : 'none';
+      ui.helper.css('clip-path', path);
     },
 
   scrollContainerBy: function(xCoord, yCoord) {
@@ -1290,7 +1283,7 @@ $(document).on('page_ready', function() {
 
         Table.highlightRowLabels(ui.helper);
 
-        Table.setClipPath(ui.helper);
+        Table.setClipPath(ui);
       };  <?php // resize ?>
 
 
