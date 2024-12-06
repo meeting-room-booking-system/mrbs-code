@@ -126,6 +126,24 @@ function getDataName(jqObject)
 }
 
 
+<?php
+// The object ui.element is only altered when the resize stops, so we can only
+// get its current position and size using ui.position and ui.size. This function
+// creates an invisible element in the DOM with the same position and size as
+// ui.element would have when resizing stops. This clone is useful for passing to
+// functions that expect a jQuery object looking like the eventual ui.element.
+?>
+function uiDummyClone(ui)
+{
+  return $('<div></div>')
+    .css('position', 'absolute')
+    .appendTo($('body'))
+    .offset(ui.position)
+    .width(ui.size.width)
+    .height(ui.size.height);
+}
+
+
 var Table = {
   selector: ".dwm_main",
   borderLeftWidth: undefined,
@@ -729,33 +747,18 @@ var Table = {
   ?>
   snapUiToGrid: function (ui, side, force) {
     <?php
-    // The object ui.element is only altered when the resize stops, so we can only
-    // get its current position and size using ui.position and ui.size. We therefore
-    // create a new element in the DOM and give it the same position and size as
-    // ui.element and pass that object to snapDelta().  (We could of course modify
-    // snapDelta() so that it takes position and size as parameters instead of an object.)
-    ?>
-    const obj = $('<div></div>')
-      .css('position', 'absolute')
-      .appendTo($('body'))
-      .offset(ui.position)
-      .width(ui.size.width)
-      .height(ui.size.height);
-
-    <?php
     // Get the changes that must be made to the UI element and apply them by updating
     // ui.position and ui.size.  The Helper element will automatically follow the
     // new position and size.
     ?>
+    const obj = uiDummyClone(ui);
     const delta = this.snapDelta(obj, side, force);
+    obj.remove();  <?php // Remove the object so it doesn't clutter the DOM. ?>
 
     ui.position.top += delta.top;
     ui.position.left += delta.left;
     ui.size.width += delta.width;
     ui.size.height += delta.height;
-
-    <?php // Remove the object we've created so it doesn't clutter the DOM. ?>
-    obj.remove();
   }
 
 };
@@ -1292,13 +1295,7 @@ $(document).on('page_ready', function() {
 
         resize.lastRectangle = $.extend({}, rectangle);
 
-        const obj = $('<div></div>')
-          .css('position', 'absolute')
-          .appendTo($('body'))
-          .offset(ui.position)
-          .width(ui.size.width)
-          .height(ui.size.height);
-
+        const obj = uiDummyClone(ui);
         Table.highlightRowLabels(obj);
         obj.remove();
 
