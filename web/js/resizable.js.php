@@ -1292,7 +1292,15 @@ $(document).on('page_ready', function() {
 
         resize.lastRectangle = $.extend({}, rectangle);
 
-        Table.highlightRowLabels(ui.helper);
+        const obj = $('<div></div>')
+          .css('position', 'absolute')
+          .appendTo($('body'))
+          .offset(ui.position)
+          .width(ui.size.width)
+          .height(ui.size.height);
+
+        Table.highlightRowLabels(obj);
+        obj.remove();
 
         Table.setClipPath(ui);
       };  <?php // resize ?>
