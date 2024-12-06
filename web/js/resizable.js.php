@@ -354,23 +354,20 @@ var Table = {
   <?php // Clip the ui.helper so that it doesn't protrude outside the table body. ?>
   setClipPath: function(ui) {
       let path;
-      const above = Table.tbodyViewport.top - ui.position.top;
+      const top = Table.tbodyViewport.top - ui.position.top;
       const right = ui.position.left + ui.size.width - Table.tbodyViewport.right;
-      const below = ui.position.top + ui.size.height - Table.tbodyViewport.bottom;
+      const bottom = ui.position.top + ui.size.height - Table.tbodyViewport.bottom;
       const left = Table.tbodyViewport.left - ui.position.left;
 
-      if ((above > 0) || (right > 0) || (below > 0) || (left > 0))
+      if ((top > 0) || (right > 0) || (bottom > 0) || (left > 0))
       {
         <?php // Set the top, right, bottom and left offsets ?>
-        path = 'inset(';
-        path += (above > 0) ? above + 'px' : '0';
-        path += ' ';
-        path += (right > 0) ? right + 'px' : '0' ;
-        path += ' ';
-        path += (below > 0) ? below + 'px' : '0' ;
-        path += ' ';
-        path += (left > 0) ? left + 'px' : '0' ;
-        path += ')';
+        let offsets = [];
+        offsets.push((top > 0) ? top + 'px' : '0');
+        offsets.push((right > 0) ? right + 'px' : '0');
+        offsets.push((bottom > 0) ? bottom + 'px' : '0');
+        offsets.push((left > 0) ? left + 'px' : '0');
+        path = 'inset(' + offsets.join(' ') + ')';
       }
       else
       {
