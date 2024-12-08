@@ -952,11 +952,6 @@ $(document).on('page_ready', function() {
         };
 
       var moveHandler = function(e) {
-          var box = downHandler.box;
-          var oldBoxOffset = box.offset();
-          var oldBoxWidth = box.outerWidth();
-          var oldBoxHeight = box.outerHeight();
-
           <?php
           // Check to see if we're only allowed to go one slot wide/high
           // and have gone over that limit.  If so, do nothing and return
@@ -967,8 +962,13 @@ $(document).on('page_ready', function() {
             return;
           }
 
-          <?php // Scroll the table if necessary ?>
+          const box = downHandler.box;
+          const oldBoxOffset = box.offset();
+          const oldBoxWidth = box.outerWidth();
+          const oldBoxHeight = box.outerHeight();
           const delta = Table.scrollDelta(e);
+
+          <?php // Scroll the table if necessary ?>
           if (delta.x || delta.y)
           {
             Table.scrollContainerBy(delta.x, delta.y);
@@ -1015,8 +1015,8 @@ $(document).on('page_ready', function() {
           // Snap the box to grid boundaries if it's close, and even if it's not
           // if you're dragging away from that edge.
           ?>
-          var draggingDown = (e.pageY > downHandler.firstPosition.y);
-          var draggingRight = (e.pageX > downHandler.firstPosition.x);
+          const draggingDown = (e.pageY > downHandler.firstPosition.y);
+          const draggingRight = (e.pageX > downHandler.firstPosition.x);
           Table.snapToGrid(box, 'top', draggingDown);
           Table.snapToGrid(box, 'left', draggingRight);
           Table.snapToGrid(box, 'bottom', !draggingDown);
