@@ -371,11 +371,12 @@ var Table = {
 
   <?php // Clip the ui.helper so that it doesn't protrude outside the table body. ?>
   setClipPath: function(ui) {
-      let path;
       const top = Table.tbodyViewport.top - ui.position.top;
       const right = ui.position.left + ui.size.width - Table.tbodyViewport.right;
       const bottom = ui.position.top + ui.size.height - Table.tbodyViewport.bottom;
       const left = Table.tbodyViewport.left - ui.position.left;
+
+      let path = 'none';
 
       if ((top > 0) || (right > 0) || (bottom > 0) || (left > 0))
       {
@@ -386,10 +387,6 @@ var Table = {
         offsets.push((bottom > 0) ? bottom + 'px' : '0');
         offsets.push((left > 0) ? left + 'px' : '0');
         path = 'inset(' + offsets.join(' ') + ')';
-      }
-      else
-      {
-        path = 'none';
       }
 
       ui.helper.css('clip-path', path);
