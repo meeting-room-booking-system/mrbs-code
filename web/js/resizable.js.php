@@ -371,11 +371,12 @@ var Table = {
 
   <?php // Clip the ui.helper so that it doesn't protrude outside the table body. ?>
   setClipPath: function(ui) {
-      let path;
       const top = Table.tbodyViewport.top - ui.position.top;
       const right = ui.position.left + ui.size.width - Table.tbodyViewport.right;
       const bottom = ui.position.top + ui.size.height - Table.tbodyViewport.bottom;
       const left = Table.tbodyViewport.left - ui.position.left;
+
+      let path = 'none';
 
       if ((top > 0) || (right > 0) || (bottom > 0) || (left > 0))
       {
@@ -386,10 +387,6 @@ var Table = {
         offsets.push((bottom > 0) ? bottom + 'px' : '0');
         offsets.push((left > 0) ? left + 'px' : '0');
         path = 'inset(' + offsets.join(' ') + ')';
-      }
-      else
-      {
-        path = 'none';
       }
 
       ui.helper.css('clip-path', path);
@@ -407,6 +404,70 @@ var Table = {
       left: xCoord,
       behavior: 'instant'
     });
+  },
+
+  <?php
+  // Calculate the amount by which the table container should be scrolled given an event 'e'.
+  // Returns an object with 'x' and 'y' properties.
+  ?>
+  scrollDelta: function(e) {
+    <?php
+    // Set the distance from the edge of the visible tbody at which we should start scrolling.
+    // It should not be more than half the height/width of the visible tbody
+    ?>
+    const scrollGapX = Math.min(30, Math.floor((Table.tbodyViewport.right - Table.tbodyViewport.left)/2));
+    const scrollGapY = Math.min(30, Math.floor((Table.tbodyViewport.bottom - Table.tbodyViewport.top)/2));
+    const table = $(Table.selector);
+    const tableContainer = table.parent();
+    let result = {x: 0, y: 0};
+
+    <?php // First check whether we are approaching the top. ?>
+    if ((e.pageY - Table.tbodyViewport.top) < scrollGapY)
+    {
+      <?php // Don't go beyond the top ?>
+      result.y = -Math.min(scrollGapY, tableContainer.scrollTop());
+    }
+
+    <?php // Then whether we are approaching the bottom. ?>
+    else if ((Table.tbodyViewport.bottom - e.pageY) < scrollGapY)
+    {
+      <?php // Don't go beyond the bottom ?>
+      result.y = Math.min(scrollGapY, table.outerHeight() - tableContainer.outerHeight() - tableContainer.scrollTop());
+      result.y = Math.max(result.y, 0);
+      <?php
+      // In Chrome, when the browser is zoomed the pixel numbers can be floating, so round down anything less than 1.
+      // See https://stackoverflow.com/questions/5828275/how-to-check-if-a-div-is-scrolled-all-the-way-to-the-bottom-with-jquery
+      ?>
+      if (result.y < 1)
+      {
+        result.y = 0;
+      }
+    }
+
+    <?php // Then the left hand side ?>
+    if ((e.pageX - Table.tbodyViewport.left) < scrollGapX)
+    {
+      <?php // Don't go beyond the left hand side ?>
+      result.x = -Math.min(scrollGapX, tableContainer.scrollLeft());
+    }
+
+    <?php // And finally the right ?>
+    else if ((Table.tbodyViewport.right - e.pageX) < scrollGapX)
+    {
+      <?php // Don't go beyond the bottom ?>
+      result.x = Math.min(scrollGapX, table.outerWidth() - tableContainer.outerWidth() - tableContainer.scrollLeft());
+      result.x = Math.max(result.x, 0);
+      <?php
+      // In Chrome, when the browser is zoomed the pixel numbers can be floating, so round down anything less than 1.
+      // See https://stackoverflow.com/questions/5828275/how-to-check-if-a-div-is-scrolled-all-the-way-to-the-bottom-with-jquery
+      ?>
+      if (result.x < 1)
+      {
+        result.x = 0;
+      }
+    }
+
+    return result;
   },
 
   size: function() {
@@ -891,19 +952,6 @@ $(document).on('page_ready', function() {
         };
 
       var moveHandler = function(e) {
-          var box = downHandler.box;
-          var oldBoxOffset = box.offset();
-          var oldBoxWidth = box.outerWidth();
-          var oldBoxHeight = box.outerHeight();
-          <?php
-          // Set the distance from the edge of the visible tbody at which we should start scrolling.
-          // It should not be more than half the height/width of the visible tbody
-          ?>
-          var scrollGapX = Math.min(30, Math.floor((Table.tbodyViewport.right - Table.tbodyViewport.left)/2));
-          var scrollGapY = Math.min(30, Math.floor((Table.tbodyViewport.bottom - Table.tbodyViewport.top)/2));
-          var xDelta = 0,
-              yDelta = 0;
-
           <?php
           // Check to see if we're only allowed to go one slot wide/high
           // and have gone over that limit.  If so, do nothing and return
@@ -914,60 +962,16 @@ $(document).on('page_ready', function() {
             return;
           }
 
-          <?php
-          // Scroll the table if necessary.
-          // First check whether we are approaching the top.
-          ?>
-          if ((e.pageY - Table.tbodyViewport.top) < scrollGapY)
-          {
-            <?php // Don't go beyond the top ?>
-            yDelta = -Math.min(scrollGapY, tableContainer.scrollTop());
-          }
+          const box = downHandler.box;
+          const oldBoxOffset = box.offset();
+          const oldBoxWidth = box.outerWidth();
+          const oldBoxHeight = box.outerHeight();
+          const delta = Table.scrollDelta(e);
 
-          <?php
-          // Then whether we are approaching the bottom.
-          ?>
-          else if ((Table.tbodyViewport.bottom - e.pageY) < scrollGapY)
+          <?php // Scroll the table if necessary ?>
+          if (delta.x || delta.y)
           {
-            <?php // Don't go beyond the bottom ?>
-            yDelta = Math.min(scrollGapY, table.outerHeight() - tableContainer.outerHeight() - tableContainer.scrollTop());
-            yDelta = Math.max(yDelta, 0);
-            <?php
-            // In Chrome, when the browser is zoomed the pixel numbers can be floating, so round down anything less than 1.
-            // See https://stackoverflow.com/questions/5828275/how-to-check-if-a-div-is-scrolled-all-the-way-to-the-bottom-with-jquery
-            ?>
-            if (yDelta < 1)
-            {
-              yDelta = 0;
-            }
-          }
-
-          <?php // Then the left hand side ?>
-          if ((e.pageX - Table.tbodyViewport.left) < scrollGapX)
-          {
-            <?php // Don't go beyond the left hand side ?>
-            xDelta = -Math.min(scrollGapX, tableContainer.scrollLeft());
-          }
-
-          <?php // And finally the right ?>
-          else if ((Table.tbodyViewport.right - e.pageX) < scrollGapX)
-          {
-            <?php // Don't go beyond the bottom ?>
-            xDelta = Math.min(scrollGapX, table.outerWidth() - tableContainer.outerWidth() - tableContainer.scrollLeft());
-            xDelta = Math.max(xDelta, 0);
-            <?php
-            // In Chrome, when the browser is zoomed the pixel numbers can be floating, so round down anything less than 1.
-            // See https://stackoverflow.com/questions/5828275/how-to-check-if-a-div-is-scrolled-all-the-way-to-the-bottom-with-jquery
-            ?>
-            if (xDelta < 1)
-            {
-              xDelta = 0;
-            }
-          }
-
-          if (xDelta || yDelta)
-          {
-            Table.scrollContainerBy(xDelta, yDelta);
+            Table.scrollContainerBy(delta.x, delta.y);
             <?php
             // Need to resize the table after a scroll because the coordinates
             // of the grid lines and booked cells will have changed.
@@ -979,10 +983,10 @@ $(document).on('page_ready', function() {
             // Because we've scrolled we need to correct the positions of
             // downHandler.firstPosition and oldBoxOffset.
             ?>
-            downHandler.firstPosition.x -= xDelta;
-            downHandler.firstPosition.y -= yDelta;
-            oldBoxOffset.left -= xDelta;
-            oldBoxOffset.top -= yDelta;
+            downHandler.firstPosition.x -= delta.x;
+            downHandler.firstPosition.y -= delta.y;
+            oldBoxOffset.left -= delta.x;
+            oldBoxOffset.top -= delta.y;
           }
 
           <?php // Otherwise redraw the box ?>
@@ -1011,8 +1015,8 @@ $(document).on('page_ready', function() {
           // Snap the box to grid boundaries if it's close, and even if it's not
           // if you're dragging away from that edge.
           ?>
-          var draggingDown = (e.pageY > downHandler.firstPosition.y);
-          var draggingRight = (e.pageX > downHandler.firstPosition.x);
+          const draggingDown = (e.pageY > downHandler.firstPosition.y);
+          const draggingRight = (e.pageX > downHandler.firstPosition.x);
           Table.snapToGrid(box, 'top', draggingDown);
           Table.snapToGrid(box, 'left', draggingRight);
           Table.snapToGrid(box, 'bottom', !draggingDown);

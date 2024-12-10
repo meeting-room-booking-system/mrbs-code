@@ -612,9 +612,14 @@ $(document).on('page_ready', function() {
   const searchParams = new URLSearchParams(window.location.search);
   const top = searchParams.get('top');
   const left = searchParams.get('left');
+
   if ((top == null) && (left === null))
   {
-    scrollToCurrentSlot();
+    const autoscroll = <?php echo $autoscroll ? 'true' : 'false'; ?>;
+    if (autoscroll)
+    {
+      scrollToCurrentSlot();
+    }
   }
   else
   {
