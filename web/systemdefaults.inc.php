@@ -405,8 +405,11 @@ $holidays = array();
 // by defining some custom CSS for the .hidden_day class.
 $hidden_days = array();
 
-// Whether or not to display the timezone
+// Whether to display the timezone
 $display_timezone = false;
+
+// Whether to scroll automatically so that the current time slot is in view
+$autoscroll = true;
 
 // Results per page for searching:
 $search["count"] = 20;
