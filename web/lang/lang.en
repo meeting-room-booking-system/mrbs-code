@@ -286,7 +286,7 @@ $vocab["skip_and_book_note"]      = "Carry on with the booking, skipping past th
 
 // Used in edit_message.php
 $vocab["edit_message"]  = "Edit message";
-$vocab["message"]       = "Message";
+$vocab["message"]       = "System message";
 $vocab["display_from"]  = "Display from the start of";
 $vocab["display_until"] = "Display until the end of";
 
