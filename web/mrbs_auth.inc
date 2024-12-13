@@ -130,19 +130,7 @@ function get_page_level($page)
       return booking_level();
       break;
 
-    // These pages only contain admin features
-    case 'add.php':                     // Adds a room
-    case 'del.php':                     // Deletes a room
-    case 'del_entries.php':             // Ajax page for bulk deletion of entries
-    case 'edit_area.php':
-    case 'edit_area_handler.php':
-    case 'edit_room_handler.php':
-    case 'import.php':
-    case 'kiosk.php':
-    case 'report.php':
-      $result = 2;
-      break;
-
+    // Everything else is for admins only
     default:
       $result = (isset($max_level)) ? $max_level : 2;
       break;
