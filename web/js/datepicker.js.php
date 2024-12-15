@@ -216,7 +216,7 @@ $(document).on('page_ready', function() {
       const hiddenDays = [<?php echo implode(',', $hidden_days)?>];
       if (hiddenDays.length &&
           args.isBookAdmin &&
-          $(fp.altInput).hasClass('navigation') &&
+          fp.altInput.classList.contains('navigation') &&
           (hiddenDays.indexOf(dayElem.dateObj.getDay()) >= 0))
       {
         dayElem.classList.add('mrbs-hidden');
