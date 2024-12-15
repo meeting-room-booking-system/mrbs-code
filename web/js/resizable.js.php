@@ -828,17 +828,22 @@ var Table = {
 <?php
 // Add scroll positions, if any, of a jQuery object to the location.
 // This enables the scroll position to be preserved after a booking
-// has been made.
+// has been made.  The originalScroll parameter is an object with left
+// and top properties giving the original scroll positions of object.
+// The scroll positions that are added are the minima of the current and
+// original positions.  We do this so that the top left of the booking,
+// and thus the brief description is in view when the booking has been
+// saved and MRBS returns to the calendar (index) page.
 ?>
-function addScrollPosition(location, object)
+function addScrollPosition(location, object, originalScroll)
 {
   if (object.isHScrollable())
   {
-    location += '&left=' + encodeURIComponent(object.scrollLeft());
+    location += '&left=' + encodeURIComponent(Math.min(object.scrollLeft(), originalScroll.left));
   }
   if (object.isVScrollable())
   {
-    location += '&top=' + encodeURIComponent(object.scrollTop());
+    location += '&top=' + encodeURIComponent(Math.min(object.scrollTop(), originalScroll.top));
   }
 
   return location;
@@ -891,6 +896,12 @@ $(document).on('page_ready', function() {
 
       var downHandler = function(e) {
           mouseDown = true;
+
+          <?php // Save the original scroll position ?>
+          downHandler.originalScroll = {
+            left: tableContainer.scrollLeft(),
+            top: tableContainer.scrollTop()
+          };
 
           <?php
           // Apply a class so that we know that resizing is in progress, eg to turn off
@@ -1093,7 +1104,7 @@ $(document).on('page_ready', function() {
           {
             if (downHandler.originalLink !== undefined)
             {
-              window.location = addScrollPosition(downHandler.originalLink, tableContainer);
+              window.location = addScrollPosition(downHandler.originalLink, tableContainer, downHandler.originalScroll);
             }
             else
             {
@@ -1127,7 +1138,7 @@ $(document).on('page_ready', function() {
           {
             queryString += '&site=' + encodeURIComponent(args.site);
           }
-          window.location = addScrollPosition('edit_entry.php?' + queryString, tableContainer);
+          window.location = addScrollPosition('edit_entry.php?' + queryString, tableContainer, downHandler.originalScroll);
         };
 
 
