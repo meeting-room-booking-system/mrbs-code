@@ -212,22 +212,18 @@ $(document).on('page_ready', function() {
       // a booking admin, then add a class to the day so that it can be styled differently.
       // If they're not a booking admin, and it's a navigation datepicker, the day will be
       // disabled - see later on in this file.
-      if (!empty($hidden_days))
-      {
-        ?>
-        if (args.isBookAdmin && $(fp.altInput).hasClass('navigation'))
-        {
-          var hiddenDays = [<?php echo implode(',', $hidden_days)?>];
-          if (hiddenDays.indexOf(dayElem.dateObj.getDay()) >= 0) {
-            dayElem.classList.add('mrbs-hidden');
-          }
-        }
-        <?php
-      }
       ?>
+      const hiddenDays = [<?php echo implode(',', $hidden_days)?>];
+      if (hiddenDays.length &&
+          args.isBookAdmin &&
+          $(fp.altInput).hasClass('navigation') &&
+          (hiddenDays.indexOf(dayElem.dateObj.getDay()) >= 0))
+      {
+        dayElem.classList.add('mrbs-hidden');
+      }
 
       <?php // And add a class if it's a weekend day ?>
-      var weekDays = [<?php echo implode(',', $weekdays)?>];
+      const weekDays = [<?php echo implode(',', $weekdays)?>];
       if (weekDays.indexOf(dayElem.dateObj.getDay()) < 0) {
         dayElem.classList.add('mrbs-weekend');
       }
