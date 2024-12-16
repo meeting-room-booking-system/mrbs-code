@@ -156,6 +156,7 @@ function print_goto_date(array $context) : void
   }
 
   $input = new ElementInputDate();
+  // Add the 'navigation' class so that the JavaScript knows it can use hidden days
   $input->setAttributes(array(
     'name'        => 'page_date',
     'value'       => format_iso_date($context['year'], $context['month'], $context['day']),

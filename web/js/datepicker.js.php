@@ -392,6 +392,7 @@ $(document).on('page_ready', function() {
       {
         for (var i = 0; i < 2; i++)
         {
+          <?php // Add the 'navigation' class so that the JavaScript knows it can use hidden days ?>
           div.append($('<span class="minicalendar navigation" id="cal' + i + '"></span>'));
         }
         config.inline = true;
