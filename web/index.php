@@ -166,15 +166,12 @@ function get_adjacent_link(string $view, int $view_all, int $year, int $month, i
     case 'day':
       $modifier = "$increment day";
       $date->modify($modifier);
-      if ($increment === 1)
+      // find the next non-hidden day
+      $i = 0;
+      while ($date->isHiddenDay() && ($i < DAYS_PER_WEEK)) // break the loop if all days are hidden
       {
-        // find the next non-hidden day
-        $i = 0;
-        while ($date->isHiddenDay() && ($i < DAYS_PER_WEEK)) // break the loop if all days are hidden
-        {
-          $i++;
-          $date->modify($modifier);
-        }
+        $i++;
+        $date->modify($modifier);
       }
       break;
     case 'week':
