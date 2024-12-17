@@ -4,6 +4,7 @@ namespace MRBS;
 
 use PDO;
 use PDOException;
+use Throwable;
 
 
 abstract class DB
@@ -46,10 +47,11 @@ abstract class DB
       // Rollback any outstanding transactions
       $this->rollback();
     }
-    catch (\Exception $e) {
-      // Don't do anything.  This is the destructor and if we get an exception
-      // it's probably because the connection has been lost or timed out, in which
-      // case the locks will have been released and the transaction rolled back anyway.
+    catch (Throwable $e) {
+      // Don't do anything, except raise an error.  This is the destructor and if we get an
+      // exception or error it's probably because the connection has been lost or timed out,
+      // in which case the locks will have been released and the transaction rolled back anyway.
+      trigger_error($e->getMessage(), E_USER_NOTICE);
     }
   }
 
