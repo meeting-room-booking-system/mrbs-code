@@ -230,18 +230,11 @@ function output_row(User $user)
         switch ($key)
         {
           case 'timestamp':
-            // Convert the SQL timestamp into a time value and back into a localised string and
-            // put the UNIX timestamp in a span so that the JavaScript can sort it properly.
-            $unix_timestamp = (isset($col_value)) ? strtotime($col_value) : 0;
-            if (($unix_timestamp === false) || ($unix_timestamp < 0))
-            {
-              // To cater for timestamps before the start of the Unix Epoch
-              $unix_timestamp = 0;
-            }
-            $values[] = "<span title=\"$unix_timestamp\"></span>" .
-              (($unix_timestamp) ? time_date_string($unix_timestamp) : '');
-            break;
-
+            // Use the 'last_updated' value because it will have been converted
+            // from 'timestamp' using the correct timezone, ie the timezone of
+            // the database server.
+            $col_value = htmlspecialchars($user->last_updated);
+            // Fall through
           case 'last_login':
             $values[] = "<span title=\"$col_value\"></span>" .
               (($col_value) ? time_date_string($col_value) : '');
