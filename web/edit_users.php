@@ -224,12 +224,12 @@ function output_row($row)
           // Use the 'last_updated' value because it will have been converted
           // from 'timestamp' using the correct timezone, ie the timezone of
           // the database server.
-          $col_value = htmlspecialchars($row['last_updated']);
+          $col_value = $row['last_updated'];
           // Fall through
         case 'last_login':
           // Put the UNIX timestamp in a span so that the JavaScript can sort it properly.
-          $values[] = "<span title=\"$col_value\"></span>" .
-                      (($col_value) ? time_date_string($col_value) : '');
+          $values[] = '<span title="' . (($col_value) ? htmlspecialchars($col_value) : '') . '"></span>' .
+                      (($col_value) ? htmlspecialchars(time_date_string($col_value)) : '');
           break;
         default:
           // Where there's an associative array of options, display
