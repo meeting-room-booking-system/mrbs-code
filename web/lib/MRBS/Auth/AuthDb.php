@@ -198,7 +198,10 @@ class AuthDb extends Auth
   // Return an array of all users
   public function getUsers() : array
   {
-    $sql = "SELECT *
+    // Add in an extra column, last_updated, which is the SQL timestamp converted to a UNIX
+    // timestamp.  We do the conversion in the SQL query so that it is converted using the
+    // same timezone that it was stored with.
+    $sql = "SELECT *, ". db()->syntax_timestamp_to_unix("timestamp") . "AS last_updated
               FROM " . _tbl('users') . "
              ORDER BY name";
 
