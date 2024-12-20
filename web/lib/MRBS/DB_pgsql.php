@@ -399,7 +399,7 @@ class DB_pgsql extends DB
     // to the nearest integer.  Note that ROUND still returns a float type
     // even though the value is an integer, so we need to cast it as well.
     // (But the casting may round as well?  If so the round is redundant.)
-    return " CAST(ROUND(DATE_PART('epoch', $fieldname)) AS integer) ";
+    return "CAST(ROUND(DATE_PART('epoch', $fieldname)) AS integer)";
   }
 
 

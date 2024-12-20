@@ -675,7 +675,7 @@ class DB_mysql extends DB
   // Generate non-standard SQL to output a TIMESTAMP as a Unix-time:
   public function syntax_timestamp_to_unix(string $fieldname) : string
   {
-    return " UNIX_TIMESTAMP($fieldname) ";
+    return "UNIX_TIMESTAMP($fieldname)";
   }
 
 
