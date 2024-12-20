@@ -1402,7 +1402,7 @@ function get_match_condition(string $full_column_name, ?string $match, array &$s
   if ($table != 'entry')
   {
     // syntax_caseless_contains() modifies the SQL params array too
-    $sql .= " AND" . db()->syntax_caseless_contains("$full_column_name", $match, $sql_params);
+    $sql .= " AND " . db()->syntax_caseless_contains("$full_column_name", $match, $sql_params);
     return $sql;
   }
 
@@ -1458,7 +1458,7 @@ function get_match_condition(string $full_column_name, ?string $match, array &$s
   else
   {
     // syntax_caseless_contains() modifies the SQL params array too
-    $sql .= " AND" . db()->syntax_caseless_contains("$full_column_name", $match, $sql_params);
+    $sql .= " AND " . db()->syntax_caseless_contains("$full_column_name", $match, $sql_params);
   }
 
   return $sql;

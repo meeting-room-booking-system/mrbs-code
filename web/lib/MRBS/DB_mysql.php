@@ -696,7 +696,7 @@ class DB_mysql extends DB
     // authenticating a user against an external database.  See the post at
     // https://stackoverflow.com/questions/5629111/how-can-i-make-sql-case-sensitive-string-comparison-on-mysql#answer-56283818
     // for an explanation of the query.
-    return " " . $this->quote($fieldname) . "=CONVERT(? using utf8mb4) COLLATE utf8mb4_bin";
+    return $this->quote($fieldname) . "=CONVERT(? using utf8mb4) COLLATE utf8mb4_bin";
   }
 
   // Generate non-standard SQL to match a string anywhere in a field's value
