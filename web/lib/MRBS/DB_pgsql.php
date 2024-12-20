@@ -412,7 +412,7 @@ class DB_pgsql extends DB
   {
     $params[] = $string;
 
-    return " " . $this->quote($fieldname) . "=?";
+    return $this->quote($fieldname) . "=?";
   }
 
 
