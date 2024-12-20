@@ -33,7 +33,7 @@ class Users extends TableIterator
     // Add in an extra column, last_updated, which is the SQL timestamp converted to a UNIX
     // timestamp.  We do the conversion in the SQL query so that it is converted using the
     // same timezone that it was stored with.
-    $sql = "SELECT U.*, ". db()->syntax_timestamp_to_unix("timestamp") . "AS last_updated,
+    $sql = "SELECT U.*, " . db()->syntax_timestamp_to_unix("timestamp") . " AS last_updated,
                         " . db()->syntax_group_array_as_string('R.role_id') . " AS roles,
                         " . db()->syntax_group_array_as_string('G.group_id') . " AS " . db()->quote('groups') . "
               FROM $table_name U
