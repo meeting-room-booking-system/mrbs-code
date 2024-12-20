@@ -428,7 +428,7 @@ class DB_pgsql extends DB
   {
     $params[] = quotemeta($string);
 
-    return " $fieldname ~* ? ";
+    return "$fieldname ~* ?";
   }
 
 

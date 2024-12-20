@@ -715,7 +715,7 @@ class DB_mysql extends DB
 
     $params[] = "%$string%";
 
-    return " $fieldname LIKE ? ";
+    return "$fieldname LIKE ?";
   }
 
 
