@@ -115,8 +115,6 @@ else
 
 if (empty($errors))
 {
-  $sql_params = array();
-
   // Start a transaction
   db()->begin();
 
