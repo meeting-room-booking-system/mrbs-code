@@ -1811,7 +1811,7 @@ function get_booking_info(int $id, bool $series, bool $silent=false)
         break;
 
       case 'timestamp':
-        array_push($terms, db()->syntax_timestamp_to_unix("timestamp") . "AS last_updated");
+        array_push($terms, db()->syntax_timestamp_to_unix("timestamp") . " AS last_updated");
         break;
 
       case 'info_time':
