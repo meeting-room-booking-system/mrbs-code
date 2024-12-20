@@ -388,7 +388,7 @@ class DB_pgsql extends DB
   // Generate non-standard SQL for LIMIT clauses:
   public function syntax_limit(int $count, int $offset) : string
   {
-    return " LIMIT $count OFFSET $offset ";
+    return "LIMIT $count OFFSET $offset";
   }
 
 
