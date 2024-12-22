@@ -850,6 +850,70 @@ function addScrollPosition(location, object, originalScroll)
 }
 
 
+<?php
+// Extend the jQuery UI resizable widget so that we can scroll the container.  When the
+// container is scrolled we need to be able to change some of the ui variables which we
+// don't have access to from the standard widget.
+
+// The extension offers two additional options:
+//
+//    scrollableContainer   A jQuery object representing the element that can be scrolled.
+//                          Default: null
+//    scrollDelta           A function that returns the amount by which the container must
+//                          be scrolled on a given event.  Returns an object with x and y
+//                          properties.  Default: null
+?>
+$.widget('ui.resizable', $.ui.resizable, {
+  options: {
+    scrollableContainer: null,
+    scrollDelta: null
+  },
+  _mouseDrag: function(event) {
+    if (this.options.scrollableContainer && this.options.scrollDelta)
+    {
+      <?php // Calculate the amount to scroll by. ?>
+      const delta = this.options.scrollDelta.call(this, event);
+
+      if (delta.x || delta.y)
+      {
+        <?php // Scroll the container. ?>
+        this.options.scrollableContainer[0].scrollBy({
+          top: delta.y,
+          left: delta.x,
+          behavior: 'instant'
+        });
+        <?php
+        // Adjust the original mouse position and the original, current and previous positions.
+        ?>
+        if (delta.x) {
+          this.originalMousePosition.left -= delta.x;
+          this.originalPosition.left -= delta.x;
+          this.position.left -= delta.x;
+          this.prevPosition.left -= delta.x;
+        }
+        if (delta.y) {
+          this.originalMousePosition.top -= delta.y;
+          this.originalPosition.top -= delta.y;
+          this.position.top -= delta.y;
+          this.prevPosition.top -= delta.y;
+        }
+        <?php // Adjust the position of the helper. ?>
+        const helperOffset = this.helper.offset();
+        this.helper.css({
+          top: (helperOffset.top - delta.y) + 'px',
+          left: (helperOffset.left - delta.x) + 'px'
+        });
+        <?php // Resize the table to adjust the position of existing bookings and grid lines. ?>
+        Table.size();
+      }
+    }
+
+    // Invoke the parent widget's _mouseDrag().
+    return this._super(event);
+  }
+});
+
+
 $(document).on('page_ready', function() {
 
   <?php // Don't do anything if we're in kiosk mode ?>
@@ -1151,11 +1215,6 @@ $(document).on('page_ready', function() {
             rectangle = {},
             sides = {n: false, s: false, e: false, w: false};
 
-        if (resize.lastRectangle === undefined)
-        {
-          resize.lastRectangle = $.extend({}, resizeStart.originalRectangle);
-        }
-
         <?php
         // Get the sides of the desired rectangle and also the direction(s) of
         // resize.  Note that the desired rectangle may be being moved in two
@@ -1208,8 +1267,17 @@ $(document).on('page_ready', function() {
         // Get all the bookings that the desired rectangle would overlap.  Note
         // that it could overlap more than one other booking, so we need to find them
         // all and then find the closest one.
+
+        // Recalculate the original rectangle which will have move if we have scrolled.
         ?>
-        var overlappedElements = Table.overlapsBooked(rectangle, false, resizeStart.originalRectangle);
+        const originalRectangle = {
+          n: ui.originalPosition.top,
+          s: ui.originalPosition.top + ui.originalSize.height,
+          w: ui.originalPosition.left,
+          e: ui.originalPosition.left + ui.originalSize.width
+        };
+
+        var overlappedElements = Table.overlapsBooked(rectangle, false, originalRectangle);
 
         if (!overlappedElements.length)
         {
@@ -1308,8 +1376,6 @@ $(document).on('page_ready', function() {
           Table.snapUiToGrid(ui, 'bottom');
         }
 
-        resize.lastRectangle = $.extend({}, rectangle);
-
         const obj = uiDummyClone(ui);
         Table.highlightRowLabels(obj);
         obj.remove();
@@ -1326,13 +1392,6 @@ $(document).on('page_ready', function() {
         resizeStart.originalOffset = ui.element.offset();
 
         resizeStart.oldParams = Table.getBookingParams(ui.originalElement.find('a'));
-
-        resizeStart.originalRectangle = {
-            n: ui.originalPosition.top,
-            s: ui.originalPosition.top + ui.originalSize.height,
-            w: ui.originalPosition.left,
-            e: ui.originalPosition.left + ui.originalSize.width
-          };
 
         <?php
         // Add a class so that we can disable the highlighting when we are
@@ -1355,7 +1414,15 @@ $(document).on('page_ready', function() {
             Table.snapUiToGrid(ui, side, true);
           });
 
-        if (rectanglesIdentical(resizeStart.originalRectangle, getSides(ui.helper)))
+        <?php // Recalculate the original rectangle which will have move if we have scrolled. ?>
+        const originalRectangle = {
+            n: ui.originalPosition.top,
+            s: ui.originalPosition.top + ui.originalSize.height,
+            w: ui.originalPosition.left,
+            e: ui.originalPosition.left + ui.originalSize.width
+          };
+
+        if (rectanglesIdentical(originalRectangle, getSides(ui.helper)))
         {
           <?php
           // Restore the proper height and width so that if the browser zoom
@@ -1638,11 +1705,15 @@ $(document).on('page_ready', function() {
 
             if (handles)
             {
-              $(this).resizable({handles: handles,
-                                 helper: 'resizable-helper',
-                                 start: resizeStart,
-                                 resize: resize,
-                                 stop: resizeStop});
+              $(this).resizable({
+                handles: handles,
+                helper: 'resizable-helper',
+                start: resizeStart,
+                resize: resize,
+                stop: resizeStop,
+                scrollableContainer: tableContainer,
+                scrollDelta: Table.scrollDelta
+              });
             }
 
             $(this).css('background-color', 'transparent');
