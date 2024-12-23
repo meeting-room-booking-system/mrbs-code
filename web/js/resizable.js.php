@@ -885,18 +885,14 @@ $.widget('ui.resizable', $.ui.resizable, {
         <?php
         // Adjust the original mouse position and the original, current and previous positions.
         ?>
-        if (delta.x) {
-          this.originalMousePosition.left -= delta.x;
-          this.originalPosition.left -= delta.x;
-          this.position.left -= delta.x;
-          this.prevPosition.left -= delta.x;
-        }
-        if (delta.y) {
-          this.originalMousePosition.top -= delta.y;
-          this.originalPosition.top -= delta.y;
-          this.position.top -= delta.y;
-          this.prevPosition.top -= delta.y;
-        }
+        ['originalMousePosition', 'originalPosition', 'position', 'prevPosition'].forEach((property) => {
+          if (delta.x) {
+            this[property].left -= delta.x;
+          }
+          if (delta.y) {
+            this[property].top -= delta.y;
+          }
+        });
         <?php // Adjust the position of the helper. ?>
         const helperOffset = this.helper.offset();
         this.helper.css({
