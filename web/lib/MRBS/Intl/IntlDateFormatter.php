@@ -203,7 +203,13 @@ class IntlDateFormatter
     // so we need to find out which locale actually worked.
     if (!empty($this->locale)) {
       $old_locale = setlocale(LC_TIME, '0');
-      $new_locale = setlocale(LC_TIME, System::getOSlocale($this->locale));
+      if (false === ($new_locale = setlocale(LC_TIME, System::getOSlocale($this->locale))))
+      {
+        $new_locale = $old_locale;
+        $locale = is_array($this->locale) ? json_encode($this->locale) : "'$this->locale'";
+        $message = "Could not set locale to $locale; continuing to use '$old_locale'";
+        trigger_error($message, E_USER_WARNING);
+      }
     }
     elseif ($server_os == "windows") {
       // If we are running Windows we have to set the locale again in case another script
