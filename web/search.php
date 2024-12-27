@@ -434,6 +434,7 @@ if (!$ajax_capable || $is_ajax)
   while (false !== ($row = $result->next_row_keyed()))
   {
     row_cast_columns($row, 'entry');
+    $row['area_id'] = (int) $row['area_id'];
     output_row($row, $returl);
   }
 }
