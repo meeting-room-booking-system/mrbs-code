@@ -75,7 +75,7 @@ class IntlDateFormatter
       throw new Exception("Neither the IntlDateFormatter class nor the strftime() function exist on this server");
     }
     // Emulate PHP 8.4 and later by detecting invalid locales now, in order to avoid problems later on.
-    if (!System::isAvailableLocale($locale))
+    if (isset($locale) && !System::isAvailableLocale($locale))
     {
       $message = 'Argument #1 ($locale) "' . $locale . '" is invalid';
       $throwable = (version_compare(PHP_VERSION, '8.0') >= 0) ? '\ValueError' : '\Exception';
