@@ -205,10 +205,18 @@ $(document).on('page_ready', function() {
     <?php
   }
 
-  // Add in a hidden input to the user list link so that we can tell if we are using DataTables
+  // Add in a hidden input to the header search forms so that we can tell if we are using DataTables
   // (which will be if JavaScript is enabled).   We need to know this because when we're using an
-  // an Ajax data source we don't want to send the HTML version of the table data.
+  // Ajax data source we don't want to send the HTML version of the table data.
+  //
+  // Also add 'datatable=1' to the link for the user list for the same reason
   ?>
+
+  $('<input>').attr({
+    type: 'hidden',
+    name: 'datatable',
+    value: '1'
+  }).appendTo('form[action="search.php"]');
 
   $('header a[href^="edit_users.php"]').each(function() {
       var href = $(this).attr('href');
