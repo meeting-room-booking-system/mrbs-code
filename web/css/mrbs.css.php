@@ -2537,7 +2537,7 @@ button#delete_button {
 
 h3.search_results {
   clear: left;
-  margin-bottom: 0;
+  margin-bottom: 1em;
   padding-top: 2em;
 }
 

@@ -17,7 +17,7 @@ $(document).on('page_ready', function() {
       tableOptions;
 
   <?php
-  // Turn the list of users into a dataTable, provided that we can use
+  // Turn the list of results into a dataTable, provided that we can use
   // an Ajax source.  Otherwise they just get the old style search page
   // with "Next" and "Prev" buttons to get new pages from the server.
   ?>
