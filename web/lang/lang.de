@@ -48,6 +48,9 @@ $vocab["create_new_booking"] = "Reservierung durchführen";
 $vocab["select_area"]        = "Bereich auswählen";
 $vocab["select_room"]        = "Raum auswählen";
 $vocab["all"]                = "<alle>";
+$vocab["exit_kiosk_mode_confirm"]    = "Kioskmodus beenden?";
+$vocab["ok"]                 = "OK";
+$vocab["cancel"]             = "Abbrechen";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Zeige Tag";
@@ -272,6 +275,12 @@ $vocab["max_secs_per_future_area"]    = 'Das maximale überschüssige Buchungsgu
 $vocab["skip_and_book"]           = "Überspringen und buchen";
 $vocab["skip_and_book_note"]      = "Buchung eintragen, dabei Buchungstermine mit Konflikten überspringen";
 
+// Used in edit_message.php
+$vocab["edit_message"]  = "Systemnachricht bearbeiten";
+$vocab["message"]       = "Systemnachricht";
+$vocab["display_from"]  = "Anzeigen ab dem";
+$vocab["display_until"] = "Anzeigen bis zum Ende des";
+
 // Used in kiosk.php
 $vocab["enter"]                     = "Starten";
 $vocab["exit"]                      = "Verlassen";
@@ -369,7 +378,8 @@ $vocab["copy_email_addresses"]  = "E-Mailadressen kopieren";
 
 // Used in search.php
 $vocab["invalid_search"]     = "Leerer oder ungültiger Suchbegriff.";
-$vocab["search_results"]     = "Suchergebnis für";
+$vocab["search_results"]     = 'Suchergebnis für \'%1$s\' ab dem %2$s';
+$vocab["search_results_unlimited"] = "Suchergebnis für '%s'";
 $vocab["nothing_found"]      = "Keine passenden Suchergebnisse gefunden.";
 $vocab["records"]            = "Ergebnisse ";
 $vocab["through"]            = " bis ";
@@ -429,6 +439,11 @@ $vocab["delete_entries_failed"] = "Die Einträge konnten nicht gelöscht werden.
 $vocab["registered"]            = "Angemeldet";
 
 // Used in admin.php
+$vocab["no_message"]         = "Zurzeit ist keine Systemnachricht zur Anzeige über dem Kalender eingestellt.";
+$vocab["this_message"]       = "Folgende Systemnachricht wird über dem Kalender angezeigt.";
+$vocab["this_message_from"]  = "Folgende Systemnachricht wird über dem Kalender ab dem %s angezeigt.";
+$vocab["this_message_until"] = "Folgende Systemnachricht wird über dem Kalender bis zum %s angezeigt.";
+$vocab["this_message_from_until"] = 'Folgende Systemnachricht wird über dem Kalender ab dem %1$s bis zum %2$s angezeigt.';
 $vocab["edit"]               = "Bearbeiten";
 $vocab["delete"]             = "Löschen";
 $vocab["rooms"]              = "Räume";
