@@ -396,6 +396,11 @@ Then define your database connection parameters. Set the values for:
     $db_login =     The database login username
     $db_password =  The database login password for the above login username
 
+If you are using cPanel on your web server, make sure you include the prefix,
+typically 8 characters followed by an underscore, in your database name and
+database username.  For example $db_database = "abcdefgh_mrbs". (Note: this
+prefix is not the same as the table prefix below.)
+
 If the database server and web server are the same machine, use
 $db_host="localhost". Or, with PostgreSQL only, you can use $db_host="" to
 use Unix Domain Sockets to connect to the database server on the same machine.

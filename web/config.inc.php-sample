@@ -47,6 +47,12 @@ require_once 'lib/autoload.inc';
 /*******************
  * Database settings
  ******************/
+
+// If you are using cPanel on your web server, make sure you include the prefix,
+// typically 8 characters followed by an underscore, in your database name and
+// database username.  For example $db_database = "abcdefgh_mrbs". (Note: this
+// prefix is not the same as the table prefix below.)
+
 // Which database system: "pgsql"=PostgreSQL, "mysql"=MySQL
 $dbsys = "mysql";
 // Hostname of database server. For pgsql, can use "" instead of localhost
