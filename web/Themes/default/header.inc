@@ -227,7 +227,7 @@ function print_menu_items(string $query) : void
 
   $menu_items['rooms'] = 'admin.php';
 
-  if ($auth['type'] == 'db')
+  if (auth()->canCreateUsers())
   {
     $menu_items['user_list'] = 'edit_users.php';
   }

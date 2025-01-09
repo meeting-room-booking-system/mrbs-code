@@ -43,9 +43,9 @@ use MRBS\Form\Form;
 
 require "defaultincludes.inc";
 
-if ($auth['type'] != 'db')
+if (!auth()->canCreateUsers())
 {
-  // You shouldn't be here unless you're using 'db' authentication
+  // You shouldn't be here unless you can create users
   location_header('index.php');
 }
 

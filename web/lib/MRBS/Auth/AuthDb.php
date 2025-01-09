@@ -211,6 +211,13 @@ class AuthDb extends Auth
   }
 
 
+  // Checks whether the authentication type allows the creation of new users.
+  public function canCreateUsers() : bool
+  {
+    return true;
+  }
+
+
   // Checks whether validation of a user by email address is possible and allowed.
   public function canValidateByEmail() : bool
   {
@@ -657,6 +664,32 @@ class AuthDb extends Auth
     }
 
     return $user;
+  }
+
+
+  // Returns a username given an email address.  Note that if two or more
+  // users share the same email address then the first one found will be
+  // returned.  If no user is found then NULL is returned.
+  public function getUsernameByEmail(string $email) : ?string
+  {
+    $sql = "SELECT name
+              FROM " . _tbl('users') . "
+             WHERE email=?";
+
+    $res = db()->query($sql, array($email));
+
+    if ($res->count() == 0)
+    {
+      return null;
+    }
+
+    if ($res->count() > 1)
+    {
+      // Could maybe do something better here
+      trigger_error("Email address not unique", E_USER_NOTICE);
+    }
+    $row = $res->next_row_keyed();
+    return $row['name'];
   }
 
 

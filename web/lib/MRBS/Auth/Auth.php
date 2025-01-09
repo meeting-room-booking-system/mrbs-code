@@ -89,6 +89,38 @@ abstract class Auth
   }
 
 
+  // Returns a username given an email address.  Note that if two or more
+  // users share the same email address then the first one found will be
+  // returned.  If no user is found then NULL is returned.
+  public function getUsernameByEmail(string $email) : ?string
+  {
+    global $mail_settings;
+
+    // Default: return the email address, unless we're constructing email
+    // addresses by adding a domain name onto the username.  In which case,
+    // strip off the domain name and then add on any necessary suffix.
+    // This should be the inverse of getDefaultEmail().
+    $result = $email;
+
+    if (isset($mail_settings['domain']) && ($mail_settings['domain'] !== ''))
+    {
+      $at_domain = '@' . self::trimDomain($mail_settings['domain']);
+      if (str_ends_with($email, $at_domain))
+      {
+        // Strip the @domain
+        $result = str_replace($at_domain, '', $result);
+        // And add on the suffix if there is one
+        if (isset($mail_settings['username_suffix']))
+        {
+          $result .= $mail_settings['username_suffix'];
+        }
+      }
+    }
+
+    return $result;
+  }
+
+
   public function getDisplayName(?string $username) : ?string
   {
     global $get_display_names_all_at_once;
@@ -136,6 +168,15 @@ abstract class Auth
     }
 
     return $username;
+  }
+
+
+  // Checks whether the authentication type allows the creation of new users.
+  // This will normally return false if users are managed elsewhere (e.g. on
+  // an external database, or on an LDAP server).
+  public function canCreateUsers() : bool
+  {
+    return false;
   }
 
 
@@ -312,16 +353,20 @@ abstract class Auth
     // Add on the domain, if there is one
     if (isset($mail_settings['domain']) && ($mail_settings['domain'] !== ''))
     {
-      // Trim any leading '@' character. Older versions of MRBS required the '@' character
-      // to be included in $mail_settings['domain'], and we still allow this for backwards
-      // compatibility.
-      $domain = ltrim($mail_settings['domain'], '@');
-      $email .= '@' . $domain;
+      $email .= '@' . self::trimDomain($mail_settings['domain']);
     }
 
     return $email;
   }
 
+
+  // Trim any leading '@' character. Older versions of MRBS required the '@' character
+  // to be included in $mail_settings['domain'], and we still allow this for backwards
+  // compatibility.
+  private static function trimDomain(string $domain) : string
+  {
+    return ltrim($domain, '@');
+  }
 
   // Callback function for comparing two users, indexed by 'username' and 'display_name'.
   // Compares first by 'display_name' and then by 'username'
