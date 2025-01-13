@@ -960,7 +960,9 @@ function report_row(&$rows, $data)
       case 'start_time':
         if ($data['enable_periods'])
         {
-          list( , $date) =  period_date_string($value, $data['area_id']);
+          // If we've fallen through from 'end_time' we need to set previous_period to TRUE
+          // so that we get the name of the previous period, not this one.
+          list( , $date) =  period_date_string($value, $data['area_id'], ($field == 'end_time'));
         }
         else
         {
