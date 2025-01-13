@@ -71,7 +71,7 @@ function generate_groups_table()
 
   echo "<thead>\n";
   echo "<tr>";
-  if ($auth['type'] == 'db')
+  if (auth()->type() == 'db')
   {
     echo "<th>";
     // TODO 1. Implement delete button
@@ -88,7 +88,7 @@ function generate_groups_table()
   foreach ($groups as $group)
   {
     echo "<tr>";
-    if ($auth['type'] == 'db')
+    if (auth()->type() == 'db')
     {
       echo "<td>";
       // TODO 1. Implement delete button
@@ -185,7 +185,7 @@ if (isset($group))
 else
 {
   echo "<h2>" . htmlspecialchars(get_vocab('groups')) . "</h2>";
-  if ($auth['type'] == 'db')
+  if (auth()->type() == 'db')
   {
     generate_add_group_form($error, $name);
   }

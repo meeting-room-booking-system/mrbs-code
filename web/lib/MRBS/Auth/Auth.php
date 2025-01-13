@@ -18,6 +18,7 @@ abstract class Auth
 
   protected $getDisplayNamesAtOnce = true;
 
+
   /* validateUser($user, $pass)
    *
    * Checks if the specified username/password pair are valid
@@ -141,6 +142,15 @@ abstract class Auth
     }
 
     return $username;
+  }
+
+
+  // Checks whether the authentication type allows the creation of new users.
+  // This will normally return false if users are managed elsewhere (e.g. on
+  // an external database, or on an LDAP server).
+  public function canCreateUsers() : bool
+  {
+    return false;
   }
 
 
@@ -276,6 +286,38 @@ abstract class Auth
   }
 
 
+  // Returns a username given an email address.  Note that if two or more
+  // users share the same email address then the first one found will be
+  // returned.  If no user is found then NULL is returned.
+  public function getUsernameByEmail(string $email) : ?string
+  {
+    global $mail_settings;
+
+    // Default: return the email address, unless we're constructing email
+    // addresses by adding a domain name onto the username.  In which case,
+    // strip off the domain name and then add on any necessary suffix.
+    // This should be the inverse of User::getDefaultEmail().
+    $result = $email;
+
+    if (isset($mail_settings['domain']) && ($mail_settings['domain'] !== ''))
+    {
+      $at_domain = '@' . self::trimDomain($mail_settings['domain']);
+      if (str_ends_with($email, $at_domain))
+      {
+        // Strip the @domain
+        $result = str_replace($at_domain, '', $result);
+        // And add on the suffix if there is one
+        if (isset($mail_settings['username_suffix']))
+        {
+          $result .= $mail_settings['username_suffix'];
+        }
+      }
+    }
+
+    return $result;
+  }
+
+
   // Gets the level from the $auth['admin'] array in the config file
   public static function getDefaultLevel(?string $username) : int
   {
@@ -289,6 +331,26 @@ abstract class Auth
 
     // Check whether the user is an admin; if not they are level 1.
     return (isset($auth['admin']) && in_arrayi($username, $auth['admin'])) ? $max_level : 1;
+  }
+
+
+  // Returns the authentication 'type' of the class that will be used in the
+  // user table.  This is normally $auth['type'] but having the method allows the
+  // type to be kept the same when extending a class.
+  public function type() : string
+  {
+    global $auth;
+
+    return $auth['type'];
+  }
+
+
+  // Trim any leading '@' character. Older versions of MRBS required the '@' character
+  // to be included in $mail_settings['domain'], and we still allow this for backwards
+  // compatibility.
+  private static function trimDomain(string $domain) : string
+  {
+    return ltrim($domain, '@');
   }
 
 

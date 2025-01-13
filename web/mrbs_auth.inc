@@ -124,7 +124,7 @@ function get_page_level($page)
     // Ordinary users can only see and edit their own details under the 'db' auth scheme
     case 'edit_user.php':
     case 'edit_user_handler.php':
-      $result = ($auth['type'] == 'db') ? 1 : 2;
+      $result = (auth()->type() == 'db') ? 1 : 2;
       break;
 
       // These pages allow users to create and delete entries

@@ -15,13 +15,11 @@ class User extends Table
 
   public function __construct($username=null)
   {
-    global $auth;
-
     parent::__construct();
 
     $this->username = $username;
     // Set some default properties
-    $this->auth_type = $auth['type'];
+    $this->auth_type = auth()->type();
     $this->display_name = $username;
     $this->email = self::getDefaultEmail($username);
     $this->level = auth()::getDefaultLevel($username);

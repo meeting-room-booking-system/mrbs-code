@@ -209,7 +209,7 @@ function output_row(User $user)
   $values[] = "<div class=\"string\" title=\"" . htmlspecialchars($role_name_list) . "\">" .
               implode(', ', $links) . "</div>";
 
-  if ($auth['type'] == 'db')
+  if (auth()->type() == 'db')
   {
     // Other columns
     foreach ($fields as $field)
@@ -674,7 +674,7 @@ $users = new Users();
 |                         Authenticate the current user                         |
 \*---------------------------------------------------------------------------*/
 
-if (($auth['type'] != 'db') || (count($users) > 0))
+if (!auth()->canCreateUsers() || (count($users) > 0))
 {
   $initial_user_creation = false;
   $mrbs_user = session()->getCurrentUser();
@@ -787,7 +787,7 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
   // or admin rights are removed!
   if ($action == "edit")
   {
-    $editing_last_admin = ($auth['type'] == 'db') && ($user->level == $max_level) && (Users::getNAdmins() <= 1);
+    $editing_last_admin = auth()->canCreateUsers() && ($user->level == $max_level) && (Users::getNAdmins() <= 1);
   }
   else
   {
@@ -855,7 +855,7 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
   {
     $key = $field['name'];
 
-    if (($auth['type'] != 'db') && !in_array($key, array('name', 'display_name', 'level')))
+    if ((auth()->type() != 'db') && !in_array($key, array('name', 'display_name', 'level')))
     {
       continue;
     }
@@ -864,10 +864,10 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
                     'name'  => $key,
                     'value' => $user->{$key});
 
-    $disabled = ($auth['type'] != 'db') ||
+    $disabled = !auth()->canCreateUsers() ||
                 (!$initial_user_creation &&
-                 !is_user_admin() &&
-                 in_array($key, $auth['db']['protected_fields']));
+                !is_user_admin() &&
+                in_array($key, $auth['db']['protected_fields']));
 
     switch ($key)
     {
@@ -886,7 +886,7 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
         // Work out whether the level select input should be disabled (NB you can't make a <select> readonly)
         // We don't want the user to be able to change the level if (a) it's the first user being created or
         // (b) it's the last admin left or (c) they don't have admin rights
-        $level_disabled = ($auth['type'] != 'db') || $initial_user_creation || $editing_last_admin || $disabled;
+        $level_disabled = !auth()->canCreateUsers() || $initial_user_creation || $editing_last_admin || $disabled;
         $fieldset->addElement(get_field_level($params, $level_disabled));
         // Add a hidden input if the field is disabled
         if ($level_disabled)
@@ -920,7 +920,7 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
   // Add in the roles
   $form->addElement(get_fieldset_roles($user));
 
-  if ($auth['type'] == 'db')
+  if (auth()->canCreateUsers())
   {
     // Now the password fields
     $disabled = !$initial_user_creation &&
@@ -993,7 +993,7 @@ if (!$is_ajax)
   if (is_user_admin()) /* Administrators get the right to add new users */
   {
     // Add button for the 'db' auth type or where we can't get all the users
-    if (($auth['type'] == 'db') || !method_exists(auth(), 'getUsers'))
+    if (auth()->canCreateUsers() || !method_exists(auth(), 'getUsers'))
     {
       $form = new Form(Form::METHOD_POST);
 
@@ -1078,7 +1078,7 @@ if (!$initial_user_creation)   // don't print the user table if there are no use
     echo '<th><span class="normal" data-type="string">' . get_vocab("roles") . "</span></th>\n";
 
     // Other column headers
-    if ($auth['type'] == 'db')
+    if (auth()->type() == 'db')
     {
       foreach ($fields as $field)
       {

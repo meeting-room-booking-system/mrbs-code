@@ -29,7 +29,7 @@ class Users extends TableIterator
 
     $class_name = $this->base_class;
     $table_name = _tbl($class_name::TABLE_NAME);
-    $sql_params = array(':auth_type' => $auth['type']);
+    $sql_params = array(':auth_type' => auth()->type());
     // Add in an extra column, last_updated, which is the SQL timestamp converted to a UNIX
     // timestamp.  We do the conversion in the SQL query so that it is converted using the
     // same timezone that it was stored with.
@@ -56,7 +56,7 @@ class Users extends TableIterator
     global $auth;
 
     // Make sure this is a valid use of the method
-    if (($auth['type'] == 'db') || !method_exists(auth(), 'getUsers'))
+    if (auth()->canCreateUsers() || !method_exists(auth(), 'getUsers'))
     {
       return;
     }

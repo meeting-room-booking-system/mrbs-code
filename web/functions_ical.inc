@@ -248,55 +248,11 @@ function get_vtimezone(string $tz)
 // Gets a username given an ORGANIZER value.   Returns NULL if none found
 function get_create_by(string $organizer) : ?string
 {
-  global $auth, $mail_settings;
-
   // Get the email address.   Stripping off the 'mailto' is a very simplistic
   // method.  It will work in the majority of cases, but this needs to be improved
   $email = preg_replace('/^mailto:/', '', $organizer);
 
-  // If we're using the 'db' auth type, then look the username up in the user table
-  if ($auth['type'] == 'db')
-  {
-    $sql = "SELECT name
-              FROM " . _tbl('user') . "
-             WHERE email=?";
-
-    $res = db()->query($sql, array($email));
-
-    if ($res->count() == 0)
-    {
-      return null;
-    }
-    else
-    {
-      if ($res->count() > 1)
-      {
-        // Could maybe do something better here
-        trigger_error("ORGANIZER email address not unique", E_USER_NOTICE);
-      }
-      $row = $res->next_row_keyed();
-      return $row['name'];
-    }
-  }
-  // If we're using LDAP we can get the username given the email address
-  else if($auth['type'] == 'ldap')
-  {
-    // We need a function that is the inverse of authLdapGetEmail()
-    trigger_error("Cannot yet get username when using LDAP", E_USER_WARNING);
-    return null;
-  }
-  // Otherwise we derive the username from the email address
-  else
-  {
-    // We just want the string up to the '@'
-    $name = preg_replace('/@.*$/', '', $email);
-    // And add on the suffix if there is one
-    if (isset($mail_settings['username_suffix']))
-    {
-      $name .= $mail_settings['username_suffix'];
-    }
-    return $name;
-  }
+  return auth()->getUsernameByEmail($email);
 }
 
 

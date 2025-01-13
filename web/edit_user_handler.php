@@ -58,7 +58,7 @@ function get_form_data(User &$user) : void
     // Stop ordinary users trying to change fields they are not allowed to
     if ($initial_user_creation ||
         is_user_admin() ||
-        (($auth['type'] == 'db') && !in_array($var, $auth['db']['protected_fields'])) )
+        (auth()->canCreateUsers() && !in_array($var, $auth['db']['protected_fields'])) )
     {
       $user->$var = $value;
     }
@@ -84,7 +84,7 @@ function validate_form_data(User &$user) : array
   }
   else
   {
-    if ($auth['type'] == 'db')
+    if (auth()->type() == 'db')
     {
       // Convert the name to lowercase for the 'db' scheme
       $user->name = utf8_strtolower($user->name);
@@ -162,7 +162,7 @@ function validate_form_data(User &$user) : array
       }
       else
       {
-        $this_user = User::getByName($mrbs_user->username, $auth['type']);
+        $this_user = User::getByName($mrbs_user->username, auth()->type());
         if ($this_user->id !== $user->id)
         {
           $message = "Attempt by a non-admin to edit another user";
@@ -204,7 +204,7 @@ $id = get_form_var('id', 'int');
 $delete_button = get_form_var('delete_button', 'string');
 $update_button = get_form_var('update_button', 'string');
 
-$initial_user_creation = ($auth['type'] == 'db') && (count($users = new Users) === 0);
+$initial_user_creation = auth()->canCreateUsers() && (count($users = new Users) === 0);
 
 // Unless we're using the 'db' authentication type and there are no users
 // in the system yet and we're trying to add the first one, check that the
@@ -243,7 +243,7 @@ if (isset($delete_button))
       // And if this is the 'db' scheme then you can't delete the last admin, to stop you
       // getting locked out of the system.  You also can't delete a user if MRBS has been
       // configured not to allow the deletion of users that appear in bookings in some form.
-      if (($auth['type'] != 'db') || ($user->level < $max_level) || (Users::getNAdmins() > 1)
+      if (!auth()->canCreateUsers() || ($user->level < $max_level) || (Users::getNAdmins() > 1)
           || !$auth['db']['prevent_deletion_of_users_in_bookings'] || !$user->isInBookings())
       {
         $user->delete();

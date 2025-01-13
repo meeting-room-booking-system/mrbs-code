@@ -435,9 +435,10 @@ if (isset($kiosk))
 
 $is_ajax = is_ajax();
 
-// If we're using the 'db' authentication type, check to see if MRBS has just been installed
-// and, if so, redirect to the edit_user page so that they can set up users.
-if ($auth['type'] == 'db')
+// If we're using an authentication type that supports the creation of users, eg 'db'
+// or an extension of that type, then check to see if MRBS has just been installed
+// and, if so, redirect to the edit_users page so that they can set up users.
+if (auth()->canCreateUsers())
 {
   $users = new Users();
   if (count($users) == 0)
