@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace MRBS;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use MRBS\ICalendar\RFC5545;
 
 define('INTERVAL_DAY', 0);
@@ -1920,8 +1921,9 @@ function get_booking_info(int $id, bool $series, bool $silent=false)
   // TODO: reintegrated.
   if ($row['enable_periods'])
   {
-    $n_periods = count(Area::getById($row['area_id'])->periods);
-    $end_date = new DateTime();
+    $area = Area::getById($row['area_id']);
+    $n_periods = count($area->periods);
+    $end_date = new DateTime('now', new DateTimeZone($area->timezone));
     $end_date->setTimestamp($row['end_time']);
     $hour = $end_date->getHour();
     // If the time is between midnight and the start of the first period, then
