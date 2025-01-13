@@ -867,7 +867,9 @@ function add_registrants(int $entry_id, array $registrants) : void
 function get_entries_by_area(int $area_id, int $interval_start, int $interval_end) : array
 {
   // The GROUP BY is necessary to get n_registered to work
-  $sql = "SELECT E.*, COUNT(P.entry_id) AS n_registered
+  $sql = "SELECT E.*, " .
+                 db()->syntax_timestamp_to_unix("E.timestamp") . " AS last_updated,
+                 COUNT(P.entry_id) AS n_registered
             FROM " . _tbl('entry') . " E
        LEFT JOIN " . _tbl('room') . " R ON E.room_id = R.id
        LEFT JOIN " . _tbl('participant') . " P ON P.entry_id = E.id
@@ -913,7 +915,9 @@ function get_entries_by_room(int $room_id, ?int $interval_start, ?int $interval_
   $sql_params = [':room_id' => $room_id];
 
   // The GROUP BY is necessary to get n_registered to work
-  $sql = "SELECT E.*, COUNT(P.entry_id) AS n_registered
+  $sql = "SELECT E.*, " .
+                 db()->syntax_timestamp_to_unix("E.timestamp") . " AS last_updated,
+                 COUNT(P.entry_id) AS n_registered
             FROM " . _tbl('entry') . " E
        LEFT JOIN " . _tbl('participant') . " P ON P.entry_id = E.id
            WHERE room_id = :room_id";
