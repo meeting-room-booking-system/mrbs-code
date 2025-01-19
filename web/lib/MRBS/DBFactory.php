@@ -27,6 +27,19 @@ class DBFactory
   }
 
 
+  public static function createDsn(
+    string $db_system,
+    string $db_host,
+    #[\SensitiveParameter]
+    string $db_name,
+    ?int   $db_port = null
+  ) : string
+  {
+    $class_name = self::getClassName($db_system);
+    return $class_name::dsn($db_host, $db_name, $db_port);
+  }
+
+  
   // Check that the appropriate PDO extension is enabled.  This can't always be
   // done in the constructor of the class itself because the class can refer to a
   // driver-specific constant.
