@@ -56,6 +56,43 @@ abstract class DB
   }
 
 
+  // Build a DSN.
+  // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
+  // The attribute is only recognised by PHP 8.2 and later.
+  public static function dsn(
+    string $db_host,
+    #[\SensitiveParameter]
+    string $db_name,
+    ?int   $db_port = null
+  ) : string
+  {
+    // Early error handling
+    if (is_null(static::DB_DBO_DRIVER) ||
+        is_null(static::DB_DEFAULT_PORT)) {
+      throw new Exception("Encountered a fatal bug in DB abstraction code!");
+    }
+
+    // Prefix
+    $result = static::DB_DBO_DRIVER . ':';
+
+    // Host
+    if ($db_host !== '') {
+      $result .= 'host=' . $db_host . ';';
+    }
+
+    // Port
+    if (empty($db_port)) {
+      $db_port = static::DB_DEFAULT_PORT;
+    }
+    $result .= 'port=' . $db_port . ';';
+
+    // Database name
+    $result .= 'dbname=' . $db_name;
+
+    return $result;
+  }
+
+
   // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
   // The attribute is only recognised by PHP 8.2 and later.
   // $driver_options is an optional array of options that supplements/overrides the
@@ -73,25 +110,7 @@ abstract class DB
     ?array $driver_options = null
   ): void
   {
-    // Early error handling
-    if (is_null(static::DB_DBO_DRIVER) ||
-      is_null(static::DB_DEFAULT_PORT)) {
-      throw new Exception("Encountered a fatal bug in DB abstraction code!");
-    }
-
-    // If no port has been provided, set a SQL variant dependent default
-    if (empty($db_port)) {
-      $db_port = static::DB_DEFAULT_PORT;
-    }
-
     // Establish a database connection.
-    if (!isset($db_host) || ($db_host == "")) {
-      $hostpart = "";
-    }
-    else {
-      $hostpart = "host=$db_host;";
-    }
-
     $default_options = array(
       PDO::ATTR_PERSISTENT => $persist,
       PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
@@ -100,7 +119,7 @@ abstract class DB
     $options = (empty($driver_options)) ? $default_options : $driver_options + $default_options;
 
     $this->dbh = new PDO(
-      static::DB_DBO_DRIVER . ":{$hostpart}port=$db_port;dbname=$db_name",
+      static::dsn($db_host, $db_name, $db_port),
       $db_username,
       $db_password,
       $options
