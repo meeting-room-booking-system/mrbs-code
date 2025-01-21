@@ -37,6 +37,32 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Security options
+    |--------------------------------------------------------------------------
+    |
+    | You can enable or disable certain security features here by setting them to true or false to enable or disable
+    | them.
+    | -detect_spoofing:
+    |       Detect spoofing attempts by checking the message sender against the message headers.
+    |       Default TRUE
+    | -detect_spoofing_exception:
+    |       Throw an exception if a spoofing attempt is detected.
+    |       Default FALSE
+    | -sanitize_filenames:
+    |       Sanitize attachment filenames by removing any unwanted and potentially dangerous characters. This is not a
+    |       100% secure solution, but it should help to prevent some common attacks. Please sanitize the filenames
+    |       again if you need a more secure solution.
+    |       Default TRUE
+    |
+    */
+    'security' => [
+        "detect_spoofing" => true,
+        "detect_spoofing_exception" => false,
+        "sanitize_filenames" => true,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Available accounts
     |--------------------------------------------------------------------------
     |
@@ -55,6 +81,7 @@ return [
             'username' => 'root@example.com',
             'password' => '',
             'authentication' => null,
+            'rfc' => 'RFC822', // If you are using iCloud, you might want to set this to 'BODY'
             'proxy' => [
                 'socket' => null,
                 'request_fulluri' => false,
@@ -147,6 +174,7 @@ return [
         'soft_fail' => false,
         'rfc822' => true,
         'debug' => false,
+        'unescaped_search_dates' => false,
         'uid_cache' => true,
         // 'fallback_date' => "01.01.1970 00:00:00",
         'boundary' => '/boundary=(.*?(?=;)|(.*))/i',
@@ -167,7 +195,7 @@ return [
 
     /**
      * |--------------------------------------------------------------------------
-     * | Available IMAP options
+     * | Available decoding options
      * |--------------------------------------------------------------------------
      * |
      * | Available php imap config parameters are listed below

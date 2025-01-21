@@ -18,6 +18,7 @@ use Webklex\PHPIMAP\Decoder\DecoderInterface;
 use Webklex\PHPIMAP\Exceptions\DecoderNotFoundException;
 use Webklex\PHPIMAP\Exceptions\InvalidMessageDateException;
 use Webklex\PHPIMAP\Exceptions\MethodNotFoundException;
+use Webklex\PHPIMAP\Exceptions\SpoofingAttemptDetectedException;
 
 /**
  * Class Header
@@ -199,6 +200,7 @@ class Header {
      * Parse the raw headers
      *
      * @throws InvalidMessageDateException
+     * @throws SpoofingAttemptDetectedException
      */
     protected function parse(): void {
         $header = $this->rfc822_parse_headers($this->raw);
@@ -230,6 +232,11 @@ class Header {
 
         $this->extractHeaderExtensions();
         $this->findPriority();
+
+        if($this->config->get('security.detect_spoofing', true)) {
+            // Detect spoofing
+            $this->detectSpoofing();
+        }
     }
 
     /**
@@ -401,6 +408,24 @@ class Header {
                         "mailbox"  => $mailbox,
                         "host"     => $host,
                     ];
+                }elseif (preg_match(
+                    '/^((?P<name>.+)<)(?P<email>[^<]+?)>$/',
+                    $split_address,
+                    $matches
+                )) {
+                    $name = trim(rtrim($matches["name"]));
+                    if(str_starts_with($name, "\"") && str_ends_with($name, "\"")) {
+                        $name = substr($name, 1, -1);
+                    }elseif(str_starts_with($name, "'") && str_ends_with($name, "'")) {
+                        $name = substr($name, 1, -1);
+                    }
+                    $email = trim(rtrim($matches["email"]));
+                    list($mailbox, $host) = array_pad(explode("@", $email), 2, null);
+                    $addresses[] = (object)[
+                        "personal" => $name,
+                        "mailbox"  => $mailbox,
+                        "host"     => $host,
+                    ];
                 }
             }
         }
@@ -413,7 +438,7 @@ class Header {
      * @param object $header
      */
     private function extractAddresses(object $header): void {
-        foreach (['from', 'to', 'cc', 'bcc', 'reply_to', 'sender'] as $key) {
+        foreach (['from', 'to', 'cc', 'bcc', 'reply_to', 'sender', 'return_path', 'envelope_from', 'envelope_to', 'delivered_to'] as $key) {
             if (property_exists($header, $key)) {
                 $this->set($key, $this->parseAddresses($header->$key));
             }
@@ -430,7 +455,60 @@ class Header {
         $addresses = [];
 
         if (is_array($list) === false) {
-            return $addresses;
+            if(is_string($list)) {
+                if (preg_match(
+                    '/^(?:(?P<name>.+)\s)?(?(name)<|<?)(?P<email>[^\s]+?)(?(name)>|>?)$/',
+                    $list,
+                    $matches
+                )) {
+                    $name = trim(rtrim($matches["name"]));
+                    $email = trim(rtrim($matches["email"]));
+                    list($mailbox, $host) = array_pad(explode("@", $email), 2, null);
+                    if($mailbox === ">") { // Fix trailing ">" in malformed mailboxes
+                        $mailbox = "";
+                    }
+                    if($name === "" && $mailbox === "" && $host === "") {
+                        return $addresses;
+                    }
+                    $list = [
+                        (object)[
+                            "personal" => $name,
+                            "mailbox"  => $mailbox,
+                            "host"     => $host,
+                        ]
+                    ];
+                }elseif (preg_match(
+                    '/^((?P<name>.+)<)(?P<email>[^<]+?)>$/',
+                    $list,
+                    $matches
+                )) {
+                    $name = trim(rtrim($matches["name"]));
+                    $email = trim(rtrim($matches["email"]));
+                    if(str_starts_with($name, "\"") && str_ends_with($name, "\"")) {
+                        $name = substr($name, 1, -1);
+                    }elseif(str_starts_with($name, "'") && str_ends_with($name, "'")) {
+                        $name = substr($name, 1, -1);
+                    }
+                    list($mailbox, $host) = array_pad(explode("@", $email), 2, null);
+                    if($mailbox === ">") { // Fix trailing ">" in malformed mailboxes
+                        $mailbox = "";
+                    }
+                    if($name === "" && $mailbox === "" && $host === "") {
+                        return $addresses;
+                    }
+                    $list = [
+                        (object)[
+                            "personal" => $name,
+                            "mailbox"  => $mailbox,
+                            "host"     => $host,
+                        ]
+                    ];
+                }else{
+                    return $addresses;
+                }
+            }else{
+                return $addresses;
+            }
         }
 
         foreach ($list as $item) {
@@ -445,27 +523,35 @@ class Header {
             if (!property_exists($address, 'personal')) {
                 $address->personal = false;
             } else {
-                $personalParts = $this->decoder->mimeHeaderDecode($address->personal);
+                $personal_slices = explode(" ", $address->personal);
+                $address->personal = "";
+                foreach ($personal_slices as $slice) {
+                    $personalParts = $this->decoder->mimeHeaderDecode($slice);
 
-                $address->personal = '';
-                foreach ($personalParts as $p) {
-                    $address->personal .= $this->decoder->convertEncoding($p->text, $this->decoder->getEncoding($p));
-                }
+                    $personal = '';
+                    foreach ($personalParts as $p) {
+                        $personal .= $this->decoder->convertEncoding($p->text, $this->decoder->getEncoding($p));
+                    }
 
-                if (str_starts_with($address->personal, "'")) {
-                    $address->personal = str_replace("'", "", $address->personal);
+                    if (str_starts_with($personal, "'")) {
+                        $personal = str_replace("'", "", $personal);
+                    }
+                    $personal = $this->decoder->decode($personal);
+                    $address->personal .= $personal . " ";
                 }
+                $address->personal = trim(rtrim($address->personal));
             }
 
             if ($address->host == ".SYNTAX-ERROR.") {
                 $address->host = "";
+            }elseif ($address->host == "UNKNOWN") {
+                $address->host = "";
             }
             if ($address->mailbox == "UNEXPECTED_DATA_AFTER_ADDRESS") {
                 $address->mailbox = "";
+            }elseif ($address->mailbox == "MISSING_MAILBOX_TERMINATOR") {
+                $address->mailbox = "";
             }
-
-            $address->mail = ($address->mailbox && $address->host) ? $address->mailbox . '@' . $address->host : false;
-            $address->full = ($address->personal) ? $address->personal . ' <' . $address->mail . '>' : $address->mail;
 
             $addresses[] = new Address($address);
         }
@@ -758,6 +844,27 @@ class Header {
     public function setDecoder(DecoderInterface $decoder): static {
         $this->decoder = $decoder;
         return $this;
+    }
+
+    /**
+     * Detect spoofing by checking the from, reply_to, return_path, sender and envelope_from headers
+     * @throws SpoofingAttemptDetectedException
+     */
+    private function detectSpoofing(): void {
+        $header_keys = ["from", "reply_to", "return_path", "sender", "envelope_from"];
+        $potential_senders = [];
+        foreach($header_keys as $key) {
+            $header = $this->get($key);
+            foreach ($header->toArray() as $address) {
+                $potential_senders[] = $address->mailbox . "@" . $address->host;
+            }
+        }
+        if(count($potential_senders) > 1) {
+            $this->set("spoofed", true);
+            if($this->config->get('security.detect_spoofing_exception', false)) {
+                throw new SpoofingAttemptDetectedException("Potential spoofing detected. Message ID: " . $this->get("message_id") . " Senders: " . implode(", ", $potential_senders));
+            }
+        }
     }
 
 }
