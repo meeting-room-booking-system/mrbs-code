@@ -93,14 +93,8 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
       }
       // Do the upgrade for the sub-site
       upgrade_echo("<h2>" . htmlspecialchars(get_vocab('upgrading_site', $dir)) . "</h2>\n");
-      // Clear existing DSN parameters
-      unset($dbsys, $db_host, $db_database, $db_port);
-      // Switch to the sub-site config settings
-      include 'systemdefaults.inc.php';
-      include 'areadefaults.inc.php';
-      include 'config.inc.php';
-      include $site_config;
-      // Form the new DSN
+      // Switch to the sub-site config settings and get the new DSN
+      switch_config($site_config);
       $dsn = DBFactory::createDsn($dbsys, $db_host, $db_database, $db_port ?? null);
       // Try and get a handle for the site
       if (!isset($admin_handles[$dsn]))
@@ -113,12 +107,8 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
         $ok = $ok && do_upgrade($admin_handles[$dsn]);
       }
     }
-    // Clear existing DSN parameters
-    unset($dbsys, $db_host, $db_database, $db_port);
-    // Then switch to the main config settings
-    include 'systemdefaults.inc.php';
-    include 'areadefaults.inc.php';
-    include 'config.inc.php';
+    // Switch to the main config settings and get the new DSN
+    switch_config();
     $dsn = DBFactory::createDsn($dbsys, $db_host, $db_database, $db_port ?? null);
     // We only need this heading if we're in multi-site mode
     upgrade_echo("<h2>" . htmlspecialchars(get_vocab('upgrading_main_site')) . "</h2>\n");
@@ -139,12 +129,7 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
   // If we're in multisite mode then restore the config settings for the site we're supposed to be running
   if ($multisite)
   {
-    // Clear existing DSN parameters
-    unset($dbsys, $db_host, $db_database, $db_port);
-    include 'systemdefaults.inc.php';
-    include 'areadefaults.inc.php';
-    include 'config.inc.php';
-    include 'site_config.inc';
+    switch_config('site_config.inc');
   }
 
   if ($ok)
@@ -349,4 +334,18 @@ function db_get_userpass()
 
   // Print footer and exit
   print_footer(TRUE);
+}
+
+
+function switch_config(?string $new_config=null) : void
+{
+  // Clear existing DSN parameters
+  unset($dbsys, $db_host, $db_database, $db_port);
+  include 'systemdefaults.inc.php';
+  include 'areadefaults.inc.php';
+  include 'config.inc.php';
+  if (isset($new_config))
+  {
+    include $new_config;
+  }
 }
