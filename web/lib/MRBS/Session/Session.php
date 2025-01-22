@@ -81,7 +81,7 @@ abstract class Session
     }
     session_set_cookie_params($lifetime, $cookie_path);
 
-    $current_db_schema_version = db_schema_version();
+    $current_db_schema_version = db_schema_version(db());
     // The session table was created in Upgrade 56.   Before that we will ignore any errors
     // to do with DB sessions.
     $session_table_should_exist = ($current_db_schema_version >= 56);

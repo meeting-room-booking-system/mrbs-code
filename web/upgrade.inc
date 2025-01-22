@@ -18,8 +18,8 @@ if (!db()->table_exists(_tbl('entry')))
   fatal_error(get_vocab('fatal_no_tables'));
 }
 
-$current_db_schema_version = db_schema_version();
-$current_db_schema_version_local = db_schema_version_local();
+$current_db_schema_version = db_schema_version(db());
+$current_db_schema_version_local = db_schema_version_local(db());
 
 // If either of the database schema version numbers are out of date, then
 // upgrade the database - provided of course that the entry table exists.
@@ -94,21 +94,44 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
       // Do the upgrade for the sub-site
       upgrade_echo("<h2>" . htmlspecialchars(get_vocab('upgrading_site', $dir)) . "</h2>\n");
       // Switch to the sub-site config settings and get the new DSN
-      switch_config($site_config);
+      // Clear existing DSN parameters
+      unset($dbsys, $db_host, $db_database, $db_port);
+      include 'systemdefaults.inc.php';
+      include 'areadefaults.inc.php';
+      include 'config.inc.php';
+      include $site_config;
       $dsn = DBFactory::createDsn($dbsys, $db_host, $db_database, $db_port ?? null);
       // Try and get a handle for the site
       if (!isset($admin_handles[$dsn]))
       {
-        // TODO: Try and get a new connection using the username and password that we've got
-        $no_handles['sub'][] = $dir;
+        // Try and get a new connection using the username and password that we've got
+        $admin_handles[$dsn] = get_handle(
+          $dbsys,
+          $db_host,
+          $db_admin_username,
+          $db_admin_password,
+          $db_database,
+          false,
+          $db_port ?? null,
+          $db_options
+        );
       }
-      if (isset($admin_handles[$dsn]))
+      if ($admin_handles[$dsn])
       {
         $ok = $ok && do_upgrade($admin_handles[$dsn]);
       }
+      else
+      {
+        $no_handles['sub'][] = $dir;
+      }
+
     }
     // Switch to the main config settings and get the new DSN
-    switch_config();
+    // Clear existing DSN parameters
+    unset($dbsys, $db_host, $db_database, $db_port);
+    include 'systemdefaults.inc.php';
+    include 'areadefaults.inc.php';
+    include 'config.inc.php';
     $dsn = DBFactory::createDsn($dbsys, $db_host, $db_database, $db_port ?? null);
     // We only need this heading if we're in multi-site mode
     upgrade_echo("<h2>" . htmlspecialchars(get_vocab('upgrading_main_site')) . "</h2>\n");
@@ -118,18 +141,37 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
   // Try and get a handle for the site
   if (!isset($admin_handles[$dsn]))
   {
-    // TODO: Try and get a new connection using the username and password that we've got
-    $no_handles['main'] = false;
+    // Try and get a new connection using the username and password that we've got
+    $admin_handles[$dsn] = get_handle(
+      $dbsys,
+      $db_host,
+      $db_admin_username,
+      $db_admin_password,
+      $db_database,
+      false,
+      $db_port ?? null,
+      $db_options
+    );
   }
-  if (isset($admin_handles[$dsn]))
+  if ($admin_handles[$dsn])
   {
     $ok = $ok && do_upgrade($admin_handles[$dsn]);
   }
+  else
+  {
+    $no_handles['main'] = false;
+  }
+
 
   // If we're in multisite mode then restore the config settings for the site we're supposed to be running
   if ($multisite)
   {
-    switch_config('site_config.inc');
+    // Clear existing DSN parameters
+    unset($dbsys, $db_host, $db_database, $db_port);
+    include 'systemdefaults.inc.php';
+    include 'areadefaults.inc.php';
+    include 'config.inc.php';
+    include 'site_config.inc';
   }
 
   if ($ok)
@@ -270,14 +312,14 @@ function do_upgrade($upgrade_handle) : bool
 {
   $result = true;
 
-  if (!db()->table_exists(_tbl('entry')))
+  if (!$upgrade_handle->table_exists(_tbl('entry')))
   {
     upgrade_echo("<p>" . htmlspecialchars(get_vocab('no_tables_found')) . "</p>\n");
   }
   else
   {
-    $current_db_schema_version = db_schema_version();
-    $current_db_schema_version_local = db_schema_version_local();
+    $current_db_schema_version = db_schema_version($upgrade_handle);
+    $current_db_schema_version_local = db_schema_version_local($upgrade_handle);
 
     // Do any MRBS upgrades first
     if ($result && ($current_db_schema_version < DB::DB_SCHEMA_VERSION))
@@ -337,15 +379,35 @@ function db_get_userpass()
 }
 
 
-function switch_config(?string $new_config=null) : void
+function get_handle(
+  string $db_system,
+  string $db_host,
+  #[\SensitiveParameter]
+  string $db_username,
+  #[\SensitiveParameter]
+  string $db_password,
+  #[\SensitiveParameter]
+  string $db_name,
+  bool $persist=false,
+  ?int $db_port=null,
+  array $db_options=[]
+)
 {
-  // Clear existing DSN parameters
-  unset($dbsys, $db_host, $db_database, $db_port);
-  include 'systemdefaults.inc.php';
-  include 'areadefaults.inc.php';
-  include 'config.inc.php';
-  if (isset($new_config))
-  {
-    include $new_config;
+  // TODO: fix this
+  return false;
+  try {
+    return DBFactory::create(
+      $db_system,
+      $db_host,
+      $db_username,
+      $db_password,
+      $db_name,
+      $persist,
+      $db_port,
+      $db_options
+    );
+  }
+  catch (\Exception $exception) {
+    return false;
   }
 }
