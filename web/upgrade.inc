@@ -62,8 +62,17 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
 
   $ok = true;
 
+  // If we're using multisite then the various sites could be using different databases, or even
+  // different database systems (MySQL or PostgreSQL).  In that case we'll need different
+  // handles to access them, so we store the handles indexed by DSN (which will give enough detail
+  // to distinguish them).
+  $dsn = DBFactory::createDsn($dbsys, $db_host, $db_database, $db_port ?? null);
+  $admin_handles = [$dsn => $admin_handle];
+
   if ($multisite)
   {
+    // Record those sites that can't be upgraded because we can't get a handle
+    $no_handles = ['main' => [], 'sub' => []];
     // Upgrade each of the sub-sites
     $sites_dir = 'sites';
     // Use scandir() rather than the DirectoryIterator in order to ensure that
@@ -82,28 +91,56 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
       {
         continue;
       }
-      // Switch to the sub-site config settings and do the upgrade for the sub-site
+      // Do the upgrade for the sub-site
       upgrade_echo("<h2>" . htmlspecialchars(get_vocab('upgrading_site', $dir)) . "</h2>\n");
+      // Clear existing DSN parameters
+      unset($dbsys, $db_host, $db_database, $db_port);
+      // Switch to the sub-site config settings
       include 'systemdefaults.inc.php';
       include 'areadefaults.inc.php';
       include 'config.inc.php';
       include $site_config;
-      $ok = $ok && do_upgrade($admin_handle);
+      // Form the new DSN
+      $dsn = DBFactory::createDsn($dbsys, $db_host, $db_database, $db_port ?? null);
+      // Try and get a handle for the site
+      if (!isset($admin_handles[$dsn]))
+      {
+        // TODO: Try and get a new connection using the username and password that we've got
+        $no_handles['sub'][] = $dir;
+      }
+      if (isset($admin_handles[$dsn]))
+      {
+        $ok = $ok && do_upgrade($admin_handles[$dsn]);
+      }
     }
+    // Clear existing DSN parameters
+    unset($dbsys, $db_host, $db_database, $db_port);
     // Then switch to the main config settings
     include 'systemdefaults.inc.php';
     include 'areadefaults.inc.php';
     include 'config.inc.php';
+    $dsn = DBFactory::createDsn($dbsys, $db_host, $db_database, $db_port ?? null);
     // We only need this heading if we're in multi-site mode
     upgrade_echo("<h2>" . htmlspecialchars(get_vocab('upgrading_main_site')) . "</h2>\n");
   }
 
   // Upgrade the main site
-  $ok = $ok && do_upgrade($admin_handle);
+  // Try and get a handle for the site
+  if (!isset($admin_handles[$dsn]))
+  {
+    // TODO: Try and get a new connection using the username and password that we've got
+    $no_handles['main'] = false;
+  }
+  if (isset($admin_handles[$dsn]))
+  {
+    $ok = $ok && do_upgrade($admin_handles[$dsn]);
+  }
 
   // If we're in multisite mode then restore the config settings for the site we're supposed to be running
   if ($multisite)
   {
+    // Clear existing DSN parameters
+    unset($dbsys, $db_host, $db_database, $db_port);
     include 'systemdefaults.inc.php';
     include 'areadefaults.inc.php';
     include 'config.inc.php';
@@ -115,8 +152,33 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
     echo '<p>' . get_vocab('upgrade_completed') . "</p>\n";
   }
 
-  // close the database connection that has admin rights
-  unset($admin_handle);
+  if ($multisite)
+  {
+    if ($no_handles['main'])
+    {
+      echo '<p>' . get_vocab('no_handles_main_site') . "</p>\n";
+    }
+    if (!empty($no_handles['sub']))
+    {
+      echo '<p>' . get_vocab('no_handles_sub_sites') . "</p>\n";
+      echo '<ul>' . "\n";
+      foreach ($no_handles['sub'] as $sub)
+      {
+        echo '<li>' . htmlspecialchars($sub) . '</li>' . "\n";
+      }
+      echo '</ul>' . "\n";
+    }
+    if ($no_handles['main'] || !empty($no_handles['sub']))
+    {
+      echo '<p>' . get_vocab('retry_from_failing') . "</p>\n";
+    }
+  }
+
+  // Close the database connections that have admin rights
+  foreach ($admin_handles as $admin_handle)
+  {
+    unset($admin_handle);
+  }
 
   echo '<a href="' . htmlspecialchars(multisite('index.php')) . '">' . get_vocab('returncal') . '</a>.';
 
@@ -219,7 +281,7 @@ function upgrade_database(bool $local, int $from, int $to, DB $upgrade_handle) :
 
 
 // Upgrades the database tables defined by the current config context
-function do_upgrade($upgrade_handle)
+function do_upgrade($upgrade_handle) : bool
 {
   $result = true;
 
