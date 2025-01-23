@@ -12,7 +12,7 @@ use MRBS\Form\Form;
 // are up-to-date, and if not performs the necessary upgrades.
 
 
-function upgrade_echo($message)
+function upgrade_echo(string $message) : void
 {
   echo $message;
   // Flush the message, so that there's some progress information
