@@ -349,6 +349,7 @@ $vocab["contact_admin"]            = "If you are not the MRBS administrator plea
 $vocab["upgrading_site"]           = "Upgrading site '%s'";  // site name
 $vocab["upgrading_main_site"]      = "Upgrading the main site";
 $vocab["no_tables_found"]          = "No tables found";
+$vocab["mrbs_upgrade_needed"]      = "A later version of MRBS is required to run against this version of the database tables.";
 $vocab["upgrade_to_version"]       = "Upgrading to database version";
 $vocab["upgrade_to_local_version"] = "Upgrading to database local version";
 $vocab["upgrade_completed"]        = "Database upgrade completed.";

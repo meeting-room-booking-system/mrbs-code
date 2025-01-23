@@ -18,8 +18,17 @@ if (!db()->table_exists(_tbl('entry')))
   fatal_error(get_vocab('fatal_no_tables'));
 }
 
+// Check the database schema versions
 $current_db_schema_version = db_schema_version(db());
 $current_db_schema_version_local = db_schema_version_local(db());
+
+// Check whether the database schema versions are higher than expected
+// by this version of MRBS.  Database downgrades are not supported.
+if (($current_db_schema_version > DB::DB_SCHEMA_VERSION) ||
+    ($current_db_schema_version_local > DB::DB_SCHEMA_VERSION_LOCAL))
+{
+  fatal_error(get_vocab('mrbs_upgrade_needed'));
+}
 
 // If either of the database schema version numbers are out of date, then
 // upgrade the database - provided of course that the entry table exists.
