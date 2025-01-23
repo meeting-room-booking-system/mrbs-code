@@ -66,7 +66,7 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
   // different database systems (MySQL or PostgreSQL).  In that case we'll need different
   // handles to access them, so we store the handles indexed by DSN (which will give enough detail
   // to distinguish them).
-  $dsn = DBFactory::createDsn($dbsys, $db_host, $db_database, $db_port ?? null);
+  $dsn = DBFactory::createDsn($dbsys, $db_host, $db_database, $db_port);
   $admin_handles = [$dsn => $admin_handle];
 
   if ($multisite)
@@ -93,42 +93,29 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
       }
       // Do the upgrade for the sub-site
       upgrade_echo("<h2>" . htmlspecialchars(get_vocab('upgrading_site', $dir)) . "</h2>\n");
-      // Switch to the sub-site config settings and get the new DSN
       // Clear existing DSN parameters
       unset($dbsys, $db_host, $db_database, $db_port);
+      // Switch to the sub-site config settings
       include 'systemdefaults.inc.php';
       include 'areadefaults.inc.php';
       include 'config.inc.php';
       include $site_config;
+      // Form the new DSN
       $dsn = DBFactory::createDsn($dbsys, $db_host, $db_database, $db_port ?? null);
       // Try and get a handle for the site
       if (!isset($admin_handles[$dsn]))
       {
-        // Try and get a new connection using the username and password that we've got
-        $admin_handles[$dsn] = get_handle(
-          $dbsys,
-          $db_host,
-          $db_admin_username,
-          $db_admin_password,
-          $db_database,
-          false,
-          $db_port ?? null,
-          $db_options
-        );
+        // TODO: Try and get a new connection using the username and password that we've got
+        $no_handles['sub'][] = $dir;
       }
-      if ($admin_handles[$dsn])
+      if (isset($admin_handles[$dsn]))
       {
         $ok = $ok && do_upgrade($admin_handles[$dsn]);
       }
-      else
-      {
-        $no_handles['sub'][] = $dir;
-      }
-
     }
-    // Switch to the main config settings and get the new DSN
     // Clear existing DSN parameters
     unset($dbsys, $db_host, $db_database, $db_port);
+    // Then switch to the main config settings
     include 'systemdefaults.inc.php';
     include 'areadefaults.inc.php';
     include 'config.inc.php';
@@ -141,27 +128,13 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
   // Try and get a handle for the site
   if (!isset($admin_handles[$dsn]))
   {
-    // Try and get a new connection using the username and password that we've got
-    $admin_handles[$dsn] = get_handle(
-      $dbsys,
-      $db_host,
-      $db_admin_username,
-      $db_admin_password,
-      $db_database,
-      false,
-      $db_port ?? null,
-      $db_options
-    );
+    // TODO: Try and get a new connection using the username and password that we've got
+    $no_handles['main'] = false;
   }
-  if ($admin_handles[$dsn])
+  if (isset($admin_handles[$dsn]))
   {
     $ok = $ok && do_upgrade($admin_handles[$dsn]);
   }
-  else
-  {
-    $no_handles['main'] = false;
-  }
-
 
   // If we're in multisite mode then restore the config settings for the site we're supposed to be running
   if ($multisite)
@@ -179,27 +152,7 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
     echo '<p>' . get_vocab('upgrade_completed') . "</p>\n";
   }
 
-  if ($multisite)
-  {
-    if ($no_handles['main'])
-    {
-      echo '<p>' . get_vocab('no_handles_main_site') . "</p>\n";
-    }
-    if (!empty($no_handles['sub']))
-    {
-      echo '<p>' . get_vocab('no_handles_sub_sites') . "</p>\n";
-      echo '<ul>' . "\n";
-      foreach ($no_handles['sub'] as $sub)
-      {
-        echo '<li>' . htmlspecialchars($sub) . '</li>' . "\n";
-      }
-      echo '</ul>' . "\n";
-    }
-    if ($no_handles['main'] || !empty($no_handles['sub']))
-    {
-      echo '<p>' . get_vocab('retry_from_failing') . "</p>\n";
-    }
-  }
+  // TODO: Report on $no_handles
 
   // Close the database connections that have admin rights
   foreach ($admin_handles as $admin_handle)
@@ -376,38 +329,4 @@ function db_get_userpass()
 
   // Print footer and exit
   print_footer(TRUE);
-}
-
-
-function get_handle(
-  string $db_system,
-  string $db_host,
-  #[\SensitiveParameter]
-  string $db_username,
-  #[\SensitiveParameter]
-  string $db_password,
-  #[\SensitiveParameter]
-  string $db_name,
-  bool $persist=false,
-  ?int $db_port=null,
-  array $db_options=[]
-)
-{
-  // TODO: fix this
-  return false;
-  try {
-    return DBFactory::create(
-      $db_system,
-      $db_host,
-      $db_username,
-      $db_password,
-      $db_name,
-      $persist,
-      $db_port,
-      $db_options
-    );
-  }
-  catch (\Exception $exception) {
-    return false;
-  }
 }
