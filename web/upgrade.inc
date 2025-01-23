@@ -11,6 +11,173 @@ use MRBS\Form\Form;
 // This file checks to see whether the database schema versions (both global and local)
 // are up-to-date, and if not performs the necessary upgrades.
 
+
+function upgrade_echo($message)
+{
+  echo $message;
+  // Flush the message, so that there's some progress information
+  // output to the browser even when the upgrade is taking a while
+  if (ob_get_length() !== false)
+  {
+    ob_flush();
+  }
+  flush();
+}
+
+
+// Upgrade between database schema versions.
+// Returns FALSE on error, TRUE is successful
+function upgrade_database(bool $local, int $from, int $to, DB $upgrade_handle) : bool
+{
+  // $local is a boolean specifying whether the upgrades are global MRBS ones ($local === false)
+  // or local upgrades ($local === true);
+  // $upgrade_handle is the database handle to use for the upgrade.   It will typically
+  // have admin rights (eg CREATE and ALTER)
+  global $dbsys;
+
+  $sql_type = $dbsys;
+  if ($sql_type == 'mysqli')
+  {
+    $sql_type = 'mysql';
+  }
+
+  for ($ver = ($from+1); $ver <= $to; $ver++)
+  {
+    upgrade_echo('<p>' .
+      (($local) ? get_vocab('upgrade_to_local_version') : get_vocab('upgrade_to_version')) .
+      ": $ver");
+
+    if ($local)
+    {
+      $filename = "upgrade/local/$ver/$sql_type.sql";
+      $php_filename = "upgrade/local/$ver/post.inc";
+    }
+    else
+    {
+      $filename = "upgrade/$ver/$sql_type.sql";
+      $php_filename = "upgrade/$ver/post.inc";
+    }
+    $handle = fopen($filename, 'r');
+    if (!$handle)
+    {
+      // No need to localise, should never happen!
+      upgrade_echo("Fatal error: Failed to open '$filename' for reading.\n");
+      return false;
+    }
+    $file_size = filesize($filename);
+    $sql = (!empty($file_size)) ? fread($handle, filesize($filename)) : '';
+    fclose($handle);
+
+    // PostgreSQL databases can have multiple schemas and so need a qualified
+    // table name when referring to the table name.  However the table prefix is also
+    // used to make, for example, constraint, index and trigger names unique.  These
+    // are unique within the schema and do not need to be schema-qualified.  Also, when
+    // the tables were created from tables.pg.sql they would just have had "mrbs_"
+    // replaced by the unqualified table prefix.
+    $sql = str_replace('%DB_TBL_PREFIX%', _tbl('', true), $sql);
+    $sql = str_replace('%DB_TBL_PREFIX_SHORT%', _tbl('', false), $sql);
+
+    foreach (explode(";", $sql) as $query)
+    {
+      // Skip any empty query (so that last semi-colon doesn't run
+      // an empty query)
+      if (preg_match("/\S/", $query))
+      {
+        $res = $upgrade_handle->query($query);
+      }
+    }
+
+    upgrade_echo('<br>' . get_vocab('ok'));
+    if ($ver > 1)
+    {
+      $variable_name = ($local) ? "local_db_version" : "db_version";
+      $upgrade_handle->command("UPDATE " . _tbl('variables') . " SET variable_content = ? ".
+        "WHERE variable_name = ?", array($ver, $variable_name));
+    }
+    upgrade_echo("</p>\n");
+
+    // Now execute the PHP file if there is one
+    if (is_readable($php_filename))
+    {
+      include($php_filename);
+    }
+  }
+  return true;
+}
+
+
+// Upgrades the database tables defined by the current config context
+function do_upgrade($upgrade_handle) : bool
+{
+  $result = true;
+
+  if (!$upgrade_handle->table_exists(_tbl('entry')))
+  {
+    upgrade_echo("<p>" . htmlspecialchars(get_vocab('no_tables_found')) . "</p>\n");
+  }
+  else
+  {
+    $current_db_schema_version = db_schema_version($upgrade_handle);
+    $current_db_schema_version_local = db_schema_version_local($upgrade_handle);
+
+    // Do any MRBS upgrades first
+    if ($result && ($current_db_schema_version < DB::DB_SCHEMA_VERSION))
+    {
+      $result = $result && upgrade_database(false, $current_db_schema_version, DB::DB_SCHEMA_VERSION, $upgrade_handle);
+    }
+    // Then any local upgrades
+    if ($result && ($current_db_schema_version_local < DB::DB_SCHEMA_VERSION_LOCAL))
+    {
+      $result = $result && upgrade_database(true, $current_db_schema_version_local, DB::DB_SCHEMA_VERSION_LOCAL, $upgrade_handle);
+    }
+  }
+
+  return $result;
+}
+
+
+// Get a database username and password
+function db_get_userpass()
+{
+  print_header();
+
+  $form = new Form(Form::METHOD_POST);
+  $form->setAttributes(array('class'  => 'standard',
+    'id'     => 'db_logon',
+    'action' => multisite(this_page())));
+
+  $fieldset = new ElementFieldset();
+  $fieldset->addLegend(get_vocab('database_login'));
+
+  // The username field
+  $field = new FieldInputText();
+  $field->setLabel('Database username')
+    ->setControlAttributes(array('id'       => 'form_username',
+      'name'     => 'form_username',
+      'required' => true));
+  $fieldset->addElement($field);
+
+  // The password field
+  $field = new FieldInputPassword();
+  $field->setLabel('Database password')
+    ->setControlAttributes(array('id'   => 'form_password',
+      'name' => 'form_password'));
+  $fieldset->addElement($field);
+
+  // The submit button
+  $field = new FieldInputSubmit();
+  $field->setControlAttributes(array('value' => get_vocab('login')));
+  $fieldset->addElement($field);
+
+  $form->addElement($fieldset);
+
+  $form->render();
+
+  // Print footer and exit
+  print_footer(TRUE);
+}
+
+
 // Sanity check:  check that we can access the MRBS tables.  If we can't, it's
 // either because they don't exist or we don't have permission.
 if (!db()->table_exists(_tbl('entry')))
@@ -70,6 +237,8 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
   Form::checkToken();
 
   $ok = true;
+
+
 
   // If we're using multisite then the various sites could be using different databases, or even
   // different database systems (MySQL or PostgreSQL).  In that case we'll need different
@@ -172,170 +341,4 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
   echo '<a href="' . htmlspecialchars(multisite('index.php')) . '">' . get_vocab('returncal') . '</a>.';
 
   print_footer(true);
-}
-
-
-function upgrade_echo($message)
-{
-  echo $message;
-  // Flush the message, so that there's some progress information
-  // output to the browser even when the upgrade is taking a while
-  if (ob_get_length() !== false)
-  {
-    ob_flush();
-  }
-  flush();
-}
-
-
-// Upgrade between database schema versions.
-// Returns FALSE on error, TRUE is successful
-function upgrade_database(bool $local, int $from, int $to, DB $upgrade_handle) : bool
-{
-  // $local is a boolean specifying whether the upgrades are global MRBS ones ($local === false)
-  // or local upgrades ($local === true);
-  // $upgrade_handle is the database handle to use for the upgrade.   It will typically
-  // have admin rights (eg CREATE and ALTER)
-  global $dbsys;
-
-  $sql_type = $dbsys;
-  if ($sql_type == 'mysqli')
-  {
-    $sql_type = 'mysql';
-  }
-
-  for ($ver = ($from+1); $ver <= $to; $ver++)
-  {
-    upgrade_echo('<p>' .
-                 (($local) ? get_vocab('upgrade_to_local_version') : get_vocab('upgrade_to_version')) .
-                 ": $ver");
-
-    if ($local)
-    {
-      $filename = "upgrade/local/$ver/$sql_type.sql";
-      $php_filename = "upgrade/local/$ver/post.inc";
-    }
-    else
-    {
-      $filename = "upgrade/$ver/$sql_type.sql";
-      $php_filename = "upgrade/$ver/post.inc";
-    }
-    $handle = fopen($filename, 'r');
-    if (!$handle)
-    {
-      // No need to localise, should never happen!
-      upgrade_echo("Fatal error: Failed to open '$filename' for reading.\n");
-      return false;
-    }
-    $file_size = filesize($filename);
-    $sql = (!empty($file_size)) ? fread($handle, filesize($filename)) : '';
-    fclose($handle);
-
-    // PostgreSQL databases can have multiple schemas and so need a qualified
-    // table name when referring to the table name.  However the table prefix is also
-    // used to make, for example, constraint, index and trigger names unique.  These
-    // are unique within the schema and do not need to be schema-qualified.  Also, when
-    // the tables were created from tables.pg.sql they would just have had "mrbs_"
-    // replaced by the unqualified table prefix.
-    $sql = str_replace('%DB_TBL_PREFIX%', _tbl('', true), $sql);
-    $sql = str_replace('%DB_TBL_PREFIX_SHORT%', _tbl('', false), $sql);
-
-    foreach (explode(";", $sql) as $query)
-    {
-      // Skip any empty query (so that last semi-colon doesn't run
-      // an empty query)
-      if (preg_match("/\S/", $query))
-      {
-        $res = $upgrade_handle->query($query);
-      }
-    }
-
-    upgrade_echo('<br>' . get_vocab('ok'));
-    if ($ver > 1)
-    {
-      $variable_name = ($local) ? "local_db_version" : "db_version";
-      $upgrade_handle->command("UPDATE " . _tbl('variables') . " SET variable_content = ? ".
-                               "WHERE variable_name = ?", array($ver, $variable_name));
-    }
-    upgrade_echo("</p>\n");
-
-    // Now execute the PHP file if there is one
-    if (is_readable($php_filename))
-    {
-      include($php_filename);
-    }
-  }
-  return true;
-}
-
-
-// Upgrades the database tables defined by the current config context
-function do_upgrade($upgrade_handle) : bool
-{
-  $result = true;
-
-  if (!$upgrade_handle->table_exists(_tbl('entry')))
-  {
-    upgrade_echo("<p>" . htmlspecialchars(get_vocab('no_tables_found')) . "</p>\n");
-  }
-  else
-  {
-    $current_db_schema_version = db_schema_version($upgrade_handle);
-    $current_db_schema_version_local = db_schema_version_local($upgrade_handle);
-
-    // Do any MRBS upgrades first
-    if ($result && ($current_db_schema_version < DB::DB_SCHEMA_VERSION))
-    {
-      $result = $result && upgrade_database(false, $current_db_schema_version, DB::DB_SCHEMA_VERSION, $upgrade_handle);
-    }
-    // Then any local upgrades
-    if ($result && ($current_db_schema_version_local < DB::DB_SCHEMA_VERSION_LOCAL))
-    {
-      $result = $result && upgrade_database(true, $current_db_schema_version_local, DB::DB_SCHEMA_VERSION_LOCAL, $upgrade_handle);
-    }
-  }
-
-  return $result;
-}
-
-
-// Get a database username and password
-function db_get_userpass()
-{
-  print_header();
-
-  $form = new Form(Form::METHOD_POST);
-  $form->setAttributes(array('class'  => 'standard',
-                             'id'     => 'db_logon',
-                             'action' => multisite(this_page())));
-
-  $fieldset = new ElementFieldset();
-  $fieldset->addLegend(get_vocab('database_login'));
-
-  // The username field
-  $field = new FieldInputText();
-  $field->setLabel('Database username')
-        ->setControlAttributes(array('id'       => 'form_username',
-                                     'name'     => 'form_username',
-                                     'required' => true));
-  $fieldset->addElement($field);
-
-  // The password field
-  $field = new FieldInputPassword();
-  $field->setLabel('Database password')
-        ->setControlAttributes(array('id'   => 'form_password',
-                                     'name' => 'form_password'));
-  $fieldset->addElement($field);
-
-  // The submit button
-  $field = new FieldInputSubmit();
-  $field->setControlAttributes(array('value' => get_vocab('login')));
-  $fieldset->addElement($field);
-
-  $form->addElement($fieldset);
-
-  $form->render();
-
-  // Print footer and exit
-  print_footer(TRUE);
 }
