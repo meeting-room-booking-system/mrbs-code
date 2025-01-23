@@ -37,51 +37,54 @@ else
 'use strict';
 
 <?php
-// Actions to take once the datatable's initialisation is complete.
-// Remember that some of the table initialisation operations, eg loading of the
-// language file, are asynchronous.
-?>
-var initCompleteActions = function initCompleteActions(dataTable) {
-  <?php // Make the table visible ?>
-  $('.datatable_container').css('visibility', 'visible');
-  <?php // Need to adjust column sizing after the table is made visible ?>
-  dataTable.columns.adjust();
-}
-
-<?php
 // Get the types, which are assumed to be in a data-type in a <span> in the <th>
 // of the table
 ?>
-var getTypes = function getTypes(table) {
-    var type,
-        types = {},
-        result = [];
+var getTypes = function getTypes($table) {
+  var types = {},
+      result = [];
 
-    table.find('thead tr:first th').each(function(i) {
-       var type = $(this).find('span').data('type');
+  $table.find('thead tr:first th').each(function(i) {
+    var $span = $(this).find('span'),
+        type = $span.data('type');
 
-       if (type)
-       {
-         if (types[type] === undefined)
-         {
-           types[type] = [];
-         }
-         types[type].push(i);
-       }
-      });
-
-    for (type in types)
-    {
-      if (types.hasOwnProperty(type))
-      {
-        result.push({type: type,
-                     targets: types[type]});
+    if (type) {
+      if (types[type] === undefined) {
+        types[type] = [];
       }
+      types[type].push(i);
     }
+  });
 
-    return result;
-  };
+  for (var type in types) {
+    if (types.hasOwnProperty(type)) {
+      result.push({
+        type: type,
+        targets: types[type]
+      });
+    }
+  }
 
+  return result;
+};
+
+<?php
+// Actions to take once the datatable's initialisation is complete.
+?>
+function initCompleteActions(settings, json) {
+  <?php // Make the table visible ?>
+  $('.datatable_container').css('visibility', 'visible');
+  <?php // Need to adjust column sizing after the table is made visible ?>
+  var dt = this;
+  if (dt && dt.api) {
+    var api = dt.api();
+    if (api && typeof api.columns === 'function') {
+      setTimeout(function() {
+        api.columns.adjust();
+      }, 100);
+    }
+  }
+}
 
 <?php
 // Extract email addresses from mailto: links in the columns defined by columnSelector and
@@ -135,77 +138,12 @@ var extractEmailAddresses = function(dt, columnSelector, sort) {
     });
 };
 
-
-var customizeExcel = function(xlsx) {
-  <?php // See https://datatables.net/forums/discussion/45277/modify-page-orientation-in-xlxs-export ?>
-  var sheet = xlsx.xl.worksheets['sheet1.xml'];
-  var pageSetup = sheet.createElement('pageSetup');
-  sheet.childNodes['0'].appendChild(pageSetup);
-  var settings = sheet.getElementsByTagName('pageSetup')[0];
-  settings.setAttribute("r:id", "rId1"); <?php // Relationship ID - do not change ?>
-  settings.setAttribute('orientation', '<?php echo $excel_default_orientation ?>');
-  settings.setAttribute('paperSize', '<?php echo $excel_paper_size ?>');
-};
-
 <?php
-// Turn the table with id 'id' into a DataTable, using specificOptions
-// which are merged with the default options.  If the buttons property is
-// set in specificOptions then the first element in the array should be the
-// colvis button and any other elements are extra buttons.
-//
-// fixedColumnsOptions is an optional object that gets passed directly to the
-// DataTables FixedColumns constructor
-//
-// If you want to do anything else as part of fnInitComplete then you'll need
-// to define fnInitComplete in specificOptions
+// Set up the configuration options for the DataTables constructor
 ?>
-
 function makeDataTable(id, specificOptions, fixedColumnsOptions)
 {
-  var i,
-      defaultOptions,
-      mergedOptions,
-      colVisIncludeCols,
-      nCols,
-      table,
-      dataTable,
-      fixedColumns;
-
-  var buttonCommon = {
-      exportOptions: {
-        columns: ':visible',
-        format: {
-          body: function (data, row, column, node) {
-            var div = $('<div>' + data + '</div>');
-            <?php
-            // Remove any elements used for sorting, which are all <span>s that don't
-            // have a class of 'normal' (which the CSS makes visible). Note that we cannot
-            // just remove :hidden elements because that would also remove everything that's
-            // not on the current page and visible on screen.
-            // (We can get rid of this step when we move to using orthogonal data.)
-            ?>
-            div.find('span:not(.normal)').remove();
-            <?php // Apply the default export data stripping ?>
-            var result = $.fn.dataTable.Buttons.stripData(div.html());
-            <?php
-            // If that is the empty string then it may be that the data is actually a form
-            // and the text we want is the text in the submit button.
-            ?>
-            if (result === '')
-            {
-              var value = div.find('input[type="submit"]').attr('value');
-              if (value !== undefined)
-              {
-                result = value;
-              }
-            }
-            return result;
-          }
-        }
-      }
-    };
-
-  table = $(id);
+  var table = $(id);
   if (table.length === 0)
   {
     return false;
@@ -229,11 +167,13 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   table.attr('width', '100%');
 
   <?php // Set up the default options ?>
-  defaultOptions = {
-    buttons: [{extend: 'colvis',
-               text: '<?php echo get_js_vocab("show_hide_columns") ?>'}],
+  var defaultOptions = {
+    buttons: [{
+      extend: 'colvis',
+      text: '<?php echo get_js_vocab("show_hide_columns") ?>'
+    }],
     deferRender: true,
-    lengthMenu: [ [10, 25, 50, 100, -1], [10, 25, 50, 100, '<?php echo get_js_vocab('dt_all') ?>'] ],
+    lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, '<?php echo get_js_vocab('dt_all') ?>']],
     paging: true,
     pageLength: 25,
     pagingType: 'full_numbers',
@@ -243,7 +183,14 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     stateDuration: <?php echo $state_duration ?? 0 ?>,
     dom: 'B<"clear">lfrtip',
     scrollX: '100%',
-    colReorder: {}
+    colReorder: {},
+    drawCallback: function(settings) {
+      var api = this.api();
+      if (api && typeof api.columns === 'function') {
+        api.columns.adjust();
+      }
+      $('.datatable_container').css('visibility', 'visible');
+    }
   };
 
   <?php
@@ -265,20 +212,145 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   if (args.page !== 'pending')
   {
     defaultOptions.buttons = defaultOptions.buttons.concat(
-      $.extend(true, {}, buttonCommon, {
+      $.extend(true, {}, {
+        exportOptions: {
+          columns: ':visible',
+          format: {
+            body: function (data, row, column, node) {
+              var div = $('<div>' + data + '</div>');
+              <?php
+              // Remove any elements used for sorting, which are all <span>s that don't
+              // have a class of 'normal' (which the CSS makes visible). Note that we cannot
+              // just remove :hidden elements because that would also remove everything that's
+              // not on the current page and visible on screen.
+              // (We can get rid of this step when we move to using orthogonal data.)
+              ?>
+              div.find('span:not(.normal)').remove();
+              <?php // Apply the default export data stripping ?>
+              var result = $.fn.dataTable.Buttons.stripData(div.html());
+              <?php
+              // If that is the empty string then it may be that the data is actually a form
+              // and the text we want is the text in the submit button.
+              ?>
+              if (result === '')
+              {
+                var value = div.find('input[type="submit"]').attr('value');
+                if (value !== undefined)
+                {
+                  result = value;
+                }
+              }
+              return result;
+            }
+          }
+        }
+      }, {
         extend: 'copy',
         text: '<?php echo get_js_vocab('copy') ?>'
       }),
-      $.extend(true, {}, buttonCommon, {
+      $.extend(true, {}, {
+        exportOptions: {
+          columns: ':visible',
+          format: {
+            body: function (data, row, column, node) {
+              var div = $('<div>' + data + '</div>');
+              <?php
+              // Remove any elements used for sorting, which are all <span>s that don't
+              // have a class of 'normal' (which the CSS makes visible). Note that we cannot
+              // just remove :hidden elements because that would also remove everything that's
+              // not on the current page and visible on screen.
+              // (We can get rid of this step when we move to using orthogonal data.)
+              ?>
+              div.find('span:not(.normal)').remove();
+              <?php // Apply the default export data stripping ?>
+              var result = $.fn.dataTable.Buttons.stripData(div.html());
+              <?php
+              // If that is the empty string then it may be that the data is actually a form
+              // and the text we want is the text in the submit button.
+              ?>
+              if (result === '')
+              {
+                var value = div.find('input[type="submit"]').attr('value');
+                if (value !== undefined)
+                {
+                  result = value;
+                }
+              }
+              return result;
+            }
+          }
+        },
         extend: 'csv',
         text: '<?php echo get_js_vocab('csv') ?>'
       }),
-      $.extend(true, {}, buttonCommon, {
+      $.extend(true, {}, {
+        exportOptions: {
+          columns: ':visible',
+          format: {
+            body: function (data, row, column, node) {
+              var div = $('<div>' + data + '</div>');
+              <?php
+              // Remove any elements used for sorting, which are all <span>s that don't
+              // have a class of 'normal' (which the CSS makes visible). Note that we cannot
+              // just remove :hidden elements because that would also remove everything that's
+              // not on the current page and visible on screen.
+              // (We can get rid of this step when we move to using orthogonal data.)
+              ?>
+              div.find('span:not(.normal)').remove();
+              <?php // Apply the default export data stripping ?>
+              var result = $.fn.dataTable.Buttons.stripData(div.html());
+              <?php
+              // If that is the empty string then it may be that the data is actually a form
+              // and the text we want is the text in the submit button.
+              ?>
+              if (result === '')
+              {
+                var value = div.find('input[type="submit"]').attr('value');
+                if (value !== undefined)
+                {
+                  result = value;
+                }
+              }
+              return result;
+            }
+          }
+        },
         extend: 'excel',
         text: '<?php echo get_js_vocab('excel') ?>',
         customize: customizeExcel
       }),
-      $.extend(true, {}, buttonCommon, {
+      $.extend(true, {}, {
+        exportOptions: {
+          columns: ':visible',
+          format: {
+            body: function (data, row, column, node) {
+              var div = $('<div>' + data + '</div>');
+              <?php
+              // Remove any elements used for sorting, which are all <span>s that don't
+              // have a class of 'normal' (which the CSS makes visible). Note that we cannot
+              // just remove :hidden elements because that would also remove everything that's
+              // not on the current page and visible on screen.
+              // (We can get rid of this step when we move to using orthogonal data.)
+              ?>
+              div.find('span:not(.normal)').remove();
+              <?php // Apply the default export data stripping ?>
+              var result = $.fn.dataTable.Buttons.stripData(div.html());
+              <?php
+              // If that is the empty string then it may be that the data is actually a form
+              // and the text we want is the text in the submit button.
+              ?>
+              if (result === '')
+              {
+                var value = div.find('input[type="submit"]').attr('value');
+                if (value !== undefined)
+                {
+                  result = value;
+                }
+              }
+              return result;
+            }
+          }
+        },
         <?php
         // Use 'pdfHtml5' rather than 'pdf'.  See
         // https://github.com/meeting-room-booking-system/mrbs-code/issues/3512
@@ -288,23 +360,43 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
         orientation: '<?php echo $pdf_default_orientation ?>',
         pageSize: '<?php echo $pdf_default_paper ?>'
       }),
-      $.extend(true, {}, buttonCommon, {
+      $.extend(true, {}, {
+        exportOptions: {
+          columns: ':visible',
+          format: {
+            body: function (data, row, column, node) {
+              var div = $('<div>' + data + '</div>');
+              <?php
+              // Remove any elements used for sorting, which are all <span>s that don't
+              // have a class of 'normal' (which the CSS makes visible). Note that we cannot
+              // just remove :hidden elements because that would also remove everything that's
+              // not on the current page and visible on screen.
+              // (We can get rid of this step when we move to using orthogonal data.)
+              ?>
+              div.find('span:not(.normal)').remove();
+              <?php // Apply the default export data stripping ?>
+              var result = $.fn.dataTable.Buttons.stripData(div.html());
+              <?php
+              // If that is the empty string then it may be that the data is actually a form
+              // and the text we want is the text in the submit button.
+              ?>
+              if (result === '')
+              {
+                var value = div.find('input[type="submit"]').attr('value');
+                if (value !== undefined)
+                {
+                  result = value;
+                }
+              }
+              return result;
+            }
+          }
+        },
         extend: 'print',
         text: '<?php echo get_js_vocab('print') ?>'
       })
     );
   }
-
-  <?php
-  // Set the language file to be used
-  if ($lang_file = get_datatable_lang_path())
-  {
-    ?>
-    defaultOptions.language = {url: '<?php echo "./$lang_file" ?>'}
-    <?php
-  }
-  ?>
-
 
   <?php
   // Construct the set of columns to be included in the column visibility
@@ -320,8 +412,8 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   }
   else
   {
-    colVisIncludeCols = [];
-    nCols = table.find('tr:first-child th').length;
+    var colVisIncludeCols = [];
+    var nCols = table.find('tr:first-child th').length;
     for (i=0; i<nCols; i++)
     {
       if (fixedColumnsOptions)
@@ -340,72 +432,47 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     defaultOptions.buttons[0].columns = colVisIncludeCols;
   }
 
-  defaultOptions.initComplete = initCompleteActions;
-
   <?php
   // Merge the specific options with the default options.  We do a deep
   // merge.
   ?>
-  mergedOptions = $.extend(true, {}, defaultOptions, specificOptions);
-  // Merge the initComplete properties, if any of them are set.  This has to be
-  // done separately as they are functions.
-  if (defaultOptions.initComplete || specificOptions.initComplete) {
-    mergedOptions.initComplete = function () {
-      if (defaultOptions.initComplete) {
-        defaultOptions.initComplete.call(this, dataTable);
-      }
-      if (specificOptions.initComplete) {
-        specificOptions.initComplete.call(this);
-      }
-    };
-  }
+  var mergedOptions = $.extend(true, {}, defaultOptions, specificOptions);
 
-  <?php // Localise the sorting.  See https://datatables.net/blog/2017-02-28 ?>
+  <?php
+  // Localise the sorting.  See https://datatables.net/blog/2017-02-28 ?>
   $.fn.dataTable.ext.order.intl($('body').data('langPrefs'));
 
-  dataTable = table.DataTable(mergedOptions);
+  var dataTable = table.DataTable(mergedOptions);
 
   if (fixedColumnsOptions)
   {
-    fixedColumns = new $.fn.dataTable.FixedColumns(dataTable, fixedColumnsOptions);
+    new $.fn.dataTable.FixedColumns(dataTable, fixedColumnsOptions);
   }
 
   <?php
-  // If we're using an Ajax data source then don't offer column reordering.
-  // This is a problem at the moment in DataTables because if you reorder a column
-  // DataTables doesn't know that the Ajax data is still in the original order.
-  // May be fixed in a future release of DataTables
-  ?>
-  if (!specificOptions.ajax)
-  {
-    <?php
-    /*
-    // In fact we don't use column reordering at all, because (a) it doesn't
-    // work with an Ajax source (b) there's no way of fixing the right hand column
-    // (c) iFixedColumns doesn't seem to work properly and (d) it's confusing
-    // for the user having reordering enabled sometimes and sometimes not.  Better
-    // to wait for a future release of DataTables when these issues have been
-    // fixed.  In the meantime the line of code we need is there below so we can see
-    // how it is done, but commented out.
-
-    var oCR = new ColReorder(oTable, mergedOptions);
-
-    */
-    ?>
-  }
-
-  <?php
-  // Adjust the column sizing on a window resize.   We shouldn't have to do this because
-  // columns.adjust() is called automatically by DataTables on a window resize, but if we
-  // don't then a right hand fixed column appears twice when a window's width is increased.
-  // I have tried to create a simple test case, but everything works OK in the test case, so
-  // it's something to do with the way MRBS uses DataTables - maybe the CSS, or maybe the
-  // JavaScript.
+  // Adjust the column sizing on a window resize
   ?>
   $(window).on('resize', function () {
-    dataTable.columns.adjust();
+    if (dataTable && dataTable.api) {
+      var api = dataTable.api();
+      if (api && typeof api.columns === 'function') {
+        setTimeout(function() {
+          api.columns.adjust();
+        }, 100);
+      }
+    }
   });
 
   return dataTable;
-
 }
+
+var customizeExcel = function(xlsx) {
+  <?php // See https://datatables.net/forums/discussion/45277/modify-page-orientation-in-xlxs-export ?>
+  var sheet = xlsx.xl.worksheets['sheet1.xml'];
+  var pageSetup = sheet.createElement('pageSetup');
+  sheet.childNodes['0'].appendChild(pageSetup);
+  var settings = sheet.getElementsByTagName('pageSetup')[0];
+  settings.setAttribute("r:id", "rId1"); <?php // Relationship ID - do not change ?>
+  settings.setAttribute('orientation', '<?php echo $excel_default_orientation ?>');
+  settings.setAttribute('paperSize', '<?php echo $excel_paper_size ?>');
+};

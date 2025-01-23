@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: cloud-deploy/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - DB_HOST=db
+      - DB_NAME=mrbs
+      - DB_USER=mrbs_user
+      - DB_PASSWORD=mrbs-db-user-2025
+      - ADMIN_EMAIL=derek.crager@gmail.com
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      - MYSQL_DATABASE=mrbs
+      - MYSQL_USER=mrbs_user
+      - MYSQL_PASSWORD=mrbs-db-user-2025
+      - MYSQL_ROOT_PASSWORD=rootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
