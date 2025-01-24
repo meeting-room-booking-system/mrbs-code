@@ -1,13 +1,34 @@
-*~
-*.bak
-web/config.inc.php.*
-web/css/custom.css
-web/config.inc.php
+# Environment files
+.env
+*.env
+.env.*
 
-/.settings
-/.project
-/.buildpath
-/.idea
-/hg-code.iml
-/nbproject
-/.vs
+# Configuration files with sensitive data
+config.inc.php
+*-config.inc.php
+
+# Database files
+*.sql
+*.sqlite
+*.db
+
+# Log files
+*.log
+logs/
+
+# Dependencies
+vendor/
+node_modules/
+
+# IDE and system files
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# Cloud SQL Proxy binary
+cloud-sql-proxy
+cloud_sql_proxy
+
+# Deployment specific
+do-deploy/
