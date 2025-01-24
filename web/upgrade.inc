@@ -414,6 +414,6 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
     $$var = $value;
   }
 
-  upgrade_echo('<p><a href="' . htmlspecialchars(multisite('index.php')) . '">' . get_vocab('returncal') . '</a>.</p>');
+  upgrade_echo('<p class="upgrade_nav"><a href="' . htmlspecialchars(multisite('index.php')) . '">' . get_vocab('returncal') . '</a>.</p>');
   print_footer(true);
 }
