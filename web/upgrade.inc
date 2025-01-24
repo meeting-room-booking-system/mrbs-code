@@ -88,7 +88,7 @@ function upgrade_echo(string $message) : void
 
 // Upgrade between database schema versions.
 // Returns FALSE on error, TRUE is successful
-function upgrade_database(bool $local, int $from, int $to, DB $upgrade_handle) : bool
+function upgrade_tables(bool $local, int $from, int $to, DB $upgrade_handle) : bool
 {
   // $local is a boolean specifying whether the upgrades are global MRBS ones ($local === false)
   // or local upgrades ($local === true);
@@ -184,12 +184,12 @@ function do_upgrade(DB $upgrade_handle) : bool
     // Do any MRBS upgrades first
     if ($result && ($current_db_schema_version < DB::DB_SCHEMA_VERSION))
     {
-      $result = $result && upgrade_database(false, $current_db_schema_version, DB::DB_SCHEMA_VERSION, $upgrade_handle);
+      $result = $result && upgrade_tables(false, $current_db_schema_version, DB::DB_SCHEMA_VERSION, $upgrade_handle);
     }
     // Then any local upgrades
     if ($result && ($current_db_schema_version_local < DB::DB_SCHEMA_VERSION_LOCAL))
     {
-      $result = $result && upgrade_database(true, $current_db_schema_version_local, DB::DB_SCHEMA_VERSION_LOCAL, $upgrade_handle);
+      $result = $result && upgrade_tables(true, $current_db_schema_version_local, DB::DB_SCHEMA_VERSION_LOCAL, $upgrade_handle);
     }
   }
 
