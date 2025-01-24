@@ -168,7 +168,7 @@ function upgrade_database(bool $local, int $from, int $to, DB $upgrade_handle) :
 
 
 // Upgrades the database tables defined by the current config context
-function do_upgrade($upgrade_handle) : bool
+function do_upgrade(DB $upgrade_handle) : bool
 {
   $result = true;
 
@@ -269,7 +269,7 @@ function upgrade_report(bool $main_site_result, array $failed_sites) : void
 
 
 // Get a database username and password
-function db_get_userpass()
+function db_get_userpass() : void
 {
   print_header();
 
