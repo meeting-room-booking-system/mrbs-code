@@ -226,6 +226,48 @@ function upgrade_site(array &$admin_handles, ?string $config_file=null) : bool
 }
 
 
+function upgrade_report(bool $main_site_result, array $failed_sites) : void
+{
+  global $multisite;
+
+  // Summarise
+  if (!$multisite)
+  {
+    // Just report on success.  Failure will be obvious.
+    if ($main_site_result) {
+      upgrade_echo("<p>" . htmlspecialchars(get_vocab('upgrade_completed')) . "</p>\n");
+    }
+  }
+  else
+  {
+    upgrade_echo("<h2>" . htmlspecialchars(get_vocab('upgrade_summary')) . "</h2>\n");
+
+    if ($main_site_result && empty($failed_sites)) {
+      upgrade_echo("<p>" . htmlspecialchars(get_vocab('upgrade_completed')) . "</p>\n");
+    }
+    else {
+      // Report on the main site
+      if (!$main_site_result) {
+        upgrade_echo("<p>" . htmlspecialchars(get_vocab('main_site_failed')) . "</p>\n");
+      }
+
+      // Report on failed sub-sites
+      if (!empty($failed_sites)) {
+        upgrade_echo("<p>" . htmlspecialchars(get_vocab('failed_sites')) . "</p>\n");
+        upgrade_echo("<ul>\n");
+        foreach ($failed_sites as $failed_site) {
+          upgrade_echo("<li>" . htmlspecialchars($failed_site) . "</li>\n");
+        }
+        upgrade_echo("</ul>\n");
+      }
+
+      // Advice on what to do next
+      upgrade_echo("<p>" . htmlspecialchars(get_vocab('retry_from_failing')) . "</p>\n");
+    }
+  }
+}
+
+
 // Get a database username and password
 function db_get_userpass()
 {
@@ -356,40 +398,8 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
   }
   $main_site_result = upgrade_site($admin_handles);
 
-  // Summarise
-  if (!$multisite)
-  {
-    // Just report on success.  Failure will be obvious.
-    if ($main_site_result) {
-      upgrade_echo("<p>" . htmlspecialchars(get_vocab('upgrade_completed')) . "</p>\n");
-    }
-  }
-  else
-  {
-    upgrade_echo("<h2>" . htmlspecialchars(get_vocab('upgrade_summary')) . "</h2>\n");
-
-    if ($main_site_result && empty($failed_sites)) {
-      upgrade_echo("<p>" . htmlspecialchars(get_vocab('upgrade_completed')) . "</p>\n");
-    }
-    else {
-      // Report on the main site
-      if (!$main_site_result) {
-        upgrade_echo("<p>" . htmlspecialchars(get_vocab('main_site_failed')) . "</p>\n");
-      }
-
-      // Report on failed sub-sites
-      if (!empty($failed_sites)) {
-        upgrade_echo("<p>" . htmlspecialchars(get_vocab('failed_sites')) . "</p>\n");
-        upgrade_echo("<ul>\n");
-        foreach ($failed_sites as $failed_site) {
-          upgrade_echo("<li>" . htmlspecialchars($failed_site) . "</li>\n");
-        }
-        upgrade_echo("</ul>\n");
-      }
-
-      upgrade_echo("<p>" . htmlspecialchars(get_vocab('retry_from_failing')) . "</p>\n");
-    }
-  }
+  // Report on the upgrade
+  upgrade_report($main_site_result, $failed_sites);
 
   // Close the database connections that have admin rights
   foreach ($admin_handles as $admin_handle)
