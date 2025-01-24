@@ -186,6 +186,10 @@ function do_upgrade(DB $upgrade_handle) : bool
     {
       $result = $result && upgrade_tables(false, $current_db_schema_version, DB::DB_SCHEMA_VERSION, $upgrade_handle);
     }
+    else
+    {
+      upgrade_echo("<p>" . htmlspecialchars(get_vocab('already_at_version', $current_db_schema_version)) . "</p>\n");
+    }
     // Then any local upgrades
     if ($result && ($current_db_schema_version_local < DB::DB_SCHEMA_VERSION_LOCAL))
     {
