@@ -2504,6 +2504,13 @@ div#site_faq_body {
 }
 
 
+/* ------------- UPGRADE.INC -------------*/
+
+.upgrade_nav {
+  margin-top: 3em;
+}
+
+
 /* ------------ VIEW_ENTRY.PHP ------------------*/
 
 .view_entry #entry td:first-child,

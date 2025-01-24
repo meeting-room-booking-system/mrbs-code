@@ -349,13 +349,17 @@ $vocab["contact_admin"]            = "If you are not the MRBS administrator plea
 $vocab["upgrading_site"]           = "Upgrading site '%s'";  // site name
 $vocab["upgrading_main_site"]      = "Upgrading the main site";
 $vocab["no_tables_found"]          = "No tables found";
+$vocab["already_at_version"]       = "Already at version %d.";
+$vocab["mrbs_upgrade_needed"]      = "A later version of MRBS is required to run against this version of the database tables.";
 $vocab["upgrade_to_version"]       = "Upgrading to database version";
 $vocab["upgrade_to_local_version"] = "Upgrading to database local version";
-$vocab["upgrade_completed"]        = "Database upgrade completed.";
-$vocab["no_handles_main_site"]     = "A database connection could not be established in order to upgrade the main site.";
-$vocab["no_handles_sub_sites"]     = "A database connection could not be established in order to upgrade the following sub-sites:";
-$vocab["retry_from_failing"]       = "Please launch MRBS from one of the failing sites and, when prompted, enter the " .
-                                     "credentials for the database associated with that site.";
+$vocab["upgrade_summary"]          = "Upgrade summary";
+$vocab["upgrade_completed"]        = "Database upgrade successfully completed.";
+$vocab["no_connection"]            = "A database connection could not be established.";
+$vocab["main_site_failed"]         = "The main site could not be upgraded.";
+$vocab["failed_sites"]             = "The following sub-sites could not be upgraded:";
+$vocab["retry_from_failing"]       = "If a database connection could not be established for a site, please launch MRBS " .
+                                     "from that site and, when prompted, enter the database credentials for that site.";
 
 // User access levels
 $vocab["level_0"]            = "none";
