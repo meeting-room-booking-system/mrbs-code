@@ -87,8 +87,24 @@ function db()
   }
   catch (\Exception $e)
   {
-    $db_obj = DBFactory::create($dbsys, $db_host, $db_login, $db_password,
-                                $db_database, (bool) $db_persist, $db_port, $db_options);
+    try
+    {
+      $db_obj = DBFactory::create(
+        $dbsys,
+        $db_host,
+        $db_login,
+        $db_password,
+        $db_database,
+        (bool)$db_persist,
+        $db_port,
+        $db_options
+      );
+    }
+    catch (\Exception $e)
+    {
+      trigger_error($e->getMessage(), E_USER_WARNING);
+      fatal_error(get_vocab('fatal_db_error'));
+    }
   }
 
   return $db_obj;

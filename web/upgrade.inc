@@ -204,6 +204,7 @@ function do_upgrade(DB $upgrade_handle) : bool
 function upgrade_site(array &$admin_handles, ?string $config_file=null) : bool
 {
   global $dbsys, $db_host, $db_database, $db_port, $db_schema, $db_tbl_prefix, $db_options;
+  global $db_admin_username, $db_admin_password;
 
   // Get the site's DB config settings
   $settings = get_db_config($config_file);
@@ -217,7 +218,23 @@ function upgrade_site(array &$admin_handles, ?string $config_file=null) : bool
   // Try and get a handle for the site
   if (!isset($admin_handles[$dsn]))
   {
-    // TODO: Try and get a new connection using the username and password that we've got
+    // Try and get a new connection using the login details we've already been given
+    try {
+      $admin_handle = DBFactory::create(
+        $dbsys,
+        $db_host,
+        $db_admin_username,
+        $db_admin_password,
+        $db_database,
+        false,
+        $db_port,
+        $db_options
+      );
+      $admin_handles[$dsn] = $admin_handle;
+    }
+    catch (DBException $e) {
+      // Don't do anything: we were only trying to see if we could connect using the same details
+    }
   }
   if (isset($admin_handles[$dsn]))
   {
@@ -365,7 +382,22 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
     }
     else
     {
-      $admin_handle = DBFactory::create($dbsys, $db_host, $db_admin_username, $db_admin_password, $db_database, false, $db_port, $db_options);
+      try {
+        $admin_handle = DBFactory::create(
+          $dbsys,
+          $db_host,
+          $db_admin_username,
+          $db_admin_password,
+          $db_database,
+          false,
+          $db_port,
+          $db_options
+        );
+      }
+      catch (DBException $e) {
+        trigger_error($e->getMessage(), E_USER_WARNING);
+        fatal_error(get_vocab('fatal_db_error'));
+      }
     }
   }
 
