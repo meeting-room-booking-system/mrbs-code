@@ -327,7 +327,7 @@ function db_get_userpass() : void
   $form->render();
 
   // Print footer and exit
-  print_footer(TRUE);
+  print_footer(true);
 }
 
 
@@ -369,6 +369,8 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
 
   // We need to open a connection to the database with a database
   // username that has admin rights.
+  // TODO: The while loop isn't doing anything.  Ideally we want to offer the user a
+  // TODO: chance to try a new username and password after a connection failure.
   while (empty($admin_handle))
   {
     $db_admin_username = get_form_var('form_username', 'string');
