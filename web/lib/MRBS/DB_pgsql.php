@@ -63,7 +63,7 @@ class DB_pgsql extends DB
       {
         $message .= ".\n[MRBS note] Try setting " . '$db_host' . " to '127.0.0.1'.";
       }
-      $this->connectError($message);
+      throw new DBException($message);
     }
   }
 

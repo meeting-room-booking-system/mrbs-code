@@ -124,7 +124,7 @@ class DB_mysql extends DB
         }
         else
         {
-          $this->connectError($message);
+          throw new DBException($message);
         }
       }
     }

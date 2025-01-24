@@ -128,6 +128,13 @@ class Client {
     public array $extensions;
 
     /**
+     * Account rfc.
+     *
+     * @var string
+     */
+    public string $rfc;
+
+    /**
      * Account authentication method.
      *
      * @var ?string
@@ -168,6 +175,7 @@ class Client {
         'validate_cert' => true,
         'username' => '',
         'password' => '',
+        'rfc' => 'RFC822',
         'authentication' => null,
         "extensions" => [],
         'proxy' => [
@@ -216,7 +224,7 @@ class Client {
         $client->default_account_config = $this->default_account_config;
         $config = $this->getAccountConfig();
         foreach($config as $key => $value) {
-            $client->setAccountConfig($key, $this->default_account_config);
+            $client->setAccountConfig($key, $config);
         }
         $client->default_message_mask = $this->default_message_mask;
         $client->default_attachment_mask = $this->default_message_mask;
@@ -715,8 +723,7 @@ class Client {
 
         $folder = $this->getFolderByPath($folder_path, true);
         if($status && $folder) {
-            $event = $this->getEvent("folder", "new");
-            $event::dispatch($folder);
+            $this->dispatch("folder", "new", $folder);
         }
 
         return $folder;
@@ -747,8 +754,7 @@ class Client {
         $status = $this->getConnection()->deleteFolder($folder->path)->validatedData();
         if ($expunge) $this->expunge();
 
-        $event = $this->getEvent("folder", "deleted");
-        $event::dispatch($folder);
+        $this->dispatch("folder", "deleted", $folder);
 
         return $status;
     }

@@ -87,8 +87,24 @@ function db()
   }
   catch (\Exception $e)
   {
-    $db_obj = DBFactory::create($dbsys, $db_host, $db_login, $db_password,
-                                $db_database, (bool) $db_persist, $db_port, $db_options);
+    try
+    {
+      $db_obj = DBFactory::create(
+        $dbsys,
+        $db_host,
+        $db_login,
+        $db_password,
+        $db_database,
+        (bool)$db_persist,
+        $db_port,
+        $db_options
+      );
+    }
+    catch (\Exception $e)
+    {
+      trigger_error($e->getMessage(), E_USER_WARNING);
+      fatal_error(get_vocab('fatal_db_error'));
+    }
   }
 
   return $db_obj;
@@ -97,10 +113,10 @@ function db()
 
 // Returns the db schema version as recorded in the database.   If there is no version
 // recorded then returns 0.
-function db_schema_version() : int
+function db_schema_version(DB $handle) : int
 {
   // The table was renamed from 'variables' to 'variable' in Upgrade 76
-  if (db()->table_exists(_tbl('variable')))
+  if ($handle->table_exists(_tbl('variable')))
   {
     $sql = "SELECT variable_content
               FROM " . _tbl('variable') . "
@@ -112,7 +128,7 @@ function db_schema_version() : int
     $sql = "SELECT variable_content
               FROM " . _tbl('variables') . "
              WHERE variable_name = 'db_version'";
-    $result = db()->query1($sql);
+    $result = $handle->query1($sql);
   }
   else
   {
@@ -126,10 +142,10 @@ function db_schema_version() : int
 
 // Returns the local db schema version as recorded in the database.   If there is no version
 // recorded then returns 0.
-function db_schema_version_local() : int
+function db_schema_version_local(DB $handle) : int
 {
   // The table was renamed from 'variables' to 'variable' in Upgrade 76
-  if (db()->table_exists(_tbl('variable')))
+  if ($handle->table_exists(_tbl('variable')))
   {
     $sql = "SELECT variable_content
               FROM " . _tbl('variable') . "
@@ -141,7 +157,7 @@ function db_schema_version_local() : int
     $sql = "SELECT variable_content
               FROM " . _tbl('variables') . "
              WHERE variable_name = 'local_db_version'";
-    $result = db()->query1($sql);
+    $result = $handle->query1($sql);
   }
   else
   {

@@ -164,7 +164,10 @@ class Query {
                 if ($statement[1] === null) {
                     $query .= $statement[0];
                 } else {
-                    if (is_numeric($statement[1])) {
+                    if (is_numeric($statement[1]) || (
+                            ($statement[0] === 'SINCE' || $statement[0] === 'BEFORE') &&
+                            $this->client->getConfig()->get('options.unescaped_search_dates', false)
+                    )) {
                         $query .= $statement[0] . ' ' . $statement[1];
                     } else {
                         $query .= $statement[0] . ' "' . $statement[1] . '"';
@@ -243,7 +246,7 @@ class Query {
 
         $contents = [];
         if ($this->getFetchBody()) {
-            $contents = $this->client->getConnection()->content($uids, "RFC822", $this->sequence)->validatedData();
+            $contents = $this->client->getConnection()->content($uids, $this->client->rfc, $this->sequence)->validatedData();
         }
 
         return [
