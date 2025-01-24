@@ -395,8 +395,8 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
         );
       }
       catch (DBException $e) {
-        trigger_error($e->getMessage(), E_USER_WARNING);
-        fatal_error(get_vocab('fatal_db_error'));
+        trigger_error($e->getMessage(), E_USER_NOTICE);
+        fatal_error(get_vocab('no_connection'));
       }
     }
   }
