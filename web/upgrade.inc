@@ -354,20 +354,41 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
   {
     upgrade_echo("<h2>" . htmlspecialchars(get_vocab('upgrading_main_site')) . "</h2>\n");
   }
-  upgrade_site($admin_handles);
+  $main_site_result = upgrade_site($admin_handles);
 
-  upgrade_echo("<p>" . htmlspecialchars(get_vocab('upgrade_completed')) . "</p>\n");
-
-  // Report failed sites
-  if (!empty($failed_sites))
+  // Summarise
+  if (!$multisite)
   {
-    upgrade_echo("<p>" . htmlspecialchars(get_vocab('failed_sites')) . "</p>\n");
-    upgrade_echo("<ul>\n");
-    foreach ($failed_sites as $failed_site)
-    {
-      upgrade_echo("<li>" . htmlspecialchars($failed_site) . "</li>\n");
+    // Just report on success.  Failure will be obvious.
+    if ($main_site_result) {
+      upgrade_echo("<p>" . htmlspecialchars(get_vocab('upgrade_completed')) . "</p>\n");
     }
-    upgrade_echo("</ul>\n");
+  }
+  else
+  {
+    upgrade_echo("<h2>" . htmlspecialchars(get_vocab('upgrade_summary')) . "</h2>\n");
+
+    if ($main_site_result && empty($failed_sites)) {
+      upgrade_echo("<p>" . htmlspecialchars(get_vocab('upgrade_completed')) . "</p>\n");
+    }
+    else {
+      // Report on the main site
+      if (!$main_site_result) {
+        upgrade_echo("<p>" . htmlspecialchars(get_vocab('main_site_failed')) . "</p>\n");
+      }
+
+      // Report on failed sub-sites
+      if (!empty($failed_sites)) {
+        upgrade_echo("<p>" . htmlspecialchars(get_vocab('failed_sites')) . "</p>\n");
+        upgrade_echo("<ul>\n");
+        foreach ($failed_sites as $failed_site) {
+          upgrade_echo("<li>" . htmlspecialchars($failed_site) . "</li>\n");
+        }
+        upgrade_echo("</ul>\n");
+      }
+
+      upgrade_echo("<p>" . htmlspecialchars(get_vocab('retry_from_failing')) . "</p>\n");
+    }
   }
 
   // Close the database connections that have admin rights
@@ -383,7 +404,6 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
     $$var = $value;
   }
 
-  upgrade_echo('<a href="' . htmlspecialchars(multisite('index.php')) . '">' . get_vocab('returncal') . '</a>.');
-
+  upgrade_echo('<p><a href="' . htmlspecialchars(multisite('index.php')) . '">' . get_vocab('returncal') . '</a>.</p>');
   print_footer(true);
 }
