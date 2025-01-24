@@ -12,6 +12,67 @@ use MRBS\Form\Form;
 // are up-to-date, and if not performs the necessary upgrades.
 
 
+// Get all the sub-site configuration files in this installation.  Returns an array of site
+// names indexed by configuration file.  (We do it this way round in case the site names are
+// integer-like, eg "1", "2", "3", etc., which will cause difficulties with PHP associative arrays>)
+function get_site_config_files() : array
+{
+  global $multisite;
+
+  $result = [];
+
+  if ($multisite)
+  {
+    $sites_dir = 'sites';
+    // Use scandir() rather than the DirectoryIterator in order to ensure that
+    // the sites are sorted.
+    $dirs = array_diff(scandir($sites_dir), array('.', '..'));
+    foreach ($dirs as $dir)
+    {
+      // Ignore anything that's not a directory
+      if (!is_dir($sites_dir . '/' . $dir))
+      {
+        continue;
+      }
+      // And ignore any directory that doesn't have a site config file
+      $site_config = $sites_dir . '/' . $dir . '/config.inc.php';
+      if (!is_readable($site_config))
+      {
+        continue;
+      }
+      $result[$site_config] = $dir;
+    }
+  }
+
+  return $result;
+}
+
+
+// Get the database config settings for a given $site_config.
+// A NULL argument gets the main site config settings.
+// Returns an array of settings.
+function get_db_config(?string $site_config=null) : array
+{
+  $result = [];
+  $vars = ['dbsys', 'db_host', 'db_database', 'db_port', 'db_schema', 'db_tbl_prefix', 'db_options'];
+
+  // Include the site's config files.  No need to include areadefaults.inc.php as it doesn't contain DB settings.
+  include 'systemdefaults.inc.php';
+  include 'config.inc.php';
+  if (isset($site_config))
+  {
+    include $site_config;
+  }
+
+  foreach ($vars as $var)
+  {
+    $result[$var] = $$var ?? null;
+  }
+
+  return $result;
+}
+
+
 function upgrade_echo(string $message) : void
 {
   echo $message;
@@ -79,7 +140,7 @@ function upgrade_database(bool $local, int $from, int $to, DB $upgrade_handle) :
 
     foreach (explode(";", $sql) as $query)
     {
-      // Skip any empty query (so that last semi-colon doesn't run
+      // Skip any empty query (so that last semicolon doesn't run
       // an empty query)
       if (preg_match("/\S/", $query))
       {
@@ -133,6 +194,35 @@ function do_upgrade($upgrade_handle) : bool
   }
 
   return $result;
+}
+
+
+function upgrade_site(array &$admin_handles, ?string $config_file=null) : bool
+{
+  global $dbsys, $db_host, $db_database, $db_port, $db_schema, $db_tbl_prefix, $db_options;
+
+  // Get the site's DB config settings
+  $settings = get_db_config($config_file);
+  foreach ($settings as $var => $value)
+  {
+    $$var = $value;
+  }
+
+  // Form the new DSN
+  $dsn = DBFactory::createDsn($dbsys, $db_host, $db_database, $db_port ?? null);
+  // Try and get a handle for the site
+  if (!isset($admin_handles[$dsn]))
+  {
+    // TODO: Try and get a new connection using the username and password that we've got
+  }
+  if (isset($admin_handles[$dsn]))
+  {
+    return do_upgrade($admin_handles[$dsn]);
+  }
+
+  upgrade_echo("<p>" . htmlspecialchars(get_vocab('no_connection')) . "</p>\n");
+
+  return false;
 }
 
 
@@ -236,10 +326,6 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
   // Check the CSRF token before we make any changes
   Form::checkToken();
 
-  $ok = true;
-
-
-
   // If we're using multisite then the various sites could be using different databases, or even
   // different database systems (MySQL or PostgreSQL).  In that case we'll need different
   // handles to access them, so we store the handles indexed by DSN (which will give enough detail
@@ -247,90 +333,42 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
   $dsn = DBFactory::createDsn($dbsys, $db_host, $db_database, $db_port);
   $admin_handles = [$dsn => $admin_handle];
 
+  // Get all the sub-site config files in this installation
+  $site_config_files = get_site_config_files();
+
+  // Upgrade each of the sub-sites
+  $failed_sites = [];
+  foreach ($site_config_files as $site_config_file => $dir)
+  {
+    // Do the upgrade for the sub-site
+    upgrade_echo("<h2>" . htmlspecialchars(get_vocab('upgrading_site', $dir)) . "</h2>\n");
+    if (!upgrade_site($admin_handles, $site_config_file))
+    {
+      $failed_sites[] = $dir;
+    }
+  }
+
+  // Then upgrade the main site
+  // We only need this heading if we're in multi-site mode
   if ($multisite)
   {
-    // Record those sites that can't be upgraded because we can't get a handle
-    $no_handles = ['main' => [], 'sub' => []];
-    // Upgrade each of the sub-sites
-    $sites_dir = 'sites';
-    // Use scandir() rather than the DirectoryIterator in order to ensure that
-    // the sites are sorted.
-    $dirs = array_diff(scandir($sites_dir), array('.', '..'));
-    foreach ($dirs as $dir)
-    {
-      // Ignore anything that's not a directory
-      if (!is_dir($sites_dir . '/' . $dir))
-      {
-        continue;
-      }
-      // And ignore any directory that doesn't have a site config file
-      $site_config = $sites_dir . '/' . $dir . '/config.inc.php';
-      if (!is_readable($site_config))
-      {
-        continue;
-      }
-      // Do the upgrade for the sub-site
-      upgrade_echo("<h2>" . htmlspecialchars(get_vocab('upgrading_site', $dir)) . "</h2>\n");
-      // Clear existing DSN parameters
-      unset($dbsys, $db_host, $db_database, $db_port);
-      // Switch to the sub-site config settings
-      include 'systemdefaults.inc.php';
-      include 'areadefaults.inc.php';
-      include 'config.inc.php';
-      include $site_config;
-      // Form the new DSN
-      $dsn = DBFactory::createDsn($dbsys, $db_host, $db_database, $db_port ?? null);
-      // Try and get a handle for the site
-      if (!isset($admin_handles[$dsn]))
-      {
-        // TODO: Try and get a new connection using the username and password that we've got
-        $no_handles['sub'][] = $dir;
-      }
-      if (isset($admin_handles[$dsn]))
-      {
-        $ok = $ok && do_upgrade($admin_handles[$dsn]);
-      }
-    }
-    // Clear existing DSN parameters
-    unset($dbsys, $db_host, $db_database, $db_port);
-    // Then switch to the main config settings
-    include 'systemdefaults.inc.php';
-    include 'areadefaults.inc.php';
-    include 'config.inc.php';
-    $dsn = DBFactory::createDsn($dbsys, $db_host, $db_database, $db_port ?? null);
-    // We only need this heading if we're in multi-site mode
     upgrade_echo("<h2>" . htmlspecialchars(get_vocab('upgrading_main_site')) . "</h2>\n");
   }
+  upgrade_site($admin_handles);
 
-  // Upgrade the main site
-  // Try and get a handle for the site
-  if (!isset($admin_handles[$dsn]))
-  {
-    // TODO: Try and get a new connection using the username and password that we've got
-    $no_handles['main'] = false;
-  }
-  if (isset($admin_handles[$dsn]))
-  {
-    $ok = $ok && do_upgrade($admin_handles[$dsn]);
-  }
+  upgrade_echo("<p>" . htmlspecialchars(get_vocab('upgrade_completed')) . "</p>\n");
 
-  // If we're in multisite mode then restore the config settings for the site we're supposed to be running
-  if ($multisite)
+  // Report failed sites
+  if (!empty($failed_sites))
   {
-    // Clear existing DSN parameters
-    unset($dbsys, $db_host, $db_database, $db_port);
-    include 'systemdefaults.inc.php';
-    include 'areadefaults.inc.php';
-    include 'config.inc.php';
-    include 'site_config.inc';
+    upgrade_echo("<p>" . htmlspecialchars(get_vocab('failed_sites')) . "</p>\n");
+    upgrade_echo("<ul>\n");
+    foreach ($failed_sites as $failed_site)
+    {
+      upgrade_echo("<li>" . htmlspecialchars($failed_site) . "</li>\n");
+    }
+    upgrade_echo("</ul>\n");
   }
-
-  if ($ok)
-  {
-    echo '<p>' . get_vocab('upgrade_completed') . "</p>\n";
-  }
-
-  // TODO: Report on $no_handles
 
   // Close the database connections that have admin rights
   foreach ($admin_handles as $admin_handle)
@@ -338,7 +376,14 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
     unset($admin_handle);
   }
 
-  echo '<a href="' . htmlspecialchars(multisite('index.php')) . '">' . get_vocab('returncal') . '</a>.';
+  // Restore the DB config settings for the site we're supposed to be running
+  $settings = get_db_config('site_config.inc');
+  foreach ($settings as $var => $value)
+  {
+    $$var = $value;
+  }
+
+  upgrade_echo('<a href="' . htmlspecialchars(multisite('index.php')) . '">' . get_vocab('returncal') . '</a>.');
 
   print_footer(true);
 }
