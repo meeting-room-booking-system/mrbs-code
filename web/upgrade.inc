@@ -73,19 +73,6 @@ function get_db_config(?string $site_config=null) : array
 }
 
 
-function upgrade_echo(string $message) : void
-{
-  echo $message;
-  // Flush the message, so that there's some progress information
-  // output to the browser even when the upgrade is taking a while
-  if (ob_get_length() !== false)
-  {
-    ob_flush();
-  }
-  flush();
-}
-
-
 // Upgrade between database schema versions.
 // Returns FALSE on error, TRUE is successful
 function upgrade_tables(bool $local, int $from, int $to, DB $upgrade_handle) : bool
@@ -104,9 +91,9 @@ function upgrade_tables(bool $local, int $from, int $to, DB $upgrade_handle) : b
 
   for ($ver = ($from+1); $ver <= $to; $ver++)
   {
-    upgrade_echo('<p>' .
-      (($local) ? get_vocab('upgrade_to_local_version') : get_vocab('upgrade_to_version')) .
-      ": $ver");
+    echo "<p>\n";
+    $tag = ($local) ? get_vocab('upgrade_to_local_version') : get_vocab('upgrade_to_version');
+    echo get_vocab($tag) . ": $ver";
 
     if ($local)
     {
@@ -122,7 +109,7 @@ function upgrade_tables(bool $local, int $from, int $to, DB $upgrade_handle) : b
     if (!$handle)
     {
       // No need to localise, should never happen!
-      upgrade_echo("Fatal error: Failed to open '$filename' for reading.\n");
+      echo "Fatal error: Failed to open '$filename' for reading.\n";
       return false;
     }
     $file_size = filesize($filename);
@@ -148,7 +135,7 @@ function upgrade_tables(bool $local, int $from, int $to, DB $upgrade_handle) : b
       }
     }
 
-    upgrade_echo('<br>' . get_vocab('ok'));
+    echo '<br>' . get_vocab('ok');
     if ($ver > 1)
     {
       // The table was renamed in Upgrade 83
@@ -159,7 +146,7 @@ function upgrade_tables(bool $local, int $from, int $to, DB $upgrade_handle) : b
                WHERE variable_name = ?";
       $upgrade_handle->command($sql, array($ver, $variable_name));
     }
-    upgrade_echo("</p>\n");
+    echo "</p>\n";
 
     // Now execute the PHP file if there is one
     if (is_readable($php_filename))
@@ -178,7 +165,7 @@ function do_upgrade(DB $upgrade_handle) : bool
 
   if (!$upgrade_handle->table_exists(_tbl('entry')))
   {
-    upgrade_echo("<p>" . htmlspecialchars(get_vocab('no_tables_found')) . "</p>\n");
+    echo "<p>" . htmlspecialchars(get_vocab('no_tables_found')) . "</p>\n";
   }
   else
   {
@@ -192,7 +179,7 @@ function do_upgrade(DB $upgrade_handle) : bool
     }
     else
     {
-      upgrade_echo("<p>" . htmlspecialchars(get_vocab('already_at_version', $current_db_schema_version)) . "</p>\n");
+      echo "<p>" . htmlspecialchars(get_vocab('already_at_version', $current_db_schema_version)) . "</p>\n";
     }
     // Then any local upgrades
     if ($result && ($current_db_schema_version_local < DB::DB_SCHEMA_VERSION_LOCAL))
@@ -245,7 +232,7 @@ function upgrade_site(array &$admin_handles, ?string $config_file=null) : bool
     return do_upgrade($admin_handles[$dsn]);
   }
 
-  upgrade_echo("<p>" . htmlspecialchars(get_vocab('no_connection')) . "</p>\n");
+  echo "<p>" . htmlspecialchars(get_vocab('no_connection')) . "</p>\n";
 
   return false;
 }
@@ -260,34 +247,34 @@ function upgrade_report(bool $main_site_result, array $failed_sites) : void
   {
     // Just report on success.  Failure will be obvious.
     if ($main_site_result) {
-      upgrade_echo("<p>" . htmlspecialchars(get_vocab('upgrade_completed')) . "</p>\n");
+      echo "<p>" . htmlspecialchars(get_vocab('upgrade_completed')) . "</p>\n";
     }
   }
   else
   {
-    upgrade_echo("<h2>" . htmlspecialchars(get_vocab('upgrade_summary')) . "</h2>\n");
+    echo "<h2>" . htmlspecialchars(get_vocab('upgrade_summary')) . "</h2>\n";
 
     if ($main_site_result && empty($failed_sites)) {
-      upgrade_echo("<p>" . htmlspecialchars(get_vocab('upgrade_completed')) . "</p>\n");
+      echo "<p>" . htmlspecialchars(get_vocab('upgrade_completed')) . "</p>\n";
     }
     else {
       // Report on the main site
       if (!$main_site_result) {
-        upgrade_echo("<p>" . htmlspecialchars(get_vocab('main_site_failed')) . "</p>\n");
+        echo "<p>" . htmlspecialchars(get_vocab('main_site_failed')) . "</p>\n";
       }
 
       // Report on failed sub-sites
       if (!empty($failed_sites)) {
-        upgrade_echo("<p>" . htmlspecialchars(get_vocab('failed_sites')) . "</p>\n");
-        upgrade_echo("<ul>\n");
+        echo "<p>" . htmlspecialchars(get_vocab('failed_sites')) . "</p>\n";
+        echo "<ul>\n";
         foreach ($failed_sites as $failed_site) {
-          upgrade_echo("<li>" . htmlspecialchars($failed_site) . "</li>\n");
+          echo "<li>" . htmlspecialchars($failed_site) . "</li>\n";
         }
-        upgrade_echo("</ul>\n");
+        echo "</ul>\n";
       }
 
       // Advice on what to do next
-      upgrade_echo("<p>" . htmlspecialchars(get_vocab('retry_from_failing')) . "</p>\n");
+      echo "<p>" . htmlspecialchars(get_vocab('retry_from_failing')) . "</p>\n";
     }
   }
 }
@@ -361,6 +348,15 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
 {
   // Upgrade needed
 
+  // Upgrades can take some time, so turn on implicit flushing so that status
+  // updates appear as they happen.  Also turn off output compression because
+  // that will involve some buffering.
+  // Note that this won't always result in streamed output as (a) the web server
+  // (b) the browser may implement their own buffering.  Solution: use Ajax calls?
+  ini_set('zlib.output_compression', '0');
+  ob_end_flush();
+  ob_implicit_flush();
+
   // Just use a simple header as the normal header may (a) use features
   // which are not available until after the database upgrade or (b) use
   // functions which are not available until after dbsys has run.
@@ -425,7 +421,7 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
   foreach ($site_config_files as $site_config_file => $dir)
   {
     // Do the upgrade for the sub-site
-    upgrade_echo("<h2>" . htmlspecialchars(get_vocab('upgrading_site', $dir)) . "</h2>\n");
+    echo "<h2>" . htmlspecialchars(get_vocab('upgrading_site', $dir)) . "</h2>\n";
     if (!upgrade_site($admin_handles, $site_config_file))
     {
       $failed_sites[] = $dir;
@@ -436,7 +432,7 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
   // We only need this heading if we're in multi-site mode
   if ($multisite)
   {
-    upgrade_echo("<h2>" . htmlspecialchars(get_vocab('upgrading_main_site')) . "</h2>\n");
+    echo "<h2>" . htmlspecialchars(get_vocab('upgrading_main_site')) . "</h2>\n";
   }
   $main_site_result = upgrade_site($admin_handles);
 
@@ -456,6 +452,6 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
     $$var = $value;
   }
 
-  upgrade_echo('<p class="upgrade_nav"><a href="' . htmlspecialchars(multisite('index.php')) . '">' . get_vocab('returncal') . '</a>.</p>');
+  echo '<p class="upgrade_nav"><a href="' . htmlspecialchars(multisite('index.php')) . '">' . get_vocab('returncal') . '</a>.</p>';
   print_footer(true);
 }
