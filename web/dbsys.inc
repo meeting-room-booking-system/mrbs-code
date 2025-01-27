@@ -118,23 +118,22 @@ function db_schema_version(DB $handle) : int
   // The table was renamed from 'variables' to 'variable' in Upgrade 76
   if ($handle->table_exists(_tbl('variable')))
   {
-    $sql = "SELECT variable_content
-              FROM " . _tbl('variable') . "
-             WHERE variable_name = 'db_version'";
-    $result = db()->query1($sql);
+    $short_name = 'variable';
   }
-  elseif (db()->table_exists(_tbl('variables')))
+  elseif ($handle->table_exists(_tbl('variables')))
   {
-    $sql = "SELECT variable_content
-              FROM " . _tbl('variables') . "
-             WHERE variable_name = 'db_version'";
-    $result = $handle->query1($sql);
+    $short_name = 'variables';
   }
   else
   {
     // Default version is 0, before we had schema versions
-    $result = 0;
+    return 0;
   }
+
+  $sql = "SELECT variable_content
+            FROM " . _tbl($short_name) . "
+           WHERE variable_name = 'db_version'";
+  $result = $handle->query1($sql);
 
   return max($result, 0);
 }
@@ -147,23 +146,22 @@ function db_schema_version_local(DB $handle) : int
   // The table was renamed from 'variables' to 'variable' in Upgrade 76
   if ($handle->table_exists(_tbl('variable')))
   {
-    $sql = "SELECT variable_content
-              FROM " . _tbl('variable') . "
-             WHERE variable_name = 'local_db_version'";
-    $result = db()->query1($sql);
+    $short_name = 'variable';
   }
-  elseif (db()->table_exists(_tbl('variables')))
+  elseif ($handle->table_exists(_tbl('variables')))
   {
-    $sql = "SELECT variable_content
-              FROM " . _tbl('variables') . "
-             WHERE variable_name = 'local_db_version'";
-    $result = $handle->query1($sql);
+    $short_name = 'variables';
   }
   else
   {
     // Default version is 0, before we had schema versions
-    $result = 0;
+    return 0;
   }
+
+  $sql = "SELECT variable_content
+            FROM " . _tbl($short_name) . "
+           WHERE variable_name = 'local_db_version'";
+  $result = $handle->query1($sql);
 
   return max($result, 0);
 }
