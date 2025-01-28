@@ -5,8 +5,7 @@ namespace MRBS;
 // from the config file.
 
 global $periods;
-global $admin_handle;
 
 $sql = "UPDATE " . _tbl('area') . " SET periods = ?";
-    
-$admin_handle->command($sql, array(json_encode($periods)));
+
+$upgrade_handle->command($sql, array(json_encode($periods)));

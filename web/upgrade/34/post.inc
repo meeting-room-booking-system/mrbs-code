@@ -5,8 +5,6 @@ namespace MRBS;
 
 require_once 'standard_vars.inc.php'; // to ensure the timezone is set
 
-global $admin_handle;
-
 // Get all the monthly sameday repeats.
 $sql = "SELECT T.id, T.start_time, A.timezone
           FROM " . _tbl('repeat') . " T, " . _tbl('area') . " A, " . _tbl('room') . " M
@@ -14,7 +12,7 @@ $sql = "SELECT T.id, T.start_time, A.timezone
            AND T.room_id=M.id
            AND M.area_id=A.id";
 
-$res = $admin_handle->query($sql);
+$res = $upgrade_handle->query($sql);
 
 // Save the current default timezone so that we can restore it at the end
 $old_tz = mrbs_default_timezone_get();
@@ -38,7 +36,7 @@ foreach ($mods as $id => $month_relative)
              SET month_relative=?,
                  rep_type=" . RepeatRule::MONTHLY . "
            WHERE id=?";
-  $admin_handle->command($sql, array($month_relative, $id));
+  $upgrade_handle->command($sql, array($month_relative, $id));
 }
 
 // Restore the original timezone

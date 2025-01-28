@@ -1,19 +1,19 @@
 <?php
 namespace MRBS;
 
-// Check whether there is any custom HTML in the room and area tables.   If there is and 
+// Check whether there is any custom HTML in the room and area tables.   If there is and
 // they haven't set $auth['allow_custom_html'] to true, then warn them that custom HTML is
 // now disabled by default for security reasons and they will have to enable it if they
 // want to continue using it.
 
-global $auth, $admin_handle;
+global $auth;
 
 if (empty($auth['allow_custom_html']))
 {
   $sql = "SELECT custom_html
             FROM " . _tbl('area') . " UNION SELECT custom_html FROM " . _tbl('room');
-  $custom_html = $admin_handle->query_array($sql);
-  
+  $custom_html = $upgrade_handle->query_array($sql);
+
   foreach ($custom_html as $value)
   {
     if (isset($value) && ($value !== ''))

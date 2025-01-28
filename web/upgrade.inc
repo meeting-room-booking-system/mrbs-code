@@ -24,6 +24,11 @@ function get_site_config_files() : array
   if ($multisite)
   {
     $sites_dir = 'sites';
+    if (!is_readable($sites_dir))
+    {
+      trigger_error("The directory '$sites_dir' either does not exist or is not readable.", E_USER_WARNING);
+      return $result;
+    }
     // Use scandir() rather than the DirectoryIterator in order to ensure that
     // the sites are sorted.
     $dirs = array_diff(scandir($sites_dir), array('.', '..'));

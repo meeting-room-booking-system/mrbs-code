@@ -5,7 +5,6 @@ namespace MRBS;
 // from the config file.
 
 global $times_along_top, $default_type;
-global $admin_handle;
 
 $times_along_top = ($times_along_top) ? 1 : 0;
 
@@ -18,4 +17,4 @@ $sql_params = array(
     ':default_type' => $default_type
   );
   
-$admin_handle->command($sql, $sql_params);
+$upgrade_handle->command($sql, $sql_params);

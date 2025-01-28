@@ -9,9 +9,8 @@ namespace MRBS;
 // operation, rather than doing it in mysql.sql or pgsql.sql.
 
 global $dbsys;
-global $admin_handle;
 
-if ($admin_handle->field_exists(_tbl('entry'), 'enable_registrant_limit'))
+if ($upgrade_handle->field_exists(_tbl('entry'), 'enable_registrant_limit'))
 {
   $sql = "ALTER TABLE " . _tbl('entry') . " ";
   if ($dbsys == 'pgsql')
@@ -23,9 +22,9 @@ if ($admin_handle->field_exists(_tbl('entry'), 'enable_registrant_limit'))
     $sql .= "CHANGE enable_registrant_limit registrant_limit_enabled tinyint DEFAULT 1 NOT NULL";
   }
 
-  $admin_handle->command($sql);
+  $upgrade_handle->command($sql);
 }
-elseif (!$admin_handle->field_exists(_tbl('entry'), 'registrant_limit_enabled'))
+elseif (!$upgrade_handle->field_exists(_tbl('entry'), 'registrant_limit_enabled'))
 {
   $message = "Something is wrong with the table structure.  Neither the column " .
              "'enable_registrant_limit' nor the column 'registrant_limit_enabled' exist. " .
