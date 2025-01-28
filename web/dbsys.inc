@@ -112,8 +112,8 @@ function db()
 
 
 // Returns the db schema version as recorded in the database.   If there is no version
-// recorded then returns 0.
-function db_schema_version(DB $handle) : int
+// recorded then returns 0.  If $local is true then the local db schema version is returned.
+function db_schema_version(DB $handle, bool $local=false) : int
 {
   // The table was renamed from 'variables' to 'variable' in Upgrade 76
   if ($handle->table_exists(_tbl('variable')))
@@ -130,38 +130,11 @@ function db_schema_version(DB $handle) : int
     return 0;
   }
 
+  $sql_params = [':variable_name' => ($local) ? 'local_db_version' : 'db_version'];
   $sql = "SELECT variable_content
             FROM " . _tbl($short_name) . "
-           WHERE variable_name = 'db_version'";
-  $result = $handle->query1($sql);
-
-  return max($result, 0);
-}
-
-
-// Returns the local db schema version as recorded in the database.   If there is no version
-// recorded then returns 0.
-function db_schema_version_local(DB $handle) : int
-{
-  // The table was renamed from 'variables' to 'variable' in Upgrade 76
-  if ($handle->table_exists(_tbl('variable')))
-  {
-    $short_name = 'variable';
-  }
-  elseif ($handle->table_exists(_tbl('variables')))
-  {
-    $short_name = 'variables';
-  }
-  else
-  {
-    // Default version is 0, before we had schema versions
-    return 0;
-  }
-
-  $sql = "SELECT variable_content
-            FROM " . _tbl($short_name) . "
-           WHERE variable_name = 'local_db_version'";
-  $result = $handle->query1($sql);
+           WHERE variable_name=:variable_name";
+  $result = $handle->query1($sql, $sql_params);
 
   return max($result, 0);
 }
