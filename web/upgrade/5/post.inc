@@ -1,9 +1,7 @@
 <?php
 namespace MRBS;
 
-global $admin_handle;
-
-$exists = $admin_handle->table_exists(_tbl('users'));
+$exists = $upgrade_handle->table_exists(_tbl('users'));
 
 /* If the table does not exist */
 if (!$exists)
@@ -13,7 +11,7 @@ if (!$exists)
 CREATE TABLE " . _tbl('users') . "
 (
   /* The first four fields are required. Don't remove. */
-  id        ".$admin_handle->syntax_createtable_autoincrementcolumn().",
+  id        ".$upgrade_handle->syntax_createtable_autoincrementcolumn().",
   level     smallint DEFAULT '0' NOT NULL,  /* play safe and give no rights */
   name      varchar(30),
   password  varchar(40),
@@ -24,5 +22,5 @@ CREATE TABLE " . _tbl('users') . "
 
   PRIMARY KEY (id)
 );";
-  $admin_handle->command($cmd);
+  $upgrade_handle->command($cmd);
 }

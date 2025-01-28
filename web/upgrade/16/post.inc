@@ -5,9 +5,8 @@ namespace MRBS;
 // with the default setting.
 
 global $enable_periods;
-global $admin_handle;
 
 // Convert booleans to 1 or 0, as the fields are tinyints/smallints
 $value = ($enable_periods) ? 1 : 0;
 
-$admin_handle->command("UPDATE " . _tbl('area') . " SET enable_periods=$value WHERE enable_periods IS NULL");
+$upgrade_handle->command("UPDATE " . _tbl('area') . " SET enable_periods=$value WHERE enable_periods IS NULL");

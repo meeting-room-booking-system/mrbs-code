@@ -2,7 +2,7 @@
 // -*- mode: php; -*-
 namespace MRBS;
 
-global $dbsys, $admin_handle;
+global $dbsys;
 
 // Special case for PostgreSQL as attempting to create a function
 // with the pgsql.sql file doesn't work due to the way the file
@@ -18,7 +18,7 @@ RETURNS BOOLEAN AS \$\$
 \$\$ LANGUAGE SQL;
 END_OF_SQL;
 
-   $admin_handle->command($sql);
+   $upgrade_handle->command($sql);
 
   $sql = <<<END_OF_SQL
 SELECT CASE WHEN NOT
@@ -38,13 +38,13 @@ ELSE
 END AS plpgsql_created;
 END_OF_SQL;
 
-   $admin_handle->command($sql);
+   $upgrade_handle->command($sql);
 
   $sql = <<<END_OF_SQL
 DROP FUNCTION create_language_plpgsql();
 END_OF_SQL;
 
-  $admin_handle->command($sql);
+  $upgrade_handle->command($sql);
 
   // Add function to update timestamp column
   $sql = <<<END_OF_SQL
@@ -56,7 +56,7 @@ BEGIN
 END;
 \$\$ language 'plpgsql';
 END_OF_SQL;
-  $admin_handle->command($sql);
+  $upgrade_handle->command($sql);
 
   // Add triggers for tables with timestamp columns
   foreach (array('entry', 'repeat', 'users') as $table)
@@ -64,6 +64,6 @@ END_OF_SQL;
     $sql = "CREATE TRIGGER update_" . _tbl($table, false) . "_timestamp " .
            "BEFORE UPDATE ON " . _tbl($table, true) . " FOR EACH ROW " .
            "EXECUTE PROCEDURE update_timestamp_column()";
-    $admin_handle->command($sql);
+    $upgrade_handle->command($sql);
   }
 }

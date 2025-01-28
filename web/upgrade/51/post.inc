@@ -8,8 +8,7 @@ namespace MRBS;
 // table just in case).
 
 global $periods;
-global $admin_handle;
 
 $sql = "UPDATE " . _tbl('area') . " SET periods = ? WHERE periods IS NULL";
-    
-$admin_handle->command($sql, array(json_encode($periods)));
+
+$upgrade_handle->command($sql, array(json_encode($periods)));

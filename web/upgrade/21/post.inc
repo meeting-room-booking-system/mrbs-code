@@ -4,9 +4,9 @@ namespace MRBS;
 // Go through the area table and if any of the per-area settings are NULL then
 // set them to the area defaults
 
-global $area_defaults, $boolean_fields, $admin_handle;
+global $area_defaults, $boolean_fields;
 
-$fields = $admin_handle->field_info(_tbl('area'));
+$fields = $upgrade_handle->field_info(_tbl('area'));
 foreach ($fields as $field)
 {
   $key = $field['name'];
@@ -23,7 +23,7 @@ foreach ($fields as $field)
     $sql = "UPDATE " . _tbl('area') . "
                SET $key=?
              WHERE $key IS NULL";
-    $admin_handle->command($sql, array($sql_val));
+    $upgrade_handle->command($sql, array($sql_val));
   }
 }
 

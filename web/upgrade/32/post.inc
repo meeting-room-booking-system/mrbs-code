@@ -3,8 +3,6 @@ namespace MRBS;
 
 require_once 'standard_vars.inc.php'; // to ensure the timezone is set
 
-global $admin_handle;
-
 // Get all the monthly repeats
 $sql = "SELECT T.id, T.start_time, A.timezone
           FROM " . _tbl('repeat') . " T, " . _tbl('area') . " A, " . _tbl('room') . " M
@@ -12,7 +10,7 @@ $sql = "SELECT T.id, T.start_time, A.timezone
            AND T.room_id=M.id
            AND M.area_id=A.id";
 
-$res = $admin_handle->query($sql);
+$res = $upgrade_handle->query($sql);
 
 // Save the current default timezone so that we can restore it at the end
 $old_tz = mrbs_default_timezone_get();
@@ -36,7 +34,7 @@ foreach ($mods as $id => $month_absolute)
              SET month_absolute=$month_absolute
            WHERE id=$id";
 
-  $admin_handle->command($sql);
+  $upgrade_handle->command($sql);
 }
 
 // Restore the original timezone
