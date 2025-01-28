@@ -141,7 +141,6 @@ function upgrade_tables(bool $local, int $from, int $to, DB $upgrade_handle) : b
       $upgrade_handle->command("UPDATE " . _tbl('variables') . " SET variable_content = ? ".
         "WHERE variable_name = ?", array($ver, $variable_name));
     }
-    echo "</p>\n";
 
     // Now execute the PHP file if there is one
     if (is_readable($php_filename))
@@ -150,6 +149,7 @@ function upgrade_tables(bool $local, int $from, int $to, DB $upgrade_handle) : b
     }
 
     echo '<br>' . get_vocab('ok');
+    echo "</p>\n";
   }
   return true;
 }
