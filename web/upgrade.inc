@@ -170,7 +170,7 @@ function do_upgrade(DB $upgrade_handle) : bool
   else
   {
     $current_db_schema_version = db_schema_version($upgrade_handle);
-    $current_db_schema_version_local = db_schema_version_local($upgrade_handle);
+    $current_db_schema_version_local = db_schema_version($upgrade_handle, true);
 
     // Do any MRBS upgrades first
     if ($result && ($current_db_schema_version < DB::DB_SCHEMA_VERSION))
@@ -331,7 +331,7 @@ if (!db()->table_exists(_tbl('entry')))
 
 // Check the database schema versions
 $current_db_schema_version = db_schema_version(db());
-$current_db_schema_version_local = db_schema_version_local(db());
+$current_db_schema_version_local = db_schema_version(db(), true);
 
 // Check whether the database schema versions are higher than expected
 // by this version of MRBS.  Database downgrades are not supported.
