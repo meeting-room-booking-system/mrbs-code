@@ -135,7 +135,6 @@ function upgrade_tables(bool $local, int $from, int $to, DB $upgrade_handle) : b
       }
     }
 
-    echo '<br>' . get_vocab('ok');
     if ($ver > 1)
     {
       $variable_name = ($local) ? "local_db_version" : "db_version";
@@ -149,6 +148,8 @@ function upgrade_tables(bool $local, int $from, int $to, DB $upgrade_handle) : b
     {
       include($php_filename);
     }
+
+    echo '<br>' . get_vocab('ok');
   }
   return true;
 }
