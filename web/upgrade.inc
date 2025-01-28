@@ -93,7 +93,7 @@ function upgrade_tables(bool $local, int $from, int $to, DB $upgrade_handle) : b
   {
     echo "<p>\n";
     $tag = ($local) ? get_vocab('upgrade_to_local_version') : get_vocab('upgrade_to_version');
-    echo get_vocab($tag) . ": $ver";
+    echo get_vocab($tag) . ": $ver<br>\n";
 
     if ($local)
     {
@@ -152,7 +152,7 @@ function upgrade_tables(bool $local, int $from, int $to, DB $upgrade_handle) : b
       include($php_filename);
     }
 
-    echo '<br>' . get_vocab('ok');
+    echo get_vocab('ok');
     echo "</p>\n";
   }
   return true;
