@@ -140,7 +140,7 @@ class AuthCas extends Auth
   }
 
 
-  private function getLevel(string $username) : int
+  protected function getLevel(string $username) : int
   {
     global $auth;
 
