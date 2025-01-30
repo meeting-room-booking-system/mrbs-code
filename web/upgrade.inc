@@ -14,7 +14,7 @@ use MRBS\Form\Form;
 
 // Get all the sub-site configuration files in this installation.  Returns an array of site
 // names indexed by configuration file.  (We do it this way round in case the site names are
-// integer-like, eg "1", "2", "3", etc., which will cause difficulties with PHP associative arrays>)
+// integer-like, eg "1", "2", "3", etc., which will cause difficulties with PHP associative arrays.)
 function get_site_config_files() : array
 {
   global $multisite;
