@@ -14,7 +14,7 @@ use MRBS\Form\Form;
 
 // Get all the sub-site configuration files in this installation.  Returns an array of site
 // names indexed by configuration file.  (We do it this way round in case the site names are
-// integer-like, eg "1", "2", "3", etc., which will cause difficulties with PHP associative arrays>)
+// integer-like, eg "1", "2", "3", etc., which will cause difficulties with PHP associative arrays.)
 function get_site_config_files() : array
 {
   global $multisite;
@@ -79,13 +79,14 @@ function get_db_config(?string $site_config=null) : array
 
 
 // Upgrade between database schema versions.
-// Returns FALSE on error, TRUE is successful
+// Returns FALSE on error, TRUE if successful
+// $local is a boolean specifying whether the upgrades are global MRBS ones ($local === false)
+// or local upgrades ($local === true);
+// $upgrade_handle is the database handle to use for the upgrade.   It will typically
+// have admin rights (eg CREATE and ALTER).  [NB: the variable $upgrade_handle is used in
+// the upgrade/*/post.inc files, so do not rename it without also editing those files.]
 function upgrade_tables(bool $local, int $from, int $to, DB $upgrade_handle) : bool
 {
-  // $local is a boolean specifying whether the upgrades are global MRBS ones ($local === false)
-  // or local upgrades ($local === true);
-  // $upgrade_handle is the database handle to use for the upgrade.   It will typically
-  // have admin rights (eg CREATE and ALTER)
   global $dbsys;
 
   $sql_type = $dbsys;
