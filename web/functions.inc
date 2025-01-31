@@ -8,6 +8,7 @@ use MRBS\Form\Field;
 use MRBS\Form\FieldSelect;
 use MRBS\ICalendar\RFC5545;
 use PHPMailer\PHPMailer\PHPMailer;
+use TypeError;
 
 require_once "mrbs_sql.inc";
 
@@ -1417,6 +1418,25 @@ function get_duration(int $start_time, int $end_time, bool $enable_periods, int 
   }
 
   return $result;
+}
+
+
+// Escape a PHP variable for use in HTML
+function escape_html($value)
+{
+  switch ($type = gettype($value))
+  {
+    case 'double':
+    case 'integer':
+      return $value;
+      break;
+    case 'string':
+      return htmlspecialchars($value);
+      break;
+    default:
+      throw new TypeError("Type '$type' not supported as an argument.");
+      break;
+  }
 }
 
 
