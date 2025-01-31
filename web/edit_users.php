@@ -203,7 +203,7 @@ function output_row($row)
         case 'level':
           // the level field contains a code and we want to display a string
           // (but we put the code in a span for sorting)
-          $values[] = "<span title=\"$col_value\"></span>" .
+          $values[] = '<span title="' . escape_html($col_value) . '"></span>' .
                       "<div class=\"string\">" . get_vocab("level_$col_value") . "</div>";
           break;
         case 'email':
