@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 function get_date_classes(DateTime $date) : array
@@ -203,8 +204,8 @@ function cell_html(array $cell, array $query_vars, bool $is_invalid = false) : s
         $vars = ($enable_periods) ? $query_vars['new_periods'] : $query_vars['new_times'];
         $query = http_build_query($vars, '', '&');
 
-        $html .= '<a href="' . htmlspecialchars(multisite("edit_entry.php?$query")) . '"' .
-                 ' aria-label="' . htmlspecialchars(get_vocab('create_new_booking')) . "\">";
+        $html .= '<a href="' . escape_html(multisite("edit_entry.php?$query")) . '"' .
+                 ' aria-label="' . escape_html(get_vocab('create_new_booking')) . "\">";
         if ($show_plus_link)
         {
           $html .= "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">";
@@ -249,12 +250,12 @@ function cell_html(array $cell, array $query_vars, bool $is_invalid = false) : s
         }
 
         $html .= '<div class="' . implode(' ', $classes) . '">';
-        $html .= '<a href="' . htmlspecialchars(multisite("view_entry.php?$query")) . '"' .
-                   ' title="' . htmlspecialchars($booking['description'] ?? '') . '"' .
+        $html .= '<a href="' . escape_html(multisite("view_entry.php?$query")) . '"' .
+                   ' title="' . escape_html($booking['description'] ?? '') . '"' .
                    ' class="' . $booking['type'] . '"' .
                    ' data-id="' . $booking['id'] . '"' .
                    ' data-type="' . $booking['type'] . '">';
-        $html .= htmlspecialchars($booking['name']) . '</a>';
+        $html .= escape_html($booking['name']) . '</a>';
         $html .= "</div>";
       }
     }
@@ -290,15 +291,15 @@ function time_cell_html(int $s, string $url) : string
   $html = '';
 
   $html .= "<th data-seconds=\"$s\">";
-  $html .= '<a href="' . htmlspecialchars($url) . '"  title="' . get_vocab("highlight_line") . "\">";
+  $html .= '<a href="' . escape_html($url) . '"  title="' . get_vocab("highlight_line") . "\">";
 
   if ($enable_periods)
   {
-    $html .= htmlspecialchars(period_name_nominal($s));
+    $html .= escape_html(period_name_nominal($s));
   }
   else
   {
-    $html .= htmlspecialchars(get_timeslot_text($s, $resolution));
+    $html .= escape_html(get_timeslot_text($s, $resolution));
   }
 
   $html .= "</a></th>\n";
@@ -333,17 +334,17 @@ function room_cell_html(array $room, array $vars) : string
 
   $title = get_vocab($tag) . "\n\n" . $room['description'];
   $html = '';
-  $html .= '<th data-room="' . htmlspecialchars($room['id']) . '">';
-  $html .= '<a href="' . htmlspecialchars($link) . '"' .
-           ' title = "' . htmlspecialchars($title) . '">';
-  $html .= htmlspecialchars($room['room_name']);
+  $html .= '<th data-room="' . escape_html($room['id']) . '">';
+  $html .= '<a href="' . escape_html($link) . '"' .
+           ' title = "' . escape_html($title) . '">';
+  $html .= escape_html($room['room_name']);
   // Put the capacity in a span to give flexibility in styling
   $html .= '<span class="capacity';
   if ($room['capacity'] == 0)
   {
     $html .= ' zero';
   }
-  $html .= '">' . htmlspecialchars($room['capacity']);
+  $html .= '">' . escape_html($room['capacity']);
   $html .= '</span>';
   $html .= '</a>';
   $html .= "</th>\n";
@@ -358,7 +359,7 @@ function day_cell_html(string $text, string $link, string $iso_date) : string
 {
   $html = '';
   // Put the date into a data attribute so that it can be picked up by JavaScript
-  $html .= '<th data-date="' . htmlspecialchars($iso_date) . '"';
+  $html .= '<th data-date="' . escape_html($iso_date) . '"';
 
   // Add classes for weekends and holidays
   $classes = get_date_classes(new DateTime($iso_date));
@@ -368,8 +369,8 @@ function day_cell_html(string $text, string $link, string $iso_date) : string
   }
 
   $html .= '>';
-  $html .= '<a href="' . htmlspecialchars($link) . '"' .
-           ' title="' . htmlspecialchars(get_vocab("viewday")) . '">';
+  $html .= '<a href="' . escape_html($link) . '"' .
+           ' title="' . escape_html(get_vocab("viewday")) . '">';
   $html .= $text;  // allowed to contain HTML tags - do not escape
   $html .= '</a>';
   $html .= "</th>\n";
@@ -485,11 +486,11 @@ function get_times_header_cells(int $start, int $end, int $increment) : string
     $html .= "<span>";
     if ( $enable_periods )
     {
-      $html .= htmlspecialchars(period_name_nominal($s));
+      $html .= escape_html(period_name_nominal($s));
     }
     else
     {
-      $html .= htmlspecialchars(get_timeslot_text($s, $increment));
+      $html .= escape_html(get_timeslot_text($s, $increment));
     }
     $html .= "</span>";
     $html .= "</th>\n";
@@ -590,7 +591,7 @@ function day_table_innerhtml(string $view, int $year, int $month, int $day, int 
       array_shift($slots[0]);
     }
     // Add some data to enable the JavaScript to draw the timeline
-    $thead .= ' data-slots="' . htmlspecialchars(json_encode($slots)) . '"';
+    $thead .= ' data-slots="' . escape_html(json_encode($slots)) . '"';
     $thead .= ' data-timeline-vertical="' . (($times_along_top) ? 'true' : 'false') . '"';
     $thead .= ' data-timeline-full="true"';
   }
@@ -778,19 +779,19 @@ function get_flex_div(int $slots, $classes, ?string $title=null, ?string $text=n
   if (isset($classes))
   {
     $value = (is_array($classes)) ? implode(' ', $classes) : $classes;
-    $result .= ' class="' . htmlspecialchars($value) . '"';
+    $result .= ' class="' . escape_html($value) . '"';
   }
 
   if (isset($title) && ($title !== ''))
   {
-    $result .= ' title="' . htmlspecialchars($title) . '"';
+    $result .= ' title="' . escape_html($title) . '"';
   }
 
   $result .= '>';
 
   if (isset($text) && ($text !== ''))
   {
-    $result .= htmlspecialchars($text);
+    $result .= escape_html($text);
   }
 
   $result .= '</div>';
@@ -861,7 +862,7 @@ function multiday_header_rows(
     // Could use a rowspan here, but we'd need to make sure the sticky cells work
     // and change the JavaScript in refresh.js.php
     $text = ($i == 0) ? '' : $label;
-    $first_last_html = '<th class="first_last">' . htmlspecialchars($text) . "</th>\n";
+    $first_last_html = '<th class="first_last">' . escape_html($text) . "</th>\n";
     $result[$i] .= $first_last_html;
 
     $vars = array(
@@ -889,9 +890,9 @@ function multiday_header_rows(
       $result[$i] .= '<th' .
         // Add the date for JavaScript.  Only really necessary for the first row in
         // the week view when not viewing all the rooms, but just add it always.
-        ' data-date="' . htmlspecialchars($date->getISODate()) . '"' .
+        ' data-date="' . escape_html($date->getISODate()) . '"' .
         ((!empty($classes)) ? ' class="' . implode(' ', $classes) . '"' : '') .
-        '><a href="' . htmlspecialchars($link) . '">' . htmlspecialchars($text) . "</a></th>\n";
+        '><a href="' . escape_html($link) . '">' . escape_html($text) . "</a></th>\n";
     }
 
     // next line to display rooms on right side
@@ -997,7 +998,7 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
   if (isset($slots))
   {
     // Add some data to enable the JavaScript to draw the timeline
-    $thead .= ' data-slots="' . htmlspecialchars(json_encode($slots)) . '"';
+    $thead .= ' data-slots="' . escape_html(json_encode($slots)) . '"';
     $thead .= ' data-timeline-vertical="' . (($days_along_top) ? 'true' : 'false') . '"';
     $thead .= ' data-timeline-full="true"';
   }
@@ -1096,7 +1097,7 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
 
         $link = "$page?" . http_build_query($vars, '', '&');
         $link = multisite($link);
-        $tbody .= '<a href="' . htmlspecialchars($link) . "\">\n";
+        $tbody .= '<a href="' . escape_html($link) . "\">\n";
         $s = $morning_slot_seconds;
         $slots = 0;
         while ($s <= $evening_slot_seconds)
@@ -1289,7 +1290,7 @@ function week_room_table_innerhtml(string $view, int $view_all, int $year, int $
   if (isset($slots))
   {
     // Add some data to enable the JavaScript to draw the timeline
-    $thead .= ' data-slots="' . htmlspecialchars(json_encode($slots)) . '"';
+    $thead .= ' data-slots="' . escape_html(json_encode($slots)) . '"';
     $thead .= ' data-timeline-vertical="' . (($times_along_top) ? 'true' : 'false') . '"';
     $thead .= ' data-timeline-full="false"';
   }
@@ -1552,13 +1553,13 @@ function get_booking_summary(int $start, int $end, int $day_start, int $day_end)
 
   if ($enable_periods)
   {
-    $start_str = htmlspecialchars(period_time_string($start, $area));
-    $end_str   = htmlspecialchars(period_time_string($end, $area, -1));
+    $start_str = escape_html(period_time_string($start, $area));
+    $end_str   = escape_html(period_time_string($end, $area, -1));
   }
   else
   {
-    $start_str = htmlspecialchars(datetime_format(hour_min_format(), $start));
-    $end_str   = htmlspecialchars(datetime_format(hour_min_format(), $end));
+    $start_str = escape_html(datetime_format(hour_min_format(), $start));
+    $end_str   = escape_html(datetime_format(hour_min_format(), $end));
   }
 
   switch (cmp3($start, $day_start) . cmp3($end, $day_end + 1))
@@ -1706,14 +1707,14 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
       {
         $vars['view'] = 'week';
         $query = http_build_query($vars, '', '&');
-        $html .= '<a class="week_number" href="' . htmlspecialchars(multisite("index.php?$query")) . '">';
+        $html .= '<a class="week_number" href="' . escape_html(multisite("index.php?$query")) . '">';
         $html .= date("W", gmmktime(12, 0, 0, $month, $d, $year));
         $html .= "</a>\n";
       }
       // then put in the day of the month
       $vars['view'] = 'day';
       $query = http_build_query($vars, '', '&');
-      $html .= '<a class="monthday" href="' . htmlspecialchars(multisite("index.php?$query")) . "\">$d</a>\n";
+      $html .= '<a class="monthday" href="' . escape_html(multisite("index.php?$query")) . "\">$d</a>\n";
 
       $html .= "</div>\n";
 
@@ -1743,8 +1744,8 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
 
         $query = http_build_query($vars, '', '&');
 
-        $html .= '<a class="new_booking" href="' . htmlspecialchars(multisite("edit_entry.php?$query")) . '"' .
-                 ' aria-label="' . htmlspecialchars(get_vocab('create_new_booking')) . "\">\n";
+        $html .= '<a class="new_booking" href="' . escape_html(multisite("edit_entry.php?$query")) . '"' .
+                 ' aria-label="' . escape_html(get_vocab('create_new_booking')) . "\">\n";
         if ($show_plus_link)
         {
           $html .= "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
@@ -1812,9 +1813,9 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
         {
           $title_text .= "\n\n" . $entry['description'];
         }
-        $html .= '<a href="' . htmlspecialchars($booking_link) . '"' .
-                 ' title="' . htmlspecialchars($title_text) . '">';
-        $html .= htmlspecialchars($display_text) . '</a>';
+        $html .= '<a href="' . escape_html($booking_link) . '"' .
+                 ' title="' . escape_html($title_text) . '">';
+        $html .= escape_html($display_text) . '</a>';
         $html .= "</div>\n";
       }
       $html .= "</div>\n";
