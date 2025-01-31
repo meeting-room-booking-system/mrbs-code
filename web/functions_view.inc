@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 // Returns a string containing a single line of data details, or if $as_html is set
