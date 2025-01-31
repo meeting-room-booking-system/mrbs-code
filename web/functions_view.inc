@@ -13,7 +13,7 @@ function create_details_row(string $label, ?string $value, bool $as_html=false, 
 
   if ($as_html)
   {
-    $escaped_value = mrbs_nl2br(htmlspecialchars($value));
+    $escaped_value = mrbs_nl2br(escape_html($value));
     $result .= "<tr>\n";
     $result .= "<td>$label</td>\n";
     $result .= "<td" . ((!empty($class)) ? " class=\"$class\"" : '') . '>';
