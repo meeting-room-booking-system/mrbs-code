@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace MRBS;
 
 use MRBS\Form\ElementFieldset;
@@ -184,8 +185,8 @@ function output_row(User $user)
 
   // Then the level field.  This contains a code and we want to display a string
   // (but we put the code in a span for sorting)
-  $values[] = '<span title="' . htmlspecialchars($user->level) . '"></span>' .
-    '<div class="string">' . htmlspecialchars(get_vocab('level_' . $user->level)) . '</div>';
+  $values[] = '<span title="' . escape_html($user->level) . '"></span>' .
+    '<div class="string">' . escape_html(get_vocab('level_' . $user->level)) . '</div>';
 
   // And add the groups, which aren't one of the table columns
   $group_name_list = implode(', ', $user->group_names);
@@ -237,8 +238,8 @@ function output_row(User $user)
             // Fall through
           case 'last_login':
             // Put the UNIX timestamp in a span so that the JavaScript can sort it properly.
-            $values[] = '<span title="' . (($col_value) ? htmlspecialchars($col_value) : '') . '"></span>' .
-                        (($col_value) ? htmlspecialchars(time_date_string($col_value)) : '');
+            $values[] = '<span title="' . (($col_value) ? escape_html($col_value) : '') . '"></span>' .
+                        (($col_value) ? escape_html(time_date_string($col_value)) : '');
             break;
 
           default:
