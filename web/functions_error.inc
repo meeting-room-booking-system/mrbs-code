@@ -228,8 +228,8 @@ function output_error(string $heading, string $body, bool $show_data=false) : vo
 
   if (ini_get('display_errors'))
   {
-    echo "<b>" . to_html(htmlspecialchars($heading)) . "</b>\n";
-    echo to_html(htmlspecialchars($body));
+    echo "<b>" . to_html(escape_html($heading)) . "</b>\n";
+    echo to_html(escape_html($body));
   }
   if (ini_get('log_errors'))
   {
@@ -311,7 +311,7 @@ function exception_handler(Throwable $exception) : void
 function fatal_error(string $message) : void
 {
   print_simple_header();
-  echo "<p>\n". htmlspecialchars($message) . "</p>\n";
+  echo "<p>\n". escape_html($message) . "</p>\n";
   print_footer();
   exit;
 }
