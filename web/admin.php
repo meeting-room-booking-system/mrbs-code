@@ -291,12 +291,12 @@ if (is_book_admin())
     {
       $text = (empty($until_string)) ? get_vocab("this_message_from", $from_string) : get_vocab("this_message_from_until", $from_string, $until_string);
     }
-    echo '<p>' . htmlspecialchars($text) . "</p>\n";
+    echo '<p>' . escape_html($text) . "</p>\n";
     echo '<p class="message_top">' . $message->getEscapedText() . "</p>\n";
   }
   else
   {
-    echo '<p>' . htmlspecialchars(get_vocab("no_message")) . "</p>\n";
+    echo '<p>' . escape_html(get_vocab("no_message")) . "</p>\n";
   }
   // Add an edit button
   $url = 'edit_message.php?' . http_build_query($context,  '', '&');
@@ -315,7 +315,7 @@ if (is_book_admin())
 echo "<h2>" . get_vocab("administration") . "</h2>\n";
 if (!empty($error))
 {
-  echo "<p class=\"error\">" . htmlspecialchars(get_vocab($error)) . "</p>\n";
+  echo "<p class=\"error\">" . escape_html(get_vocab($error)) . "</p>\n";
 }
 
 // TOP SECTION:  THE FORM FOR SELECTING AN AREA
@@ -372,7 +372,7 @@ echo "</div>";  // area_form
 if ($auth['allow_custom_html'])
 {
   echo "<div id=\"div_custom_html\">\n";
-  // no htmlspecialchars() because we want the HTML!
+  // no escape_html() because we want the HTML!
   echo (isset($custom_html)) ? "$custom_html\n" : "";
   echo "</div>\n";
 }
@@ -387,7 +387,7 @@ if (is_admin() || !empty($enabled_areas))
   echo get_vocab("rooms");
   if(isset($area_name))
   {
-    echo " " . get_vocab("in") . " " . htmlspecialchars($area_name);
+    echo " " . get_vocab("in") . " " . escape_html($area_name);
   }
   echo "</h2>\n";
 
@@ -465,7 +465,7 @@ if (is_admin() || !empty($enabled_areas))
             {
               $text = '<span class="normal" data-type="string">' . $text . '</span>';
             }
-            // We don't use htmlspecialchars() here because (a) the column names are
+            // We don't use escape_html() here because (a) the column names are
             // trusted and some of them may deliberately contain HTML entities (eg &nbsp;)
             // (b) $text could contain the span above.
             echo "<th>$text</th>\n";
@@ -491,12 +491,12 @@ if (is_admin() || !empty($enabled_areas))
             $row_class = ($row_class == "even") ? "odd" : "even";
             echo "<tr class=\"$row_class\">\n";
 
-            $html_name = htmlspecialchars($r['room_name']);
+            $html_name = escape_html($r['room_name']);
             $href = multisite('edit_room.php?room=' . $r['id']);
             // We insert a data attribute containing the sort key so that the rooms will
             // be sorted properly
-            echo '<td data-order="' . htmlspecialchars($r['sort_key']) . '"><div>' .
-                 "<a title=\"$html_name\" href=\"" . htmlspecialchars($href) . "\">$html_name</a>" .
+            echo '<td data-order="' . escape_html($r['sort_key']) . '"><div>' .
+                 "<a title=\"$html_name\" href=\"" . escape_html($href) . "\">$html_name</a>" .
                  "</div></td>\n";
             if (is_admin())
             {
@@ -512,11 +512,11 @@ if (is_admin() || !empty($enabled_areas))
                   // the standard MRBS fields
                   case 'description':
                   case 'room_admin_email':
-                    echo "<td><div>" . htmlspecialchars($r[$field['name']] ?? '') . "</div></td>\n";
+                    echo "<td><div>" . escape_html($r[$field['name']] ?? '') . "</div></td>\n";
                     break;
                   case 'capacity':
                     $value = $r[$field['name']] ?? '';
-                    echo "<td class=\"int\"><div>" . htmlspecialchars((string) $value) . "</div></td>\n";
+                    echo "<td class=\"int\"><div>" . escape_html($value) . "</div></td>\n";
                     break;
                   case 'invalid_types':
                     echo "<td><div>" . get_type_names($r[$field['name']]) . "</div></td>\n";
@@ -535,15 +535,15 @@ if (is_admin() || !empty($enabled_areas))
                     {
                       // integer values
                       $value = $r[$field['name']] ?? '';
-                      echo "<td class=\"int\"><div>" . htmlspecialchars((string) $value) . "</div></td>\n";
+                      echo "<td class=\"int\"><div>" . escape_html($value) . "</div></td>\n";
                     }
                     else
                     {
                       // strings
                       $value = $r[$field['name']] ?? '';
-                      $html = "<td title=\"" . htmlspecialchars($value) . "\"><div>";
+                      $html = "<td title=\"" . escape_html($value) . "\"><div>";
                       // Truncate before conversion, otherwise you could chop off in the middle of an entity
-                      $html .= htmlspecialchars(utf8_substr($value, 0, $max_content_length));
+                      $html .= escape_html(utf8_substr($value, 0, $max_content_length));
                       $html .= (utf8_strlen($value) > $max_content_length) ? '&hellip;' : '';
                       $html .= "</div></td>\n";
                       echo $html;
