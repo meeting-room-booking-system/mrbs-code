@@ -193,10 +193,10 @@ function output_row(User $user)
   $links = array();
   foreach ($user->group_names as $group_id => $group_name)
   {
-    $links[] = '<a href="' . multisite(htmlspecialchars("edit_group.php?group_id=$group_id")) . '">' .
-               htmlspecialchars($group_name) . '</a>';
+    $links[] = '<a href="' . multisite(escape_html("edit_group.php?group_id=$group_id")) . '">' .
+               escape_html($group_name) . '</a>';
   }
-  $values[] = "<div class=\"string\" title=\"" . htmlspecialchars($group_name_list) . "\">" .
+  $values[] = "<div class=\"string\" title=\"" . escape_html($group_name_list) . "\">" .
               implode(', ', $links) . "</div>";
 
   // And add the roles, which aren't one of the table columns either
@@ -204,10 +204,10 @@ function output_row(User $user)
   $links = array();
   foreach ($user->role_names as $role_id => $role_name)
   {
-    $links[] = '<a href="' . multisite(htmlspecialchars("edit_role.php?role_id=$role_id")) . '">' .
-               htmlspecialchars($role_name) . '</a>';
+    $links[] = '<a href="' . multisite(escape_html("edit_role.php?role_id=$role_id")) . '">' .
+               escape_html($role_name) . '</a>';
   }
-  $values[] = "<div class=\"string\" title=\"" . htmlspecialchars($role_name_list) . "\">" .
+  $values[] = "<div class=\"string\" title=\"" . escape_html($role_name_list) . "\">" .
               implode(', ', $links) . "</div>";
 
   if (auth()->type() == 'db')
@@ -256,7 +256,7 @@ function output_row(User $user)
               {
                 $col_value = '';
               }
-              $values[] = "<div class=\"string\">" . htmlspecialchars($col_value) . "</div>";
+              $values[] = "<div class=\"string\">" . escape_html($col_value) . "</div>";
             }
             elseif (($field['nature'] == 'boolean') ||
               (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)))
@@ -276,8 +276,8 @@ function output_row(User $user)
                 $col_value = '';
               }
               // strings
-              $values[] = "<div class=\"string\" title=\"" . htmlspecialchars($col_value) . "\">" .
-                htmlspecialchars($col_value) . "</div>";
+              $values[] = "<div class=\"string\" title=\"" . escape_html($col_value) . "\">" .
+                escape_html($col_value) . "</div>";
             }
             break;
         }  // end switch
@@ -1103,7 +1103,7 @@ if (!$initial_user_creation)   // don't print the user table if there are no use
               }
               break;
           }
-          echo '<th id="col_' . htmlspecialchars($fieldname) . "\">$heading</th>";
+          echo '<th id="col_' . escape_html($fieldname) . "\">$heading</th>";
         }
       }
     }
