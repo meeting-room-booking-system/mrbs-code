@@ -322,7 +322,7 @@ function generate_room_form($room_id, $errors=null)
   {
     // Now the custom HTML
     echo "<div id=\"div_custom_html\">\n";
-    // no htmlspecialchars() because we want the HTML!
+    // no escape_html() because we want the HTML!
     echo (isset($room->custom_html)) ? $room->custom_html . "\n" : "";
     echo "</div>\n";
   }
