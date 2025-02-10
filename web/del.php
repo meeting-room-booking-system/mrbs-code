@@ -145,7 +145,7 @@ if ($type == "room")
         foreach ($entries as $entry)
         {
           $interval = new EntryInterval($entry['start_time'], $entry['end_time'], $enable_periods);
-          echo "<li>" . htmlspecialchars($entry['name']) . " (" . $interval . ")</li>\n";
+          echo "<li>" . escape_html($entry['name']) . " (" . $interval . ")</li>\n";
         }
 
         echo "</ul>\n";
@@ -201,7 +201,7 @@ if ($type == "area")
     echo get_vocab("delarea");
     $query_vars = array('area' => $area);
     $query = http_build_query($query_vars, '', '&');
-    echo '<a href="' . htmlspecialchars(multisite("admin.php?$query")) . '">' . get_vocab('back') . '</a>';
+    echo '<a href="' . escape_html(multisite("admin.php?$query")) . '">' . get_vocab('back') . '</a>';
     echo "</p>\n";
     print_footer();
     exit;
