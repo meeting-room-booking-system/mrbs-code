@@ -331,7 +331,7 @@ if ($auth['allow_custom_html'])
 {
   // Now the custom HTML
   echo "<div id=\"div_custom_html\">\n";
-  // no htmlspecialchars() because we want the HTML!
+  // no escape_html() because we want the HTML!
   echo (isset($data['custom_html'])) ? $data['custom_html'] . "\n" : "";
   echo "</div>\n";
 }
