@@ -159,21 +159,21 @@ function output_row(User $user)
   }
   else
   {
-    $first_column_value = "<span class=\"normal\">" . htmlspecialchars($form_value) . "</span>";
+    $first_column_value = "<span class=\"normal\">" . escape_html($form_value) . "</span>";
   }
 
   $sortname = get_sortable_name($user->display_name);
   // TODO: move the data-order attribute up into the <td> and get rid of the <span>
-  $values[] = '<span data-order="' . htmlspecialchars($sortname) . '"></span>' . $first_column_value;
+  $values[] = '<span data-order="' . escape_html($sortname) . '"></span>' . $first_column_value;
 
   // Then the username
-  $values[] = '<span class="normal">' . htmlspecialchars($user->name) . '</span>';
+  $values[] = '<span class="normal">' . escape_html($user->name) . '</span>';
 
   // Then the email address
   // we don't want to truncate the email address
   if (isset($user->email) && ($user->email !== ''))
   {
-    $escaped_email = htmlspecialchars($user->email);
+    $escaped_email = escape_html($user->email);
     $values[] = "<div class=\"string\">\n" .
                 "<a href=\"mailto:$escaped_email\">$escaped_email</a>\n" .
                 "</div>\n";
@@ -802,7 +802,7 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
   }
   if (!empty($name_not_unique))
   {
-    echo "<p class=\"error\">'" . htmlspecialchars($taken_name) . "' " . get_vocab('name_not_unique') . "<p>\n";
+    echo "<p class=\"error\">'" . escape_html($taken_name) . "' " . get_vocab('name_not_unique') . "<p>\n";
   }
   if (!empty($name_empty))
   {
