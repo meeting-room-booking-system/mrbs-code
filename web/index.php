@@ -255,7 +255,7 @@ function get_view_nav(string $current_view, int $view_all, int $year, int $month
     $href = multisite("index.php?$query");
     $html .= '<a';
     $html .= ($view == $current_view) ? ' class="selected"' : '';
-    $html .= ' href="' . htmlspecialchars($href) . '">' . htmlspecialchars(get_vocab($token)) . '</a>';
+    $html .= ' href="' . escape_html($href) . '">' . escape_html(get_vocab($token)) . '</a>';
   }
 
   $html .= '</div>';
@@ -295,8 +295,8 @@ function get_arrow_nav(string $view, int $view_all, int $year, int $month, int $
       break;
   }
 
-  $title_prev = htmlspecialchars($title_prev);
-  $title_next = htmlspecialchars($title_next);
+  $title_prev = escape_html($title_prev);
+  $title_next = escape_html($title_next);
 
   $link_prev = get_adjacent_link($view, $view_all, $year, $month, $day, $area, $room, -1);
   $link_today = get_today_link($view, $view_all, $area, $room);
@@ -307,14 +307,14 @@ function get_arrow_nav(string $view, int $view_all, int $year, int $month, int $
   $html .= "<nav class=\"arrow\">\n";
   if ($view == 'day')
   {
-    $html .= "<a class=\"prev week symbol prefetch\" title=\"$title_prev_week\" aria-label=\"$title_prev_week\" href=\"" . htmlspecialchars($link_prev_week) . "\"></a>";
+    $html .= "<a class=\"prev week symbol prefetch\" title=\"$title_prev_week\" aria-label=\"$title_prev_week\" href=\"" . escape_html($link_prev_week) . "\"></a>";
   }
-  $html .= "<a class=\"prev symbol prefetch\" title=\"$title_prev\" aria-label=\"$title_prev\" href=\"" . htmlspecialchars($link_prev) . "\"></a>";
-  $html .= "<a title= \"$title_this\" aria-label=\"$title_this\" href=\"" . htmlspecialchars($link_today) . "\">" . get_vocab('today') . "</a>";
-  $html .= "<a class=\"next symbol prefetch\" title=\"$title_next\" aria-label=\"$title_next\" href=\"" . htmlspecialchars($link_next) . "\"></a>";
+  $html .= "<a class=\"prev symbol prefetch\" title=\"$title_prev\" aria-label=\"$title_prev\" href=\"" . escape_html($link_prev) . "\"></a>";
+  $html .= "<a title= \"$title_this\" aria-label=\"$title_this\" href=\"" . escape_html($link_today) . "\">" . get_vocab('today') . "</a>";
+  $html .= "<a class=\"next symbol prefetch\" title=\"$title_next\" aria-label=\"$title_next\" href=\"" . escape_html($link_next) . "\"></a>";
   if ($view == 'day')
   {
-    $html .= "<a class=\"next week symbol prefetch\" title=\"$title_next_week\" aria-label=\"$title_next_week\" href=\"" . htmlspecialchars($link_next_week) . "\"></a>";
+    $html .= "<a class=\"next week symbol prefetch\" title=\"$title_next_week\" aria-label=\"$title_next_week\" href=\"" . escape_html($link_next_week) . "\"></a>";
   }
   $html .= "</nav>";
 
