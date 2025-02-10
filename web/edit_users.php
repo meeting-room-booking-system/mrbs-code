@@ -171,15 +171,15 @@ function output_row($row)
   }
   else
   {
-    $display_name_value = "<span class=\"normal\">" . htmlspecialchars($row['display_name']) . "</span>";
+    $display_name_value = "<span class=\"normal\">" . escape_html($row['display_name']) . "</span>";
   }
 
   $sortname = get_sortable_name($row['display_name']);
   // TODO: move the data-order attribute up into the <td> and get rid of the <span>
-  $values[] = '<span data-order="' . htmlspecialchars($sortname) . '"></span>' . $display_name_value;
+  $values[] = '<span data-order="' . escape_html($sortname) . '"></span>' . $display_name_value;
 
   // Then the username
-  $values[] = '<span class="normal">' . htmlspecialchars($row['name']) . '</span>';
+  $values[] = '<span class="normal">' . escape_html($row['name']) . '</span>';
 
   // Other columns
   foreach ($fields as $field)
@@ -210,7 +210,7 @@ function output_row($row)
           // we don't want to truncate the email address
           if (isset($col_value) && ($col_value !== ''))
           {
-            $escaped_email = htmlspecialchars($col_value);
+            $escaped_email = escape_html($col_value);
             $values[] = "<div class=\"string\">\n" .
                         "<a href=\"mailto:$escaped_email\">$escaped_email</a>\n" .
                         "</div>\n";
@@ -245,7 +245,7 @@ function output_row($row)
             {
               $col_value = '';
             }
-            $values[] = "<div class=\"string\">" . htmlspecialchars($col_value) . "</div>";
+            $values[] = "<div class=\"string\">" . escape_html($col_value) . "</div>";
           }
           elseif (($field['nature'] == 'boolean') ||
               (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
@@ -265,8 +265,8 @@ function output_row($row)
             {
               $col_value = '';
             }
-            $values[] = "<div class=\"string\" title=\"" . htmlspecialchars($col_value) . "\">" .
-                        htmlspecialchars($col_value) . "</div>";
+            $values[] = "<div class=\"string\" title=\"" . escape_html($col_value) . "\">" .
+                        escape_html($col_value) . "</div>";
           }
           break;
       }  // end switch
@@ -777,7 +777,7 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
   }
   if (!empty($name_not_unique))
   {
-    echo "<p class=\"error\">'" . htmlspecialchars($taken_name) . "' " . get_vocab('name_not_unique') . "<p>\n";
+    echo "<p class=\"error\">'" . escape_html($taken_name) . "' " . get_vocab('name_not_unique') . "<p>\n";
   }
   if (!empty($name_empty))
   {
@@ -1240,7 +1240,7 @@ if (isset($action) && ($action == "update"))
   }
 
   /* DEBUG lines - check the actual sql statement going into the db */
-  //echo "Final SQL string: <code>" . htmlspecialchars($operation) . "</code>";
+  //echo "Final SQL string: <code>" . escape_html($operation) . "</code>";
   //exit;
   db()->command($operation, $sql_params);
 
@@ -1385,7 +1385,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
             }
             break;
         }
-        echo '<th id="col_' . htmlspecialchars($fieldname) . "\">$heading</th>";
+        echo '<th id="col_' . escape_html($fieldname) . "\">$heading</th>";
       }
     }
 
