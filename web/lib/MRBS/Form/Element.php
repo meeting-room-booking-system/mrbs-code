@@ -16,6 +16,7 @@ namespace MRBS\Form;
 // If structures like these are required ten they can usually be achieved by wrapping the raw
 // text nodes in a <span>.
 
+use function MRBS\escape_html;
 use function MRBS\is_assoc;
 
 class Element
@@ -38,7 +39,7 @@ class Element
   }
 
 
-  // If $raw is true then the text will not be put through htmlspecialchars().  Only to
+  // If $raw is true then the text will not be put through escape_html().  Only to
   // be used for trusted text.
   public function setText(string $text, bool $text_at_start=false, bool $raw=false) : Element
   {
@@ -402,17 +403,7 @@ class Element
       if ($value !== true)
       {
         // boolean attributes, eg 'required', don't need a value
-        $html .= '="';
-        if (is_numeric($value))
-        {
-          // No need to escape these
-          $html .= $value;
-        }
-        else
-        {
-          $html .= htmlspecialchars($value);
-        }
-        $html .= '"';
+        $html .= '="' . escape_html($value) . '"';
       }
     }
 
@@ -463,12 +454,7 @@ class Element
 
   private static function escapeText($text, bool $raw=false)
   {
-    if ($raw || is_numeric($text))
-    {
-      return $text;
-    }
-
-    return htmlspecialchars($text);
+    return ($raw) ? $text : escape_html($text);
   }
 
 }
