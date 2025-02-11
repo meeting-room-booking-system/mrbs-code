@@ -596,11 +596,11 @@ function process_event(array $vevent) : bool
   }
   // There were problems - list them
   echo "<div class=\"problem_report\">\n";
-  echo htmlspecialchars(get_vocab("could_not_import", $booking['name'], $booking['ical_uid']));
+  echo escape_html(get_vocab("could_not_import", $booking['name'], $booking['ical_uid']));
   echo "<ul>\n";
   foreach ($problems as $problem)
   {
-    echo "<li>" . htmlspecialchars($problem) . "</li>\n";
+    echo "<li>" . escape_html($problem) . "</li>\n";
   }
   if (!empty($result['violations']['errors']))
   {
