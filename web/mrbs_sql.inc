@@ -160,13 +160,13 @@ function mrbsCheckFree(array $booking, ?int $ignore_entry_id=null, ?int $ignore_
 
     $query = http_build_query($vars, '', '&');
 
-    $err[] = '<a href="' . htmlspecialchars(multisite('view_entry.php?id=' . $row['id'])) . '">' .
-             htmlspecialchars($row['name']) . '</a>' .
-             ' (' . htmlspecialchars($timestr) . ', ' . htmlspecialchars($row['room_name']) . ') ' .
+    $err[] = '<a href="' . escape_html(multisite('view_entry.php?id=' . $row['id'])) . '">' .
+             escape_html($row['name']) . '</a>' .
+             ' (' . escape_html($timestr) . ', ' . escape_html($row['room_name']) . ') ' .
              '<span>(' .
-             '<a href="' . htmlspecialchars(multisite("index.php?view=day&$query")) . '">' . get_vocab('viewday') . '</a> | ' .
-             '<a href="' . htmlspecialchars(multisite("index.php?view=week&$query")) . '">' . get_vocab('viewweek') . '</a> | ' .
-             '<a href="' . htmlspecialchars(multisite("index.php?view=month&$query")) . '">' . get_vocab('viewmonth') . '</a>' .
+             '<a href="' . escape_html(multisite("index.php?view=day&$query")) . '">' . get_vocab('viewday') . '</a> | ' .
+             '<a href="' . escape_html(multisite("index.php?view=week&$query")) . '">' . get_vocab('viewweek') . '</a> | ' .
+             '<a href="' . escape_html(multisite("index.php?view=month&$query")) . '">' . get_vocab('viewmonth') . '</a>' .
              ')</span>';
   }
 
@@ -561,8 +561,8 @@ function mrbsCheckPolicy(array $booking, ?int $ignore_entry_id=null, ?int $ignor
       if (isset($room_details['invalid_types']) &&
           in_array($booking['type'], $room_details['invalid_types']))
       {
-        // TODO: is this the best place for the htmlspecialchars()?  Should it go closer to the output?
-        $violations[] = get_vocab('type_not_allowed', get_type_vocab($booking['type']), htmlspecialchars($room_details['room_name']));
+        // TODO: is this the best place for the escape_html()?  Should it go closer to the output?
+        $violations[] = get_vocab('type_not_allowed', get_type_vocab($booking['type']), escape_html($room_details['room_name']));
       }
       // ... on this day
       if (!empty($invalid_types_days[$booking['type']]))
