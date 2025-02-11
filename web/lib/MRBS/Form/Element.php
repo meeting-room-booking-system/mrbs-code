@@ -403,17 +403,7 @@ class Element
       if ($value !== true)
       {
         // boolean attributes, eg 'required', don't need a value
-        $html .= '="';
-        if (is_numeric($value))
-        {
-          // No need to escape these
-          $html .= $value;
-        }
-        else
-        {
-          $html .= escape_html($value);
-        }
-        $html .= '"';
+        $html .= '="' . escape_html($value) . '"';
       }
     }
 
@@ -464,12 +454,7 @@ class Element
 
   private static function escapeText($text, bool $raw=false)
   {
-    if ($raw || is_numeric($text))
-    {
-      return $text;
-    }
-
-    return escape_html($text);
+    return ($raw) ? $text : escape_html($text);
   }
 
 }
