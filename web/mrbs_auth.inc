@@ -359,7 +359,7 @@ function showAccessDenied($view=null, $view_all=null, $year=null, $month=null, $
   if (isset($referrer))
   {
     echo "<p>\n";
-    echo "<a href=\"" . htmlspecialchars($referrer) . "\">\n" . get_vocab("returnprev") . "</a>\n";
+    echo "<a href=\"" . escape_html($referrer) . "\">\n" . get_vocab("returnprev") . "</a>\n";
     echo "</p>\n";
   }
   echo "</div>\n";

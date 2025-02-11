@@ -90,7 +90,7 @@ class Message
 
     if (empty($message_allowed_tags))
     {
-      return htmlspecialchars($this->text);
+      return escape_html($this->text);
     }
 
     return self::stripTags($this->text, $message_allowed_tags);
