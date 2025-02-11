@@ -252,11 +252,11 @@ function create_body_table_row(string $label, ?string $new, ?string $old, bool $
 
   // The label
   $result .= ($as_html) ? '<td>' : '';
-  $result .= ($as_html) ? htmlspecialchars("$label: ") : "$label: ";
+  $result .= ($as_html) ? escape_html("$label: ") : "$label: ";
   $result .= ($as_html) ? '</td>' . MAIL_EOL : '';
   // The new value
   $result .= ($as_html) ? '<td>' : '';
-  $result .= ($as_html) ? htmlspecialchars($new) : "$new";
+  $result .= ($as_html) ? escape_html($new) : "$new";
   $result .= ($as_html) ? '</td>' . MAIL_EOL : '';
   // The old value (if we're doing a comparison)
   if ($compare)
@@ -271,7 +271,7 @@ function create_body_table_row(string $label, ?string $new, ?string $old, bool $
       // Put parentheses around the HTML version as well as the plain text
       // version in case the table is not rendered properly in HTML.  The
       // parentheses will make the old value stand out.
-      $result .= ($as_html) ? htmlspecialchars(" ($old)") : " ($old)";
+      $result .= ($as_html) ? escape_html(" ($old)") : " ($old)";
     }
     $result .= ($as_html) ? '</td>' . MAIL_EOL : '';
   }
@@ -293,7 +293,7 @@ function create_date_list(array $dates, bool $as_html) : string
   {
     $result .= ($as_html) ? '<li>' : '';
     $date_string = getMailDateString($date);
-    $result .= ($as_html) ? htmlspecialchars($date_string) : $date_string;
+    $result .= ($as_html) ? escape_html($date_string) : $date_string;
     $result .= ($as_html) ? '</li>' : '';
     // The newline is important to stop the line length exceeding 998 characters,
     // which will happen if there are a lot of dates.  See RFC 5322 2.1.1.
@@ -369,7 +369,7 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
     $body .= '<html lang="' . convert_to_BCP47(get_mail_lang()) . '">' . MAIL_EOL;
     $body .= '<head>' . MAIL_EOL;
     $body .= '<meta http-equiv="Content-Type" content="text/html; charset=' . get_mail_charset() . '">' . MAIL_EOL;
-    $body .= '<title>' . htmlspecialchars($mrbs_company) . '</title>' . MAIL_EOL;
+    $body .= '<title>' . escape_html($mrbs_company) . '</title>' . MAIL_EOL;
     $body .= '<style type="text/css">' . MAIL_EOL;
     $css_file = 'css/mrbs-mail.css.php';
     if (is_file($css_file) && is_readable($css_file))
@@ -390,7 +390,7 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
     $body .= '</style>' . MAIL_EOL;
     $body .= '</head>' . MAIL_EOL;
     $body .= '<body id="mrbs">' . MAIL_EOL;
-    $body .= '<div id="header">' . htmlspecialchars($mrbs_company . ' - ' . get_mail_vocab('mrbs')) . '</div>' . MAIL_EOL;
+    $body .= '<div id="header">' . escape_html($mrbs_company . ' - ' . get_mail_vocab('mrbs')) . '</div>' . MAIL_EOL;
     $body .= '<div id="contents">' . MAIL_EOL;
   }
 
@@ -399,7 +399,7 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
   $mrbs_user = session()->getCurrentUser();
   if (isset($mrbs_user))
   {
-    $user_escaped = ($as_html) ? htmlspecialchars($mrbs_user->display_name) : $mrbs_user->display_name;
+    $user_escaped = ($as_html) ? escape_html($mrbs_user->display_name) : $mrbs_user->display_name;
   }
   else
   {
@@ -453,7 +453,7 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
     {
       $body .= '&series=1';
     }
-    $body .= ($as_html) ? '">' . htmlspecialchars($data['name']) . '</a>' : '';
+    $body .= ($as_html) ? '">' . escape_html($data['name']) . '</a>' : '';
   }
   $body .= ($as_html) ? '</p>' . MAIL_EOL : MAIL_EOL . MAIL_EOL;
 
@@ -1046,7 +1046,7 @@ function debug_output(string $message) : void
   if (isset($mail_settings['debug_output']) &&
       ($mail_settings['debug_output'] == 'browser'))
   {
-    echo htmlspecialchars($message) . "<br>\n";
+    echo escape_html($message) . "<br>\n";
     // flush in case they have output_buffering configured on
     if (ob_get_length() !== FALSE)
     {
