@@ -8,7 +8,7 @@ function script_html(string $src, bool $add_version=false) : string
 {
   $html = '<script src="';
   $value = ($add_version) ? add_version($src) : $src;
-  $html .= htmlspecialchars($value);
+  $html .= escape_html($value);
   $html .= "\"></script>\n";
 
   return $html;
