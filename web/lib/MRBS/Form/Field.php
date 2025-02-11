@@ -52,7 +52,7 @@ abstract class Field extends Element
   }
 
 
-  // If $raw is true then the text will not be put through htmlspecialchars().  Only to
+  // If $raw is true then the text will not be put through escape_html().  Only to
   // be used for trusted text.
   public function setLabel($text, bool $text_at_start=false, bool $raw=false): Field
   {
