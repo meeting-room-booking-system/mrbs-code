@@ -73,11 +73,11 @@ function output_row($row, $returl)
 
   $values = array();
   // booking name
-  $html_name = htmlspecialchars($row['name']);
+  $html_name = escape_html($row['name']);
   $values[] = '<a title="' . $html_name . '"' .
-                ' href="' . htmlspecialchars(multisite("view_entry.php?$query")) . '">' . $html_name . '</a>';
+                ' href="' . escape_html(multisite("view_entry.php?$query")) . '">' . $html_name . '</a>';
   // created by
-  $values[] = htmlspecialchars(get_compound_name($row['create_by']));
+  $values[] = escape_html(get_compound_name($row['create_by']));
   // start time and link to day view
   $date = getdate($row['start_time']);
 
@@ -90,13 +90,13 @@ function output_row($row, $returl)
 
   $query = http_build_query($vars, '', '&');
 
-  $link = '<a href="' . htmlspecialchars(multisite("index.php?$query")) . '">';
+  $link = '<a href="' . escape_html(multisite("index.php?$query")) . '">';
   $link_str = date_string($row['enable_periods'], $row['start_time'], $row['area_id']);
-  $link .= htmlspecialchars($link_str) ."</a>";
+  $link .= escape_html($link_str) ."</a>";
   // add a span with the numeric start time in the title for sorting
   $values[] = "<span title=\"" . $row['start_time'] . "\"></span>" . $link;
   // description
-  $values[] = htmlspecialchars($row['description'] ?? '');
+  $values[] = escape_html($row['description'] ?? '');
 
   if ($is_ajax)
   {
@@ -219,13 +219,13 @@ if (!($is_ajax || $ics)) {
   {
     echo get_vocab(
       'search_results',
-      htmlspecialchars($search_str),
-      htmlspecialchars(datetime_format($datetime_formats['date_search'], $search_start_time))
+      escape_html($search_str),
+      escape_html(datetime_format($datetime_formats['date_search'], $search_start_time))
     );
   }
   else
   {
-    echo get_vocab('search_results_unlimited', htmlspecialchars($search_str));
+    echo get_vocab('search_results_unlimited', escape_html($search_str));
   }
   echo "</h3>\n";
 }  // if (!$is_ajax)
@@ -383,10 +383,10 @@ if (!($is_ajax || $ics))
   echo "<table id=\"search_results\" class=\"admin_table display\"";
 
   // Put the search parameters as data attributes so that the JavaScript can use them
-  echo ' data-search_str="' . htmlspecialchars($search_str) . '"';
+  echo ' data-search_str="' . escape_html($search_str) . '"';
   if (isset($from_date))
   {
-    echo ' data-from_date="' . htmlspecialchars($from_date) . '"';
+    echo ' data-from_date="' . escape_html($from_date) . '"';
   }
 
   echo ">\n";
