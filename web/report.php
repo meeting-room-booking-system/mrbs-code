@@ -554,7 +554,7 @@ function escape(string $string) : string
   switch ($output_format)
   {
     case OUTPUT_HTML:
-      $string = mrbs_nl2br(htmlspecialchars($string));
+      $string = mrbs_nl2br(escape_html($string));
       break;
     case OUTPUT_CSV:
       $string = str_replace('"', '""', $string);
@@ -764,7 +764,7 @@ function open_report() : void
     $sort_columns = get_sort_columns($sortby);
     if (!empty($sort_columns))
     {
-      echo ' data-sort-columns="' . htmlspecialchars(json_encode($sort_columns)) . '"';
+      echo ' data-sort-columns="' . escape_html(json_encode($sort_columns)) . '"';
     }
     echo ">\n";
   }
@@ -846,7 +846,7 @@ function output_row(array $values, int $output_format, bool $body_row = true) : 
       $line = '<tr>';
       foreach ($values as $key => $value)
       {
-        $line .= ($body_row) ? '<td>' : '<th id="'. htmlspecialchars("col_$key") . '">';
+        $line .= ($body_row) ? '<td>' : '<th id="'. escape_html("col_$key") . '">';
         $line .= $value;
         $line .= ($body_row) ? '</td>' : '</th>';
         $line .= "\n";
@@ -1055,7 +1055,7 @@ function report_row(&$rows, $data)
             $user = auth()->getUser($create_by);
             if (isset($user->email) && ($user->email !== ''))
             {
-              $value = '<a href="mailto:' . htmlspecialchars($user->email) . '">' . "$text</a>";
+              $value = '<a href="mailto:' . escape_html($user->email) . '">' . "$text</a>";
             }
           }
           // Put an invisible <span> at the beginning for sorting.
@@ -1071,7 +1071,7 @@ function report_row(&$rows, $data)
           // TODO but we can't do that with Ajax loading.  The solution is to switch to use DataTables'
           // TODO orthogonal data.
           $value = "<span>$value</span>" .
-                   '<a href="' . htmlspecialchars($href) . '"' .
+                   '<a href="' . escape_html($href) . '"' .
                    ' data-id="' . intval($data['id']) . '"' .  // Cast to int as a precaution
                    $value . '">' . $value . '</a>';  // $value already escaped
           break;
@@ -1088,11 +1088,11 @@ function report_row(&$rows, $data)
           break;
         case 'area_name':
           // TODO Use orthogonal data instead of a span
-          $value = '<span>' . htmlspecialchars($data['area_sort_key']) . '</span>' . $value;
+          $value = '<span>' . escape_html($data['area_sort_key']) . '</span>' . $value;
           break;
         case 'room_name':
           // TODO Use orthogonal data instead of a span
-          $value = '<span>' . htmlspecialchars($data['room_sort_key']) . '</span>' . $value;
+          $value = '<span>' . escape_html($data['room_sort_key']) . '</span>' . $value;
           break;
         default:
           break;
