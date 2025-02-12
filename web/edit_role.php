@@ -276,7 +276,7 @@ function generate_roles_table()
   echo "<thead>\n";
   echo "<tr>";
   echo "<th></th>";
-  echo "<th>" . htmlspecialchars(get_vocab('role')) . "</th>";
+  echo "<th>" . escape_html(get_vocab('role')) . "</th>";
   echo "</tr>\n";
   echo "</thead>\n";
 
@@ -291,7 +291,7 @@ function generate_roles_table()
 
     echo "<td>";
     $href = multisite(this_page() . '?role_id=' . $role->id);
-    echo '<a href="' . htmlspecialchars($href). '">' . htmlspecialchars($role->name) . '</a>';
+    echo '<a href="' . escape_html($href). '">' . escape_html($role->name) . '</a>';
     echo "</td>";
     echo "</tr>\n";
   }
@@ -582,7 +582,7 @@ if (isset($role_id))
 
 if (isset($role))
 {
-  echo "<h2>" . htmlspecialchars(get_vocab('role_heading', $role->name)) . "</h2>";
+  echo "<h2>" . escape_html(get_vocab('role_heading', $role->name)) . "</h2>";
   if (isset($action))
   {
     switch($action)
@@ -607,7 +607,7 @@ if (isset($role))
 }
 else
 {
-  echo "<h2>" . htmlspecialchars(get_vocab('roles')) . "</h2>";
+  echo "<h2>" . escape_html(get_vocab('roles')) . "</h2>";
   generate_add_role_form($error, $name);
   generate_roles_table();
 }

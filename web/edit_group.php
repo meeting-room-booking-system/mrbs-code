@@ -78,8 +78,8 @@ function generate_groups_table()
     // generate_delete_button($group);
     echo "</th>";
   }
-  echo "<th>" . htmlspecialchars(get_vocab('group')) . "</th>";
-  echo "<th>" . htmlspecialchars(get_vocab('roles')) . "</th>";
+  echo "<th>" . escape_html(get_vocab('group')) . "</th>";
+  echo "<th>" . escape_html(get_vocab('roles')) . "</th>";
   echo "</tr>\n";
   echo "</thead>\n";
 
@@ -98,15 +98,15 @@ function generate_groups_table()
 
     echo "<td>";
     $href = multisite(this_page() . '?group_id=' . $group->id);
-    echo '<a href="' . htmlspecialchars($href). '">' . htmlspecialchars($group->name) . '</a>';
+    echo '<a href="' . escape_html($href). '">' . escape_html($group->name) . '</a>';
     echo "</td>";
 
     echo "<td>";
     $links = array();
     foreach ($group->role_names as $role_id => $role_name)
     {
-      $links[] = '<a href="' . multisite(htmlspecialchars("edit_role.php?role_id=$role_id")) . '">' .
-                 htmlspecialchars($role_name) . '</a>';
+      $links[] = '<a href="' . multisite(escape_html("edit_role.php?role_id=$role_id")) . '">' .
+                 escape_html($role_name) . '</a>';
     }
     echo implode(', ', $links);
     echo "</td>";
@@ -179,12 +179,12 @@ if (isset($group_id))
 
 if (isset($group))
 {
-  echo "<h2>" . htmlspecialchars(get_vocab('group_heading', $group->name)) . "</h2>";
+  echo "<h2>" . escape_html(get_vocab('group_heading', $group->name)) . "</h2>";
   generate_edit_group_form($group);
 }
 else
 {
-  echo "<h2>" . htmlspecialchars(get_vocab('groups')) . "</h2>";
+  echo "<h2>" . escape_html(get_vocab('groups')) . "</h2>";
   if (auth()->type() == 'db')
   {
     generate_add_group_form($error, $name);

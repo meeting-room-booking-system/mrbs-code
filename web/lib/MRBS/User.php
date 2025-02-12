@@ -231,7 +231,7 @@ class User extends Table
     $html .= '<table';
     if (isset($this->id) && ($this->id !== ''))
     {
-      $html .= ' data-id="' . htmlspecialchars($this->id) . '"';
+      $html .= ' data-id="' . escape_html($this->id) . '"';
     }
     $html .= ">\n";
     $html .= "<thead>\n";
@@ -239,7 +239,7 @@ class User extends Table
     $html .= "<th></th>";
     foreach ($permission_options as $key => $value)
     {
-      $html .= "<th>" . htmlspecialchars($value) . "</th>";
+      $html .= "<th>" . escape_html($value) . "</th>";
     }
     $html .= "</tr>\n";
     $html .= "</thead>\n";
@@ -248,7 +248,7 @@ class User extends Table
     foreach ($areas as $area)
     {
       $html .= '<tr class="area">';
-      $html .= "<td>" . htmlspecialchars($area->area_name) . "</td>";
+      $html .= "<td>" . escape_html($area->area_name) . "</td>";
       foreach ($permission_options as $key => $value)
       {
         $html .= "<td>";
@@ -266,7 +266,7 @@ class User extends Table
       foreach ($rooms as $room)
       {
         $html .= '<tr class="room">';
-        $html .= "<td>" . htmlspecialchars($room->room_name) . "</td>";
+        $html .= "<td>" . escape_html($room->room_name) . "</td>";
         unset($class);
         foreach ($permission_options as $key => $value)
         {
