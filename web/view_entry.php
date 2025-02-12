@@ -78,19 +78,19 @@ function generate_registrant_table(array $row, ?string $previous_page=null) : vo
         }
       }
       $sort_name = get_sortable_name($display_name);
-      echo '<td data-order="' . htmlspecialchars($sort_name) . '">';
-      $display_name_html = htmlspecialchars($display_name);
+      echo '<td data-order="' . escape_html($sort_name) . '">';
+      $display_name_html = escape_html($display_name);
       // Add a mailto: link if we've got an email address
       if (isset($email) && ($email !== ''))
       {
-        $display_name_html = '<a href="mailto:' . htmlspecialchars($email) . '">' . $display_name_html . '</a>';
+        $display_name_html = '<a href="mailto:' . escape_html($email) . '">' . $display_name_html . '</a>';
       }
       echo $display_name_html;
       echo '</td>';
     }
     // Time of registration
     $time = time_date_string($registrant['registered']);
-    echo '<td data-order="' . intval($registrant['registered']) . '">' . htmlspecialchars($time) . '</td>';
+    echo '<td data-order="' . intval($registrant['registered']) . '">' . escape_html($time) . '</td>';
     echo "</tr>\n";
   }
 
@@ -260,29 +260,29 @@ function generate_event_registration(array $row, ?string $previous_page=null) : 
   if ($row['registration_opens_enabled'])
   {
     echo '<tr>';
-    echo '<td>' . htmlspecialchars(get_vocab('registration_opens')) . '</td>';
-    echo '<td>' . htmlspecialchars(time_date_string(registration_opens_timestamp($row))) . '</td>';
+    echo '<td>' . escape_html(get_vocab('registration_opens')) . '</td>';
+    echo '<td>' . escape_html(time_date_string(registration_opens_timestamp($row))) . '</td>';
     echo "</tr>\n";
   }
 
   if ($row['registration_closes_enabled'])
   {
     echo '<tr>';
-    echo '<td>' . htmlspecialchars(get_vocab('registration_closes')) . '</td>';
-    echo '<td>' . htmlspecialchars(time_date_string(registration_closes_timestamp($row))) . '</td>';
+    echo '<td>' . escape_html(get_vocab('registration_closes')) . '</td>';
+    echo '<td>' . escape_html(time_date_string(registration_closes_timestamp($row))) . '</td>';
     echo "</tr>\n";
   }
 
   if (!empty($row['registrant_limit_enabled']))
   {
     echo '<tr>';
-    echo '<td>' . htmlspecialchars(get_vocab('registrant_limit')) . '</td>';
+    echo '<td>' . escape_html(get_vocab('registrant_limit')) . '</td>';
     echo '<td>' . intval($row['registrant_limit']) . '</td>';  // Redundant escaping, just in case
     echo "</tr>\n";
   }
 
   echo '<tr>';
-  echo '<td>' . htmlspecialchars(get_vocab('n_registered')) . '</td>';
+  echo '<td>' . escape_html(get_vocab('n_registered')) . '</td>';
   echo '<td>' . intval($n_registered) . '</td>';  // Redundant escaping, just in case
   echo "</tr>\n";
   echo "</tbody>\n";
@@ -308,7 +308,7 @@ function generate_event_registration(array $row, ?string $previous_page=null) : 
     if (!$can_register_others && in_arrayi($mrbs_user->username,
         array_column($row['registrants'], 'username')))
     {
-      echo '<p>' . htmlspecialchars(get_vocab('already_registered')) . "</p>\n";
+      echo '<p>' . escape_html(get_vocab('already_registered')) . "</p>\n";
       foreach ($row['registrants'] as $registrant)
       {
         if (strcasecmp_locale($mrbs_user->username, $registrant['username']) === 0)
@@ -339,7 +339,7 @@ function generate_event_registration(array $row, ?string $previous_page=null) : 
       }
       else
       {
-        echo '<p>' . htmlspecialchars(get_vocab('event_full')) . "</p>\n";
+        echo '<p>' . escape_html(get_vocab('event_full')) . "</p>\n";
       }
     }
   }
@@ -743,7 +743,7 @@ print_header($context);
 // Now that we know all the data we start drawing it
 
 echo "<h3" . (($keep_private && $is_private_field['entry.name']) ? " class=\"private\"" : "") . ">\n";
-echo ($keep_private && $is_private_field['entry.name']) ? "[" . get_vocab("unavailable") . "]" : htmlspecialchars($row['name']);
+echo ($keep_private && $is_private_field['entry.name']) ? "[" . get_vocab("unavailable") . "]" : escape_html($row['name']);
 if (is_private_event($private) && $writeable)
 {
   echo ' ('.get_vocab("unavailable").')';
@@ -1035,7 +1035,7 @@ if (isset($previous_page) &&
     (basename(parse_url($previous_page)['path']) !== this_page()))
 {
   echo "<div id=\"returl\">\n";
-  echo '<a href="' . htmlspecialchars($previous_page) . '">' . get_vocab('returnprev') . "</a>\n";
+  echo '<a href="' . escape_html($previous_page) . '">' . get_vocab('returnprev') . "</a>\n";
   echo "</div>\n";
 }
 
