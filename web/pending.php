@@ -147,13 +147,13 @@ function display_subtable_head($row)
   // We give some columns a type data value so that the JavaScript knows how to sort them
   echo "<th class=\"control\">&nbsp;</th>\n";
   // reservation name, with a link to the view_entry page
-  echo '<th><a href="' . htmlspecialchars(multisite('view_entry.php?id=' . $row['repeat_id'] . '&series=1')) . '">' .
-       htmlspecialchars($row['name']) ."</a></th>\n";
+  echo '<th><a href="' . escape_html(multisite('view_entry.php?id=' . $row['repeat_id'] . '&series=1')) . '">' .
+       escape_html($row['name']) ."</a></th>\n";
 
   // create_by, area and room names
-  echo "<th>" . htmlspecialchars($row['create_by']) . "</th>\n";
-  echo "<th>"   . htmlspecialchars($row['area_name']) . "</th>\n";
-  echo "<th>"   . htmlspecialchars($row['room_name']) . "</th>\n";
+  echo "<th>" . escape_html($row['create_by']) . "</th>\n";
+  echo "<th>" . escape_html($row['area_name']) . "</th>\n";
+  echo "<th>" . escape_html($row['room_name']) . "</th>\n";
 
   echo "<th><span class=\"normal\" data-type=\"title-numeric\">" . get_vocab("series") . "</span></th>\n";
 
@@ -169,13 +169,13 @@ function display_series_title_row($row)
   echo "<tr id=\"row_" . $row['repeat_id'] . "\">\n";
   echo "<td class=\"control\">&nbsp;</td>\n";
   // reservation name, with a link to the view_entry page
-  echo '<td><a href="' . htmlspecialchars(multisite('view_entry.php?id=' . $row['repeat_id'] . '&series=1')) . '">' .
-        htmlspecialchars($row['name']) ."</a></td>\n";
+  echo '<td><a href="' . escape_html(multisite('view_entry.php?id=' . $row['repeat_id'] . '&series=1')) . '">' .
+        escape_html($row['name']) ."</a></td>\n";
 
   // create_by, area and room names
-  echo "<td>" . htmlspecialchars(auth()->getDisplayName($row['create_by'])) . "</td>\n";
-  echo "<td>" . htmlspecialchars($row['area_name']) . "</td>\n";
-  echo "<td>" . htmlspecialchars($row['room_name']) . "</td>\n";
+  echo "<td>" . escape_html(auth()->getDisplayName($row['create_by'])) . "</td>\n";
+  echo "<td>" . escape_html($row['area_name']) . "</td>\n";
+  echo "<td>" . escape_html($row['room_name']) . "</td>\n";
 
   echo "<td>";
   // <span> for sorting
@@ -199,13 +199,13 @@ function display_entry_row(array $row)
 
   // reservation name, with a link to the view_entry page
   echo "<td>";
-  echo '<a href="' . htmlspecialchars(multisite('view_entry.php?id=' . $row['id'])) . '">' .
-        htmlspecialchars($row['name']) ."</a></td>\n";
+  echo '<a href="' . escape_html(multisite('view_entry.php?id=' . $row['id'])) . '">' .
+        escape_html($row['name']) ."</a></td>\n";
 
   // create_by, area and room names
-  echo "<td>" . htmlspecialchars(auth()->getDisplayName($row['create_by'])) . "</td>\n";
-  echo "<td>" . htmlspecialchars($row['area_name']) . "</td>\n";
-  echo "<td>" . htmlspecialchars($row['room_name']) . "</td>\n";
+  echo "<td>" . escape_html(auth()->getDisplayName($row['create_by'])) . "</td>\n";
+  echo "<td>" . escape_html($row['area_name']) . "</td>\n";
+  echo "<td>" . escape_html($row['room_name']) . "</td>\n";
 
   // start date, with a link to the calendar view
   $link = getdate($row['start_time']);
@@ -222,10 +222,10 @@ function display_entry_row(array $row)
 
   $query = http_build_query($vars, '', '&');
 
-  echo '<a href="' . htmlspecialchars(multisite("index.php?$query")) . '">';
+  echo '<a href="' . escape_html(multisite("index.php?$query")) . '">';
 
   $link_str = date_string($row['enable_periods'], $row['start_time'], $row['area_id']);
-  echo htmlspecialchars($link_str) . "</a></td>";
+  echo escape_html($link_str) . "</a></td>";
 
   // action buttons
   echo "<td>\n";
