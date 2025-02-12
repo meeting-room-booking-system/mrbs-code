@@ -8,7 +8,7 @@ function link_html(string $href, bool $add_version=false, ?string $media=null) :
 {
   $html = '<link rel="stylesheet" type="text/css" href="';
   $value = ($add_version) ? add_version($href) : $href;
-  $html .= htmlspecialchars($value) . '"';
+  $html .= escape_html($value) . '"';
   if (isset($media))
   {
     $html .= " media=\"$media\"";
