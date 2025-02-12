@@ -172,7 +172,7 @@ function do_upgrade(DB $upgrade_handle) : bool
 
   if (!$upgrade_handle->table_exists(_tbl('entry')))
   {
-    echo "<p>" . htmlspecialchars(get_vocab('no_tables_found')) . "</p>\n";
+    echo "<p>" . escape_html(get_vocab('no_tables_found')) . "</p>\n";
   }
   else
   {
@@ -186,7 +186,7 @@ function do_upgrade(DB $upgrade_handle) : bool
     }
     else
     {
-      echo "<p>" . htmlspecialchars(get_vocab('already_at_version', $current_db_schema_version)) . "</p>\n";
+      echo "<p>" . escape_html(get_vocab('already_at_version', $current_db_schema_version)) . "</p>\n";
     }
     // Then any local upgrades
     if ($result && ($current_db_schema_version_local < DB::DB_SCHEMA_VERSION_LOCAL))
@@ -239,7 +239,7 @@ function upgrade_site(array &$admin_handles, ?string $config_file=null) : bool
     return do_upgrade($admin_handles[$dsn]);
   }
 
-  echo "<p>" . htmlspecialchars(get_vocab('no_connection')) . "</p>\n";
+  echo "<p>" . escape_html(get_vocab('no_connection')) . "</p>\n";
 
   return false;
 }
@@ -254,34 +254,34 @@ function upgrade_report(bool $main_site_result, array $failed_sites) : void
   {
     // Just report on success.  Failure will be obvious.
     if ($main_site_result) {
-      echo "<p>" . htmlspecialchars(get_vocab('upgrade_completed')) . "</p>\n";
+      echo "<p>" . escape_html(get_vocab('upgrade_completed')) . "</p>\n";
     }
   }
   else
   {
-    echo "<h2>" . htmlspecialchars(get_vocab('upgrade_summary')) . "</h2>\n";
+    echo "<h2>" . escape_html(get_vocab('upgrade_summary')) . "</h2>\n";
 
     if ($main_site_result && empty($failed_sites)) {
-      echo "<p>" . htmlspecialchars(get_vocab('upgrade_completed')) . "</p>\n";
+      echo "<p>" . escape_html(get_vocab('upgrade_completed')) . "</p>\n";
     }
     else {
       // Report on the main site
       if (!$main_site_result) {
-        echo "<p>" . htmlspecialchars(get_vocab('main_site_failed')) . "</p>\n";
+        echo "<p>" . escape_html(get_vocab('main_site_failed')) . "</p>\n";
       }
 
       // Report on failed sub-sites
       if (!empty($failed_sites)) {
-        echo "<p>" . htmlspecialchars(get_vocab('failed_sites')) . "</p>\n";
+        echo "<p>" . escape_html(get_vocab('failed_sites')) . "</p>\n";
         echo "<ul>\n";
         foreach ($failed_sites as $failed_site) {
-          echo "<li>" . htmlspecialchars($failed_site) . "</li>\n";
+          echo "<li>" . escape_html($failed_site) . "</li>\n";
         }
         echo "</ul>\n";
       }
 
       // Advice on what to do next
-      echo "<p>" . htmlspecialchars(get_vocab('retry_from_failing')) . "</p>\n";
+      echo "<p>" . escape_html(get_vocab('retry_from_failing')) . "</p>\n";
     }
   }
 }
@@ -428,7 +428,7 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
   foreach ($site_config_files as $site_config_file => $dir)
   {
     // Do the upgrade for the sub-site
-    echo "<h2>" . htmlspecialchars(get_vocab('upgrading_site', $dir)) . "</h2>\n";
+    echo "<h2>" . escape_html(get_vocab('upgrading_site', $dir)) . "</h2>\n";
     if (!upgrade_site($admin_handles, $site_config_file))
     {
       $failed_sites[] = $dir;
@@ -439,7 +439,7 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
   // We only need this heading if we're in multi-site mode
   if ($multisite)
   {
-    echo "<h2>" . htmlspecialchars(get_vocab('upgrading_main_site')) . "</h2>\n";
+    echo "<h2>" . escape_html(get_vocab('upgrading_main_site')) . "</h2>\n";
   }
   $main_site_result = upgrade_site($admin_handles);
 
@@ -459,6 +459,6 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
     $$var = $value;
   }
 
-  echo '<p class="upgrade_nav"><a href="' . htmlspecialchars(multisite('index.php')) . '">' . get_vocab('returncal') . '</a>.</p>';
+  echo '<p class="upgrade_nav"><a href="' . escape_html(multisite('index.php')) . '">' . get_vocab('returncal') . '</a>.</p>';
   print_footer(true);
 }
