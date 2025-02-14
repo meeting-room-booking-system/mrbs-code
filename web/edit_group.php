@@ -161,8 +161,8 @@ $context = array(
   'year'      => $year,
   'month'     => $month,
   'day'       => $day,
-  'area'      => isset($area) ? $area : null,
-  'room'      => isset($room) ? $room : null
+  'area'      => $area ?? null,
+  'room'      => $room ?? null
 );
 
 $group_id = get_form_var('group_id', 'int');
