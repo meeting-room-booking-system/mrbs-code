@@ -13,7 +13,7 @@ use MRBS\Form\Form;
 require "defaultincludes.inc";
 
 
-function generate_add_group_form($error=null, $name=null)
+function generate_add_group_form(?string $error=null, ?string $name=null) : void
 {
   $form = new Form(Form::METHOD_POST);
   $form->addHiddenInput('action', 'add')
@@ -62,7 +62,7 @@ function generate_add_group_form($error=null, $name=null)
 }
 
 
-function generate_groups_table()
+function generate_groups_table() : void
 {
   global $auth;
 
@@ -120,7 +120,7 @@ function generate_groups_table()
 }
 
 
-function generate_edit_group_form(Group $group)
+function generate_edit_group_form(Group $group) : void
 {
   $form = new Form(Form::METHOD_POST);
   $form->addHiddenInputs(array('group_id' => $group->id))
