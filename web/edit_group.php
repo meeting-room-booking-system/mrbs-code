@@ -64,8 +64,6 @@ function generate_add_group_form(?string $error=null, ?string $name=null) : void
 
 function generate_groups_table() : void
 {
-  global $auth;
-
   $groups = new Groups();
 
   echo "<table class=\"admin_table display\" id=\"groups\">\n";
