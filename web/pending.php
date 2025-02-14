@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 use MRBS\Form\ElementInputSubmit;
@@ -6,7 +7,7 @@ use MRBS\Form\Form;
 
 require "defaultincludes.inc";
 
-function display_buttons($row, $is_series)
+function display_buttons(array $row, bool $is_series) : void
 {
   global $reminders_enabled, $reminder_interval;
 
@@ -123,7 +124,7 @@ function display_buttons($row, $is_series)
 }
 
 
-function display_table_head()
+function display_table_head() : void
 {
   echo "<thead>\n";
   echo "<tr>\n";
@@ -140,7 +141,7 @@ function display_table_head()
 }
 
 // display the table head for a subtable
-function display_subtable_head($row)
+function display_subtable_head(array $row) : void
 {
   echo "<thead>\n";
   echo "<tr>\n";
@@ -164,7 +165,7 @@ function display_subtable_head($row)
 
 
 // display the title row for a series
-function display_series_title_row($row)
+function display_series_title_row(array $row) : void
 {
   echo "<tr id=\"row_" . $row['repeat_id'] . "\">\n";
   echo "<td class=\"control\">&nbsp;</td>\n";
@@ -190,7 +191,7 @@ function display_series_title_row($row)
 }
 
 // display an entry in a row
-function display_entry_row(array $row)
+function display_entry_row(array $row) : void
 {
   global $view;
 
