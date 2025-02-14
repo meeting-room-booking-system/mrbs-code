@@ -7,7 +7,7 @@ use MRBS\Form\Form;
 require "defaultincludes.inc";
 
 
-function update_rules($role_id, array $area_rules, array $room_rules)
+function update_rules(int $role_id, array $area_rules, array $room_rules) : void
 {
   foreach ($area_rules as $area_id => $settings)
   {
@@ -27,7 +27,7 @@ function update_rules($role_id, array $area_rules, array $room_rules)
 }
 
 
-function add_role($name)
+function add_role(?string $name) : ?string
 {
   $error = null;
 
