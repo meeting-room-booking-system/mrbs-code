@@ -113,7 +113,7 @@ function generate_add_room_rule_button(Role $role) : void
 }
 
 
-function generate_add_area_rule_form(Role $role, ?string $error, int $area_id) : void
+function generate_add_area_rule_form(Role $role, ?string $error, ?int $area_id) : void
 {
   $form = new Form(Form::METHOD_POST);
   $form->addHiddenInputs(array('action' => 'add_area_rule',
@@ -178,7 +178,7 @@ function generate_add_area_rule_form(Role $role, ?string $error, int $area_id) :
 }
 
 
-function generate_add_room_rule_form(Role $role, ?string $error, int $room_id) : void
+function generate_add_room_rule_form(Role $role, ?string $error, ?int $room_id) : void
 {
   $form = new Form(Form::METHOD_POST);
   $form->addHiddenInputs(array('action' => 'add_room_rule',
