@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 use MRBS\Form\Element;
@@ -15,7 +16,7 @@ use MRBS\Form\Form;
 require "defaultincludes.inc";
 
 
-function generate_add_role_form($error=null, $name=null)
+function generate_add_role_form(?string $error=null, ?string $name=null) : void
 {
   $form = new Form(Form::METHOD_POST);
   $form->addHiddenInput('action', 'add')
@@ -64,7 +65,7 @@ function generate_add_role_form($error=null, $name=null)
 }
 
 
-function generate_add_area_rule_button(Role $role)
+function generate_add_area_rule_button(Role $role) : void
 {
   $form = new Form(Form::METHOD_POST);
   $form->addHiddenInputs(array('action' => 'add_area_rule',
@@ -88,7 +89,7 @@ function generate_add_area_rule_button(Role $role)
 }
 
 
-function generate_add_room_rule_button(Role $role)
+function generate_add_room_rule_button(Role $role) : void
 {
   $form = new Form(Form::METHOD_POST);
   $form->addHiddenInputs(array('action' => 'add_room_rule',
@@ -112,7 +113,7 @@ function generate_add_room_rule_button(Role $role)
 }
 
 
-function generate_add_area_rule_form(Role $role, $error, $area_id)
+function generate_add_area_rule_form(Role $role, ?string $error, int $area_id) : void
 {
   $form = new Form(Form::METHOD_POST);
   $form->addHiddenInputs(array('action' => 'add_area_rule',
@@ -177,7 +178,7 @@ function generate_add_area_rule_form(Role $role, $error, $area_id)
 }
 
 
-function generate_add_room_rule_form(Role $role, $error, $room_id)
+function generate_add_room_rule_form(Role $role, ?string $error, int $room_id) : void
 {
   $form = new Form(Form::METHOD_POST);
   $form->addHiddenInputs(array('action' => 'add_room_rule',
@@ -242,7 +243,7 @@ function generate_add_room_rule_form(Role $role, $error, $room_id)
 }
 
 
-function generate_delete_role_button(Role $role)
+function generate_delete_role_button(Role $role) : void
 {
   $form = new Form(Form::METHOD_POST);
   $form->setAttributes(array('action' => multisite('edit_role_handler.php')));
@@ -267,7 +268,7 @@ function generate_delete_role_button(Role $role)
 }
 
 
-function generate_roles_table()
+function generate_roles_table() : void
 {
   $roles = new Roles();
 
@@ -301,7 +302,7 @@ function generate_roles_table()
 }
 
 
-function generate_empty_row(Area $area)
+function generate_empty_row(Area $area) : Element
 {
   $tr = new Element('tr');
   // The delete button column
@@ -323,7 +324,7 @@ function generate_empty_row(Area $area)
 }
 
 
-function generate_delete_rule_button(LocationRule $rule)
+function generate_delete_rule_button(LocationRule $rule) : Form
 {
   $form = new Form(Form::METHOD_POST);
   $form->setAttributes(array('action' => multisite('edit_role_handler.php')));
@@ -364,7 +365,7 @@ function generate_delete_rule_button(LocationRule $rule)
 }
 
 
-function generate_row(LocationRule $rule, array $permission_options, array $state_options)
+function generate_row(LocationRule $rule, array $permission_options, array $state_options) : Element
 {
   if ($rule instanceof AreaRule)
   {
@@ -430,7 +431,7 @@ function generate_row(LocationRule $rule, array $permission_options, array $stat
 }
 
 
-function generate_area_roles_table(Role $role)
+function generate_area_roles_table(Role $role) : void
 {
   $permission_options = AreaRule::getPermissionOptions();
   $state_options = AreaRule::getStateOptions();
