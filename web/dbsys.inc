@@ -55,7 +55,7 @@ function get_table_short_name(string $table) : string
 
 // Convenience wrapper function to provide access to a DB object for
 // default MRBS database
-function db()
+function db() : DB
 {
   global $db_persist, $db_host, $db_login, $db_password,
          $db_database, $db_port, $dbsys, $db_options;
