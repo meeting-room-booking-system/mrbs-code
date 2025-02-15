@@ -661,6 +661,11 @@ function print_theme_header(?array $context=null, bool $simple=false, bool $omit
   {
     if (isset($value))
     {
+      // Convert booleans to 0 or 1
+      if (is_bool($value))
+      {
+        $value = (int)$value;
+      }
       echo " data-$key=\"" . escape_html($value) . '"';
     }
   }
