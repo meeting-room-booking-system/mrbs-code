@@ -5,6 +5,7 @@ namespace MRBS;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementP;
+use MRBS\Form\Field;
 use MRBS\Form\FieldInputEmail;
 use MRBS\Form\FieldInputPassword;
 use MRBS\Form\FieldInputSubmit;
@@ -71,7 +72,7 @@ $is_ajax = is_ajax();
 
 
 // Checks whether the current user can view the target user
-function can_view_user($target)
+function can_view_user(string $target) : bool
 {
   global $auth, $min_user_viewing_level;
 
@@ -91,7 +92,7 @@ function can_view_user($target)
 
 
 // Checks whether the current user can edit the target user
-function can_edit_user($target)
+function can_edit_user(string $target) : bool
 {
   $mrbs_user = session()->getCurrentUser();
 
@@ -101,7 +102,7 @@ function can_edit_user($target)
 
 // Get the type that should be used with get_form_var() for
 // a field which is a member of the array returned by get_field_info()
-function get_form_var_type($field)
+function get_form_var_type(array $field) : string
 {
   // "Level" is an exception because we've forced the value to be a string
   // so that it can be used in an associative array
@@ -127,7 +128,7 @@ function get_form_var_type($field)
 }
 
 
-function output_row(User $user)
+function output_row(User $user) : void
 {
   global $auth;
   global $is_ajax, $json_data;
@@ -298,7 +299,7 @@ function output_row(User $user)
 }
 
 
-function get_field_level($params, $disabled=false)
+function get_field_level(array $params, bool $disabled=false) : FieldSelect
 {
   global $level;
 
@@ -322,7 +323,7 @@ function get_field_level($params, $disabled=false)
 }
 
 
-function get_fieldset_roles($user)
+function get_fieldset_roles(User $user) : ?ElementFieldset
 {
   global $auth, $initial_user_creation;
 
@@ -334,7 +335,7 @@ function get_fieldset_roles($user)
 }
 
 
-function get_field_name($params, $disabled=false)
+function get_field_name(array $params, bool $disabled=false) : FieldInputText
 {
   $field = new FieldInputText();
 
@@ -361,7 +362,7 @@ function get_field_name($params, $disabled=false)
 }
 
 
-function get_field_display_name($params, $disabled=false)
+function get_field_display_name(array $params, bool $disabled=false) : FieldInputText
 {
   $field = new FieldInputText();
 
@@ -388,7 +389,7 @@ function get_field_display_name($params, $disabled=false)
 }
 
 
-function get_field_email($params, $disabled=false)
+function get_field_email(array $params, bool $disabled=false) : FieldInputEmail
 {
   $field = new FieldInputEmail();
 
@@ -406,7 +407,7 @@ function get_field_email($params, $disabled=false)
 }
 
 
-function get_field_custom($custom_field, $params, $disabled=false)
+function get_field_custom(array $custom_field, array $params, bool $disabled=false) : Field
 {
   global $select_options, $datalist_options, $is_mandatory_field, $pattern;
   global $text_input_max;
@@ -542,7 +543,7 @@ function get_field_custom($custom_field, $params, $disabled=false)
 }
 
 
-function get_fieldset_password($id=null, $disabled=false)
+function get_fieldset_password(?int $id=null, bool $disabled=false) : ElementFieldset
 {
   $fieldset = new ElementFieldset();
   $fieldset->addLegend(get_loc_field_name(User::TABLE_NAME, 'password'));
@@ -577,7 +578,7 @@ function get_fieldset_password($id=null, $disabled=false)
 //    $delete               If true, make the second button a Delete button instead of a Back button
 //    $disabled             If true, disable the Delete button
 //    $last_admin_warning   If true, add a warning about editing the last admin
-function get_fieldset_submit_buttons(?int $user_id, $delete=false, $disabled=false, $last_admin_warning=false)
+function get_fieldset_submit_buttons(?int $user_id, bool $delete=false, bool $disabled=false, bool $last_admin_warning=false) : ElementFieldset
 {
   global $auth;
 

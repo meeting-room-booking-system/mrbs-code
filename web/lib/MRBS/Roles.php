@@ -29,7 +29,7 @@ class Roles extends Attributes
 
 
   // Gets a form field for a standard form for selecting roles
-  public function getFieldset(array $selected_own, $disabled=false, $selected_groups=null) : ?object
+  public function getFieldset(array $selected_own, $disabled=false, $selected_groups=null) : ?ElementFieldset
   {
     if ($this->count() == 0)
     {
