@@ -517,6 +517,13 @@ class User extends Table
       $row['role_names'] = Roles::idsToNames($row['roles']);
     }
 
+    // Turn the last_updated column into an int (some MySQL drivers will return a string,
+    // and it won't have been caught by load() as it's a derived result).
+    if (isset($row['last_updated']))
+    {
+      $row['last_updated'] = intval($row['last_updated']);
+    }
+
     return $row;
   }
 
