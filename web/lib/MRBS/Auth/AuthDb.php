@@ -14,6 +14,7 @@ use function MRBS\get_mail_charset;
 use function MRBS\get_vocab;
 use function MRBS\multisite;
 use function MRBS\parse_email;
+use function MRBS\row_cast_columns;
 use function MRBS\toTimeString;
 use function MRBS\url_base;
 use function MRBS\utf8_strpos;
@@ -207,7 +208,17 @@ class AuthDb extends Auth
 
     $res = db()->query($sql);
 
-    return $res->all_rows_keyed();
+    $result = $res->all_rows_keyed();
+
+    foreach ($result as &$row)
+    {
+      row_cast_columns($row, 'users');
+      // Turn the last_updated column into an int (some MySQL drivers will return a string,
+      // and it won't have been caught by row_cast_columns() as it's a derived result).
+      $row['last_updated'] = intval($row['last_updated']);
+    }
+
+    return $result;
   }
 
 
