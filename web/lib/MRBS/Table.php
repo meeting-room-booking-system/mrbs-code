@@ -306,10 +306,10 @@ abstract class Table
   {
     global $dbsys;
 
-    // MySQL returns everything as a string, so convert the values to
-    // their proper types first. (It's easier to test for the db not
-    // being pgsql, because both 'mysql' and 'mysqli' cover MySQL, for
-    // backwards compatibility of config files.)
+    // Some MySQL drivers return everything as a string, so convert the values to
+    // their proper types first. (It's easier to test for the db not being pgsql,
+    // because both 'mysql' and 'mysqli' cover MySQL, for backwards compatibility
+    // of config files.)
     if ($dbsys != 'pgsql')
     {
       $columns = Columns::getInstance(_tbl(static::TABLE_NAME));
