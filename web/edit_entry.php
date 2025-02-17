@@ -1121,6 +1121,8 @@ $drag = get_form_var('drag', 'int');
 $start_seconds = get_form_var('start_seconds', 'int');
 $end_seconds = get_form_var('end_seconds', 'int');
 $selected_rooms = get_form_var('rooms', 'array');
+// $selected_rooms should be an array of ints
+$selected_rooms = array_map('intval', $selected_rooms);
 $start_date = get_form_var('start_date', 'string');
 $end_date = get_form_var('end_date', 'string');
 // And this comes from edit_entry_handler.php
