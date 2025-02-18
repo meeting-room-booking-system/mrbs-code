@@ -57,7 +57,7 @@ class Form extends Element
       if ($max_file_size !== false)
       {
         $max_file_size = self::convertToBytes($max_file_size);
-        $this->addHiddenInput('MAX_FILE_SIZE', $max_file_size);
+        $this->addHiddenInput('MAX_FILE_SIZE', $max_file_size, 'MAX_FILE_SIZE');
       }
       // Add a CSRF token
       $this->addCSRFToken();
@@ -126,11 +126,12 @@ class Form extends Element
   }
 
 
-  // Adds a hidden input to the form
-  public function addHiddenInput(string $name, $value) : Form
+  // Adds a hidden input to the form.  Optionally give the element a key
+  // so that it can be removed later using the same key.
+  public function addHiddenInput(string $name, $value, ?string $key=null) : Form
   {
     $element = new ElementInputHidden($name, $value);
-    $this->addElement($element, $name);
+    $this->addElement($element, $key);
     return $this;
   }
 
@@ -147,9 +148,9 @@ class Form extends Element
 
 
   // Removes a hidden input from the form.
-  private function removeHiddenInput(string $name) : Form
+  private function removeHiddenInput(string $key) : Form
   {
-    $this->removeElement($name);
+    $this->removeElement($key);
     return $this;
   }
 
@@ -231,7 +232,7 @@ class Form extends Element
 
   private function addCSRFToken() : Form
   {
-    $this->addHiddenInput(self::TOKEN_NAME, self::getToken());
+    $this->addHiddenInput(self::TOKEN_NAME, self::getToken(), self::TOKEN_NAME);
     return $this;
   }
 
