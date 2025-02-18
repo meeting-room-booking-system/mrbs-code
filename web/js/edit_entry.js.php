@@ -1271,6 +1271,12 @@ function populateFromSessionStorage(form)
         tagName = el.prop('tagName'),
         type;
 
+      <?php // Some of the variables, eg 'top', won't have a corresponding field ?>
+      if (tagName === undefined)
+      {
+        return;
+      }
+
       <?php
       // If it's a select element then these can be multi-valued.  If we just do
       // el.val() for each one it will change the value each time, rather than adding
