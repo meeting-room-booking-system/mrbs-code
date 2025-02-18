@@ -74,7 +74,7 @@ function get_form_var(string $var, string $var_type='string', $default=null, ?in
   // Clean up the result
   if ($is_array)
   {
-    if (isset($value))
+    if (isset($result))
     {
       $result = (array) $result;
       foreach ($result as $key => $value)
