@@ -980,7 +980,7 @@ if (isset($action) && ($action == "update"))
         $values[$fieldname] = (empty($values[$fieldname])) ? 0 : 1;
       }
 
-      if (isset($values[$fieldname]))
+      if (is_string($values[$fieldname]))
       {
         // Trim the field to remove accidental whitespace
         $values[$fieldname] = trim($values[$fieldname]);
