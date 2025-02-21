@@ -6,14 +6,19 @@ namespace MRBS;
 // a table row of details.   The first column is the $label and the second column
 // the $value.   $class is an optional class name which can be applied to the
 // second column.  If $email is set then the $value will be turned into a mailto: link.
-function create_details_row(string $label, ?string $value, bool $as_html=false, string $class='', ?string $email=null) : string
+// $value can be of type null|int|float|string (union declarations are not supported until PHP 8.0).
+function create_details_row(string $label, $value, bool $as_html=false, string $class='', ?string $email=null) : string
 {
   $value = $value ?? '';
   $result = '';
 
   if ($as_html)
   {
-    $escaped_value = mrbs_nl2br(escape_html($value));
+    $escaped_value = escape_html($value);
+    if (is_string($escaped_value))
+    {
+      $escaped_value = mrbs_nl2br($escaped_value);
+    }
     $result .= "<tr>\n";
     $result .= "<td>$label</td>\n";
     $result .= "<td" . ((!empty($class)) ? " class=\"$class\"" : '') . '>';
