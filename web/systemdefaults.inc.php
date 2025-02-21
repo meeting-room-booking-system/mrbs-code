@@ -1595,8 +1595,9 @@ $mail_settings['use_from_for_all_mail'] = false;
 // false in order not to set a Reply-To address.
 $mail_settings['use_reply_to'] = true;
 
-// The address to be used for the ORGANIZER in an iCalendar event.   Do not make
-// this email address the same as the admin email address or the recipients
+// The address to be used for the ORGANIZER in an iCalendar event.  The address should
+// be an RFC822-style address of the form "display name <address>" or just "address".
+// Do not make this email address the same as the admin email address or the recipients
 // email address because on some mail systems, eg IBM Domino, the iCalendar email
 // notification is silently discarded if the organizer's email address is the same
 // as the recipient's.  On other systems you may get a "Meeting not found" message.

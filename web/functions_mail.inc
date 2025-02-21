@@ -242,8 +242,9 @@ function get_room_admin_email($id, bool $series=false) : string
 // Create a row of a table in either plain text or HTML format.
 // Plain text:  returns "$label: $new" . MAIL_EOL
 // HTML:        returns "<tr><td>$label: </td><td>$new</td></tr>" . MAIL_EOL
+// $new and $old can be of type null|int|float|string (union declarations are not supported until PHP 8.0).
 // If $compare is TRUE then a third column is output with $old in parentheses
-function create_body_table_row(string $label, ?string $new, ?string $old, bool $compare=false, bool $as_html=false) : string
+function create_body_table_row(string $label, $new, $old, bool $compare=false, bool $as_html=false) : string
 {
   $new = $new ?? '';
   $old = $old ?? '';

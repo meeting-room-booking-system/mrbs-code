@@ -487,7 +487,27 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
   // if the organizer's email address is the same as the recipient's - presumably because
   // they assume that the recipient already knows about the event.
 
-  $organizer = PHPMailer::parseAddresses($mail_settings['organizer'], true, get_mail_charset())[0];
+  $organizer_addresses = PHPMailer::parseAddresses($mail_settings['organizer'], true, get_mail_charset());
+  if (empty($organizer_addresses))
+  {
+    // TODO: Review whether the ORGANIZER property is required.
+    // RFC 5545 states:
+    // "This property MUST be specified in an iCalendar object
+    // that specifies a group-scheduled calendar entity.  This property
+    // MUST be specified in an iCalendar object that specifies the
+    // publication of a calendar user's busy time.  This property MUST
+    // NOT be specified in an iCalendar object that specifies only a time
+    // zone definition or that defines calendar components that are not
+    // group-scheduled components, but are components only on a single
+    // user's calendar."
+    // Does MRBS count as a user? If so, does this mean that as long as
+    // there is at least one ATTENDEE the property MUST be specified?
+    $message = "The value '" . $mail_settings['organizer'] . "' supplied for " . '$mail_settings["organizer"]' .
+      " is not a valid RFC822-style email address.  Please check your MRBS config file.";
+    throw new Exception($message);
+  }
+
+  $organizer = $organizer_addresses[0];
   if (!isset($organizer['name']) || ($organizer['name'] === ''))
   {
     $organizer['name'] = get_mail_vocab('mrbs');
