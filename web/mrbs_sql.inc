@@ -2106,6 +2106,8 @@ function get_area_names(bool $all=false) : array
 // Returns NULL if $area_id does not exist.
 function get_area_details(int $area_id) : ?array
 {
+  global $timezone;
+
   $sql = "SELECT *
             FROM " . _tbl('area') . "
            WHERE id=?
@@ -2120,6 +2122,16 @@ function get_area_details(int $area_id) : ?array
 
   $row = $res->next_row_keyed();
   row_cast_columns($row, 'area');
+
+  // It's possible that the timezone could be NULL on systems upgraded from early versions
+  // of MRBS before the timezone column was in the area table and if the area details have
+  // not been edited since the upgrade.  (The column should have been populated with the
+  // system timezone on upgrade, but wasn't. It's too late to fix the upgrade step now as
+  // there will be sites out there that have already upgraded.)
+  if (!isset($row['timezone']))
+  {
+    $row['timezone'] = $timezone;
+  }
 
   return $row;
 }
