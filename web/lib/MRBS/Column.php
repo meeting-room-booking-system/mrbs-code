@@ -57,15 +57,18 @@ class Column
   }
 
 
+  // Returns the column length.  Can be null|int|string
+  // For example a DECIMAL might return "5,2".
   public function getLength()
   {
     return $this->length;
   }
 
 
+  // $length can be null|int|string
   public function setLength($length)
   {
-    $this->length = intval($length);
+    $this->length = $length;
   }
 
 
@@ -178,7 +181,7 @@ class Column
         isset($this->length) &&
         ($this->length < 256))
     {
-      $result = utf8_substr($value, 0, $this->length);
+      $result = utf8_substr($value, 0, intval($this->length));
     }
 
     return $result;
