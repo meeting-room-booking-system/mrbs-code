@@ -26,7 +26,7 @@ class Column
   private $type;
 
 
-  public function __construct($table, $name)
+  public function __construct(string $table, string $name)
   {
     $this->table = $table;
     $this->name = $name;
@@ -39,19 +39,19 @@ class Column
   }
 
 
-  public function setDefault($default)
+  public function setDefault($default) : void
   {
     $this->default = $default;
   }
 
 
-  public function getIsNullable()
+  public function getIsNullable() : bool
   {
     return $this->is_nullable;
   }
 
 
-  public function setIsNullable($is_nullable)
+  public function setIsNullable(bool $is_nullable)
   {
     $this->is_nullable = $is_nullable;
   }
