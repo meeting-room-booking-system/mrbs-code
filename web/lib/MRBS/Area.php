@@ -59,6 +59,8 @@ class Area extends Location
     global $area_defaults;
 
     // If there isn't a value in the database use the area default
+    // TODO: add upgrade steps to populate the columns with default
+    // TODO: values and make then non-nullable.
     foreach ($row as $key => $value)
     {
       if (!isset($row[$key]) && array_key_exists($key, $area_defaults))
