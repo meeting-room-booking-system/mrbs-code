@@ -2126,8 +2126,8 @@ function get_area_details(int $area_id) : ?array
   // It's possible that the timezone could be NULL on systems upgraded from early versions
   // of MRBS before the timezone column was in the area table and if the area details have
   // not been edited since the upgrade.  (The column should have been populated with the
-  // system timezone on upgrade, but wasn't. It's too late to fix the upgrade step now as
-  // there will be sites out there that have already upgraded.)
+  // system timezone on upgrade, but wasn't.  It's too complicated to add another upgrade
+  // step to fix this until the roles branch is merged back into main.)
   if (!isset($row['timezone']))
   {
     $row['timezone'] = $timezone;
