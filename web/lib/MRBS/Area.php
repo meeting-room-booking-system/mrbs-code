@@ -58,7 +58,11 @@ class Area extends Location
     global $periods, $private_override_options;
     global $area_defaults;
 
-    // If there isn't a value in the database use the area default
+    // If there isn't a value in the database use the area default.
+    // It's possible for the values to be NULL if the database has been
+    // upgraded from an early version of MRBS (eg 1.4.7) and the area
+    // settings haven't been edited and saved in MRBS.  See GitHub Issue
+    // #3832.
     // TODO: add upgrade steps to populate the columns with default
     // TODO: values and make then non-nullable.
     foreach ($row as $key => $value)
