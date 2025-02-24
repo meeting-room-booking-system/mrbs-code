@@ -2636,4 +2636,3 @@ function get_user_field(array $params, bool $datalist=false) : Field
 
   return $field;
 }
-
