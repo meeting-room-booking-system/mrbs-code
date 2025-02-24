@@ -110,6 +110,7 @@ function get_form_var_type(array $field) : string
   {
     return 'string';
   }
+
   switch($field['nature'])
   {
     case 'character':
@@ -118,6 +119,9 @@ function get_form_var_type(array $field) : string
     case 'integer':
       // Smallints and tinyints are considered to be booleans
       $type = (isset($field['length']) && ($field['length'] <= 2)) ? 'bool' : 'int';
+      break;
+    case 'real':
+      $type = 'float';
       break;
     // We can only really deal with the types above at the moment
     default:
