@@ -116,6 +116,9 @@ class Column
       case self::NATURE_INTEGER:
         $var_type = ($this->isBooleanLike()) ? 'bool' : 'int';
         break;
+      case self::NATURE_REAL:
+        $var_type = 'float';
+        break;
       // We can only really deal with the types above at the moment
       default:
         $var_type = 'string';
