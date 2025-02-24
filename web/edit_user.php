@@ -100,38 +100,6 @@ function can_edit_user(string $target) : bool
 }
 
 
-// Get the type that should be used with get_form_var() for
-// a field which is a member of the array returned by get_field_info()
-function get_form_var_type(array $field) : string
-{
-  // "Level" is an exception because we've forced the value to be a string
-  // so that it can be used in an associative array
-  if ($field['name'] == 'level')
-  {
-    return 'string';
-  }
-
-  switch($field['nature'])
-  {
-    case 'character':
-      $type = 'string';
-      break;
-    case 'integer':
-      // Smallints and tinyints are considered to be booleans
-      $type = (isset($field['length']) && ($field['length'] <= 2)) ? 'bool' : 'int';
-      break;
-    case 'real':
-      $type = 'float';
-      break;
-    // We can only really deal with the types above at the moment
-    default:
-      $type = 'string';
-      break;
-  }
-  return $type;
-}
-
-
 function output_row(User $user) : void
 {
   global $auth;
