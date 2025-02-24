@@ -537,6 +537,13 @@ if (is_admin() || !empty($enabled_areas))
                       $value = $r[$field['name']] ?? '';
                       echo "<td class=\"int\"><div>" . escape_html($value) . "</div></td>\n";
                     }
+                    elseif ($field['nature'] == 'real')
+                    {
+                      // floats
+                      // TODO: check whether these sort properly and, if not, the best way to do so
+                      $value = $r[$field['name']] ?? '';
+                      echo "<td><div>" . escape_html($value) . "</div></td>\n";
+                    }
                     else
                     {
                       // strings
