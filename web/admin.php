@@ -375,6 +375,13 @@ function display_rooms($area_id)
                     $value = $room->{$column->name} ?? '';
                     echo "<td class=\"int\"><div>" . escape_html($value) . "</div></td>\n";
                   }
+                  elseif ($column->getNature() == Column::NATURE_REAL)
+                  {
+                    // floats
+                    // TODO: check whether these sort properly and, if not, the best way to do so
+                    $value = $room->{$column->name} ?? '';
+                    echo "<td><div>" . escape_html($value) . "</div></td>\n";
+                  }
                   else
                   {
                     // strings
