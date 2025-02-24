@@ -107,8 +107,11 @@ function create_details_body(array $data, bool $as_html=false, bool $keep_privat
         }
         else
         {
-          $user = auth()->getUser($data[$key]);
-          $data[$key] = (isset($user)) ? $user->display_name : '';
+          $user = auth()->getUser($value);
+          if (isset($user))
+          {
+            $data[$key] = $user->display_name;
+          }
         }
         // Add in the email address if there is one and we are allowed to
         if (!isset($user) ||
