@@ -21,7 +21,7 @@ namespace MRBS;
 
 // Gets a form variable.
 //    $var        The variable name
-//    $var_type   The type of the variable ('bool', 'decimal', 'int', 'string').  Arrays of these
+//    $var_type   The type of the variable ('bool', 'decimal', 'float', 'int', 'string').  Arrays of these
 //                types are also supported by enclosing the types in square brackets, eg '[int]'.
 //                For backwards compatibility 'array' is also supported and is equivalent to '[string]'.
 //    $default    The default value for the variable
@@ -117,6 +117,9 @@ function clean_value($value, string $element_type)
         $value = null;
       }
       break;
+    case 'float':
+      $value = ($value === '') ? null : floatval($value);
+      break;
     case 'int':
       $value = ($value === '') ? null : intval($value);
       break;
@@ -139,7 +142,7 @@ function parse_var_type(string $var_type) : array
   $element_type = $matches[1] ?? $var_type;
 
   // Validate
-  if (!in_array($element_type, ['bool', 'decimal', 'int', 'string']))
+  if (!in_array($element_type, ['bool', 'decimal', 'float', 'int', 'string']))
   {
     throw new \InvalidArgumentException("Invalid argument '$var_type'");
   }
