@@ -118,7 +118,7 @@ function can_edit_user($target)
 
 // Get the type that should be used with get_form_var() for
 // a field which is a member of the array returned by get_field_info()
-function get_form_var_type($field)
+function get_form_var_type(array $field) : string
 {
   // "Level" is an exception because we've forced the value to be a string
   // so that it can be used in an associative array
