@@ -49,12 +49,10 @@ foreach($fields as $field)
   $var = VAR_PREFIX . $field['name'];
   $$var = get_form_var($var, get_form_var_type($field));
 
-  // Turn checkboxes into booleans
-  if (($field['nature'] == 'integer') &&
-      isset($field['length']) &&
-      ($field['length'] <= 2))
+  // Cast booleans to ints (0 or 1) for insertion into the database
+  if (is_bool($$var))
   {
-    $$var = (empty($$var)) ? 0 : 1;
+    $$var = intval($$var);
   }
 
   // Trim any strings and truncate them to the maximum field length

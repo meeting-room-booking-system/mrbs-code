@@ -110,7 +110,7 @@ function get_form_var_type(array $field) : string
       break;
     case 'integer':
       // Smallints and tinyints are considered to be booleans
-      $type = (isset($field['length']) && ($field['length'] <= 2)) ? 'string' : 'int';
+      $type = (isset($field['length']) && ($field['length'] <= 2)) ? 'bool' : 'int';
       break;
     case 'real':
       $type = 'float';
