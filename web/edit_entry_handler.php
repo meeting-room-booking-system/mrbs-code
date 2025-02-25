@@ -236,31 +236,10 @@ foreach($fields as $field)
 {
   if (!in_array($field['name'], $standard_fields['entry']))
   {
-    switch($field['nature'])
-    {
-      case 'character':
-        $f_type = 'string';
-        break;
-      case 'integer':
-        // Smallints and tinyints are considered to be booleans
-        $f_type = (isset($field['length']) && ($field['length'] <= 2)) ? 'string' : 'int';
-        break;
-      case 'decimal':
-        $f_type = 'decimal';
-        break;
-      // We can only really deal with the types above at the moment
-      default:
-        $f_type = 'string';
-        break;
-    }
-
+    $f_type = get_form_var_type($field);
     $var = VAR_PREFIX . $field['name'];
     $custom_fields[$field['name']] = get_form_var($var, $f_type);
 
-    if (($f_type == 'int') && ($custom_fields[$field['name']] === ''))
-    {
-      $custom_fields[$field['name']] = null;
-    }
     // Turn checkboxes into booleans
     if (($field['nature'] == 'integer') &&
         isset($field['length']) &&
