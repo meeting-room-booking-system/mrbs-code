@@ -244,21 +244,12 @@ foreach($fields as $field)
     $var = VAR_PREFIX . $field['name'];
     $custom_fields[$field['name']] = get_form_var($var, $f_type);
 
-    // Turn checkboxes into booleans
-    if (($field['nature'] == 'integer') &&
-        isset($field['length']) &&
-        ($field['length'] <= 2))
-    {
-      $custom_fields[$field['name']] = (bool) $custom_fields[$field['name']];
-    }
-
     // Trim any strings and truncate them to the maximum field length
     if (is_string($custom_fields[$field['name']]) && ($field['nature'] != 'decimal'))
     {
       $custom_fields[$field['name']] = trim($custom_fields[$field['name']]);
       $custom_fields[$field['name']] = truncate($custom_fields[$field['name']], 'entry.' . $field['name']);
     }
-
   }
 }
 
