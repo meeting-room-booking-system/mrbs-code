@@ -2106,7 +2106,7 @@ function get_area_names(bool $all=false) : array
 // Returns NULL if $area_id does not exist.
 function get_area_details(int $area_id) : ?array
 {
-  global $timezone;
+  global $area_defaults;
 
   $sql = "SELECT *
             FROM " . _tbl('area') . "
@@ -2130,7 +2130,7 @@ function get_area_details(int $area_id) : ?array
   // step to fix this until the roles branch is merged back into main.)
   if (!isset($row['timezone']))
   {
-    $row['timezone'] = $timezone;
+    $row['timezone'] = $area_defaults['timezone'];
   }
 
   return $row;
