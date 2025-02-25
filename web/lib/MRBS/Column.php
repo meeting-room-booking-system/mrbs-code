@@ -101,7 +101,7 @@ class Column
     $this->type = $type;
   }
 
-  // Gets the type ('bool', 'int' or 'string') to be used with get_form_var().
+  // Gets the type ('bool', 'decimal', 'float', 'int' or 'string') to be used with get_form_var().
   // TODO: this method maybe doesn't belong here.
   public function getFormVarType() : string
   {
