@@ -211,7 +211,9 @@ function output_row(User $user) : void
             // Fall through
           case 'last_login':
             // Put the UNIX timestamp in a span so that the JavaScript can sort it properly.
-            $values[] = '<span title="' . (($col_value) ? escape_html($col_value) : '') . '"></span>' .
+            // If there isn't a date then put '0' in the title, otherwise DataTables throws
+            // a TypeError if you try and sort the column.
+            $values[] = '<span title="' . (($col_value) ? escape_html($col_value) : '0') . '"></span>' .
                         (($col_value) ? escape_html(time_date_string($col_value)) : '');
             break;
 
