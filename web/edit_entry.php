@@ -1459,7 +1459,7 @@ else
     // Set the duration
     if ($enable_periods)
     {
-      $duration = 60;  // one period
+      $duration = ($default_duration_periods ?? 1) * SECONDS_PER_MINUTE;  // One minute is one period
     }
     else
     {
