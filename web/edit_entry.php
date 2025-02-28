@@ -1463,7 +1463,7 @@ else
     }
     else
     {
-      $duration = (isset($default_duration)) ? $default_duration : SECONDS_PER_HOUR;
+      $duration = $default_duration ?? SECONDS_PER_HOUR;
     }
 
     // Make sure the duration doesn't exceed the maximum
