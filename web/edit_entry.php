@@ -1495,11 +1495,11 @@ else
     // Set the duration
     if ($enable_periods)
     {
-      $duration = 60;  // one period
+      $duration = ($default_duration_periods ?? 1) * SECONDS_PER_MINUTE;  // One minute is one period
     }
     else
     {
-      $duration = (isset($default_duration)) ? $default_duration : SECONDS_PER_HOUR;
+      $duration = $default_duration ?? SECONDS_PER_HOUR;
     }
 
     // Make sure the duration doesn't exceed the maximum

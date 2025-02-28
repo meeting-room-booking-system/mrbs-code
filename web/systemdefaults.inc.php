@@ -775,6 +775,10 @@ $force_srtftime = false;
  * Miscellaneous settings
  ************************/
 
+// Default booking duration when using periods.  (The default duration when using
+// times is specified in areadefaults.inc.php.)
+$default_duration_periods = 1; // Number of periods
+
 // Maximum repeating entries (max needed +1):
 $max_rep_entrys = 365 + 1;
 
