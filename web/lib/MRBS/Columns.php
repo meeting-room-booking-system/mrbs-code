@@ -64,7 +64,7 @@ class Columns implements Countable, Iterator
   }
 
 
-  public function getColumnByName($name) : ?Column
+  public function getColumnByName(string $name) : ?Column
   {
     foreach ($this as $column)
     {
