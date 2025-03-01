@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS;
 
 // At the moment MRBS\Exception is identical to \Exception and only exists to catch
