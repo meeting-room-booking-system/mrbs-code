@@ -51,7 +51,7 @@ class Column
   }
 
 
-  public function setIsNullable(bool $is_nullable)
+  public function setIsNullable(bool $is_nullable) : void
   {
     $this->is_nullable = $is_nullable;
   }
@@ -66,19 +66,19 @@ class Column
 
 
   // $length can be null|int|string
-  public function setLength($length)
+  public function setLength($length) : void
   {
     $this->length = $length;
   }
 
 
-  public function getNature()
+  public function getNature() : int
   {
     return $this->nature;
   }
 
 
-  public function setNature($nature)
+  public function setNature(int $nature) : void
   {
     $reflectionClass = new ReflectionClass($this);
     $constants = $reflectionClass->getConstants();
