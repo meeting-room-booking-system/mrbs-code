@@ -71,7 +71,7 @@ function create_details_body(array $data, bool $as_html=false, bool $keep_privat
 
   // Go through each of the columns and for each of them that can be made private
   // substitute the private text if the user is not allowed to see the data
-  $private_text = "[" . get_vocab("unavailable") . "]";
+  $private_text = get_vocab("unavailable");
 
   foreach ($data as $key => $value)
   {
