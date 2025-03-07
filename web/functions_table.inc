@@ -64,7 +64,7 @@ function prepare_entry(array $entry) : array
     {
       if ($is_private_field["entry.$key"])
       {
-        $entry[$key] = '[' . get_vocab('unavailable') . ']';
+        $entry[$key] = get_vocab('unavailable');
       }
     }
 
