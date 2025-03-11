@@ -336,13 +336,11 @@ if (!db()->table_exists(_tbl('entry')))
 $current_db_schema_version = db_schema_version(db());
 $current_db_schema_version_local = db_schema_version(db(), true);
 
-// Check whether the database schema versions are higher than expected
-// by this version of MRBS.  Database downgrades are not supported.
-if (($current_db_schema_version > DB::DB_SCHEMA_VERSION) ||
-    ($current_db_schema_version_local > DB::DB_SCHEMA_VERSION_LOCAL))
-{
-  fatal_error(get_vocab('mrbs_upgrade_needed'));
-}
+// Although we could check whether the database schema version is higher than
+// that expected by MRBS, we don't.  That's because if we do it prevents us
+// performing backwards compatible database upgrades in the background, because
+// the production site will stop working unnecessarily once the database has
+// been upgraded.
 
 // If either of the database schema version numbers are out of date, then
 // upgrade the database - provided of course that the entry table exists.
