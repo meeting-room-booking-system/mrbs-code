@@ -2,6 +2,14 @@
 declare(strict_types=1);
 namespace MRBS;
 
+// Site-specific php.ini settings
+if (!empty($ini_directives))
+{
+  foreach ($ini_directives as $option => $value)
+  {
+    ini_set($option, $value);
+  }
+}
 
 // Initialise error reporting
 init_errors();
