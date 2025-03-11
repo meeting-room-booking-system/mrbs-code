@@ -143,6 +143,25 @@ $db_options['mysql']['ssl_verify_server_cert'] = null;  // boolean
 // There are none at the moment.
 
 
+/******************
+ * System settings
+ ******************/
+
+// The $ini_directives setting can be used to set php.ini directives.  This can
+// be useful if (a) you don't have easy access to the php.ini file or (b) in
+// multisite mode when you want to have different settings for different sites.
+// Only settings that can be set in user scripts (INI_USER) may be used.  For
+// more details see https://www.php.net/manual/en/ini.list.php.
+// This should be an associative array indexed by option, for example:
+// $ini_directives = [
+//   'memory_limit' => '64M',
+//   'session.gc_probability' => 1,
+//   'session.gc_divisor' => 100,
+//   'session.gc_maxlifetime' => 90*24*60*60  // 90 days
+// ];
+$ini_directives = [];
+
+
 /*********************************
  * Site identification information
  *********************************/
