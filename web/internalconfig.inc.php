@@ -16,7 +16,7 @@ namespace MRBS;
 // Variables no longer used in versions of MRBS > 1.4.4.1
 if (isset($provisional_enabled))
 {
-  $message = 'Please check your config file.   The variable $provisional_enabled ' .
+  $message = 'Please check your MRBS config file.   The variable $provisional_enabled ' .
              'is no longer used and has been replaced by $approval_enabled.';
   trigger_error($message, E_USER_NOTICE);
   $approval_enabled = (bool) $provisional_enabled;
@@ -28,7 +28,7 @@ if (isset($mail_settings['admin_all']))
   // We won't set $mail_settings['on_new'] because the default is TRUE
   // which gives the same behaviour as before, and if it's been set to FALSE
   // it means the site admin has deliberately changed it.
-  $message = 'Please check your config file.   The variable $mail_settings["admin_all"] ' .
+  $message = 'Please check your MRBS config file.   The variable $mail_settings["admin_all"] ' .
              'is no longer used and has been replaced by $mail_settings["on_new"], ' .
              '$mail_settings["on_change"] and $mail_settings["on_delete"].';
   trigger_error($message, E_USER_NOTICE);
@@ -37,7 +37,7 @@ if (isset($mail_settings['admin_all']))
 
 if (isset($mail_settings['admin_on_delete']))
 {
-  $message = 'Please check your config file.   The variable $mail_settings["admin_on_delete"] ' .
+  $message = 'Please check your MRBS config file.   The variable $mail_settings["admin_on_delete"] ' .
              'is no longer used and has been replaced by $mail_settings["on_delete"].';
   trigger_error($message, E_USER_NOTICE);
   $mail_settings['on_delete'] = (bool) $mail_settings['admin_on_delete'];
@@ -45,7 +45,7 @@ if (isset($mail_settings['admin_on_delete']))
 
 if (isset($dateformat))
 {
-  $message = 'Please check your config file. The setting $dateformat ' .
+  $message = 'Please check your MRBS config file. The setting $dateformat ' .
              'is no longer used and has been replaced by $datetime_formats. ' .
              'See systemdefaults.inc.php for more details.';
   trigger_error($message, E_USER_NOTICE);
@@ -54,21 +54,21 @@ if (isset($dateformat))
 // Variables no longer used in versions of MRBS > 1.4.7
 if (isset($highlight_method))
 {
-  $message = 'Please check your config file.   The variable $highlight_method ' .
+  $message = 'Please check your MRBS config file.   The variable $highlight_method ' .
              'is no longer used and is redundant.';
   trigger_error($message, E_USER_NOTICE);
 }
 
 if (isset($javascript_cursor))
 {
-  $message = 'Please check your config file.   The variable $javascript_cursor ' .
+  $message = 'Please check your MRBS config file.   The variable $javascript_cursor ' .
              'is no longer used and is redundant.';
   trigger_error($message, E_USER_NOTICE);
 }
 
 if (isset($mail_charset))
 {
-  $message = 'Please check your config file.   The variable $mail_charset ' .
+  $message = 'Please check your MRBS config file.   The variable $mail_charset ' .
              'is no longer used.   All emails are sent as UTF-8.';
   trigger_error($message, E_USER_NOTICE);
 }
@@ -76,7 +76,7 @@ if (isset($mail_charset))
 // Variables no longer used in versions of MRBS > 1.4.11
 if (isset($min_book_ahead_enabled))
 {
-  $message = 'Please check your config file.   The variable $min_book_ahead_enabled ' .
+  $message = 'Please check your MRBS config file.   The variable $min_book_ahead_enabled ' .
              'is no longer used and has been replaced by $min_create_ahead_enabled ' .
              'and $min_delete_ahead_enabled.';
   trigger_error($message, E_USER_WARNING);
@@ -86,7 +86,7 @@ if (isset($min_book_ahead_enabled))
 
 if (isset($max_book_ahead_enabled))
 {
-  $message = 'Please check your config file.   The variable $max_book_ahead_enabled ' .
+  $message = 'Please check your MRBS config file.   The variable $max_book_ahead_enabled ' .
              'is no longer used and has been replaced by $max_create_ahead_enabled ' .
              'and $max_delete_ahead_enabled.';
   trigger_error($message, E_USER_WARNING);
@@ -96,7 +96,7 @@ if (isset($max_book_ahead_enabled))
 
 if (isset($min_book_ahead_secs))
 {
-  $message = 'Please check your config file.   The variable $min_book_ahead_secs ' .
+  $message = 'Please check your MRBS config file.   The variable $min_book_ahead_secs ' .
              'is no longer used and has been replaced by $min_create_ahead_secs ' .
              'and $min_delete_ahead_secs.';
   trigger_error($message, E_USER_WARNING);
@@ -106,7 +106,7 @@ if (isset($min_book_ahead_secs))
 
 if (isset($max_book_ahead_secs))
 {
-  $message = 'Please check your config file.   The variable $max_book_ahead_secs ' .
+  $message = 'Please check your MRBS config file.   The variable $max_book_ahead_secs ' .
              'is no longer used and has been replaced by $max_create_ahead_secs ' .
              'and $max_delete_ahead_secs.';
   trigger_error($message, E_USER_WARNING);
@@ -116,7 +116,7 @@ if (isset($max_book_ahead_secs))
 
 if (isset($maxlength))
 {
-  $message = 'Please check your config file.   The variable $maxlength ' .
+  $message = 'Please check your MRBS config file.   The variable $maxlength ' .
              'is no longer used and maximum field lengths are now calculated automatically.';
   trigger_error($message, E_USER_NOTICE);
 }
@@ -125,7 +125,7 @@ if (isset($maxlength))
 if (isset($db_nopersist))
 {
   $db_persist = !$db_nopersist;
-  $message = 'Please check your config file.  The $db_nopersist config variable ' .
+  $message = 'Please check your MRBS config file.  The $db_nopersist config variable ' .
              'has been replaced by $db_persist';
   trigger_error($message, E_USER_NOTICE);
 }
@@ -134,7 +134,7 @@ if (isset($db_nopersist))
 if (false !== ($key = array_search('start_date', $edit_entry_field_order)))
 {
   $edit_entry_field_order[$key] = 'start_time';
-  $message = 'Please check your config file.  The value \'start_date\' in the variable ' .
+  $message = 'Please check your MRBS config file.  The value \'start_date\' in the variable ' .
              '$edit_entry_field_order has been replaced by \'start_time\'.';
   trigger_error($message, E_USER_NOTICE);
 }
@@ -142,7 +142,7 @@ if (false !== ($key = array_search('start_date', $edit_entry_field_order)))
 if (false !== ($key = array_search('end_date', $edit_entry_field_order)))
 {
   $edit_entry_field_order[$key] = 'end_time';
-  $message = 'Please check your config file.  The value \'end_date\' in the variable ' .
+  $message = 'Please check your MRBS config file.  The value \'end_date\' in the variable ' .
              '$edit_entry_field_order has been replaced by \'end_time\'.';
   trigger_error($message, E_USER_NOTICE);
 }
@@ -150,7 +150,7 @@ if (false !== ($key = array_search('end_date', $edit_entry_field_order)))
 if (false !== ($key = array_search('areas', $edit_entry_field_order)))
 {
   $edit_entry_field_order[$key] = 'room_id';
-  $message = 'Please check your config file.  The value \'areas\' in the variable ' .
+  $message = 'Please check your MRBS config file.  The value \'areas\' in the variable ' .
              '$edit_entry_field_order has been replaced by \'room_id\'.';
   trigger_error($message, E_USER_NOTICE);
 }
@@ -165,7 +165,7 @@ if (false !== ($key = array_search('rooms', $edit_entry_field_order)))
   {
     $edit_entry_field_order[$key] = 'room_id';
   }
-  $message = 'Please check your config file.  The value \'rooms\' in the variable ' .
+  $message = 'Please check your MRBS config file.  The value \'rooms\' in the variable ' .
              '$edit_entry_field_order has been replaced by \'room_id\'.';
   trigger_error($message, E_USER_NOTICE);
 }
@@ -173,7 +173,7 @@ if (false !== ($key = array_search('rooms', $edit_entry_field_order)))
 // Variables no longer used in versions of MRBS > 1.11.0
 if (isset($twentyfourhour_format))
 {
-  $message = 'Please check your config file. The setting $twentyfourhour_format ' .
+  $message = 'Please check your MRBS config file. The setting $twentyfourhour_format ' .
              'is no longer used and whether a 12 or 24-hour clock is used is determined ' .
              'by the locale. See systemdefaults.inc.php for more details.';
   trigger_error($message, E_USER_NOTICE);
@@ -181,7 +181,7 @@ if (isset($twentyfourhour_format))
 
 if (isset($strftime_format))
 {
-  $message = 'Please check your config file. The setting $strftime_format ' .
+  $message = 'Please check your MRBS config file. The setting $strftime_format ' .
              'is no longer used and has been replaced by $datetime_formats. ' .
              'See systemdefaults.inc.php for more details.';
   trigger_error($message, E_USER_NOTICE);
@@ -203,22 +203,22 @@ if ($enable_periods)
 {
   if (isset($periods) && (count($periods) > 60))
   {
-    die('Configuration error: too many periods defined');
+    die('MRBS configuration error: too many periods defined');
   }
 }
 else
 {
   if (!isset($resolution))
   {
-    die('Configuration error: $resolution has not been set.');
+    die('MRBS configuration error: $resolution has not been set.');
   }
   if ($resolution <= 0)
   {
-    die('Configuration error: $resolution is less than or equal to zero.');
+    die('MRBS configuration error: $resolution is less than or equal to zero.');
   }
   if ($resolution%60 != 0)
   {
-    die('Configuration error: $resolution is not an integral number of minutes.');
+    die('MRBS configuration error: $resolution is not an integral number of minutes.');
   }
   // Not safe to call get_start_first_slot() etc. here as the timezone won't necessarily have
   // been set yet(although quite often it will have been by php.ini using date.timezone)
@@ -231,7 +231,7 @@ else
   $start_difference = $start_last_slot - $start_first_slot;    // seconds
   if ($start_difference%$resolution != 0)
   {
-    die('Configuration error: make sure that the length of the booking day is an integral multiple of $resolution.');
+    die('MRBS configuration error: make sure that the length of the booking day is an integral multiple of $resolution.');
   }
 }
 
