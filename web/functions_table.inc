@@ -853,7 +853,7 @@ function multiday_header_rows(
   global $row_labels_both_sides;
 
   $result = array();
-  $n_rows = 2;
+  $n_rows = ($view == "year") ? 1 : 2;
   // Loop through twice: one row for the days of the week, the next for the date.
   for ($i = 0; $i < $n_rows; $i++)
   {
@@ -883,17 +883,33 @@ function multiday_header_rows(
       $link = "index.php?" . http_build_query($vars, '', '&');
       $link = multisite($link);
       $t = mktime(12, 0, 0, $month, $day_start_interval + $j, $year);
-      $text = ($i === 0) ? get_day($t, $view) : get_date($t, $view);
+      if ($view == "year")
+      {
+        $day_in_month = date('t', $t);
+        $colspan = ' style="width: 8%" colspan="'.$day_in_month.'"';
+        $text = date('F', $t);
+      }
+      else
+      {
+        $colspan = '';
+        $text = ($i === 0) ? get_day($t, $view) : get_date($t, $view);
+      }
+
       $date = new DateTime();
       $date->setTimestamp($t);
       $classes = get_date_classes($date);
-      $result[$i] .= '<th' .
+      $result[$i] .= '<th' . $colspan .
         // Add the date for JavaScript.  Only really necessary for the first row in
         // the week view when not viewing all the rooms, but just add it always.
         ' data-date="' . escape_html($date->getISODate()) . '"' .
         ((!empty($classes)) ? ' class="' . implode(' ', $classes) . '"' : '') .
         '><a href="' . escape_html($link) . '">' . escape_html($text) . "</a></th>\n";
+      if ($view == "year")
+      {
+        $j += $day_in_month - 1;
+      }
     }
+
 
     // next line to display rooms on right side
     if ($row_labels_both_sides)
@@ -931,8 +947,16 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
   // case people want a transposed view in future.
   $days_along_top = true;
 
-  $rooms = get_rooms($area_id);
-  $n_rooms = count($rooms);
+  if ($view_all)
+  {
+    $rooms = get_rooms($area_id);
+    $n_rooms = count($rooms);
+  }
+  else
+  {
+    $rooms = array(get_room_details($room_id));
+    $n_rooms = 1;
+  }
 
   // Check to see whether there are any rooms in the area
   if ($n_rooms == 0)
@@ -959,13 +983,19 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
       $n_days = (int) date('t', $time);
       $start_dow = (int) date('N', mktime(12, 0, 0, $month, 1, $year));
       break;
+    case 'year':
+      $day_start_interval = 1;
+      $n_days = (int) date('L', $time) ? 366 : 365;
+      $start_dow = (int) date('N', mktime(12, 0, 0, $month, 1, $year));
+      $resolution = 86400;
+      break;
     default:
       trigger_error("Unsupported view '$view'", E_USER_WARNING);
       break;
   }
 
   // Get the time slots
-  $n_time_slots = get_n_time_slots();
+  $n_time_slots = ($view != "year") ? get_n_time_slots() : 1;
   $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
   $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
 
@@ -1056,7 +1086,35 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
         $date->setDate($year, $month, $d);
         $classes = get_date_classes($date);
 
+        // merge events spanning multiple days
+        $colspan = 1;
+        if ($view == "year")
+        {
+          $classes = array();
+          $current_slot = $map->slot($room_id, $d, $morning_slot_seconds);
+          if (isset($current_slot) && count($current_slot) == 1)
+          {
+            for ($k = $d + 1; $k < $n_days; $k++)
+            {
+              $next_slot = $map->slot($room_id, $k, $morning_slot_seconds);
+              if (isset($next_slot) && count($next_slot) == 1 && $next_slot[0]['id'] == $current_slot[0]['id'])
+              {
+                $colspan++;
+              }
+              else
+              {
+                break;
+              }
+            }
+          }
+        }
+
         $tbody .= '<td';
+        if ($colspan > 1)
+        {
+          $tbody .= ' style="width; ' . ( 8 * $colspan) . '%" colspan="' . $colspan . '"';
+        }
+
         if (!empty($classes))
         {
           $tbody .= ' class="' . implode(' ', $classes) . '"';
@@ -1131,6 +1189,8 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
 
         $tbody .= "</a>\n";
         $tbody .= "</td>\n";
+
+        $j += ($colspan - 1);
       }
 
       if ($row_labels_both_sides)
@@ -1611,6 +1671,11 @@ function month_table_innerhtml(string $view, int $view_all, int $year, int $mont
   {
     return month_room_table_innerhtml($view, $view_all, $year, $month, $day, $area, $room);
   }
+}
+
+function year_table_innerhtml(string $view, int $view_all, int $year, int $month, int $day, int $area, int $room) : string
+{
+  return multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day, $area, $room);
 }
 
 

@@ -31,6 +31,7 @@ $vocab["goto"]               = "Go to";
 $vocab["nav_day"]            = "Day";
 $vocab["nav_week"]           = "Week";
 $vocab["nav_month"]          = "Month";
+$vocab["nav_year"]           = "Year";
 $vocab["highlight_line"]     = "Highlight this line";
 $vocab["click_to_reserve"]   = "Click on the cell to make a reservation.";
 $vocab["timezone"]           = "Timezone";
@@ -61,7 +62,16 @@ $vocab["cancel"]             = "Cancel";
 $vocab["viewday"]            = "View Day";
 $vocab["viewweek"]           = "View Week";
 $vocab["viewmonth"]          = "View Month";
+$vocab["viewmonth2"]         = "Monthly agenda";
+$vocab["viewyear"]           = "Yearly agenda";
 $vocab["ppreview"]           = "Print Preview";
+
+// Used in year.php
+$vocab['all_areas']          = 'All areas';
+$vocab['all_rooms']          = 'All rooms';
+$vocab['yearbefore']         = 'Previous year';
+$vocab['yearafter']          = 'Next year';
+$vocab['gotothisyear']       = 'Current year';
 
 // Used in edit_entry.php
 $vocab["addentry"]           = "Add Entry";

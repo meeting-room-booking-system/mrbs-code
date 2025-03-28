@@ -181,6 +181,9 @@ function get_adjacent_link(string $view, int $view_all, int $year, int $month, i
     case 'month':
       $date->modifyMonthsNoOverflow($increment);
       break;
+    case 'year':
+      $date->modifyYearsNoOverflow($increment);
+      break;
     default:
       throw new \Exception("Unknown view '$view'");
       break;
@@ -238,7 +241,8 @@ function get_view_nav(string $current_view, int $view_all, int $year, int $month
 
   $views = array('day' => 'nav_day',
                  'week' => 'nav_week',
-                 'month' => 'nav_month');
+                 'month' => 'nav_month',
+                 'year' => 'nav_year');
 
   foreach ($views as $view => $token)
   {
@@ -288,6 +292,11 @@ function get_arrow_nav(string $view, int $view_all, int $year, int $month, int $
       $title_prev = get_vocab('monthbefore');
       $title_this = get_vocab('gotothismonth');
       $title_next = get_vocab('monthafter');
+      break;
+    case 'year':
+      $title_prev = get_vocab('yearbefore');
+      $title_this = get_vocab('gotothisyear');
+      $title_next = get_vocab('yearafter');
       break;
     default:
       throw new \Exception("Unknown view '$view'");
@@ -383,6 +392,10 @@ function get_date_heading(string $view, int $year, int $month, int $day) : strin
       $html .= datetime_format($datetime_formats['view_month'], $time);
       break;
 
+    case 'year':
+      $html .= datetime_format($datetime_formats['view_year'], $time);
+      break;
+
     default:
       throw new \Exception("Unknown view '$view'");
       break;
@@ -456,6 +469,9 @@ switch ($view)
   case 'month':
     $inner_html = month_table_innerhtml($view, $view_all, $year, $month, $day, $area, $room);
     break;
+  case 'year':
+    $inner_html = year_table_innerhtml($view, $view_all, $year, $month, $day, $area, $room);
+    break;
   default:
     if ($view !== 'day')
     {
@@ -482,6 +498,7 @@ $context = array(
     'view_all'  => $view_all,
     'year'      => $year,
     'month'     => $month,
+    'year'      => $year,
     'day'       => $day,
     'area'      => $area,
     'room'      => $room ?? null,

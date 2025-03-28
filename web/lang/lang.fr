@@ -32,6 +32,7 @@ $vocab["goto"]               = "Afficher";
 $vocab["nav_day"]            = "Jour";
 $vocab["nav_week"]           = "Semaine";
 $vocab["nav_month"]          = "Mois";
+$vocab["nav_year"]           = "Année";
 $vocab["highlight_line"]     = "Surligner cette ligne";
 $vocab["click_to_reserve"]   = "Cliquer sur la cellule pour réserver.";
 $vocab["timezone"]           = "Fuseau horaire";
@@ -62,7 +63,16 @@ $vocab["cancel"]             = "Annuler";
 $vocab["viewday"]            = "Afficher par jour";
 $vocab["viewweek"]           = "Afficher par semaine";
 $vocab["viewmonth"]          = "Afficher par mois";
+$vocab["viewmonth2"]         = "Planning mensuel";
+$vocab["viewyear"]           = "Planning annuel";
 $vocab["ppreview"]           = "Format imprimable";
+
+// Used in year.php
+$vocab['all_areas']          = 'Tous les lieux';
+$vocab['all_rooms']          = 'Toutes les pièces';
+$vocab['yearbefore']         = 'Année précédente';
+$vocab['yearafter']          = 'Année suivante';
+$vocab['gotothisyear']       = 'Année actuelle';
 
 // Used in edit_entry.php
 $vocab["addentry"]           = "Ajouter une réservation";

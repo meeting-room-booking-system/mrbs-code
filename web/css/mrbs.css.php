@@ -602,7 +602,7 @@ nav.main_calendar > nav:last-child {
 
 nav.view div.container {
   display: inline-grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
 nav.view a, nav.arrow a {
@@ -2848,6 +2848,4 @@ nav.qr {
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }
-
-
 
