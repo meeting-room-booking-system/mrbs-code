@@ -286,6 +286,12 @@ $rows = array();
 
 while (false !== ($row = $res->next_row_keyed()))
 {
+  row_cast_columns($row, 'entry');
+  // Turn these columns into ints (some MySQL drivers will return a string,
+  // and they won't have been caught by row_cast_columns() as they are derived results).
+  $row['last_updated'] = intval($row['last_updated']);
+  $row['entry_info_time'] = intval($row['entry_info_time']);
+  $row['repeat_info_time'] = intval($row['repeat_info_time']);
   if ((strcasecmp_locale($row['create_by'], $mrbs_username) === 0) || is_book_admin($row['room_id']))
   {
     $rows[] = $row;
