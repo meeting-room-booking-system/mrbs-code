@@ -185,15 +185,16 @@ function is_ajax() : bool
 }
 
 // Returns the contents of the URL. If $if_modified_since is set it will send that in
-// an 'If-Modified-Since' header in the request.  A user agent to be used in the header
-// can be specified by $user_agent, otherwise it defaults to the browser's user agent
-// if available, otherwise the string 'PHP'.
+// an 'If-Modified-Since' header in the request.  Additional request headers can be
+// specified in $request_headers.  A user agent to be used in the header can be specified
+// by $user_agent, otherwise it defaults to the browser's user agent if available, otherwise
+// the string 'PHP'.
 //
 // The result is an associative array, indexed by
 //    'body'      The body of the response (FALSE on failure)
 //    'code'      The HTTP response code, eg 200 (NULL if none found)
 //    'headers'   An associative array of headers with the keys converted to lower case
-function url_get_contents(string $url, ?string $if_modified_since=null, ?string $user_agent=null) : array
+function url_get_contents(string $url, ?string $if_modified_since=null, ?string $user_agent=null, array $request_headers = []) : array
 {
   global $server;
 
@@ -237,9 +238,11 @@ function url_get_contents(string $url, ?string $if_modified_since=null, ?string 
     }
     if (isset($if_modified_since))
     {
-      curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-          "If-Modified-Since: $if_modified_since"
-        ));
+      $request_headers[] = "If-Modified-Since: $if_modified_since";
+    }
+    if (!empty($request_headers))
+    {
+      curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
     }
     curl_setopt($ch, CURLOPT_HEADERFUNCTION,
       function($curl, $header) use (&$headers)
@@ -267,18 +270,16 @@ function url_get_contents(string $url, ?string $if_modified_since=null, ?string 
     // have been sent, but when the connection is closed, (b) set a timeout in case
     // the transfer is slow and (c) add a User-Agent header to prevent possible 403 errors
     // from some sites.
-    $request_header =  array(
-        "Connection: close",
-        "User-Agent: $user_agent"
-      );
+    $request_headers[] =  "Connection: close";
+    $request_headers[] = "User-Agent: $user_agent";
     if (isset($if_modified_since))
     {
-      $request_header[] = "If-Modified-Since: $if_modified_since";
+      $request_headers[] = "If-Modified-Since: $if_modified_since";
     }
     $context = stream_context_create(
         array(
             'http' => array(
-                'header' => $request_header,
+                'header' => $request_headers,
                 'timeout' => $transfer_timeout)
           )
       );
