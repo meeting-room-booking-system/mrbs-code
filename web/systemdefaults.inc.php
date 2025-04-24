@@ -1561,6 +1561,9 @@ $auth['show_registrant_names_in_public_calendar'] = false;
 // Set this to true if you want ordinary users to be able to register others.
 $auth['users_can_register_others'] = false;
 
+// Set this to true if you want ordinary users to be able to delete other users' registrations.
+$auth['users_can_delete_others_registrations'] = false;
+
 // Set this to true if you don't want admins to be able to make bookings
 // on behalf of other users
 $auth['admin_can_only_book_for_self'] = false;

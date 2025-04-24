@@ -17,6 +17,8 @@ require_once "functions_view.inc";
 
 function generate_registrant_table(array $row, ?string $previous_page=null) : void
 {
+  global $auth;
+
   echo "<div id=\"registrant_list\" class=\"datatable_container\">\n";
   echo "<table id=\"registrants\" class=\"admin_table display\">\n";
 
@@ -31,15 +33,19 @@ function generate_registrant_table(array $row, ?string $previous_page=null) : vo
 
   echo "<tbody>\n";
 
+  $mrbs_user = session()->getCurrentUser();
+
   foreach ($row['registrants'] as $registrant)
   {
     echo '<tr>';
     echo '<td>';
     // A registration can be cancelled by the registrant or by
-    // the person who registered them or by the booking owner
+    // the person who registered them or by the booking owner or
+    // if ordinary users are allowed to delete other users' registrations.
     if (getWritable($registrant['username'], $row['room_id']) ||
         getWritable($registrant['create_by'], $row['room_id']) ||
-        getWritable($row['create_by'], $row['room_id']))
+        getWritable($row['create_by'], $row['room_id']) ||
+        (isset($mrbs_user) && $auth['users_can_delete_others_registrations']))
     {
       generate_cancel_registration_button(
         $row,
