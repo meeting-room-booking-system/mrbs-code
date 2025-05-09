@@ -10,7 +10,6 @@ use function MRBS\get_vocab;
 use function MRBS\in_arrayi;
 use function MRBS\session;
 use function MRBS\strcasecmp_locale;
-use function MRBS\utf8_strlen;
 
 
 abstract class Auth
@@ -234,7 +233,7 @@ abstract class Auth
         switch($rule)
         {
           case 'length':
-            if (utf8_strlen($password) < $value)
+            if (mb_strlen($password) < $value)
             {
               return false;
             }

@@ -916,7 +916,7 @@ function utf8_substr(string $str, int $start, ?int $length=null) : string
     // https://bugs.php.net/bug.php?id=42101.  Note also that passing NULL
     // for the length in mb_substr() causes mb_substr to use a length of 0.
     // See the user contributed notes on the PHP mb_substr() manual page.
-    $length = utf8_strlen($str);
+    $length = mb_strlen($str);
   }
 
   if (strlen($str) > 1000)
@@ -1143,32 +1143,6 @@ function utf8_to_utf16(string $string) : string
     $out .= $ucs_string;
   }
   return $out;
-}
-
-
-// Takes a UTF-8 string, and returns the number of _characters_ in the string
-function utf8_strlen(string $str) : int
-{
-  // If we have mb_strlen(), use it - it'll be quicker
-  if (function_exists('mb_strlen'))
-  {
-    return mb_strlen($str);
-  }
-
-  // Otherwise do it ourselves
-  if ($str === '')
-  {
-    return 0;
-  }
-
-  $len = 1;
-  $next = 0;
-  while ($next = utf8_next_index($str, $next))
-  {
-    $len++;
-  }
-
-  return $len;
 }
 
 

@@ -551,7 +551,7 @@ if (is_admin() || !empty($enabled_areas))
                       $html = "<td title=\"" . escape_html($value) . "\"><div>";
                       // Truncate before conversion, otherwise you could chop off in the middle of an entity
                       $html .= escape_html(utf8_substr($value, 0, $max_content_length));
-                      $html .= (utf8_strlen($value) > $max_content_length) ? '&hellip;' : '';
+                      $html .= (mb_strlen($value) > $max_content_length) ? '&hellip;' : '';
                       $html .= "</div></td>\n";
                       echo $html;
                     }

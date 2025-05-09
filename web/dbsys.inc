@@ -49,7 +49,7 @@ function get_table_short_name(string $table) : string
   }
 
   // Strip the prefix off the table name
-  return utf8_substr($result, utf8_strlen($db_tbl_prefix));
+  return utf8_substr($result, mb_strlen($db_tbl_prefix));
 }
 
 
