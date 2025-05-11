@@ -6,6 +6,29 @@ declare(strict_types=1);
 // that only exist in later versions of PHP.
 
 
+// Emulation of mb_strlen()
+use MRBS\Utf8Array;
+
+if (!function_exists('mb_strlen'))
+{
+  function mb_strlen(string $string, ?string $encoding=null) : int
+  {
+    if ($string === '')
+    {
+      return 0;
+    }
+
+    if (isset($encoding) && ($encoding !== 'UTF-8'))
+    {
+      throw new InvalidArgumentException("This emulation of mb_strlen() only supports the UTF-8 encoding.");
+    }
+
+    return (new Utf8Array($string))->count();
+  }
+
+}
+
+
 // Emulates the PHP 8 function str_contains()
 if (!function_exists('str_contains'))
 {
@@ -25,28 +48,6 @@ if (!function_exists('str_contains'))
   }
 }
 
-
-if (!function_exists('mb_strlen'))
-{
-  // TODO: extra parameters for mb_strlen()?
-  function mb_strlen(string $string) : int
-  {
-    if ($string === '')
-    {
-      return 0;
-    }
-
-    $length = 1;
-    $next = 0;
-    while ($next = utf8_next_index($string, $next))
-    {
-      $length++;
-    }
-
-    return $length;
-  }
-
-}
 
 // Emulates the PHP 8 function str_starts_with()
 if (!function_exists('str_starts_with'))
