@@ -25,7 +25,21 @@ if (!function_exists('mb_strlen'))
 
     return (new Utf8Array($string))->count();
   }
+}
 
+
+// Emulation of mb_substr()
+if (!function_exists('mb_substr'))
+{
+  function mb_substr(string $string, int $start, ?int $length = null, ?string $encoding = null): string
+  {
+    if (isset($encoding) && ($encoding !== 'UTF-8'))
+    {
+      throw new InvalidArgumentException("This emulation of mb_substr() only supports the UTF-8 encoding.");
+    }
+
+    return implode('', array_slice((array)new Utf8Array($string), $start, $length));
+  }
 }
 
 
