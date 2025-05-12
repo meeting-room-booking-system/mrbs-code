@@ -961,7 +961,7 @@ if (isset($action) && ($action == "update"))
         // Truncate the field to the maximum length as a precaution.
         if (null !== ($maxlength = maxlength("users.$fieldname")))
         {
-          $values[$fieldname] = utf8_substr($values[$fieldname], 0, $maxlength);
+          $values[$fieldname] = mb_substr($values[$fieldname], 0, $maxlength);
         }
       }
     }

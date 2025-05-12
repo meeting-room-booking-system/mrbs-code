@@ -414,7 +414,7 @@ function truncate(string $value, string $column) : string
 {
   if (null !== ($maxlength = maxlength($column)))
   {
-    return utf8_substr($value, 0, $maxlength);
+    return mb_substr($value, 0, $maxlength);
   }
 
   return $value;
@@ -2433,7 +2433,7 @@ function generate_global_uid(string $str) : string
   }
   elseif (utf8_strpos($server['SERVER_NAME'], 'www.') === 0)
   {
-    $uid .= utf8_substr($server['SERVER_NAME'], 4);
+    $uid .= mb_substr($server['SERVER_NAME'], 4);
   }
   else
   {

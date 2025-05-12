@@ -2338,7 +2338,7 @@ function mrbsAddArea($name, &$error)
   }
 
   // Truncate the name field to the maximum length as a precaution.
-  $name = utf8_substr($name, 0, maxlength('area.area_name'));
+  $name = mb_substr($name, 0, maxlength('area.area_name'));
 
   // Insert the area into the database.   We insert the area name that we have
   // been given, together with the default values for the per-area settings.
@@ -2416,8 +2416,8 @@ function mrbsAddRoom($name, $area, &$error, $description='', $capacity='', $room
   }
 
   // Truncate the name and description fields to the maximum length as a precaution.
-  $name = utf8_substr($name, 0, maxlength('room.room_name'));
-  $description = utf8_substr($description, 0, maxlength('room.description'));
+  $name = mb_substr($name, 0, maxlength('room.room_name'));
+  $description = mb_substr($description, 0, maxlength('room.description'));
 
   if (empty($capacity))
   {

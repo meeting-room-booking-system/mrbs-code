@@ -218,12 +218,12 @@ function get_unfolded_line($handle)
     }
     else
     {
-      $first_char = utf8_substr($line, 0, 1);
+      $first_char = mb_substr($line, 0, 1);
       // If the first character of the line is a space or tab then it's
       // part of a fold
       if (($first_char == " ") || ($first_char == "\t"))
       {
-        $unfolded_line .= utf8_substr($line, 1);
+        $unfolded_line .= mb_substr($line, 1);
       }
       // Otherwise we've reached the start of the next unfolded line, so
       // save it for next time and finish
