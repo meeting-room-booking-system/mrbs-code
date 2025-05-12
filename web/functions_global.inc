@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use MRBS\Utf8Array;
+use MRBS\Utf8\Utf8Array;
 
 // These functions are deliberately in the global namespace so that they
 // can be used in classes.  They are typically polyfills for PHP functions
