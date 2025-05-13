@@ -84,6 +84,7 @@ class Utf8String implements Iterator
 
   private static function convertCharToUtf16(string $char) : string
   {
+    // TODO: test for endian-ness
     $ucs_string = pack('v', self::convertCharToUtf16Int($char));
     //error_log(sprintf("UCS %04x -> %02x,%02x",$char,ord($ucs_string[0]),ord($ucs_string[1])));
     return $ucs_string;
