@@ -5,8 +5,8 @@ namespace MRBS\Utf8;
 class Utf8String implements \Iterator
 {
   private $byte_index = 0;
-  private $next_byte_index;
   private $char_index = 0;
+  private $next_char_length;
   private $data = [];
   private $string;
 
@@ -14,8 +14,7 @@ class Utf8String implements \Iterator
   public function __construct(string $string)
   {
     $this->string = $string;
-    $this->next_byte_index = $this->nextByteIndex();
-    if (isset($this->next_byte_index))
+    if ($this->next_char_length = $this->nextCharLength())
     {
       $this->data[$this->char_index] = $this->nextChar();
     }
@@ -28,10 +27,9 @@ class Utf8String implements \Iterator
 
   public function next() : void
   {
-    $this->byte_index = $this->next_byte_index;
-    $this->next_byte_index = $this->nextByteIndex();
+    $this->byte_index += $this->next_char_length;
     $this->char_index++;
-    if (isset($this->next_byte_index))
+    if ($this->next_char_length = $this->nextCharLength())
     {
       $this->data[$this->char_index] = $this->nextChar();
     }
@@ -51,17 +49,14 @@ class Utf8String implements \Iterator
   {
     $this->byte_index = 0;
     $this->char_index = 0;
-    $this->next_byte_index = $this->nextByteIndex();
+    $this->next_char_length = $this->nextCharLength();
   }
 
 
-  // Takes a UTF-8 string and a byte index into that string, and
-  // returns the byte index of the next UTF-8 sequence. When the end
-  // of the string is encountered, the function returns NULL
-  private function nextByteIndex() : ?int
+  // Gets the length in bytes of the next UTF-8 char.  Returns
+  // zero if there isn't one.
+  private function nextCharLength() : ?int
   {
-    $result = null;
-
     $i = $this->byte_index;
 
     if (isset($this->string[$i]))
@@ -78,13 +73,9 @@ class Utf8String implements \Iterator
           $i++;
         }
       }
-      if (isset($this->string[$i]) && (ord($this->string[$i]) != 0))
-      {
-        $result = $i;
-      }
     }
 
-    return $result;
+    return $i - $this->byte_index;
   }
 
 
@@ -92,7 +83,7 @@ class Utf8String implements \Iterator
   {
     $result = '';
 
-    for ($i=0, $byte_index = $this->byte_index; $byte_index < $this->next_byte_index; $i++, $byte_index++)
+    for ($i=0, $byte_index = $this->byte_index; $i<$this->next_char_length; $i++, $byte_index++)
     {
       $result[$i] = $this->string[$byte_index];
     }
