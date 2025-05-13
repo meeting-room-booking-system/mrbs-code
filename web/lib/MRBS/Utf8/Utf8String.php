@@ -13,6 +13,7 @@ class Utf8String implements Iterator
   private $byte_index;
   private $char_index;
   private $next_char_length;
+  private $have_all_chars = false;
   private $data = [];
   private $string;
 
@@ -23,41 +24,45 @@ class Utf8String implements Iterator
     $this->rewind();
   }
 
+
+  // Return the current element
   public function current() : ?string
   {
     return $this->data[$this->char_index] ?? null;
   }
 
+
+  // Move forward to next element
   public function next() : void
   {
     $this->byte_index += $this->next_char_length;
     $this->char_index++;
     $this->next_char_length = $this->nextCharLength();
-    if ($this->next_char_length && !isset($this->data[$this->char_index]))
-    {
-      $this->data[$this->char_index] = $this->nextChar();
-    }
+    $this->setNextChar();
   }
 
+
+  // Return the key of the current element
   public function key(): int
   {
     return $this->char_index;
   }
 
+
+  // Checks if current position is valid
   public function valid() : bool
   {
     return isset($this->data[$this->char_index]);
   }
 
+
+  // Rewind the Iterator to the first element
   public function rewind() : void
   {
     $this->byte_index = 0;
     $this->char_index = 0;
     $this->next_char_length = $this->nextCharLength();
-    if ($this->next_char_length && !isset($this->data[$this->char_index]))
-    {
-      $this->data[$this->char_index] = $this->nextChar();
-    }
+    $this->setNextChar();
   }
 
 
@@ -70,24 +75,27 @@ class Utf8String implements Iterator
   // Explodes the string into an array of UTF-8 characters
   public function explode() : array
   {
-    // Preserve the variables
-    $vars = ['byte_index', 'char_index', 'next_char_length'];
-    $old = [];
-    foreach ($vars as $var)
+    // Get the rest of the characters if we haven't already got them
+    if (!$this->have_all_chars)
     {
-      $old[$var] = $this->$var;
-    }
+      // Preserve the variables
+      $vars = ['byte_index', 'char_index', 'next_char_length'];
+      $old = [];
+      foreach ($vars as $var)
+      {
+        $old[$var] = $this->$var;
+      }
 
-    // Get the rest of the characters
-    while ($this->valid())
-    {
-      $this->next();
-    }
+      while ($this->valid())
+      {
+        $this->next();
+      }
 
-    // Restore the indices
-    foreach ($vars as $var)
-    {
-      $this->$var = $old[$var];
+      // Restore the indices
+      foreach ($vars as $var)
+      {
+        $this->$var = $old[$var];
+      }
     }
 
     return $this->data;
@@ -130,5 +138,18 @@ class Utf8String implements Iterator
     }
 
     return $result;
+  }
+
+
+  private function setNextChar() : void
+  {
+    if (!$this->next_char_length)
+    {
+      $this->have_all_chars = true;
+    }
+    elseif (!isset($this->data[$this->char_index]))
+    {
+      $this->data[$this->char_index] = $this->nextChar();
+    }
   }
 }
