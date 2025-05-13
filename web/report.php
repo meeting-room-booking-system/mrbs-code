@@ -14,6 +14,7 @@ use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldSelect;
 use MRBS\Form\Form;
+use MRBS\Utf8\Utf8String;
 
 
 require "defaultincludes.inc";
@@ -535,7 +536,7 @@ function csv_conv(string $string) : string
   }
   elseif (($in_charset == 'UTF-8') && ($out_charset == 'UTF-16'))
   {
-    $result = utf8_to_utf16($string);
+    $result = (new Utf8String($string))->convertToUtf16();
   }
   else
   {
