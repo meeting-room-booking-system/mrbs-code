@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS\Utf8;
 
+// A class that allows iteration over the characters in a UTF-8 string
 class Utf8String implements \Iterator
 {
   private $byte_index;
