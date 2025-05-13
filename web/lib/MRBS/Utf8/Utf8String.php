@@ -68,8 +68,6 @@ class Utf8String implements \Iterator
   // Explodes the string into an array of UTF-8 characters
   public function explode() : array
   {
-    $result = [];
-
     // Preserve the variables
     $vars = ['byte_index', 'char_index', 'next_char_length'];
     $old = [];
@@ -78,10 +76,9 @@ class Utf8String implements \Iterator
       $old[$var] = $this->$var;
     }
 
-    $this->rewind();
+    // Get the rest of the characters
     while ($this->valid())
     {
-      $result[] = $this->current();
       $this->next();
     }
 
@@ -91,7 +88,7 @@ class Utf8String implements \Iterator
       $this->$var = $old[$var];
     }
 
-    return $result;
+    return $this->data;
   }
 
 
