@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use MRBS\Utf8\Utf8String;
+
 require "defaultincludes.inc";
 require_once "version.inc";
 
@@ -21,7 +23,15 @@ $context = array(
 print_header($context);
 
 echo "<h3>" . get_vocab("about_mrbs") . "</h3>\n";
-
+$str = "会议室预约系统";
+echo $str;
+echo mb_strlen($str);
+echo mb_substr($str, 1, 2);
+$utf8 = new Utf8String($str);
+foreach ($utf8 as $char)
+{
+  var_dump($char);
+}
 if (!is_admin())
 {
   echo "<table class=\"details list\">\n";
