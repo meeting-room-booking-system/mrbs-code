@@ -8,7 +8,6 @@ use Iterator;
 // It also has the methods:
 //   convertToUtf16() converts the string to UTF-16
 //   explode()        explodes the string into an array of UTF-8 characters
-
 class Utf8String implements Iterator
 {
   private $byte_index;
