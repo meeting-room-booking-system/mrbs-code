@@ -4,8 +4,8 @@ namespace MRBS\Utf8;
 
 class Utf8String implements \Iterator
 {
-  private $byte_index = 0;
-  private $char_index = 0;
+  private $byte_index;
+  private $char_index;
   private $next_char_length;
   private $data = [];
   private $string;
@@ -14,10 +14,7 @@ class Utf8String implements \Iterator
   public function __construct(string $string)
   {
     $this->string = $string;
-    if ($this->next_char_length = $this->nextCharLength())
-    {
-      $this->data[$this->char_index] = $this->nextChar();
-    }
+    $this->rewind();
   }
 
   public function current() : ?string
@@ -50,6 +47,10 @@ class Utf8String implements \Iterator
     $this->byte_index = 0;
     $this->char_index = 0;
     $this->next_char_length = $this->nextCharLength();
+    if ($this->next_char_length && !isset($this->data[$this->char_index]))
+    {
+      $this->data[$this->char_index] = $this->nextChar();
+    }
   }
 
 
