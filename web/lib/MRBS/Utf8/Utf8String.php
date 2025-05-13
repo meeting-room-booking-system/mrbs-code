@@ -55,6 +55,36 @@ class Utf8String implements \Iterator
   }
 
 
+  // Explodes the string into an array of UTF-8 characters
+  public function explode() : array
+  {
+    $result = [];
+
+    // Preserve the variables
+    $vars = ['byte_index', 'char_index', 'next_char_length'];
+    $old = [];
+    foreach ($vars as $var)
+    {
+      $old[$var] = $this->$var;
+    }
+
+    $this->rewind();
+    while ($this->valid())
+    {
+      $result[] = $this->current();
+      $this->next();
+    }
+
+    // Restore the indices
+    foreach ($vars as $var)
+    {
+      $this->$var = $old[$var];
+    }
+
+    return $result;
+  }
+
+
   // Gets the length in bytes of the next UTF-8 char.  Returns
   // zero if there isn't one.
   private function nextCharLength() : ?int
