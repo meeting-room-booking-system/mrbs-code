@@ -26,7 +26,8 @@ class Utf8String implements \Iterator
   {
     $this->byte_index += $this->next_char_length;
     $this->char_index++;
-    if ($this->next_char_length = $this->nextCharLength())
+    $this->next_char_length = $this->nextCharLength();
+    if ($this->next_char_length && !isset($this->data[$this->char_index]))
     {
       $this->data[$this->char_index] = $this->nextChar();
     }
