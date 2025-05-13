@@ -59,6 +59,12 @@ class Utf8String implements \Iterator
   }
 
 
+  public function convertToUtf16() : string
+  {
+
+  }
+
+
   // Explodes the string into an array of UTF-8 characters
   public function explode() : array
   {
