@@ -3,7 +3,6 @@ declare(strict_types=1);
 namespace MRBS\Utf8;
 
 use Iterator;
-use MRBS\Exception;
 
 // A class that allows iteration over the characters in a UTF-8 string.
 // It also has the methods:
@@ -68,70 +67,17 @@ class Utf8String implements Iterator
 
 
   // Converts to UTF-16 without using iconv()
-  public function convertToUtf16() : string
+  public function toUtf16() : string
   {
     $result = '';
     $this->explode();
 
     foreach ($this->data as $char)
     {
-      $result .= self::convertCharToUtf16($char);
+      $result .= (new Utf8Char($char))->toUtf16();
     }
 
     return $result;
-  }
-
-
-  private static function convertCharToUtf16(string $char) : string
-  {
-    // TODO: test for endian-ness
-    $ucs_string = pack('v', self::convertCharToUtf16Int($char));
-    //error_log(sprintf("UCS %04x -> %02x,%02x",$char,ord($ucs_string[0]),ord($ucs_string[1])));
-    return $ucs_string;
-  }
-
-
-  private static function convertCharToUtf16Int(string $char) : int
-  {
-    $c0 = ord($char[0]);
-
-    // Easy case, code is 0xxxxxxx - just use it as is
-    if ($c0 < 0x80)
-    {
-      return $c0;
-    }
-
-    $cn = ord($char[1]) ^ 0x80;
-    $ucs = ($c0 << 6) | $cn;
-
-    // Two byte codes: 110xxxxx 10xxxxxx
-    if ($c0 < 0xE0)
-    {
-      $ucs &= ~0x3000;
-      return $ucs;
-    }
-
-    $cn = ord($char[2]) ^ 0x80;
-    $ucs = ($ucs << 6) | $cn;
-
-    // Three byte codes: 1110xxxx 10xxxxxx 10xxxxxx
-    if ($c0 < 0xF0)
-    {
-      $ucs &= ~0xE0000;
-      return $ucs;
-    }
-
-    $cn = ord($char[3]) ^ 0x80;
-    $ucs = ($ucs << 6) | $cn;
-
-    // Four byte codes: 11110xxx 10xxxxxxx 10xxxxxx 10xxxxxx
-    if ($c0 < 0xF8)
-    {
-      $ucs &= ~0x3C00000;
-      return $ucs;
-    }
-
-    throw new Exception("Shouldn't get here.");
   }
 
 

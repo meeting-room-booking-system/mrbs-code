@@ -536,7 +536,7 @@ function csv_conv(string $string) : string
   }
   elseif (($in_charset == 'UTF-8') && ($out_charset == 'UTF-16'))
   {
-    $result = (new Utf8String($string))->convertToUtf16();
+    $result = (new Utf8String($string))->toUtf16();
   }
   else
   {
