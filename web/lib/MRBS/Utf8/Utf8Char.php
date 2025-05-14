@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace MRBS\Utf8;
 
 use MRBS\Exception;
+use MRBS\System;
 
 class Utf8Char
 {
@@ -13,10 +14,22 @@ class Utf8Char
     $this->char = $char;
   }
 
-  public function toUtf16() : string
+  public function toUtf16(int $endianness) : string
   {
-    // TODO: test for endian-ness
-    $ucs_string = pack('v', self::convertCharToUtf16Int($this->char));
+    switch ($endianness)
+    {
+      case System::BIG_ENDIAN:
+        $format = 'n';
+        break;
+      case System::LITTLE_ENDIAN:
+        $format = 'v';
+        break;
+      default:
+        throw new \InvalidArgumentException("Unknown endianness '$endianness'");
+        break;
+    }
+
+    $ucs_string = pack($format, self::convertCharToUtf16Int($this->char));
     //error_log(sprintf("UCS %04x -> %02x,%02x",$char,ord($ucs_string[0]),ord($ucs_string[1])));
     return $ucs_string;
   }

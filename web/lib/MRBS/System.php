@@ -7,6 +7,9 @@ use ResourceBundle;
 
 class System
 {
+  public const BIG_ENDIAN = 0;
+  public const LITTLE_ENDIAN = 1;
+
   // A set of special cases for mapping a language to a default region
   // (normally the region is the same as the language, eg 'fr' => 'FR')
   private static $default_regions = array(
@@ -860,6 +863,21 @@ class System
       'big-5' => 'IBM-eucTW'
     );
 
+
+  // Works out whether the machine architecture is little-endian or big-endian
+  public static function getEndianness() : int
+  {
+    static $result;
+
+    if (!isset($result))
+    {
+      $testint = 0x00FF;
+      $p = pack('S', $testint);
+      $result = ($testint===current(unpack('v', $p))) ? self::LITTLE_ENDIAN : self::BIG_ENDIAN;
+    }
+
+    return $result;
+  }
 
   public static function getServerOS() : string
   {

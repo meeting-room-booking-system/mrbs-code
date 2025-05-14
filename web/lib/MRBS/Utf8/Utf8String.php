@@ -3,6 +3,9 @@ declare(strict_types=1);
 namespace MRBS\Utf8;
 
 use Iterator;
+use MRBS\Exception;
+use MRBS\System;
+use function MRBS\utf8_strpos;
 
 // A class that allows iteration over the characters in a UTF-8 string.
 // It also has the methods:
@@ -66,15 +69,89 @@ class Utf8String implements Iterator
   }
 
 
+  public function toUtf16(?int $endianness=null, bool $strip_bom=false) : string
+  {
+    // If the endian-ness hasn't been specified, then state it explicitly, because
+    // Windows and Unix will use different defaults on the same architecture.
+    if (!isset($endianness))
+    {
+      $endianness = System::getEndianness();
+    }
+
+    if (function_exists('iconv'))
+    {
+      $result = $this->toUtf16Iconv($endianness);
+    }
+    else
+    {
+      $result = $this->toUtf16NoIconv($endianness);
+    }
+
+    if ($strip_bom)
+    {
+      $result = self::stripBom($result);
+    }
+
+    return $result;
+  }
+
+
+  // Strip off anything that looks like a BOM
+  private static function stripBom(string $string) : string
+  {
+    $result = $string;
+
+    $boms = array("\xFE\xFF", "\xFF\xFE");
+    foreach ($boms as $bom)
+    {
+      if (utf8_strpos($result, $bom) === 0)
+      {
+        $result = substr($result, strlen($bom));
+      }
+    }
+
+    return $result;
+  }
+
+  // Converts to UTF-16 using iconv()
+  private function toUtf16Iconv(int $endianness, bool $strip_bom=false) : string
+  {
+    $in_charset = 'UTF-8';
+    $out_charset = 'UTF-16';
+
+    switch ($endianness)
+    {
+      case System::BIG_ENDIAN:
+        $out_charset .= 'BE';
+        break;
+      case System::LITTLE_ENDIAN:
+        $out_charset .= 'LE';
+        break;
+      default:
+        throw new \InvalidArgumentException("Unknown endianness '$endianness'");
+        break;
+    }
+
+    $result = iconv($in_charset, $out_charset, $this->string);
+
+    if ($result === false)
+    {
+      throw new Exception("iconv() failed converting from '$in_charset' to '$out_charset'");
+    }
+
+    return $result;
+  }
+
+
   // Converts to UTF-16 without using iconv()
-  public function toUtf16() : string
+  private function toUtf16NoIconv(int $endianness) : string
   {
     $result = '';
     $this->explode();
 
     foreach ($this->data as $char)
     {
-      $result .= (new Utf8Char($char))->toUtf16();
+      $result .= (new Utf8Char($char))->toUtf16($endianness);
     }
 
     return $result;
