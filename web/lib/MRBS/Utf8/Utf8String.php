@@ -69,6 +69,26 @@ class Utf8String implements Iterator
   }
 
 
+  public function toArray() : array
+  {
+    if (strlen($this->string) > 1000)
+    {
+      if (false === preg_match_all("/./su", $string, $matches))
+      {
+        throw new Exception("preg_match_all() failed");
+      }
+      $this->data = $matches[0];
+    }
+    else
+    {
+      // Faster method of splitting the string for small strings?
+      // TODO: this needs to be verified
+      $this->explode();
+    }
+    return $this->data;
+  }
+
+
   public function toUtf16(?int $endianness=null, bool $strip_bom=false) : string
   {
     // If the endian-ness hasn't been specified, then state it explicitly, because

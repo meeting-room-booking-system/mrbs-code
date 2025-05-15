@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use MRBS\Utf8\Utf8Array;
+use MRBS\Utf8\Utf8String;
 
 // These functions are deliberately in the global namespace so that they
 // can be used in classes.  They are typically polyfills for PHP functions
@@ -23,7 +23,7 @@ if (!function_exists('mb_strlen'))
       throw new InvalidArgumentException("This emulation of mb_strlen() only supports the UTF-8 encoding.");
     }
 
-    return (new Utf8Array($string))->count();
+    return count((new Utf8String($string))->toArray());
   }
 }
 
@@ -38,7 +38,7 @@ if (!function_exists('mb_substr'))
       throw new InvalidArgumentException("This emulation of mb_substr() only supports the UTF-8 encoding.");
     }
 
-    return implode('', array_slice((array)new Utf8Array($string), $start, $length));
+    return implode('', array_slice((new Utf8String($string))->toArray(), $start, $length));
   }
 }
 
