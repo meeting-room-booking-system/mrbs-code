@@ -885,23 +885,6 @@ function is_ampm(?string $locale=null) : ?bool
 }
 
 
-// Takes a string (which may be UTF-8) and returns how long it is in
-// _bytes_
-function utf8_bytecount(string $str) : int
-{
-  // We cannot rely on strlen() to return the number of bytes because it might
-  // have been overloaded by mb_strlen() which returns characters
-  if (function_exists('mb_strlen'))
-  {
-    return mb_strlen($str, '8bit');
-  }
-  else
-  {
-    return strlen($str);
-  }
-}
-
-
 // Takes a UTF-8 string and returns the string with one Unicode character
 // removed from the front. Returns FALSE if the original string is empty.
 function utf8_next(string $str)
