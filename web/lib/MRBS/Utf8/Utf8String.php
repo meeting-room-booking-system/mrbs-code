@@ -9,8 +9,8 @@ use function MRBS\utf8_strpos;
 
 // A class that allows iteration over the characters in a UTF-8 string.
 // It also has the methods:
-//   convertToUtf16() converts the string to UTF-16
-//   explode()        explodes the string into an array of UTF-8 characters
+//   toUtf16()  converts the string to UTF-16
+//   toArray()  converts the string into an array of UTF-8 characters
 class Utf8String implements Iterator
 {
   private $byte_index;
@@ -83,7 +83,7 @@ class Utf8String implements Iterator
     {
       // Faster method of splitting the string for small strings?
       // TODO: this needs to be verified
-      $this->explode();
+      $this->getRemainingData();
     }
     return $this->data;
   }
@@ -167,7 +167,7 @@ class Utf8String implements Iterator
   private function toUtf16NoIconv(int $endianness) : string
   {
     $result = '';
-    $this->explode();
+    $this->getRemainingData();
 
     foreach ($this->data as $char)
     {
@@ -178,8 +178,8 @@ class Utf8String implements Iterator
   }
 
 
-  // Explodes the string into an array of UTF-8 characters
-  public function explode() : array
+  // Get the rest of the UTF-8 characters, preserving the current key
+  private function getRemainingData() : void
   {
     // Get the rest of the characters if we haven't already got them
     if (!$this->have_all_chars)
@@ -203,8 +203,6 @@ class Utf8String implements Iterator
         $this->$var = $old[$var];
       }
     }
-
-    return $this->data;
   }
 
 
