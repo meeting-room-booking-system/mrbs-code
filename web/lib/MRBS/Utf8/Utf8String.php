@@ -69,6 +69,38 @@ class Utf8String implements Iterator
   }
 
 
+  // Returns the string's length in bytes
+  public function byteCount() : int
+  {
+    // Trivial case
+    if (!isset($this->string[0]))
+    {
+      return 0;
+    }
+
+    // Use a binary chop
+    $lower = 0;
+    $upper = 2;
+
+    while (($upper - $lower) > 1)
+    {
+      if (isset($this->string[$upper]))
+      {
+        $lower = $upper;
+        $upper = $upper * 2;
+      }
+      else
+      {
+        $upper = $lower + intval(($upper - $lower)/2);
+      }
+    }
+
+    $index = (isset($this->string[$upper])) ? $upper : $lower;
+
+    return $index + 1;
+  }
+
+
   // Converts the string to an array.
   //
   // The $break_point parameter is there for testing purposes only.  Historically
