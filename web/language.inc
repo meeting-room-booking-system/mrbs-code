@@ -885,16 +885,6 @@ function is_ampm(?string $locale=null) : ?bool
 }
 
 
-// UTF-8 compatible substr function obtained from a contribution by
-// "frank at jkelloggs dot dk" in the PHP online manual for substr()
-function utf8_substr_old(string $str, int $start, ?int $length=null) : string
-{
-  preg_match_all("/./su", $str, $ar);
-
-  return join("", array_slice($ar[0], $start, $length));
-}
-
-
 // Takes a string (which may be UTF-8) and returns how long it is in
 // _bytes_
 function utf8_bytecount(string $str) : int
