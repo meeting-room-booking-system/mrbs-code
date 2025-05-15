@@ -69,11 +69,19 @@ class Utf8String implements Iterator
   }
 
 
-  public function toArray() : array
+  // Converts the string to an array.
+  // The $break_point parameter is there for testing purposes only.  Historically
+  // MRBS provided utf8_substr() and utf8_substr_old(), using the preg_match_all()
+  // approach for strings longer than 1000 bytes and doing it manually otherwise,
+  // which testing had shown was faster.  However, testing of the method below shows
+  // that the preg_match_all() approach is faster for all string lengths (maybe because
+  // the performance of preg_match_all() has been improved?).  The code for the
+  // manual method is left in place just in case it is needed in the future.
+  public function toArray(int $break_point=0) : array
   {
-    if (strlen($this->string) > 1000)
+    if (strlen($this->string) > $break_point)
     {
-      if (false === preg_match_all("/./su", $string, $matches))
+      if (false === preg_match_all("/./su", $this->string, $matches))
       {
         throw new Exception("preg_match_all() failed");
       }
@@ -81,8 +89,7 @@ class Utf8String implements Iterator
     }
     else
     {
-      // Faster method of splitting the string for small strings?
-      // TODO: this needs to be verified
+      // Alternative method of splitting the string for small strings
       $this->getRemainingData();
     }
     return $this->data;
@@ -167,9 +174,9 @@ class Utf8String implements Iterator
   private function toUtf16NoIconv(int $endianness) : string
   {
     $result = '';
-    $this->getRemainingData();
+    $chars = $this->toArray();
 
-    foreach ($this->data as $char)
+    foreach ($chars as $char)
     {
       $result .= (new Utf8Char($char))->toUtf16($endianness);
     }
