@@ -9,6 +9,8 @@ use MRBS\Utf8\Utf8String;
 
 
 // Emulation of mb_strlen()
+// Use mb_strlen() with '8bit' encoding to get a string's length in bytes
+// because strlen() may have been overloaded by mb_strlen().
 if (!function_exists('mb_strlen'))
 {
   function mb_strlen(string $string, ?string $encoding=null) : int
@@ -18,12 +20,17 @@ if (!function_exists('mb_strlen'))
       return 0;
     }
 
-    if (isset($encoding) && ($encoding !== 'UTF-8'))
+    switch ($encoding)
     {
-      throw new InvalidArgumentException("This emulation of mb_strlen() only supports the UTF-8 encoding.");
+      case null:
+      case 'UTF-8':
+        return count((new Utf8String($string))->toArray());
+        break;
+      case '8bit':
+        return (new Utf8String($string))->byteCount();
     }
 
-    return count((new Utf8String($string))->toArray());
+    throw new InvalidArgumentException("Encoding '$encoding' is not supported.");
   }
 }
 
