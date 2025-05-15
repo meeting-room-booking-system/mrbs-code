@@ -885,33 +885,6 @@ function is_ampm(?string $locale=null) : ?bool
 }
 
 
-// Takes a UTF-8 string and returns the string with one Unicode character
-// removed from the front. Returns FALSE if the original string is empty.
-function utf8_next(string $str)
-{
-  if ($str === '')
-  {
-    return false;
-  }
-
-  $ret = '';
-  $index = utf8_next_index($str, 0);
-
-  if ($index)
-  {
-    $i = 0;
-    while (isset($str[$index]) && (ord($str[$index]) != 0))
-    {
-      $ret[$i] = $str[$index];
-      $i++;
-      $index++;
-    }
-  }
-
-  return $ret;
-}
-
-
 // Takes a UTF-8 string and a byte index into that string, and
 // returns the byte index of the next UTF-8 sequence. When the end
 // of the string is encountered, the function returns NULL
