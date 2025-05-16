@@ -885,67 +885,6 @@ function is_ampm(?string $locale=null) : ?bool
 }
 
 
-// Takes a UTF-8 string and a byte index into that string, and
-// returns the byte index of the next UTF-8 sequence. When the end
-// of the string is encountered, the function returns NULL
-function utf8_next_index(string $str, int $start) : ?int
-{
-  $ret = null;
-
-  $i = $start;
-
-  if (isset($str[$i]))
-  {
-    if (ord($str[$i]) < 0xc0)
-    {
-      $i++;
-    }
-    else
-    {
-      $i++;
-      while (isset($str[$i]) && ((ord($str[$i]) & 0xc0) == 0x80))
-      {
-        $i++;
-      }
-    }
-    if (isset($str[$i]) && (ord($str[$i]) != 0))
-    {
-      $ret = $i;
-    }
-  }
-
-  return $ret;
-}
-
-
-// Given a UTF-8 string and a byte index, return the UTF-8 sequence
-// at this index as a string, and update the byte index to point to
-// the next sequence. When the end of the string is encountered, the
-// last sequence is returned, and the byte index set to NULL.
-// Returns FALSE if the original string is empty.
-function utf8_seq(string $str, int &$byte_index)
-{
-  if ($str === '')
-  {
-    $byte_index = null;
-    return false;
-  }
-
-  $ret = '';
-  $next = utf8_next_index($str, $byte_index);
-  $j = 0;
-
-  for ($i = $byte_index; isset($next) ? ($i < $next) : isset($str[$i]) && (ord($str[$i]) != 0); $i++)
-  {
-    $ret[$j] = $str[$i];
-    $j++;
-  }
-
-  $byte_index = $next;
-  return $ret;
-}
-
-
 // Wrapper round mb_strpos()
 function utf8_strpos(string $haystack, string $needle, int $offset=0)
 {
