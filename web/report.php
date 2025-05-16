@@ -1397,7 +1397,7 @@ function get_match_condition(string $full_column_name, ?string $match, array &$s
       // We have to use strpos() rather than stripos() because we cannot
       // assume PHP5
       if (($option_key !== '') &&
-          (utf8_strpos(utf8_strtolower($option_value), utf8_strtolower($match)) !== FALSE))
+          (utf8_strpos(mb_strtolower($option_value), mb_strtolower($match)) !== FALSE))
       {
         $or_array[] = "$full_column_name=?";
         $sql_params[] = $option_key;

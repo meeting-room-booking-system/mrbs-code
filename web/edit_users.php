@@ -902,7 +902,7 @@ if (isset($action) && ($action == "update"))
               FROM " . _tbl('users') . "
              WHERE name=?
              LIMIT 1";
-    $my_id = db()->query1($sql, array(utf8_strtolower($mrbs_user->username)));
+    $my_id = db()->query1($sql, array(mb_strtolower($mrbs_user->username)));
   }
   else
   {
@@ -984,7 +984,7 @@ if (isset($action) && ($action == "update"))
       case 'name':
         // name: convert it to lower case
         $q_string .= "&$fieldname=" . $values[$fieldname];
-        $values[$fieldname] = utf8_strtolower($values[$fieldname]);
+        $values[$fieldname] = mb_strtolower($values[$fieldname]);
         break;
       case 'password_hash':
         // password: if the password field is blank it means

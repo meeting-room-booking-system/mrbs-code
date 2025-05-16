@@ -66,7 +66,7 @@ language_debug('$override_locale: ' . $override_locale);
 if (!empty($override_locale))
 {
   $new_override_locale = System::getBCPlocale($override_locale);
-  if (utf8_strtolower($override_locale) != utf8_strtolower($new_override_locale))
+  if (mb_strtolower($override_locale) != mb_strtolower($new_override_locale))
   {
     $message = 'The config variable $override_locale should now be in BCP 47 format. ' .
       "Please change '$override_locale' to '$new_override_locale'.";
@@ -138,7 +138,7 @@ function using_rtl_lang() : bool
   global $rtl_languages;
 
   $lang = get_mrbs_lang();
-  return in_array(utf8_strtolower($lang), $rtl_languages);
+  return in_array(mb_strtolower($lang), $rtl_languages);
 }
 
 
@@ -605,7 +605,7 @@ function load_vocab($lang)
     return;
   }
 
-  $lang = utf8_strtolower($lang);
+  $lang = mb_strtolower($lang);
   $lang_file = MRBS_ROOT . "/lang/lang.$lang";
 
   if (!is_readable($lang_file))
@@ -682,7 +682,7 @@ function get_lang() : string
 
 function get_bom(string $charset) : string
 {
-  switch(utf8_strtolower($charset))
+  switch(mb_strtolower($charset))
   {
     case 'utf-8':
       return pack('CCC', 0xEF, 0xBB, 0xBF);
@@ -943,21 +943,6 @@ function utf8_seq(string $str, int &$byte_index)
 
   $byte_index = $next;
   return $ret;
-}
-
-
-// Wrapper round mb_strtolower() to make sure it's used if present and mb_string
-// function overloading is not enabled.
-// The ordinary strtolower() will give unexpected results when the locale is set to
-// Turkish and will not convert the letter 'I'.
-function utf8_strtolower(string $str) : string
-{
-  if (function_exists('mb_strtolower'))
-  {
-    return mb_strtolower($str);
-  }
-
-  return strtolower($str);
 }
 
 

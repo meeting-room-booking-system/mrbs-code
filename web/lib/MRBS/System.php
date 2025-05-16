@@ -976,7 +976,7 @@ class System
     // Windows systems
     if ($server_os == "windows")
     {
-      $langtag_lower = utf8_strtolower($langtag);
+      $langtag_lower = mb_strtolower($langtag);
       if (!isset(self::$lang_map_windows[$langtag_lower]))
       {
         return false;
@@ -996,7 +996,7 @@ class System
         else
         {
           // Convert locale=xx to xx_XX
-          $locale = utf8_strtolower($langtag) . "-" . mb_strtoupper($langtag);
+          $locale = mb_strtolower($langtag) . "-" . mb_strtoupper($langtag);
         }
       }
       else
@@ -1101,7 +1101,7 @@ class System
         $locale = get_mrbs_locale();
       }
 
-      $locale = utf8_strtolower($locale);
+      $locale = mb_strtolower($locale);
 
       if (isset(self::$lang_map_windows[$locale]) &&
           array_key_exists(self::$lang_map_windows[$locale], self::$winlocale_codepage_map))
@@ -1151,9 +1151,9 @@ class System
       if (self::getServerOS() == 'windows')
       {
         // Add in the three-letter code if any as a last resort
-        if (isset(self::$lang_map_windows[utf8_strtolower($langtag)]))
+        if (isset(self::$lang_map_windows[mb_strtolower($langtag)]))
         {
-          $locales[] = self::$lang_map_windows[utf8_strtolower($langtag)];
+          $locales[] = self::$lang_map_windows[mb_strtolower($langtag)];
         }
       }
 
@@ -1244,7 +1244,7 @@ class System
     }
 
     // Convert character encoding name to lowercase
-    $character_encoding = utf8_strtolower($character_encoding);
+    $character_encoding = mb_strtolower($character_encoding);
 
     // Check that we know of an IBM AIX libiconv character encoding name equivalent for this character encoding name
     if (!array_key_exists($character_encoding, self::$gnu_iconv_to_aix_iconv_codepage_map))

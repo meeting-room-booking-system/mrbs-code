@@ -29,7 +29,6 @@ else
 use MRBS\Exception;
 use MRBS\System;
 use function MRBS\get_qualifiers;
-use function MRBS\utf8_strtolower;
 
 class Locale
 {
@@ -294,7 +293,7 @@ class Locale
   {
     $glue = ',';
     $result = (is_array($langtag)) ? implode($glue, $langtag) : $langtag;
-    $result = utf8_strtolower(str_replace('_', '-', $result));
+    $result = mb_strtolower(str_replace('_', '-', $result));
     return (is_array($langtag)) ? explode($glue, $result) : $result;
   }
 
