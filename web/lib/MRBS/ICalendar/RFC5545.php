@@ -9,7 +9,6 @@ use MRBS\Utf8\Utf8String;
 use function MRBS\get_charset;
 use function MRBS\get_mail_charset;
 use function MRBS\get_vocab;
-use function MRBS\utf8_seq;
 
 class RFC5545
 {
@@ -333,47 +332,7 @@ class RFC5545
   // of max 75 octets separated by 'CRLFspace' or 'CRLFtab'
   public static function unfold(string $str) : string
   {
-    // Deal with the trivial case
-    if ($str === '')
-    {
-      return $str;
-    }
-
-    // We've got a non-zero length string
-    $result = '';
-    $byte_index = 0;
-
-    while (isset($byte_index))
-    {
-      // Get the next character
-      $char = utf8_seq($str, $byte_index);
-      // If it's a CR then look ahead to the following character, if there is one
-      if (($char == "\r") && isset($byte_index))
-      {
-        $char = utf8_seq($str, $byte_index);
-        // If that's a LF then look ahead to the next character, if there is one
-        if (($char == "\n") && isset($byte_index))
-        {
-          $char = utf8_seq($str, $byte_index);
-          // If that's a space or a tab then ignore it because we've just had a fold
-          // sequence.  Otherwise, add the characters into the result string.
-          if (($char != " ") && ($char != "\t"))
-          {
-            $result .= "\r\n" . $char;
-          }
-        }
-        else
-        {
-          $result .= "\r" . $char;
-        }
-      }
-      else
-      {
-        $result .= $char;
-      }
-    }
-
-    return $result;
+    return preg_replace('/\r\n[ \t]/u', '', $str);
   }
 
 
