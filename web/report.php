@@ -482,8 +482,8 @@ function get_fieldset_submit_buttons() : ElementFieldset
 // to be used for CSV files
 function csv_conv(string $string) : string
 {
-  $in_charset = utf8_strtoupper(get_charset());
-  $out_charset = utf8_strtoupper(get_csv_charset());
+  $in_charset = mb_strtoupper(get_charset());
+  $out_charset = mb_strtoupper(get_csv_charset());
 
   if ($in_charset == $out_charset)
   {

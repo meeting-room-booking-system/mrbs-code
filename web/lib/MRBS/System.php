@@ -996,7 +996,7 @@ class System
         else
         {
           // Convert locale=xx to xx_XX
-          $locale = utf8_strtolower($langtag) . "-" . utf8_strtoupper($langtag);
+          $locale = utf8_strtolower($langtag) . "-" . mb_strtoupper($langtag);
         }
       }
       else
@@ -1182,7 +1182,7 @@ class System
       return self::$default_regions[$language];
     }
 
-    return utf8_strtoupper($language);
+    return mb_strtoupper($language);
   }
 
 

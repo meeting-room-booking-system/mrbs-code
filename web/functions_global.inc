@@ -35,6 +35,29 @@ if (!function_exists('mb_strlen'))
 }
 
 
+// Emulation of mb_strtoupper
+if (!function_exists('mb_strtoupper'))
+{
+  function mb_strtoupper(string $string, ?string $encoding=null) : string
+  {
+    if ($string === '')
+    {
+      return $string;
+    }
+
+    if (isset($encoding) && ($encoding !== 'UTF-8'))
+    {
+      throw new InvalidArgumentException("This emulation of mb_substr() only supports the UTF-8 encoding.");
+    }
+
+    // TODO: do something better using the Intl class if it's present
+    // The ordinary strtoupper() will give unexpected results when the locale is set to
+    // Turkish and will not convert the letter 'i'.
+    return strtoupper($string);
+  }
+}
+
+
 // Emulation of mb_substr()
 if (!function_exists('mb_substr'))
 {
