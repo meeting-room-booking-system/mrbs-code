@@ -60,7 +60,7 @@ if (!function_exists('mb_strlen'))
 // Emulation of mb_strpos()
 if (!function_exists('mb_strpos'))
 {
-  function mb_strpos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
+  function my_mb_strpos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
   {
     if (isset($encoding) && ($encoding !== 'UTF-8'))
     {
@@ -68,8 +68,65 @@ if (!function_exists('mb_strpos'))
       throw new InvalidArgumentException($message);
     }
 
-    // TODO: do something better
-    return strpos($haystack, $needle, $offset);
+    $haystack_chars = (new Utf8String($haystack))->toArray();
+    $last_haystack_index = count($haystack_chars) - 1;
+    $needle_chars = (new Utf8String($needle))->toArray();
+    $last_needle_index = count($needle_chars) - 1;
+    // Note the +1 for negative offsets n the line below: it's the way the PHP implementation works
+    $start = ($offset < 0) ? $last_haystack_index + $offset + 1 : $offset;
+    $n = 0;
+
+    // Check that $offset is sensible.  (The PHP implementation allows an offset of +/-N on a
+    // string of length N. The error reporting in the PHP implementation depends on the PHP version.)
+    if (abs($offset) > $last_haystack_index + 1)
+    {
+      $message = 'mb_strpos(): Argument #3 ($offset) must be contained in argument #1 ($haystack)';
+      if ((version_compare(PHP_VERSION, '8') >= 0))
+      {
+        throw new ValueError($message);
+      }
+      else
+      {
+        $message = "mb_strpos(): Offset not contained in string";
+        trigger_error($message, E_USER_WARNING);
+        return false;
+      }
+    }
+
+    // Special case: an empty needle is found immediately
+    if ($needle === '')
+    {
+      return $start;
+    }
+
+    // Quick test: if the needle is longer than the part of the haystack to
+    // be searched, then we'll never find it.
+    if (count($needle_chars) > $last_haystack_index + 1 - $start)
+    {
+      return false;
+    }
+
+    // Otherwise, start searching through the haystack for the needle
+    for ($h = $start; $h <= $last_haystack_index; $h++)
+    {
+      // If we get a match with a needle character, then keep cycling through
+      // the haystack and needle. If we get to the end of the needle and all
+      // characters have matched, then we've found the needle, otherwise we
+      // reset and start looking for the needle again.
+      while (isset($haystack_chars[$h]) && isset($needle_chars[$n]) &&
+        ($haystack_chars[$h] === $needle_chars[$n]))
+      {
+        if ($n === $last_needle_index)
+        {
+          return $h - $n; // to get the starting index of the needle.
+        }
+        $h++;
+        $n++;
+      }
+      $n = 0;
+    }
+
+    return false;
   }
 }
 
