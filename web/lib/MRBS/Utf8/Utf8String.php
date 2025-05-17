@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS\Utf8;
 
+use InvalidArgumentException;
 use Iterator;
 use MRBS\Exception;
 use MRBS\System;
@@ -185,7 +186,7 @@ class Utf8String implements Iterator
         $out_charset .= 'LE';
         break;
       default:
-        throw new \InvalidArgumentException("Unknown endianness '$endianness'");
+        throw new InvalidArgumentException("Unknown endianness '$endianness'");
         break;
     }
 
