@@ -15,7 +15,8 @@ if (!function_exists('mb_stripos'))
   {
     if (isset($encoding) && ($encoding !== 'UTF-8'))
     {
-      throw new InvalidArgumentException("This emulation of mb_stripos() only supports the UTF-8 encoding.");
+      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
+      throw new InvalidArgumentException($message);
     }
 
     // TODO: do something better
@@ -58,7 +59,8 @@ if (!function_exists('mb_strpos'))
   {
     if (isset($encoding) && ($encoding !== 'UTF-8'))
     {
-      throw new InvalidArgumentException("This emulation of mb_strpos() only supports the UTF-8 encoding.");
+      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
+      throw new InvalidArgumentException($message);
     }
 
     // TODO: do something better
@@ -79,7 +81,8 @@ if (!function_exists('mb_strtolower'))
 
     if (isset($encoding) && ($encoding !== 'UTF-8'))
     {
-      throw new InvalidArgumentException("This emulation of mb_substr() only supports the UTF-8 encoding.");
+      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
+      throw new InvalidArgumentException($message);
     }
 
     // TODO: do something better using the Intl class if it's present
@@ -102,7 +105,8 @@ if (!function_exists('mb_strtoupper'))
 
     if (isset($encoding) && ($encoding !== 'UTF-8'))
     {
-      throw new InvalidArgumentException("This emulation of mb_substr() only supports the UTF-8 encoding.");
+      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
+      throw new InvalidArgumentException($message);
     }
 
     // TODO: do something better using the Intl class if it's present
@@ -120,7 +124,8 @@ if (!function_exists('mb_substr'))
   {
     if (isset($encoding) && ($encoding !== 'UTF-8'))
     {
-      throw new InvalidArgumentException("This emulation of mb_substr() only supports the UTF-8 encoding.");
+      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
+      throw new InvalidArgumentException($message);
     }
 
     return implode('', array_slice((new Utf8String($string))->toArray(), $start, $length));
