@@ -66,7 +66,7 @@ language_debug('$override_locale: ' . $override_locale);
 if (!empty($override_locale))
 {
   $new_override_locale = System::getBCPlocale($override_locale);
-  if (utf8_strtolower($override_locale) != utf8_strtolower($new_override_locale))
+  if (mb_strtolower($override_locale) != mb_strtolower($new_override_locale))
   {
     $message = 'The config variable $override_locale should now be in BCP 47 format. ' .
       "Please change '$override_locale' to '$new_override_locale'.";
@@ -138,7 +138,7 @@ function using_rtl_lang() : bool
   global $rtl_languages;
 
   $lang = get_mrbs_lang();
-  return in_array(utf8_strtolower($lang), $rtl_languages);
+  return in_array(mb_strtolower($lang), $rtl_languages);
 }
 
 
@@ -605,7 +605,7 @@ function load_vocab($lang)
     return;
   }
 
-  $lang = utf8_strtolower($lang);
+  $lang = mb_strtolower($lang);
   $lang_file = MRBS_ROOT . "/lang/lang.$lang";
 
   if (!is_readable($lang_file))
@@ -682,7 +682,7 @@ function get_lang() : string
 
 function get_bom(string $charset) : string
 {
-  switch(utf8_strtolower($charset))
+  switch(mb_strtolower($charset))
   {
     case 'utf-8':
       return pack('CCC', 0xEF, 0xBB, 0xBF);
@@ -882,322 +882,6 @@ function is_ampm(?string $locale=null) : ?bool
 
   // And see if it contains an 'a'
   return str_contains($pattern, 'a');
-}
-
-
-// UTF-8 compatible substr function obtained from a contribution by
-// "frank at jkelloggs dot dk" in the PHP online manual for substr()
-function utf8_substr_old(string $str, int $start, ?int $length=null) : string
-{
-  preg_match_all("/./su", $str, $ar);
-
-  return join("", array_slice($ar[0], $start, $length));
-}
-
-
-// UTF-8 compatible substr function
-function utf8_substr(string $str, int $start, ?int $length=null) : string
-{
-  // If we have mb_substr, use it - it's much quicker than our routines, as it's native code.
-  // Note that we need to check for both 'mb_substr' and 'mb_detect_encoding' in case
-  // we are working with WordPress, which has a compatibility library that includes
-  // mb_substr() but not mb_detect_encoding().
-  if (function_exists('mb_substr') && function_exists('mb_detect_encoding'))
-  {
-    $encoding = mb_detect_encoding($str);
-    return mb_substr($str, $start, $length, $encoding);
-  }
-
-  // Otherwise do it ourselves
-  if (!isset($length))
-  {
-    // We cannot set $length to PHP_INT_MAX because there is a bug (#42101)
-    // in mb_substr() when using PHP_INT_MAX on 64-bit Linux systems.  See
-    // https://bugs.php.net/bug.php?id=42101.  Note also that passing NULL
-    // for the length in mb_substr() causes mb_substr to use a length of 0.
-    // See the user contributed notes on the PHP mb_substr() manual page.
-    $length = utf8_strlen($str);
-  }
-
-  if (strlen($str) > 1000)
-  {
-    // If the string is long, the old routine is quicker. :(
-    return utf8_substr_old($str, $start, $length);
-  }
-
-  // Deal with the trivial cases first
-  if (($str === '') || ($length === 0))
-  {
-    return '';
-  }
-
-  $i = 0;
-  $index = 0;
-  while (isset($index) && isset($str[$index]) && (ord($str[$index]) != 0) && ($i < $start))
-  {
-    $index = utf8_next_index($str, $index);
-    $i++;
-  }
-
-  if (!isset($index))
-  {
-    return '';
-  }
-
-  if (isset($length))
-  {
-    $end_index = $index;
-
-    $j = 0;
-    while (isset($end_index) && ($j < $length))
-    {
-      $end_index = utf8_next_index($str, $end_index);
-      $j++;
-    }
-    $j = 0;
-    $ret = '';
-    for ($i = $index;
-         isset($str[$i]) && (ord($str[$i]) != 0) && (!isset($end_index) || ($i < $end_index));
-         $i++)
-    {
-      $ret[$j++] = $str[$i];
-    }
-  }
-  else
-  {
-    $j = 0;
-    $ret = '';
-    for ($i = $index; isset($str[$i]) && (ord($str[$i]) != 0); $i++)
-    {
-      $ret[$j++] = $str[$i];
-    }
-  }
-
-  return $ret;
-}
-
-
-// Takes a string (which may be UTF-8) and returns how long it is in
-// _bytes_
-function utf8_bytecount(string $str) : int
-{
-  // We cannot rely on strlen() to return the number of bytes because it might
-  // have been overloaded by mb_strlen() which returns characters
-  if (function_exists('mb_strlen'))
-  {
-    return mb_strlen($str, '8bit');
-  }
-  else
-  {
-    return strlen($str);
-  }
-}
-
-
-// Takes a UTF-8 string and returns the string with one Unicode character
-// removed from the front. Returns FALSE if the original string is empty.
-function utf8_next(string $str)
-{
-  if ($str === '')
-  {
-    return false;
-  }
-
-  $ret = '';
-  $index = utf8_next_index($str, 0);
-
-  if ($index)
-  {
-    $i = 0;
-    while (isset($str[$index]) && (ord($str[$index]) != 0))
-    {
-      $ret[$i] = $str[$index];
-      $i++;
-      $index++;
-    }
-  }
-
-  return $ret;
-}
-
-
-// Takes a UTF-8 string and a byte index into that string, and
-// returns the byte index of the next UTF-8 sequence. When the end
-// of the string is encountered, the function returns NULL
-function utf8_next_index(string $str, int $start) : ?int
-{
-  $ret = null;
-
-  $i = $start;
-
-  if (isset($str[$i]))
-  {
-    if (ord($str[$i]) < 0xc0)
-    {
-      $i++;
-    }
-    else
-    {
-      $i++;
-      while (isset($str[$i]) && ((ord($str[$i]) & 0xc0) == 0x80))
-      {
-        $i++;
-      }
-    }
-    if (isset($str[$i]) && (ord($str[$i]) != 0))
-    {
-      $ret = $i;
-    }
-  }
-
-  return $ret;
-}
-
-
-// Given a UTF-8 string and a byte index, return the UTF-8 sequence
-// at this index as a string, and update the byte index to point to
-// the next sequence. When the end of the string is encountered, the
-// last sequence is returned, and the byte index set to NULL.
-// Returns FALSE if the original string is empty.
-function utf8_seq(string $str, int &$byte_index)
-{
-  if ($str === '')
-  {
-    $byte_index = null;
-    return false;
-  }
-
-  $ret = '';
-  $next = utf8_next_index($str, $byte_index);
-  $j = 0;
-
-  for ($i = $byte_index; isset($next) ? ($i < $next) : isset($str[$i]) && (ord($str[$i]) != 0); $i++)
-  {
-    $ret[$j] = $str[$i];
-    $j++;
-  }
-
-  $byte_index = $next;
-  return $ret;
-}
-
-
-// Takes a UTF-8 string and converts it to UTF-16 without using iconv
-function utf8_to_utf16(string $string) : string
-{
-  $ucs2 = array();
-  $byte_index = 0;
-
-  while (!is_null($byte_index))
-  {
-    $next = utf8_seq($string, $byte_index);
-
-    $c0 = ord($next[0]);
-
-    // Easy case, code is 0xxxxxxx - just use it as is
-    if ($c0 < 0x80)
-    {
-      array_push($ucs2, $c0);
-      continue;
-    }
-    $cn = ord($next[1]) ^ 0x80;
-    $ucs = ($c0 << 6) | $cn;
-
-    // Two byte codes: 110xxxxx 10xxxxxx
-    if ($c0 < 0xE0)
-    {
-      $ucs &= ~0x3000;
-      array_push($ucs2, $ucs);
-      continue;
-    }
-
-    $cn = ord($next[2]) ^ 0x80;
-    $ucs = ($ucs << 6) | $cn;
-
-    // Three byte codes: 1110xxxx 10xxxxxx 10xxxxxx
-    if ($c0 < 0xF0)
-    {
-      $ucs &= ~0xE0000;
-      array_push($ucs2, $ucs);
-      continue;
-    }
-
-    $cn = ord($next[3]) ^ 0x80;
-    $ucs = ($ucs << 6) | $cn;
-
-    // Four byte codes: 11110xxx 10xxxxxxx 10xxxxxx 10xxxxxx
-    if ($c0 < 0xF8)
-    {
-      $ucs &= ~0x3C00000;
-      array_push($ucs2, $ucs);
-      continue;
-    }
-    die("Shouldn't get here!");
-  }
-
-  $out = "";
-  foreach ($ucs2 as $char)
-  {
-    $ucs_string = pack("v", $char);
-    //error_log(sprintf("UCS %04x -> %02x,%02x",$char,ord($ucs_string[0]),ord($ucs_string[1])));
-    $out .= $ucs_string;
-  }
-  return $out;
-}
-
-
-// Takes a UTF-8 string, and returns the number of _characters_ in the string
-function utf8_strlen(string $str) : int
-{
-  // If we have mb_strlen(), use it - it'll be quicker
-  if (function_exists('mb_strlen'))
-  {
-    return mb_strlen($str);
-  }
-
-  // Otherwise do it ourselves
-  if ($str === '')
-  {
-    return 0;
-  }
-
-  $len = 1;
-  $next = 0;
-  while ($next = utf8_next_index($str, $next))
-  {
-    $len++;
-  }
-
-  return $len;
-}
-
-
-// Wrapper round mb_strtolower() to make sure it's used if present and mb_string
-// function overloading is not enabled.
-// The ordinary strtolower() will give unexpected results when the locale is set to
-// Turkish and will not convert the letter 'I'.
-function utf8_strtolower(string $str) : string
-{
-  if (function_exists('mb_strtolower'))
-  {
-    return mb_strtolower($str);
-  }
-
-  return strtolower($str);
-}
-
-
-// Wrapper round mb_strtoupper() to make sure it's used if present and mb_string
-// function overloading is not enabled.
-// The ordinary strtoupper() will give unexpected results when the locale is set to
-// Turkish and will not convert the letter 'i'.
-function utf8_strtoupper(string $str) : string
-{
-  if (function_exists('mb_strtoupper'))
-  {
-    return mb_strtoupper($str);
-  }
-  return strtoupper($str);
 }
 
 

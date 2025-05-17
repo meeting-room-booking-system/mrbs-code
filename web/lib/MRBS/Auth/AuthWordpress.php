@@ -182,7 +182,7 @@ class AuthWordpress extends Auth
   // Example "MRBS Admin" -> "mrbs_admin"
   private static function standardise_role_name(string $role) : string
   {
-    return str_replace(' ', '_', \MRBS\utf8_strtolower($role));
+    return str_replace(' ', '_', mb_strtolower($role));
   }
 
 }

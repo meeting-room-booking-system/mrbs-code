@@ -1,9 +1,99 @@
 <?php
 declare(strict_types=1);
 
+use MRBS\Utf8\Utf8String;
+
 // These functions are deliberately in the global namespace so that they
 // can be used in classes.  They are typically polyfills for PHP functions
 // that only exist in later versions of PHP.
+
+
+// Emulation of mb_strlen()
+// Use mb_strlen() with '8bit' encoding to get a string's length in bytes
+// because strlen() may have been overloaded by mb_strlen().
+if (!function_exists('mb_strlen'))
+{
+  function mb_strlen(string $string, ?string $encoding=null) : int
+  {
+    if ($string === '')
+    {
+      return 0;
+    }
+
+    switch ($encoding)
+    {
+      case null:
+      case 'UTF-8':
+        return count((new Utf8String($string))->toArray());
+        break;
+      case '8bit':
+        return (new Utf8String($string))->byteCount();
+    }
+
+    throw new InvalidArgumentException("Encoding '$encoding' is not supported.");
+  }
+}
+
+
+// Emulation of mb_strtolower
+if (!function_exists('mb_strtolower'))
+{
+  function mb_strtolower(string $string, ?string $encoding=null) : string
+  {
+    if ($string === '')
+    {
+      return $string;
+    }
+
+    if (isset($encoding) && ($encoding !== 'UTF-8'))
+    {
+      throw new InvalidArgumentException("This emulation of mb_substr() only supports the UTF-8 encoding.");
+    }
+
+    // TODO: do something better using the Intl class if it's present
+    // The ordinary strtolower() will give unexpected results when the locale is set to
+    // Turkish and will not convert the letter 'I'.
+    return strtolower($string);
+  }
+}
+
+
+// Emulation of mb_strtoupper
+if (!function_exists('mb_strtoupper'))
+{
+  function mb_strtoupper(string $string, ?string $encoding=null) : string
+  {
+    if ($string === '')
+    {
+      return $string;
+    }
+
+    if (isset($encoding) && ($encoding !== 'UTF-8'))
+    {
+      throw new InvalidArgumentException("This emulation of mb_substr() only supports the UTF-8 encoding.");
+    }
+
+    // TODO: do something better using the Intl class if it's present
+    // The ordinary strtoupper() will give unexpected results when the locale is set to
+    // Turkish and will not convert the letter 'i'.
+    return strtoupper($string);
+  }
+}
+
+
+// Emulation of mb_substr()
+if (!function_exists('mb_substr'))
+{
+  function mb_substr(string $string, int $start, ?int $length = null, ?string $encoding = null): string
+  {
+    if (isset($encoding) && ($encoding !== 'UTF-8'))
+    {
+      throw new InvalidArgumentException("This emulation of mb_substr() only supports the UTF-8 encoding.");
+    }
+
+    return implode('', array_slice((new Utf8String($string))->toArray(), $start, $length));
+  }
+}
 
 
 // Emulates the PHP 8 function str_contains()

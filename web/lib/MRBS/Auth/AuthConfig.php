@@ -2,8 +2,6 @@
 namespace MRBS\Auth;
 
 
-use function MRBS\utf8_strtolower;
-
 class AuthConfig extends Auth
 {
   /* validateUser($user, $pass)
@@ -34,8 +32,8 @@ class AuthConfig extends Auth
     if ((isset($auth["user"][$user]) &&
         ($auth["user"][$user] == $pass)
       ) ||
-      (isset($auth["user"][utf8_strtolower($user)]) &&
-        ($auth["user"][utf8_strtolower($user)] == $pass)
+      (isset($auth["user"][mb_strtolower($user)]) &&
+        ($auth["user"][mb_strtolower($user)] == $pass)
       ))
     {
       return $user;    // User validated

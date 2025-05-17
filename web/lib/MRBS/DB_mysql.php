@@ -648,7 +648,7 @@ class DB_mysql extends DB
         $length = null;
       }
       // Convert the is_nullable field to a boolean
-      $is_nullable = (utf8_strtolower($row['Null']) == 'yes');
+      $is_nullable = (mb_strtolower($row['Null']) == 'yes');
 
       $fields[] = array(
           'name' => $name,

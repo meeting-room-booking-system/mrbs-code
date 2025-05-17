@@ -1799,7 +1799,7 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
                        $entry['end_time'],
                        $start_first_slot,
                        $end_last_slot);
-        $description_text = utf8_substr($entry['name'], 0, 255);
+        $description_text = mb_substr($entry['name'], 0, 255);
         $full_text = $slot_text . " " . $description_text;
         switch ($monthly_view_entries_details)
         {

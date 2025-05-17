@@ -14,6 +14,7 @@ use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldSelect;
 use MRBS\Form\Form;
+use MRBS\Utf8\Utf8String;
 
 
 require "defaultincludes.inc";
@@ -477,72 +478,45 @@ function get_fieldset_submit_buttons() : ElementFieldset
 }
 
 
-// Works out whether the machine architecture is little-endian
-function is_little_endian() : bool
-{
-  static $result;
-
-  if (!isset($result))
-  {
-    $testint = 0x00FF;
-    $p = pack('S', $testint);
-    $result = ($testint===current(unpack('v', $p)));
-  }
-
-  return $result;
-}
-
-
 // Converts a string from the standard MRBS character set to the character set
 // to be used for CSV files
 function csv_conv(string $string) : string
 {
-  $in_charset = utf8_strtoupper(get_charset());
-  $out_charset = utf8_strtoupper(get_csv_charset());
+  $in_charset = mb_strtoupper(get_charset());
+  $out_charset = mb_strtoupper(get_csv_charset());
 
-  // Use iconv() if it exists because it's faster than our own code and also it's
-  // standard (though it has the disadvantage that it adds in BOMs which we have to remove)
-  if (function_exists('iconv'))
+  if ($in_charset == $out_charset)
   {
-    if ($out_charset == 'UTF-16')
-    {
-      // If the endian-ness hasn't been specified, then state it explicitly, because
-      // Windows and Unix will use different defaults on the same architecture.
-      $out_charset .= (is_little_endian()) ? 'LE' : 'BE';
-    }
+    return $string;
+  }
 
-    $result = iconv($in_charset, $out_charset, $string);
-    if ($result === false)
+  if (($in_charset == 'UTF-8') && (str_starts_with($out_charset, 'UTF-16')))
+  {
+    $suffix = substr($out_charset, strlen('UTF-16'));
+
+    switch ($suffix)
     {
-      throw new Exception("iconv() failed converting from '$in_charset' to '$out_charset'");
+      case '':
+        $endianness = null;
+        break;
+      case 'BE':
+        $endianness = System::BIG_ENDIAN;
+        break;
+      case 'LE':
+        $endianness = System::LITTLE_ENDIAN;
+        break;
+      default:
+        throw new Exception("Unsupported charset '$out_charset'.");
+        break;
     }
 
     // iconv() will add in a BOM if the output encoding requires one, but as we are only
     // dealing with parts of a file we don't want any BOMs because we add them separately
     // at the beginning of the file.  So strip off anything that looks like a BOM.
-    $boms = array("\xFE\xFF", "\xFF\xFE");
-    foreach ($boms as $bom)
-    {
-      if (utf8_strpos($result, $bom) === 0)
-      {
-        $result = substr($result, strlen($bom));
-      }
-    }
-  }
-  elseif ($in_charset == $out_charset)
-  {
-    $result = $string;
-  }
-  elseif (($in_charset == 'UTF-8') && ($out_charset == 'UTF-16'))
-  {
-    $result = utf8_to_utf16($string);
-  }
-  else
-  {
-    throw new Exception("Cannot convert from '$in_charset' to '$out_charset'");
+    return (new Utf8String($string))->toUtf16($endianness, true);
   }
 
-  return $result;
+  throw new Exception("Cannot convert from '$in_charset' to '$out_charset'");
 }
 
 
@@ -1423,7 +1397,7 @@ function get_match_condition(string $full_column_name, ?string $match, array &$s
       // We have to use strpos() rather than stripos() because we cannot
       // assume PHP5
       if (($option_key !== '') &&
-          (utf8_strpos(utf8_strtolower($option_value), utf8_strtolower($match)) !== FALSE))
+          (utf8_strpos(mb_strtolower($option_value), mb_strtolower($match)) !== FALSE))
       {
         $or_array[] = "$full_column_name=?";
         $sql_params[] = $option_key;

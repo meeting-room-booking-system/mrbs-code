@@ -35,8 +35,8 @@ function constrain_int(int $n, int $bytes, bool $unsigned=false) : int
 // See https://www.php.net/manual/en/function.in-array.php#Hcom89256
 function in_arrayi($needle, array $haystack, bool $strict=false) : bool
 {
-  return in_array(utf8_strtolower($needle),
-                  array_map(__NAMESPACE__ . "\\utf8_strtolower", $haystack),
+  return in_array(mb_strtolower($needle),
+                  array_map('mb_strtolower', $haystack),
                   $strict);
 }
 
@@ -209,7 +209,7 @@ function is_ajax() : bool
   global $server;
 
   return (isset($server['HTTP_X_REQUESTED_WITH']) &&
-          (utf8_strtolower($server['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'));
+          (mb_strtolower($server['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'));
 }
 
 // Returns the contents of the URL. If $if_modified_since is set it will send that in
@@ -442,7 +442,7 @@ function truncate(string $value, string $column) : string
 {
   if (null !== ($maxlength = maxlength($column)))
   {
-    return utf8_substr($value, 0, $maxlength);
+    return mb_substr($value, 0, $maxlength);
   }
 
   return $value;
@@ -2353,7 +2353,7 @@ function generate_global_uid(string $str) : string
   }
   elseif (utf8_strpos($server['SERVER_NAME'], 'www.') === 0)
   {
-    $uid .= utf8_substr($server['SERVER_NAME'], 4);
+    $uid .= mb_substr($server['SERVER_NAME'], 4);
   }
   else
   {

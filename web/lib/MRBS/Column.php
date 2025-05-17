@@ -184,7 +184,7 @@ class Column
         isset($this->length) &&
         ($this->length < 256))
     {
-      $result = utf8_substr($value, 0, intval($this->length));
+      $result = mb_substr($value, 0, intval($this->length));
     }
 
     return $result;

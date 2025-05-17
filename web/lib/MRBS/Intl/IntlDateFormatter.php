@@ -18,7 +18,6 @@ use MRBS\System;
 use function MRBS\convert_to_BCP47;
 use function MRBS\get_mrbs_locale;
 use function MRBS\set_mrbs_locale;
-use function MRBS\utf8_strlen;
 
 // We need to check that the 'intl' extension is loaded because earlier versions of
 // MRBS had the IntlDateFormatter emulation class at the top level in lib.  If users
@@ -289,7 +288,7 @@ class IntlDateFormatter
     $tokens = self::parseStrftimeFormat($format);
 
     foreach ($tokens as $token) {
-      if (utf8_strlen($token) === 1) {
+      if (mb_strlen($token) === 1) {
         $result .= $token;
       }
       else {

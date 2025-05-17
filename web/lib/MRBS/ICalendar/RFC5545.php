@@ -4,10 +4,11 @@ namespace MRBS\ICalendar;
 
 use DateTimeZone;
 use MRBS\DateTime;
+use MRBS\Exception;
+use MRBS\Utf8\Utf8String;
 use function MRBS\get_charset;
 use function MRBS\get_mail_charset;
 use function MRBS\get_vocab;
-use function MRBS\utf8_seq;
 
 class RFC5545
 {
@@ -15,7 +16,12 @@ class RFC5545
   // An array which can be used to map day of the week numbers (0..6)
   // onto days of the week as defined in RFC 5545
   public const DAYS = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
-  public const EOL  = "\r\n";  // Lines must be terminated by CRLF
+  public const EOL = "\r\n";  // Lines must be terminated by CRLF
+  private const CR = "\r";
+  private const LF = "\n";
+  private const LINE_FOLD = self::EOL . ' '; // The RFC also allows a horizontal tab instead of a space
+  private const LINE_FOLD_OCTETS = 1;
+  private const MAX_OCTETS_IN_LINE =75;  // The maximum line length allowed
 
   // Convert an RFC 5545 day to an ordinal number representing the day of the week,
   // eg "MO" returns "1"
@@ -254,67 +260,70 @@ class RFC5545
       return $str;
     }
 
-    $line_split = "\r\n ";  // The RFC also allows a tab instead of a space
-
     // We assume that we are using UTF-8 and therefore that a space character
-    // is one octet long.  If we ever switched for some reason to using for
-    // example UTF-16 this assumption would be invalid.
+    // is one octet long.  If we ever switched for some reason to using, for
+    // example, UTF-16, this assumption would be invalid.
     if ((get_charset() != 'utf-8') || (get_mail_charset() != 'utf-8'))
     {
-      trigger_error("MRBS: internal error - using unsupported character set", E_USER_WARNING);
+      throw new Exception("MRBS: internal error - using unsupported character set");
     }
-    $space_octets = 1;
 
-    $octets_max = 75;
+    $utf8_string = new Utf8String($str);
 
-    $result = '';
-    $octets = 0;
-    $byte_index = 0;
-
-    while (isset($byte_index))
+    // Simple case: no folding necessary
+    if ($utf8_string->byteCount() <= self::MAX_OCTETS_IN_LINE)
     {
-      // Get the next character
-      $prev_byte_index = $byte_index;
-      $char = utf8_seq($str, $byte_index);
-
-      $char_octets = $byte_index - $prev_byte_index;
-      // If it's a CR then look ahead to the following character, if there is one
-      if (($char == "\r") && isset($byte_index))
-      {
-        $this_byte_index = $byte_index;
-        $next_char = utf8_seq($str, $byte_index);
-        // If that's a LF then take the CR, and advance by one character
-        if ($next_char == "\n")
-        {
-          $result .= $char;    // take the CR
-          $char = $next_char;  // advance by one character
-          $octets = 0;         // reset the octet counter to the beginning of the line
-          $char_octets = 0;    // and pretend the LF is zero octets long so that after
-          // we've added it in we're still at the beginning of the line
-        }
-        // otherwise stay where we were
-        else
-        {
-          $byte_index = $this_byte_index;
-        }
-      }
-      // otherwise if this character will take us over the octet limit for the line,
-      // fold the line and set the octet count to however many octets a space takes
-      // (the folding involves adding a CRLF followed by one character, a space or a tab)
-      //
-      // [Note:  It's not entirely clear from the RFC whether the octet that is introduced
-      // when folding counts towards the 75 octets.   Some implementations (eg Google
-      // Calendar as of Jan 2011) do not count it.  However, it can do no harm to err on
-      // the safe side and include the initial whitespace in the count.]
-      elseif (($octets + $char_octets) > $octets_max)
-      {
-        $result .= $line_split;
-        $octets = $space_octets;
-      }
-      // finally add the character to the result string and up the octet count
-      $result .= $char;
-      $octets += $char_octets;
+      return $str;
     }
+
+    // Iterate through the characters working out when to insert a fold
+    $result = '';
+    $n_chars = count($utf8_string->toArray());
+    $octets = 0;
+    $previous = [];
+
+    foreach ($utf8_string as $i => $char)
+    {
+      // Store the character
+      $previous[] = $char;
+
+      // If it's a CR and there's at least one more character to come, then get that one.
+      if (($char == self::CR) && ($i < $n_chars - 1))
+      {
+        continue;
+      }
+
+      // If it's a LF and the previous character was a CR, then we've reached the end of a line
+      if (($char == self::LF) && (count($previous) == 2) && ($previous[0] == self::CR))
+      {
+        // Output the EOL, clear the previous characters and reset the octet count
+        $result .= self::EOL;
+        $previous = [];
+        $octets = 0;
+        continue;
+      }
+
+      // Otherwise output the previous characters, inserting a fold if necessary
+      while (null !== ($previous_char = array_shift($previous)))
+      {
+        $previous_char_octets = (new Utf8String($previous_char))->byteCount();
+        // If this character would take us over the line length limit, then output a line fold
+        if ($octets + $previous_char_octets > self::MAX_OCTETS_IN_LINE)
+        {
+          $result .= self::LINE_FOLD;
+          // Reset the octet count to account for the whitespace introduced during folding.
+          // [Note:  It's not entirely clear from the RFC whether the octet that is introduced
+          // when folding counts towards the 75 octets.   Some implementations (eg Google
+          // Calendar as of Jan 2011) do not count it.  However, it can do no harm to err on
+          // the safe side and include the initial whitespace in the count.]
+          $octets = self::LINE_FOLD_OCTETS;
+        }
+        // Now output the character and add on the octets just output.
+        $result .= $previous_char;
+        $octets += $previous_char_octets;
+      }
+    }
+
     return $result;
   }
 
@@ -323,47 +332,7 @@ class RFC5545
   // of max 75 octets separated by 'CRLFspace' or 'CRLFtab'
   public static function unfold(string $str) : string
   {
-    // Deal with the trivial case
-    if ($str === '')
-    {
-      return $str;
-    }
-
-    // We've got a non-zero length string
-    $result = '';
-    $byte_index = 0;
-
-    while (isset($byte_index))
-    {
-      // Get the next character
-      $char = utf8_seq($str, $byte_index);
-      // If it's a CR then look ahead to the following character, if there is one
-      if (($char == "\r") && isset($byte_index))
-      {
-        $char = utf8_seq($str, $byte_index);
-        // If that's a LF then look ahead to the next character, if there is one
-        if (($char == "\n") && isset($byte_index))
-        {
-          $char = utf8_seq($str, $byte_index);
-          // If that's a space or a tab then ignore it because we've just had a fold
-          // sequence.  Otherwise, add the characters into the result string.
-          if (($char != " ") && ($char != "\t"))
-          {
-            $result .= "\r\n" . $char;
-          }
-        }
-        else
-        {
-          $result .= "\r" . $char;
-        }
-      }
-      else
-      {
-        $result .= $char;
-      }
-    }
-
-    return $result;
+    return preg_replace('/\r\n[ \t]/u', '', $str);
   }
 
 
