@@ -42,13 +42,17 @@ if (!function_exists('mb_strlen'))
     {
       case null:
       case 'UTF-8':
-        return count((new Utf8String($string))->toArray());
+        $result = count((new Utf8String($string))->toArray());
         break;
       case '8bit':
-        return (new Utf8String($string))->byteCount();
+        $result = (new Utf8String($string))->byteCount();
+        break;
+      default:
+        throw new InvalidArgumentException("Encoding '$encoding' is not supported.");
+        break;
     }
 
-    throw new InvalidArgumentException("Encoding '$encoding' is not supported.");
+    return $result;
   }
 }
 
