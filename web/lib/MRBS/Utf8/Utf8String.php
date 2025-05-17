@@ -5,12 +5,15 @@ namespace MRBS\Utf8;
 use Iterator;
 use MRBS\Exception;
 use MRBS\System;
-use function MRBS\utf8_strpos;
 
 // A class that allows iteration over the characters in a UTF-8 string.
 // It also has the methods:
-//   toUtf16()  converts the string to UTF-16
 //   toArray()  converts the string into an array of UTF-8 characters
+//   toUtf16()  converts the string to UTF-16
+//
+// Note that we cannot use the PHP string functions, eg strlen() and strpos(),
+// or their mb_ equivalents, in this class, because it is used by MRBS's
+// emulations of the mb_ string functions.
 class Utf8String implements Iterator
 {
   private $byte_index;
@@ -159,22 +162,13 @@ class Utf8String implements Iterator
   }
 
 
-  // Strip off anything that looks like a BOM
+  // Strip off the BOM if there is one
   private static function stripBom(string $string) : string
   {
-    $result = $string;
-
-    $boms = array("\xFE\xFF", "\xFF\xFE");
-    foreach ($boms as $bom)
-    {
-      if (utf8_strpos($result, $bom) === 0)
-      {
-        $result = substr($result, strlen($bom));
-      }
-    }
-
-    return $result;
+    $bom = pack('H*','FEFF');
+    return preg_replace("/^$bom/", '', $string);
   }
+
 
   // Converts to UTF-16 using iconv()
   private function toUtf16Iconv(int $endianness, bool $strip_bom=false) : string
