@@ -88,7 +88,7 @@ function validate_form_data(User &$user) : array
     if (auth()->type() == 'db')
     {
       // Convert the name to lowercase for the 'db' scheme
-      $user->name = utf8_strtolower($user->name);
+      $user->name = mb_strtolower($user->name);
     }
     // If there's already a user with this name then it can only be this user.
     $tmp = User::getByName($user->name, $user->auth_type);

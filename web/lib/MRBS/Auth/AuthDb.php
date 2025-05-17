@@ -16,7 +16,6 @@ use function MRBS\parse_email;
 use function MRBS\to_time_string;
 use function MRBS\url_base;
 use function MRBS\utf8_strpos;
-use function MRBS\utf8_strtolower;
 
 
 class AuthDb extends Auth
@@ -80,7 +79,7 @@ class AuthDb extends Auth
     // Usernames are unique in the user table, so we only look for one.
     $sql = "SELECT password_hash, name
             FROM " . _tbl(User::TABLE_NAME) . "
-           WHERE " . db()->syntax_casesensitive_equals('name', utf8_strtolower($user), $sql_params) . "
+           WHERE " . db()->syntax_casesensitive_equals('name', mb_strtolower($user), $sql_params) . "
              AND auth_type='db'
            LIMIT 1";
 
@@ -219,7 +218,7 @@ class AuthDb extends Auth
       {
         // Check that the email addresses are the same
         if (!empty($possible_users) &&
-            (utf8_strtolower($possible_users[0]->email) !== utf8_strtolower($login)))
+            (mb_strtolower($possible_users[0]->email) !== mb_strtolower($login)))
         {
           return false;
         }
@@ -685,7 +684,7 @@ class AuthDb extends Auth
       }
       // Special case for Gmail addresses: ignore dots in the local part and treat gmail.com and
       // googlemail.com as equivalent domains.
-      elseif (in_array(utf8_strtolower($address['domain']), array('gmail.com', 'googlemail.com')))
+      elseif (in_array(mb_strtolower($address['domain']), array('gmail.com', 'googlemail.com')))
       {
         $sql_params = array(str_replace('.', '', $address['local']));
         $sql_params[] = $sql_params[0];
@@ -730,7 +729,7 @@ class AuthDb extends Auth
     switch ($column_name)
     {
       case 'name':
-        $condition = db()->syntax_casesensitive_equals($column_name, utf8_strtolower($column_value), $sql_params);
+        $condition = db()->syntax_casesensitive_equals($column_name, mb_strtolower($column_value), $sql_params);
         break;
       case 'email':
         // For the moment we will assume that email addresses are case insensitive.   Whilst it is true

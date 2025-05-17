@@ -2085,8 +2085,8 @@ function mrbsAddRoom($name, $area_id, &$error, $description='', $capacity='', $r
   }
 
   // Truncate the name and description fields to the maximum length as a precaution.
-  $name = utf8_substr($name, 0, maxlength('room.room_name'));
-  $description = utf8_substr($description, 0, maxlength('room.description'));
+  $name = mb_substr($name, 0, maxlength('room.room_name'));
+  $description = mb_substr($description, 0, maxlength('room.description'));
 
   $room = new Room($name, $area_id);
   $room->description = $description;

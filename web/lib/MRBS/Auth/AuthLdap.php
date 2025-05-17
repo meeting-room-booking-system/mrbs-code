@@ -9,7 +9,6 @@ use function MRBS\fatal_error;
 use function MRBS\get_microtime;
 use function MRBS\in_arrayi;
 use function MRBS\session;
-use function MRBS\utf8_strtolower;
 
 
 class AuthLdap extends Auth
@@ -569,7 +568,7 @@ class AuthLdap extends Auth
     $result = array();
 
     // Username
-    $result['username'] = utf8_strtolower($object['config']['ldap_user_attrib']);
+    $result['username'] = mb_strtolower($object['config']['ldap_user_attrib']);
 
     // The display name attribute might not have been set in the config file
     if (isset($object['config']['ldap_name_attrib']))
@@ -581,13 +580,13 @@ class AuthLdap extends Auth
     // The email address
     if ($ldap_get_user_email && isset($object['config']['ldap_email_attrib']))
     {
-      $result['email'] = utf8_strtolower($object['config']['ldap_email_attrib']);
+      $result['email'] = mb_strtolower($object['config']['ldap_email_attrib']);
     }
 
     // The group name attribute might not have been set in the config file
     if ($include_groups && isset($object['config']['ldap_group_member_attrib']))
     {
-      $result['groups'] = utf8_strtolower($object['config']['ldap_group_member_attrib']);
+      $result['groups'] = mb_strtolower($object['config']['ldap_group_member_attrib']);
     }
 
     return $result;
@@ -629,7 +628,7 @@ class AuthLdap extends Auth
     while ($attribute)
     {
       $values = ldap_get_values($ldap, $entry, $attribute);
-      $attribute = utf8_strtolower($attribute);  // ready for the comparisons
+      $attribute = mb_strtolower($attribute);  // ready for the comparisons
 
       if ($attribute == $attributes['username'])
       {
@@ -899,7 +898,7 @@ class AuthLdap extends Auth
   private static function explodeNameAttribute($attribute) : array
   {
     $result = explode(' ', $attribute);
-    return array_map('\MRBS\utf8_strtolower', $result);
+    return array_map('mb_strtolower', $result);
   }
 
 
