@@ -1067,7 +1067,7 @@ class System
     $result = $locale;
 
     // Strip anything like '.utf-8' off the end
-    if (utf8_strpos($result, '.') !== false)
+    if (mb_strpos($result, '.') !== false)
     {
       $result = strstr($locale, '.', true);
     }
@@ -1271,7 +1271,7 @@ class System
     // Restore the original settings
     foreach ($original_locales as $locale_setting)
     {
-      if (utf8_strpos($locale_setting, '=') !== false)
+      if (mb_strpos($locale_setting, '=') !== false)
       {
         list($category, $locale) = explode('=', $locale_setting);
         // Need to turn the string back into a constant (sometimes PHP doesn't recognise a LC_ constant,

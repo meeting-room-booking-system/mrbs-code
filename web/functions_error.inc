@@ -16,8 +16,8 @@ function init_errors() : void
   // on Windows.
   $error_log = ini_get('error_log');
   if (($error_log !== '') &&
-      (utf8_strpos($error_log, '/') === false) &&
-      (utf8_strpos($error_log, '\\') === false))
+      (mb_strpos($error_log, '/') === false) &&
+      (mb_strpos($error_log, '\\') === false))
   {
     ini_set('error_log', getcwd() . '/' . $error_log);
   }
@@ -58,7 +58,7 @@ function get_error_name(int $errno) : string
   $constants = get_defined_constants(true);
   $keys = array_keys($constants['Core'], $errno);
   $keys = array_filter($keys, function($value) {
-      return (utf8_strpos($value, 'E_') === 0);
+      return (mb_strpos($value, 'E_') === 0);
     });
   return implode('|', $keys); // There should only be one member of the array, all being well.
 }
@@ -322,7 +322,7 @@ function shutdown_function() : void
   $error = error_get_last();
 
   if (isset($error) &&
-      (utf8_strpos($error['message'], 'iconv()') !== false) &&
+      (mb_strpos($error['message'], 'iconv()') !== false) &&
       !function_exists('iconv'))
   {
     // Help new admins understand what to do in case the iconv error occurs...

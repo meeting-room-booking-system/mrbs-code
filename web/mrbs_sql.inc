@@ -1186,7 +1186,7 @@ function mrbsCreateEntry(string $table, array $data) : int
     // other parts of the code will run without producing PHP or SQL errors but will give
     // the wrong results.   A bit of a crude check, and in due course we probably ought to
     // allow custom fields with spaces in them (or else have custom fields created by MRBS).
-    if (utf8_strpos($key, ' ') !== FALSE)
+    if (mb_strpos($key, ' ') !== FALSE)
     {
       fatal_error("Custom field names cannot contain spaces.");
     }

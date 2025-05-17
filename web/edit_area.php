@@ -40,7 +40,7 @@ function get_timezone_options() : array
 
   foreach ($timezone_identifiers as $value)
   {
-    if (utf8_strpos($value, '/') === FALSE)
+    if (mb_strpos($value, '/') === FALSE)
     {
       // There are some timezone identifiers (eg 'UTC') on some operating
       // systems that don't fit the Continent/City model.   We'll put them

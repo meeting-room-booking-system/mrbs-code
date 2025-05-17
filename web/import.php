@@ -44,7 +44,7 @@ function get_compression_wrappers() : array
     foreach ($wrappers as $wrapper)
     {
       if ((($wrapper == 'zip') && class_exists('ZipArchive')) ||
-          (utf8_strpos($wrapper, 'compress.') === 0))
+          (mb_strpos($wrapper, 'compress.') === 0))
       {
         $result[] = $wrapper;
       }
@@ -63,7 +63,7 @@ function get_room_id($location, &$error)
 
   // If there's no delimiter we assume we've just been given a room name (that will
   // have to be unique).   Otherwise we split the location into its area and room parts
-  if (utf8_strpos($location, $area_room_delimiter) === false)
+  if (mb_strpos($location, $area_room_delimiter) === false)
   {
     $location_area = '';
     $location_room = $location;
@@ -716,7 +716,7 @@ function get_file_details_zip(array $file) : array
       $constants = $reflection->getConstants();
       foreach ($constants as $key => $value)
       {
-        if (($result === $value) && (utf8_strpos($key, 'ER_') === 0))
+        if (($result === $value) && (mb_strpos($key, 'ER_') === 0))
         {
           $error_code = $key;
           break;

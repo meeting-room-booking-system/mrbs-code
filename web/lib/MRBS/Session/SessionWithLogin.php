@@ -19,7 +19,6 @@ use function MRBS\multisite;
 use function MRBS\print_footer;
 use function MRBS\print_header;
 use function MRBS\this_page;
-use function MRBS\utf8_strpos;
 
 
 // An abstract class for those session schemes that implement a login form
@@ -143,7 +142,7 @@ abstract class SessionWithLogin extends Session
           if (!empty($this->form['returl']))
           {
             // check to see whether there's a query string already
-            $this->form['target_url'] .= (utf8_strpos($this->form['target_url'], '?') === false) ? '?' : '&';
+            $this->form['target_url'] .= (mb_strpos($this->form['target_url'], '?') === false) ? '?' : '&';
             $this->form['target_url'] .= 'returl=' . urlencode($this->form['returl']);
           }
         }

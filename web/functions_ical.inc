@@ -45,7 +45,7 @@ function get_vtimezone_url(string $vtimezone) : ?string
   $properties = explode("\r\n", RFC5545::unfold($vtimezone));
   foreach ($properties as $property)
   {
-    if (utf8_strpos($property, "TZURL:") === 0)
+    if (mb_strpos($property, "TZURL:") === 0)
     {
       $tz_url = substr($property, 6);  // 6 is the length of "TZURL:"
       break;

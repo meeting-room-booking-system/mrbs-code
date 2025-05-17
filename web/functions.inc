@@ -2351,7 +2351,7 @@ function generate_global_uid(string $str) : string
   {
     $uid .= 'MRBS';
   }
-  elseif (utf8_strpos($server['SERVER_NAME'], 'www.') === 0)
+  elseif (mb_strpos($server['SERVER_NAME'], 'www.') === 0)
   {
     $uid .= mb_substr($server['SERVER_NAME'], 4);
   }
