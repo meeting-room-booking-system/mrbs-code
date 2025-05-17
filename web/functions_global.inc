@@ -8,7 +8,6 @@ use MRBS\Utf8\Utf8String;
 // that only exist in later versions of PHP, or else emulations of the
 // mb_ string functions that aren't always present.
 
-
 // Emulation of mb_stripos()
 if (!function_exists('mb_stripos'))
 {
@@ -60,7 +59,7 @@ if (!function_exists('mb_strlen'))
 // Emulation of mb_strpos()
 if (!function_exists('mb_strpos'))
 {
-  function my_mb_strpos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
+  function mb_strpos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
   {
     if (isset($encoding) && ($encoding !== 'UTF-8'))
     {
