@@ -86,7 +86,18 @@ if (!function_exists('mb_strtolower'))
       throw new InvalidArgumentException($message);
     }
 
-    // TODO: do something better using the Intl class if it's present
+    if (method_exists('IntlChar', 'tolower'))
+    {
+      $result = '';
+      $utf8_string = new Utf8String($string);
+      foreach ($utf8_string->toArray() as $char)
+      {
+        $result .= IntlChar::tolower($char);
+      }
+      return $result;
+    }
+
+    // Last resort - use the ordinary strtolower().
     // The ordinary strtolower() will give unexpected results when the locale is set to
     // Turkish and will not convert the letter 'I'.
     return strtolower($string);
@@ -110,7 +121,18 @@ if (!function_exists('mb_strtoupper'))
       throw new InvalidArgumentException($message);
     }
 
-    // TODO: do something better using the Intl class if it's present
+    if (method_exists('IntlChar', 'toupper'))
+    {
+      $result = '';
+      $utf8_string = new Utf8String($string);
+      foreach ($utf8_string->toArray() as $char)
+      {
+        $result .= IntlChar::toupper($char);
+      }
+      return $result;
+    }
+
+    // Last resort - use the ordinary strtoupper().
     // The ordinary strtoupper() will give unexpected results when the locale is set to
     // Turkish and will not convert the letter 'i'.
     return strtoupper($string);
