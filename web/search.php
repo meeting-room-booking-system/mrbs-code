@@ -263,7 +263,7 @@ foreach ($fields as $field)
       {
         // We have to use strpos() rather than stripos() because we cannot
         // assume PHP5
-        if (($key !== '') && (utf8_strpos(mb_strtolower($value), mb_strtolower($search_str)) !== false))
+        if (($key !== '') && (mb_strpos(mb_strtolower($value), mb_strtolower($search_str)) !== false))
         {
           $sql_pred .= " OR (E." . db()->quote($field['name']) . "=?)";
           $sql_params[] = $key;

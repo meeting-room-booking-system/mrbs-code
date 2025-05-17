@@ -93,7 +93,7 @@ else
   {
     $domain_name = 'MRBS';
   }
-  elseif (utf8_strpos($server['SERVER_NAME'], 'www.') === 0)
+  elseif (mb_strpos($server['SERVER_NAME'], 'www.') === 0)
   {
     $domain_name = substr($server['SERVER_NAME'], 4);
   }

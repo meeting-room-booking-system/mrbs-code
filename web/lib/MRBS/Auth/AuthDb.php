@@ -17,7 +17,6 @@ use function MRBS\parse_email;
 use function MRBS\row_cast_columns;
 use function MRBS\toTimeString;
 use function MRBS\url_base;
-use function MRBS\utf8_strpos;
 
 class AuthDb extends Auth
 {
@@ -718,7 +717,7 @@ class AuthDb extends Auth
     // be case sensitive.  But before we can take account of this, the email addresses in the database
     // need to be normalised so that all the domain names are stored in lower case.  Then it will be
     // possible to do a case sensitive comparison.
-    if (utf8_strpos($email, '@') === false)
+    if (mb_strpos($email, '@') === false)
     {
       if (!empty($auth['allow_local_part_email']))
       {

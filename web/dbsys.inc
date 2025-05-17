@@ -24,7 +24,7 @@ function _tbl(string $short_name, bool $include_schema=true) : string
   // other than MySQL, which is one of the few that doesn't support schemas.
   // (Although in practice this means PostgreSQL at the moment, it's possible that
   // in the future support for more databases may be added)
-  if ($include_schema && (utf8_strpos($dbsys, 'mysql') === false) && isset($db_schema))
+  if ($include_schema && (mb_strpos($dbsys, 'mysql') === false) && isset($db_schema))
   {
     $result = $db_schema . '.' . $result;
   }

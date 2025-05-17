@@ -439,11 +439,11 @@ class DB_mysql extends DB
 
     if (!isset($this->db_type))
     {
-      if ((false !== utf8_stripos($this->versionComment(), 'maria')) || (false !== utf8_stripos($this->version(), 'maria')))
+      if ((false !== mb_stripos($this->versionComment(), 'maria')) || (false !== mb_stripos($this->version(), 'maria')))
       {
         $this->db_type = self::DB_MARIADB;
       }
-      elseif ((false !== utf8_stripos($this->versionComment(), 'mysql')) || (false !== utf8_stripos($this->version(), 'mysql')))
+      elseif ((false !== mb_stripos($this->versionComment(), 'mysql')) || (false !== mb_stripos($this->version(), 'mysql')))
       {
         $this->db_type = self::DB_MYSQL;
       }
@@ -455,11 +455,11 @@ class DB_mysql extends DB
       // number and the initial version check will pass, though the code may fail later on when it tries to use an unsupported feature.
       // TODO: something better. Perhaps we could also look at version numbers and then make some assumptions about whether the database
       // TODO: is MySQL or MariaDB, but that could become dangerous in the future. Or perhaps there's some other way.
-      elseif ((false !== utf8_stripos($this->versionComment(), 'ubuntu')) || (false !== utf8_stripos($this->version(), 'ubuntu')))
+      elseif ((false !== mb_stripos($this->versionComment(), 'ubuntu')) || (false !== mb_stripos($this->version(), 'ubuntu')))
       {
         $this->db_type = self::DB_MYSQL;
       }
-      elseif ((false !== utf8_stripos($this->versionComment(), 'percona')) || (false !== utf8_stripos($this->version(), 'percona')))
+      elseif ((false !== mb_stripos($this->versionComment(), 'percona')) || (false !== mb_stripos($this->version(), 'percona')))
       {
         $this->db_type = self::DB_PERCONA;
       }

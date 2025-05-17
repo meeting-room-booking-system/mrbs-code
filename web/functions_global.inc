@@ -8,6 +8,22 @@ use MRBS\Utf8\Utf8String;
 // that only exist in later versions of PHP.
 
 
+// Emulation of mb_stripos()
+if (!function_exists('mb_stripos'))
+{
+  function mb_stripos(string $haystack, string $needle, int $offset=0, ?string $encoding = null)
+  {
+    if (isset($encoding) && ($encoding !== 'UTF-8'))
+    {
+      throw new InvalidArgumentException("This emulation of mb_stripos() only supports the UTF-8 encoding.");
+    }
+
+    // TODO: do something better
+    return stripos($haystack, $needle, $offset);
+  }
+}
+
+
 // Emulation of mb_strlen()
 // Use mb_strlen() with '8bit' encoding to get a string's length in bytes
 // because strlen() may have been overloaded by mb_strlen().
@@ -31,6 +47,22 @@ if (!function_exists('mb_strlen'))
     }
 
     throw new InvalidArgumentException("Encoding '$encoding' is not supported.");
+  }
+}
+
+
+// Emulation of mb_strpos()
+if (!function_exists('mb_strpos'))
+{
+  function mb_strpos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
+  {
+    if (isset($encoding) && ($encoding !== 'UTF-8'))
+    {
+      throw new InvalidArgumentException("This emulation of mb_strpos() only supports the UTF-8 encoding.");
+    }
+
+    // TODO: do something better
+    return strpos($haystack, $needle, $offset);
   }
 }
 

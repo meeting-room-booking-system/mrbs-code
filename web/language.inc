@@ -896,17 +896,6 @@ function utf8_strpos(string $haystack, string $needle, int $offset=0)
 }
 
 
-// Wrapper round mb_stripos()
-function utf8_stripos(string $haystack, string $needle, int $offset=0)
-{
-  if (function_exists('mb_stripos'))
-  {
-    return mb_stripos($haystack, $needle, $offset);
-  }
-  return stripos($haystack, $needle, $offset);
-}
-
-
 function language_debug(string $message) : void
 {
   global $language_debug;
