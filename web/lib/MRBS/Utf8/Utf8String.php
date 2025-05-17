@@ -171,7 +171,7 @@ class Utf8String implements Iterator
 
 
   // Converts to UTF-16 using iconv()
-  private function toUtf16Iconv(int $endianness, bool $strip_bom=false) : string
+  private function toUtf16Iconv(int $endianness) : string
   {
     $in_charset = 'UTF-8';
     $out_charset = 'UTF-16';
