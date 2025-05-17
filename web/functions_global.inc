@@ -4,8 +4,9 @@ declare(strict_types=1);
 use MRBS\Utf8\Utf8String;
 
 // These functions are deliberately in the global namespace so that they
-// can be used in classes.  They are typically polyfills for PHP functions
-// that only exist in later versions of PHP.
+// can be used in classes.  They are either polyfills for PHP functions
+// that only exist in later versions of PHP, or else emulations of the
+// mb_ string functions that aren't always present.
 
 
 // Emulation of mb_stripos()
