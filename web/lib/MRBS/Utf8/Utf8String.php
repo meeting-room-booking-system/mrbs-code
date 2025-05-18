@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS\Utf8;
 
+use InvalidArgumentException;
 use Iterator;
 use MRBS\Exception;
 use MRBS\System;
@@ -118,19 +119,24 @@ class Utf8String implements Iterator
   // it is needed in the future.
   public function toArray(int $break_point=0) : array
   {
-    if (strlen($this->string) > $break_point)
+    if (!$this->have_all_chars)
     {
-      if (false === preg_match_all("/./su", $this->string, $matches))
+      if (strlen($this->string) > $break_point)
       {
-        throw new Exception("preg_match_all() failed");
+        if (false === preg_match_all("/./su", $this->string, $matches))
+        {
+          throw new Exception("preg_match_all() failed");
+        }
+        $this->data = $matches[0];
       }
-      $this->data = $matches[0];
+      else
+      {
+        // Alternative method of splitting the string for small strings
+        $this->getRemainingData();
+      }
+      $this->have_all_chars = true;
     }
-    else
-    {
-      // Alternative method of splitting the string for small strings
-      $this->getRemainingData();
-    }
+
     return $this->data;
   }
 
@@ -185,7 +191,7 @@ class Utf8String implements Iterator
         $out_charset .= 'LE';
         break;
       default:
-        throw new \InvalidArgumentException("Unknown endianness '$endianness'");
+        throw new InvalidArgumentException("Unknown endianness '$endianness'");
         break;
     }
 

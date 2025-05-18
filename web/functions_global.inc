@@ -2,12 +2,12 @@
 declare(strict_types=1);
 
 use MRBS\Utf8\Utf8String;
+use function MRBS\utf8_strpos_generic;
 
 // These functions are deliberately in the global namespace so that they
 // can be used in classes.  They are either polyfills for PHP functions
 // that only exist in later versions of PHP, or else emulations of the
 // mb_ string functions that aren't always present.
-
 
 // Emulation of mb_stripos()
 if (!function_exists('mb_stripos'))
@@ -20,8 +20,10 @@ if (!function_exists('mb_stripos'))
       throw new InvalidArgumentException($message);
     }
 
-    // TODO: do something better
-    return stripos($haystack, $needle, $offset);
+    // We could just convert $haystack and $needle to the same case and then use mb_strpos.
+    // However, that would involve converting the whole of both strings, whereas utf8_strpos_generic
+    // only converts those characters that are necessary.
+    return utf8_strpos_generic($haystack, $needle, $offset, true);
   }
 }
 
@@ -42,13 +44,17 @@ if (!function_exists('mb_strlen'))
     {
       case null:
       case 'UTF-8':
-        return count((new Utf8String($string))->toArray());
+        $result = count((new Utf8String($string))->toArray());
         break;
       case '8bit':
-        return (new Utf8String($string))->byteCount();
+        $result = (new Utf8String($string))->byteCount();
+        break;
+      default:
+        throw new InvalidArgumentException("Encoding '$encoding' is not supported.");
+        break;
     }
 
-    throw new InvalidArgumentException("Encoding '$encoding' is not supported.");
+    return $result;
   }
 }
 
@@ -64,8 +70,7 @@ if (!function_exists('mb_strpos'))
       throw new InvalidArgumentException($message);
     }
 
-    // TODO: do something better
-    return strpos($haystack, $needle, $offset);
+    return utf8_strpos_generic($haystack, $needle, $offset);
   }
 }
 
@@ -86,7 +91,18 @@ if (!function_exists('mb_strtolower'))
       throw new InvalidArgumentException($message);
     }
 
-    // TODO: do something better using the Intl class if it's present
+    if (method_exists('IntlChar', 'tolower'))
+    {
+      $result = '';
+      $utf8_string = new Utf8String($string);
+      foreach ($utf8_string->toArray() as $char)
+      {
+        $result .= IntlChar::tolower($char);
+      }
+      return $result;
+    }
+
+    // Last resort - use the ordinary strtolower().
     // The ordinary strtolower() will give unexpected results when the locale is set to
     // Turkish and will not convert the letter 'I'.
     return strtolower($string);
@@ -110,7 +126,18 @@ if (!function_exists('mb_strtoupper'))
       throw new InvalidArgumentException($message);
     }
 
-    // TODO: do something better using the Intl class if it's present
+    if (method_exists('IntlChar', 'toupper'))
+    {
+      $result = '';
+      $utf8_string = new Utf8String($string);
+      foreach ($utf8_string->toArray() as $char)
+      {
+        $result .= IntlChar::toupper($char);
+      }
+      return $result;
+    }
+
+    // Last resort - use the ordinary strtoupper().
     // The ordinary strtoupper() will give unexpected results when the locale is set to
     // Turkish and will not convert the letter 'i'.
     return strtoupper($string);
