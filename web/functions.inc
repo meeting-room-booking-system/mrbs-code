@@ -7,10 +7,106 @@ use DateTimeZone;
 use MRBS\Form\Field;
 use MRBS\Form\FieldSelect;
 use MRBS\ICalendar\RFC5545;
+use MRBS\Utf8\Utf8String;
+use Normalizer;
 use PHPMailer\PHPMailer\PHPMailer;
 use TypeError;
 
 require_once "mrbs_sql.inc";
+
+
+// Test to see if two strings are equal, optionally case-insensitively
+// See https://stackoverflow.com/questions/5473542/case-insensitive-string-comparison
+function mb_is_string_equal(string $string1, string $string2, bool $case_insensitive=false) : bool
+{
+  // Case-sensitive test
+  if (!$case_insensitive)
+  {
+    return ($string1 === $string2);
+  }
+
+  // Case-insensitive
+  // Quick test to see if they are equal in a case-sensitive fashion.
+  if ($string1 === $string2)
+  {
+    return true;
+  }
+  // Otherwise do a case-insensitive check
+  if (method_exists('Normalizer', 'normalize'))
+  {
+    $string1 = Normalizer::normalize($string1, Normalizer::FORM_KC);
+    $string2 = Normalizer::normalize($string2, Normalizer::FORM_KC);
+  }
+  return ((mb_strtolower($string1) === mb_strtolower($string2)) ||
+          (mb_strtoupper($string1) === mb_strtoupper($string2)));
+}
+
+
+// An emulation of mb_strpos() and mb_stripos() for UTF-8 that has the case-sensitivity as a parameter.
+function utf8_strpos_generic(string $haystack, string $needle, int $offset=0, bool $case_insensitive=false)
+{
+  $haystack_chars = (new Utf8String($haystack))->toArray();
+  $last_haystack_index = count($haystack_chars) - 1;
+  $needle_chars = (new Utf8String($needle))->toArray();
+  $last_needle_index = count($needle_chars) - 1;
+  // Note the +1 for negative offsets n the line below: it's the way the PHP implementation works
+  $start = ($offset < 0) ? $last_haystack_index + $offset + 1 : $offset;
+  $n = 0;
+
+  // Check that $offset is sensible.  (The PHP implementation allows an offset of +/-N on a
+  // string of length N. The error reporting in the PHP implementation depends on the PHP version.)
+  if (abs($offset) > $last_haystack_index + 1)
+  {
+    $message = __FUNCTION__ . '(): Argument #3 ($offset) must be contained in argument #1 ($haystack)';
+
+    if ((version_compare(PHP_VERSION, '8') >= 0))
+    {
+      throw new \ValueError($message);
+    }
+    else
+    {
+      $message = __FUNCTION__ . '(): Offset not contained in string';
+      trigger_error($message, E_USER_WARNING);
+      return false;
+    }
+  }
+
+  // Special case: an empty needle is found immediately
+  if ($needle === '')
+  {
+    return $start;
+  }
+
+  // Quick test: if the needle is longer than the part of the haystack to
+  // be searched, then we'll never find it.
+  if (count($needle_chars) > $last_haystack_index + 1 - $start)
+  {
+    return false;
+  }
+
+  // Otherwise, start searching through the haystack for the needle
+  for ($h = $start; $h <= $last_haystack_index; $h++)
+  {
+    // If we get a match with a needle character, then keep cycling through
+    // the haystack and needle. If we get to the end of the needle and all
+    // characters have matched, then we've found the needle; otherwise we
+    // reset and start looking for the needle again.
+    while (isset($haystack_chars[$h]) && isset($needle_chars[$n]) &&
+           mb_is_string_equal($haystack_chars[$h], $needle_chars[$n], $case_insensitive))
+    {
+      if ($n === $last_needle_index)
+      {
+        return $h - $n; // to get the starting index of the needle.
+      }
+      $h++;
+      $n++;
+    }
+    $n = 0;
+  }
+
+  return false;
+}
+
 
 // Constrain an integer to fit a certain type.  Useful for making sure
 // that integers will fit within the range for a database type.

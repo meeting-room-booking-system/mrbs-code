@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use MRBS\Utf8\Utf8String;
+use function MRBS\utf8_strpos_generic;
 
 // These functions are deliberately in the global namespace so that they
 // can be used in classes.  They are either polyfills for PHP functions
@@ -19,8 +20,10 @@ if (!function_exists('mb_stripos'))
       throw new InvalidArgumentException($message);
     }
 
-    // TODO: do something better
-    return stripos($haystack, $needle, $offset);
+    // We could just convert $haystack and $needle to the same case and then use mb_strpos.
+    // However, that would involve converting the whole of both strings, whereas utf8_strpos_generic
+    // only converts those characters that are necessary.
+    return utf8_strpos_generic($haystack, $needle, $offset, true);
   }
 }
 
@@ -67,65 +70,7 @@ if (!function_exists('mb_strpos'))
       throw new InvalidArgumentException($message);
     }
 
-    $haystack_chars = (new Utf8String($haystack))->toArray();
-    $last_haystack_index = count($haystack_chars) - 1;
-    $needle_chars = (new Utf8String($needle))->toArray();
-    $last_needle_index = count($needle_chars) - 1;
-    // Note the +1 for negative offsets n the line below: it's the way the PHP implementation works
-    $start = ($offset < 0) ? $last_haystack_index + $offset + 1 : $offset;
-    $n = 0;
-
-    // Check that $offset is sensible.  (The PHP implementation allows an offset of +/-N on a
-    // string of length N. The error reporting in the PHP implementation depends on the PHP version.)
-    if (abs($offset) > $last_haystack_index + 1)
-    {
-      $message = 'mb_strpos(): Argument #3 ($offset) must be contained in argument #1 ($haystack)';
-      if ((version_compare(PHP_VERSION, '8') >= 0))
-      {
-        throw new ValueError($message);
-      }
-      else
-      {
-        $message = "mb_strpos(): Offset not contained in string";
-        trigger_error($message, E_USER_WARNING);
-        return false;
-      }
-    }
-
-    // Special case: an empty needle is found immediately
-    if ($needle === '')
-    {
-      return $start;
-    }
-
-    // Quick test: if the needle is longer than the part of the haystack to
-    // be searched, then we'll never find it.
-    if (count($needle_chars) > $last_haystack_index + 1 - $start)
-    {
-      return false;
-    }
-
-    // Otherwise, start searching through the haystack for the needle
-    for ($h = $start; $h <= $last_haystack_index; $h++)
-    {
-      // If we get a match with a needle character, then keep cycling through
-      // the haystack and needle. If we get to the end of the needle and all
-      // characters have matched, then we've found the needle, otherwise we
-      // reset and start looking for the needle again.
-      while (isset($haystack_chars[$h]) && isset($needle_chars[$n]) &&
-        ($haystack_chars[$h] === $needle_chars[$n]))
-      {
-        if ($n === $last_needle_index)
-        {
-          return $h - $n; // to get the starting index of the needle.
-        }
-        $h++;
-        $n++;
-      }
-      $n = 0;
-    }
-
-    return false;
+    return utf8_strpos_generic($haystack, $needle, $offset);
   }
 }
 
