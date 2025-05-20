@@ -250,6 +250,24 @@ class Element
     {
       foreach ($options as $key => $value)
       {
+        // Replace the second and subsequent spaces in a consecutive sequence with the
+        // non-breaking space character.  We do this because otherwise they will be
+        // treated as extra whitespace and not rendered.  Moreover, they won't be passed
+        // through in the form.  This matters because if the form variable is then going
+        // to be used in an SQL query, the appropriate rows won't be found in the table.
+        // For example if the string in the database table is "Joe  Bloggs", only "Joe Bloggs"
+        // will be passed through in the form and a subsequent query of the form "SELECT *
+        // FROM table WHERE name='Joe Bloggs'" won't find the row.
+        // Fortunately, for the collation we use in MRBS, an ordinary space character is
+        // considered to be equivalent to a non-breaking space.
+        foreach (['key', 'value'] as $var)
+        {
+          if (is_string($$var))
+          {
+            $$var = preg_replace('/(?<= ) /', "\xc2\xa0", $$var);
+          }
+        }
+
         $option = new ElementOption();
 
         if ($associative)
