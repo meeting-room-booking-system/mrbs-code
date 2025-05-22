@@ -969,7 +969,7 @@ if (isset($action) && ($action == "update"))
     // Remove any extra whitespace that may have accidentally been inserted in the display name
     if ($fieldname == 'display_name')
     {
-      $values[$fieldname] = preg_replace('/\s+/', ' ', $values[$fieldname]);
+      $values[$fieldname] = remove_extra_whitespace($values[$fieldname]);
     }
 
     // we will also put the data into a query string which we will use for passing
