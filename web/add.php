@@ -29,32 +29,39 @@ if (!isset($name) || ($name === ''))
 {
   $error = "empty_name";
 }
-
-// we need to do different things depending on if it's a room
-// or an area
-elseif ($type === 'area')
+else
 {
-  $area_object = new Area($name);
+  // Strip out any extra whitespace that the user may accidentally have typed in the name
+  $name = remove_extra_whitespace($name);
 
-  try {
-    $area_object->insert();
-    $area = $area_object->id;
-  }
-  catch (DBException $e) {
-    if ($area_object->exists())
-    {
-      $error = 'invalid_area_name';
-    }
-    else
-    {
-      throw $e;
-    }
-  }
-}
+  // We need to do different things depending on if it's a room
+  // or an area
+  if ($type === 'area')
+  {
+    $area_object = new Area($name);
 
-elseif ($type === 'room')
-{
-  $room = mrbsAddRoom($name, $area, $error, $description, $capacity, $room_admin_email);
+    try
+    {
+      $area_object->insert();
+      $area = $area_object->id;
+    }
+    catch (DBException $e)
+    {
+      if ($area_object->exists())
+      {
+        $error = 'invalid_area_name';
+      }
+      else
+      {
+        throw $e;
+      }
+    }
+  }
+
+  elseif ($type === 'room')
+  {
+    $room = mrbsAddRoom($name, $area, $error, $description, $capacity, $room_admin_email);
+  }
 }
 
 $returl = "admin.php?area=$area" . (!empty($error) ? "&error=$error" : "");
