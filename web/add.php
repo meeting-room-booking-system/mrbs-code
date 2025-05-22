@@ -29,17 +29,20 @@ if (!isset($name) || ($name === ''))
 {
   $error = "empty_name";
 }
-
-// we need to do different things depending on if it's a room
-// or an area
-elseif ($type == "area")
+else
 {
-  $area = mrbsAddArea($name, $error);
-}
-
-elseif ($type == "room")
-{
-  $room = mrbsAddRoom($name, $area, $error, $description, $capacity, $room_admin_email);
+  // Strip out any extra whitespace that the user may accidentally have typed in the name
+  $name = remove_extra_whitespace($name);
+  // We need to do different things depending on if it's a room
+  // or an area
+  if ($type == "area")
+  {
+    $area = mrbsAddArea($name, $error);
+  }
+  elseif ($type == "room")
+  {
+    $room = mrbsAddRoom($name, $area, $error, $description, $capacity, $room_admin_email);
+  }
 }
 
 $returl = "admin.php?area=$area" . (!empty($error) ? "&error=$error" : "");
