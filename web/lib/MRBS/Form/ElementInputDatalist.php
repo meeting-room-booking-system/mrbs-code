@@ -43,7 +43,7 @@ class ElementInputDatalist extends ElementInput
     // the JavaScript polyfill can find them and do something with them
     $select = new ElementSelect();
     $select->addClass('none');
-    $select->addSelectOptions($options, null, $associative);
+    $select->addSelectOptions($options, null, $associative, true);
 
     $this->next($this->next()->addElement($select));
 

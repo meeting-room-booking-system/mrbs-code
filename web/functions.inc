@@ -42,6 +42,15 @@ function mb_is_string_equal(string $string1, string $string2, bool $case_insensi
 }
 
 
+// Strips out extra whitespace from a string.  Useful for sanitizing
+// user input before it is inserted into the database, eg when the
+// user has accidentally typed "Joe  Smith" instead of "Joe Smith".
+function remove_extra_whitespace(string $string) : string
+{
+  return preg_replace('/\s+/', ' ', $string);
+}
+
+
 // An emulation of mb_strpos() and mb_stripos() for UTF-8 that has the case-sensitivity as a parameter.
 function utf8_strpos_generic(string $haystack, string $needle, int $offset=0, bool $case_insensitive=false)
 {

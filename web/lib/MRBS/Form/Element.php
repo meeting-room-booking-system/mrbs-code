@@ -215,7 +215,8 @@ class Element
   //                      true    treat as an associative array
   //                      false   treat as a simple array
   //                      null    auto-detect
-  public function addSelectOptions(array $options, $selected=null, ?bool $associative=null) : Element
+  //    $for_datalist Whether the options are intended for use in a <datalist>.
+  public function addSelectOptions(array $options, $selected=null, ?bool $associative=null, bool $for_datalist=false) : Element
   {
     // Trivial case
     if (empty($options))
@@ -238,6 +239,10 @@ class Element
     // If two-dimensional then we need to use <optgroup>s.
     if (is_array(reset($options)))   // cannot use $options[0] because $options may be associative
     {
+      if ($for_datalist)
+      {
+        throw new \InvalidArgumentException("Datalists cannot have <optgroup> elements.");
+      }
       foreach ($options as $group => $group_options)
       {
         $optgroup = new ElementOptgroup();
@@ -248,41 +253,52 @@ class Element
     }
     else
     {
-      foreach ($options as $key => $value)
+      foreach ($options as $value => $text)
       {
-        // Replace the second and subsequent spaces in a consecutive sequence with the
-        // non-breaking space character.  We do this because otherwise they will be
-        // treated as extra whitespace and not rendered.  Moreover, they won't be passed
-        // through in the form.  This matters because if the form variable is then going
-        // to be used in an SQL query, the appropriate rows won't be found in the table.
-        // For example if the string in the database table is "Joe  Bloggs", only "Joe Bloggs"
-        // will be passed through in the form and a subsequent query of the form "SELECT *
-        // FROM table WHERE name='Joe Bloggs'" won't find the row.
-        // Fortunately, for the collation we use in MRBS, an ordinary space character is
-        // considered to be equivalent to a non-breaking space.
-        foreach (['key', 'value'] as $var)
-        {
-          if (is_string($$var))
-          {
-            $$var = preg_replace('/(?<= ) /', "\xc2\xa0", $$var);
-          }
-        }
-
         $option = new ElementOption();
 
-        if ($associative)
+        // We need to be careful about strings with multiple consecutive spaces in them.  If we have a <select> element
+        // with simple options of the form <option>Joe  Smith</option>, then the text "Joe  Smith" will be contracted
+        // to "Joe Smith".  This means that (a) it will look wrong on the form and (b) the wrong value will be passed
+        // through to the form handler.  One way of getting round this would be to substitute the extra spaces with
+        // non-breaking space characters.  However, although this will now look correct on the form, the value that is
+        // passed through to the form handler will contain non-breaking spaces instead of ordinary spaces.  A query
+        // using this value to find a row in the database will rely on the database engine treating ordinary and non-
+        // breaking spaces as equivalent. While this will be true for many collations, it won't always be so.
+        //
+        // The solution is to place the text as is in the value attribute, but to replace the spaces in the text node
+        // with non-breaking spaces, eg <option value="Joe  Smith">Joe  Smith</option>.  Because extra spaces in
+        // attributes are preserved, the correct string will be passed through to the form handler.  And because
+        // there are now non-breaking spaces in the text node, the string is displayed properly in the browser.  If the
+        // options are in the form of an associative array with values and text, then the value will be used for the
+        // value attribute and the text can have its spaces replaced.
+        //
+        // This solution doesn't work though for <datalist> elements, at least not when using Chrome or Safari.
+        // According to https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/datalist "Each <option>
+        // element should have a value attribute, which represents a suggestion to be entered into the input. It can
+        // also have a label attribute, or, missing that, some text content, which may be displayed by the browser
+        // instead of value (Firefox), or in addition to value (Chrome and Safari, as supplemental text). The exact
+        // content of the drop-down menu depends on the browser, but when clicked, content entered into control field
+        // will always come from the value attribute."  In other words, if the value and text are different - even in
+        // the type of space character used - then, when using Chrome and Safari, they are both displayed by the
+        // browser, which looks a little odd, when they are essentially the same string.
+        //
+        // So for <datalist> elements, which are never associative anyway, we just use the value attribute and have an
+        // empty text node, eg <option value="Joe  Smith"></option>.
+        //
+        // See also https://github.com/meeting-room-booking-system/mrbs-code/issues/3871 and
+        // https://stackoverflow.com/questions/79629259/does-mysql-distinguish-betwen-ordinary-and-non-breaking-spaces-in-a-query
+
+        $option->setAttribute('value', ($associative) ? $value : $text);
+
+        if (!$for_datalist || $associative)
         {
-          $option->setAttribute('value', $key);
+          // If it's a string replace the second and subsequent spaces with non-breaking spaces
+          $text = (is_string($text)) ? preg_replace('/(?<= ) /', "\xc2\xa0", $text) : strval($text);
+          $option->setText($text);
         }
 
-        $option->setText(strval($value));
-
-        if (!$associative)
-        {
-          $key = $value;
-        }
-
-        if (in_array($key, $selected))
+        if (!$for_datalist && in_array($value, $selected))
         {
           $option->setAttribute('selected');
         }
