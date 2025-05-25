@@ -354,7 +354,11 @@ function url_get_contents(string $url, ?string $if_modified_since=null, ?string 
       {
         // This function is called by curl for each header received
         $headers[] = $header;
-        return strlen($header);
+        // We want the length in bytes rather than characters.  We can't use strlen()
+        // because it might have been overloaded by mb_strlen().  But it's safe to
+        // use mb_strlen() because we have an emulation if the mbstring extension hasn't
+        // been loaded.
+        return mb_strlen($header, '8bit');
       }
     );
     $contents = curl_exec($ch);
