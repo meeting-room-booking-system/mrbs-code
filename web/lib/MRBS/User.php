@@ -130,9 +130,9 @@ class User
       if (isset($mail_settings['username_suffix']) && ($mail_settings['username_suffix'] !== ''))
       {
         $suffix = $mail_settings['username_suffix'];
-        if (substr($this->email, -strlen($suffix)) === $suffix)
+        if (mb_substr($this->email, -mb_strlen($suffix)) === $suffix)
         {
-          $this->email = substr($this->email, 0, -strlen($suffix));
+          $this->email = mb_substr($this->email, 0, -mb_strlen($suffix));
         }
       }
 
