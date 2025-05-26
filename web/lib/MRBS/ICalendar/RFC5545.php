@@ -48,9 +48,9 @@ class RFC5545
   {
     $result = array();
 
-    $split_pos = strlen($byday) -2;
-    $result['ordinal'] = (int) substr($byday, 0, $split_pos);
-    $result['day'] = substr($byday, $split_pos, 2);
+    $split_pos = mb_strlen($byday) -2;
+    $result['ordinal'] = (int) mb_substr($byday, 0, $split_pos);
+    $result['day'] = mb_substr($byday, $split_pos, 2);
 
     return $result;
   }
