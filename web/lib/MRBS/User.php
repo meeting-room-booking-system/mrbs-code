@@ -480,9 +480,9 @@ class User extends Table
     if (isset($mail_settings['username_suffix']) && ($mail_settings['username_suffix'] !== ''))
     {
       $suffix = $mail_settings['username_suffix'];
-      if (substr($email, -strlen($suffix)) === $suffix)
+      if (mb_substr($email, -mb_strlen($suffix)) === $suffix)
       {
-        $email = substr($email, 0, -strlen($suffix));
+        $email = mb_substr($email, 0, -mb_strlen($suffix));
       }
     }
 
