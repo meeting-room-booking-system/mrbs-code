@@ -1,0 +1,41 @@
+<?php
+namespace MRBS;
+
+// Database settings
+// We'll use environment variables for sensitive data
+$dbsys = "mysql";
+$db_host = "/cloudsql/" . getenv('INSTANCE_CONNECTION_NAME');  // Use Unix socket
+$db_database = getenv('DB_NAME');
+$db_login = getenv('DB_USER');
+$db_password = getenv('DB_PASSWORD');
+$db_port = getenv('DB_PORT') ?: 3306;
+
+// Use SSL for database connection in production
+$db_ssl = true;
+
+// Timezone
+$timezone = "America/New_York";  // Adjust this to your timezone
+
+// Site settings
+$mrbs_admin = "admin";
+$mrbs_admin_email = getenv('ADMIN_EMAIL');
+
+// Authentication settings
+$auth["type"] = "db";  // Use database authentication
+$auth["session"] = "php";  // Use PHP sessions
+
+// Enable security headers
+$secure_headers = true;
+$strict_transport_security = true;
+
+// Email settings (optional, configure if needed)
+$mail_settings['smtp_host'] = getenv('SMTP_HOST') ?: '';
+$mail_settings['smtp_port'] = getenv('SMTP_PORT') ?: 587;
+$mail_settings['smtp_username'] = getenv('SMTP_USER') ?: '';
+$mail_settings['smtp_password'] = getenv('SMTP_PASSWORD') ?: '';
+
+// Debug settings (disable in production)
+$debug = true;
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
