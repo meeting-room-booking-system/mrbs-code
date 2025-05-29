@@ -74,6 +74,22 @@ if (!function_exists('mb_strpos'))
   }
 }
 
+// Emulation of mb_strripos()
+if (!function_exists('mb_strripos'))
+{
+  function mb_strripos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
+  {
+    if (isset($encoding) && ($encoding !== 'UTF-8'))
+    {
+      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
+      throw new InvalidArgumentException($message);
+    }
+
+    // TODO: do something better
+    return strripos($haystack, $needle, $offset);
+  }
+}
+
 
 // Emulation of mb_strrpos()
 if (!function_exists('mb_strrpos'))
