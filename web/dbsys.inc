@@ -39,9 +39,9 @@ function get_table_short_name(string $table) : string
 
   // Get everything after the last '.', ie strip off any database
   // and schema names
-  if (false !== ($pos = strrpos($table, '.')))
+  if (false !== ($pos = mb_strrpos($table, '.')))
   {
-    $result = substr($table, $pos + 1);
+    $result = mb_substr($table, $pos + 1);
   }
   else
   {
