@@ -52,15 +52,52 @@ function remove_extra_whitespace(string $string) : string
 
 
 // An emulation of mb_strpos() and mb_stripos() for UTF-8 that has the case-sensitivity as a parameter.
-function utf8_strpos_generic(string $haystack, string $needle, int $offset=0, bool $case_insensitive=false)
+// This function can be tested by test_mb.php in the mrbs-tools repository.
+function utf8_strpos_generic(string $haystack, string $needle, int $offset=0, bool $case_insensitive=false, bool $reverse=false)
 {
   $haystack_chars = (new Utf8String($haystack))->toArray();
   $last_haystack_index = count($haystack_chars) - 1;
   $needle_chars = (new Utf8String($needle))->toArray();
   $last_needle_index = count($needle_chars) - 1;
-  // Note the +1 for negative offsets n the line below: it's the way the PHP implementation works
-  $start = ($offset < 0) ? $last_haystack_index + $offset + 1 : $offset;
-  $n = 0;
+
+  if ($reverse)
+  {
+    // We're looking for the last occurrence of the needle in the haystack, so we
+    // start at the right-hand end of the haystack, going backwards through the
+    // haystack looking for the right-hand end of the needle.  If we find the end
+    // of the needle, we keep going backwards through the needle and haystack,
+    // checking that all the characters match.
+    $increment = -1;
+    if ($offset < 0)
+    {
+      // The PHP mb_strrpos() documentation isn't very clear.  If there's a negative offset
+      // then it looks for a needle that can *start* anywhere up to and including the offset
+      // character.  It doesn't matter if part of the needle is to the right of the offset.
+      $haystack_start = min($last_haystack_index, $last_haystack_index + count($needle_chars) + $offset);
+      $haystack_end = 0;
+    }
+    else
+    {
+      $haystack_start = $last_haystack_index;
+      $haystack_end = $offset;
+    }
+    $needle_start = $last_needle_index;
+    $needle_end = 0;
+  }
+  else
+  {
+    // We're looking for the first occurrence of the needle in the haystack, so we
+    // start at the left-hand end of the haystack, going forwards through the
+    // haystack looking for the left-hand end of the needle.  If we find the end
+    // of the needle, we keep going forwards through the needle and haystack,
+    // checking that all the characters match.
+    $increment = 1;
+    // Note the +1 for negative offsets n the line below: it's the way the PHP implementation works
+    $haystack_start = ($offset < 0) ? $last_haystack_index + $offset + 1 : $offset;
+    $haystack_end = $last_haystack_index;
+    $needle_start = 0;
+    $needle_end = $last_needle_index;
+  }
 
   // Check that $offset is sensible.  (The PHP implementation allows an offset of +/-N on a
   // string of length N. The error reporting in the PHP implementation depends on the PHP version.)
@@ -83,34 +120,53 @@ function utf8_strpos_generic(string $haystack, string $needle, int $offset=0, bo
   // Special case: an empty needle is found immediately
   if ($needle === '')
   {
-    return $start;
+    return $haystack_start;
   }
 
   // Quick test: if the needle is longer than the part of the haystack to
   // be searched, then we'll never find it.
-  if (count($needle_chars) > $last_haystack_index + 1 - $start)
+  if ($reverse)
+  {
+    if ($offset >= 0)
+    {
+      if ((count($needle_chars) > $haystack_start + 2 - $haystack_end))
+      {
+        return false;
+      }
+    }
+    elseif (count($needle_chars) > count($haystack_chars))
+    {
+      return false;
+    }
+  }
+  elseif (count($needle_chars) > $haystack_end + 1 - $haystack_start)
   {
     return false;
   }
 
-  // Otherwise, start searching through the haystack for the needle
-  for ($h = $start; $h <= $last_haystack_index; $h++)
+  // Otherwise, start searching through the haystack for the needle (going either backwards
+  // or forwards depending on the value of $increment).
+  $n = $needle_start;
+
+  for ($h = $haystack_start; ($increment > 0) ? $h <= $haystack_end : $h >= $haystack_end; $h += $increment)
   {
     // If we get a match with a needle character, then keep cycling through
     // the haystack and needle. If we get to the end of the needle and all
     // characters have matched, then we've found the needle; otherwise we
     // reset and start looking for the needle again.
-    while (isset($haystack_chars[$h]) && isset($needle_chars[$n]) &&
+    while ((($increment > 0) ? $h <= $haystack_end : $h >= $haystack_end) && isset($needle_chars[$n]) &&
            mb_is_string_equal($haystack_chars[$h], $needle_chars[$n], $case_insensitive))
     {
-      if ($n === $last_needle_index)
+      if ($n === $needle_end)
       {
+        // We've found the needle, as we've got to the end and all characters match
         return $h - $n; // to get the starting index of the needle.
       }
-      $h++;
-      $n++;
+      $h += $increment;
+      $n += $increment;
     }
-    $n = 0;
+    // No match, reset the needle index
+    $n = $needle_start;
   }
 
   return false;

@@ -85,8 +85,7 @@ if (!function_exists('mb_strripos'))
       throw new InvalidArgumentException($message);
     }
 
-    // TODO: do something better
-    return strripos($haystack, $needle, $offset);
+    return utf8_strpos_generic($haystack, $needle, $offset, true, true);
   }
 }
 
@@ -102,8 +101,7 @@ if (!function_exists('mb_strrpos'))
       throw new InvalidArgumentException($message);
     }
 
-    // TODO: do something better
-    return strrpos($haystack, $needle, $offset);
+    return utf8_strpos_generic($haystack, $needle, $offset, false, true);
   }
 }
 
