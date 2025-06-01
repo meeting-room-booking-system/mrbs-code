@@ -74,6 +74,37 @@ if (!function_exists('mb_strpos'))
   }
 }
 
+// Emulation of mb_strripos()
+if (!function_exists('mb_strripos'))
+{
+  function mb_strripos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
+  {
+    if (isset($encoding) && ($encoding !== 'UTF-8'))
+    {
+      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
+      throw new InvalidArgumentException($message);
+    }
+
+    return utf8_strpos_generic($haystack, $needle, $offset, true, true);
+  }
+}
+
+
+// Emulation of mb_strrpos()
+if (!function_exists('mb_strrpos'))
+{
+  function mb_strrpos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
+  {
+    if (isset($encoding) && ($encoding !== 'UTF-8'))
+    {
+      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
+      throw new InvalidArgumentException($message);
+    }
+
+    return utf8_strpos_generic($haystack, $needle, $offset, false, true);
+  }
+}
+
 
 // Emulation of mb_strtolower
 if (!function_exists('mb_strtolower'))

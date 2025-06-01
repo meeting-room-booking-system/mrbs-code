@@ -22,7 +22,7 @@ function init_errors() : void
     ini_set('error_log', getcwd() . '/' . $error_log);
   }
 
-  // Make sure notice errors are not reported, they can break mrbs code:
+  // Make sure notice errors are not reported; they can break mrbs code.
   $error_level = E_ALL & ~E_NOTICE & ~E_USER_NOTICE;
 
   if (defined("E_DEPRECATED"))
@@ -31,8 +31,9 @@ function init_errors() : void
   }
 
   // The Mail and Net libraries generate E_STRICT errors, so disable E_STRICT (which became
-  // part of E_ALL in PHP 5.4)
-  if (defined("E_STRICT"))
+  // part of E_ALL in PHP 5.4).  E_STRICT is deprecated from PHP 8.4 (and not used since PHP 7).
+  assert(version_compare(MRBS_MIN_PHP_VERSION, '8.0.0', '<'), "The if block below can be removed.");
+  if (defined("E_STRICT") && (version_compare(PHP_VERSION, '8.4') < 0))
   {
     $error_level = $error_level & ~E_STRICT;
   }

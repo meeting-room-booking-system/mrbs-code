@@ -47,7 +47,7 @@ function get_vtimezone_url(string $vtimezone) : ?string
   {
     if (mb_strpos($property, "TZURL:") === 0)
     {
-      $tz_url = substr($property, 6);  // 6 is the length of "TZURL:"
+      $tz_url = mb_substr($property, 6);  // 6 is the length of "TZURL:"
       break;
     }
   }
@@ -318,8 +318,8 @@ function get_repeat_rule(string $rrule, int $start_time, array &$errors)
           }
           foreach ($byday_days as $byday_day)
           {
-            $rfc5545day = substr($byday_day, -2);     // the last two characters of the string
-            $nth = substr($byday_day, 0, -2);  // everything except the last two characters
+            $rfc5545day = mb_substr($byday_day, -2);     // the last two characters of the string
+            $nth = mb_substr($byday_day, 0, -2);  // everything except the last two characters
             if ($nth === '')
             {
               // "If an integer modifier is not present, it means all days of this
