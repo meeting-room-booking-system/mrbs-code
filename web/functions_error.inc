@@ -22,7 +22,7 @@ function init_errors() : void
     ini_set('error_log', getcwd() . '/' . $error_log);
   }
 
-  // Make sure notice errors are not reported, they can break mrbs code:
+  // Make sure notice errors are not reported; they can break mrbs code.
   $error_level = E_ALL & ~E_NOTICE & ~E_USER_NOTICE;
 
   if (defined("E_DEPRECATED"))
