@@ -51,7 +51,8 @@ function remove_extra_whitespace(string $string) : string
 }
 
 
-// An emulation of mb_strpos() and mb_stripos() for UTF-8 that has the case-sensitivity as a parameter.
+// An emulation of mb_strpos(), mb_stripos(), mb_strrpos() and mb_strripos() for UTF-8 that has
+// the case-sensitivity and direction as parameters.
 // This function can be tested by test_mb.php in the mrbs-tools repository.
 function utf8_strpos_generic(string $haystack, string $needle, int $offset=0, bool $case_insensitive=false, bool $reverse=false)
 {
