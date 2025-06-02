@@ -14,17 +14,26 @@ if (!function_exists('mb_stripos'))
 {
   function mb_stripos(string $haystack, string $needle, int $offset=0, ?string $encoding = null)
   {
-    if (isset($encoding) && ($encoding !== 'UTF-8'))
-    {
-      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
-      throw new InvalidArgumentException($message);
-    }
-
-    // We could just convert $haystack and $needle to the same case and then use mb_strpos.
-    // However, that would involve converting the whole of both strings, whereas utf8_strpos_generic
-    // only converts those characters that are necessary.
-    return utf8_strpos_generic($haystack, $needle, $offset, true);
+    // The function signatures are identical to facilitate testing
+    return mrbs_mb_stripos($haystack, $needle, $offset, $encoding);
   }
+}
+
+
+// Only to be called by mb_stripos() or test software
+function mrbs_mb_stripos(string $haystack, string $needle, int $offset=0, ?string $encoding = null)
+{
+  if (isset($encoding) && ($encoding !== 'UTF-8'))
+  {
+    $function = mb_substr(__FUNCTION__, mb_strlen('mrbs_')) . '()';
+    $message = "This emulation of $function only supports the UTF-8 encoding.";
+    throw new InvalidArgumentException($message);
+  }
+
+  // We could just convert $haystack and $needle to the same case and then use mb_strpos.
+  // However, that would involve converting the whole of both strings, whereas utf8_strpos_generic
+  // only converts those characters that are necessary.
+  return utf8_strpos_generic($haystack, $needle, $offset, true);
 }
 
 
@@ -64,29 +73,48 @@ if (!function_exists('mb_strpos'))
 {
   function mb_strpos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
   {
-    if (isset($encoding) && ($encoding !== 'UTF-8'))
-    {
-      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
-      throw new InvalidArgumentException($message);
-    }
-
-    return utf8_strpos_generic($haystack, $needle, $offset);
+    // The function signatures are identical to facilitate testing
+    return mrbs_mb_strpos($haystack, $needle, $offset, $encoding);
   }
 }
+
+
+// Only to be called by mb_strpos() or test software
+function mrbs_mb_strpos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
+{
+  if (isset($encoding) && ($encoding !== 'UTF-8'))
+  {
+    $function = mb_substr(__FUNCTION__, mb_strlen('mrbs_')) . '()';
+    $message = "This emulation of $function only supports the UTF-8 encoding.";
+    throw new InvalidArgumentException($message);
+  }
+
+  return utf8_strpos_generic($haystack, $needle, $offset);
+}
+
 
 // Emulation of mb_strripos()
 if (!function_exists('mb_strripos'))
 {
   function mb_strripos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
   {
-    if (isset($encoding) && ($encoding !== 'UTF-8'))
-    {
-      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
-      throw new InvalidArgumentException($message);
-    }
-
-    return utf8_strpos_generic($haystack, $needle, $offset, true, true);
+    // The function signatures are identical to facilitate testing
+    return mrbs_mb_strripos($haystack, $needle, $offset, $encoding);
   }
+}
+
+
+// Only to be called by mb_strripos() or test software
+function mrbs_mb_strripos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
+{
+  if (isset($encoding) && ($encoding !== 'UTF-8'))
+  {
+    $function = mb_substr(__FUNCTION__, mb_strlen('mrbs_')) . '()';
+    $message = "This emulation of $function only supports the UTF-8 encoding.";
+    throw new InvalidArgumentException($message);
+  }
+
+  return utf8_strpos_generic($haystack, $needle, $offset, true, true);
 }
 
 
@@ -95,14 +123,23 @@ if (!function_exists('mb_strrpos'))
 {
   function mb_strrpos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
   {
-    if (isset($encoding) && ($encoding !== 'UTF-8'))
-    {
-      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
-      throw new InvalidArgumentException($message);
-    }
-
-    return utf8_strpos_generic($haystack, $needle, $offset, false, true);
+    // The function signatures are identical to facilitate testing
+    return mrbs_mb_strrpos($haystack, $needle, $offset, $encoding);
   }
+}
+
+
+// Only to be called by mb_strrpos() or test software
+function mrbs_mb_strrpos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
+{
+  if (isset($encoding) && ($encoding !== 'UTF-8'))
+  {
+    $function = mb_substr(__FUNCTION__, mb_strlen('mrbs_')) . '()';
+    $message = "This emulation of $function only supports the UTF-8 encoding.";
+    throw new InvalidArgumentException($message);
+  }
+
+  return utf8_strpos_generic($haystack, $needle, $offset, false, true);
 }
 
 
