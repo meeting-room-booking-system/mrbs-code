@@ -44,27 +44,35 @@ if (!function_exists('mb_strlen'))
 {
   function mb_strlen(string $string, ?string $encoding=null) : int
   {
-    if ($string === '')
-    {
-      return 0;
-    }
-
-    switch ($encoding)
-    {
-      case null:
-      case 'UTF-8':
-        $result = count((new Utf8String($string))->toArray());
-        break;
-      case '8bit':
-        $result = (new Utf8String($string))->byteCount();
-        break;
-      default:
-        throw new InvalidArgumentException("Encoding '$encoding' is not supported.");
-        break;
-    }
-
-    return $result;
+    // The function signatures are identical to facilitate testing
+    return mrbs_mb_strlen($string, $encoding);
   }
+}
+
+
+// Only to be called by mb_strlen() or test software
+function mrbs_mb_strlen(string $string, ?string $encoding=null) : int
+{
+  if ($string === '')
+  {
+    return 0;
+  }
+
+  switch ($encoding)
+  {
+    case null:
+    case 'UTF-8':
+      $result = count((new Utf8String($string))->toArray());
+      break;
+    case '8bit':
+      $result = (new Utf8String($string))->byteCount();
+      break;
+    default:
+      throw new InvalidArgumentException("Encoding '$encoding' is not supported.");
+      break;
+  }
+
+  return $result;
 }
 
 
