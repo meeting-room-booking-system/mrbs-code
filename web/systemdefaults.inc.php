@@ -746,6 +746,12 @@ $datetime_formats['view_month'] = array(
   'pattern' => 'MMMM y'
 );
 
+// The title of the month view calendar
+$datetime_formats['view_year'] = array(
+  'skeleton' => 'MMMMy',
+  'pattern' => 'MMMM y'
+);
+
 // The day and month as used in the header row of the week view
 $datetime_formats['view_week_day_month'] = array(
   'skeleton' => 'dMMM',
