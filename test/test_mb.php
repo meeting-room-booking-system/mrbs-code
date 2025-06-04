@@ -58,20 +58,31 @@ function test_strlen()
   echo "<table>\n";
   echo "<thead>\n";
   echo "<tr>";
-  echo '<th>function</th><th>$string</th><th>result - mbstring</th><th>result - mrbs</th><th>Summary</th>';
+  echo '<th>function</th><th>$string</th><th>Encoding</th><th>result - mbstring</th><th>result - mrbs</th><th>Summary</th>';
   echo "<tr>\n";
   echo "</thead>\n";
 
   echo "<tbody>\n";
 
   // Simple case
-  test('mb_strlen', ['abcd']);
+  test('mb_strlen', ['abcd', 'UTF-8']);
   // Multibyte
-  test('mb_strlen', ['會議室預約系統']);
-  test('mb_strlen', ['emojis 😀😨🙁']);
+  test('mb_strlen', ['會議室預約系統', 'UTF-8']);
+  test('mb_strlen', ['emojis 😀😨🙁', 'UTF-8']);
   // Empty string
-  test('mb_strlen', ['']);
+  test('mb_strlen', ['', 'UTF-8']);
 
+  // 8bit testing
+  test('mb_strlen', ['', '8bit']);
+  test('mb_strlen', ['&', '8bit']);
+  test('mb_strlen', ['å', '8bit']);
+  test('mb_strlen', ['議', '8bit']);
+  test('mb_strlen', ['👽', '8bit']);
+  test('mb_strlen', ['z👽', '8bit']);
+  test('mb_strlen', ['åäö', '8bit']);
+  test('mb_strlen', ['👽統', '8bit']);
+  test('mb_strlen', ['👿🤩', '8bit']);
+  test('mb_strlen', ['系統åg', '8bit']);
 
   echo "</tbody>\n";
   echo "</table>\n";
