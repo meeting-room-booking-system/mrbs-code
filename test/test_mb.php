@@ -172,7 +172,7 @@ function test_pos() : void
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '0123456789a', 0]);
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '0123456789a', 1]);
 
-  // Positive offsets, needle partial match at end
+  // Positive offsets, needle partial match at the end
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '89cd', 10]);
 
   // Positive offsets, needle longer than search area
@@ -183,7 +183,7 @@ function test_pos() : void
   test('mb_strrpos', ['abcdefg', 'cdefghi', -2]);
   test('mb_strrpos', ['abcdefg', 'cdefghij', -2]);
 
-  // Negative offsets, needle in middle of haystack
+  // Negative offsets, needle in the middle of haystack
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '234', 0]);
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '234', -1]);
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '234', -2]);
@@ -191,7 +191,7 @@ function test_pos() : void
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '234', -9]);
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '234', -10]);
 
-  // Negative offsets, needle at end of haystack
+  // Negative offsets, needle at the end of haystack
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '789c', 0]);
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '789c', -1]);
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '789c', -2]);
@@ -199,7 +199,7 @@ function test_pos() : void
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '789c', -4]);
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '789c', -5]);
 
-  // Negative offsets, needle partial match at end
+  // Negative offsets, needle partial match at the end
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '789cd', 0]);
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '789cd', -1]);
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '789cd', -2]);
