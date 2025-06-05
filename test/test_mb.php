@@ -11,14 +11,14 @@ ini_set('display_errors', '1');
 ini_set('max_execution_time', '5');
 
 
-function thead_html(array $test_function_args) : string
+function thead_html(array $function_arg_names) : string
 {
   $html = "<thead>\n";
   $html .= '<tr>';
   $html .= '<th>function</th>';
-  foreach ($test_function_args as $arg)
+  foreach ($function_arg_names as $name)
   {
-    $html .= "<th>$arg</th>";
+    $html .= '<th>$' . $name . '</th>';
   }
   $html .= '<th>result - mbstring</th><th>result - mrbs</th><th>Summary</th>';
   $html .= "<tr>\n";
@@ -70,10 +70,10 @@ function test(string $function, $args) : void
 }
 
 
-function test_strlen()
+function test_strlen() : void
 {
   echo "<table>\n";
-  echo thead_html(['$string', '$encoding']);
+  echo thead_html(['string', 'encoding']);
   echo "<tbody>\n";
 
   // Simple case
@@ -101,10 +101,38 @@ function test_strlen()
 }
 
 
-function test_pos()
+function test_substr() : void
 {
   echo "<table>\n";
-  echo thead_html(['$haystack', '$needle', '$offset']);
+  echo thead_html(['string', 'start', 'length']);
+  echo "<tbody>\n";
+
+  // Empty string
+  test('mb_substr', ['', 0, null]);
+  test('mb_substr', ['', 1, null]);
+  test('mb_substr', ['', 0, 2]);
+  test('mb_substr', ['', 1, 2]);
+
+  // Multibyte
+  test('mb_substr', ['👽系😨z😎é', 0, null]);
+  test('mb_substr', ['👽系😨z😎é', 2, null]);
+  test('mb_substr', ['👽系😨z😎é', 2, 1]);
+  test('mb_substr', ['👽系😨z😎é', 2, -1]);
+  test('mb_substr', ['👽系😨z😎é', 2, -5]);
+  test('mb_substr', ['👽系😨z😎é', -1, null]);
+  test('mb_substr', ['👽系😨z😎é', -3, -1]);
+  test('mb_substr', ['👽系😨z😎é', -9, -1]);
+  test('mb_substr', ['👽系😨z😎é', -9, -12]);
+
+  echo "</tbody>\n";
+  echo "</table>\n";
+}
+
+
+function test_pos() : void
+{
+  echo "<table>\n";
+  echo thead_html(['haystack', 'needle', 'offset']);
   echo "<tbody>\n";
 
   // mb_strpos()
@@ -224,6 +252,9 @@ if (!in_array('mbstring', $loaded_extensions))
 
 echo "<h2>mb_strlen() tests</h2>\n";
 test_strlen();
+
+echo "<h2>mb_substr() tests</h2>\n";
+test_substr();
 
 echo "<h2>mb_*pos() tests</h2>\n";
 test_pos();

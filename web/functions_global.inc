@@ -226,14 +226,22 @@ if (!function_exists('mb_substr'))
 {
   function mb_substr(string $string, int $start, ?int $length = null, ?string $encoding = null): string
   {
-    if (isset($encoding) && ($encoding !== 'UTF-8'))
-    {
-      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
-      throw new InvalidArgumentException($message);
-    }
-
-    return implode('', array_slice((new Utf8String($string))->toArray(), $start, $length));
+    // The function signatures are identical to facilitate testing
+    return mrbs_mb_substr($string, $start, $length, $encoding);
   }
+}
+
+
+// Only to be called by mb_substr() or test software
+function mrbs_mb_substr(string $string, int $start, ?int $length = null, ?string $encoding = null): string
+{
+  if (isset($encoding) && ($encoding !== 'UTF-8'))
+  {
+    $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
+    throw new InvalidArgumentException($message);
+  }
+
+  return implode('', array_slice((new Utf8String($string))->toArray(), $start, $length));
 }
 
 
