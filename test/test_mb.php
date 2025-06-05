@@ -110,7 +110,7 @@ function test_strtolower() : void
   // Empty string
   test('mb_strtolower', ['']);
   // Simple string
-  test('mb_strtolower', ['ABcDeF']);
+  test('mb_strtolower', ['ABcDeFgHI']);
   // More complex
   test('mb_strtolower', ['AÅÄÖ']);
   // Turkish characters
@@ -133,7 +133,7 @@ function test_strtoupper() : void
   // Empty string
   test('mb_strtoupper', ['']);
   // Simple string
-  test('mb_strtoupper', ['ABcDeF']);
+  test('mb_strtoupper', ['ABcDeFgHI']);
   // More complex
   test('mb_strtoupper', ['aåäö']);
   // Turkish characters
