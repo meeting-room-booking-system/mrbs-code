@@ -199,33 +199,41 @@ if (!function_exists('mb_strtoupper'))
 {
   function mb_strtoupper(string $string, ?string $encoding=null) : string
   {
-    if ($string === '')
-    {
-      return $string;
-    }
-
-    if (isset($encoding) && ($encoding !== 'UTF-8'))
-    {
-      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
-      throw new InvalidArgumentException($message);
-    }
-
-    if (method_exists('IntlChar', 'toupper'))
-    {
-      $result = '';
-      $utf8_string = new Utf8String($string);
-      foreach ($utf8_string->toArray() as $char)
-      {
-        $result .= IntlChar::toupper($char);
-      }
-      return $result;
-    }
-
-    // Last resort - use the ordinary strtoupper().
-    // The ordinary strtoupper() will give unexpected results when the locale is set to
-    // Turkish and will not convert the letter 'i'.
-    return strtoupper($string);
+    // The function signatures are identical to facilitate testing
+    return mrbs_mb_strtoupper($string, $encoding);
   }
+}
+
+
+// Only to be called by mb_strtoupper() or test software
+function mrbs_mb_strtoupper(string $string, ?string $encoding=null) : string
+{
+  if ($string === '')
+  {
+    return $string;
+  }
+
+  if (isset($encoding) && ($encoding !== 'UTF-8'))
+  {
+    $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
+    throw new InvalidArgumentException($message);
+  }
+
+  if (method_exists('IntlChar', 'toupper'))
+  {
+    $result = '';
+    $utf8_string = new Utf8String($string);
+    foreach ($utf8_string->toArray() as $char)
+    {
+      $result .= IntlChar::toupper($char);
+    }
+    return $result;
+  }
+
+  // Last resort - use the ordinary strtoupper().
+  // The ordinary strtoupper() will give unexpected results when the locale is set to
+  // Turkish and will not convert the letter 'i'.
+  return strtoupper($string);
 }
 
 

@@ -124,6 +124,29 @@ function test_strtolower() : void
 }
 
 
+function test_strtoupper() : void
+{
+  echo "<table>\n";
+  echo thead_html(['string']);
+  echo "<tbody>\n";
+
+  // Empty string
+  test('mb_strtoupper', ['']);
+  // Simple string
+  test('mb_strtoupper', ['ABcDeF']);
+  // More complex
+  test('mb_strtoupper', ['aåäö']);
+  // Turkish characters
+  test('mb_strtoupper', ['cçgğiiı̇sş']);
+  // Other
+  test('mb_strtoupper', ['Τάχιστη αλώπηξ βαφής']);
+  test('mb_strtoupper', ['👽系😨z😎éÉ']);
+
+  echo "</tbody>\n";
+  echo "</table>\n";
+}
+
+
 function test_substr() : void
 {
   echo "<table>\n";
@@ -278,6 +301,9 @@ test_strlen();
 
 echo "<h2>mb_strtolower()</h2>\n";
 test_strtolower();
+
+echo "<h2>mb_strtoupper()</h2>\n";
+test_strtoupper();
 
 echo "<h2>mb_substr()</h2>\n";
 test_substr();
