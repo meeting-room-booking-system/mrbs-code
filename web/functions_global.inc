@@ -156,33 +156,41 @@ if (!function_exists('mb_strtolower'))
 {
   function mb_strtolower(string $string, ?string $encoding=null) : string
   {
-    if ($string === '')
-    {
-      return $string;
-    }
-
-    if (isset($encoding) && ($encoding !== 'UTF-8'))
-    {
-      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
-      throw new InvalidArgumentException($message);
-    }
-
-    if (method_exists('IntlChar', 'tolower'))
-    {
-      $result = '';
-      $utf8_string = new Utf8String($string);
-      foreach ($utf8_string->toArray() as $char)
-      {
-        $result .= IntlChar::tolower($char);
-      }
-      return $result;
-    }
-
-    // Last resort - use the ordinary strtolower().
-    // The ordinary strtolower() will give unexpected results when the locale is set to
-    // Turkish and will not convert the letter 'I'.
-    return strtolower($string);
+    // The function signatures are identical to facilitate testing
+    return mrbs_mb_strtolower($string, $encoding);
   }
+}
+
+
+// Only to be called by mb_strtolower() or test software
+function mrbs_mb_strtolower(string $string, ?string $encoding=null) : string
+{
+  if ($string === '')
+  {
+    return $string;
+  }
+
+  if (isset($encoding) && ($encoding !== 'UTF-8'))
+  {
+    $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
+    throw new InvalidArgumentException($message);
+  }
+
+  if (method_exists('IntlChar', 'tolower'))
+  {
+    $result = '';
+    $utf8_string = new Utf8String($string);
+    foreach ($utf8_string->toArray() as $char)
+    {
+      $result .= IntlChar::tolower($char);
+    }
+    return $result;
+  }
+
+  // Last resort - use the ordinary strtolower().
+  // The ordinary strtolower() will give unexpected results when the locale is set to
+  // Turkish and will not convert the letter 'I'.
+  return strtolower($string);
 }
 
 

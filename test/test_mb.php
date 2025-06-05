@@ -101,6 +101,29 @@ function test_strlen() : void
 }
 
 
+function test_strtolower() : void
+{
+  echo "<table>\n";
+  echo thead_html(['string']);
+  echo "<tbody>\n";
+
+  // Empty string
+  test('mb_strtolower', ['']);
+  // Simple string
+  test('mb_strtolower', ['ABcDeF']);
+  // More complex
+  test('mb_strtolower', ['AÅÄÖ']);
+  // Turkish characters
+  test('mb_strtolower', ['CÇGĞIİSŞ']);
+  // Other
+  test('mb_strtolower', ['Τάχιστη αλώπηξ βαφής']);
+  test('mb_strtolower', ['👽系😨z😎éÉ']);
+
+  echo "</tbody>\n";
+  echo "</table>\n";
+}
+
+
 function test_substr() : void
 {
   echo "<table>\n";
@@ -250,11 +273,14 @@ if (!in_array('mbstring', $loaded_extensions))
   die("This test needs the 'mbstring' PHP extension to be loaded.");
 }
 
-echo "<h2>mb_strlen() tests</h2>\n";
+echo "<h2>mb_strlen()</h2>\n";
 test_strlen();
 
-echo "<h2>mb_substr() tests</h2>\n";
+echo "<h2>mb_strtolower()</h2>\n";
+test_strtolower();
+
+echo "<h2>mb_substr()</h2>\n";
 test_substr();
 
-echo "<h2>mb_*pos() tests</h2>\n";
+echo "<h2>mb_*pos()</h2>\n";
 test_pos();
