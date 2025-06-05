@@ -11,6 +11,23 @@ ini_set('display_errors', '1');
 ini_set('max_execution_time', '5');
 
 
+function thead_html(array $test_function_args) : string
+{
+  $html = "<thead>\n";
+  $html .= '<tr>';
+  $html .= '<th>function</th>';
+  foreach ($test_function_args as $arg)
+  {
+    $html .= "<th>$arg</th>";
+  }
+  $html .= '<th>result - mbstring</th><th>result - mrbs</th><th>Summary</th>';
+  $html .= "<tr>\n";
+  $html .= "</thead>\n";
+
+  return $html;
+}
+
+
 function test(string $function, $args) : void
 {
   echo "<tr>";
@@ -56,12 +73,7 @@ function test(string $function, $args) : void
 function test_strlen()
 {
   echo "<table>\n";
-  echo "<thead>\n";
-  echo "<tr>";
-  echo '<th>function</th><th>$string</th><th>Encoding</th><th>result - mbstring</th><th>result - mrbs</th><th>Summary</th>';
-  echo "<tr>\n";
-  echo "</thead>\n";
-
+  echo thead_html(['$string', '$encoding']);
   echo "<tbody>\n";
 
   // Simple case
@@ -92,12 +104,7 @@ function test_strlen()
 function test_pos()
 {
   echo "<table>\n";
-  echo "<thead>\n";
-  echo "<tr>";
-  echo '<th>function</th><th>$haystack</th><th>$needle</th><th>$offset</th><th>result - mbstring</th><th>result - mrbs</th><th>Summary</th>';
-  echo "<tr>\n";
-  echo "</thead>\n";
-
+  echo thead_html(['$haystack', '$needle', '$offset']);
   echo "<tbody>\n";
 
   // mb_strpos()
