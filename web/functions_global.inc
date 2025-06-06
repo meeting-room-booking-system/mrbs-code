@@ -1,8 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use MRBS\Utf8\Utf8String;
-use function MRBS\utf8_strpos_generic;
+use MRBS\Mbstring;
 
 // These functions are deliberately in the global namespace so that they
 // can be used in classes.  They are either polyfills for PHP functions
@@ -14,26 +13,8 @@ if (!function_exists('mb_stripos'))
 {
   function mb_stripos(string $haystack, string $needle, int $offset=0, ?string $encoding = null)
   {
-    // The function signatures are identical to facilitate testing
-    return mrbs_mb_stripos($haystack, $needle, $offset, $encoding);
+    return Mbstring::mb_stripos($haystack, $needle, $offset, $encoding);
   }
-}
-
-
-// Only to be called by mb_stripos() or test software
-function mrbs_mb_stripos(string $haystack, string $needle, int $offset=0, ?string $encoding = null)
-{
-  if (isset($encoding) && ($encoding !== 'UTF-8'))
-  {
-    $function = mb_substr(__FUNCTION__, mb_strlen('mrbs_')) . '()';
-    $message = "This emulation of $function only supports the UTF-8 encoding.";
-    throw new InvalidArgumentException($message);
-  }
-
-  // We could just convert $haystack and $needle to the same case and then use mb_strpos.
-  // However, that would involve converting the whole of both strings, whereas utf8_strpos_generic
-  // only converts those characters that are necessary.
-  return utf8_strpos_generic($haystack, $needle, $offset, true);
 }
 
 
@@ -44,35 +25,8 @@ if (!function_exists('mb_strlen'))
 {
   function mb_strlen(string $string, ?string $encoding=null) : int
   {
-    // The function signatures are identical to facilitate testing
-    return mrbs_mb_strlen($string, $encoding);
+    return Mbstring::mb_strlen($string, $encoding);
   }
-}
-
-
-// Only to be called by mb_strlen() or test software
-function mrbs_mb_strlen(string $string, ?string $encoding=null) : int
-{
-  if ($string === '')
-  {
-    return 0;
-  }
-
-  switch ($encoding)
-  {
-    case null:
-    case 'UTF-8':
-      $result = count((new Utf8String($string))->toArray());
-      break;
-    case '8bit':
-      $result = (new Utf8String($string))->byteCount();
-      break;
-    default:
-      throw new InvalidArgumentException("Encoding '$encoding' is not supported.");
-      break;
-  }
-
-  return $result;
 }
 
 
@@ -81,23 +35,8 @@ if (!function_exists('mb_strpos'))
 {
   function mb_strpos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
   {
-    // The function signatures are identical to facilitate testing
-    return mrbs_mb_strpos($haystack, $needle, $offset, $encoding);
+    return Mbstring::mb_strpos($haystack, $needle, $offset, $encoding);
   }
-}
-
-
-// Only to be called by mb_strpos() or test software
-function mrbs_mb_strpos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
-{
-  if (isset($encoding) && ($encoding !== 'UTF-8'))
-  {
-    $function = mb_substr(__FUNCTION__, mb_strlen('mrbs_')) . '()';
-    $message = "This emulation of $function only supports the UTF-8 encoding.";
-    throw new InvalidArgumentException($message);
-  }
-
-  return utf8_strpos_generic($haystack, $needle, $offset);
 }
 
 
@@ -106,23 +45,8 @@ if (!function_exists('mb_strripos'))
 {
   function mb_strripos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
   {
-    // The function signatures are identical to facilitate testing
-    return mrbs_mb_strripos($haystack, $needle, $offset, $encoding);
+    return Mbstring::mb_strripos($haystack, $needle, $offset, $encoding);
   }
-}
-
-
-// Only to be called by mb_strripos() or test software
-function mrbs_mb_strripos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
-{
-  if (isset($encoding) && ($encoding !== 'UTF-8'))
-  {
-    $function = mb_substr(__FUNCTION__, mb_strlen('mrbs_')) . '()';
-    $message = "This emulation of $function only supports the UTF-8 encoding.";
-    throw new InvalidArgumentException($message);
-  }
-
-  return utf8_strpos_generic($haystack, $needle, $offset, true, true);
 }
 
 
@@ -131,92 +55,27 @@ if (!function_exists('mb_strrpos'))
 {
   function mb_strrpos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
   {
-    // The function signatures are identical to facilitate testing
-    return mrbs_mb_strrpos($haystack, $needle, $offset, $encoding);
+    return Mbstring::mb_strrpos($haystack, $needle, $offset, $encoding);
   }
 }
 
 
-// Only to be called by mb_strrpos() or test software
-function mrbs_mb_strrpos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
-{
-  if (isset($encoding) && ($encoding !== 'UTF-8'))
-  {
-    $function = mb_substr(__FUNCTION__, mb_strlen('mrbs_')) . '()';
-    $message = "This emulation of $function only supports the UTF-8 encoding.";
-    throw new InvalidArgumentException($message);
-  }
-
-  return utf8_strpos_generic($haystack, $needle, $offset, false, true);
-}
-
-
-// Emulation of mb_strtolower
+// Emulation of mb_strtolower()
 if (!function_exists('mb_strtolower'))
 {
   function mb_strtolower(string $string, ?string $encoding=null) : string
   {
-    if ($string === '')
-    {
-      return $string;
-    }
-
-    if (isset($encoding) && ($encoding !== 'UTF-8'))
-    {
-      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
-      throw new InvalidArgumentException($message);
-    }
-
-    if (method_exists('IntlChar', 'tolower'))
-    {
-      $result = '';
-      $utf8_string = new Utf8String($string);
-      foreach ($utf8_string->toArray() as $char)
-      {
-        $result .= IntlChar::tolower($char);
-      }
-      return $result;
-    }
-
-    // Last resort - use the ordinary strtolower().
-    // The ordinary strtolower() will give unexpected results when the locale is set to
-    // Turkish and will not convert the letter 'I'.
-    return strtolower($string);
+    return Mbstring::mb_strtolower($string, $encoding);
   }
 }
 
 
-// Emulation of mb_strtoupper
+// Emulation of mb_strtoupper()
 if (!function_exists('mb_strtoupper'))
 {
   function mb_strtoupper(string $string, ?string $encoding=null) : string
   {
-    if ($string === '')
-    {
-      return $string;
-    }
-
-    if (isset($encoding) && ($encoding !== 'UTF-8'))
-    {
-      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
-      throw new InvalidArgumentException($message);
-    }
-
-    if (method_exists('IntlChar', 'toupper'))
-    {
-      $result = '';
-      $utf8_string = new Utf8String($string);
-      foreach ($utf8_string->toArray() as $char)
-      {
-        $result .= IntlChar::toupper($char);
-      }
-      return $result;
-    }
-
-    // Last resort - use the ordinary strtoupper().
-    // The ordinary strtoupper() will give unexpected results when the locale is set to
-    // Turkish and will not convert the letter 'i'.
-    return strtoupper($string);
+    return Mbstring::mb_strtoupper($string, $encoding);
   }
 }
 
@@ -226,13 +85,7 @@ if (!function_exists('mb_substr'))
 {
   function mb_substr(string $string, int $start, ?int $length = null, ?string $encoding = null): string
   {
-    if (isset($encoding) && ($encoding !== 'UTF-8'))
-    {
-      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
-      throw new InvalidArgumentException($message);
-    }
-
-    return implode('', array_slice((new Utf8String($string))->toArray(), $start, $length));
+    return Mbstring::mb_substr($string, $start, $length, $encoding);
   }
 }
 

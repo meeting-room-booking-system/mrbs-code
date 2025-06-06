@@ -1,18 +1,43 @@
 <?php
 declare(strict_types=1);
+namespace MRBS;
 
 // Program for testing the mbstring function emulations.  Run it in the MRBS directory on a
 // system with the 'mbstring' extension enabled.
+
+use Throwable;
 
 include 'defaultincludes.inc';
 
 error_reporting(-1);
 ini_set('display_errors', '1');
-ini_set('max_execution_time', '5');
+ini_set('max_execution_time', '10');
+
+$color_fail = 'pink';
+$color_pass = 'palegreen';
+
+
+function thead_html(array $function_arg_names) : string
+{
+  $html = "<thead>\n";
+  $html .= '<tr>';
+  $html .= '<th>function</th>';
+  foreach ($function_arg_names as $name)
+  {
+    $html .= '<th>$' . $name . '</th>';
+  }
+  $html .= '<th>result - mbstring</th><th>result - mrbs</th><th>Summary</th>';
+  $html .= "<tr>\n";
+  $html .= "</thead>\n";
+
+  return $html;
+}
 
 
 function test(string $function, $args) : void
 {
+  global $color_fail, $color_pass;
+
   echo "<tr>";
   echo "<td>$function</td>";
 
@@ -35,7 +60,7 @@ function test(string $function, $args) : void
   // Using the MRBS emulations
   echo "<td>";
   try {
-    $mrbs = call_user_func_array("mrbs_$function", $args);
+    $mrbs = call_user_func_array([__NAMESPACE__ . "\\Mbstring", $function], $args);
   }
   catch (Throwable $t) {
     $mrbs = get_class($t);
@@ -44,7 +69,7 @@ function test(string $function, $args) : void
   echo "</td>";
 
   // Compare the results
-  $color = ($mbstring === $mrbs) ? "palegreen" : "pink";
+  $color = ($mbstring === $mrbs) ? $color_pass : $color_fail;
   echo '<td style="background-color: ' . $color . '">';
   echo ($mbstring === $mrbs) ? 'Pass' : 'Fail';
   echo "</td>";
@@ -53,15 +78,10 @@ function test(string $function, $args) : void
 }
 
 
-function test_strlen()
+function test_strlen() : void
 {
   echo "<table>\n";
-  echo "<thead>\n";
-  echo "<tr>";
-  echo '<th>function</th><th>$string</th><th>Encoding</th><th>result - mbstring</th><th>result - mrbs</th><th>Summary</th>';
-  echo "<tr>\n";
-  echo "</thead>\n";
-
+  echo thead_html(['string', 'encoding']);
   echo "<tbody>\n";
 
   // Simple case
@@ -89,15 +109,131 @@ function test_strlen()
 }
 
 
-function test_pos()
+function test_all_alpha(string $function) : void
 {
+  global $color_fail;
+
+  echo "<h3>Testing all alpha codepoints</h3>\n";
   echo "<table>\n";
   echo "<thead>\n";
-  echo "<tr>";
-  echo '<th>function</th><th>$haystack</th><th>$needle</th><th>$offset</th><th>result - mbstring</th><th>result - mrbs</th><th>Summary</th>';
-  echo "<tr>\n";
   echo "</thead>\n";
+  echo "<tbody>\n";
 
+  $n_passed = 0;
+  $max_codepoint = 0x10FFFF;
+
+  for ($i =0; $i<=$max_codepoint; $i++)
+  {
+    if (\IntlChar::isalpha($i))
+    {
+      $str = \IntlChar::chr($i);
+      $mb = call_user_func($function, $str);
+      $mrbs = call_user_func([__NAMESPACE__ . "\\Mbstring", $function], $str);
+      if ($mb === $mrbs)
+      {
+        $n_passed++;
+      }
+      else
+      {
+        echo "<tr>";
+        echo "<td>U+" . dechex($i) . "</td><td>" . \IntlChar::charName($i) . "</td><td>$str</td><td>$mb</td><td>$mrbs</td>";
+        echo '<td style="background-color: ' . $color_fail . '">Fail</td>' . "\n";
+        echo "</tr>\n";
+      }
+    }
+  }
+
+  echo "</tbody>\n";
+  echo "</table>\n";
+  echo "<p>$n_passed alpha characters passed.</p>\n";
+}
+
+
+function test_strtolower() : void
+{
+  echo "<table>\n";
+  echo thead_html(['string']);
+  echo "<tbody>\n";
+
+  // Empty string
+  test('mb_strtolower', ['']);
+  // Simple string
+  test('mb_strtolower', ['ABcDeFgHI']);
+  // More complex
+  test('mb_strtolower', ['AÅÄÖ']);
+  // Turkish characters
+  test('mb_strtolower', ['CÇGĞIİSŞ']);
+  test('mb_strtolower', ['İ']);
+  // Other
+  test('mb_strtolower', ['Τάχιστη αλώπηξ βαφής']);
+  test('mb_strtolower', ['👽系😨z😎éÉ']);
+
+  echo "</tbody>\n";
+  echo "</table>\n";
+
+  test_all_alpha('mb_strtolower');
+}
+
+
+function test_strtoupper() : void
+{
+  echo "<table>\n";
+  echo thead_html(['string']);
+  echo "<tbody>\n";
+
+  // Empty string
+  test('mb_strtoupper', ['']);
+  // Simple string
+  test('mb_strtoupper', ['ABcDeFgHI']);
+  // More complex
+  test('mb_strtoupper', ['aåäö']);
+  // Turkish characters
+  test('mb_strtoupper', ['cçgğiiı̇sş']);
+  // Other
+  test('mb_strtoupper', ['Τάχιστη αλώπηξ βαφής']);
+  test('mb_strtoupper', ['👽系😨z😎éÉ']);
+  // These fail with Transliterator
+  test('mb_strtoupper', ['ƛɤ']);
+
+  echo "</tbody>\n";
+  echo "</table>\n";
+
+  test_all_alpha('mb_strtoupper');
+}
+
+
+function test_substr() : void
+{
+  echo "<table>\n";
+  echo thead_html(['string', 'start', 'length']);
+  echo "<tbody>\n";
+
+  // Empty string
+  test('mb_substr', ['', 0, null]);
+  test('mb_substr', ['', 1, null]);
+  test('mb_substr', ['', 0, 2]);
+  test('mb_substr', ['', 1, 2]);
+
+  // Multibyte
+  test('mb_substr', ['👽系😨z😎é', 0, null]);
+  test('mb_substr', ['👽系😨z😎é', 2, null]);
+  test('mb_substr', ['👽系😨z😎é', 2, 1]);
+  test('mb_substr', ['👽系😨z😎é', 2, -1]);
+  test('mb_substr', ['👽系😨z😎é', 2, -5]);
+  test('mb_substr', ['👽系😨z😎é', -1, null]);
+  test('mb_substr', ['👽系😨z😎é', -3, -1]);
+  test('mb_substr', ['👽系😨z😎é', -9, -1]);
+  test('mb_substr', ['👽系😨z😎é', -9, -12]);
+
+  echo "</tbody>\n";
+  echo "</table>\n";
+}
+
+
+function test_pos() : void
+{
+  echo "<table>\n";
+  echo thead_html(['haystack', 'needle', 'offset']);
   echo "<tbody>\n";
 
   // mb_strpos()
@@ -137,7 +273,7 @@ function test_pos()
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '0123456789a', 0]);
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '0123456789a', 1]);
 
-  // Positive offsets, needle partial match at end
+  // Positive offsets, needle partial match at the end
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '89cd', 10]);
 
   // Positive offsets, needle longer than search area
@@ -148,7 +284,7 @@ function test_pos()
   test('mb_strrpos', ['abcdefg', 'cdefghi', -2]);
   test('mb_strrpos', ['abcdefg', 'cdefghij', -2]);
 
-  // Negative offsets, needle in middle of haystack
+  // Negative offsets, needle in the middle of haystack
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '234', 0]);
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '234', -1]);
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '234', -2]);
@@ -156,7 +292,7 @@ function test_pos()
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '234', -9]);
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '234', -10]);
 
-  // Negative offsets, needle at end of haystack
+  // Negative offsets, needle at the end of haystack
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '789c', 0]);
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '789c', -1]);
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '789c', -2]);
@@ -164,7 +300,7 @@ function test_pos()
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '789c', -4]);
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '789c', -5]);
 
-  // Negative offsets, needle partial match at end
+  // Negative offsets, needle partial match at the end
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '789cd', 0]);
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '789cd', -1]);
   test('mb_strrpos', ['0123456789a0123456789b0123456789c', '789cd', -2]);
@@ -215,8 +351,17 @@ if (!in_array('mbstring', $loaded_extensions))
   die("This test needs the 'mbstring' PHP extension to be loaded.");
 }
 
-echo "<h2>mb_strlen() tests</h2>\n";
+echo "<h2>mb_strlen()</h2>\n";
 test_strlen();
 
-echo "<h2>mb_*pos() tests</h2>\n";
+echo "<h2>mb_strtolower()</h2>\n";
+test_strtolower();
+
+echo "<h2>mb_strtoupper()</h2>\n";
+test_strtoupper();
+
+echo "<h2>mb_substr()</h2>\n";
+test_substr();
+
+echo "<h2>mb_*pos()</h2>\n";
 test_pos();
