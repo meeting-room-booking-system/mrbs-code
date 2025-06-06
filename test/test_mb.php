@@ -120,7 +120,9 @@ function test_all_alpha(string $function) : void
   echo "<tbody>\n";
 
   $n_passed = 0;
-  for ($i =0; $i<=0x10FFFF; $i++)
+  $max_codepoint = 0x10FFFF;
+
+  for ($i =0; $i<=$max_codepoint; $i++)
   {
     if (\IntlChar::isalpha($i))
     {
