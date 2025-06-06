@@ -7,6 +7,7 @@ namespace MRBS;
 use IntlChar;
 use InvalidArgumentException;
 use MRBS\Utf8\Utf8String;
+use Transliterator;
 use ValueError;
 
 class Mbstring
@@ -104,15 +105,11 @@ class Mbstring
       throw new InvalidArgumentException($message);
     }
 
-    if (method_exists('IntlChar', 'tolower'))
+    if (method_exists('Transliterator', 'transliterate'))
     {
-      $result = '';
-      $utf8_string = new Utf8String($string);
-      foreach ($utf8_string->toArray() as $char)
-      {
-        $result .= IntlChar::tolower($char);
-      }
-      return $result;
+      // Works better than IntlChar::toLower()
+      // See https://stackoverflow.com/questions/79655507/what-is-the-difference-between-phps-mb-strolower-and-intlchartolower
+      return Transliterator::create('Lower')->transliterate($string);
     }
 
     // Last resort - use the ordinary strtolower().
@@ -135,13 +132,28 @@ class Mbstring
       throw new InvalidArgumentException($message);
     }
 
-    if (method_exists('IntlChar', 'toupper'))
+    if (method_exists('Transliterator', 'transliterate'))
     {
       $result = '';
+      // There are a couple of characters that the Transliterator can't handle, so we have to split
+      // the string into characters.
       $utf8_string = new Utf8String($string);
       foreach ($utf8_string->toArray() as $char)
       {
-        $result .= IntlChar::toupper($char);
+        // Works better than IntlChar::toUpper()
+        // See https://stackoverflow.com/questions/79655507/what-is-the-difference-between-phps-mb-strolower-and-intlchartolower
+        switch (IntlChar::ord($char))
+        {
+          case 0x19b:  // LATIN SMALL LETTER LAMBDA WITH STROKE
+            $result .= IntlChar::chr(0xa7dc);  // LATIN CAPITAL LETTER LAMBDA WITH STROKE
+            break;
+          case 0x264:  // LATIN SMALL LETTER RAMS HORN
+            $result .= IntlChar::chr(0xa7cb);  // LATIN CAPITAL LETTER RAMS HORN
+            break;
+          default:
+            $result .= Transliterator::create('Upper')->transliterate($char);
+            break;
+        }
       }
       return $result;
     }

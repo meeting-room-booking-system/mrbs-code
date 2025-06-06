@@ -192,6 +192,8 @@ function test_strtoupper() : void
   // Other
   test('mb_strtoupper', ['Τάχιστη αλώπηξ βαφής']);
   test('mb_strtoupper', ['👽系😨z😎éÉ']);
+  // These fail with Transliterator
+  test('mb_strtoupper', ['ƛɤ']);
 
   echo "</tbody>\n";
   echo "</table>\n";
