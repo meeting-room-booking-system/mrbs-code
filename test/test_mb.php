@@ -11,7 +11,10 @@ include 'defaultincludes.inc';
 
 error_reporting(-1);
 ini_set('display_errors', '1');
-ini_set('max_execution_time', '5');
+ini_set('max_execution_time', '10');
+
+$color_fail = 'pink';
+$color_pass = 'palegreen';
 
 
 function thead_html(array $function_arg_names) : string
@@ -33,6 +36,8 @@ function thead_html(array $function_arg_names) : string
 
 function test(string $function, $args) : void
 {
+  global $color_fail, $color_pass;
+
   echo "<tr>";
   echo "<td>$function</td>";
 
@@ -64,7 +69,7 @@ function test(string $function, $args) : void
   echo "</td>";
 
   // Compare the results
-  $color = ($mbstring === $mrbs) ? "palegreen" : "pink";
+  $color = ($mbstring === $mrbs) ? $color_pass : $color_fail;
   echo '<td style="background-color: ' . $color . '">';
   echo ($mbstring === $mrbs) ? 'Pass' : 'Fail';
   echo "</td>";
@@ -104,6 +109,44 @@ function test_strlen() : void
 }
 
 
+function test_all_alpha(string $function) : void
+{
+  global $color_fail;
+
+  echo "<h3>Testing all alpha codepoints</h3>\n";
+  echo "<table>\n";
+  echo "<thead>\n";
+  echo "</thead>\n";
+  echo "<tbody>\n";
+
+  $n_passed = 0;
+  for ($i =0; $i<=0x10FFFF; $i++)
+  {
+    if (\IntlChar::isalpha($i))
+    {
+      $str = \IntlChar::chr($i);
+      $mb = call_user_func($function, $str);
+      $mrbs = call_user_func([__NAMESPACE__ . "\\Mbstring", $function], $str);
+      if ($mb === $mrbs)
+      {
+        $n_passed++;
+      }
+      else
+      {
+        echo "<tr>";
+        echo "<td>U+" . dechex($i) . "</td><td>" . \IntlChar::charName($i) . "</td><td>$str</td><td>$mb</td><td>$mrbs</td>";
+        echo '<td style="background-color: ' . $color_fail . '">Fail</td>' . "\n";
+        echo "</tr>\n";
+      }
+    }
+  }
+
+  echo "</tbody>\n";
+  echo "</table>\n";
+  echo "<p>$n_passed alpha characters passed.</p>\n";
+}
+
+
 function test_strtolower() : void
 {
   echo "<table>\n";
@@ -125,6 +168,8 @@ function test_strtolower() : void
 
   echo "</tbody>\n";
   echo "</table>\n";
+
+  test_all_alpha('mb_strtolower');
 }
 
 
@@ -148,6 +193,8 @@ function test_strtoupper() : void
 
   echo "</tbody>\n";
   echo "</table>\n";
+
+  test_all_alpha('mb_strtoupper');
 }
 
 
