@@ -1,8 +1,11 @@
 <?php
 declare(strict_types=1);
+namespace MRBS;
 
 // Program for testing the mbstring function emulations.  Run it in the MRBS directory on a
 // system with the 'mbstring' extension enabled.
+
+use Throwable;
 
 include 'defaultincludes.inc';
 
@@ -52,7 +55,7 @@ function test(string $function, $args) : void
   // Using the MRBS emulations
   echo "<td>";
   try {
-    $mrbs = call_user_func_array("mrbs_$function", $args);
+    $mrbs = call_user_func_array([__NAMESPACE__ . "\\Mbstring", $function], $args);
   }
   catch (Throwable $t) {
     $mrbs = get_class($t);
@@ -115,6 +118,7 @@ function test_strtolower() : void
   test('mb_strtolower', ['AÅÄÖ']);
   // Turkish characters
   test('mb_strtolower', ['CÇGĞIİSŞ']);
+  test('mb_strtolower', ['İ']);
   // Other
   test('mb_strtolower', ['Τάχιστη αλώπηξ βαφής']);
   test('mb_strtolower', ['👽系😨z😎éÉ']);
