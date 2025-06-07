@@ -5,16 +5,24 @@ namespace MRBS;
 // Program for testing the mbstring function emulations.  Run it in the MRBS directory on a
 // system with the 'mbstring' extension enabled.
 
+use IntlChar;
 use Throwable;
 
 include 'defaultincludes.inc';
 
 error_reporting(-1);
 ini_set('display_errors', '1');
-ini_set('max_execution_time', '10');
+ini_set('max_execution_time', '90');
 
 $color_fail = 'pink';
 $color_pass = 'palegreen';
+
+
+function codepoint_notation(int $codepoint) : string
+{
+  // OK to user strtoupper here instead of mb_ because we're only looking at the hex characters
+  return 'U+' . str_pad(strtoupper(dechex($codepoint)), 4, '0', STR_PAD_LEFT);
+}
 
 
 function thead_html(array $function_arg_names) : string
@@ -109,24 +117,23 @@ function test_strlen() : void
 }
 
 
-function test_all_alpha(string $function) : void
+function test_all_codepoints(string $function) : void
 {
   global $color_fail;
 
-  echo "<h3>Testing all alpha codepoints</h3>\n";
-  echo "<table>\n";
-  echo "<thead>\n";
-  echo "</thead>\n";
-  echo "<tbody>\n";
+  $intl_loaded = method_exists('\IntlChar', 'charName');
+
+  echo "<h3>Testing all codepoints</h3>\n";
 
   $n_passed = 0;
+  $failures = [];
   $max_codepoint = 0x10FFFF;
 
   for ($i =0; $i<=$max_codepoint; $i++)
   {
-    if (\IntlChar::isalpha($i))
+    $str = mb_chr($i, 'UTF-8');
+    if (($str !== false) && mb_check_encoding($str, 'UTF-8'))
     {
-      $str = \IntlChar::chr($i);
       $mb = call_user_func($function, $str);
       $mrbs = call_user_func([__NAMESPACE__ . "\\Mbstring", $function], $str);
       if ($mb === $mrbs)
@@ -135,19 +142,43 @@ function test_all_alpha(string $function) : void
       }
       else
       {
-        echo "<tr>";
-        echo "<td>U+" . dechex($i) . "</td><td>" . \IntlChar::charName($i) . "</td><td>$str</td><td>$mb</td><td>$mrbs</td>";
-        echo '<td style="background-color: ' . $color_fail . '">Fail</td>' . "\n";
-        echo "</tr>\n";
+        $failures[] = [$str, $mb, $mrbs];
       }
     }
   }
 
-  echo "</tbody>\n";
-  echo "</table>\n";
-  echo "<p>$n_passed alpha characters passed.</p>\n";
-}
+  echo "<p>$n_passed codepoints passed, " . count ($failures) . " failed.</p>\n";
 
+  if (!empty($failures))
+  {
+    echo "<table>\n";
+    echo "<thead>\n";
+    echo '<tr>';
+    echo '<th colspan="' . (($intl_loaded) ? 3 : 2) . '">Codepoint</th>';
+    echo '<th colspan="2">mbstring</th><th colspan="2">mrbs</th><th>Summary</th>';
+    echo "</tr>\n";
+    echo "</thead>\n";
+    echo "<tbody>\n";
+
+    foreach ($failures as $failure)
+    {
+      echo '<tr>';
+      if ($intl_loaded)
+      {
+        echo '<td>' . IntlChar::charName(mb_ord($failure[0])) . '</td>';
+      }
+      foreach ($failure as $char)
+      {
+        echo "<td>$char</td><td>" . codepoint_notation(mb_ord($char)) . '</td>';
+      }
+      echo '<td style="background-color: ' . $color_fail . '">Fail</td>' . "\n";
+      echo "</tr>\n";
+    }
+
+    echo "</tbody>\n";
+    echo "</table>\n";
+  }
+}
 
 function test_strtolower() : void
 {
@@ -171,7 +202,7 @@ function test_strtolower() : void
   echo "</tbody>\n";
   echo "</table>\n";
 
-  test_all_alpha('mb_strtolower');
+  test_all_codepoints('mb_strtolower');
 }
 
 
@@ -198,7 +229,7 @@ function test_strtoupper() : void
   echo "</tbody>\n";
   echo "</table>\n";
 
-  test_all_alpha('mb_strtoupper');
+  test_all_codepoints('mb_strtoupper');
 }
 
 
