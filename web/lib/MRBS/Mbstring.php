@@ -176,6 +176,7 @@ class Mbstring
     // Last resort - use the ordinary strtolower().
     // The ordinary strtolower() will give unexpected results when the locale is set to
     // Turkish and will not convert the letter 'I'.
+    // TODO: Do something better?  Issue warning?
     return strtolower($string);
   }
 
@@ -203,6 +204,7 @@ class Mbstring
     // Last resort - use the ordinary strtoupper().
     // The ordinary strtoupper() will give unexpected results when the locale is set to
     // Turkish and will not convert the letter 'i'.
+    // TODO: Do something better?  Issue warning?
     return strtoupper($string);
   }
 
