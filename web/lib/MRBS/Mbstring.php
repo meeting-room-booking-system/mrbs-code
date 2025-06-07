@@ -12,6 +12,67 @@ use ValueError;
 
 class Mbstring
 {
+  private const TRANSLITERATOR_LOWER_EXCEPTIONS = [
+    0x1C89 => 0x1C8A,
+    0xA7CB => 0x0264,
+    0xA7CC => 0xA7CD,
+    0xA7DA => 0xA7DB,
+    0xA7DC => 0x019B,
+    0x10D50 => 0x10D70,
+    0x10D51 => 0x10D71,
+    0x10D52 => 0x10D72,
+    0x10D53 => 0x10D73,
+    0x10D54 => 0x10D74,
+    0x10D55 => 0x10D75,
+    0x10D56 => 0x10D76,
+    0x10D57 => 0x10D77,
+    0x10D58 => 0x10D78,
+    0x10D59 => 0x10D79,
+    0x10D5A => 0x10D7A,
+    0x10D5B => 0x10D7B,
+    0x10D5C => 0x10D7C,
+    0x10D5D => 0x10D7D,
+    0x10D5E => 0x10D7E,
+    0x10D5F => 0x10D7F,
+    0x10D60 => 0x10D80,
+    0x10D61 => 0x10D81,
+    0x10D62 => 0x10D82,
+    0x10D63 => 0x10D83,
+    0x10D64 => 0x10D84,
+    0x10D65 => 0x10D85
+  ];
+
+  private const TRANSLITERATOR_UPPER_EXCEPTIONS = [
+    0x019B => 0xA7DC,  // LATIN SMALL LETTER LAMBDA WITH STROKE
+    0x0264 => 0xA7CB,  // LATIN SMALL LETTER RAMS HORN
+    0x1C8A => 0x1C89,
+    0xA7CD => 0xA7CC,
+    0xA7DB => 0xA7DA,
+    0x10D70 => 0x10D50,
+    0x10D71 => 0x10D51,
+    0x10D72 => 0x10D52,
+    0x10D73 => 0x10D53,
+    0x10D74 => 0x10D54,
+    0x10D75 => 0x10D55,
+    0x10D76 => 0x10D56,
+    0x10D77 => 0x10D57,
+    0x10D78 => 0x10D58,
+    0x10D79 => 0x10D59,
+    0x10D7A => 0x10D5A,
+    0x10D7B => 0x10D5B,
+    0x10D7C => 0x10D5C,
+    0x10D7D => 0x10D5D,
+    0x10D7E => 0x10D5E,
+    0x10D7F => 0x10D5F,
+    0x10D80 => 0x10D60,
+    0x10D81 => 0x10D61,
+    0x10D82 => 0x10D62,
+    0x10D83 => 0x10D63,
+    0x10D84 => 0x10D64,
+    0x10D85 => 0x10D65
+  ];
+
+
   public static function mb_stripos(string $haystack, string $needle, int $offset=0, ?string $encoding = null)
   {
     if (isset($encoding) && ($encoding !== 'UTF-8'))
@@ -109,7 +170,7 @@ class Mbstring
     {
       // Works better than IntlChar::toLower()
       // See https://stackoverflow.com/questions/79655507/what-is-the-difference-between-phps-mb-strolower-and-intlchartolower
-      return Transliterator::create('Lower')->transliterate($string);
+      return self::TransliteratorToLower($string);
     }
 
     // Last resort - use the ordinary strtolower().
@@ -134,28 +195,9 @@ class Mbstring
 
     if (method_exists('Transliterator', 'transliterate'))
     {
-      $result = '';
-      // There are a couple of characters that the Transliterator can't handle, so we have to split
-      // the string into characters.
-      $utf8_string = new Utf8String($string);
-      foreach ($utf8_string->toArray() as $char)
-      {
-        // Works better than IntlChar::toUpper()
-        // See https://stackoverflow.com/questions/79655507/what-is-the-difference-between-phps-mb-strolower-and-intlchartolower
-        switch (IntlChar::ord($char))
-        {
-          case 0x19b:  // LATIN SMALL LETTER LAMBDA WITH STROKE
-            $result .= IntlChar::chr(0xa7dc);  // LATIN CAPITAL LETTER LAMBDA WITH STROKE
-            break;
-          case 0x264:  // LATIN SMALL LETTER RAMS HORN
-            $result .= IntlChar::chr(0xa7cb);  // LATIN CAPITAL LETTER RAMS HORN
-            break;
-          default:
-            $result .= Transliterator::create('Upper')->transliterate($char);
-            break;
-        }
-      }
-      return $result;
+      // Works better than IntlChar::toUpper()
+      // See https://stackoverflow.com/questions/79655507/what-is-the-difference-between-phps-mb-strolower-and-intlchartolower
+      return self::TransliteratorToUpper($string);
     }
 
     // Last resort - use the ordinary strtoupper().
@@ -297,6 +339,58 @@ class Mbstring
     }
 
     return false;
+  }
+
+
+  private static function TransliteratorToLower(string $string) : string
+  {
+    // There are some characters that the Transliterator treats differently from the mbstring
+    // library, so we have to split the string into characters and deal with them one by one.
+    // Remember, we are only trying to emulate the mbstring library, not provide the "correct"
+    // result.
+    $result = '';
+    $utf8_string = new Utf8String($string);
+
+    foreach ($utf8_string->toArray() as $char)
+    {
+      $codepoint = IntlChar::ord($char);
+      if (array_key_exists($codepoint, self::TRANSLITERATOR_LOWER_EXCEPTIONS))
+      {
+        $result .= IntlChar::chr(self::TRANSLITERATOR_LOWER_EXCEPTIONS[$codepoint]);
+      }
+      else
+      {
+        $result .= Transliterator::create('Lower')->transliterate($char);
+      }
+    }
+
+    return $result;
+  }
+
+
+  private static function TransliteratorToUpper(string $string) : string
+  {
+    // There are some characters that the Transliterator treats differently from the mbstring
+    // library, so we have to split the string into characters and deal with them one by one.
+    // Remember, we are only trying to emulate the mbstring library, not provide the "correct"
+    // result.
+    $result = '';
+    $utf8_string = new Utf8String($string);
+
+    foreach ($utf8_string->toArray() as $char)
+    {
+      $codepoint = IntlChar::ord($char);
+      if (array_key_exists($codepoint, self::TRANSLITERATOR_UPPER_EXCEPTIONS))
+      {
+        $result .= IntlChar::chr(self::TRANSLITERATOR_UPPER_EXCEPTIONS[$codepoint]);
+      }
+      else
+      {
+        $result .= Transliterator::create('Upper')->transliterate($char);
+      }
+    }
+
+    return $result;
   }
 
 }
