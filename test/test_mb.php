@@ -19,6 +19,7 @@ $color_pass = 'palegreen';
 
 function codepoint_notation(int $codepoint) : string
 {
+  // OK to user strtoupper here instead of mb_ because we're only looking at the hex characters
   return 'U+' . str_pad(strtoupper(dechex($codepoint)), 4, '0', STR_PAD_LEFT);
 }
 
