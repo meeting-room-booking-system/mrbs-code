@@ -81,8 +81,7 @@ class Mbstring
   {
     if (isset($encoding) && ($encoding !== 'UTF-8'))
     {
-      $function = mb_substr(__FUNCTION__, mb_strlen('mrbs_')) . '()';
-      $message = "This emulation of $function only supports the UTF-8 encoding.";
+      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
       throw new InvalidArgumentException($message);
     }
 
@@ -97,8 +96,7 @@ class Mbstring
   {
     if (isset($encoding) && ($encoding !== 'UTF-8'))
     {
-      $function = mb_substr(__FUNCTION__, mb_strlen('mrbs_')) . '()';
-      $message = "This emulation of $function only supports the UTF-8 encoding.";
+      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
       throw new InvalidArgumentException($message);
     }
 
@@ -110,8 +108,7 @@ class Mbstring
   {
     if (isset($encoding) && ($encoding !== 'UTF-8'))
     {
-      $function = mb_substr(__FUNCTION__, mb_strlen('mrbs_')) . '()';
-      $message = "This emulation of $function only supports the UTF-8 encoding.";
+      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
       throw new InvalidArgumentException($message);
     }
 
@@ -123,8 +120,7 @@ class Mbstring
   {
     if (isset($encoding) && ($encoding !== 'UTF-8'))
     {
-      $function = mb_substr(__FUNCTION__, mb_strlen('mrbs_')) . '()';
-      $message = "This emulation of $function only supports the UTF-8 encoding.";
+      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
       throw new InvalidArgumentException($message);
     }
 
