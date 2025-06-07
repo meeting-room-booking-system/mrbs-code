@@ -5,6 +5,7 @@ namespace MRBS;
 // Program for testing the mbstring function emulations.  Run it in the MRBS directory on a
 // system with the 'mbstring' extension enabled.
 
+use IntlChar;
 use Throwable;
 
 include 'defaultincludes.inc';
@@ -123,16 +124,9 @@ function test_all_codepoints(string $function) : void
   $intl_loaded = method_exists('\IntlChar', 'charName');
 
   echo "<h3>Testing all codepoints</h3>\n";
-  echo "<table>\n";
-  echo "<thead>\n";
-  echo '<tr>';
-  echo '<th colspan="' . (($intl_loaded) ? 3 : 2) . '">Codepoint</th>';
-  echo '<th colspan="2">mbstring</th><th colspan="2">mrbs</th><th>Summary</th>';
-  echo "</tr>\n";
-  echo "</thead>\n";
-  echo "<tbody>\n";
 
   $n_passed = 0;
+  $failures = [];
   $max_codepoint = 0x10FFFF;
 
   for ($i =0; $i<=$max_codepoint; $i++)
@@ -148,25 +142,43 @@ function test_all_codepoints(string $function) : void
       }
       else
       {
-        echo '<tr>';
-        if ($intl_loaded)
-        {
-          echo '<td>' . \IntlChar::charName($i) . '</td>';
-        }
-        echo "<td>$str</td>" . '<td>' . codepoint_notation($i) . '</td>';
-        echo "<td>$mb</td>" . '<td>' . codepoint_notation(mb_ord($mb)) . '</td>';
-        echo "<td>$mrbs</td>" . '<td>' . codepoint_notation(mb_ord($mrbs)) . '</td>';
-        echo '<td style="background-color: ' . $color_fail . '">Fail</td>' . "\n";
-        echo "</tr>\n";
+        $failures[] = [$str, $mb, $mrbs];
       }
     }
   }
 
-  echo "</tbody>\n";
-  echo "</table>\n";
-  echo "<p>$n_passed codepoints passed.</p>\n";
-}
+  echo "<p>$n_passed codepoints passed, " . count ($failures) . " failed.</p>\n";
 
+  if (!empty($failures))
+  {
+    echo "<table>\n";
+    echo "<thead>\n";
+    echo '<tr>';
+    echo '<th colspan="' . (($intl_loaded) ? 3 : 2) . '">Codepoint</th>';
+    echo '<th colspan="2">mbstring</th><th colspan="2">mrbs</th><th>Summary</th>';
+    echo "</tr>\n";
+    echo "</thead>\n";
+    echo "<tbody>\n";
+
+    foreach ($failures as $failure)
+    {
+      echo '<tr>';
+      if ($intl_loaded)
+      {
+        echo '<td>' . IntlChar::charName(mb_ord($failure[0])) . '</td>';
+      }
+      foreach ($failure as $char)
+      {
+        echo "<td>$char</td><td>" . codepoint_notation(mb_ord($char)) . '</td>';
+      }
+      echo '<td style="background-color: ' . $color_fail . '">Fail</td>' . "\n";
+      echo "</tr>\n";
+    }
+
+    echo "</tbody>\n";
+    echo "</table>\n";
+  }
+}
 
 function test_strtolower() : void
 {
