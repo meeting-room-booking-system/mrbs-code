@@ -12,6 +12,8 @@ use ValueError;
 
 class Mbstring
 {
+  // A list of codepoints where the Transliterator provides a different result to
+  // the mbstring library when converting to lowercase.
   private const TRANSLITERATOR_LOWER_EXCEPTIONS = [
     0x1C89 => 0x1C8A,
     0xA7CB => 0x0264,
@@ -42,6 +44,8 @@ class Mbstring
     0x10D65 => 0x10D85
   ];
 
+  // A list of codepoints where the Transliterator provides a different result to
+  // the mbstring library when converting to uppercase.
   private const TRANSLITERATOR_UPPER_EXCEPTIONS = [
     0x019B => 0xA7DC,  // LATIN SMALL LETTER LAMBDA WITH STROKE
     0x0264 => 0xA7CB,  // LATIN SMALL LETTER RAMS HORN
