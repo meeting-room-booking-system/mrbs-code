@@ -11,10 +11,16 @@ include 'defaultincludes.inc';
 
 error_reporting(-1);
 ini_set('display_errors', '1');
-ini_set('max_execution_time', '10');
+ini_set('max_execution_time', '90');
 
 $color_fail = 'pink';
 $color_pass = 'palegreen';
+
+
+function codepoint_notation(int $codepoint) : string
+{
+  return 'U+' . str_pad(strtoupper(dechex($codepoint)), 4, '0', STR_PAD_LEFT);
+}
 
 
 function thead_html(array $function_arg_names) : string
@@ -109,13 +115,19 @@ function test_strlen() : void
 }
 
 
-function test_all_alpha(string $function) : void
+function test_all_codepoints(string $function) : void
 {
   global $color_fail;
 
-  echo "<h3>Testing all alpha codepoints</h3>\n";
+  $intl_loaded = method_exists('\IntlChar', 'charName');
+
+  echo "<h3>Testing all codepoints</h3>\n";
   echo "<table>\n";
   echo "<thead>\n";
+  echo '<tr>';
+  echo '<th colspan="' . (($intl_loaded) ? 3 : 2) . '">Codepoint</th>';
+  echo '<th colspan="2">mbstring</th><th colspan="2">mrbs</th><th>Summary</th>';
+  echo "</tr>\n";
   echo "</thead>\n";
   echo "<tbody>\n";
 
@@ -124,9 +136,9 @@ function test_all_alpha(string $function) : void
 
   for ($i =0; $i<=$max_codepoint; $i++)
   {
-    if (\IntlChar::isalpha($i))
+    $str = mb_chr($i, 'UTF-8');
+    if (($str !== false) && mb_check_encoding($str, 'UTF-8'))
     {
-      $str = \IntlChar::chr($i);
       $mb = call_user_func($function, $str);
       $mrbs = call_user_func([__NAMESPACE__ . "\\Mbstring", $function], $str);
       if ($mb === $mrbs)
@@ -135,8 +147,14 @@ function test_all_alpha(string $function) : void
       }
       else
       {
-        echo "<tr>";
-        echo "<td>U+" . dechex($i) . "</td><td>" . \IntlChar::charName($i) . "</td><td>$str</td><td>$mb</td><td>$mrbs</td>";
+        echo '<tr>';
+        if ($intl_loaded)
+        {
+          echo '<td>' . \IntlChar::charName($i) . '</td>';
+        }
+        echo "<td>$str</td>" . '<td>' . codepoint_notation($i) . '</td>';
+        echo "<td>$mb</td>" . '<td>' . codepoint_notation(mb_ord($mb)) . '</td>';
+        echo "<td>$mrbs</td>" . '<td>' . codepoint_notation(mb_ord($mrbs)) . '</td>';
         echo '<td style="background-color: ' . $color_fail . '">Fail</td>' . "\n";
         echo "</tr>\n";
       }
@@ -145,7 +163,7 @@ function test_all_alpha(string $function) : void
 
   echo "</tbody>\n";
   echo "</table>\n";
-  echo "<p>$n_passed alpha characters passed.</p>\n";
+  echo "<p>$n_passed codepoints passed.</p>\n";
 }
 
 
@@ -171,7 +189,7 @@ function test_strtolower() : void
   echo "</tbody>\n";
   echo "</table>\n";
 
-  test_all_alpha('mb_strtolower');
+  test_all_codepoints('mb_strtolower');
 }
 
 
@@ -198,7 +216,7 @@ function test_strtoupper() : void
   echo "</tbody>\n";
   echo "</table>\n";
 
-  test_all_alpha('mb_strtoupper');
+  test_all_codepoints('mb_strtoupper');
 }
 
 
