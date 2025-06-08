@@ -17,6 +17,67 @@ ini_set('max_execution_time', '90');
 $color_fail = 'pink';
 $color_pass = 'palegreen';
 
+$intl_loaded = method_exists('\IntlChar', 'charName');
+$max_codepoint = 0x10FFFF;
+
+
+function test_ord() : void
+{
+  global $color_fail, $intl_loaded, $max_codepoint;
+
+  $n_passed = 0;
+  $failures = [];
+
+  for ($i =0; $i<=$max_codepoint; $i++)
+  {
+    $str = mb_chr($i, 'UTF-8');
+    if (($str !== false) && mb_check_encoding($str, 'UTF-8'))
+    {
+      $mrbs_ord = Mbstring::mb_ord($str);
+      if ($mrbs_ord === mb_ord($str))
+      {
+        $n_passed++;
+      }
+      else
+      {
+        $failures[] = [$str, $i, $mrbs_ord];
+      }
+    }
+  }
+
+  echo "<p>$n_passed codepoints passed, " . count ($failures) . " failed.</p>\n";
+
+  if (!empty($failures))
+  {
+    echo "<table>\n";
+    echo "<thead>\n";
+    echo '<tr>';
+    echo '<th colspan="' . (($intl_loaded) ? 2 : 1) . '">Char</th>';
+    echo '<th>mbstring</th><th>mrbs</th><th>Summary</th>';
+    echo "</tr>\n";
+    echo "</thead>\n";
+    echo "<tbody>\n";
+
+    foreach ($failures as $failure)
+    {
+      echo '<tr>';
+      if ($intl_loaded)
+      {
+        echo '<td>' . IntlChar::charName(mb_ord($failure[0])) . '</td>';
+      }
+      foreach ($failure as $value)
+      {
+        echo "<td>$value</td>";
+      }
+      echo '<td style="background-color: ' . $color_fail . '">Fail</td>' . "\n";
+      echo "</tr>\n";
+    }
+
+    echo "</tbody>\n";
+    echo "</table>\n";
+  }
+}
+
 
 function codepoint_notation(int $codepoint) : string
 {
@@ -119,15 +180,12 @@ function test_strlen() : void
 
 function test_all_codepoints(string $function) : void
 {
-  global $color_fail;
-
-  $intl_loaded = method_exists('\IntlChar', 'charName');
+  global $color_fail, $intl_loaded, $max_codepoint;
 
   echo "<h3>Testing all codepoints</h3>\n";
 
   $n_passed = 0;
   $failures = [];
-  $max_codepoint = 0x10FFFF;
 
   for ($i =0; $i<=$max_codepoint; $i++)
   {
@@ -375,12 +433,17 @@ echo "mbstring enabled: " . var_export(in_array('mbstring', $loaded_extensions),
 echo "<br>\n";
 echo "intl enabled: " . var_export(in_array('intl', $loaded_extensions), true);
 echo "<br>\n";
+echo "iconv enabled: " . var_export(in_array('iconv', $loaded_extensions), true);
+echo "<br>\n";
 echo "<br>\n";
 
 if (!in_array('mbstring', $loaded_extensions))
 {
   die("This test needs the 'mbstring' PHP extension to be loaded.");
 }
+
+echo "<h2>mb_ord()</h2>\n";
+test_ord();
 
 echo "<h2>mb_strlen()</h2>\n";
 test_strlen();

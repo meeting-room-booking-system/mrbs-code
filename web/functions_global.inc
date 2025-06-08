@@ -8,6 +8,16 @@ use MRBS\Mbstring;
 // that only exist in later versions of PHP, or else emulations of the
 // mb_ string functions that aren't always present.
 
+// Emulation of mb_ord()
+if (!function_exists('mb_ord'))
+{
+  function mb_ord(string $string, ?string $encoding=null)
+  {
+    return Mbstring::mb_ord($string, $encoding);
+  }
+}
+
+
 // Emulation of mb_stripos()
 if (!function_exists('mb_stripos'))
 {

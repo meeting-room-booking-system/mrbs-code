@@ -47,12 +47,13 @@ function create_details_row(string $label, $value, bool $as_html=false, string $
 
 // Returns a string containing a set of details for $data consisting of a label/value
 // pair for each data element in the array $data.   If $as_html is true then the string
-// is the HTML for a table body, ie looks like "<tbody> ... </tbody>".
-//    $keep_private   boolean   if true then any private fields will be given the class 'private';
-//                              note that $data must already have had values substituted
-//                              for private fields
-//    $room_disabled  boolean   if true then a note will be added that the room is disabled
-function create_details_body(array $data, bool $as_html=false, bool $keep_private=false, bool $room_disabled=false) : string
+// is the HTML for a table body; i.e. looks like "<tbody> ... </tbody>".
+//    $keep_private       boolean if true, then any private fields will be given the class 'private';
+//                                note that $data must already have had values substituted
+//                                for private fields
+//    $room_disabled      boolean if true, then a note will be added that the room is disabled
+//    $major_details_only boolean if true, only show the major details
+function create_details_body(array $data, bool $as_html=false, bool $keep_private=false, bool $room_disabled=false, bool $major_details_only=false) : string
 {
   global $enable_periods, $confirmation_enabled, $approval_enabled;
   global $is_private_field, $standard_fields;
@@ -181,6 +182,11 @@ function create_details_body(array $data, bool $as_html=false, bool $keep_privat
 
   foreach ($field_order as $key)
   {
+    if ($major_details_only && !in_array($key, ['description', 'room_id', 'start_time', 'end_time']))
+    {
+      continue;
+    }
+
     switch ($key)
     {
       // Ignore these
@@ -341,36 +347,38 @@ function create_details_body(array $data, bool $as_html=false, bool $keep_privat
     }  // switch
   }  // foreach
 
-  // Repeat type
-  $tbody .= create_details_row(get_vocab("rep_type"), get_vocab("rep_type_" . $data['rep_type']), $as_html);
-  // Repeat details
-  if($data['repeat_rule']->getType() != RepeatRule::NONE)
+  if (!$major_details_only)
   {
-    switch ($data['repeat_rule']->getType())
+    // Repeat type
+    $tbody .= create_details_row(get_vocab("rep_type"), get_vocab("rep_type_" . $data['rep_type']), $as_html);
+    // Repeat details
+    if ($data['repeat_rule']->getType() != RepeatRule::NONE)
     {
-      case RepeatRule::WEEKLY:
-        // Repeat days
-        $tbody .= create_details_row(get_vocab("rep_rep_day"), $data['repeat_rule']->getDaysAsNames(), $as_html);
-        break;
-      case RepeatRule::MONTHLY:
-        $tbody .= create_details_row(get_vocab("repeat_on"), get_monthly_repeat_day($data), $as_html);
-        break;
-      default:
-        break;
+      switch ($data['repeat_rule']->getType())
+      {
+        case RepeatRule::WEEKLY:
+          // Repeat days
+          $tbody .= create_details_row(get_vocab("rep_rep_day"), $data['repeat_rule']->getDaysAsNames(), $as_html);
+          break;
+        case RepeatRule::MONTHLY:
+          $tbody .= create_details_row(get_vocab("repeat_on"), get_monthly_repeat_day($data), $as_html);
+          break;
+        default:
+          break;
+      }
+
+      // Repeat interval
+      $value = $data['repeat_rule']->getInterval() . ' ' . $data['repeat_rule']->getIntervalUnits();
+      $tbody .= create_details_row(get_vocab("rep_interval"), $value, $as_html);
+
+      // Repeat end date
+      $tbody .= create_details_row(
+        get_vocab("rep_end_date"),
+        datetime_format($datetime_formats['date'], $data['end_date']),
+        $as_html
+      );
     }
-
-    // Repeat interval
-    $value = $data['repeat_rule']->getInterval() . ' ' . $data['repeat_rule']->getIntervalUnits();
-    $tbody .= create_details_row(get_vocab("rep_interval"), $value, $as_html);
-
-    // Repeat end date
-    $tbody .= create_details_row(
-      get_vocab("rep_end_date"),
-      datetime_format($datetime_formats['date'], $data['end_date']),
-      $as_html
-    );
   }
-
   $tbody .= ($as_html) ? "</tbody>\n" : "";
 
   return $tbody;
