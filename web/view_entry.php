@@ -388,6 +388,49 @@ function generate_button(array $params, array $button_attributes=array()) : void
 }
 
 
+function generate_copy_buttons(int $id, bool $series, string $returl, bool $repeats_allowed) : void
+{
+  global $day, $month, $year;
+
+  echo "<div>\n";
+
+  if (!$series)
+  {
+    echo "<div>\n";
+    $params = [
+      'action' => multisite('edit_entry.php'),
+      'value' => get_vocab('copyentry'),
+      'inputs' => [
+        'id' => $id,
+        'copy' => true,
+        'returl' => $returl
+      ]
+    ];
+    generate_button($params);
+    echo "</div>\n";
+  }
+
+  if ((!empty($repeat_id) || $series) && $repeats_allowed)
+  {
+    echo "<div>\n";
+    $params = [
+      'action' => multisite("edit_entry.php?day=$day&month=$month&year=$year"),
+      'value' => get_vocab('copyseries'),
+      'inputs' => [
+        'id' => $id,
+        'edit_series' => true,
+        'copy' => true,
+        'returl' => $returl
+      ]
+    ];
+    generate_button($params);
+    echo "</div>\n";
+  }
+
+  echo "</div>\n";
+}
+
+
 // Generates the Approve, Reject and More Info buttons
 function generateApproveButtons(int $id, bool $series) : void
 {
@@ -864,7 +907,8 @@ if (!$major_details_only)
   // Only show the links for Edit and Delete if the room is enabled.    We're
   // allowed to view and copy existing bookings in disabled rooms, but not to
   // modify or delete them.
-  if (!$room_disabled) {
+  if (!$room_disabled)
+  {
     // Only show the Edit and Delete buttons if the user is allowed to use them
     if (getWritable($create_by, $room))
     {
@@ -978,39 +1022,7 @@ if (!$major_details_only)
   // Copy and Copy Series
   if (!$auth['only_admin_can_copy_others_entries'] || $writeable)
   {
-    echo "<div>\n";
-    if (!$series)
-    {
-      echo "<div>\n";
-      $params = array(
-        'action' => multisite('edit_entry.php'),
-        'value' => get_vocab('copyentry'),
-        'inputs' => array(
-          'id' => $id,
-          'copy' => true,
-          'returl' => $returl
-        )
-      );
-      generate_button($params);
-      echo "</div>\n";
-    }
-    if ((!empty($repeat_id) || $series) && $repeats_allowed)
-    {
-      echo "<div>\n";
-      $params = array(
-        'action' => multisite("edit_entry.php?day=$day&month=$month&year=$year"),
-        'value' => get_vocab('copyseries'),
-        'inputs' => array(
-          'id' => $id,
-          'edit_series' => true,
-          'copy' => true,
-          'returl' => $returl
-        )
-      );
-      generate_button($params);
-      echo "</div>\n";
-    }
-    echo "</div>\n";
+    generate_copy_buttons($id, $series, $returl, $repeats_allowed);
   }
 
   // Export and Export Series
