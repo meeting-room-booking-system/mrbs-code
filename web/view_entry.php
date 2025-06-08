@@ -388,7 +388,7 @@ function generate_button(array $params, array $button_attributes=array()) : void
 }
 
 
-function generate_copy_buttons(int $id, bool $series, string $returl, bool $repeats_allowed) : void
+function generate_copy_buttons(int $id, ?int $repeat_id, bool $series, string $returl, bool $repeats_allowed) : void
 {
   global $day, $month, $year;
 
@@ -420,6 +420,52 @@ function generate_copy_buttons(int $id, bool $series, string $returl, bool $repe
         'id' => $id,
         'edit_series' => true,
         'copy' => true,
+        'returl' => $returl
+      ]
+    ];
+    generate_button($params);
+    echo "</div>\n";
+  }
+
+  echo "</div>\n";
+}
+
+
+function generate_export_buttons(int $id, ?int $repeat_id, bool $series, string $returl) : void
+{
+  global $day, $month, $year;
+
+  // The iCalendar information has the full booking details in it, so we will not allow
+  // it to be exported if it is private and the user is not authorised to see it.
+  // iCalendar information doesn't work with periods at the moment (no periods to times mapping)
+  echo "<div>\n";
+
+  if (!$series)
+  {
+    echo "<div>\n";
+    $params = [
+      'action' => multisite('view_entry.php'),
+      'value' => get_vocab('exportentry'),
+      'inputs' => [
+        'id' => $id,
+        'action' => 'export',
+        'returl' => $returl
+      ]
+    ];
+    generate_button($params);
+    echo "</div>\n";
+  }
+
+  if (!empty($repeat_id) || $series)
+  {
+    echo "<div>\n";
+    $params = [
+      'action' => multisite("view_entry.php?day=$day&month=$month&year=$year"),
+      'value' => get_vocab('exportseries'),
+      'inputs' => [
+        'id' => $repeat_id,
+        'action' => 'export',
+        'series' => 1,
         'returl' => $returl
       ]
     ];
@@ -1022,47 +1068,13 @@ if (!$major_details_only)
   // Copy and Copy Series
   if (!$auth['only_admin_can_copy_others_entries'] || $writeable)
   {
-    generate_copy_buttons($id, $series, $returl, $repeats_allowed);
+    generate_copy_buttons($id, $repeat_id, $series, $returl, $repeats_allowed);
   }
 
   // Export and Export Series
   if (!$keep_private && !$enable_periods)
   {
-    // The iCalendar information has the full booking details in it, so we will not allow
-    // it to be exported if it is private and the user is not authorised to see it.
-    // iCalendar information doesn't work with periods at the moment (no periods to times mapping)
-    echo "<div>\n";
-    if (!$series)
-    {
-      echo "<div>\n";
-      $params = array(
-        'action' => multisite('view_entry.php'),
-        'value' => get_vocab('exportentry'),
-        'inputs' => array(
-          'id' => $id,
-          'action' => 'export',
-          'returl' => $returl
-        )
-      );
-      generate_button($params);
-      echo "</div>\n";
-    }
-    if (!empty($repeat_id) || $series)
-    {
-      echo "<div>\n";
-      $params = array(
-        'action' => multisite("view_entry.php?day=$day&month=$month&year=$year"),
-        'value' => get_vocab('exportseries'),
-        'inputs' => array(
-          'id' => $repeat_id,
-          'action' => 'export',
-          'series' => 1,
-          'returl' => $returl)
-      );
-      generate_button($params);
-      echo "</div>\n";
-    }
-    echo "</div>\n";
+    generate_export_buttons($id, $repeat_id, $series, $returl);
   }
 }
 
