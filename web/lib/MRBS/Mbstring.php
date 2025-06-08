@@ -77,7 +77,57 @@ class Mbstring
   ];
 
 
-  public static function mb_stripos(string $haystack, string $needle, int $offset=0, ?string $encoding = null)
+  public static function mb_ord(string $string, ?string $encoding=null)
+  {
+    if (isset($encoding) && ($encoding !== 'UTF-8'))
+    {
+      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
+      throw new InvalidArgumentException($message);
+    }
+
+    // Taken from https://stackoverflow.com/questions/9361303/can-i-get-the-unicode-value-of-a-character-or-vise-versa-with-php
+
+    // Use iconv() if we can.  It's marginally faster (not much, about 15%), and simpler.
+    if (function_exists('iconv'))
+    {
+      return unpack('V', iconv('UTF-8', 'UCS-4LE', $string))[1];
+    }
+
+    // Otherwise do it the long way.
+    if (ord($string[0]) >= 0 && ord($string[0]) <= 127)
+    {
+      return ord($string[0]);
+    }
+    if (ord($string[0]) >= 192 && ord($string[0]) <= 223)
+    {
+      return (ord($string[0]) - 192) * 64 + (ord($string[1]) - 128);
+    }
+    if (ord($string[0]) >= 224 && ord($string[0]) <= 239)
+    {
+      return (ord($string[0]) - 224) * 4096 + (ord($string[1]) - 128) * 64 + (ord($string[2]) - 128);
+    }
+    if (ord($string[0]) >= 240 && ord($string[0]) <= 247)
+    {
+      return (ord($string[0]) - 240) * 262144 + (ord($string[1]) - 128) * 4096 + (ord($string[2]) - 128) * 64 + (ord($string[3]) - 128);
+    }
+    if (ord($string[0]) >= 248 && ord($string[0]) <= 251)
+    {
+      return (ord($string[0]) - 248) * 16777216 + (ord($string[1]) - 128) * 262144 + (ord($string[2]) - 128) * 4096 + (ord($string[3]) - 128) * 64 + (ord($string[4]) - 128);
+    }
+    if (ord($string[0]) >= 252 && ord($string[0]) <= 253)
+    {
+      return (ord($string[0]) - 252) * 1073741824 + (ord($string[1]) - 128) * 16777216 + (ord($string[2]) - 128) * 262144 + (ord($string[3]) - 128) * 4096 + (ord($string[4]) - 128) * 64 + (ord($string[5]) - 128);
+    }
+    if (ord($string[0]) >= 254 && ord($string[0]) <= 255)    //  error
+    {
+      return false;
+    }
+
+    return 0;
+  }
+
+
+  public static function mb_stripos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
   {
     if (isset($encoding) && ($encoding !== 'UTF-8'))
     {
