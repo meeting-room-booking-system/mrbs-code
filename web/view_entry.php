@@ -1053,7 +1053,8 @@ if (!$major_details_only)
     echo "</div>\n";
   }
 }
-echo "</div>\n";
+
+echo "</div>\n";  // id="view_entry_nav"
 
 // Don't display a link to the previous page if there isn't one (eg if we've got here
 // from an email), or if it would just send the user to the same page for some reason.
