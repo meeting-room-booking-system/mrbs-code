@@ -431,6 +431,117 @@ function generate_copy_buttons(int $id, ?int $repeat_id, bool $series, string $r
 }
 
 
+function generate_edit_and_delete_buttons(array $row, int $id, ?int $repeat_id, bool $series, string $returl, bool $repeats_allowed) : void
+{
+  global $day, $month, $year;
+
+  // Check whether the entry is deletable (and therefore editable).  Also get the
+  // reason.  We only get the first reason because it's easier just to display one
+  // reason in a tooltip, rather than a complete list.  [Note: if the entry is
+  // deletable but the series is not, the series button will not be disabled.  This
+  // is something that needs to be fixed in the future.]
+  $violations = mrbsCheckPolicy($row, null, null, true);
+
+  if (empty($violations['errors']))
+  {
+    $button_attributes = [];
+  }
+  else
+  {
+    $button_attributes = [
+      'disabled' => true,
+      'title' => $violations['errors'][0]
+    ];
+  }
+
+  // Edit and Edit Series
+  echo "<div>\n";
+  if (!$series)
+  {
+    echo "<div>\n";
+    $params = [
+      'action' => multisite('edit_entry.php'),
+      'value' => get_vocab('editentry'),
+      'inputs' => ['id' => $id, 'returl' => $returl]
+    ];
+    generate_button($params, $button_attributes);
+    echo "</div>\n";
+  }
+  if ((!empty($repeat_id) || $series) && $repeats_allowed)
+  {
+    echo "<div>\n";
+    $params = [
+      'action' => multisite("edit_entry.php?day=$day&month=$month&year=$year"),
+      'value' => get_vocab('editseries'),
+      'inputs' => [
+        'id' => $id,
+        'edit_series' => true,
+        'returl' => $returl
+      ]
+    ];
+
+    if (empty($button_attributes['disabled']) &&
+        isset($repeat_id) &&
+        series_has_registrants($repeat_id))
+    {
+      $button_attributes['onclick'] = "return confirm('" . get_js_vocab("confirm_edit_series") . "');";
+    }
+    generate_button($params, $button_attributes);
+    echo "</div>\n";
+  }
+  echo "</div>\n";
+
+  // Delete and Delete Series
+  echo "<div>\n";
+
+  // For the delete buttons, either the button is disabled and we show the reason why, or else
+  // we add a click event to confirm the deletion
+  unset($button_attributes['onclick']);
+
+  if (!$series)
+  {
+    echo "<div>\n";
+    if (empty($button_attributes['disabled']))
+    {
+      $button_attributes['onclick'] = "return confirm('" . get_js_vocab('confirmdel') . "');";
+    }
+    $params = [
+      'action' => multisite('del_entry.php'),
+      'value' => get_vocab('deleteentry'),
+      'inputs' => [
+        'id' => $id,
+        'series' => 0,
+        'returl' => $returl
+      ]
+    ];
+    generate_button($params, $button_attributes);
+    echo "</div>\n";
+  }
+
+  if ((!empty($repeat_id) || $series) && $repeats_allowed)
+  {
+    echo "<div>\n";
+    if (empty($button_attributes['disabled']))
+    {
+      $button_attributes['onclick'] = "return confirm('" . get_js_vocab('confirmdel_series') . "');";
+    }
+    $params = [
+      'action' => multisite("del_entry.php?day=$day&month=$month&year=$year"),
+      'value' => get_vocab('deleteseries'),
+      'inputs' => [
+        'id' => $id,
+        'series' => 1,
+        'returl' => $returl
+      ]
+    ];
+    generate_button($params, $button_attributes);
+    echo "</div>\n";
+  }
+
+  echo "</div>\n";
+}
+
+
 function generate_export_buttons(int $id, ?int $repeat_id, bool $series, string $returl) : void
 {
   global $day, $month, $year;
@@ -950,119 +1061,12 @@ if (isset($previous_page) &&
 
 if (!$major_details_only)
 {
-  // Only show the links for Edit and Delete if the room is enabled.    We're
-  // allowed to view and copy existing bookings in disabled rooms, but not to
-  // modify or delete them.
-  if (!$room_disabled)
+  // Only show the links for Edit and Delete if (a) the room is enabled, and (b) the user
+  // is allowed to use them.  (We're allowed to view and copy existing bookings in disabled
+  // rooms, but not to modify or delete them.)
+  if (!$room_disabled && getWritable($create_by, $room))
   {
-    // Only show the Edit and Delete buttons if the user is allowed to use them
-    if (getWritable($create_by, $room))
-    {
-      // Check whether the entry is deletable (and therefore editable).  Also get the
-      // reason.  We only get the first reason because it's easier just to display one
-      // reason in a tooltip, rather than a complete list.  [Note: if the entry is
-      // deletable but the series is not, the series button will not be disabled.  This
-      // is something that needs to be fixed in the future.]
-      $violations = mrbsCheckPolicy($row, null, null, true);
-
-      if (empty($violations['errors']))
-      {
-        $button_attributes = array();
-      }
-      else
-      {
-        $button_attributes = array(
-          'disabled' => true,
-          'title' => $violations['errors'][0]
-        );
-      }
-
-      // Edit and Edit Series
-      echo "<div>\n";
-      if (!$series)
-      {
-        echo "<div>\n";
-        $params = array(
-          'action' => multisite('edit_entry.php'),
-          'value' => get_vocab('editentry'),
-          'inputs' => array('id' => $id, 'returl' => $returl)
-        );
-        generate_button($params, $button_attributes);
-        echo "</div>\n";
-      }
-      if ((!empty($repeat_id) || $series) && $repeats_allowed)
-      {
-        echo "<div>\n";
-        $params = array(
-          'action' => multisite("edit_entry.php?day=$day&month=$month&year=$year"),
-          'value' => get_vocab('editseries'),
-          'inputs' => array(
-            'id' => $id,
-            'edit_series' => true,
-            'returl' => $returl
-          )
-        );
-
-        if (empty($button_attributes['disabled']) &&
-            isset($repeat_id) &&
-            series_has_registrants($repeat_id))
-        {
-            $button_attributes['onclick'] = "return confirm('" . get_js_vocab("confirm_edit_series") . "');";
-        }
-        generate_button($params, $button_attributes);
-        echo "</div>\n";
-      }
-      echo "</div>\n";
-
-      // Delete and Delete Series
-      echo "<div>\n";
-
-      // For the delete buttons, either the button is disabled and we show the reason why, or else
-      // we add a click event to confirm the deletion
-      unset($button_attributes['onclick']);
-
-      if (!$series)
-      {
-        echo "<div>\n";
-        if (empty($button_attributes['disabled']))
-        {
-          $button_attributes['onclick'] = "return confirm('" . get_js_vocab('confirmdel') . "');";
-        }
-        $params = array(
-          'action' => multisite('del_entry.php'),
-          'value' => get_vocab('deleteentry'),
-          'inputs' => array(
-            'id' => $id,
-            'series' => 0,
-            'returl' => $returl
-          )
-        );
-        generate_button($params, $button_attributes);
-        echo "</div>\n";
-      }
-
-      if ((!empty($repeat_id) || $series) && $repeats_allowed)
-      {
-        echo "<div>\n";
-        if (empty($button_attributes['disabled']))
-        {
-          $button_attributes['onclick'] = "return confirm('" . get_js_vocab('confirmdel_series') . "');";
-        }
-        $params = array(
-          'action' => multisite("del_entry.php?day=$day&month=$month&year=$year"),
-          'value' => get_vocab('deleteseries'),
-          'inputs' => array(
-            'id' => $id,
-            'series' => 1,
-            'returl' => $returl
-          )
-        );
-        generate_button($params, $button_attributes);
-        echo "</div>\n";
-      }
-
-      echo "</div>\n";
-    }
+    generate_edit_and_delete_buttons($row, $id, $repeat_id, $series, $returl, $repeats_allowed);
   }
 
   // Copy and Copy Series
