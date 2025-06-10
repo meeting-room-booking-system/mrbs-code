@@ -21,6 +21,61 @@ $intl_loaded = method_exists('\IntlChar', 'charName');
 $max_codepoint = 0x10FFFF;
 
 
+function test_chr() : void
+{
+  global $color_fail, $intl_loaded, $max_codepoint;
+
+  $n_passed = 0;
+  $failures = [];
+
+  for ($i =0; $i<=$max_codepoint; $i++)
+  {
+    $mb = mb_chr($i, 'UTF-8');
+    $mrbs = Mbstring::mb_chr($i, 'UTF-8');
+    if ($mb === $mrbs)
+    {
+      $n_passed++;
+    }
+    else
+    {
+      $failures[] = [$i, $mb, $mrbs];
+    }
+  }
+
+  echo "<p>$n_passed codepoints passed, " . count ($failures) . " failed.</p>\n";
+
+  if (!empty($failures))
+  {
+    echo "<table>\n";
+    echo "<thead>\n";
+    echo '<tr>';
+    echo '<th colspan="' . (($intl_loaded) ? 2 : 1) . '">Codepoint</th>';
+    echo '<th>mbstring</th><th>mrbs</th><th>Summary</th>';
+    echo "</tr>\n";
+    echo "</thead>\n";
+    echo "<tbody>\n";
+
+    foreach ($failures as $failure)
+    {
+      echo '<tr>';
+      if ($intl_loaded)
+      {
+        echo '<td>' . IntlChar::charName($failure[0]) . '</td>';
+      }
+      foreach ($failure as $value)
+      {
+        echo "<td>$value</td>";
+      }
+      echo '<td style="background-color: ' . $color_fail . '">Fail</td>' . "\n";
+      echo "</tr>\n";
+    }
+
+    echo "</tbody>\n";
+    echo "</table>\n";
+  }
+}
+
+
 function test_ord() : void
 {
   global $color_fail, $intl_loaded, $max_codepoint;
@@ -441,6 +496,9 @@ if (!in_array('mbstring', $loaded_extensions))
 {
   die("This test needs the 'mbstring' PHP extension to be loaded.");
 }
+
+echo "<h2>mb_chr()</h2>\n";
+test_chr();
 
 echo "<h2>mb_ord()</h2>\n";
 test_ord();
