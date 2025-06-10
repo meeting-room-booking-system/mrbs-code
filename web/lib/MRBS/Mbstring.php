@@ -77,6 +77,37 @@ class Mbstring
   ];
 
 
+  public static function mb_chr(int $codepoint, ?string $encoding = null)
+  {
+    if (isset($encoding) && ($encoding !== 'UTF-8'))
+    {
+      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
+      throw new InvalidArgumentException($message);
+    }
+
+    // Check if it's a codepoint reserved for surrogates.
+    if ((0xD800 <= $codepoint) && ($codepoint <= 0xDFFF))
+    {
+      return false;
+    }
+
+    // Use IntlChar if possible - it's the fastest method.
+    if (method_exists('IntlChar', 'chr'))
+    {
+      return IntlChar::chr($codepoint);
+    }
+
+    // If not, use iconv() which takes about 3 times as long as IntlChar.
+    if (function_exists('iconv'))
+    {
+      return iconv('UCS-4LE', 'UTF-8', pack('V', $codepoint));
+    }
+
+    // Otherwise, use json_decode() which takes about 5 times as long as IntlChar.
+    return json_decode('"' . self::FullJsonEscapedCodepoint($codepoint)  . '"') ?? false;
+  }
+
+
   public static function mb_ord(string $string, ?string $encoding=null)
   {
     if (isset($encoding) && ($encoding !== 'UTF-8'))
@@ -445,4 +476,36 @@ class Mbstring
     return $result;
   }
 
+
+  private static function SingleJsonEscapedCodepoint(int $codepoint) : string
+  {
+    return '\u' . str_pad(strtoupper(dechex($codepoint)), 4, '0', STR_PAD_LEFT);
+  }
+
+
+  private static function FullJsonEscapedCodepoint(int $codepoint) : string
+  {
+    if ($codepoint > 0x10FFFF)
+    {
+      throw new InvalidArgumentException('Codepoint cannot be greater than 0x10FFFF');
+    }
+
+    // The simple case: codepoints in the Basic Multilingual Plane
+    if ($codepoint < 0x10000)
+    {
+      return self::SingleJsonEscapedCodepoint($codepoint);
+    }
+
+    // Otherwise, we have to split the codepoint into surrogate pairs. See https://en.wikipedia.org/wiki/UTF-16
+    // Subtract 0x10000, leaving a 20-bit number
+    $codepoint -= 0x10000;
+
+    // For the leading surrogate, take the high 10 bits and add 0xd800
+    $leading = self::SingleJsonEscapedCodepoint(($codepoint >> 10) + 0xD800);
+
+    // For the trailing surrogate, take the low 10 bits and add 0xdc00
+    $trailing = self::SingleJsonEscapedCodepoint(($codepoint & 0x3FF) + 0xDC00);
+
+    return $leading . $trailing;
+  }
 }
