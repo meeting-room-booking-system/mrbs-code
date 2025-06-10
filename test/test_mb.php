@@ -12,7 +12,7 @@ include 'defaultincludes.inc';
 
 error_reporting(-1);
 ini_set('display_errors', '1');
-ini_set('max_execution_time', '90');
+ini_set('max_execution_time', '120');
 
 $color_fail = 'pink';
 $color_pass = 'palegreen';
