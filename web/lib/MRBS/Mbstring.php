@@ -97,7 +97,7 @@ class Mbstring
       return IntlChar::chr($codepoint);
     }
 
-    // If not, use iconv() which takes about 3 times as long as IntlChar.
+    // If not, use iconv(), if we can, which takes about 3 times as long as IntlChar.
     if (function_exists('iconv'))
     {
       return iconv('UCS-4LE', 'UTF-8', pack('V', $codepoint));
@@ -116,15 +116,21 @@ class Mbstring
       throw new InvalidArgumentException($message);
     }
 
+    // Use IntlChar if possible - it's the fastest method.
+    if (method_exists('IntlChar', 'ord'))
+    {
+      return IntlChar::ord($string) ?? false;
+    }
+
     // Taken from https://stackoverflow.com/questions/9361303/can-i-get-the-unicode-value-of-a-character-or-vise-versa-with-php
 
-    // Use iconv() if we can.  It's marginally faster (not much, about 15%), and simpler.
+    // If not, use iconv() if we can, which takes about 2.3 times as long as IntlChar.
     if (function_exists('iconv'))
     {
       return unpack('V', iconv('UTF-8', 'UCS-4LE', $string))[1];
     }
 
-    // Otherwise do it the long way.
+    // Otherwise do it the long way, which takes about 2.6 times as long as IntlChar.
     if (ord($string[0]) >= 0 && ord($string[0]) <= 127)
     {
       return ord($string[0]);
