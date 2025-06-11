@@ -6,6 +6,7 @@ namespace MRBS;
 // system with the 'mbstring' extension enabled.
 
 use IntlChar;
+use MRBS\Mbstring\Mbstring;
 use Throwable;
 
 include 'defaultincludes.inc';
@@ -184,7 +185,7 @@ function test(string $function, $args) : void
   // Using the MRBS emulations
   echo "<td>";
   try {
-    $mrbs = call_user_func_array([__NAMESPACE__ . "\\Mbstring", $function], $args);
+    $mrbs = call_user_func_array([__NAMESPACE__ . "\\Mbstring\\Mbstring", $function], $args);
   }
   catch (Throwable $t) {
     $mrbs = get_class($t);
@@ -248,7 +249,7 @@ function test_all_codepoints(string $function) : void
     if (($str !== false) && mb_check_encoding($str, 'UTF-8'))
     {
       $mb = call_user_func($function, $str);
-      $mrbs = call_user_func([__NAMESPACE__ . "\\Mbstring", $function], $str);
+      $mrbs = call_user_func([__NAMESPACE__ . "\\Mbstring\\Mbstring", $function], $str);
       if ($mb === $mrbs)
       {
         $n_passed++;

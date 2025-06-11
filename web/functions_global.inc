@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use MRBS\Mbstring;
+use MRBS\Mbstring\Mbstring;
 
 // These functions are deliberately in the global namespace so that they
 // can be used in classes.  They are either polyfills for PHP functions

@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace MRBS;
+namespace MRBS\Mbstring;
 
 // A class that provides emulations of the PHP mbstring functions.  This class should
 // normally only be used by the emulation functions themselves or else test software.
@@ -9,6 +9,7 @@ use InvalidArgumentException;
 use MRBS\Utf8\Utf8String;
 use Transliterator;
 use ValueError;
+use function MRBS\mb_is_string_equal;
 
 class Mbstring
 {
@@ -413,7 +414,7 @@ class Mbstring
       // characters have matched, then we've found the needle; otherwise we
       // reset and start looking for the needle again.
       while ((($increment > 0) ? $h <= $haystack_end : $h >= $haystack_end) && isset($needle_chars[$n]) &&
-        mb_is_string_equal($haystack_chars[$h], $needle_chars[$n], $case_insensitive))
+             mb_is_string_equal($haystack_chars[$h], $needle_chars[$n], $case_insensitive))
       {
         if ($n === $needle_end)
         {
