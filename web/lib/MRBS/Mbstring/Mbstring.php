@@ -265,7 +265,7 @@ class Mbstring
     // The ordinary strtolower() will give unexpected results when the locale is set to
     // Turkish and will not convert the letter 'I'.
     // TODO: Do something better?  Issue warning?
-    return strtolower($string);
+    return Strtolower::strtolower($string);
   }
 
 
