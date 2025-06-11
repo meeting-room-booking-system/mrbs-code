@@ -262,10 +262,7 @@ class Mbstring
     }
 
     // Last resort - use the ordinary strtolower().
-    // The ordinary strtolower() will give unexpected results when the locale is set to
-    // Turkish and will not convert the letter 'I'.
-    // TODO: Do something better?  Issue warning?
-    return Strtolower::strtolower($string);
+    return Ordinary::strtolower($string);
   }
 
 

@@ -4,9 +4,15 @@ namespace MRBS\Mbstring;
 
 use MRBS\Utf8\Utf8String;
 
-class Strtolower
+// A class that improves on the ordinary strtolower() and strtoupper() functions by
+// handling the special cases that would otherwise fail to produce the same results as
+// the mbstring equivalents.
+//
+// It is a separate class because it contains large arrays and is only needed if other
+// extensions (e.g. intl or iconv) are not available.
+class Ordinary
 {
-  private const EXCEPTIONS = [
+  private const EXCEPTIONS_TOLOWER = [
     0x00C0 => 0x00E0,
     0x00C1 => 0x00E1,
     0x00C2 => 0x00E2,
@@ -1375,14 +1381,17 @@ class Strtolower
     foreach ($utf8_string->toArray() as $char)
     {
       $codepoint = Mbstring::mb_ord($char);
+      // The Turkish dotted I is a special case and can't be covered by the codepoint mappings.
       if ($char === 'İ')
       {
         $result .= 'i̇';
       }
-      elseif (array_key_exists($codepoint, self::EXCEPTIONS))
+      // Check to see if the codepoint is one of the exceptions.
+      elseif (array_key_exists($codepoint, self::EXCEPTIONS_TOLOWER))
       {
-        $result .= Mbstring::mb_chr(self::EXCEPTIONS[$codepoint]);
+        $result .= Mbstring::mb_chr(self::EXCEPTIONS_TOLOWER[$codepoint]);
       }
+      // Otherwise, plain old ordinary strtolower() should work.
       else
       {
         $result .= strtolower($char);
