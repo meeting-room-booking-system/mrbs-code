@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace MRBS;
+namespace MRBS\Mbstring;
 
 // A class that provides emulations of the PHP mbstring functions.  This class should
 // normally only be used by the emulation functions themselves or else test software.
@@ -9,6 +9,7 @@ use InvalidArgumentException;
 use MRBS\Utf8\Utf8String;
 use Transliterator;
 use ValueError;
+use function MRBS\mb_is_string_equal;
 
 class Mbstring
 {
@@ -253,6 +254,7 @@ class Mbstring
       throw new InvalidArgumentException($message);
     }
 
+    // If we can, use the Transliterator
     if (method_exists('Transliterator', 'transliterate'))
     {
       // Works better than IntlChar::toLower()
@@ -260,11 +262,8 @@ class Mbstring
       return self::TransliteratorToLower($string);
     }
 
-    // Last resort - use the ordinary strtolower().
-    // The ordinary strtolower() will give unexpected results when the locale is set to
-    // Turkish and will not convert the letter 'I'.
-    // TODO: Do something better?  Issue warning?
-    return strtolower($string);
+    // Otherwise, use the (enhanced) ordinary strtolower().
+    return Ordinary::strtolower($string);
   }
 
 
@@ -281,6 +280,7 @@ class Mbstring
       throw new InvalidArgumentException($message);
     }
 
+    // If we can, use the Transliterator
     if (method_exists('Transliterator', 'transliterate'))
     {
       // Works better than IntlChar::toUpper()
@@ -288,11 +288,8 @@ class Mbstring
       return self::TransliteratorToUpper($string);
     }
 
-    // Last resort - use the ordinary strtoupper().
-    // The ordinary strtoupper() will give unexpected results when the locale is set to
-    // Turkish and will not convert the letter 'i'.
-    // TODO: Do something better?  Issue warning?
-    return strtoupper($string);
+    // Otherwise, use the (enhanced) ordinary strtoupper().
+    return Ordinary::strtoupper($string);
   }
 
 
@@ -413,7 +410,7 @@ class Mbstring
       // characters have matched, then we've found the needle; otherwise we
       // reset and start looking for the needle again.
       while ((($increment > 0) ? $h <= $haystack_end : $h >= $haystack_end) && isset($needle_chars[$n]) &&
-        mb_is_string_equal($haystack_chars[$h], $needle_chars[$n], $case_insensitive))
+             mb_is_string_equal($haystack_chars[$h], $needle_chars[$n], $case_insensitive))
       {
         if ($n === $needle_end)
         {
