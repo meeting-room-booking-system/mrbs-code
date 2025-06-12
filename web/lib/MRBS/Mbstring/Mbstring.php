@@ -254,6 +254,7 @@ class Mbstring
       throw new InvalidArgumentException($message);
     }
 
+    // If we can, use the Transliterator
     if (method_exists('Transliterator', 'transliterate'))
     {
       // Works better than IntlChar::toLower()
@@ -261,7 +262,7 @@ class Mbstring
       return self::TransliteratorToLower($string);
     }
 
-    // Last resort - use the ordinary strtolower().
+    // Otherwise, use the (enhanced) ordinary strtolower().
     return Ordinary::strtolower($string);
   }
 
@@ -279,6 +280,7 @@ class Mbstring
       throw new InvalidArgumentException($message);
     }
 
+    // If we can, use the Transliterator
     if (method_exists('Transliterator', 'transliterate'))
     {
       // Works better than IntlChar::toUpper()
@@ -286,11 +288,8 @@ class Mbstring
       return self::TransliteratorToUpper($string);
     }
 
-    // Last resort - use the ordinary strtoupper().
-    // The ordinary strtoupper() will give unexpected results when the locale is set to
-    // Turkish and will not convert the letter 'i'.
-    // TODO: Do something better?  Issue warning?
-    return strtoupper($string);
+    // Otherwise, use the (enhanced) ordinary strtoupper().
+    return Ordinary::strtoupper($string);
   }
 
 
