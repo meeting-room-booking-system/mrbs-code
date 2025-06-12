@@ -12,6 +12,8 @@ use MRBS\Utf8\Utf8String;
 // extensions (e.g. intl or iconv) are not available.
 class Ordinary
 {
+  // A table of special cases, indexed by codepoint, giving the codepoint of the
+  // character that is produced by mb_strtolower().
   private const EXCEPTIONS_TOLOWER = [
     0x00C0 => 0x00E0,
     0x00C1 => 0x00E1,
@@ -1373,6 +1375,8 @@ class Ordinary
   ];
 
 
+  // A table of special cases, indexed by character, giving the character that is
+  // produced by mb_strtoupper().  These cases can't be handled by the codepoint table.
   private const EXCEPTIONS_TOUPPER_CHARACTERS = [
     'ß' => 'SS',
     'ŉ' => 'ʼN',
@@ -1479,6 +1483,8 @@ class Ordinary
   ];
 
 
+  // A table of special cases, indexed by codepoint, giving the codepoint of the
+  // character that is produced by mb_strtoupper().
   private const EXCEPTIONS_TOUPPER_CODEPOINTS = [
     0x00B5 => 0x039C,
     0x00DF => 0x0053,
@@ -2971,6 +2977,7 @@ class Ordinary
 
     foreach ($utf8_string->toArray() as $char)
     {
+      // First check if the character is in the character exceptions.
       if (array_key_exists($char, self::EXCEPTIONS_TOUPPER_CHARACTERS))
       {
         $result .= self::EXCEPTIONS_TOUPPER_CHARACTERS[$char];
