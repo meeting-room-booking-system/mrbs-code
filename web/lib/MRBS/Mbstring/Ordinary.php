@@ -1373,7 +1373,113 @@ class Ordinary
   ];
 
 
-  private const EXCEPTIONS_TOUPPER = [
+  private const EXCEPTIONS_TOUPPER_CHARACTERS = [
+    'ß' => 'SS',
+    'ŉ' => 'ʼN',
+    'ǰ' => 'J̌',
+    'ΐ' => 'Ϊ́',
+    'ΰ' => 'Ϋ́',
+    'և' => 'ԵՒ',
+    'ẖ' => 'H̱',
+    'ẗ' => 'T̈',
+    'ẘ' => 'W̊',
+    'ẙ' => 'Y̊',
+    'ẚ' => 'Aʾ',
+    'ὐ' => 'Υ̓',
+    'ὒ' => 'Υ̓̀',
+    'ὔ' => 'Υ̓́',
+    'ὖ' => 'Υ̓͂',
+    'ᾀ' => 'ἈΙ',
+    'ᾁ' => 'ἉΙ',
+    'ᾂ' => 'ἊΙ',
+    'ᾃ' => 'ἋΙ',
+    'ᾄ' => 'ἌΙ',
+    'ᾅ' => 'ἍΙ',
+    'ᾆ' => 'ἎΙ',
+    'ᾇ' => 'ἏΙ',
+    'ᾈ' => 'ἈΙ',
+    'ᾉ' => 'ἉΙ',
+    'ᾊ' => 'ἊΙ',
+    'ᾋ' => 'ἋΙ',
+    'ᾌ' => 'ἌΙ',
+    'ᾍ' => 'ἍΙ',
+    'ᾎ' => 'ἎΙ',
+    'ᾏ' => 'ἏΙ',
+    'ᾐ' => 'ἨΙ',
+    'ᾑ' => 'ἩΙ',
+    'ᾒ' => 'ἪΙ',
+    'ᾓ' => 'ἫΙ',
+    'ᾔ' => 'ἬΙ',
+    'ᾕ' => 'ἭΙ',
+    'ᾖ' => 'ἮΙ',
+    'ᾗ' => 'ἯΙ',
+    'ᾘ' => 'ἨΙ',
+    'ᾙ' => 'ἩΙ',
+    'ᾚ' => 'ἪΙ',
+    'ᾛ' => 'ἫΙ',
+    'ᾜ' => 'ἬΙ',
+    'ᾝ' => 'ἭΙ',
+    'ᾞ' => 'ἮΙ',
+    'ᾟ' => 'ἯΙ',
+    'ᾠ' => 'ὨΙ',
+    'ᾡ' => 'ὩΙ',
+    'ᾢ' => 'ὪΙ',
+    'ᾣ' => 'ὫΙ',
+    'ᾤ' => 'ὬΙ',
+    'ᾥ' => 'ὭΙ',
+    'ᾦ' => 'ὮΙ',
+    'ᾧ' => 'ὯΙ',
+    'ᾨ' => 'ὨΙ',
+    'ᾩ' => 'ὩΙ',
+    'ᾪ' => 'ὪΙ',
+    'ᾫ' => 'ὫΙ',
+    'ᾬ' => 'ὬΙ',
+    'ᾭ' => 'ὭΙ',
+    'ᾮ' => 'ὮΙ',
+    'ᾯ' => 'ὯΙ',
+    'ᾲ' => 'ᾺΙ',
+    'ᾳ' => 'ΑΙ',
+    'ᾴ' => 'ΆΙ',
+    'ᾶ' => 'Α͂',
+    'ᾷ' => 'Α͂Ι',
+    'ᾼ' => 'ΑΙ',
+    'ῂ' => 'ῊΙ',
+    'ῃ' => 'ΗΙ',
+    'ῄ' => 'ΉΙ',
+    'ῆ' => 'Η͂',
+    'ῇ' => 'Η͂Ι',
+    'ῌ' => 'ΗΙ',
+    'ῒ' => 'Ϊ̀',
+    'ΐ' => 'Ϊ́',
+    'ῖ' => 'Ι͂',
+    'ῗ' => 'Ϊ͂',
+    'ῢ' => 'Ϋ̀',
+    'ΰ' => 'Ϋ́',
+    'ῤ' => 'Ρ̓',
+    'ῦ' => 'Υ͂',
+    'ῧ' => 'Ϋ͂',
+    'ῲ' => 'ῺΙ',
+    'ῳ' => 'ΩΙ',
+    'ῴ' => 'ΏΙ',
+    'ῶ' => 'Ω͂',
+    'ῷ' => 'Ω͂Ι',
+    'ῼ' => 'ΩΙ',
+    'ﬀ' => 'FF',
+    'ﬁ' => 'FI',
+    'ﬂ' => 'FL',
+    'ﬃ' => 'FFI',
+    'ﬄ' => 'FFL',
+    'ﬅ' => 'ST',
+    'ﬆ' => 'ST',
+    'ﬓ' => 'ՄՆ',
+    'ﬔ' => 'ՄԵ',
+    'ﬕ' => 'ՄԻ',
+    'ﬖ' => 'ՎՆ',
+    'ﬗ' => 'ՄԽ'
+  ];
+
+
+  private const EXCEPTIONS_TOUPPER_CODEPOINTS = [
     0x00B5 => 0x039C,
     0x00DF => 0x0053,
     0x00E0 => 0x00C0,
@@ -1594,7 +1700,7 @@ class Ordinary
     0x0292 => 0x01B7,
     0x029D => 0xA7B2,
     0x029E => 0xA7B0,
-    ͅ0x0345 => 0x0399,
+    0x0345 => 0x0399,
     0x0371 => 0x0370,
     0x0373 => 0x0372,
     0x0377 => 0x0376,
@@ -2833,21 +2939,24 @@ class Ordinary
 
     foreach ($utf8_string->toArray() as $char)
     {
-      $codepoint = Mbstring::mb_ord($char);
       // The Turkish dotted I is a special case and can't be covered by the codepoint mappings.
       if ($char === 'İ')
       {
         $result .= 'i̇';
       }
-      // Check to see if the codepoint is one of the exceptions.
-      elseif (array_key_exists($codepoint, self::EXCEPTIONS_TOLOWER))
-      {
-        $result .= Mbstring::mb_chr(self::EXCEPTIONS_TOLOWER[$codepoint]);
-      }
-      // Otherwise, plain old ordinary strtolower() should work.
       else
       {
-        $result .= strtolower($char);
+        $codepoint = Mbstring::mb_ord($char);
+        // Check to see if the codepoint is one of the exceptions.
+        if (array_key_exists($codepoint, self::EXCEPTIONS_TOLOWER))
+        {
+          $result .= Mbstring::mb_chr(self::EXCEPTIONS_TOLOWER[$codepoint]);
+        }
+        // Otherwise, plain old ordinary strtolower() should work.
+        else
+        {
+          $result .= strtolower($char);
+        }
       }
     }
 
@@ -2862,16 +2971,23 @@ class Ordinary
 
     foreach ($utf8_string->toArray() as $char)
     {
-      $codepoint = Mbstring::mb_ord($char);
-      // Check to see if the codepoint is one of the exceptions.
-      if (array_key_exists($codepoint, self::EXCEPTIONS_TOUPPER))
+      if (array_key_exists($char, self::EXCEPTIONS_TOUPPER_CHARACTERS))
       {
-        $result .= Mbstring::mb_chr(self::EXCEPTIONS_TOUPPER[$codepoint]);
+        $result .= self::EXCEPTIONS_TOUPPER_CHARACTERS[$char];
       }
-      // Otherwise, plain old ordinary strtoupper() should work.
       else
       {
-        $result .= strtoupper($char);
+        $codepoint = Mbstring::mb_ord($char);
+        // Check to see if the codepoint is one of the exceptions.
+        if (array_key_exists($codepoint, self::EXCEPTIONS_TOUPPER_CODEPOINTS))
+        {
+          $result .= Mbstring::mb_chr(self::EXCEPTIONS_TOUPPER_CODEPOINTS[$codepoint]);
+        }
+        // Otherwise, plain old ordinary strtoupper() should work.
+        else
+        {
+          $result .= strtoupper($char);
+        }
       }
     }
 
