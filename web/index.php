@@ -359,7 +359,7 @@ function get_calendar_nav(string $view, int $view_all, int $year, int $month, in
 function get_date_heading(string $view, int $year, int $month, int $day) : string
 {
   global $datetime_formats, $display_timezone, $timezone,
-         $weekstarts, $view_week_number;
+         $weekstarts, $year_start, $view_week_number;
 
   $html = '';
   $time = mktime(12, 0, 0, $month, $day, $year);
@@ -403,10 +403,25 @@ function get_date_heading(string $view, int $year, int $month, int $day) : strin
     case 'year':
       $ranger = new YearRanger(get_mrbs_locale());
       $ranger->setSeparator(get_vocab('year_range_separator'));
-      $range = $ranger->format(
-        (new DateTime())->setDate($year, $month, $day),
-        (new DateTime())->setDate($year + 1, $month, $day)
-      );
+      $start_date = (new DateTime())->setDate($year, $month, $day);
+      // Set the starting month
+      $actual_month = $start_date->getMonth();
+      if ($year_start == 0)
+      {
+        $modification = 0;
+      }
+      else
+      {
+        $modification = $year_start - $actual_month;
+        if ($modification > 0)
+        {
+          $modification -= 12;
+        }
+      }
+      $start_date->modifyMonthsNoOverflow($modification, true);
+      $end_date = clone $start_date;
+      $end_date->modifyMonthsNoOverflow(11, true);
+      $range = $ranger->format($start_date, $end_date);
       $html .= $range;
       break;
 

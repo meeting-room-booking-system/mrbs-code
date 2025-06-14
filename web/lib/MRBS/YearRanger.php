@@ -23,6 +23,16 @@ class YearRanger
     $formatter->setPattern('y');
     $start_string = $formatter->format($start);
     $end_string = $formatter->format($end);
+
+    // There's no range
+    if ($start_string == $end_string)
+    {
+      return $start_string;
+    }
+
+    // Get the range
+    // If we're dealing with 4-digit Arabic numerals, and the centuries are the
+    // same, then shorten the end year.
     $pattern = '/^\d{4}$/';  // exactly four digits, eg '2025'
     if (preg_match($pattern, $start_string) && preg_match($pattern, $end_string))
     {

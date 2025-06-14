@@ -401,8 +401,12 @@ $prevent_booking_on_weekends = false;
 // Set to false to disable the year view
 $year_view_enabled = true;
 
-// Start of week: 0 for Sunday, 1 for Monday, etc.
+// Start of the week: 0 for Sunday, 1 for Monday, etc.
 $weekstarts = 0;
+
+// Start of the year: 1 for January, 2 for February, etc.
+// 0 for the current month
+$year_start = 1;
 
 // Days of the week that are weekdays
 $weekdays = array(1, 2, 3, 4, 5);
