@@ -398,6 +398,9 @@ $prevent_booking_on_weekends = false;
 // [These are all variables that control the appearance of pages and could in time
 //  become per-user settings]
 
+// Set to false to disable the year view
+$year_view_enabled = true;
+
 // Start of week: 0 for Sunday, 1 for Monday, etc.
 $weekstarts = 0;
 

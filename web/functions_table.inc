@@ -959,6 +959,8 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
       $n_days = (int) date('t', $time);
       $start_dow = (int) date('N', mktime(12, 0, 0, $month, 1, $year));
       break;
+    case 'year':
+      break;
     default:
       trigger_error("Unsupported view '$view'", E_USER_WARNING);
       break;
@@ -1845,4 +1847,17 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
   $html .= "</tbody>\n";
 
   return $html;
+}
+
+
+function year_table_innerhtml(string $view, int $view_all, int $year, int $month, int $day, int $area, int $room) : string
+{
+  if ($view_all)
+  {
+    return multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day, $area, $room);
+  }
+  else
+  {
+    return year_room_table_innerhtml($view, $view_all, $year, $month, $day, $area, $room);
+  }
 }

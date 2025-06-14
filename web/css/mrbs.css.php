@@ -602,7 +602,8 @@ nav.main_calendar > nav:last-child {
 
 nav.view div.container {
   display: inline-grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
 }
 
 nav.view a, nav.arrow a {

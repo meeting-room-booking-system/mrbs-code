@@ -231,14 +231,23 @@ function get_location_nav(string $view, int $view_all, int $year, int $month, in
 
 function get_view_nav(string $current_view, int $view_all, int $year, int $month, int $day, int $area, int $room) : string
 {
+  global $year_view_enabled;
+
   $html = '';
 
   $html .= '<nav class="view">';
   $html .= '<div class="container">';  // helps the CSS
 
-  $views = array('day' => 'nav_day',
-                 'week' => 'nav_week',
-                 'month' => 'nav_month');
+  $views = [
+    'day' => 'nav_day',
+    'week' => 'nav_week',
+    'month' => 'nav_month'
+  ];
+
+  if ($year_view_enabled)
+  {
+    $views['year'] = 'nav_year';
+  }
 
   foreach ($views as $view => $token)
   {
@@ -288,6 +297,11 @@ function get_arrow_nav(string $view, int $view_all, int $year, int $month, int $
       $title_prev = get_vocab('monthbefore');
       $title_this = get_vocab('gotothismonth');
       $title_next = get_vocab('monthafter');
+      break;
+    case 'year':
+      $title_prev = get_vocab('yearbefore');
+      $title_this = get_vocab('gotothisyear');
+      $title_next = get_vocab('yearafter');
       break;
     default:
       throw new \Exception("Unknown view '$view'");
@@ -455,6 +469,9 @@ switch ($view)
     break;
   case 'month':
     $inner_html = month_table_innerhtml($view, $view_all, $year, $month, $day, $area, $room);
+    break;
+  case 'year':
+    $inner_html = year_table_innerhtml($view, $view_all, $year, $month, $day, $area, $room);
     break;
   default:
     if ($view !== 'day')
