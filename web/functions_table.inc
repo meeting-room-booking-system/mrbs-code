@@ -1163,53 +1163,53 @@ function get_slots(int $month, int $day, int $year, int $n_days=1, bool $day_cel
 {
   global $enable_periods, $morningstarts, $morningstarts_minutes, $resolution;
 
-  $slots = null;
-
-  if (!$enable_periods)
+  if ($enable_periods)
   {
-    $slots = array();
+    return null;
+  }
 
-    $n_time_slots = get_n_time_slots();
-    $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
-    $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
+  $slots = array();
 
-    for ($j = 0; $j < $n_days; $j++)
+  $n_time_slots = get_n_time_slots();
+  $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
+  $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
+
+  for ($j = 0; $j < $n_days; $j++)
+  {
+    $d = $day + $j;
+
+    // If there's more than one day in the interval then don't include the hidden days in the array, because
+    // they don't appear in the DOM.  If there's only one day then we've managed to display the hidden day.
+    if (($n_days > 1) &&
+        is_hidden_day(intval(date('w', mktime($morningstarts, $morningstarts_minutes, 0, $month, $d, $year)))))
     {
-      $d = $day + $j;
+      continue;
+    }
 
-      // If there's more than one day in the interval then don't include the hidden days in the array, because
-      // they don't appear in the DOM.  If there's only one day then we've managed to display the hidden day.
-      if (($n_days > 1) &&
-          is_hidden_day(intval(date('w', mktime($morningstarts, $morningstarts_minutes, 0, $month, $d, $year)))))
+    $this_day = array();
+
+    if ($day_cells)
+    {
+      $this_day[] = mktime(0, 0, $morning_slot_seconds, $month, $d, $year);
+      // Need to do mktime() again for the end of the slot as we can't assume that the end slot is $resolution
+      // seconds after the start of the slot because of the possibility of DST transitions
+      $this_day[] = mktime(0, 0, $evening_slot_seconds + $resolution, $month, $d, $year);
+    }
+    else
+    {
+      for ($s = $morning_slot_seconds;
+           $s <= $evening_slot_seconds;
+           $s += $resolution)
       {
-        continue;
-      }
-
-      $this_day = array();
-
-      if ($day_cells)
-      {
-        $this_day[] = mktime(0, 0, $morning_slot_seconds, $month, $d, $year);
+        $this_slot = array();
+        $this_slot[] = mktime(0, 0, $s, $month, $d, $year);
         // Need to do mktime() again for the end of the slot as we can't assume that the end slot is $resolution
         // seconds after the start of the slot because of the possibility of DST transitions
-        $this_day[] = mktime(0, 0, $evening_slot_seconds + $resolution, $month, $d, $year);
+        $this_slot[] = mktime(0, 0, $s + $resolution, $month, $d, $year);
+        $this_day[] = $this_slot;
       }
-      else
-      {
-        for ($s = $morning_slot_seconds;
-             $s <= $evening_slot_seconds;
-             $s += $resolution)
-        {
-          $this_slot = array();
-          $this_slot[] = mktime(0, 0, $s, $month, $d, $year);
-          // Need to do mktime() again for the end of the slot as we can't assume that the end slot is $resolution
-          // seconds after the start of the slot because of the possibility of DST transitions
-          $this_slot[] = mktime(0, 0, $s + $resolution, $month, $d, $year);
-          $this_day[] = $this_slot;
-        }
-      }
-      $slots[] = $this_day;
     }
+    $slots[] = $this_day;
   }
 
   if ($day_cells)
