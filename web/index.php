@@ -401,7 +401,13 @@ function get_date_heading(string $view, int $year, int $month, int $day) : strin
       break;
 
     case 'year':
-      $html .= 'TODO !!!!!!';
+      $ranger = new YearRanger(get_mrbs_locale());
+      $ranger->setSeparator(get_vocab('year_range_separator'));
+      $range = $ranger->format(
+        (new DateTime())->setDate($year, $month, $day),
+        (new DateTime())->setDate($year + 1, $month, $day)
+      );
+      $html .= $range;
       break;
 
     default:
