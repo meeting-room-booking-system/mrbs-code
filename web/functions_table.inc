@@ -959,8 +959,6 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
       $n_days = (int) date('t', $time);
       $start_dow = (int) date('N', mktime(12, 0, 0, $month, 1, $year));
       break;
-    case 'year':
-      break;
     default:
       trigger_error("Unsupported view '$view'", E_USER_WARNING);
       break;
@@ -1854,10 +1852,57 @@ function year_table_innerhtml(string $view, int $view_all, int $year, int $month
 {
   if ($view_all)
   {
-    return multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day, $area, $room);
+    return multimonth_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day, $area, $room);
   }
   else
   {
     return year_room_table_innerhtml($view, $view_all, $year, $month, $day, $area, $room);
   }
+}
+
+
+function multimonth_view_all_rooms_innerhtml(string $view, int $view_all, int $year, int $month, int $day, int $area_id, int $room_id) : string
+{
+  // Check to see whether there are any rooms in the area
+  $rooms = get_rooms($area_id);
+
+  if (count($rooms) == 0)
+  {
+    // Add an 'empty' data flag so that the JavaScript knows whether this is a real table or not
+    return "<tbody data-empty=1><tr><td><h1>" . get_vocab("no_rooms_for_area") . "</h1></td></tr></tbody>";
+  }
+
+  // Table header
+  $thead = '<thead';
+  // TODO: get_slots() for JavaScript
+  $thead .= ">\n";
+
+  $day_start_interval = 0;  // TESTING
+  $n_days = 0; // TESTING
+  $start_dow = 0; //TESTING
+  $header_row = multimonth_header_row($view, $view_all, $year, $month, $day_start_interval, $area_id, $room_id, $n_days, $start_dow);
+  $thead .= $header_row;
+
+  $thead .= "</thead>\n";
+
+  return $thead;
+}
+
+
+function multimonth_header_row(
+  string $view,
+  int $view_all,
+  int $year,
+  int $month,
+  int $day_start_interval,
+  int $area_id,
+  int $room_id,
+  int $n_days,
+  int $start_dow,
+  string $label=''
+) : string
+{
+  $html = "<tr>\n";
+  $html .= "</tr>\n";
+  return $html;
 }

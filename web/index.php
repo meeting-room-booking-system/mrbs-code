@@ -181,6 +181,9 @@ function get_adjacent_link(string $view, int $view_all, int $year, int $month, i
     case 'month':
       $date->modifyMonthsNoOverflow($increment);
       break;
+    case 'year':
+      $date->modifyYearsNoOverflow($increment);
+      break;
     default:
       throw new \Exception("Unknown view '$view'");
       break;
@@ -395,6 +398,10 @@ function get_date_heading(string $view, int $year, int $month, int $day) : strin
 
     case 'month':
       $html .= datetime_format($datetime_formats['view_month'], $time);
+      break;
+
+    case 'year':
+      $html .= 'TODO !!!!!!';
       break;
 
     default:
