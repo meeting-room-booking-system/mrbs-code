@@ -450,8 +450,6 @@ class DateTime extends \DateTime
       $hour -= 24;
     }
 
-    $this->setTime($hour, $minute, $second);
-
-    return $this;
+    return $this->setTime($hour, $minute, $second);
   }
 }
