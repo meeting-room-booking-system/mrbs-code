@@ -1912,10 +1912,20 @@ function multimonth_header_row(
   // The main header cells
   $date = (new DateTime())->setDate($year, $month, $day);
   $date->setMonthYearStart($year_start);
+  // The variables for the link query string
+  $vars = [
+    'view' => 'month',
+    'view_all' => $view_all,
+    'area' => $area_id,
+    'room' => $room_id
+  ];
   for ($i=0; $i<$n_months; $i++)
   {
+    $vars['page_date'] = $date->getISODate();
+    $link = 'index.php?' . http_build_query($vars, '', '&');
+    $link = multisite($link);
     $month_name = datetime_format($datetime_formats['month_name_year_view'], $date->getTimestamp());
-    $html .= '<th>' . escape_html($month_name) . "</th>\n";
+    $html .= '<th><a href="' . escape_html($link) . '">' . escape_html($month_name) . "</a></th>\n";
     $date->modifyMonthsNoOverflow(1, true);
   }
 
