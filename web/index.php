@@ -404,23 +404,9 @@ function get_date_heading(string $view, int $year, int $month, int $day) : strin
       $ranger = new YearRanger(get_mrbs_locale());
       $ranger->setSeparator(get_vocab('year_range_separator'));
       $start_date = (new DateTime())->setDate($year, $month, $day);
-      // Set the starting month
-      $actual_month = $start_date->getMonth();
-      if ($year_start == 0)
-      {
-        $modification = 0;
-      }
-      else
-      {
-        $modification = $year_start - $actual_month;
-        if ($modification > 0)
-        {
-          $modification -= 12;
-        }
-      }
-      $start_date->modifyMonthsNoOverflow($modification, true);
+      $start_date->setMonthYearStart($year_start);
       $end_date = clone $start_date;
-      $end_date->modifyMonthsNoOverflow(11, true);
+      $end_date->modifyMonthsNoOverflow(MONTHS_PER_YEAR - 1, true);
       $range = $ranger->format($start_date, $end_date);
       $html .= $range;
       break;

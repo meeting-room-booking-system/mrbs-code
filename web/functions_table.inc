@@ -1878,9 +1878,9 @@ function multimonth_view_all_rooms_innerhtml(string $view, int $view_all, int $y
   $thead .= ">\n";
 
   $day_start_interval = 0;  // TESTING
-  $n_days = 0; // TESTING
   $start_dow = 0; //TESTING
-  $header_row = multimonth_header_row($view, $view_all, $year, $month, $day_start_interval, $area_id, $room_id, $n_days, $start_dow);
+  $n_months = MONTHS_PER_YEAR;
+  $header_row = multimonth_header_row($view, $view_all, $year, $month, $day, $area_id, $room_id, $n_months);
   $thead .= $header_row;
 
   $thead .= "</thead>\n";
@@ -1894,15 +1894,38 @@ function multimonth_header_row(
   int $view_all,
   int $year,
   int $month,
-  int $day_start_interval,
+  int $day,
   int $area_id,
   int $room_id,
-  int $n_days,
-  int $start_dow,
+  int $n_months,
   string $label=''
 ) : string
 {
+  global $datetime_formats, $row_labels_both_sides, $year_start;
+
   $html = "<tr>\n";
+
+  // The left-hand header column
+  $first_last_html = '<th class="first_last">' . escape_html($label) . "</th>\n";
+  $html .= $first_last_html;
+
+  // The main header cells
+  $date = (new DateTime())->setDate($year, $month, $day);
+  $date->setMonthYearStart($year_start);
+  for ($i=0; $i<$n_months; $i++)
+  {
+    $month_name = datetime_format($datetime_formats['month_name_year_view'], $date->getTimestamp());
+    $html .= '<th>' . escape_html($month_name) . "</th>\n";
+    $date->modifyMonthsNoOverflow(1, true);
+  }
+
+  // The right-hand header column, if required
+  if ($row_labels_both_sides)
+  {
+    $html .= $first_last_html;
+  }
+
   $html .= "</tr>\n";
+
   return $html;
 }

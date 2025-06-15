@@ -207,6 +207,26 @@ class DateTime extends \DateTime
   }
 
 
+  // Winds the date back to the first $month that is at or before
+  // this date.  Useful for aligning with financial or academic years.
+  // If $month is 0, then no change is made.
+  public function setMonthYearStart(int $month) : self
+  {
+    if ($month !== 0)
+    {
+      $this_month = $this->getMonth();
+      $modification = $month - $this_month;
+      if ($modification > 0)
+      {
+        $modification -= MONTHS_PER_YEAR;
+      }
+      $this->modifyMonthsNoOverflow($modification, true);
+    }
+
+    return $this;
+  }
+
+
   // Checks whether the config setting of holidays for $year consists
   // of a valid set of dates.
   private static function validateHolidays(string $year) : bool

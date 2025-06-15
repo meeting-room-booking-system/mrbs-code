@@ -722,6 +722,11 @@ $datetime_formats['day_name_edit'] = array(
   'pattern' => 'ccc'
 );
 
+// The format used for the month name in the year view
+$datetime_formats['month_name_year_view'] = array(
+  'pattern' => 'LLL'
+);
+
 // The format for ranges with both dates and times
 // Note: this setting only accepts 'date_type' and 'time_type' keys
 // and ignores 'pattern' and 'skeleton' keys.
