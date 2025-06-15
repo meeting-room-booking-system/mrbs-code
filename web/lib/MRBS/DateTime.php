@@ -193,17 +193,21 @@ class DateTime extends \DateTime
 
 
   // Set the day to $day
-  public function setDay(int $day) : void
+  public function setDay(int $day) : self
   {
     $date = getdate($this->getTimestamp());
     $this->setDate($date['year'], $date['mon'], $day);
+
+    return $this;
   }
 
 
   // Sets the day to $day, but not past the end of the month
-  public function setDayNoOverflow(int $day) : void
+  public function setDayNoOverflow(int $day) : self
   {
     $this->setDay(min($day, (int) $this->format('t')));
+
+    return $this;
   }
 
 
@@ -411,7 +415,7 @@ class DateTime extends \DateTime
 
   // Set the time to $s, where $s is the nominal number of
   // seconds after midnight, ignoring DST changes.
-  public function setNominalSeconds(int $s) : void
+  public function setNominalSeconds(int $s) : self
   {
     $second = $s % 60;
     $s -= $second;
@@ -427,5 +431,7 @@ class DateTime extends \DateTime
     }
 
     $this->setTime($hour, $minute, $second);
+
+    return $this;
   }
 }
