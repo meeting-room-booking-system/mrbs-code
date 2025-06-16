@@ -1863,6 +1863,8 @@ function year_table_innerhtml(string $view, int $view_all, int $year, int $month
 
 function multimonth_view_all_rooms_innerhtml(string $view, int $view_all, int $year, int $month, int $day, int $area_id, int $room_id) : string
 {
+  global $column_labels_both_ends;
+
   // Check to see whether there are any rooms in the area
   $rooms = get_rooms($area_id);
 
@@ -1876,16 +1878,15 @@ function multimonth_view_all_rooms_innerhtml(string $view, int $view_all, int $y
   $thead = '<thead';
   // TODO: get_slots() for JavaScript
   $thead .= ">\n";
-
-  $day_start_interval = 0;  // TESTING
-  $start_dow = 0; //TESTING
   $n_months = MONTHS_PER_YEAR;
   $header_row = multimonth_header_row($view, $view_all, $year, $month, $day, $area_id, $room_id, $n_months);
   $thead .= $header_row;
-
   $thead .= "</thead>\n";
 
-  return $thead;
+  // Table footer
+  $tfoot = ($column_labels_both_ends) ? "<tfoot>\n$header_row</tfoot>\n" : '';
+
+  return $thead . $tfoot;
 }
 
 
