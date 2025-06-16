@@ -1863,7 +1863,7 @@ function year_table_innerhtml(string $view, int $view_all, int $year, int $month
 
 function multimonth_view_all_rooms_innerhtml(string $view, int $view_all, int $year, int $month, int $day, int $area_id, int $room_id) : string
 {
-  global $column_labels_both_ends;
+  global $column_labels_both_ends, $row_labels_both_sides;
 
   // Check to see whether there are any rooms in the area
   $rooms = get_rooms($area_id);
@@ -1883,10 +1883,40 @@ function multimonth_view_all_rooms_innerhtml(string $view, int $view_all, int $y
   $thead .= $header_row;
   $thead .= "</thead>\n";
 
+  // Table body
+  $tbody = "<tbody>\n";
+
+  $room_link_vars = [
+    'view'      => $view,
+    'view_all'  => 0,
+    'page_date' => format_iso_date($year, $month, $day),
+    'area'      => $area_id
+  ];
+
+  foreach ($rooms as $room)
+  {
+    $tbody .= "<tr>\n";
+    $room_link_vars['room'] = $room['id'];
+    $row_label = room_cell_html($room, $room_link_vars);
+    $tbody .= $row_label;
+
+    for ($i=0; $i<$n_months; $i++)
+    {
+      $tbody .= "<td></td>";
+    }
+
+    if ($row_labels_both_sides)
+    {
+      $tbody .= $row_label;
+    }
+    $tbody .= "</tr>\n";
+  }
+  $tbody .= "<tbody>\n";
+
   // Table footer
   $tfoot = ($column_labels_both_ends) ? "<tfoot>\n$header_row</tfoot>\n" : '';
 
-  return $thead . $tfoot;
+  return $thead . $tfoot . $tbody;
 }
 
 
