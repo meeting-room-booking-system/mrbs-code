@@ -65,6 +65,7 @@ $vocab["cancel"]             = "Cancel";
 $vocab["viewday"]            = "View Day";
 $vocab["viewweek"]           = "View Week";
 $vocab["viewmonth"]          = "View Month";
+$vocab["viewyear"]          = "View Year";
 $vocab["ppreview"]           = "Print Preview";
 
 // Used in edit_entry.php
