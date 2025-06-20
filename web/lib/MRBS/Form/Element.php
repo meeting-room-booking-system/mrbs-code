@@ -298,7 +298,7 @@ class Element
           $option->setText($text);
         }
 
-        if (!$for_datalist && in_array($value, $selected))
+        if (!$for_datalist && in_array(($associative) ? $value : $text, $selected))
         {
           $option->setAttribute('selected');
         }
