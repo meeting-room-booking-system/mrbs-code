@@ -66,6 +66,15 @@ class SessionPhp extends SessionWithLogin
 
   public function updatePage(?string $url): void
   {
+    // Don't update the page if the URL as the same as the one we've already got
+    // stored for this page.  This will be the case if the user has refreshed the
+    // browser, and if we update the page then we'll lose the last page, which is
+    // sometimes needed for MRBS to know where to go back to.
+    if (isset($_SESSION['this_page']) && ($url === $_SESSION['this_page']))
+    {
+      return;
+    }
+
     $_SESSION['last_page'] = $_SESSION['this_page'] ?? null;
     $_SESSION['this_page'] = $url;
   }
