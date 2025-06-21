@@ -253,7 +253,7 @@ class Element
     }
     else
     {
-      foreach ($options as $value => $text)
+      foreach ($options as $key => $text)
       {
         $option = new ElementOption();
 
@@ -289,7 +289,8 @@ class Element
         // See also https://github.com/meeting-room-booking-system/mrbs-code/issues/3871 and
         // https://stackoverflow.com/questions/79629259/does-mysql-distinguish-betwen-ordinary-and-non-breaking-spaces-in-a-query
 
-        $option->setAttribute('value', ($associative) ? $value : $text);
+        $value = ($associative) ? $key : $text;
+        $option->setAttribute('value', $value);
 
         if (!$for_datalist || $associative)
         {
@@ -298,7 +299,7 @@ class Element
           $option->setText($text);
         }
 
-        if (!$for_datalist && in_array(($associative) ? $value : $text, $selected))
+        if (!$for_datalist && in_array($value, $selected))
         {
           $option->setAttribute('selected');
         }
