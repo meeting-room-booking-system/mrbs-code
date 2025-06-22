@@ -14,6 +14,20 @@ class Map
   // consists of an array of entries that fall in that slot.
   private $data = [];
 
+  // $entries is an array, indexed by entry id, storing the entries that we are using for this map.
+  // Instead of storing the entry itself in the $data array, which will be many times for entries
+  // spanning multiple slots, we just store the entry id to save memory. Normally this wouldn't
+  // help as PHP uses copy-on-write, but we want to modify the entries to store extra information
+  // relevant to the slot, thus triggering a copy-on-write.  Instead, we store the extra information
+  // in an array together with the entry id.
+  private $entries = [];
+
+  // Keys for the entry data stored in $data.
+  private const ENTRY_ID = 0;
+  private const ENTRY_IS_MULTIDAY_START = 1;
+  private const ENTRY_IS_MULTIDAY_END = 2;
+  private const ENTRY_N_SLOTS = 3;
+
   public function __construct(int $resolution)
   {
     $this->resolution = $resolution;
@@ -45,12 +59,12 @@ class Map
     // Normally of course there will only be one entry per slot, but it is possible to have
     // multiple entries per slot if the resolution is increased, the day shifted since the
     // original bookings were made, or if the bookings were made using an older version of MRBS
-    // that had faulty conflict detection.  For example if you previously had a resolution of 1800
-    // seconds you might have a booking (A) for 1000-1130 and another (B) for 1130-1230.
+    // that had faulty conflict detection.  For example, if you previously had a resolution of
+    // 1800 seconds, you might have a booking (A) for 1000-1130 and another (B) for 1130-1230.
     // If you then increase the resolution to 3600 seconds, these two bookings
     // will both occupy the 1100-1200 time slot.
     //
-    // Each entry also has the following keys added:
+    // We also store the following extra information:
     //       is_multiday_start  a boolean indicating if the booking stretches beyond the day start
     //       is_multiday_end    a boolean indicating if the booking stretches beyond the day end
     //       n_slots            the number of slots the booking lasts (tentatively set to 1)
@@ -88,30 +102,52 @@ class Map
     $end_s = nominal_seconds($end_t);
 
     // Get some additional information about the entry related to the way it displays on the page
-    $entry['is_multiday_start'] = ($entry['start_time'] < $start_first_slot);
-    $entry['is_multiday_end'] = ($entry['end_time'] > ($start_last_slot + $this->resolution));
+    $is_multiday_start = ($entry['start_time'] < $start_first_slot);
+    $is_multiday_end = ($entry['end_time'] > ($start_last_slot + $this->resolution));
 
     // Tentatively assume that this booking occupies 1 slot.  Call coalesce() later to fix it.
-    $entry['n_slots'] = 1;
+    $n_slots = 1;
 
     for ($s = $start_s; $s <= $end_s; $s += $this->resolution)
     {
-      $this->data[$entry['room_id']][$day][$s][] = $entry;
+      // Add the entry to the array of entries if it's not already there
+      if (!isset($this->entries[$entry['id']]))
+      {
+        $this->entries[$entry['id']] = $entry;
+      }
+      // Store a pointer to this entry, together with the additional data
+      $this->data[$entry['room_id']][$day][$s][] = [
+        self::ENTRY_ID => $entry['id'],
+        self::ENTRY_IS_MULTIDAY_START => $is_multiday_start,
+        self::ENTRY_IS_MULTIDAY_END => $is_multiday_end,
+        self::ENTRY_N_SLOTS => $n_slots
+      ];
     }
   }
 
 
-  // Returns the entry that should be displayed at slot $s on day $day for room $room_id.
+  // Returns the entry or entries that should be displayed at slot $s on day $day for room $room_id.
   // Returns an empty array if there is no entry.
-  // Should not be called until after all the data has been added
+  // Should not be called until all the data has been added.
   public function slot(int $room_id, int $day, int $slot) : array
   {
+    $result = [];
+
     if (!$this->data_has_been_coalesced)
     {
       $this->coalesce();
     }
 
-    return $this->data[$room_id][$day][$slot] ?? [];
+    foreach ($this->data[$room_id][$day][$slot] ?? [] as $entry_data)
+    {
+      $entry = $this->entries[$entry_data[self::ENTRY_ID]];
+      $entry['is_multiday_start'] = $entry_data[self::ENTRY_IS_MULTIDAY_START];
+      $entry['is_multiday_end'] = $entry_data[self::ENTRY_IS_MULTIDAY_END];
+      $entry['n_slots'] = $entry_data[self::ENTRY_N_SLOTS];
+      $result[] = $entry;
+    }
+
+    return $result;
   }
 
 
@@ -134,25 +170,25 @@ class Map
           {
             if (count($day_data[$s]) == 1)
             {
-              // Single booking for time slot $s.  If this event is a continuation
+              // Single booking for time slot $s. If this event is a continuation
               // of a sole event from time slot $p (the previous slot), then
               // increment the slot count of the same booking in slot $p, and clear
               // out the redundant attributes in slot $s.
-              if (count($day_data[$p]) == 1 && $day_data[$p][0]['id'] == $day_data[$s][0]['id'])
+              if (count($day_data[$p]) == 1 && $day_data[$p][0][self::ENTRY_ID] == $day_data[$s][0][self::ENTRY_ID])
               {
                 $this_booking = &$day_data[$s][0];
                 $prev_booking = &$day_data[$p][0];
-                $prev_booking['n_slots'] = 1 + $this_booking['n_slots'];
-                $this_booking['n_slots'] = null;
+                $prev_booking[self::ENTRY_N_SLOTS] = 1 + $this_booking[self::ENTRY_N_SLOTS];
+                $this_booking[self::ENTRY_N_SLOTS] = null;
               }
             }
 
             else
             {
-              // Multiple bookings for time slot $s.  Mark all of them as 1 slot.
+              // Multiple bookings for time slot $s. Mark all of them as 1 slot.
               foreach ($day_data[$s] as &$booking)
               {
-                $booking['n_slots'] = 1;
+                $booking[self::ENTRY_N_SLOTS] = 1;
               }
             }
           }
