@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS\Auth;
 
+use MRBS\DBExternalException;
 use MRBS\DBFactory;
 use MRBS\User;
 use ValueError;
@@ -243,7 +244,9 @@ class AuthDbExt extends Auth
       // Establish a connection
       $port = isset($auth['db_ext']['db_port']) ? (int) $auth['db_ext']['db_port'] : null;
 
-      $connection = DBFactory::create(
+      try
+      {
+        $connection = DBFactory::create(
           $auth['db_ext']['db_system'],
           $auth['db_ext']['db_host'],
           $auth['db_ext']['db_username'],
@@ -252,6 +255,12 @@ class AuthDbExt extends Auth
           false,
           $port
         );
+      }
+      catch (\PDOException $e)
+      {
+        // Differentiate between an error in the MRBS database and the external database
+        throw new DBExternalException($e->getMessage(), $e->getCode());
+      }
     }
 
     return $connection;
