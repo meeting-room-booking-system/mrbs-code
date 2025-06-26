@@ -104,6 +104,9 @@ class Columns implements Countable, Iterator
       case 'integer':
         $column->setNature(Column::NATURE_INTEGER);
         break;
+      case 'json':
+        $column->setNature(Column::NATURE_JSON);
+        break;
       case 'real':
         $column->setNature(Column::NATURE_REAL);
         break;
