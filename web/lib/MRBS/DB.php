@@ -561,7 +561,19 @@ abstract class DB
           $sql_param = $data[$column_name];
           if (is_object($col))
           {
-            $sql_param = $col->sanitizeValue($sql_param);
+            // NB MariaDB doesn't support the JSON data type.  It treats it as an
+            // alias of LONG TEXT.
+            if ($col->getNature() === Column::NATURE_JSON)
+            {
+              if (!is_string($sql_param) || !json_validate($sql_param))
+              {
+                throw new Exception('Invalid JSON string');
+              }
+            }
+            else
+            {
+              $sql_param = $col->sanitizeValue($sql_param);
+            }
           }
         }
         else
