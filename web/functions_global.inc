@@ -8,6 +8,16 @@ use MRBS\Mbstring\Mbstring;
 // that only exist in later versions of PHP, or else emulations of the
 // mb_ string functions that aren't always present.
 
+if (!function_exists('json_validate'))
+{
+  function json_validate(string $json, int $depth = 512, int $flags = 0): bool
+  {
+    json_decode($json, null, $depth, $flags);
+    return json_last_error() === JSON_ERROR_NONE;
+  }
+}
+
+
 // Emulation of mb_ord()
 if (!function_exists('mb_ord'))
 {
