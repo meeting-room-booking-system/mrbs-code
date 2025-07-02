@@ -66,10 +66,10 @@ class Map
   // Add an entry to the map of the bookings being prepared for display.
   //
   //    $entry             a booking from the database
-  //    $day               the day of the booking
+  //    $day_index         the index day of the booking, starting at zero
   //    $start_first_slot  the start of the first slot of the booking day (Unix timestamp)
   //    $start_last_slot   the start of the last slot of the booking day (Unix timestamp)
-  private function addEntry(array $entry, int $day, int $start_first_slot, int $start_last_slot) : void
+  private function addEntry(array $entry, int $day_index, int $start_first_slot, int $start_last_slot) : void
   {
     // $entry is expected to have the following keys, when present:
     //       room_id
@@ -147,7 +147,7 @@ class Map
         $this->entries[$entry['id']] = $entry;
       }
       // Store a pointer to this entry, together with the additional data
-      $this->data[$entry['room_id']][$day][$s][] = [
+      $this->data[$entry['room_id']][$day_index][$s][] = [
         self::ENTRY_ID => $entry['id'],
         self::ENTRY_IS_MULTIDAY_START => $is_multiday_start,
         self::ENTRY_IS_MULTIDAY_END => $is_multiday_end,
