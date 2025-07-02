@@ -759,7 +759,7 @@ function day_table_innerhtml(string $view, int $year, int $month, int $day, int 
         }
 
         // set up the query vars to be used for the link in the cell
-        $query_vars = get_query_vars($view, $area_id, $room['id'], $month, $day, $year, $s);
+        $query_vars = get_query_vars($view, $area_id, $room->id, $month, $day, $year, $s);
         $tbody .= cell_html($map->slot($room->id, 0, $s), $query_vars, $is_invalid);
       }
 
