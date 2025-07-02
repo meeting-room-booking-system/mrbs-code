@@ -114,8 +114,6 @@ class Map
       return;
     }
 
-    $entry = prepare_entry($entry);
-
     // Fill in the map for this meeting. Start at the meeting start time,
     // or the day start time, whichever is later. End one slot before the
     // meeting end time (since the next slot is for meetings which start then),
@@ -144,7 +142,7 @@ class Map
       // Add the entry to the array of entries if it's not already there
       if (!isset($this->entries[$entry['id']]))
       {
-        $this->entries[$entry['id']] = $entry;
+        $this->entries[$entry['id']] = prepare_entry($entry);
       }
       // Store a pointer to this entry, together with the additional data
       $this->data[$entry['room_id']][$day_index][$s][] = [
