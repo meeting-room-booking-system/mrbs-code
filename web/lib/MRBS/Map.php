@@ -5,6 +5,8 @@ namespace MRBS;
 // A class for building a map of bookings which can be used for constructing the calendar display
 class Map
 {
+  private $start_date;
+  private $end_date;
   private $resolution;
   private $data_has_been_coalesced = false;
 
@@ -28,9 +30,36 @@ class Map
   private const ENTRY_IS_MULTIDAY_END = 2;
   private const ENTRY_N_SLOTS = 3;
 
-  public function __construct(int $resolution)
+
+  public function __construct(DateTime $start_date, DateTime $end_date, int $resolution)
   {
+    $this->start_date = $start_date;
+    $this->end_date = $end_date;
     $this->resolution = $resolution;
+  }
+
+
+  public function addEntries(array $entries) : void
+  {
+    $date = clone $this->start_date;
+    $d = 0;
+    while ($date <= $this->end_date)
+    {
+      $this_day = $date->getDay();
+      $this_month = $date->getMonth();
+      $this_year = $date->getYear();
+
+      $start_first_slot = get_start_first_slot($this_month, $this_day, $this_year);
+      $start_last_slot = get_start_last_slot($this_month, $this_day, $this_year);
+
+      foreach ($entries as $entry)
+      {
+        $this->addEntry($entry, $d, $start_first_slot, $start_last_slot);
+      }
+
+      $d++;
+      $date->modify('+1 day');
+    }
   }
 
 
@@ -40,7 +69,7 @@ class Map
   //    $day               the day of the booking
   //    $start_first_slot  the start of the first slot of the booking day (Unix timestamp)
   //    $start_last_slot   the start of the last slot of the booking day (Unix timestamp)
-  public function add(array $entry, int $day, int $start_first_slot, int $start_last_slot) : void
+  private function addEntry(array $entry, int $day, int $start_first_slot, int $start_last_slot) : void
   {
     // $entry is expected to have the following keys, when present:
     //       room_id
@@ -84,6 +113,8 @@ class Map
     {
       return;
     }
+
+    $entry = prepare_entry($entry);
 
     // Fill in the map for this meeting. Start at the meeting start time,
     // or the day start time, whichever is later. End one slot before the

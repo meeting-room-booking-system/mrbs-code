@@ -567,16 +567,15 @@ function day_table_innerhtml(string $view, int $year, int $month, int $day, int 
   // saves us bothering to do the detailed calculations of which slots are invalid.
   $is_possibly_invalid = !$enable_periods && is_possibly_invalid($start_first_slot, $start_last_slot);
 
-  $entries = get_entries_by_area($area_id, $start_first_slot, $start_last_slot + $resolution);
+  $start_date = (new DateTime())->setTimestamp($start_first_slot);
+  $end_date = (new DateTime())->setTimestamp($start_last_slot + $resolution);
+
+  $entries = get_entries_by_area($area_id, $start_date->getTimestamp(), $end_date->getTimestamp());
 
   // We want to build a map containing all the data we want to show
   // and then spit it out.
-  $map = new Map($resolution);
-  foreach ($entries as $entry)
-  {
-    $entry = prepare_entry($entry);
-    $map->add($entry, $day, $start_first_slot, $start_last_slot);
-  }
+  $map = new Map($start_date, $end_date, $resolution);
+  $map->addEntries($entries);
 
   $n_time_slots = get_n_time_slots() - $skipped_slots;
   $morning_slot_seconds = ((($morningstarts * 60) + $morningstarts_minutes) * 60) + ($skipped_slots * $resolution);
@@ -692,7 +691,7 @@ function day_table_innerhtml(string $view, int $year, int $month, int $day, int 
         $query_vars = get_query_vars($view, $area_id, $room['id'], $month, $day, $year, $s);
 
         // and then draw the cell
-        $tbody .= cell_html($map->slot($room['id'], $day, $s), $query_vars, $is_invalid[$s]);
+        $tbody .= cell_html($map->slot($room['id'], 0, $s), $query_vars, $is_invalid[$s]);
       }  // end for (looping through the times)
       if ($row_labels_both_sides)
       {
@@ -751,7 +750,7 @@ function day_table_innerhtml(string $view, int $year, int $month, int $day, int 
       {
         // set up the query vars to be used for the link in the cell
         $query_vars = get_query_vars($view, $area_id, $room['id'], $month, $day, $year, $s);
-        $tbody .= cell_html($map->slot($room['id'], $day, $s), $query_vars, $is_invalid);
+        $tbody .= cell_html($map->slot($room['id'], 0, $s), $query_vars, $is_invalid);
       }
 
       // next lines to display times on right side
@@ -972,27 +971,16 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
   $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
   $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
 
+  $start_date = (new DateTime())->setTimestamp(get_start_first_slot($month, $day_start_interval, $year));
+  $end_date = (new DateTime())->setTimestamp(get_end_last_slot($month, $day_start_interval + $n_days-1, $year));
+
   // Get the data.  It's much quicker to do a single SQL query getting all the
   // entries for the interval in one go, rather than doing a query for each day.
-  $entries = get_entries_by_area($area_id,
-                                 get_start_first_slot($month, $day_start_interval, $year),
-                                 get_end_last_slot($month, $day_start_interval + $n_days-1, $year));
+  $entries = get_entries_by_area($area_id, $start_date->getTimestamp(), $end_date->getTimestamp());
 
   // We want to build an array containing all the data we want to show and then spit it out.
-  $map = new Map($resolution);
-
-  for ($j = 0; $j < $n_days; $j++)
-  {
-    $d = $day_start_interval + $j;
-    $start_first_slot = get_start_first_slot($month, $d, $year);
-    $start_last_slot = get_start_last_slot($month, $d, $year);
-
-    foreach ($entries as $entry)
-    {
-      $entry = prepare_entry($entry);
-      $map->add($entry, $d, $start_first_slot, $start_last_slot);
-    }
-  }
+  $map = new Map($start_date, $end_date, $resolution);
+  $map->addEntries($entries);
 
   // TABLE HEADER
   $thead = '<thead';
@@ -1045,18 +1033,14 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
       $row_label = room_cell_html($room, $room_link_vars);
       $tbody .= $row_label;
 
-      for ($j = 0; $j < $n_days; $j++)
+      for ($j = 0, $date = clone $start_date; $j < $n_days; $j++, $date->modify('+1 day'))
       {
-        if (is_hidden_day(($j + $start_dow) % DAYS_PER_WEEK))
+        if ($date->isHiddenDay())
         {
           continue;
         }
 
-        $d = $day_start_interval + $j;
-
         // Add a classes for weekends and classes
-        $date = new DateTime();
-        $date->setDate($year, $month, $d);
         $classes = get_date_classes($date);
 
         $tbody .= '<td';
@@ -1067,12 +1051,12 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
         $tbody .= '>';
         $vars = array(
             'view_all'  => $view_all,
-            'page_date' => format_iso_date($year, $month, $d),
+            'page_date' => $date->getISODate(),
             'area'      => $area_id,
             'room'      => $room['id']
           );
 
-        // If there is more than one slot per day then it can be very difficult to pick
+        // If there is more than one slot per day, then it can be very difficult to pick
         // out an individual one, which could be just one pixel wide, so we go to the
         // day view first where it's easier to see what you are doing.  Otherwise, we go
         // direct to edit_entry.php if the slot is free, or view_entry.php if it is not.
@@ -1086,7 +1070,7 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
         else
         {
           $vars['view'] = $view;
-          $this_slot = $map->slot($room_id, $d, $morning_slot_seconds);
+          $this_slot = $map->slot($room_id, $j, $morning_slot_seconds);
           if (empty($this_slot))
           {
             $page = 'edit_entry.php';
@@ -1105,7 +1089,7 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
         $slots = 0;
         while ($s <= $evening_slot_seconds)
         {
-          $this_slot = $map->slot($room_id, $d, $s);
+          $this_slot = $map->slot($room_id, $j, $s);
           if (!empty($this_slot))
           {
             if ($slots > 0)
@@ -1263,23 +1247,15 @@ function week_room_table_innerhtml(string $view, int $view_all, int $year, int $
   }
   unset($j);  // Just so that we pick up any accidental attempt to use it later
 
+  $start_date = (new DateTime())->setTimestamp($start_first_slot[0]);
+  $end_date = (new DateTime())->setTimestamp($start_last_slot[DAYS_PER_WEEK - 1] + $resolution);
+
   // Get the data.  It's much quicker to do a single SQL query getting all the
   // entries for the interval in one go, rather than doing a query for each day.
-  $entries = get_entries_by_room($room_id,
-                                 $start_first_slot[0],
-                                 $start_last_slot[DAYS_PER_WEEK - 1] + $resolution);
+  $entries = get_entries_by_room($room_id, $start_date->getTimestamp(), $end_date->getTimestamp());
 
-  $map = new Map($resolution);
-
-  for ($j = 0; $j < DAYS_PER_WEEK; $j++)
-  {
-    foreach ($entries as $entry)
-    {
-      $entry = prepare_entry($entry);
-      $map->add($entry, $j, $start_first_slot[$j], $start_last_slot[$j]);
-    }
-  }
-  unset($j);  // Just so that we pick up any accidental attempt to use it later
+  $map = new Map($start_date, $end_date, $resolution);
+  $map->addEntries($entries);
 
   // START DISPLAYING THE MAIN TABLE
   $n_time_slots = get_n_time_slots();
@@ -1350,9 +1326,9 @@ function week_room_table_innerhtml(string $view, int $view_all, int $year, int $
     $format = $datetime_formats['view_week_day_date_month'];
     // with times along the top and days of the week down the side
     // See note above: weekday==0 is day $weekstarts, not necessarily Sunday.
-    for ($d = 0; $d < DAYS_PER_WEEK; $d++)
+    for ($j = 0, $date = clone $start_date; $j < DAYS_PER_WEEK; $j++, $date->modify('+1 day'))
     {
-      if (is_hidden_day(($d + $weekstarts) % DAYS_PER_WEEK))
+      if ($date->isHiddenDay())
       {
         // These days are to be hidden in the display: don't display a row
         continue;
@@ -1360,36 +1336,28 @@ function week_room_table_innerhtml(string $view, int $view_all, int $year, int $
 
       $tbody .= "<tr>\n";
 
-      $this_date = new DateTime();
-      $this_date->setDate($year, $month, $day_start_week + $d);
-      $this_day = $this_date->getDay();
-      $this_month = $this_date->getMonth();
-      $this_year = $this_date->getYear();
+      $day_cell_text = datetime_format($format, $date->getTimestamp());
 
-      $day_cell_text = datetime_format($format, $this_date->getTimestamp());
-
-      $vars = array('view'     => 'day',
-                    'view_all' => $view_all,
-                    'year'     => $this_year,
-                    'month'    => $this_month,
-                    'day'      => $this_day,
-                    'area'     => $area_id,
-                    'room'     => $room_id);
+      $vars = array('view'      => 'day',
+                    'view_all'  => $view_all,
+                    'page_date' => $date->getISODate(),
+                    'area'      => $area_id,
+                    'room'      => $room_id);
 
       $day_cell_link = 'index.php?' . http_build_query($vars, '', '&');
       $day_cell_link = multisite($day_cell_link);
-      $row_label = day_cell_html($day_cell_text, $day_cell_link, $this_date->getISODate());
+      $row_label = day_cell_html($day_cell_text, $day_cell_link, $date->getISODate());
       $tbody .= $row_label;
 
       for ($s = $morning_slot_seconds;
            $s <= $evening_slot_seconds;
            $s += $resolution)
       {
-        $is_invalid = $is_possibly_invalid[$d] && is_invalid_datetime(0, 0, $s, $this_month, $this_day, $this_year);
+        $is_invalid = $is_possibly_invalid[$j] && is_invalid_datetime(0, 0, $s, $date->getMonth(), $date->getDay(), $date->getYear());
         // set up the query vars to be used for the link in the cell
-        $query_vars = get_query_vars($view, $area_id, $room_id, $this_month, $this_day, $this_year, $s);
+        $query_vars = get_query_vars($view, $area_id, $room_id, $date->getMonth(), $date->getDay(), $date->getYear(), $s);
         // and then draw the cell
-        $tbody .= cell_html($map->slot($room_id, $d, $s), $query_vars, $is_invalid);
+        $tbody .= cell_html($map->slot($room_id, $j, $s), $query_vars, $is_invalid);
       }  // end looping through the time slots
       if ($row_labels_both_sides)
       {
@@ -1442,25 +1410,23 @@ function week_room_table_innerhtml(string $view, int $view_all, int $year, int $
 
 
       // See note above: weekday==0 is day $weekstarts, not necessarily Sunday.
-      for ($d = 0; $d < DAYS_PER_WEEK; $d++)
+      for ($j = 0, $date = clone $start_date; $j < DAYS_PER_WEEK; $j++, $date->modify('+1 day'))
       {
-        if (is_hidden_day(($d + $weekstarts) % DAYS_PER_WEEK))
+        if ($date->isHiddenDay())
         {
           // These days are to be hidden in the display
           continue;
         }
 
         // set up the query vars to be used for the link in the cell
-        $this_date = new DateTime();
-        $this_date->setDate($year, $month, $day_start_week + $d);
-        $this_day = $this_date->getDay();
-        $this_month = $this_date->getMonth();
-        $this_year = $this_date->getYear();
-        $is_invalid = $is_possibly_invalid[$d] && is_invalid_datetime(0, 0, $s, $this_month, $this_day, $this_year);
+        $this_day = $date->getDay();
+        $this_month = $date->getMonth();
+        $this_year = $date->getYear();
+        $is_invalid = $is_possibly_invalid[$j] && is_invalid_datetime(0, 0, $s, $this_month, $this_day, $this_year);
         $query_vars = get_query_vars($view, $area_id, $room_id, $this_month, $this_day, $this_year, $s);
 
         // and then draw the cell
-        $tbody .= cell_html($map->slot($room_id, $d, $s), $query_vars, $is_invalid);
+        $tbody .= cell_html($map->slot($room_id, $j, $s), $query_vars, $is_invalid);
       }
 
       // next lines to display times on right side
