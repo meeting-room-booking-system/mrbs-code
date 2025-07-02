@@ -567,7 +567,7 @@ function day_table_innerhtml(string $view, int $year, int $month, int $day, int 
   $start_date = (new DateTime())->setTimestamp($start_first_slot);
   $end_date = (new DateTime())->setTimestamp($start_last_slot + $resolution);
 
-  $entries = get_entries_by_area($area_id, $start_date->getTimestamp(), $end_date->getTimestamp());
+  $entries = get_entries_by_area($area_id, $start_date, $end_date);
 
   // We want to build a map containing all the data we want to show
   // and then spit it out.
@@ -973,7 +973,7 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
 
   // Get the data.  It's much quicker to do a single SQL query getting all the
   // entries for the interval in one go, rather than doing a query for each day.
-  $entries = get_entries_by_area($area_id, $start_date->getTimestamp(), $end_date->getTimestamp());
+  $entries = get_entries_by_area($area_id, $start_date, $end_date);
 
   // We want to build an array containing all the data we want to show and then spit it out.
   $map = new Map($start_date, $end_date, $resolution);

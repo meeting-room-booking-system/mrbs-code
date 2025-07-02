@@ -859,11 +859,11 @@ function add_registrants(int $entry_id, array $registrants) : void
 }
 
 
-// Get all the entries for the area with $area_id in the interval that starts at $interval_start
-// and ends at $interval_start (both Unix timestamps).   Only gets entries for enabled rooms.
+// Get all the entries for the area with $area_id in the interval that starts at $start_date
+// and ends at $end_date (both DateTime objects).  Only get entries for enabled rooms.
 // Returns an array of entries.   Each element of the array is itself an array with keys
 // corresponding to the entry table columns
-function get_entries_by_area(int $area_id, int $interval_start, int $interval_end) : array
+function get_entries_by_area(int $area_id, DateTime $start_date, DateTime $end_date) : array
 {
   // The GROUP BY is necessary to get n_registered to work
   $sql = "SELECT E.*, " .
@@ -872,13 +872,19 @@ function get_entries_by_area(int $area_id, int $interval_start, int $interval_en
             FROM " . _tbl('entry') . " E
        LEFT JOIN " . _tbl('room') . " R ON E.room_id = R.id
        LEFT JOIN " . _tbl('participants') . " P ON P.entry_id = E.id
-           WHERE R.area_id = ?
+           WHERE R.area_id = :area_id
              AND R.disabled = 0
-             AND start_time < ? AND end_time > ?
+             AND start_time < :interval_end AND end_time > :interval_start
         GROUP BY E.id
         ORDER BY start_time, E.id";   // necessary so that multiple bookings appear in the right order
 
-  $res = db()->query($sql, array($area_id, $interval_end, $interval_start));
+  $sql_params = [
+    ':area_id' => $area_id,
+    ':interval_end' => $end_date->getTimestamp(),
+    ':interval_start' => $start_date->getTimestamp()
+  ];
+
+  $res = db()->query($sql, $sql_params);
 
   $result = $res->all_rows_keyed();
 
