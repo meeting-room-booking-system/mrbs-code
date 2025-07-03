@@ -1249,7 +1249,7 @@ function week_room_table_innerhtml(string $view, int $view_all, int $year, int $
 
   // Get the data.  It's much quicker to do a single SQL query getting all the
   // entries for the interval in one go, rather than doing a query for each day.
-  $entries = get_entries_by_room($room_id, $start_date->getTimestamp(), $end_date->getTimestamp());
+  $entries = get_entries_by_room($room_id, $start_date, $end_date);
 
   $map = new Map($start_date, $end_date, $resolution);
   $map->addEntries($entries);
@@ -1622,7 +1622,7 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
 
   // Get the data.  It's much quicker to do a single SQL query getting all the
   // entries for the interval in one go, rather than doing a query for each day.
-  $entries = get_entries_by_room($room, $start_date->getTimestamp(), $end_date->getTimestamp());
+  $entries = get_entries_by_room($room, $start_date, $end_date);
 
   // Draw the days of the month:
   for ($d = 1; $d <= $last_day_of_month; $d++)

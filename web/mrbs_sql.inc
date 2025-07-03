@@ -910,12 +910,12 @@ function get_n_entries_by_room(int $room_id) : int
 }
 
 
-// Get all the entries for the room with $room_id in the interval that starts at $interval_start (if set)
-// and ends at $interval_start (if set) (both Unix timestamps).  The sort order is ASC by default, but
+// Get all the entries for the room with $room_id in the interval that starts at $start_date (if set)
+// and ends at $end_date (if set) (both DateTime objects).  The sort order is ASC by default, but
 // DESC if $desc is TRUE.  If $limit is set then only $limit entries are returned.
 // Returns an array of entries.   Each element of the array is itself an array with keys
 // corresponding to the entry table columns
-function get_entries_by_room(int $room_id, ?int $interval_start, ?int $interval_end, bool $desc=false, ?int $limit=null) : array
+function get_entries_by_room(int $room_id, ?DateTime $start_date, ?DateTime $end_date, bool $desc=false, ?int $limit=null) : array
 {
   $sql_params = [':room_id' => $room_id];
 
@@ -927,14 +927,14 @@ function get_entries_by_room(int $room_id, ?int $interval_start, ?int $interval_
        LEFT JOIN " . _tbl('participants') . " P ON P.entry_id = E.id
            WHERE room_id = :room_id";
 
-  if (isset($interval_start))
+  if (isset($start_date))
   {
-    $sql_params[':interval_start'] = $interval_start;
+    $sql_params[':interval_start'] = $start_date->getTimestamp();
     $sql .= " AND end_time > :interval_start";
   }
-  if (isset($interval_end))
+  if (isset($end_date))
   {
-    $sql_params[':interval_end'] = $interval_end;
+    $sql_params[':interval_end'] = $end_date->getTimestamp();
     $sql .= " AND start_time < :interval_end";
   }
 
