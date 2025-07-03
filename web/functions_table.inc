@@ -1688,7 +1688,7 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
         $vars['view'] = 'week';
         $query = http_build_query($vars, '', '&');
         $html .= '<a class="week_number" href="' . escape_html(multisite("index.php?$query")) . '">';
-        $html .= date("W", gmmktime(12, 0, 0, $month, $d, $year));
+        $html .= $date->format('W');
         $html .= "</a>\n";
       }
       // then put in the day of the month
