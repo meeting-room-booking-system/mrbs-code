@@ -1625,7 +1625,7 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
   $entries = get_entries_by_room($room, $start_date, $end_date);
 
   // Draw the days of the month:
-  for ($d = 1; $d <= $last_day_of_month; $d++)
+  for ($d = 1, $date = clone $start_date; $d <= $last_day_of_month; $d++, $date->modify('+1 day'))
   {
     // Get the slot times
     $start_first_slot = get_start_first_slot($month, $d, $year);
@@ -1654,8 +1654,6 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
     else
     {
       // Add classes for weekends and holidays
-      $date = new DateTime();
-      $date->setDate($year, $month, $d);
       $classes = get_date_classes($date);
 
       $html .= '<td' . ((empty($classes)) ? '' : ' class="' . implode(' ', $classes) . '"') . ">\n";
