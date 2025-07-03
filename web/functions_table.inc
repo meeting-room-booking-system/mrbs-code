@@ -1617,11 +1617,12 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
     $html .= get_blank_day($weekcol);
   }
 
+  $start_date = (new DateTime())->setTimestamp(get_start_first_slot($month, 1, $year));
+  $end_date = (new DateTime())->setTimestamp(get_end_last_slot($month, $last_day_of_month, $year));
+
   // Get the data.  It's much quicker to do a single SQL query getting all the
   // entries for the interval in one go, rather than doing a query for each day.
-  $entries = get_entries_by_room($room,
-                                 get_start_first_slot($month, 1, $year),
-                                 get_end_last_slot($month, $last_day_of_month, $year));
+  $entries = get_entries_by_room($room, $start_date->getTimestamp(), $end_date->getTimestamp());
 
   // Draw the days of the month:
   for ($d = 1; $d <= $last_day_of_month; $d++)
