@@ -1661,11 +1661,11 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
 
       $html .= "<div class=\"cell_header\">\n";
 
-      $vars = array('year'  => $year,
-                    'month' => $month,
-                    'day'   => $d,
-                    'area'  => $area,
-                    'room'  => $room);
+      $vars = [
+        'page_date' => $date->getISODate(),
+        'area'  => $area,
+        'room'  => $room
+      ];
 
       // If it's the first day of the week, show the week number
       if ($view_week_number && (($weekcol + $weekstarts)%DAYS_PER_WEEK == DateTime::firstDayOfWeek($timezone, get_mrbs_locale())))
