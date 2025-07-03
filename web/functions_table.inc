@@ -1638,7 +1638,7 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
     }
 
     // output the day cell
-    if (is_hidden_day(($weekcol + $weekstarts) % DAYS_PER_WEEK))
+    if ($date->isHiddenDay())
     {
       // These days are to be hidden in the display (as they are hidden, just give the
       // day of the week in the header row
