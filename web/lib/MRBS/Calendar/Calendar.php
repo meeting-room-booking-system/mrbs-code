@@ -4,5 +4,5 @@ namespace MRBS\Calendar;
 
 abstract class Calendar
 {
-
+  abstract public function innerHTML() : string;
 }
