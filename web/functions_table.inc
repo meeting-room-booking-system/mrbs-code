@@ -1668,7 +1668,7 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
       ];
 
       // If it's the first day of the week, show the week number
-      if ($view_week_number && (($weekcol + $weekstarts)%DAYS_PER_WEEK == DateTime::firstDayOfWeek($timezone, get_mrbs_locale())))
+      if ($view_week_number && $date->isFirstDayOfWeek(get_mrbs_locale()))
       {
         $vars['view'] = 'week';
         $query = http_build_query($vars, '', '&');
