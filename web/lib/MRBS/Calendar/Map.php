@@ -1,8 +1,17 @@
 <?php
 declare(strict_types=1);
-namespace MRBS;
+namespace MRBS\Calendar;
 
 // A class for building a map of bookings which can be used for constructing the calendar display
+use MRBS\DateTime;
+use MRBS\Exception;
+use function MRBS\get_start_first_slot;
+use function MRBS\get_start_last_slot;
+use function MRBS\nominal_seconds;
+use function MRBS\prepare_entry;
+use function MRBS\round_t_down;
+use function MRBS\round_t_up;
+
 class Map
 {
   private $start_date;
