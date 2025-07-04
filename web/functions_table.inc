@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use MRBS\Calendar\Map;
+
 function get_date_classes(DateTime $date) : array
 {
   $result = array();
