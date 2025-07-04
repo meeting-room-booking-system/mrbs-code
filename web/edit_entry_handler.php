@@ -7,6 +7,7 @@ require_once 'mrbs_sql.inc';
 require_once 'functions_ical.inc';
 require_once 'functions_mail.inc';
 
+use MRBS\Calendar\CalendarDay;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\Form;
 
@@ -846,7 +847,8 @@ try
       switch ($view)
       {
         case 'day':
-          $result['table_innerhtml'] = day_table_innerhtml($view, $year, $month, $day, $area, $room, $timetohighlight);
+          $calendar = new CalendarDay($view, $year, $month, $day, $area, $room, $timetohighlight);
+          $result['table_innerhtml'] = $calendar->innerHTML();
           break;
         case 'week':
           $result['table_innerhtml'] = week_table_innerhtml($view, $view_all, $year, $month, $day, $area, $room, $timetohighlight);

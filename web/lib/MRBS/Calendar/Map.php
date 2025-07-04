@@ -109,7 +109,6 @@ class Map
 
     // s is the number of nominal seconds (ie ignoring DST changes) since the
     // start of the calendar day which has the start of the booking day
-
     if ($this->data_has_been_coalesced)
     {
       throw new Exception("Map: entries cannot be added after output has started");
