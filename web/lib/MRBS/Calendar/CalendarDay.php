@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace MRBS\Calendar;
 
 use MRBS\DateTime;
+use MRBS\Rooms;
 use function MRBS\cell_html;
 use function MRBS\escape_html;
 use function MRBS\get_entries_by_area;
@@ -53,16 +54,14 @@ class CalendarDay extends Calendar
 
     if ($this->kiosk === 'room')
     {
-      $rooms = array(get_room_details($this->room_id));
+      $rooms = new Rooms(null, $this->room_id);
     }
     else
     {
-      $rooms = get_rooms($this->area_id);
+      $rooms = new Rooms($this->area_id);
     }
 
-    $n_rooms = count($rooms);
-
-    if ($n_rooms == 0)
+    if ($rooms->countVisible() == 0)
     {
       // Add an 'empty' data flag so that the JavaScript knows whether this is a real table or not
       return "<tbody data-empty=1><tr><td><h1>" . get_vocab("no_rooms_for_area") . "</h1></td></tr></tbody>";
@@ -76,7 +75,7 @@ class CalendarDay extends Calendar
 
     // If we are in kiosk mode we are not interested in what has already happened.
     // But if we are in periods mode we don't know when the periods occur, so show them all.
-    if (isset($kiosk) && !$enable_periods)
+    if (isset($this->kiosk) && !$enable_periods)
     {
       $now = time();
       $start_next_slot = $start_first_slot + $resolution;
@@ -108,6 +107,7 @@ class CalendarDay extends Calendar
     $n_time_slots = get_n_time_slots() - $skipped_slots;
     $morning_slot_seconds = ((($morningstarts * 60) + $morningstarts_minutes) * 60) + ($skipped_slots * $resolution);
     $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
+
 
     // TABLE HEADER
     $thead = '<thead';
@@ -192,6 +192,11 @@ class CalendarDay extends Calendar
       // with times along the top and rooms down the side
       foreach ($rooms as $room)
       {
+        if ($room->isDisabled() || !$room->isVisible())
+        {
+          continue;
+        }
+
         $tbody .= "<tr>\n";
 
         $vars = array('view'     => 'week',
@@ -200,7 +205,7 @@ class CalendarDay extends Calendar
           'month'    => $this->month,
           'day'      => $this->day,
           'area'     => $this->area_id,
-          'room'     => $room['id']);
+          'room'     => $room->id);
 
         $row_label = room_cell_html($room, $vars);
         $tbody .= $row_label;
@@ -216,10 +221,10 @@ class CalendarDay extends Calendar
             $is_invalid[$s] = $is_possibly_invalid && is_invalid_datetime(0, 0, $s, $this->month, $this->day, $this->year);
           }
           // set up the query vars to be used for the link in the cell
-          $query_vars = get_query_vars($this->view, $this->area_id, $room['id'], $this->month, $this->day, $this->year, $s);
+          $query_vars = get_query_vars($this->view, $this->area_id, $room->id, $this->month, $this->day, $this->year, $s);
 
           // and then draw the cell
-          $tbody .= cell_html($map->slot($room['id'], 0, $s), $query_vars, $is_invalid[$s]);
+          $tbody .= cell_html($map->slot($room->id, 0, $s), $query_vars, $is_invalid[$s]);
         }  // end for (looping through the times)
         if ($row_labels_both_sides)
         {
@@ -247,9 +252,9 @@ class CalendarDay extends Calendar
           'area' => $this->area_id
         );
 
-        if (isset($this->room_id))
+        if (isset($room_id))
         {
-          $vars['room'] = $this->room_id;
+          $vars['room'] = $room_id;
         }
 
         if (isset($this->timetohighlight) && ($s == $this->timetohighlight))
@@ -276,9 +281,14 @@ class CalendarDay extends Calendar
         // Loop through the list of rooms we have for this area
         foreach ($rooms as $room)
         {
+          if ($room->isDisabled() || !$room->isVisible())
+          {
+            continue;
+          }
+
           // set up the query vars to be used for the link in the cell
-          $query_vars = get_query_vars($this->view, $this->area_id, $room['id'], $this->month, $this->day, $this->year, $s);
-          $tbody .= cell_html($map->slot($room['id'], 0, $s), $query_vars, $is_invalid);
+          $query_vars = get_query_vars($this->view, $this->area_id, $room->id, $this->month, $this->day, $this->year, $s);
+          $tbody .= cell_html($map->slot($room->id, 0, $s), $query_vars, $is_invalid);
         }
 
         // next lines to display times on right side
