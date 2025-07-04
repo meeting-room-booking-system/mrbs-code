@@ -570,7 +570,7 @@ function day_table_innerhtml(string $view, int $year, int $month, int $day, int 
   $start_date = (new DateTime())->setTimestamp($start_first_slot);
   $end_date = (new DateTime())->setTimestamp($start_last_slot + $resolution);
 
-  $entries = get_entries_by_area($area_id, $start_date->getTimestamp(), $end_date->getTimestamp());
+  $entries = get_entries_by_area($area_id, $start_date, $end_date);
 
   // We want to build a map containing all the data we want to show
   // and then spit it out.
@@ -976,7 +976,7 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
 
   // Get the data.  It's much quicker to do a single SQL query getting all the
   // entries for the interval in one go, rather than doing a query for each day.
-  $entries = get_entries_by_area($area_id, $start_date->getTimestamp(), $end_date->getTimestamp());
+  $entries = get_entries_by_area($area_id, $start_date, $end_date);
 
   // We want to build an array containing all the data we want to show and then spit it out.
   $map = new Map($start_date, $end_date, $resolution);
@@ -1252,7 +1252,7 @@ function week_room_table_innerhtml(string $view, int $view_all, int $year, int $
 
   // Get the data.  It's much quicker to do a single SQL query getting all the
   // entries for the interval in one go, rather than doing a query for each day.
-  $entries = get_entries_by_room($room_id, $start_date->getTimestamp(), $end_date->getTimestamp());
+  $entries = get_entries_by_room($room_id, $start_date, $end_date);
 
   $map = new Map($start_date, $end_date, $resolution);
   $map->addEntries($entries);
@@ -1620,14 +1620,15 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
     $html .= get_blank_day($weekcol);
   }
 
+  $start_date = (new DateTime())->setTimestamp(get_start_first_slot($month, 1, $year));
+  $end_date = (new DateTime())->setTimestamp(get_end_last_slot($month, $last_day_of_month, $year));
+
   // Get the data.  It's much quicker to do a single SQL query getting all the
   // entries for the interval in one go, rather than doing a query for each day.
-  $entries = get_entries_by_room($room,
-                                 get_start_first_slot($month, 1, $year),
-                                 get_end_last_slot($month, $last_day_of_month, $year));
+  $entries = get_entries_by_room($room, $start_date, $end_date);
 
   // Draw the days of the month:
-  for ($d = 1; $d <= $last_day_of_month; $d++)
+  for ($d = 1, $date = clone $start_date; $d <= $last_day_of_month; $d++, $date->modify('+1 day'))
   {
     // Get the slot times
     $start_first_slot = get_start_first_slot($month, $d, $year);
@@ -1640,7 +1641,7 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
     }
 
     // output the day cell
-    if (is_hidden_day(($weekcol + $weekstarts) % DAYS_PER_WEEK))
+    if ($date->isHiddenDay())
     {
       // These days are to be hidden in the display (as they are hidden, just give the
       // day of the week in the header row
@@ -1656,8 +1657,6 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
     else
     {
       // Add classes for weekends and holidays
-      $date = new DateTime();
-      $date->setDate($year, $month, $d);
       $classes = get_date_classes($date);
 
       $html .= '<td' . ((empty($classes)) ? '' : ' class="' . implode(' ', $classes) . '"') . ">\n";
@@ -1665,19 +1664,19 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
 
       $html .= "<div class=\"cell_header\">\n";
 
-      $vars = array('year'  => $year,
-                    'month' => $month,
-                    'day'   => $d,
-                    'area'  => $area,
-                    'room'  => $room);
+      $vars = [
+        'page_date' => $date->getISODate(),
+        'area'  => $area,
+        'room'  => $room
+      ];
 
       // If it's the first day of the week, show the week number
-      if ($view_week_number && (($weekcol + $weekstarts)%DAYS_PER_WEEK == DateTime::firstDayOfWeek($timezone, get_mrbs_locale())))
+      if ($view_week_number && $date->isFirstDayOfWeek(get_mrbs_locale()))
       {
         $vars['view'] = 'week';
         $query = http_build_query($vars, '', '&');
         $html .= '<a class="week_number" href="' . escape_html(multisite("index.php?$query")) . '">';
-        $html .= date("W", gmmktime(12, 0, 0, $month, $d, $year));
+        $html .= $date->format('W');
         $html .= "</a>\n";
       }
       // then put in the day of the month

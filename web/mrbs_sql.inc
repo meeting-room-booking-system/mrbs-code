@@ -859,11 +859,11 @@ function add_registrants(int $entry_id, array $registrants) : void
 }
 
 
-// Get all the entries for the area with $area_id in the interval that starts at $interval_start
-// and ends at $interval_start (both Unix timestamps).   Only gets entries for enabled rooms.
+// Get all the entries for the area with $area_id in the interval that starts at $start_date
+// and ends at $end_date (both DateTime objects).  Only get entries for enabled rooms.
 // Returns an array of entries.   Each element of the array is itself an array with keys
 // corresponding to the entry table columns
-function get_entries_by_area(int $area_id, int $interval_start, int $interval_end) : array
+function get_entries_by_area(int $area_id, DateTime $start_date, DateTime $end_date) : array
 {
   // The GROUP BY is necessary to get n_registered to work
   $sql = "SELECT E.*, " .
@@ -872,13 +872,19 @@ function get_entries_by_area(int $area_id, int $interval_start, int $interval_en
             FROM " . _tbl('entry') . " E
        LEFT JOIN " . _tbl('room') . " R ON E.room_id = R.id
        LEFT JOIN " . _tbl('participants') . " P ON P.entry_id = E.id
-           WHERE R.area_id = ?
+           WHERE R.area_id = :area_id
              AND R.disabled = 0
-             AND start_time < ? AND end_time > ?
+             AND start_time < :interval_end AND end_time > :interval_start
         GROUP BY E.id
         ORDER BY start_time, E.id";   // necessary so that multiple bookings appear in the right order
 
-  $res = db()->query($sql, array($area_id, $interval_end, $interval_start));
+  $sql_params = [
+    ':area_id' => $area_id,
+    ':interval_end' => $end_date->getTimestamp(),
+    ':interval_start' => $start_date->getTimestamp()
+  ];
+
+  $res = db()->query($sql, $sql_params);
 
   $result = $res->all_rows_keyed();
 
@@ -904,12 +910,12 @@ function get_n_entries_by_room(int $room_id) : int
 }
 
 
-// Get all the entries for the room with $room_id in the interval that starts at $interval_start (if set)
-// and ends at $interval_start (if set) (both Unix timestamps).  The sort order is ASC by default, but
+// Get all the entries for the room with $room_id in the interval that starts at $start_date (if set)
+// and ends at $end_date (if set) (both DateTime objects).  The sort order is ASC by default, but
 // DESC if $desc is TRUE.  If $limit is set then only $limit entries are returned.
 // Returns an array of entries.   Each element of the array is itself an array with keys
 // corresponding to the entry table columns
-function get_entries_by_room(int $room_id, ?int $interval_start, ?int $interval_end, bool $desc=false, ?int $limit=null) : array
+function get_entries_by_room(int $room_id, ?DateTime $start_date, ?DateTime $end_date, bool $desc=false, ?int $limit=null) : array
 {
   $sql_params = [':room_id' => $room_id];
 
@@ -921,14 +927,14 @@ function get_entries_by_room(int $room_id, ?int $interval_start, ?int $interval_
        LEFT JOIN " . _tbl('participants') . " P ON P.entry_id = E.id
            WHERE room_id = :room_id";
 
-  if (isset($interval_start))
+  if (isset($start_date))
   {
-    $sql_params[':interval_start'] = $interval_start;
+    $sql_params[':interval_start'] = $start_date->getTimestamp();
     $sql .= " AND end_time > :interval_start";
   }
-  if (isset($interval_end))
+  if (isset($end_date))
   {
-    $sql_params[':interval_end'] = $interval_end;
+    $sql_params[':interval_end'] = $end_date->getTimestamp();
     $sql .= " AND start_time < :interval_end";
   }
 

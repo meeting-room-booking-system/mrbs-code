@@ -91,6 +91,14 @@ class DateTime extends \DateTime
   }
 
 
+  // Tests whether this is the first day of the week in the locale.
+  // If $locale is null, the default locale will be used.
+  public function isFirstDayOfWeek(?string $locale = null) : bool
+  {
+    return ($this->getDayOfWeek() === self::firstDayOfWeek($this->getTimezone()->getName(), $locale));
+  }
+
+
   // TODO: make $relative an object?
   // Sets the day to $relative, where relative is an RFC5545 relative day,
   // eg "-2SU".  Returns FALSE if the relative day doesn't exist in this
@@ -170,6 +178,12 @@ class DateTime extends \DateTime
   public function getDay() : int
   {
     return intval($this->format('j'));
+  }
+
+
+  public function getDayOfWeek() : int
+  {
+    return intval($this->format('w'));
   }
 
 
