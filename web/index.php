@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use MRBS\Calendar\CalendarDay;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementSelect;
 use MRBS\Form\Form;
@@ -461,7 +462,8 @@ switch ($view)
     {
       trigger_error("Unknown view '$view'", E_USER_WARNING);
     }
-    $inner_html = day_table_innerhtml($view, $year, $month, $day, $area, $room, $timetohighlight, $kiosk);
+    $calendar = new CalendarDay($view, $year, $month, $day, $area, $room, $timetohighlight, $kiosk);
+    $inner_html = $calendar->innerHTML();
     break;
 }
 
