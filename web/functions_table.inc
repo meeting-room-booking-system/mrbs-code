@@ -502,20 +502,6 @@ function get_times_header_cells(int $start, int $end, int $increment) : string
 }
 
 
-function get_rooms_header_cells(array $rooms, array $vars) : string
-{
-  $html = '';
-
-  foreach($rooms as $room)
-  {
-    $vars['room'] = $room['id'];
-    $html .= room_cell_html($room, $vars);
-  }
-
-  return $html;
-}
-
-
 // Returns the HTML for a booking, or a free set of slots
 //    $slots    The number of slots occupied
 //    $classes  A scalar or array giving the class or classes to be used in the class attribute
