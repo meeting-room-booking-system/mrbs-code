@@ -11,7 +11,6 @@ use function MRBS\get_n_time_slots;
 use function MRBS\get_query_vars;
 use function MRBS\get_room_details;
 use function MRBS\get_rooms;
-use function MRBS\get_rooms_header_cells;
 use function MRBS\get_slots;
 use function MRBS\get_start_first_slot;
 use function MRBS\get_start_last_slot;
@@ -160,7 +159,7 @@ class CalendarDay extends Calendar
         'day'      => $this->day,
         'area'     => $this->area_id);
 
-      $header_inner .= get_rooms_header_cells($rooms, $vars);
+      $header_inner .= $this->roomsHeaderCellsHTML($rooms, $vars);
     }  // end standard view (for the header)
 
     // next: line to display times on right side
@@ -305,4 +304,19 @@ class CalendarDay extends Calendar
 
     return $thead . $tfoot . $tbody;
   }
+
+
+  private function roomsHeaderCellsHTML(array $rooms, array $vars) : string
+  {
+    $html = '';
+
+    foreach($rooms as $room)
+    {
+      $vars['room'] = $room['id'];
+      $html .= room_cell_html($room, $vars);
+    }
+
+    return $html;
+  }
+
 }
