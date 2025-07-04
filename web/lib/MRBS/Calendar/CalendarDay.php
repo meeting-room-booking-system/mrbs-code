@@ -306,13 +306,17 @@ class CalendarDay extends Calendar
   }
 
 
-  private function roomsHeaderCellsHTML(array $rooms, array $vars) : string
+  private function roomsHeaderCellsHTML(Rooms $rooms, array $vars) : string
   {
     $html = '';
 
     foreach($rooms as $room)
     {
-      $vars['room'] = $room['id'];
+      if ($room->isDisabled() || !$room->isVisible())
+      {
+        continue;
+      }
+      $vars['room'] = $room->id;
       $html .= room_cell_html($room, $vars);
     }
 
