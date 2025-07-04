@@ -21,7 +21,7 @@ use function MRBS\multisite;
 use function MRBS\room_cell_html;
 use function MRBS\time_cell_html;
 
-class CalendarDay extends Calendar
+class CalendarDay extends CalendarSlots
 {
   private $day;
   private $month;
