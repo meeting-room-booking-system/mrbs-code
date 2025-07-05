@@ -414,38 +414,6 @@ function get_n_time_slots() : int
 }
 
 
-// $s is nominal seconds
-function get_query_vars(string $view, int $area, int $room, int $month, int $day, int $year, int $s) : array
-{
-  global $morningstarts, $morningstarts_minutes;
-
-  $result = array();
-
-  // check to see if the time is really on the next day
-  $date = getdate(mktime(0, 0, $s, $month, $day, $year));
-  if (hm_before($date,
-                array('hours' => $morningstarts, 'minutes' => $morningstarts_minutes)))
-  {
-    $date['hours'] += 24;
-  }
-  $hour = $date['hours'];
-  $minute = $date['minutes'];
-  $period = period_index_nominal($s);
-
-  $vars = array('view'  => $view,
-                'year'  => $year,
-                'month' => $month,
-                'day'   => $day,
-                'area'  => $area);
-
-  $result['booking']     = $vars;
-  $result['new_periods'] = array_merge($vars, array('room' => $room, 'period' => $period));
-  $result['new_times']   = array_merge($vars, array('room' => $room, 'hour' => $hour, 'minute' => $minute));
-
-  return $result;
-}
-
-
 function get_times_header_cells(int $start, int $end, int $increment) : string
 {
   global $enable_periods;
