@@ -261,12 +261,12 @@ class CalendarSlotsWeek extends CalendarSlots
             continue;
           }
 
-          // set up the query vars to be used for the link in the cell
-          $this_day = $date->getDay();
-          $this_month = $date->getMonth();
-          $this_year = $date->getYear();
-          $is_invalid = $is_possibly_invalid[$j] && is_invalid_datetime(0, 0, $s, $this_month, $this_day, $this_year);
-          $query_vars = get_query_vars($this->view, $this->area_id, $this->room_id, $this_month, $this_day, $this_year, $s);
+          // Set up the query vars to be used for the link in the cell.
+          $cell_day = $date->getDay();
+          $cell_month = $date->getMonth();
+          $cell_year = $date->getYear();
+          $is_invalid = $is_possibly_invalid[$j] && is_invalid_datetime(0, 0, $s, $cell_month, $cell_day, $cell_year);
+          $query_vars = get_query_vars($this->view, $this->area_id, $this->room_id, $cell_month, $cell_day, $cell_year, $s);
 
           // and then draw the cell
           $tbody .= cell_html($map->slot($this->room_id, $j, $s), $query_vars, $is_invalid);
