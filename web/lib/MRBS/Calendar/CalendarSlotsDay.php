@@ -208,7 +208,7 @@ class CalendarSlotsDay extends CalendarSlots
             $is_invalid[$s] = $is_possibly_invalid && is_invalid_datetime(0, 0, $s, $this->month, $this->day, $this->year);
           }
           // set up the query vars to be used for the link in the cell
-          $query_vars = $this->getQueryVars($this->view, $this->area_id, $room['id'], $this->month, $this->day, $this->year, $s);
+          $query_vars = $this->getQueryVars($room['id'], $this->month, $this->day, $this->year, $s);
 
           // and then draw the cell
           $tbody .= cell_html($map->slot($room['id'], 0, $s), $query_vars, $is_invalid[$s]);
@@ -269,7 +269,7 @@ class CalendarSlotsDay extends CalendarSlots
         foreach ($rooms as $room)
         {
           // set up the query vars to be used for the link in the cell
-          $query_vars = $this->getQueryVars($this->view, $this->area_id, $room['id'], $this->month, $this->day, $this->year, $s);
+          $query_vars = $this->getQueryVars($room['id'], $this->month, $this->day, $this->year, $s);
           $tbody .= cell_html($map->slot($room['id'], 0, $s), $query_vars, $is_invalid);
         }
 
