@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace MRBS\Calendar;
 
 use MRBS\DateTime;
+use MRBS\Room;
 use function MRBS\cell_html;
 use function MRBS\datetime_format;
 use function MRBS\day_cell_html;
@@ -56,10 +57,9 @@ class CalendarSlotsWeek extends CalendarSlots
     global $resolution, $morningstarts, $morningstarts_minutes;
     global $weekstarts, $datetime_formats;
 
-    // Check that we've got a valid, enabled room
-    $room_name = get_room_name($this->room_id);
-
-    if (is_null($room_name) || (!is_visible($this->room_id)))
+    // Check that we've got a valid, enabled and visible room
+    $room = Room::getById($this->room_id);
+    if (!isset($room) || $room->isDisabled() || !$room->isVisible())
     {
       // No rooms have been created yet, or else they are all disabled
       // Add an 'empty' data flag so that the JavaScript knows whether this is a real table or not
