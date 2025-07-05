@@ -8,8 +8,6 @@ use function MRBS\cell_html;
 use function MRBS\escape_html;
 use function MRBS\get_entries_by_area;
 use function MRBS\get_n_time_slots;
-use function MRBS\get_room_details;
-use function MRBS\get_rooms;
 use function MRBS\get_slots;
 use function MRBS\get_start_first_slot;
 use function MRBS\get_start_last_slot;
