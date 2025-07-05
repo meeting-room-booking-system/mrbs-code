@@ -7,6 +7,15 @@ use function MRBS\period_index_nominal;
 
 abstract class CalendarSlots extends Calendar
 {
+  protected $day;
+  protected $month;
+  protected $year;
+  protected $area_id;
+  protected $room_id;
+  protected $view;
+  protected $timetohighlight;
+
+
   // $s is nominal seconds
   protected function getQueryVars(string $view, int $area, int $room, int $month, int $day, int $year, int $s) : array
   {

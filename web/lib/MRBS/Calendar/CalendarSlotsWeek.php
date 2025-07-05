@@ -26,14 +26,7 @@ use function MRBS\time_cell_html;
 
 class CalendarSlotsWeek extends CalendarSlots
 {
-  private $day;
-  private $month;
-  private $year;
-  private $area_id;
-  private $room_id;
-  private $view;
   private $view_all;
-  private $timetohighlight;
 
 
   public function __construct(string $view, int $view_all, int $year, int $month, int $day, int $area_id, int $room_id, ?int $timetohighlight=null)
