@@ -189,7 +189,7 @@ class CalendarSlotsWeek extends CalendarSlots
 
         $day_cell_link = 'index.php?' . http_build_query($vars, '', '&');
         $day_cell_link = multisite($day_cell_link);
-        $row_label = $this->dayCellHTML($day_cell_text, $day_cell_link, $date->getISODate());
+        $row_label = $this->dayCellHTML($day_cell_text, $day_cell_link, $date);
         $tbody .= $row_label;
 
         for ($s = $morning_slot_seconds;
@@ -290,15 +290,15 @@ class CalendarSlotsWeek extends CalendarSlots
   // Draw a day cell to be used in the header rows/columns of the week view
   //    $text     contains the date, formatted as a string (not escaped - allowed to contain HTML tags)
   //    $link     the href to be used for the link
-  //    $date     the date in yyyy-mm-dd format
-  private function dayCellHTML(string $text, string $link, string $iso_date) : string
+  //    $date     the date
+  private function dayCellHTML(string $text, string $link, DateTime $date) : string
   {
     $html = '';
     // Put the date into a data attribute so that it can be picked up by JavaScript
-    $html .= '<th data-date="' . escape_html($iso_date) . '"';
+    $html .= '<th data-date="' . escape_html($date->getISODate()) . '"';
 
     // Add classes for weekends and holidays
-    $classes = get_date_classes(new DateTime($iso_date));
+    $classes = get_date_classes($date);
     if (!empty($classes))
     {
       $html .= ' class="' . implode(' ', $classes) . '"';
