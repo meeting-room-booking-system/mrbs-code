@@ -5,9 +5,9 @@ namespace MRBS\Calendar;
 use MRBS\DateTime;
 use function MRBS\cell_html;
 use function MRBS\datetime_format;
-use function MRBS\day_cell_html;
 use function MRBS\day_of_MRBS_week;
 use function MRBS\escape_html;
+use function MRBS\get_date_classes;
 use function MRBS\get_entries_by_room;
 use function MRBS\get_n_time_slots;
 use function MRBS\get_query_vars;
@@ -189,7 +189,7 @@ class CalendarSlotsWeek extends CalendarSlots
 
         $day_cell_link = 'index.php?' . http_build_query($vars, '', '&');
         $day_cell_link = multisite($day_cell_link);
-        $row_label = day_cell_html($day_cell_text, $day_cell_link, $date->getISODate());
+        $row_label = $this->dayCellHTML($day_cell_text, $day_cell_link, $date->getISODate());
         $tbody .= $row_label;
 
         for ($s = $morning_slot_seconds;
@@ -284,5 +284,32 @@ class CalendarSlotsWeek extends CalendarSlots
     $tbody .= "</tbody>\n";
 
     return $thead . $tfoot . $tbody;
+  }
+
+
+  // Draw a day cell to be used in the header rows/columns of the week view
+  //    $text     contains the date, formatted as a string (not escaped - allowed to contain HTML tags)
+  //    $link     the href to be used for the link
+  //    $date     the date in yyyy-mm-dd format
+  private function dayCellHTML(string $text, string $link, string $iso_date) : string
+  {
+    $html = '';
+    // Put the date into a data attribute so that it can be picked up by JavaScript
+    $html .= '<th data-date="' . escape_html($iso_date) . '"';
+
+    // Add classes for weekends and holidays
+    $classes = get_date_classes(new DateTime($iso_date));
+    if (!empty($classes))
+    {
+      $html .= ' class="' . implode(' ', $classes) . '"';
+    }
+
+    $html .= '>';
+    $html .= '<a href="' . escape_html($link) . '"' .
+      ' title="' . escape_html(get_vocab("viewday")) . '">';
+    $html .= $text;  // allowed to contain HTML tags - do not escape
+    $html .= '</a>';
+    $html .= "</th>\n";
+    return $html;
   }
 }

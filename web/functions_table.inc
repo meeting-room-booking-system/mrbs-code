@@ -353,32 +353,6 @@ function room_cell_html(array $room, array $vars) : string
   return $html;
 }
 
-// Draw a day cell to be used in the header rows/columns of the week view
-//    $text     contains the date, formatted as a string (not escaped - allowed to contain HTML tags)
-//    $link     the href to be used for the link
-//    $date     the date in yyyy-mm-dd format
-function day_cell_html(string $text, string $link, string $iso_date) : string
-{
-  $html = '';
-  // Put the date into a data attribute so that it can be picked up by JavaScript
-  $html .= '<th data-date="' . escape_html($iso_date) . '"';
-
-  // Add classes for weekends and holidays
-  $classes = get_date_classes(new DateTime($iso_date));
-  if (!empty($classes))
-  {
-    $html .= ' class="' . implode(' ', $classes) . '"';
-  }
-
-  $html .= '>';
-  $html .= '<a href="' . escape_html($link) . '"' .
-           ' title="' . escape_html(get_vocab("viewday")) . '">';
-  $html .= $text;  // allowed to contain HTML tags - do not escape
-  $html .= '</a>';
-  $html .= "</th>\n";
-  return $html;
-}
-
 
 // Output a start table cell tag <td> with class of $classes.
 // $classes can be either a string or an array of classes
