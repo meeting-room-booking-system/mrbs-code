@@ -11,7 +11,6 @@ use function MRBS\escape_html;
 use function MRBS\get_date_classes;
 use function MRBS\get_entries_by_room;
 use function MRBS\get_n_time_slots;
-use function MRBS\get_query_vars;
 use function MRBS\get_room_name;
 use function MRBS\get_slots;
 use function MRBS\get_start_first_slot;
@@ -198,7 +197,7 @@ class CalendarSlotsWeek extends CalendarSlots
         {
           $is_invalid = $is_possibly_invalid[$j] && is_invalid_datetime(0, 0, $s, $date->getMonth(), $date->getDay(), $date->getYear());
           // set up the query vars to be used for the link in the cell
-          $query_vars = get_query_vars($this->view, $this->area_id, $this->room_id, $date->getMonth(), $date->getDay(), $date->getYear(), $s);
+          $query_vars = $this->getQueryVars($this->view, $this->area_id, $this->room_id, $date->getMonth(), $date->getDay(), $date->getYear(), $s);
           // and then draw the cell
           $tbody .= cell_html($map->slot($this->room_id, $j, $s), $query_vars, $is_invalid);
         }  // end looping through the time slots
@@ -266,7 +265,7 @@ class CalendarSlotsWeek extends CalendarSlots
           $cell_month = $date->getMonth();
           $cell_year = $date->getYear();
           $is_invalid = $is_possibly_invalid[$j] && is_invalid_datetime(0, 0, $s, $cell_month, $cell_day, $cell_year);
-          $query_vars = get_query_vars($this->view, $this->area_id, $this->room_id, $cell_month, $cell_day, $cell_year, $s);
+          $query_vars = $this->getQueryVars($this->view, $this->area_id, $this->room_id, $cell_month, $cell_day, $cell_year, $s);
 
           // and then draw the cell
           $tbody .= cell_html($map->slot($this->room_id, $j, $s), $query_vars, $is_invalid);
