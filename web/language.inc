@@ -385,7 +385,8 @@ function get_qualifiers(?string $header, bool $translate_wildcard=false) : array
       }
       else
       {
-        trigger_error("Unexpected specifier format '$specifier'", E_USER_NOTICE);
+        $message = "Unexpected specifier format '$specifier' in the Accept-Language request header sent by the client.";
+        trigger_error($message, E_USER_NOTICE);
       }
 
       if (isset($weight))
