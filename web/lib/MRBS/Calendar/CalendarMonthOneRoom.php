@@ -3,8 +3,8 @@ declare(strict_types=1);
 namespace MRBS\Calendar;
 
 use MRBS\DateTime;
+use function MRBS\datetime_format;
 use function MRBS\escape_html;
-use function MRBS\get_booking_summary;
 use function MRBS\get_date_classes;
 use function MRBS\get_end_last_slot;
 use function MRBS\get_entries_by_room;
@@ -14,10 +14,12 @@ use function MRBS\get_room_name;
 use function MRBS\get_start_first_slot;
 use function MRBS\get_table_head;
 use function MRBS\get_vocab;
+use function MRBS\hour_min_format;
 use function MRBS\is_book_admin;
 use function MRBS\is_hidden_day;
 use function MRBS\is_visible;
 use function MRBS\multisite;
+use function MRBS\period_time_string;
 use function MRBS\prepare_entry;
 use function MRBS\session;
 
@@ -202,7 +204,7 @@ class CalendarMonthOneRoom extends Calendar
 
           $query = http_build_query($vars, '', '&');
           $booking_link = multisite("view_entry.php?$query");
-          $slot_text = get_booking_summary(
+          $slot_text = $this->bookingSummaryHTML(
             $entry['start_time'],
             $entry['end_time'],
             $start_first_slot,
@@ -269,6 +271,86 @@ class CalendarMonthOneRoom extends Calendar
     $html .= "</tbody>\n";
 
     return $html;
+  }
+
+
+  // Describe the start and end time, accounting for "all day"
+  // and for entries starting before/ending after today.
+  // There are 9 cases, for start time < = or > midnight this morning,
+  // and end time < = or > midnight tonight.
+  private function bookingSummaryHTML(int $start, int $end, int $day_start, int $day_end) : string
+  {
+    global $enable_periods, $area;
+
+    // Use ~ (not -) to separate the start and stop times, because MSIE
+    // will incorrectly line break after a -.
+    $separator = '~';
+    $after_today = "==>";
+    $before_today = "<==";
+    $midnight = "24:00";  // need to fix this so it works with AM/PM configurations (and for that matter 24h)
+    $all_day = get_vocab('all_day');
+
+    if ($enable_periods)
+    {
+      $start_str = escape_html(period_time_string($start, $area));
+      $end_str   = escape_html(period_time_string($end, $area, -1));
+    }
+    else
+    {
+      $start_str = escape_html(datetime_format(hour_min_format(), $start));
+      $end_str   = escape_html(datetime_format(hour_min_format(), $end));
+    }
+
+    switch (self::cmp3($start, $day_start) . self::cmp3($end, $day_end + 1))
+    {
+      case "> < ":         // Starts after midnight, ends before midnight
+      case "= < ":         // Starts at midnight, ends before midnight
+        $result = $start_str;
+        // Don't bother showing the end if it's the same as the start period
+        if ($end_str !== $start_str)
+        {
+          $result .= $separator . $end_str;
+        }
+        break;
+      case "> = ":         // Starts after midnight, ends at midnight
+        $result = $start_str . $separator . $midnight;
+        break;
+      case "> > ":         // Starts after midnight, continues tomorrow
+        $result = $start_str . $separator . $after_today;
+        break;
+      case "= = ":         // Starts at midnight, ends at midnight
+        $result = $all_day;
+        break;
+      case "= > ":         // Starts at midnight, continues tomorrow
+        $result = $all_day . $after_today;
+        break;
+      case "< < ":         // Starts before today, ends before midnight
+        $result = $before_today . $separator .  $end_str;
+        break;
+      case "< = ":         // Starts before today, ends at midnight
+        $result = $before_today . $all_day;
+        break;
+      case "< > ":         // Starts before today, continues tomorrow
+        $result = $before_today . $all_day . $after_today;
+        break;
+    }
+
+    return $result;
+  }
+
+
+  // 3-value compare: Returns result of compare as "< " "= " or "> ".
+  private static function cmp3(int $a, int $b) : string
+  {
+    if ($a < $b)
+    {
+      return "< ";
+    }
+    if ($a == $b)
+    {
+      return "= ";
+    }
+    return "> ";
   }
 
 
