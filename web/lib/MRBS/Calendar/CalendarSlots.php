@@ -266,7 +266,7 @@ abstract class CalendarSlots extends Calendar
   }
 
 
-  protected function timesHeaderCellsHTML(int $start, int $end, int $increment) : string
+  protected function theadThTimeCellsHTML(int $start, int $end, int $increment) : string
   {
     global $enable_periods;
 
