@@ -14,7 +14,6 @@ use function MRBS\get_room_name;
 use function MRBS\get_slots;
 use function MRBS\get_start_first_slot;
 use function MRBS\get_start_last_slot;
-use function MRBS\get_times_header_cells;
 use function MRBS\get_vocab;
 use function MRBS\is_invalid_datetime;
 use function MRBS\is_possibly_invalid;
@@ -130,7 +129,7 @@ class CalendarSlotsWeek extends CalendarSlots
       $header_inner = "<tr>\n";
       $first_last_html = '<th class="first_last">' . $label . "</th>\n";
       $header_inner .= $first_last_html;
-      $header_inner .= get_times_header_cells($morning_slot_seconds, $evening_slot_seconds, $resolution);
+      $header_inner .= $this->timesHeaderCellsHTML($morning_slot_seconds, $evening_slot_seconds, $resolution);
       // next line to display times on right side
       if ($row_labels_both_sides)
       {
