@@ -648,42 +648,6 @@ function get_slots(int $month, int $day, int $year, int $n_days=1, bool $day_cel
 }
 
 
-// Gets the table header row for the single room month view
-function get_table_head() : string
-{
-  global $weekstarts;
-
-  $html = '';
-
-  // Weekday name header row:
-  $html .= "<thead>\n";
-  $html .= "<tr>\n";
-  for ($i = 0; $i< DAYS_PER_WEEK; $i++)
-  {
-    $classes = [];
-    $dow = ($i + $weekstarts) % DAYS_PER_WEEK;
-    if (is_hidden_day($dow))
-    {
-      $classes[] = 'hidden_day';
-    }
-    if (is_weekend($dow))
-    {
-      $classes[] = 'weekend';
-    }
-    $html .= '<th';
-    if (!empty($classes))
-    {
-      $html .= ' class="' . implode(' ', $classes) . '"';
-    }
-    $html .= '>' . day_name(($i + $weekstarts)%DAYS_PER_WEEK) . '</th>';
-  }
-  $html .= "\n</tr>\n";
-  $html .= "</thead>\n";
-
-  return $html;
-}
-
-
 function month_table_innerhtml(string $view, int $view_all, int $year, int $month, int $day, int $area, int $room) : string
 {
 
