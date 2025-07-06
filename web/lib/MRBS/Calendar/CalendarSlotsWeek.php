@@ -19,7 +19,6 @@ use function MRBS\is_possibly_invalid;
 use function MRBS\is_visible;
 use function MRBS\multiday_header_rows;
 use function MRBS\multisite;
-use function MRBS\time_cell_html;
 
 class CalendarSlotsWeek extends CalendarSlots
 {
@@ -239,7 +238,7 @@ class CalendarSlotsWeek extends CalendarSlots
         }
         $tbody .= ">\n";
 
-        $tbody .= time_cell_html($s, $url);
+        $tbody .= $this->tbodyThTimeCellHTML($s, $url);
 
 
         // See note above: weekday==0 is day $weekstarts, not necessarily Sunday.
@@ -265,7 +264,7 @@ class CalendarSlotsWeek extends CalendarSlots
         // next lines to display times on right side
         if ($row_labels_both_sides)
         {
-          $tbody .= time_cell_html($s, $url);
+          $tbody .= $this->tbodyThTimeCellHTML($s, $url);
         }
 
         $tbody .= "</tr>\n";

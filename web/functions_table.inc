@@ -142,31 +142,6 @@ function get_timeslot_text(int $s, int $resolution) : string
   return $result;
 }
 
-// Draw a time cell to be used in the first and last columns of the day and week views
-//    $s                 the number of seconds since the start of the day (nominal - not adjusted for DST)
-//    $url               the url to form the basis of the link in the time cell
-function time_cell_html(int $s, string $url) : string
-{
-  global $enable_periods, $resolution;
-
-  $html = '';
-
-  $html .= "<th data-seconds=\"$s\">";
-  $html .= '<a href="' . escape_html($url) . '"  title="' . get_vocab("highlight_line") . "\">";
-
-  if ($enable_periods)
-  {
-    $html .= escape_html(period_name_nominal($s));
-  }
-  else
-  {
-    $html .= escape_html(get_timeslot_text($s, $resolution));
-  }
-
-  $html .= "</a></th>\n";
-
-  return $html;
-}
 
 // Draw a room cell to be used in the header rows/columns of the calendar views
 //    $room    contains the room details
