@@ -5,7 +5,6 @@ namespace MRBS\Calendar;
 use MRBS\DateTime;
 use MRBS\Room;
 use function MRBS\escape_html;
-use function MRBS\get_blank_day;
 use function MRBS\get_booking_summary;
 use function MRBS\get_date_classes;
 use function MRBS\get_end_last_slot;
@@ -73,7 +72,7 @@ class CalendarMonthOneRoom extends Calendar
     // Skip days in week before the start of the month:
     for ($weekcol = 0; $weekcol < $weekday_start; $weekcol++)
     {
-      $html .= get_blank_day($weekcol);
+      $html .= $this->tdBlankDayHTML($weekcol);
     }
 
     $start_date = (new DateTime())->setTimestamp(get_start_first_slot($this->month, 1, $this->year));
@@ -267,7 +266,7 @@ class CalendarMonthOneRoom extends Calendar
     {
       for (; $weekcol < DAYS_PER_WEEK; $weekcol++)
       {
-        $html .= get_blank_day($weekcol);
+        $html .= $this->tdBlankDayHTML($weekcol);
       }
     }
 
@@ -275,5 +274,14 @@ class CalendarMonthOneRoom extends Calendar
     $html .= "</tbody>\n";
 
     return $html;
+  }
+
+
+  private function tdBlankDayHTML(int $col) : string
+  {
+    global $weekstarts;
+
+    $td_class = (is_hidden_day(($col + $weekstarts) % DAYS_PER_WEEK)) ? 'hidden_day' : 'invalid';
+    return "<td class=\"$td_class\"><div class=\"cell_container\">&nbsp;</div></td>\n";
   }
 }

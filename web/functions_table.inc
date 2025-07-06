@@ -701,15 +701,6 @@ function get_table_head() : string
 }
 
 
-function get_blank_day(int $col) : string
-{
-  global $weekstarts;
-
-  $td_class = (is_hidden_day(($col + $weekstarts) % DAYS_PER_WEEK)) ? 'hidden_day' : 'invalid';
-  return "<td class=\"$td_class\"><div class=\"cell_container\">&nbsp;</div></td>\n";
-}
-
-
 // Describe the start and end time, accounting for "all day"
 // and for entries starting before/ending after today.
 // There are 9 cases, for start time < = or > midnight this morning,
