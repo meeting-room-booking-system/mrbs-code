@@ -15,7 +15,6 @@ use function MRBS\multisite;
 use function MRBS\period_index_nominal;
 use function MRBS\period_name_nominal;
 use function MRBS\session;
-use function MRBS\tdcell;
 
 abstract class CalendarSlots extends Calendar
 {
@@ -119,7 +118,7 @@ abstract class CalendarSlots extends Calendar
       // If there's no booking, or if there are multiple bookings, then make the slot one unit long
       $slots = (count($cell) == 1) ? $cell[0]['n_slots'] : 1;
 
-      $html .= tdcell($classes, $slots);
+      $html .= $this->tdOpeningTagHTML($classes, $slots);
 
       // If the room isn't booked, then allow it to be booked
       if (empty($cell))
@@ -200,6 +199,45 @@ abstract class CalendarSlots extends Calendar
 
     return $html;
   }
+
+
+  // Output a start table cell tag <td> with class of $classes.
+  // $classes can be either a string or an array of classes
+  // empty or row_highlight if highlighted.
+  // $slots is the number of time slots high that the cell should be
+  //
+  // $data is an optional third parameter which if set passes an
+  // associative array of name-value pairs to be used in data attributes
+  private function tdOpeningTagHTML(array $classes, int $slots, ?array $data=null) : string
+  {
+    global $times_along_top;
+
+    $html = '<td';
+
+    if (!empty($classes))
+    {
+      $html.= ' class="' . implode(' ', $classes) . '"';
+    }
+
+    if ($slots > 1)
+      // No need to output more HTML than necessary
+    {
+      $html .= (($times_along_top) ? ' colspan' : ' rowspan') . "=\"$slots\"";
+    }
+
+    if (isset($data))
+    {
+      foreach ($data as $name => $value)
+      {
+        $html .= " data-$name=\"$value\"";
+      }
+    }
+
+    $html .= ">";
+
+    return $html;
+  }
+
 
 
   protected function timesHeaderCellsHTML(int $start, int $end, int $increment) : string
