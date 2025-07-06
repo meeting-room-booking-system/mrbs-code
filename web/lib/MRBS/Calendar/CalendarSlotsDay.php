@@ -138,7 +138,7 @@ class CalendarSlotsDay extends CalendarSlots
     // We can display the table in two ways
     if ($times_along_top)
     {
-      $header_inner .= $this->timesHeaderCellsHTML($morning_slot_seconds, $evening_slot_seconds, $resolution);
+      $header_inner .= $this->theadThTimeCellsHTML($morning_slot_seconds, $evening_slot_seconds, $resolution);
     }
     else
     {
