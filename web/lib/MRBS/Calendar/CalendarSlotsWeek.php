@@ -21,8 +21,6 @@ use function MRBS\multisite;
 
 class CalendarSlotsWeek extends CalendarSlots
 {
-  private $view_all;
-
 
   public function __construct(string $view, int $view_all, int $year, int $month, int $day, int $area_id, int $room_id, ?int $timetohighlight=null)
   {
