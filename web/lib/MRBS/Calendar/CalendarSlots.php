@@ -18,12 +18,6 @@ use function MRBS\session;
 
 abstract class CalendarSlots extends Calendar
 {
-  protected $day;
-  protected $month;
-  protected $year;
-  protected $area_id;
-  protected $room_id;
-  protected $view;
   protected $timetohighlight;
 
 
