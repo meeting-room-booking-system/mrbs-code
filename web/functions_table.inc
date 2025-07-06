@@ -786,7 +786,7 @@ function month_table_innerhtml(string $view, int $view_all, int $year, int $mont
 }
 
 
-function month_room_table_innerhtml(string $view, int $view_all, int $year, int $month, int $day, int $area, int $room) : string
+function month_room_table_innerhtml(string $view, int $view_all, int $year, int $month, int $day, int $area_id, int $room_id) : string
 {
   global $weekstarts, $view_week_number, $show_plus_link, $monthly_view_entries_details;
   global $enable_periods, $morningstarts, $morningstarts_minutes;
@@ -794,7 +794,7 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
   global $timezone;
 
   // Check that we've got a valid, enabled room
-  if (is_null(get_room_name($room)) || !is_visible($room))
+  if (is_null(get_room_name($room_id)) || !is_visible($room_id))
   {
     // No rooms have been created yet, or else they are all disabled
     // Add an 'empty' data flag so that the JavaScript knows whether this is a real table or not
@@ -828,7 +828,7 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
 
   // Get the data.  It's much quicker to do a single SQL query getting all the
   // entries for the interval in one go, rather than doing a query for each day.
-  $entries = get_entries_by_room($room, $start_date, $end_date);
+  $entries = get_entries_by_room($room_id, $start_date, $end_date);
 
   // Draw the days of the month:
   for ($d = 1, $date = clone $start_date; $d <= $last_day_of_month; $d++, $date->modify('+1 day'))
@@ -869,8 +869,8 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
 
       $vars = [
         'page_date' => $date->getISODate(),
-        'area'  => $area,
-        'room'  => $room
+        'area'  => $area_id,
+        'room'  => $room_id
       ];
 
       // If it's the first day of the week, show the week number
@@ -893,7 +893,7 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
       // Don't provide a link if the slot doesn't really exist or if the user is logged in, but not a booking admin,
       // and it's a holiday/weekend and bookings on holidays/weekends are not allowed.  (We provide a link if they
       // are not logged in because they might want to click and login as an admin).
-      if ((null !== session()->getCurrentUser()) && !is_book_admin($room) &&
+      if ((null !== session()->getCurrentUser()) && !is_book_admin($room_id) &&
           (($prevent_booking_on_holidays && in_array('holiday', $classes)) ||
            ($prevent_booking_on_weekends && in_array('weekend', $classes))))
       {
