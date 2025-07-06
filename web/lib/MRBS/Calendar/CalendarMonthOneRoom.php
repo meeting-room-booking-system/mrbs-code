@@ -45,7 +45,6 @@ class CalendarMonthOneRoom extends Calendar
     global $weekstarts, $view_week_number, $show_plus_link, $monthly_view_entries_details;
     global $enable_periods, $morningstarts, $morningstarts_minutes;
     global $prevent_booking_on_holidays, $prevent_booking_on_weekends;
-    global $timezone;
 
     // Check that we've got a valid, enabled and visible room
     $room = Room::getById($this->room_id);

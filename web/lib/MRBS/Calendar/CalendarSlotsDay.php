@@ -140,12 +140,14 @@ class CalendarSlotsDay extends CalendarSlots
     }
     else
     {
-      $vars = array('view'     => 'week',
+      $vars = [
+        'view'     => 'week',
         'view_all' => 0,
         'year'     => $this->year,
         'month'    => $this->month,
         'day'      => $this->day,
-        'area'     => $this->area_id);
+        'area'     => $this->area_id
+      ];
 
       $header_inner .= $this->roomsHeaderCellsHTML($rooms, $vars);
     }  // end standard view (for the header)
