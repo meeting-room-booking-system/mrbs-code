@@ -213,45 +213,6 @@ function room_cell_html(Room $room, array $vars) : string
 }
 
 
-// Output a start table cell tag <td> with class of $classes.
-// $classes can be either a string or an array of classes
-// empty or row_highlight if highlighted.
-// $slots is the number of time slots high that the cell should be
-//
-// $data is an optional third parameter which if set passes an
-// associative array of name-value pairs to be used in data attributes
-function tdcell(array $classes, int $slots, ?array $data=null) : string
-{
-  global $times_along_top;
-
-  $html = '';
-  $html .= '<td';
-
-  if (!empty($classes))
-  {
-    $html.= ' class="' . implode(' ', $classes) . '"';
-  }
-
-  if ($slots > 1)
-  // No need to output more HTML than necessary
-  {
-    $html .= (($times_along_top) ? ' colspan' : ' rowspan') . "=\"$slots\"";
-  }
-
-  if (isset($data))
-  {
-    foreach ($data as $name => $value)
-    {
-      $html .= " data-$name=\"$value\"";
-    }
-  }
-
-  $html .= ">";
-
-  return $html;
-}
-
-
 // Gets the number of time slots between the beginning and end of the booking
 // day.   (This is the normal number on a non-DST transition day)
 function get_n_time_slots() : int
