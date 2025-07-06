@@ -16,7 +16,6 @@ use function MRBS\is_invalid_datetime;
 use function MRBS\is_possibly_invalid;
 use function MRBS\multisite;
 use function MRBS\room_cell_html;
-use function MRBS\time_cell_html;
 
 class CalendarSlotsDay extends CalendarSlots
 {
@@ -261,7 +260,7 @@ class CalendarSlotsDay extends CalendarSlots
         }
         $tbody .= ">\n";
 
-        $tbody .= time_cell_html($s, $url);
+        $tbody .= $this->tbodyThTimeCellHTML($s, $url);
         $is_invalid = $is_possibly_invalid && is_invalid_datetime(0, 0, $s, $this->month, $this->day, $this->year);
         // Loop through the list of rooms we have for this area
         foreach ($rooms as $room)
@@ -274,7 +273,7 @@ class CalendarSlotsDay extends CalendarSlots
         // next lines to display times on right side
         if ($row_labels_both_sides)
         {
-          $tbody .= time_cell_html($s, $url);
+          $tbody .= $this->tbodyThTimeCellHTML($s, $url);
         }
 
         $tbody .= "</tr>\n";
