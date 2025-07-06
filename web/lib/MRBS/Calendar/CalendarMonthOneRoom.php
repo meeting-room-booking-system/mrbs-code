@@ -4,6 +4,7 @@ namespace MRBS\Calendar;
 
 use MRBS\DateTime;
 use function MRBS\datetime_format;
+use function MRBS\day_name;
 use function MRBS\escape_html;
 use function MRBS\get_date_classes;
 use function MRBS\get_end_last_slot;
@@ -12,12 +13,12 @@ use function MRBS\get_entry_classes;
 use function MRBS\get_mrbs_locale;
 use function MRBS\get_room_name;
 use function MRBS\get_start_first_slot;
-use function MRBS\get_table_head;
 use function MRBS\get_vocab;
 use function MRBS\hour_min_format;
 use function MRBS\is_book_admin;
 use function MRBS\is_hidden_day;
 use function MRBS\is_visible;
+use function MRBS\is_weekend;
 use function MRBS\multisite;
 use function MRBS\period_time_string;
 use function MRBS\prepare_entry;
@@ -63,7 +64,7 @@ class CalendarMonthOneRoom extends Calendar
     $weekday_start = (date("w", $month_start) - $weekstarts + DAYS_PER_WEEK) % DAYS_PER_WEEK;
     $last_day_of_month = (int) date("t", $month_start);
 
-    $html .= get_table_head();
+    $html .= $this->theadHTML();
 
     // Main body
     $html .= "<tbody>\n";
@@ -361,4 +362,41 @@ class CalendarMonthOneRoom extends Calendar
     $td_class = (is_hidden_day(($col + $weekstarts) % DAYS_PER_WEEK)) ? 'hidden_day' : 'invalid';
     return "<td class=\"$td_class\"><div class=\"cell_container\">&nbsp;</div></td>\n";
   }
+
+
+  // Gets the table head for the single room month view
+  private function theadHTML() : string
+  {
+    global $weekstarts;
+
+    $html = '';
+
+    // Weekday name header row:
+    $html .= "<thead>\n";
+    $html .= "<tr>\n";
+    for ($i = 0; $i< DAYS_PER_WEEK; $i++)
+    {
+      $classes = [];
+      $dow = ($i + $weekstarts) % DAYS_PER_WEEK;
+      if (is_hidden_day($dow))
+      {
+        $classes[] = 'hidden_day';
+      }
+      if (is_weekend($dow))
+      {
+        $classes[] = 'weekend';
+      }
+      $html .= '<th';
+      if (!empty($classes))
+      {
+        $html .= ' class="' . implode(' ', $classes) . '"';
+      }
+      $html .= '>' . day_name(($i + $weekstarts)%DAYS_PER_WEEK) . '</th>';
+    }
+    $html .= "\n</tr>\n";
+    $html .= "</thead>\n";
+
+    return $html;
+  }
+
 }

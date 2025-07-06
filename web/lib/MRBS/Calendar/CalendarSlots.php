@@ -6,10 +6,10 @@ use MRBS\DateTime;
 use function MRBS\escape_html;
 use function MRBS\get_date_classes;
 use function MRBS\get_entry_classes;
-use function MRBS\get_timeslot_text;
 use function MRBS\get_vocab;
 use function MRBS\getWritable;
 use function MRBS\hm_before;
+use function MRBS\hour_min;
 use function MRBS\is_book_admin;
 use function MRBS\multisite;
 use function MRBS\period_index_nominal;
@@ -251,7 +251,7 @@ abstract class CalendarSlots extends Calendar
     }
     else
     {
-      $html .= escape_html(get_timeslot_text($s, $resolution));
+      $html .= escape_html($this->timeslotText($s, $resolution));
     }
 
     $html .= "</a></th>\n";
@@ -280,12 +280,27 @@ abstract class CalendarSlots extends Calendar
       }
       else
       {
-        $html .= escape_html(get_timeslot_text($s, $increment));
+        $html .= escape_html($this->timeslotText($s, $increment));
       }
       $html .= "</span>";
       $html .= "</th>\n";
     }
 
     return $html;
+  }
+
+
+  private function timeslotText(int $s, int $resolution) : string
+  {
+    global $show_slot_endtime;
+
+    $result = hour_min($s);
+
+    if ($show_slot_endtime)
+    {
+      $result .= '-' . hour_min($s + $resolution);
+    }
+
+    return $result;
   }
 }

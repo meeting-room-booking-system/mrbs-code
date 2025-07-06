@@ -129,21 +129,6 @@ function get_entry_classes(array $entry) : array
 }
 
 
-function get_timeslot_text(int $s, int $resolution) : string
-{
-  global $show_slot_endtime;
-
-  $result = hour_min($s);
-
-  if ($show_slot_endtime)
-  {
-    $result .= '-' . hour_min($s + $resolution);
-  }
-
-  return $result;
-}
-
-
 // Draw a room cell to be used in the header rows/columns of the calendar views
 //    $room    contains the room details
 //    $vars    an associative array containing the variables to be used to build the link
@@ -645,42 +630,6 @@ function get_slots(int $month, int $day, int $year, int $n_days=1, bool $day_cel
   }
 
   return $slots;
-}
-
-
-// Gets the table header row for the single room month view
-function get_table_head() : string
-{
-  global $weekstarts;
-
-  $html = '';
-
-  // Weekday name header row:
-  $html .= "<thead>\n";
-  $html .= "<tr>\n";
-  for ($i = 0; $i< DAYS_PER_WEEK; $i++)
-  {
-    $classes = [];
-    $dow = ($i + $weekstarts) % DAYS_PER_WEEK;
-    if (is_hidden_day($dow))
-    {
-      $classes[] = 'hidden_day';
-    }
-    if (is_weekend($dow))
-    {
-      $classes[] = 'weekend';
-    }
-    $html .= '<th';
-    if (!empty($classes))
-    {
-      $html .= ' class="' . implode(' ', $classes) . '"';
-    }
-    $html .= '>' . day_name(($i + $weekstarts)%DAYS_PER_WEEK) . '</th>';
-  }
-  $html .= "\n</tr>\n";
-  $html .= "</thead>\n";
-
-  return $html;
 }
 
 
