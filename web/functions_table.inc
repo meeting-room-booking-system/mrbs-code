@@ -414,36 +414,6 @@ function get_n_time_slots() : int
 }
 
 
-function get_times_header_cells(int $start, int $end, int $increment) : string
-{
-  global $enable_periods;
-
-  $html = '';
-
-  for ($s = $start; $s <= $end; $s += $increment)
-  {
-    // Put the number of seconds since the start of the day (nominal, ignoring DST)
-    // in a data attribute so that JavaScript can pick it up
-    $html .= "<th data-seconds=\"$s\">";
-    // We need the span so that we can apply some padding.   We can't apply it
-    // to the <th> because that is used by jQuery.offset() in resizable bookings
-    $html .= "<span>";
-    if ( $enable_periods )
-    {
-      $html .= escape_html(period_name_nominal($s));
-    }
-    else
-    {
-      $html .= escape_html(get_timeslot_text($s, $increment));
-    }
-    $html .= "</span>";
-    $html .= "</th>\n";
-  }
-
-  return $html;
-}
-
-
 // Returns the HTML for a booking, or a free set of slots
 //    $slots    The number of slots occupied
 //    $classes  A scalar or array giving the class or classes to be used in the class attribute

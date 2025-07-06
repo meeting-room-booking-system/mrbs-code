@@ -11,7 +11,6 @@ use function MRBS\get_n_time_slots;
 use function MRBS\get_slots;
 use function MRBS\get_start_first_slot;
 use function MRBS\get_start_last_slot;
-use function MRBS\get_times_header_cells;
 use function MRBS\get_vocab;
 use function MRBS\is_invalid_datetime;
 use function MRBS\is_possibly_invalid;
@@ -139,7 +138,7 @@ class CalendarSlotsDay extends CalendarSlots
     // We can display the table in two ways
     if ($times_along_top)
     {
-      $header_inner .= get_times_header_cells($morning_slot_seconds, $evening_slot_seconds, $resolution);
+      $header_inner .= $this->timesHeaderCellsHTML($morning_slot_seconds, $evening_slot_seconds, $resolution);
     }
     else
     {
