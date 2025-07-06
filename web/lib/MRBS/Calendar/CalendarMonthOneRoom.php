@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace MRBS\Calendar;
 
 use MRBS\DateTime;
+use MRBS\Room;
 use function MRBS\escape_html;
 use function MRBS\get_blank_day;
 use function MRBS\get_booking_summary;
@@ -16,6 +17,7 @@ use function MRBS\get_start_first_slot;
 use function MRBS\get_table_head;
 use function MRBS\get_vocab;
 use function MRBS\is_book_admin;
+use function MRBS\is_hidden_day;
 use function MRBS\is_visible;
 use function MRBS\multisite;
 use function MRBS\prepare_entry;
@@ -43,8 +45,9 @@ class CalendarMonthOneRoom extends Calendar
     global $prevent_booking_on_holidays, $prevent_booking_on_weekends;
     global $timezone;
 
-    // Check that we've got a valid, enabled room
-    if (is_null(get_room_name($this->room_id)) || !is_visible($this->room_id))
+    // Check that we've got a valid, enabled and visible room
+    $room = Room::getById($this->room_id);
+    if (!isset($room) || $room->isDisabled() || !$room->isVisible())
     {
       // No rooms have been created yet, or else they are all disabled
       // Add an 'empty' data flag so that the JavaScript knows whether this is a real table or not
@@ -81,7 +84,7 @@ class CalendarMonthOneRoom extends Calendar
     $entries = get_entries_by_room($this->room_id, $start_date, $end_date);
 
     // Draw the days of the month:
-    for ($d = 1, $date = clone $start_date; $d <= $last_day_of_month; $d++, $date->modify('+1 day'))
+    for ($d = 1; $d <= $last_day_of_month; $d++)
     {
       // Get the slot times
       $start_first_slot = get_start_first_slot($this->month, $d, $this->year);
@@ -94,10 +97,10 @@ class CalendarMonthOneRoom extends Calendar
       }
 
       // output the day cell
-      if ($date->isHiddenDay())
+      if (is_hidden_day(($weekcol + $weekstarts) % DAYS_PER_WEEK))
       {
         // These days are to be hidden in the display (as they are hidden, just give the
-        // day of the week in the header row)
+        // day of the week in the header row
         $html .= "<td class=\"hidden_day\">\n";
         $html .= "<div class=\"cell_container\">\n";
         $html .= "<div class=\"cell_header\">\n";
@@ -110,6 +113,8 @@ class CalendarMonthOneRoom extends Calendar
       else
       {
         // Add classes for weekends and holidays
+        $date = new DateTime();
+        $date->setDate($this->year, $this->month, $d);
         $classes = get_date_classes($date);
 
         $html .= '<td' . ((empty($classes)) ? '' : ' class="' . implode(' ', $classes) . '"') . ">\n";
@@ -118,18 +123,20 @@ class CalendarMonthOneRoom extends Calendar
         $html .= "<div class=\"cell_header\">\n";
 
         $vars = [
-          'page_date' => $date->getISODate(),
+          'year'  => $this->year,
+          'month' => $this->month,
+          'day'   => $d,
           'area'  => $this->area_id,
           'room'  => $this->room_id
         ];
 
         // If it's the first day of the week, show the week number
-        if ($view_week_number && $date->isFirstDayOfWeek(get_mrbs_locale()))
+        if ($view_week_number && (($weekcol + $weekstarts)%DAYS_PER_WEEK == DateTime::firstDayOfWeek($timezone, get_mrbs_locale())))
         {
           $vars['view'] = 'week';
           $query = http_build_query($vars, '', '&');
           $html .= '<a class="week_number" href="' . escape_html(multisite("index.php?$query")) . '">';
-          $html .= $date->format('W');
+          $html .= date("W", gmmktime(12, 0, 0, $this->month, $d, $this->year));
           $html .= "</a>\n";
         }
         // then put in the day of the month
@@ -143,7 +150,7 @@ class CalendarMonthOneRoom extends Calendar
         // Don't provide a link if the slot doesn't really exist or if the user is logged in, but not a booking admin,
         // and it's a holiday/weekend and bookings on holidays/weekends are not allowed.  (We provide a link if they
         // are not logged in because they might want to click and login as an admin).
-        if ((null !== session()->getCurrentUser()) && !is_book_admin($this->room_id) &&
+        if ((null !== session()->getCurrentUser()) && !is_book_admin($room->id) &&
           (($prevent_booking_on_holidays && in_array('holiday', $classes)) ||
             ($prevent_booking_on_weekends && in_array('weekend', $classes))))
         {
@@ -206,8 +213,7 @@ class CalendarMonthOneRoom extends Calendar
             $entry['start_time'],
             $entry['end_time'],
             $start_first_slot,
-            $end_last_slot
-          );
+            $end_last_slot);
           $description_text = mb_substr($entry['name'], 0, 255);
           $full_text = $slot_text . " " . $description_text;
           switch ($monthly_view_entries_details)
