@@ -129,21 +129,6 @@ function get_entry_classes(array $entry) : array
 }
 
 
-function get_timeslot_text(int $s, int $resolution) : string
-{
-  global $show_slot_endtime;
-
-  $result = hour_min($s);
-
-  if ($show_slot_endtime)
-  {
-    $result .= '-' . hour_min($s + $resolution);
-  }
-
-  return $result;
-}
-
-
 // Draw a room cell to be used in the header rows/columns of the calendar views
 //    $room    contains the room details
 //    $vars    an associative array containing the variables to be used to build the link
