@@ -3,7 +3,6 @@ declare(strict_types=1);
 namespace MRBS\Calendar;
 
 use MRBS\DateTime;
-use function MRBS\cell_html;
 use function MRBS\escape_html;
 use function MRBS\get_entries_by_area;
 use function MRBS\get_n_time_slots;
@@ -210,7 +209,7 @@ class CalendarSlotsDay extends CalendarSlots
           $query_vars = $this->getQueryVars($room['id'], $this->month, $this->day, $this->year, $s);
 
           // and then draw the cell
-          $tbody .= cell_html($map->slot($room['id'], 0, $s), $query_vars, $is_invalid[$s]);
+          $tbody .= $this->tdHTML($map->slot($room['id'], 0, $s), $query_vars, $is_invalid[$s]);
         }  // end for (looping through the times)
         if ($row_labels_both_sides)
         {
@@ -269,7 +268,7 @@ class CalendarSlotsDay extends CalendarSlots
         {
           // set up the query vars to be used for the link in the cell
           $query_vars = $this->getQueryVars($room['id'], $this->month, $this->day, $this->year, $s);
-          $tbody .= cell_html($map->slot($room['id'], 0, $s), $query_vars, $is_invalid);
+          $tbody .= $this->tdHTML($map->slot($room['id'], 0, $s), $query_vars, $is_invalid);
         }
 
         // next lines to display times on right side

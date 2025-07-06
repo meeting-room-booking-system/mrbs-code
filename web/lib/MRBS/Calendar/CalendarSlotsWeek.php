@@ -3,7 +3,6 @@ declare(strict_types=1);
 namespace MRBS\Calendar;
 
 use MRBS\DateTime;
-use function MRBS\cell_html;
 use function MRBS\datetime_format;
 use function MRBS\day_of_MRBS_week;
 use function MRBS\escape_html;
@@ -191,7 +190,7 @@ class CalendarSlotsWeek extends CalendarSlots
           // set up the query vars to be used for the link in the cell
           $query_vars = $this->getQueryVars($this->room_id, $date->getMonth(), $date->getDay(), $date->getYear(), $s);
           // and then draw the cell
-          $tbody .= cell_html($map->slot($this->room_id, $j, $s), $query_vars, $is_invalid);
+          $tbody .= $this->tdHTML($map->slot($this->room_id, $j, $s), $query_vars, $is_invalid);
         }  // end looping through the time slots
         if ($row_labels_both_sides)
         {
@@ -260,7 +259,7 @@ class CalendarSlotsWeek extends CalendarSlots
           $query_vars = $this->getQueryVars($this->room_id, $cell_month, $cell_day, $cell_year, $s);
 
           // and then draw the cell
-          $tbody .= cell_html($map->slot($this->room_id, $j, $s), $query_vars, $is_invalid);
+          $tbody .= $this->tdHTML($map->slot($this->room_id, $j, $s), $query_vars, $is_invalid);
         }
 
         // next lines to display times on right side
