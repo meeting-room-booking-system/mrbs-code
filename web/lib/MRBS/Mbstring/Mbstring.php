@@ -80,7 +80,7 @@ class Mbstring
 
   public static function mb_chr(int $codepoint, ?string $encoding = null)
   {
-    if (isset($encoding) && ($encoding !== 'UTF-8'))
+    if (isset($encoding) && (strtoupper($encoding) !== 'UTF-8'))
     {
       $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
       throw new InvalidArgumentException($message);
@@ -111,7 +111,7 @@ class Mbstring
 
   public static function mb_ord(string $string, ?string $encoding=null)
   {
-    if (isset($encoding) && ($encoding !== 'UTF-8'))
+    if (isset($encoding) && (strtoupper($encoding) !== 'UTF-8'))
     {
       $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
       throw new InvalidArgumentException($message);
@@ -167,7 +167,7 @@ class Mbstring
 
   public static function mb_stripos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
   {
-    if (isset($encoding) && ($encoding !== 'UTF-8'))
+    if (isset($encoding) && (strtoupper($encoding) !== 'UTF-8'))
     {
       $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
       throw new InvalidArgumentException($message);
@@ -182,7 +182,7 @@ class Mbstring
 
   public static function mb_strpos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
   {
-    if (isset($encoding) && ($encoding !== 'UTF-8'))
+    if (isset($encoding) && (strtoupper($encoding) !== 'UTF-8'))
     {
       $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
       throw new InvalidArgumentException($message);
@@ -194,7 +194,7 @@ class Mbstring
 
   public static function mb_strripos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
   {
-    if (isset($encoding) && ($encoding !== 'UTF-8'))
+    if (isset($encoding) && (strtoupper($encoding) !== 'UTF-8'))
     {
       $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
       throw new InvalidArgumentException($message);
@@ -206,7 +206,7 @@ class Mbstring
 
   public static function mb_strrpos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
   {
-    if (isset($encoding) && ($encoding !== 'UTF-8'))
+    if (isset($encoding) && (strtoupper($encoding) !== 'UTF-8'))
     {
       $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
       throw new InvalidArgumentException($message);
@@ -227,6 +227,7 @@ class Mbstring
     {
       case null:
       case 'UTF-8':
+      case 'utf-8':
         $result = count((new Utf8String($string))->toArray());
         break;
       case '8bit':
@@ -248,7 +249,7 @@ class Mbstring
       return $string;
     }
 
-    if (isset($encoding) && ($encoding !== 'UTF-8'))
+    if (isset($encoding) && (strtoupper($encoding) !== 'UTF-8'))
     {
       $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
       throw new InvalidArgumentException($message);
@@ -274,7 +275,7 @@ class Mbstring
       return $string;
     }
 
-    if (isset($encoding) && ($encoding !== 'UTF-8'))
+    if (isset($encoding) && (strtoupper($encoding) !== 'UTF-8'))
     {
       $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
       throw new InvalidArgumentException($message);
@@ -295,7 +296,7 @@ class Mbstring
 
   public static function mb_substr(string $string, int $start, ?int $length = null, ?string $encoding = null): string
   {
-    if (isset($encoding) && ($encoding !== 'UTF-8'))
+    if (isset($encoding) && (strtoupper($encoding) !== 'UTF-8'))
     {
       $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
       throw new InvalidArgumentException($message);
