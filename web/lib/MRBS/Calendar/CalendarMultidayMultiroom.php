@@ -11,7 +11,6 @@ use function MRBS\get_date_classes;
 use function MRBS\get_end_last_slot;
 use function MRBS\get_entries_by_area;
 use function MRBS\get_entry_classes;
-use function MRBS\get_flex_div;
 use function MRBS\get_n_time_slots;
 use function MRBS\get_slots;
 use function MRBS\get_start_first_slot;
@@ -220,13 +219,13 @@ class CalendarMultidayMultiroom extends Calendar
             {
               if ($slots > 0)
               {
-                $tbody .= get_flex_div($slots, 'free');
+                $tbody .= $this->flexDivHTML($slots, 'free');
               }
               $this_entry = $this_slot[0];
               $n =    $this_entry['n_slots'];
               $text = $this_entry['name'];
               $classes = get_entry_classes($this_entry);
-              $tbody .= get_flex_div($n, $classes, $text, $text);
+              $tbody .= $this->flexDivHTML($n, $classes, $text, $text);
               $slots = 0;
             }
             else
@@ -239,7 +238,7 @@ class CalendarMultidayMultiroom extends Calendar
 
           if ($slots > 0)
           {
-            $tbody .= get_flex_div($slots, 'free');
+            $tbody .= $this->flexDivHTML($slots, 'free');
           }
 
           $tbody .= "</a>\n";
@@ -262,4 +261,38 @@ class CalendarMultidayMultiroom extends Calendar
     $tbody .= "</tbody>\n";
     return $thead . $tfoot . $tbody;
   }
+
+
+  // Returns the HTML for a booking, or a free set of slots
+  //    $slots    The number of slots occupied
+  //    $classes  A scalar or array giving the class or classes to be used in the class attribute
+  //    $title    The value of the title attribute
+  //    $text     The value of the text to be used in the div
+  private function flexDivHTML(int $slots, $classes, ?string $title=null, ?string $text=null) : string
+  {
+    $result = "<div style=\"flex: $slots\"";
+
+    if (isset($classes))
+    {
+      $value = (is_array($classes)) ? implode(' ', $classes) : $classes;
+      $result .= ' class="' . escape_html($value) . '"';
+    }
+
+    if (isset($title) && ($title !== ''))
+    {
+      $result .= ' title="' . escape_html($title) . '"';
+    }
+
+    $result .= '>';
+
+    if (isset($text) && ($text !== ''))
+    {
+      $result .= escape_html($text);
+    }
+
+    $result .= '</div>';
+
+    return $result;
+  }
+
 }
