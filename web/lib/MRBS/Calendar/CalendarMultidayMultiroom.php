@@ -57,11 +57,9 @@ class CalendarMultidayMultiroom extends Calendar
     // case people want a transposed view in future.
     $days_along_top = true;
 
-    $rooms = get_rooms($this->area_id);
-    $n_rooms = count($rooms);
+    $rooms = new Rooms($this->area_id);
 
-    // Check to see whether there are any rooms in the area
-    if ($n_rooms == 0)
+    if ($rooms->countVisible() == 0)
     {
       // Add an 'empty' data flag so that the JavaScript knows whether this is a real table or not
       return "<tbody data-empty=1><tr><td><h1>" . get_vocab("no_rooms_for_area") . "</h1></td></tr></tbody>";
@@ -151,8 +149,12 @@ class CalendarMultidayMultiroom extends Calendar
       // the standard view, with days along the top and rooms down the side
       foreach ($rooms as $room)
       {
-        $room_id = $room['id'];
-        $room_link_vars['room'] = $room_id;
+        if ($room->isDisabled() || !$room->isVisible())
+        {
+          continue;
+        }
+
+        $room_link_vars['room'] = $room->id;
         $tbody .= "<tr>\n";
         $row_label = room_cell_html($room, $room_link_vars);
         $tbody .= $row_label;
@@ -177,7 +179,7 @@ class CalendarMultidayMultiroom extends Calendar
             'view_all'  => $this->view_all,
             'page_date' => $date->getISODate(),
             'area'      => $this->area_id,
-            'room'      => $room['id']
+            'room'      => $room->id
           ];
 
           // If there is more than one slot per day, then it can be very difficult to pick
@@ -194,7 +196,7 @@ class CalendarMultidayMultiroom extends Calendar
           else
           {
             $vars['view'] = $this->view;
-            $this_slot = $map->slot($room_id, $j, $morning_slot_seconds);
+            $this_slot = $map->slot($this->room_id, $j, $morning_slot_seconds);
             if (empty($this_slot))
             {
               $page = 'edit_entry.php';
@@ -213,7 +215,7 @@ class CalendarMultidayMultiroom extends Calendar
           $slots = 0;
           while ($s <= $evening_slot_seconds)
           {
-            $this_slot = $map->slot($room_id, $j, $s);
+            $this_slot = $map->slot($room->id, $j, $s);
             if (!empty($this_slot))
             {
               if ($slots > 0)
