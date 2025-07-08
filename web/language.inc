@@ -57,9 +57,9 @@ if (function_exists('mb_internal_encoding'))
 }
 
 language_debug('$disable_automatic_language_changing: ' . (($disable_automatic_language_changing) ? 'true' : 'false'));
-language_debug('$default_language_tokens: ' . $default_language_tokens);
-language_debug('$cli_language: ' . $cli_language);
-language_debug('$override_locale: ' . $override_locale);
+language_debug('$default_language_tokens: ' . ($default_language_tokens ?? 'NULL'));
+language_debug('$cli_language: ' . ($cli_language ?? 'NULL'));
+language_debug('$override_locale: ' . ($override_locale ?? 'NULL'));
 
 // Check and adjust if necessary the format of $override_locale which changed in versions
 // of MRBS > 1.7.1
@@ -385,7 +385,8 @@ function get_qualifiers(?string $header, bool $translate_wildcard=false) : array
       }
       else
       {
-        trigger_error("Unexpected specifier format '$specifier'", E_USER_NOTICE);
+        $message = "Unexpected specifier format '$specifier' in the Accept-Language request header sent by the client.";
+        trigger_error($message, E_USER_NOTICE);
       }
 
       if (isset($weight))
