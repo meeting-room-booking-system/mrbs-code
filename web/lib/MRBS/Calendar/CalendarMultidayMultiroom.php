@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace MRBS\Calendar;
 
 use MRBS\DateTime;
+use MRBS\Rooms;
 use function MRBS\day_of_MRBS_week;
 use function MRBS\escape_html;
 use function MRBS\format_iso_date;
@@ -12,7 +13,6 @@ use function MRBS\get_entries_by_area;
 use function MRBS\get_entry_classes;
 use function MRBS\get_flex_div;
 use function MRBS\get_n_time_slots;
-use function MRBS\get_rooms;
 use function MRBS\get_slots;
 use function MRBS\get_start_first_slot;
 use function MRBS\get_vocab;
