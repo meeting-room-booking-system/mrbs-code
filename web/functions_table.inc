@@ -195,39 +195,6 @@ function get_n_time_slots() : int
 }
 
 
-// Returns the HTML for a booking, or a free set of slots
-//    $slots    The number of slots occupied
-//    $classes  A scalar or array giving the class or classes to be used in the class attribute
-//    $title    The value of the title attribute
-//    $text     The value of the text to be used in the div
-function get_flex_div(int $slots, $classes, ?string $title=null, ?string $text=null) : string
-{
-  $result = "<div style=\"flex: $slots\"";
-
-  if (isset($classes))
-  {
-    $value = (is_array($classes)) ? implode(' ', $classes) : $classes;
-    $result .= ' class="' . escape_html($value) . '"';
-  }
-
-  if (isset($title) && ($title !== ''))
-  {
-    $result .= ' title="' . escape_html($title) . '"';
-  }
-
-  $result .= '>';
-
-  if (isset($text) && ($text !== ''))
-  {
-    $result .= escape_html($text);
-  }
-
-  $result .= '</div>';
-
-  return $result;
-}
-
-
 function week_table_innerhtml(string $view, int $view_all, int $year, int $month, int $day, int $area_id, int $room_id, ?int $timetohighlight) : string
 {
   if ($view_all)
