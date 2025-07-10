@@ -99,21 +99,6 @@ function week_table_innerhtml(string $view, int $view_all, int $year, int $month
 }
 
 
-function get_date(int $t, string $view) : string
-{
-  global $datetime_formats;
-
-  if ($view == 'month')
-  {
-    return datetime_format(['pattern' => 'd'], $t);
-  }
-  else
-  {
-    return datetime_format($datetime_formats['view_week_day_month'], $t);
-  }
-}
-
-
 function get_day(int $t, string $view) : string
 {
   // In the month view use a pattern which will tend to give a narrower result, to save space.

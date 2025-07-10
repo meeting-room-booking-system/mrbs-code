@@ -3,9 +3,9 @@ declare(strict_types=1);
 namespace MRBS\Calendar;
 
 use MRBS\DateTime;
+use function MRBS\datetime_format;
 use function MRBS\escape_html;
 use function MRBS\format_iso_date;
-use function MRBS\get_date;
 use function MRBS\get_day;
 use function MRBS\get_vocab;
 use function MRBS\is_hidden_day;
@@ -23,6 +23,21 @@ abstract class Calendar
 
 
   abstract public function innerHTML() : string;
+
+
+  private function getDate(int $t, string $view) : string
+  {
+    global $datetime_formats;
+
+    if ($view == 'month')
+    {
+      return datetime_format(['pattern' => 'd'], $t);
+    }
+    else
+    {
+      return datetime_format($datetime_formats['view_week_day_month'], $t);
+    }
+  }
 
 
   protected function getDateClasses(DateTime $date) : array
@@ -136,7 +151,7 @@ abstract class Calendar
         $link = "index.php?" . http_build_query($vars, '', '&');
         $link = multisite($link);
         $t = mktime(12, 0, 0, $month, $day_start_interval + $j, $year);
-        $text = ($i === 0) ? get_day($t, $view) : get_date($t, $view);
+        $text = ($i === 0) ? get_day($t, $view) : $this->getDate($t, $view);
         $date = new DateTime();
         $date->setTimestamp($t);
         $classes = $this->getDateClasses($date);
