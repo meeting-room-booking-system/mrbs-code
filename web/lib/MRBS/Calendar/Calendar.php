@@ -6,7 +6,6 @@ use MRBS\DateTime;
 use function MRBS\escape_html;
 use function MRBS\format_iso_date;
 use function MRBS\get_date;
-use function MRBS\get_date_classes;
 use function MRBS\get_day;
 use function MRBS\is_hidden_day;
 use function MRBS\multisite;
@@ -23,6 +22,28 @@ abstract class Calendar
 
 
   abstract public function innerHTML() : string;
+
+
+  protected function getDateClasses(DateTime $date) : array
+  {
+    $result = [];
+
+    if ($date->isWeekend())
+    {
+      $result[] = 'weekend';
+    }
+    if ($date->isHoliday())
+    {
+      $result[] = 'holiday';
+    }
+    if ($date->isToday())
+    {
+      $result[] = 'today';
+    }
+
+    return $result;
+  }
+
 
   protected function multidayHeaderRowsHTML(
     string $view,
@@ -73,7 +94,7 @@ abstract class Calendar
         $text = ($i === 0) ? get_day($t, $view) : get_date($t, $view);
         $date = new DateTime();
         $date->setTimestamp($t);
-        $classes = get_date_classes($date);
+        $classes = $this->getDateClasses($date);
         $result[$i] .= '<th' .
           // Add the date for JavaScript.  Only really necessary for the first row in
           // the week view when not viewing all the rooms, but just add it always.

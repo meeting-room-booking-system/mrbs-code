@@ -6,7 +6,6 @@ use MRBS\DateTime;
 use function MRBS\day_of_MRBS_week;
 use function MRBS\escape_html;
 use function MRBS\format_iso_date;
-use function MRBS\get_date_classes;
 use function MRBS\get_end_last_slot;
 use function MRBS\get_entries_by_area;
 use function MRBS\get_entry_classes;
@@ -163,7 +162,7 @@ class CalendarMultidayMultiroom extends Calendar
           }
 
           // Add a classes for weekends and classes
-          $classes = get_date_classes($date);
+          $classes = $this->getDateClasses($date);
 
           $tbody .= '<td';
           if (!empty($classes))

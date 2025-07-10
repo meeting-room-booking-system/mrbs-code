@@ -4,7 +4,6 @@ namespace MRBS\Calendar;
 
 use MRBS\DateTime;
 use function MRBS\escape_html;
-use function MRBS\get_date_classes;
 use function MRBS\get_entry_classes;
 use function MRBS\get_vocab;
 use function MRBS\getWritable;
@@ -106,7 +105,7 @@ abstract class CalendarSlots extends Calendar
           $query_vars['new_times']['month'],
           $query_vars['new_times']['day']
         );
-        $classes = array_merge($classes, get_date_classes($date));
+        $classes = array_merge($classes, $this->getDateClasses($date));
       }
 
       // If there's no booking, or if there are multiple bookings, then make the slot one unit long
