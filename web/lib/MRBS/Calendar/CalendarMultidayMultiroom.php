@@ -15,7 +15,6 @@ use function MRBS\get_rooms;
 use function MRBS\get_slots;
 use function MRBS\get_start_first_slot;
 use function MRBS\get_vocab;
-use function MRBS\multiday_header_rows;
 use function MRBS\multisite;
 use function MRBS\room_cell_html;
 
@@ -121,7 +120,7 @@ class CalendarMultidayMultiroom extends Calendar
 
     if ($days_along_top)
     {
-      $header_inner_rows = multiday_header_rows($this->view, $this->view_all, $this->year, $this->month, $day_start_interval, $this->area_id, $this->room_id, $n_days, $start_dow);
+      $header_inner_rows = $this->multidayHeaderRowsHTML($this->view, $this->view_all, $this->year, $this->month, $day_start_interval, $this->area_id, $this->room_id, $n_days, $start_dow);
     }
     else
     {
