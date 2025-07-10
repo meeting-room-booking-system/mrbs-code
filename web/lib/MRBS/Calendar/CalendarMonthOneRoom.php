@@ -83,7 +83,7 @@ class CalendarMonthOneRoom extends Calendar
     $entries = get_entries_by_room($this->room_id, $start_date, $end_date);
 
     // Draw the days of the month:
-    for ($d = 1; $d <= $last_day_of_month; $d++)
+    for ($d = 1, $date = clone $start_date; $d <= $last_day_of_month; $d++, $date->modify('+1 day'))
     {
       // Get the slot times
       $start_first_slot = get_start_first_slot($this->month, $d, $this->year);
@@ -96,7 +96,7 @@ class CalendarMonthOneRoom extends Calendar
       }
 
       // output the day cell
-      if (is_hidden_day(($weekcol + $weekstarts) % DAYS_PER_WEEK))
+      if ($date->isHiddenDay())
       {
         // These days are to be hidden in the display (as they are hidden, just give the
         // day of the week in the header row
@@ -112,8 +112,6 @@ class CalendarMonthOneRoom extends Calendar
       else
       {
         // Add classes for weekends and holidays
-        $date = new DateTime();
-        $date->setDate($this->year, $this->month, $d);
         $classes = $this->getDateClasses($date);
 
         $html .= '<td' . ((empty($classes)) ? '' : ' class="' . implode(' ', $classes) . '"') . ">\n";
@@ -122,20 +120,18 @@ class CalendarMonthOneRoom extends Calendar
         $html .= "<div class=\"cell_header\">\n";
 
         $vars = [
-          'year'  => $this->year,
-          'month' => $this->month,
-          'day'   => $d,
+          'page_date' => $date->getISODate(),
           'area'  => $this->area_id,
           'room'  => $this->room_id
         ];
 
         // If it's the first day of the week, show the week number
-        if ($view_week_number && (($weekcol + $weekstarts)%DAYS_PER_WEEK == DateTime::firstDayOfWeek($timezone, get_mrbs_locale())))
+        if ($view_week_number && $date->isFirstDayOfWeek(get_mrbs_locale()))
         {
           $vars['view'] = 'week';
           $query = http_build_query($vars, '', '&');
           $html .= '<a class="week_number" href="' . escape_html(multisite("index.php?$query")) . '">';
-          $html .= date("W", gmmktime(12, 0, 0, $this->month, $d, $this->year));
+          $html .= $date->format('W');
           $html .= "</a>\n";
         }
         // then put in the day of the month
