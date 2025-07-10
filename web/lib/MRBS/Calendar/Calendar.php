@@ -7,6 +7,7 @@ use function MRBS\escape_html;
 use function MRBS\format_iso_date;
 use function MRBS\get_date;
 use function MRBS\get_day;
+use function MRBS\get_vocab;
 use function MRBS\is_hidden_day;
 use function MRBS\multisite;
 
@@ -158,4 +159,50 @@ abstract class Calendar
 
     return $result;
   }
+
+
+  // Draw a room cell to be used in the header rows/columns of the calendar views
+  //    $room    contains the room details
+  //    $vars    an associative array containing the variables to be used to build the link
+  protected function roomCellHTML(array $room, array $vars) : string
+  {
+    $link = 'index.php?' . http_build_query($vars, '', '&');
+    $link = multisite($link);
+
+    switch ($vars['view'])
+    {
+      case 'day':
+        $tag = 'viewday';
+        break;
+      case 'week':
+        $tag = 'viewweek';
+        break;
+      case 'month':
+        $tag = 'viewmonth';
+        break;
+      default:
+        trigger_error("Unknown view '" . $vars['view'] . "'", E_USER_NOTICE);
+        $tag = 'viewweek';
+        break;
+    }
+
+    $title = get_vocab($tag) . "\n\n" . $room['description'];
+    $html = '';
+    $html .= '<th data-room="' . escape_html($room['id']) . '">';
+    $html .= '<a href="' . escape_html($link) . '"' .
+      ' title = "' . escape_html($title) . '">';
+    $html .= escape_html($room['room_name']);
+    // Put the capacity in a span to give flexibility in styling
+    $html .= '<span class="capacity';
+    if ($room['capacity'] == 0)
+    {
+      $html .= ' zero';
+    }
+    $html .= '">' . escape_html($room['capacity']);
+    $html .= '</span>';
+    $html .= '</a>';
+    $html .= "</th>\n";
+    return $html;
+  }
+
 }

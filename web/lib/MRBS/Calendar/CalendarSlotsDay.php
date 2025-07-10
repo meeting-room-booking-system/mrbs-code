@@ -14,7 +14,6 @@ use function MRBS\get_vocab;
 use function MRBS\is_invalid_datetime;
 use function MRBS\is_possibly_invalid;
 use function MRBS\multisite;
-use function MRBS\room_cell_html;
 
 class CalendarSlotsDay extends CalendarSlots
 {
@@ -196,7 +195,7 @@ class CalendarSlotsDay extends CalendarSlots
           'area'     => $this->area_id,
           'room'     => $room->id);
 
-        $row_label = room_cell_html($room, $vars);
+        $row_label = $this->roomCellHTML($room, $vars);
         $tbody .= $row_label;
         $is_invalid = array();
         for ($s = $morning_slot_seconds;
@@ -307,7 +306,7 @@ class CalendarSlotsDay extends CalendarSlots
         continue;
       }
       $vars['room'] = $room->id;
-      $html .= room_cell_html($room, $vars);
+      $html .= $this->roomCellHTML($room, $vars);
     }
 
     return $html;
