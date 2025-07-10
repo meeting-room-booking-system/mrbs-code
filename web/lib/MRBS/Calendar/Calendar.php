@@ -6,7 +6,6 @@ use MRBS\DateTime;
 use function MRBS\datetime_format;
 use function MRBS\escape_html;
 use function MRBS\format_iso_date;
-use function MRBS\get_day;
 use function MRBS\get_vocab;
 use function MRBS\is_hidden_day;
 use function MRBS\multisite;
@@ -37,6 +36,15 @@ abstract class Calendar
     {
       return datetime_format($datetime_formats['view_week_day_month'], $t);
     }
+  }
+
+
+  private function getDay(int $t) : string
+  {
+    // In the month view use a pattern which will tend to give a narrower result, to save space.
+    $pattern = ($this->view == 'month') ? 'cccccc' : 'ccc';
+
+    return datetime_format(['pattern' => $pattern], $t);
   }
 
 
@@ -140,7 +148,7 @@ abstract class Calendar
         $link = "index.php?" . http_build_query($vars, '', '&');
         $link = multisite($link);
         $t = mktime(12, 0, 0, $this->month, $day_start_interval + $j, $this->year);
-        $text = ($i === 0) ? get_day($t, $this->view) : $this->getDate($t);
+        $text = ($i === 0) ? $this->getDay($t) : $this->getDate($t);
         $date = new DateTime();
         $date->setTimestamp($t);
         $classes = $this->getDateClasses($date);
