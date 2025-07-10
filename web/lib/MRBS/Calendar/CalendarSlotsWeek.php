@@ -16,6 +16,7 @@ use function MRBS\get_start_last_slot;
 use function MRBS\get_vocab;
 use function MRBS\is_invalid_datetime;
 use function MRBS\is_possibly_invalid;
+use function MRBS\is_visible;
 use function MRBS\multiday_header_rows;
 use function MRBS\multisite;
 
@@ -135,7 +136,7 @@ class CalendarSlotsWeek extends CalendarSlots
 
     else
     {
-      $header_inner_rows = multiday_header_rows($this->view, $this->view_all, $this->year, $this->month, $day_start_week, $this->area_id, $this->room_id, DAYS_PER_WEEK, $weekstarts, $label);
+      $header_inner_rows = $this->multidayHeaderRowsHTML($this->view, $this->view_all, $this->year, $this->month, $day_start_week, $this->area_id, $this->room_id, DAYS_PER_WEEK, $weekstarts, $label);
     }
 
 
