@@ -9,7 +9,6 @@ use function MRBS\day_name;
 use function MRBS\escape_html;
 use function MRBS\get_end_last_slot;
 use function MRBS\get_entries_by_room;
-use function MRBS\get_entry_classes;
 use function MRBS\get_mrbs_locale;
 use function MRBS\get_room_name;
 use function MRBS\get_start_first_slot;
@@ -195,7 +194,7 @@ class CalendarMonthOneRoom extends Calendar
 
           $entry = prepare_entry($entry);
 
-          $classes = get_entry_classes($entry);
+          $classes = $this->getEntryClasses($entry);
           $classes[] = $monthly_view_entries_details;
 
           $html .= '<div class="' . implode(' ', $classes) . '">';

@@ -64,50 +64,6 @@ function prepare_entry(array $entry) : array
 }
 
 
-// Returns an array of classes to be used for the entry
-function get_entry_classes(array $entry) : array
-{
-  global $approval_enabled, $confirmation_enabled;
-
-  $classes = array($entry['type']);
-
-  if ($entry['private'])
-  {
-    $classes[] = 'private';
-  }
-
-  if ($approval_enabled && ($entry['awaiting_approval']))
-  {
-    $classes[] = 'awaiting_approval';
-  }
-
-  if ($confirmation_enabled && ($entry['tentative']))
-  {
-    $classes[] = 'tentative';
-  }
-
-  if (isset($entry['repeat_id']))
-  {
-    $classes[] = 'series';
-  }
-
-  if ($entry['allow_registration'])
-  {
-    if ($entry['registrant_limit_enabled'] &&
-        ($entry['n_registered'] >= $entry['registrant_limit']))
-    {
-      $classes[] = 'full';
-    }
-    else
-    {
-      $classes[] = 'spaces';
-    }
-  }
-
-  return $classes;
-}
-
-
 // Draw a room cell to be used in the header rows/columns of the calendar views
 //    $room    a Room object
 //    $vars    an associative array containing the variables to be used to build the link
