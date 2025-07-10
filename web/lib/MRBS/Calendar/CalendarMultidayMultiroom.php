@@ -14,7 +14,7 @@ use function MRBS\get_slots;
 use function MRBS\get_start_first_slot;
 use function MRBS\get_vocab;
 use function MRBS\multisite;
-use function MRBS\room_cell_html;
+
 
 class CalendarMultidayMultiroom extends Calendar
 {
@@ -150,7 +150,7 @@ class CalendarMultidayMultiroom extends Calendar
         $room_id = $room['id'];
         $room_link_vars['room'] = $room_id;
         $tbody .= "<tr>\n";
-        $row_label = room_cell_html($room, $room_link_vars);
+        $row_label = $this->roomCellHTML($room, $room_link_vars);
         $tbody .= $row_label;
 
         for ($j = 0, $date = clone $start_date; $j < $n_days; $j++, $date->modify('+1 day'))
