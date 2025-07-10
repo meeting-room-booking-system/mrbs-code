@@ -135,7 +135,7 @@ class CalendarSlotsWeek extends CalendarSlots
 
     else
     {
-      $header_inner_rows = $this->multidayHeaderRowsHTML($this->view, $this->view_all, $this->year, $this->month, $day_start_week, $this->area_id, $this->room_id, DAYS_PER_WEEK, $weekstarts, $label);
+      $header_inner_rows = $this->multidayHeaderRowsHTML($day_start_week, DAYS_PER_WEEK, $weekstarts, $label);
     }
 
 

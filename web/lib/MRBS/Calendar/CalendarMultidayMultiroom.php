@@ -118,7 +118,7 @@ class CalendarMultidayMultiroom extends Calendar
 
     if ($days_along_top)
     {
-      $header_inner_rows = $this->multidayHeaderRowsHTML($this->view, $this->view_all, $this->year, $this->month, $day_start_interval, $this->area_id, $this->room_id, $n_days, $start_dow);
+      $header_inner_rows = $this->multidayHeaderRowsHTML($day_start_interval, $n_days, $start_dow);
     }
     else
     {

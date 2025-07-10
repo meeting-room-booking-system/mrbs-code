@@ -25,11 +25,11 @@ abstract class Calendar
   abstract public function innerHTML() : string;
 
 
-  private function getDate(int $t, string $view) : string
+  private function getDate(int $t) : string
   {
     global $datetime_formats;
 
-    if ($view == 'month')
+    if ($this->view === 'month')
     {
       return datetime_format(['pattern' => 'd'], $t);
     }
@@ -105,18 +105,7 @@ abstract class Calendar
   }
 
 
-  protected function multidayHeaderRowsHTML(
-    string $view,
-    int $view_all,
-    int $year,
-    int $month,
-    int $day_start_interval,
-    int $area_id,
-    int $room_id,
-    int $n_days,
-    int $start_dow,
-    string $label=''
-  ) : array
+  protected function multidayHeaderRowsHTML(int $day_start_interval, int $n_days, int $start_dow, string $label='') : array
   {
     global $row_labels_both_sides;
 
@@ -133,12 +122,12 @@ abstract class Calendar
       $first_last_html = '<th class="first_last">' . escape_html($text) . "</th>\n";
       $result[$i] .= $first_last_html;
 
-      $vars = array(
+      $vars = [
         'view' => 'day',
-        'view_all' => $view_all,
-        'area' => $area_id,
-        'room' => $room_id
-      );
+        'view_all' => $this->view_all,
+        'area' => $this->area_id,
+        'room' => $this->room_id
+      ];
 
       // the standard view, with days along the top and rooms down the side
       for ($j = 0; $j < $n_days; $j++)
@@ -147,11 +136,11 @@ abstract class Calendar
         {
           continue;
         }
-        $vars['page_date'] = format_iso_date($year, $month, $day_start_interval + $j);
+        $vars['page_date'] = format_iso_date($this->year, $this->month, $day_start_interval + $j);
         $link = "index.php?" . http_build_query($vars, '', '&');
         $link = multisite($link);
-        $t = mktime(12, 0, 0, $month, $day_start_interval + $j, $year);
-        $text = ($i === 0) ? get_day($t, $view) : $this->getDate($t, $view);
+        $t = mktime(12, 0, 0, $this->month, $day_start_interval + $j, $this->year);
+        $text = ($i === 0) ? get_day($t, $this->view) : $this->getDate($t);
         $date = new DateTime();
         $date->setTimestamp($t);
         $classes = $this->getDateClasses($date);
