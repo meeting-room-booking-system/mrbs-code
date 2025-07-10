@@ -5,27 +5,6 @@ namespace MRBS;
 use MRBS\Calendar\CalendarMonthOneRoom;
 use MRBS\Calendar\CalendarMultidayMultiroom;
 
-function get_date_classes(DateTime $date) : array
-{
-  $result = array();
-
-  if ($date->isWeekend())
-  {
-    $result[] = 'weekend';
-  }
-  if ($date->isHoliday())
-  {
-    $result[] = 'holiday';
-  }
-  if ($date->isToday())
-  {
-    $result[] = 'today';
-  }
-
-  return $result;
-}
-
-
 // Prepares an entry for display by (a) adding in registration level information
 // and (b) replacing the text in private fields if necessary.
 function prepare_entry(array $entry) : array

@@ -7,7 +7,6 @@ use MRBS\Room;
 use function MRBS\datetime_format;
 use function MRBS\day_of_MRBS_week;
 use function MRBS\escape_html;
-use function MRBS\get_date_classes;
 use function MRBS\get_entries_by_room;
 use function MRBS\get_n_time_slots;
 use function MRBS\get_slots;
@@ -282,7 +281,7 @@ class CalendarSlotsWeek extends CalendarSlots
     $html .= '<th data-date="' . escape_html($date->getISODate()) . '"';
 
     // Add classes for weekends and holidays
-    $classes = get_date_classes($date);
+    $classes = $this->getDateClasses($date);
     if (!empty($classes))
     {
       $html .= ' class="' . implode(' ', $classes) . '"';
