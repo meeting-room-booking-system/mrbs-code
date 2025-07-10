@@ -4,7 +4,6 @@ namespace MRBS\Calendar;
 
 use MRBS\DateTime;
 use function MRBS\escape_html;
-use function MRBS\get_entry_classes;
 use function MRBS\get_vocab;
 use function MRBS\getWritable;
 use function MRBS\hm_before;
@@ -156,7 +155,7 @@ abstract class CalendarSlots extends Calendar
           // 'width: 100%' and 'height: 100%' to fill the table-cell with the entire booking
           // including content.
 
-          $classes = get_entry_classes($booking);
+          $classes = $this->getEntryClasses($booking);
           $classes[] = 'booking';
 
           if ($booking['is_multiday_start'])

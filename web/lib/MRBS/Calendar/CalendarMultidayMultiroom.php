@@ -8,7 +8,6 @@ use function MRBS\escape_html;
 use function MRBS\format_iso_date;
 use function MRBS\get_end_last_slot;
 use function MRBS\get_entries_by_area;
-use function MRBS\get_entry_classes;
 use function MRBS\get_n_time_slots;
 use function MRBS\get_rooms;
 use function MRBS\get_slots;
@@ -220,7 +219,7 @@ class CalendarMultidayMultiroom extends Calendar
               $this_entry = $this_slot[0];
               $n =    $this_entry['n_slots'];
               $text = $this_entry['name'];
-              $classes = get_entry_classes($this_entry);
+              $classes = $this->getEntryClasses($this_entry);
               $tbody .= $this->flexDivHTML($n, $classes, $text, $text);
               $slots = 0;
             }
