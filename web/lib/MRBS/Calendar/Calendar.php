@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace MRBS\Calendar;
 
 use MRBS\DateTime;
+use MRBS\Room;
 use function MRBS\escape_html;
 use function MRBS\format_iso_date;
 use function MRBS\get_date;
@@ -164,7 +165,7 @@ abstract class Calendar
   // Draw a room cell to be used in the header rows/columns of the calendar views
   //    $room    a Room object
   //    $vars    an associative array containing the variables to be used to build the link
-  function room_cell_html(Room $room, array $vars) : string
+  protected function roomCellHTML(Room $room, array $vars) : string
   {
     $link = 'index.php?' . http_build_query($vars, '', '&');
     $link = multisite($link);
