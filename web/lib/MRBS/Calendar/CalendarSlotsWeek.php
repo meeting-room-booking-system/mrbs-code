@@ -16,8 +16,6 @@ use function MRBS\get_start_last_slot;
 use function MRBS\get_vocab;
 use function MRBS\is_invalid_datetime;
 use function MRBS\is_possibly_invalid;
-use function MRBS\is_visible;
-use function MRBS\multiday_header_rows;
 use function MRBS\multisite;
 
 class CalendarSlotsWeek extends CalendarSlots
