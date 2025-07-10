@@ -99,15 +99,6 @@ function week_table_innerhtml(string $view, int $view_all, int $year, int $month
 }
 
 
-function get_day(int $t, string $view) : string
-{
-  // In the month view use a pattern which will tend to give a narrower result, to save space.
-  $pattern = ($view == 'month') ? 'cccccc' : 'ccc';
-
-  return datetime_format(['pattern' => $pattern], $t);
-}
-
-
 // If we're not using periods, construct an array describing the slots to pass to the JavaScript so that
 // it can calculate where the timeline should be drawn.  (If we are using periods then the timeline is
 // meaningless because we don't know when periods begin and end.)
