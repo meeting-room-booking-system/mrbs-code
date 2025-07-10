@@ -8,7 +8,6 @@ use function MRBS\get_entries_by_area;
 use function MRBS\get_n_time_slots;
 use function MRBS\get_room_details;
 use function MRBS\get_rooms;
-use function MRBS\get_slots;
 use function MRBS\get_start_first_slot;
 use function MRBS\get_start_last_slot;
 use function MRBS\get_vocab;
@@ -100,7 +99,7 @@ class CalendarSlotsDay extends CalendarSlots
     // TABLE HEADER
     $thead = '<thead';
 
-    $slots = get_slots($this->month, $this->day, $this->year);
+    $slots = $this->getSlots($this->month, $this->day, $this->year);
     if (isset($slots))
     {
       // Remove the skipped slots from the start of the first day's array

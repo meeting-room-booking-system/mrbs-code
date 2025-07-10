@@ -10,7 +10,6 @@ use function MRBS\get_end_last_slot;
 use function MRBS\get_entries_by_area;
 use function MRBS\get_n_time_slots;
 use function MRBS\get_rooms;
-use function MRBS\get_slots;
 use function MRBS\get_start_first_slot;
 use function MRBS\get_vocab;
 use function MRBS\multisite;
@@ -105,7 +104,7 @@ class CalendarMultidayMultiroom extends Calendar
     // TABLE HEADER
     $thead = '<thead';
 
-    $slots = get_slots($this->month, $day_start_interval, $this->year, $n_days, true);
+    $slots = $this->getSlots($this->month, $day_start_interval, $this->year, $n_days, true);
     if (isset($slots))
     {
       // Add some data to enable the JavaScript to draw the timeline

@@ -9,7 +9,6 @@ use function MRBS\escape_html;
 use function MRBS\get_entries_by_room;
 use function MRBS\get_n_time_slots;
 use function MRBS\get_room_name;
-use function MRBS\get_slots;
 use function MRBS\get_start_first_slot;
 use function MRBS\get_start_last_slot;
 use function MRBS\get_vocab;
@@ -93,7 +92,7 @@ class CalendarSlotsWeek extends CalendarSlots
     // TABLE HEADER
     $thead = '<thead';
 
-    $slots = get_slots($this->month, $day_start_week, $this->year, DAYS_PER_WEEK);
+    $slots = $this->getSlots($this->month, $day_start_week, $this->year, DAYS_PER_WEEK);
     if (isset($slots))
     {
       // Add some data to enable the JavaScript to draw the timeline
