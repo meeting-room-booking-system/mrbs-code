@@ -162,9 +162,9 @@ abstract class Calendar
 
 
   // Draw a room cell to be used in the header rows/columns of the calendar views
-  //    $room    contains the room details
+  //    $room    a Room object
   //    $vars    an associative array containing the variables to be used to build the link
-  protected function roomCellHTML(array $room, array $vars) : string
+  function room_cell_html(Room $room, array $vars) : string
   {
     $link = 'index.php?' . http_build_query($vars, '', '&');
     $link = multisite($link);
@@ -186,19 +186,19 @@ abstract class Calendar
         break;
     }
 
-    $title = get_vocab($tag) . "\n\n" . $room['description'];
+    $title = get_vocab($tag) . "\n\n" . $room->description;
     $html = '';
-    $html .= '<th data-room="' . escape_html($room['id']) . '">';
+    $html .= '<th data-room="' . escape_html($room->id) . '">';
     $html .= '<a href="' . escape_html($link) . '"' .
       ' title = "' . escape_html($title) . '">';
-    $html .= escape_html($room['room_name']);
+    $html .= escape_html($room->room_name);
     // Put the capacity in a span to give flexibility in styling
     $html .= '<span class="capacity';
-    if ($room['capacity'] == 0)
+    if ($room->capacity == 0)
     {
       $html .= ' zero';
     }
-    $html .= '">' . escape_html($room['capacity']);
+    $html .= '">' . escape_html($room->capacity);
     $html .= '</span>';
     $html .= '</a>';
     $html .= "</th>\n";
