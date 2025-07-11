@@ -72,7 +72,7 @@ function week_table_innerhtml(string $view, int $view_all, int $year, int $month
   }
   else
   {
-    $calendar = new Calendar\CalendarSlotsWeek($view, $view_all, $year, $month, $day, $area_id, $room_id, $timetohighlight);
+    $calendar = new Calendar\CalendarMultislotWeek($view, $view_all, $year, $month, $day, $area_id, $room_id, $timetohighlight);
   }
   return $calendar->innerHTML();
 }
