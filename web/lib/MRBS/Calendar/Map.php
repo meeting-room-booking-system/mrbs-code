@@ -5,12 +5,16 @@ namespace MRBS\Calendar;
 // A class for building a map of bookings which can be used for constructing the calendar display
 use MRBS\DateTime;
 use MRBS\Exception;
+use function MRBS\auth;
 use function MRBS\get_start_first_slot;
 use function MRBS\get_start_last_slot;
+use function MRBS\get_vocab;
+use function MRBS\getWritable;
+use function MRBS\is_private_event;
 use function MRBS\nominal_seconds;
-use function MRBS\prepare_entry;
 use function MRBS\round_t_down;
 use function MRBS\round_t_up;
+use function MRBS\session;
 
 class Map
 {
@@ -150,7 +154,7 @@ class Map
       // Add the entry to the array of entries if it's not already there
       if (!isset($this->entries[$entry['id']]))
       {
-        $this->entries[$entry['id']] = prepare_entry($entry);
+        $this->entries[$entry['id']] = self::prepareEntry($entry);
       }
       // Store a pointer to this entry, together with the additional data
       $this->data[$entry['room_id']][$day_index][$s][] = [
@@ -160,6 +164,65 @@ class Map
         self::ENTRY_N_SLOTS => $n_slots
       ];
     }
+  }
+
+
+  // Prepares an entry for display by (a) adding in registration level information
+  // and (b) replacing the text in private fields if necessary.
+  public static function prepareEntry(array $entry) : array
+  {
+    global $is_private_field, $show_registration_level, $auth, $kiosk;
+
+    // Add in the registration level details
+    if ($show_registration_level && $entry['allow_registration'])
+    {
+      // Check whether we should be showing the registrants' names
+      $show_names = ($auth['show_registrant_names_in_calendar'] && ($entry['n_registered'] > 0));
+      if ($show_names && !$auth['show_registrant_names_in_public_calendar'])
+      {
+        // If we're not allowed to show names in the public calendar, check that the user is logged in
+        // and has an access level of at least 1
+        $mrbs_user = session()->getCurrentUser();
+        $show_names = isset($mrbs_user) && ($mrbs_user->level > 0);
+      }
+      $names = ($show_names) ? implode(', ', auth()->getRegistrantsDisplayNames($entry)) : '';
+      if ($entry['registrant_limit_enabled'])
+      {
+        $tag = ($show_names) ? 'registration_level_limited_with_names' : 'registration_level_limited';
+        $entry['name'] .= get_vocab($tag, $entry['n_registered'], $entry['registrant_limit'], $names);
+      }
+      else
+      {
+        $tag = ($show_names) ? 'registration_level_unlimited_with_names' : 'registration_level_unlimited';
+        $entry['name'] .= get_vocab($tag, $entry['n_registered'], $names);
+      }
+    }
+
+    // Check whether the event is private
+    if (is_private_event($entry['private']) &&
+      ($kiosk || !getWritable($entry['create_by'], $entry['room_id'])))
+    {
+      $entry['private'] = true;
+
+      foreach (array('name', 'description') as $key)
+      {
+        if ($is_private_field["entry.$key"])
+        {
+          $entry[$key] = get_vocab('unavailable');
+        }
+      }
+
+      if (!empty($is_private_field['entry.type']))
+      {
+        $entry['type'] = 'private_type';
+      }
+    }
+    else
+    {
+      $entry['private'] = false;
+    }
+
+    return $entry;
   }
 
 

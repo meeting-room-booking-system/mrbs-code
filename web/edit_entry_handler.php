@@ -7,7 +7,7 @@ require_once 'mrbs_sql.inc';
 require_once 'functions_ical.inc';
 require_once 'functions_mail.inc';
 
-use MRBS\Calendar\CalendarMultislotDay;
+use MRBS\Calendar\CalendarFactory;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\Form;
 
@@ -829,25 +829,11 @@ try
   // If this is an Ajax request, output the result and finish
   if ($is_ajax)
   {
-    // Generate the new HTML
     if ($commit)
     {
       // Generate the new HTML
-      require_once "functions_table.inc";
-
-      switch ($view)
-      {
-        case 'day':
-          $calendar = new CalendarMultislotDay($view, $year, $month, $day, $area, $room, $timetohighlight);
-          $result['table_innerhtml'] = $calendar->innerHTML();
-          break;
-        case 'week':
-          $result['table_innerhtml'] = week_table_innerhtml($view, $view_all, $year, $month, $day, $area, $room, $timetohighlight);
-          break;
-        default:
-          throw new \Exception("Unsupported view '$view'");
-          break;
-      }
+      $calendar = CalendarFactory::create($view, $view_all, $year, $month, $day, $area, $room, $timetohighlight);
+      $result['table_innerhtml'] = $calendar->innerHTML();
     }
     http_headers(array("Content-Type: application/json"));
     echo json_encode($result);

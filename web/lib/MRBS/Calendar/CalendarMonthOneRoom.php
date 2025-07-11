@@ -19,7 +19,6 @@ use function MRBS\is_visible;
 use function MRBS\is_weekend;
 use function MRBS\multisite;
 use function MRBS\period_time_string;
-use function MRBS\prepare_entry;
 use function MRBS\session;
 
 class CalendarMonthOneRoom extends Calendar
@@ -186,7 +185,7 @@ class CalendarMonthOneRoom extends Calendar
             continue;
           }
 
-          $entry = prepare_entry($entry);
+          $entry = Map::prepareEntry($entry);
 
           $classes = $this->getEntryClasses($entry);
           $classes[] = $monthly_view_entries_details;
