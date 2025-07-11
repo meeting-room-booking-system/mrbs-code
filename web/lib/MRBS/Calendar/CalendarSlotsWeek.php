@@ -7,7 +7,6 @@ use function MRBS\datetime_format;
 use function MRBS\day_of_MRBS_week;
 use function MRBS\escape_html;
 use function MRBS\get_entries_by_room;
-use function MRBS\get_n_time_slots;
 use function MRBS\get_room_name;
 use function MRBS\get_start_first_slot;
 use function MRBS\get_start_last_slot;
@@ -85,7 +84,7 @@ class CalendarSlotsWeek extends CalendarSlots
     $map->addEntries($entries);
 
     // START DISPLAYING THE MAIN TABLE
-    $n_time_slots = get_n_time_slots();
+    $n_time_slots = $this->getNTimeSlots();
     $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
     $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
 

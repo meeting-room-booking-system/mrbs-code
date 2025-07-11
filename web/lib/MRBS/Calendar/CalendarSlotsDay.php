@@ -5,7 +5,6 @@ namespace MRBS\Calendar;
 use MRBS\DateTime;
 use function MRBS\escape_html;
 use function MRBS\get_entries_by_area;
-use function MRBS\get_n_time_slots;
 use function MRBS\get_room_details;
 use function MRBS\get_rooms;
 use function MRBS\get_start_first_slot;
@@ -92,7 +91,7 @@ class CalendarSlotsDay extends CalendarSlots
     $map = new Map($start_date, $end_date, $resolution);
     $map->addEntries($entries);
 
-    $n_time_slots = get_n_time_slots() - $skipped_slots;
+    $n_time_slots = $this->getNTimeSlots() - $skipped_slots;
     $morning_slot_seconds = ((($morningstarts * 60) + $morningstarts_minutes) * 60) + ($skipped_slots * $resolution);
     $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
 
