@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace MRBS;
 
-use MRBS\Calendar\CalendarSlotsDay;
+use MRBS\Calendar\CalendarFactory;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementSelect;
 use MRBS\Form\Form;
@@ -10,8 +10,6 @@ use MRBS\Intl\IntlDateFormatter;
 use OpenPsa\Ranger\Ranger;
 
 require "defaultincludes.inc";
-require_once "functions_table.inc";
-
 
 // Display the entry-type color key.
 function get_color_key() : string
@@ -477,27 +475,8 @@ if (!checkAuthorised(this_page(), $refresh))
   exit;
 }
 
-switch ($view)
-{
-  case 'week':
-    $inner_html = week_table_innerhtml($view, $view_all, $year, $month, $day, $area, $room, $timetohighlight);
-    break;
-  case 'month':
-    $inner_html = month_table_innerhtml($view, $view_all, $year, $month, $day, $area, $room);
-    break;
-  case 'year':
-    $inner_html = year_table_innerhtml($view, $view_all, $year, $month, $day, $area, $room);
-    break;
-  default:
-    if ($view !== 'day')
-    {
-      trigger_error("Unknown view '$view'", E_USER_WARNING);
-    }
-    $calendar = new CalendarSlotsDay($view, $year, $month, $day, $area, $room, $timetohighlight, $kiosk);
-    $inner_html = $calendar->innerHTML();
-    break;
-}
-
+$calendar = CalendarFactory::create($view, $view_all, $year, $month, $day, $area, $room, $timetohighlight, $kiosk);
+$inner_html = $calendar->innerHTML();
 $date_heading = get_date_heading($view, $year, $month, $day);
 
 if ($refresh)

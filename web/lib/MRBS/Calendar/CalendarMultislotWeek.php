@@ -3,30 +3,21 @@ declare(strict_types=1);
 namespace MRBS\Calendar;
 
 use MRBS\DateTime;
-use function MRBS\cell_html;
 use function MRBS\datetime_format;
 use function MRBS\day_of_MRBS_week;
 use function MRBS\escape_html;
-use function MRBS\get_date_classes;
 use function MRBS\get_entries_by_room;
-use function MRBS\get_n_time_slots;
 use function MRBS\get_room_name;
-use function MRBS\get_slots;
 use function MRBS\get_start_first_slot;
 use function MRBS\get_start_last_slot;
-use function MRBS\get_times_header_cells;
 use function MRBS\get_vocab;
 use function MRBS\is_invalid_datetime;
 use function MRBS\is_possibly_invalid;
 use function MRBS\is_visible;
-use function MRBS\multiday_header_rows;
 use function MRBS\multisite;
-use function MRBS\time_cell_html;
 
-class CalendarSlotsWeek extends CalendarSlots
+class CalendarMultislotWeek extends CalendarMultislot
 {
-  private $view_all;
-
 
   public function __construct(string $view, int $view_all, int $year, int $month, int $day, int $area_id, int $room_id, ?int $timetohighlight=null)
   {
@@ -93,14 +84,14 @@ class CalendarSlotsWeek extends CalendarSlots
     $map->addEntries($entries);
 
     // START DISPLAYING THE MAIN TABLE
-    $n_time_slots = get_n_time_slots();
+    $n_time_slots = $this->getNTimeSlots();
     $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
     $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
 
     // TABLE HEADER
     $thead = '<thead';
 
-    $slots = get_slots($this->month, $day_start_week, $this->year, DAYS_PER_WEEK);
+    $slots = $this->getSlots($this->month, $day_start_week, $this->year, DAYS_PER_WEEK);
     if (isset($slots))
     {
       // Add some data to enable the JavaScript to draw the timeline
@@ -130,7 +121,7 @@ class CalendarSlotsWeek extends CalendarSlots
       $header_inner = "<tr>\n";
       $first_last_html = '<th class="first_last">' . $label . "</th>\n";
       $header_inner .= $first_last_html;
-      $header_inner .= get_times_header_cells($morning_slot_seconds, $evening_slot_seconds, $resolution);
+      $header_inner .= $this->theadThTimeCellsHTML($morning_slot_seconds, $evening_slot_seconds, $resolution);
       // next line to display times on right side
       if ($row_labels_both_sides)
       {
@@ -142,7 +133,7 @@ class CalendarSlotsWeek extends CalendarSlots
 
     else
     {
-      $header_inner_rows = multiday_header_rows($this->view, $this->view_all, $this->year, $this->month, $day_start_week, $this->area_id, $this->room_id, DAYS_PER_WEEK, $weekstarts, $label);
+      $header_inner_rows = $this->multidayHeaderRowsHTML($day_start_week, DAYS_PER_WEEK, $weekstarts, $label);
     }
 
 
@@ -192,7 +183,7 @@ class CalendarSlotsWeek extends CalendarSlots
           // set up the query vars to be used for the link in the cell
           $query_vars = $this->getQueryVars($this->room_id, $date->getMonth(), $date->getDay(), $date->getYear(), $s);
           // and then draw the cell
-          $tbody .= cell_html($map->slot($this->room_id, $j, $s), $query_vars, $is_invalid);
+          $tbody .= $this->tdHTML($map->slot($this->room_id, $j, $s), $query_vars, $is_invalid);
         }  // end looping through the time slots
         if ($row_labels_both_sides)
         {
@@ -241,7 +232,7 @@ class CalendarSlotsWeek extends CalendarSlots
         }
         $tbody .= ">\n";
 
-        $tbody .= time_cell_html($s, $url);
+        $tbody .= $this->tbodyThTimeCellHTML($s, $url);
 
 
         // See note above: weekday==0 is day $weekstarts, not necessarily Sunday.
@@ -261,13 +252,13 @@ class CalendarSlotsWeek extends CalendarSlots
           $query_vars = $this->getQueryVars($this->room_id, $cell_month, $cell_day, $cell_year, $s);
 
           // and then draw the cell
-          $tbody .= cell_html($map->slot($this->room_id, $j, $s), $query_vars, $is_invalid);
+          $tbody .= $this->tdHTML($map->slot($this->room_id, $j, $s), $query_vars, $is_invalid);
         }
 
         // next lines to display times on right side
         if ($row_labels_both_sides)
         {
-          $tbody .= time_cell_html($s, $url);
+          $tbody .= $this->tbodyThTimeCellHTML($s, $url);
         }
 
         $tbody .= "</tr>\n";
@@ -290,7 +281,7 @@ class CalendarSlotsWeek extends CalendarSlots
     $html .= '<th data-date="' . escape_html($date->getISODate()) . '"';
 
     // Add classes for weekends and holidays
-    $classes = get_date_classes($date);
+    $classes = $this->getDateClasses($date);
     if (!empty($classes))
     {
       $html .= ' class="' . implode(' ', $classes) . '"';

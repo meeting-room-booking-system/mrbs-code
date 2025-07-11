@@ -53,7 +53,7 @@ class System
       {
         $locale = "$a$b$c";
         setlocale(LC_ALL, $locale);
-        $result = setlocale(LC_ALL, 0);
+        $result = setlocale(LC_ALL, '0');
         if ($locale != $result)
         {
           echo "$locale: $result\n";
@@ -1261,7 +1261,7 @@ class System
   {
     // Save the original locales so that we can restore them later.   Note that
     // there could be different locales for different categories
-    $original_locales = explode(';', setlocale(LC_ALL, 0));
+    $original_locales = explode(';', setlocale(LC_ALL, '0'));
 
     $os_locale = self::getOSLocale($langtag);
 

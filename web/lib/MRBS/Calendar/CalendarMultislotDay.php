@@ -3,24 +3,18 @@ declare(strict_types=1);
 namespace MRBS\Calendar;
 
 use MRBS\DateTime;
-use function MRBS\cell_html;
 use function MRBS\escape_html;
 use function MRBS\get_entries_by_area;
-use function MRBS\get_n_time_slots;
 use function MRBS\get_room_details;
 use function MRBS\get_rooms;
-use function MRBS\get_slots;
 use function MRBS\get_start_first_slot;
 use function MRBS\get_start_last_slot;
-use function MRBS\get_times_header_cells;
 use function MRBS\get_vocab;
 use function MRBS\is_invalid_datetime;
 use function MRBS\is_possibly_invalid;
 use function MRBS\multisite;
-use function MRBS\room_cell_html;
-use function MRBS\time_cell_html;
 
-class CalendarSlotsDay extends CalendarSlots
+class CalendarMultislotDay extends CalendarMultislot
 {
   private $kiosk;
 
@@ -97,14 +91,14 @@ class CalendarSlotsDay extends CalendarSlots
     $map = new Map($start_date, $end_date, $resolution);
     $map->addEntries($entries);
 
-    $n_time_slots = get_n_time_slots() - $skipped_slots;
+    $n_time_slots = $this->getNTimeSlots() - $skipped_slots;
     $morning_slot_seconds = ((($morningstarts * 60) + $morningstarts_minutes) * 60) + ($skipped_slots * $resolution);
     $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
 
     // TABLE HEADER
     $thead = '<thead';
 
-    $slots = get_slots($this->month, $this->day, $this->year);
+    $slots = $this->getSlots($this->month, $this->day, $this->year);
     if (isset($slots))
     {
       // Remove the skipped slots from the start of the first day's array
@@ -141,16 +135,18 @@ class CalendarSlotsDay extends CalendarSlots
     // We can display the table in two ways
     if ($times_along_top)
     {
-      $header_inner .= get_times_header_cells($morning_slot_seconds, $evening_slot_seconds, $resolution);
+      $header_inner .= $this->theadThTimeCellsHTML($morning_slot_seconds, $evening_slot_seconds, $resolution);
     }
     else
     {
-      $vars = array('view'     => 'week',
+      $vars = [
+        'view'     => 'week',
         'view_all' => 0,
         'year'     => $this->year,
         'month'    => $this->month,
         'day'      => $this->day,
-        'area'     => $this->area_id);
+        'area'     => $this->area_id
+      ];
 
       $header_inner .= $this->roomsHeaderCellsHTML($rooms, $vars);
     }  // end standard view (for the header)
@@ -194,7 +190,7 @@ class CalendarSlotsDay extends CalendarSlots
           'area'     => $this->area_id,
           'room'     => $room['id']);
 
-        $row_label = room_cell_html($room, $vars);
+        $row_label = $this->roomCellHTML($room, $vars);
         $tbody .= $row_label;
         $is_invalid = array();
         for ($s = $morning_slot_seconds;
@@ -211,7 +207,7 @@ class CalendarSlotsDay extends CalendarSlots
           $query_vars = $this->getQueryVars($room['id'], $this->month, $this->day, $this->year, $s);
 
           // and then draw the cell
-          $tbody .= cell_html($map->slot($room['id'], 0, $s), $query_vars, $is_invalid[$s]);
+          $tbody .= $this->tdHTML($map->slot($room['id'], 0, $s), $query_vars, $is_invalid[$s]);
         }  // end for (looping through the times)
         if ($row_labels_both_sides)
         {
@@ -263,20 +259,20 @@ class CalendarSlotsDay extends CalendarSlots
         }
         $tbody .= ">\n";
 
-        $tbody .= time_cell_html($s, $url);
+        $tbody .= $this->tbodyThTimeCellHTML($s, $url);
         $is_invalid = $is_possibly_invalid && is_invalid_datetime(0, 0, $s, $this->month, $this->day, $this->year);
         // Loop through the list of rooms we have for this area
         foreach ($rooms as $room)
         {
           // set up the query vars to be used for the link in the cell
           $query_vars = $this->getQueryVars($room['id'], $this->month, $this->day, $this->year, $s);
-          $tbody .= cell_html($map->slot($room['id'], 0, $s), $query_vars, $is_invalid);
+          $tbody .= $this->tdHTML($map->slot($room['id'], 0, $s), $query_vars, $is_invalid);
         }
 
         // next lines to display times on right side
         if ($row_labels_both_sides)
         {
-          $tbody .= time_cell_html($s, $url);
+          $tbody .= $this->tbodyThTimeCellHTML($s, $url);
         }
 
         $tbody .= "</tr>\n";
@@ -296,7 +292,7 @@ class CalendarSlotsDay extends CalendarSlots
     foreach($rooms as $room)
     {
       $vars['room'] = $room['id'];
-      $html .= room_cell_html($room, $vars);
+      $html .= $this->roomCellHTML($room, $vars);
     }
 
     return $html;
