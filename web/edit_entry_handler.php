@@ -7,7 +7,7 @@ require_once 'mrbs_sql.inc';
 require_once 'functions_ical.inc';
 require_once 'functions_mail.inc';
 
-use MRBS\Calendar\CalendarSlotsDay;
+use MRBS\Calendar\CalendarMultislotDay;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\Form;
 
@@ -847,7 +847,7 @@ try
       switch ($view)
       {
         case 'day':
-          $calendar = new CalendarSlotsDay($view, $year, $month, $day, $area, $room, $timetohighlight);
+          $calendar = new CalendarMultislotDay($view, $year, $month, $day, $area, $room, $timetohighlight);
           $result['table_innerhtml'] = $calendar->innerHTML();
           break;
         case 'week':

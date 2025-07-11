@@ -14,7 +14,7 @@ use function MRBS\period_index_nominal;
 use function MRBS\period_name_nominal;
 use function MRBS\session;
 
-abstract class CalendarSlots extends Calendar
+abstract class CalendarMultislot extends Calendar
 {
   protected $timetohighlight;
 

@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace MRBS;
 
-use MRBS\Calendar\CalendarSlotsDay;
+use MRBS\Calendar\CalendarMultislotDay;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementSelect;
 use MRBS\Form\Form;
@@ -467,7 +467,7 @@ switch ($view)
     {
       trigger_error("Unknown view '$view'", E_USER_WARNING);
     }
-    $calendar = new CalendarSlotsDay($view, $year, $month, $day, $area, $room, $timetohighlight, $kiosk);
+    $calendar = new CalendarMultislotDay($view, $year, $month, $day, $area, $room, $timetohighlight, $kiosk);
     $inner_html = $calendar->innerHTML();
     break;
 }

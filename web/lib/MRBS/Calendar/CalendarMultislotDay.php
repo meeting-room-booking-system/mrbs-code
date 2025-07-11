@@ -13,7 +13,7 @@ use function MRBS\is_invalid_datetime;
 use function MRBS\is_possibly_invalid;
 use function MRBS\multisite;
 
-class CalendarSlotsDay extends CalendarSlots
+class CalendarMultislotDay extends CalendarMultislot
 {
   private $kiosk;
 
