@@ -36,6 +36,9 @@ class CalendarFactory
         }
         return new CalendarMonthOneRoom($view, $view_all, $year, $month, $day, $area_id, $room_id);
         break;
+      case 'year':
+        return new CalendarMultimonthMultiroom($view, $view_all, $year, $month, $day, $area_id, $room_id);
+        break;
       default:
         throw new InvalidArgumentException("Invalid view: $view");
         break;
