@@ -5,9 +5,9 @@ namespace MRBS\Calendar;
 use MRBS\DateTime;
 use MRBS\Room;
 use function MRBS\datetime_format;
+use function MRBS\day_past_midnight;
 use function MRBS\escape_html;
 use function MRBS\format_iso_date;
-use function MRBS\get_n_time_slots;
 use function MRBS\get_vocab;
 use function MRBS\is_hidden_day;
 use function MRBS\multisite;
@@ -50,6 +50,27 @@ abstract class Calendar
   }
 
 
+  // Gets the number of time slots between the beginning and end of the booking
+  // day.   (This is the normal number on a non-DST transition day)
+  protected function getNTimeSlots() : int
+  {
+    global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
+    global $resolution;
+
+    $start_first = (($morningstarts * 60) + $morningstarts_minutes) * 60;           // seconds
+    $end_last = ((($eveningends * 60) + $eveningends_minutes) * 60) + $resolution;  // seconds
+    $end_last = $end_last % SECONDS_PER_DAY;
+    if (day_past_midnight())
+    {
+      $end_last += SECONDS_PER_DAY;
+    }
+
+    // Force the result to be an int.  It normally will be, but might not be if, say,
+    // $force_resolution is set.
+    return intval(($end_last - $start_first)/$resolution);
+  }
+
+
   // If we're not using periods, construct an array describing the slots to pass to the JavaScript so that
   // it can calculate where the timeline should be drawn.  (If we are using periods then the timeline is
   // meaningless because we don't know when periods begin and end.)
@@ -67,7 +88,7 @@ abstract class Calendar
 
     $slots = array();
 
-    $n_time_slots = get_n_time_slots();
+    $n_time_slots = $this->getNTimeSlots();
     $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
     $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
 

@@ -64,27 +64,6 @@ function prepare_entry(array $entry) : array
 }
 
 
-// Gets the number of time slots between the beginning and end of the booking
-// day.   (This is the normal number on a non-DST transition day)
-function get_n_time_slots() : int
-{
-  global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
-  global $resolution;
-
-  $start_first = (($morningstarts * 60) + $morningstarts_minutes) * 60;           // seconds
-  $end_last = ((($eveningends * 60) + $eveningends_minutes) * 60) + $resolution;  // seconds
-  $end_last = $end_last % SECONDS_PER_DAY;
-  if (day_past_midnight())
-  {
-    $end_last += SECONDS_PER_DAY;
-  }
-
-  // Force the result to be an int.  It normally will be, but might not be if, say,
-  // $force_resolution is set.
-  return intval(($end_last - $start_first)/$resolution);
-}
-
-
 function week_table_innerhtml(string $view, int $view_all, int $year, int $month, int $day, int $area_id, int $room_id, ?int $timetohighlight) : string
 {
   if ($view_all)

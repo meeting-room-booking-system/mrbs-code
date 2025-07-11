@@ -9,7 +9,6 @@ use function MRBS\escape_html;
 use function MRBS\format_iso_date;
 use function MRBS\get_end_last_slot;
 use function MRBS\get_entries_by_area;
-use function MRBS\get_n_time_slots;
 use function MRBS\get_start_first_slot;
 use function MRBS\get_vocab;
 use function MRBS\multisite;
@@ -84,7 +83,7 @@ class CalendarMultidayMultiroom extends Calendar
     }
 
     // Get the time slots
-    $n_time_slots = get_n_time_slots();
+    $n_time_slots = $this->getNTimeSlots();
     $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
     $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
 
