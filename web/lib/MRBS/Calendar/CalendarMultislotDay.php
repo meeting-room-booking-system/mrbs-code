@@ -91,7 +91,7 @@ class CalendarMultislotDay extends CalendarMultislot
     $map = new Map($start_date, $end_date, $resolution);
     $map->addEntries($entries);
 
-    $n_time_slots = $this->getNTimeSlots() - $skipped_slots;
+    $n_time_slots = self::getNTimeSlots() - $skipped_slots;
     $morning_slot_seconds = ((($morningstarts * 60) + $morningstarts_minutes) * 60) + ($skipped_slots * $resolution);
     $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
 

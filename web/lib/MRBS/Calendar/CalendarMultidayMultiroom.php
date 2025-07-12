@@ -85,7 +85,7 @@ class CalendarMultidayMultiroom extends Calendar
     }
 
     // Get the time slots
-    $n_time_slots = $this->getNTimeSlots();
+    $n_time_slots = self::getNTimeSlots();
     $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
     $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
 
