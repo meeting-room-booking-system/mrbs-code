@@ -82,7 +82,7 @@ class CalendarMultislotWeek extends CalendarMultislot
     $map->addEntries($entries);
 
     // START DISPLAYING THE MAIN TABLE
-    $n_time_slots = $this->getNTimeSlots();
+    $n_time_slots = self::getNTimeSlots();
     $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
     $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
 
