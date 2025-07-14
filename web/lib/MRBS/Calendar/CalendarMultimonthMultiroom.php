@@ -4,6 +4,7 @@ namespace MRBS\Calendar;
 
 
 use MRBS\DateTime;
+use MRBS\Exception;
 use function MRBS\datetime_format;
 use function MRBS\escape_html;
 use function MRBS\format_iso_date;
@@ -13,6 +14,7 @@ use function MRBS\multisite;
 
 class CalendarMultimonthMultiroom extends Calendar
 {
+  private $n_months;
 
   public function __construct(string $view, int $view_all, int $year, int $month, int $day, int $area_id, int $room_id)
   {
@@ -23,6 +25,16 @@ class CalendarMultimonthMultiroom extends Calendar
     $this->day = $day;
     $this->area_id = $area_id;
     $this->room_id = $room_id;
+
+    if ($view === 'year')
+    {
+      $this->n_months = MONTHS_PER_YEAR;
+    }
+    else
+    {
+      throw new Exception("Invalid view: '$view'");
+    }
+
   }
 
 
@@ -43,8 +55,7 @@ class CalendarMultimonthMultiroom extends Calendar
     $thead = '<thead';
     // TODO: get_slots() for JavaScript
     $thead .= ">\n";
-    $n_months = MONTHS_PER_YEAR;
-    $header_row = $this->headerRowHTML($n_months);
+    $header_row = $this->headerRowHTML();
     $thead .= $header_row;
     $thead .= "</thead>\n";
 
@@ -65,7 +76,7 @@ class CalendarMultimonthMultiroom extends Calendar
       $row_label = $this->roomCellHTML($room, $room_link_vars);
       $tbody .= $row_label;
 
-      for ($i=0; $i<$n_months; $i++)
+      for ($i=0; $i<$this->n_months; $i++)
       {
         $tbody .= "<td></td>";
       }
@@ -85,10 +96,7 @@ class CalendarMultimonthMultiroom extends Calendar
   }
 
 
-  private function headerRowHTML(
-    int $n_months,
-    string $label=''
-  ) : string
+  private function headerRowHTML(string $label='') : string
   {
     global $datetime_formats, $row_labels_both_sides, $year_start;
 
@@ -108,7 +116,8 @@ class CalendarMultimonthMultiroom extends Calendar
       'area' => $this->area_id,
       'room' => $this->room_id
     ];
-    for ($i=0; $i<$n_months; $i++)
+
+    for ($i=0; $i<$this->n_months; $i++)
     {
       $vars['page_date'] = $date->getISODate();
       $link = 'index.php?' . http_build_query($vars, '', '&');
