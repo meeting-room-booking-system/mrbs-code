@@ -40,7 +40,7 @@ class CalendarMultimonthMultiroom extends Calendar
 
   public function innerHTML(): string
   {
-    global $column_labels_both_ends, $row_labels_both_sides;
+    global $column_labels_both_ends, $row_labels_both_sides, $year_start;
 
     // Check to see whether there are any rooms in the area
     $rooms = get_rooms($this->area_id);
@@ -76,9 +76,27 @@ class CalendarMultimonthMultiroom extends Calendar
       $row_label = $this->roomCellHTML($room, $room_link_vars);
       $tbody .= $row_label;
 
+      $date = (new DateTime())->setDate($this->year, $this->month, $this->day);
+      $date->setMonthYearStart($year_start);
+      // The variables for the link query string
+      $vars = [
+        'view' => 'month',
+        'view_all' => 0,
+        'area' => $this->area_id,
+        'room' => $room['id']
+      ];
+
       for ($i=0; $i<$this->n_months; $i++)
       {
-        $tbody .= "<td></td>";
+        $tbody .= "<td>\n";
+        $vars['page_date'] = $date->getISODate();
+        $link = 'index.php?' . http_build_query($vars, '', '&');
+        $link = multisite($link);
+        $tbody .= '<a href="' . escape_html($link) . '">';
+        $tbody .= "<div></div>";
+        $tbody .= '</a>';
+        $tbody .= "</td>\n";
+        $date->modifyMonthsNoOverflow(1, true);
       }
 
       if ($row_labels_both_sides)
