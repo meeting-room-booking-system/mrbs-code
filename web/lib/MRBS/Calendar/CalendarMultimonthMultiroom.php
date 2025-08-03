@@ -8,6 +8,7 @@ use MRBS\Exception;
 use function MRBS\datetime_format;
 use function MRBS\escape_html;
 use function MRBS\format_iso_date;
+use function MRBS\get_entries_by_area;
 use function MRBS\get_rooms;
 use function MRBS\get_vocab;
 use function MRBS\multisite;
@@ -40,7 +41,7 @@ class CalendarMultimonthMultiroom extends Calendar
 
   public function innerHTML(): string
   {
-    global $column_labels_both_ends;
+    global $column_labels_both_ends, $year_start, $resolution;
 
     // Check to see whether there are any rooms in the area
     $rooms = get_rooms($this->area_id);
@@ -50,6 +51,24 @@ class CalendarMultimonthMultiroom extends Calendar
       // Add an 'empty' data flag so that the JavaScript knows whether this is a real table or not
       return "<tbody data-empty=1><tr><td><h1>" . get_vocab("no_rooms_for_area") . "</h1></td></tr></tbody>";
     }
+
+    // Get the entries
+    $start_date = (new DateTime())->setDate($this->year, $this->month, 1);
+    $start_date->setMonthYearStart($year_start);
+    $start_date->setStartFirstSlot();
+
+    $end_date = (new DateTime())->setDate($this->year + 1, $this->month, 1);
+    $end_date->setMonthYearStart($year_start);
+    $end_date->modify('-1 day');
+    $end_date->setEndLastSlot();
+
+    // Get the data.  It's much quicker to do a single SQL query getting all the
+    // entries for the interval in one go, rather than doing a query for each day.
+    $entries = get_entries_by_area($this->area_id, $start_date, $end_date);
+
+    // We want to build an array containing all the data we want to show and then spit it out.
+    $map = new Map($start_date, $end_date, $resolution);
+    $map->addEntries($entries);
 
     // Table header
     $thead = '<thead';
