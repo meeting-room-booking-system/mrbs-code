@@ -139,6 +139,7 @@ abstract class Calendar
   }
 
 
+  // Get classes for weekends, holidays, etc.
   protected function getDateClasses(DateTime $date) : array
   {
     $result = [];

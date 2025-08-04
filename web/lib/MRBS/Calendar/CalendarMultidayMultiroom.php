@@ -160,7 +160,7 @@ class CalendarMultidayMultiroom extends Calendar
             continue;
           }
 
-          // Add a classes for weekends and classes
+          // Add classes for weekends, holidays, etc.
           $classes = $this->getDateClasses($date);
 
           $tbody .= '<td';
