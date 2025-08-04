@@ -25,6 +25,39 @@ abstract class Calendar
   abstract public function innerHTML() : string;
 
 
+  // Returns the HTML for a booking, or a free set of slots
+  //    $slots    The number of slots occupied
+  //    $classes  A scalar or array giving the class or classes to be used in the class attribute
+  //    $title    The value of the title attribute
+  //    $text     The value of the text to be used in the div
+  protected function flexDivHTML(int $slots, $classes, ?string $title=null, ?string $text=null) : string
+  {
+    $result = "<div style=\"flex: $slots\"";
+
+    if (isset($classes))
+    {
+      $value = (is_array($classes)) ? implode(' ', $classes) : $classes;
+      $result .= ' class="' . escape_html($value) . '"';
+    }
+
+    if (isset($title) && ($title !== ''))
+    {
+      $result .= ' title="' . escape_html($title) . '"';
+    }
+
+    $result .= '>';
+
+    if (isset($text) && ($text !== ''))
+    {
+      $result .= escape_html($text);
+    }
+
+    $result .= '</div>';
+
+    return $result;
+  }
+
+
   private function getDate(int $t) : string
   {
     global $datetime_formats;

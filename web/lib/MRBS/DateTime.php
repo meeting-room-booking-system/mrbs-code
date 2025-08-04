@@ -240,6 +240,12 @@ class DateTime extends \DateTime
   }
 
 
+  public function getDaysInMonth() : int
+  {
+    return intval($this->format('t'));
+  }
+
+
   public function getMonth() : int
   {
     return intval($this->format('n'));

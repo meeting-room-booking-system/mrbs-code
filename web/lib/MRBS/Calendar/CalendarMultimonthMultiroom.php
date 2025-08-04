@@ -99,7 +99,8 @@ class CalendarMultimonthMultiroom extends Calendar
 
   private function bodyRowHTML(array $room): string
   {
-    global  $row_labels_both_sides, $year_start;
+    global $row_labels_both_sides, $year_start;
+    global $morningstarts, $morningstarts_minutes, $resolution;
 
     $room_link_vars = [
       'view'      => $this->view,
@@ -115,6 +116,12 @@ class CalendarMultimonthMultiroom extends Calendar
 
     $date = (new DateTime())->setDate($this->year, $this->month, $this->day);
     $date->setMonthYearStart($year_start);
+
+    // Get the time slots
+    $n_time_slots = self::getNTimeSlots();
+    $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
+    $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
+
     // The variables for the link query string
     $vars = [
       'view' => 'month',
@@ -123,6 +130,7 @@ class CalendarMultimonthMultiroom extends Calendar
       'room' => $room['id']
     ];
 
+    $j = 0;
     for ($i=0; $i<$this->n_months; $i++)
     {
       $html .= "<td>\n";
@@ -130,7 +138,48 @@ class CalendarMultimonthMultiroom extends Calendar
       $link = 'index.php?' . http_build_query($vars, '', '&');
       $link = multisite($link);
       $html .= '<a href="' . escape_html($link) . '">';
-      $html .= "<div></div>";
+
+      for ($d=1; $d<=$date->getDaysInMonth(); $d++)
+      {
+        $s = $morning_slot_seconds;
+        $slots = 0;
+        while ($s <= $evening_slot_seconds)
+        {
+          $this_slot = $this->map->slot($room['id'], $j, $s);
+          if (empty($this_slot))
+          {
+            // This is just a continuation of the previous free slot, so
+            // increment the slot count and proceed to the next slot.
+            $n = 1;
+            $slots++;
+          }
+          else
+          {
+            // We've found a booking.
+            // If we've been accumulating a free slot, then record it.
+            if ($slots > 0)
+            {
+              $html .= $this->flexDivHTML($slots, 'free');
+            }
+            // Then record the booking.
+            $this_entry = $this_slot[0];
+            $n =    $this_entry['n_slots'];
+            $text = $this_entry['name'];
+            $classes = $this->getEntryClasses($this_entry);
+            $html .= $this->flexDivHTML($n, $classes, $text, $text);
+            $slots = 0;
+          }
+          $s = $s + ($n * $resolution);
+        }
+
+        // We've got to the end of the day, so record the free slot, if there is one.
+        if ($slots > 0)
+        {
+          $html .= $this->flexDivHTML($slots, 'free');
+        }
+
+        $j++;
+      }
       $html .= '</a>';
       $html .= "</td>\n";
       $date->modifyMonthsNoOverflow(1, true);
