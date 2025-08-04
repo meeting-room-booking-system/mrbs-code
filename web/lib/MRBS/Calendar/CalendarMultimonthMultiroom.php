@@ -139,13 +139,27 @@ class CalendarMultimonthMultiroom extends Calendar
       $link = multisite($link);
       $html .= '<a href="' . escape_html($link) . '">';
 
-      for ($d=1; $d<=$date->getDaysInMonth(); $d++)
+      $days_in_month = $date->getDaysInMonth();
+      for ($d=1; $d<=$days_in_month; $d++)
       {
         $s = $morning_slot_seconds;
         $slots = 0;
         while ($s <= $evening_slot_seconds)
         {
           $this_slot = $this->map->slot($room['id'], $j, $s);
+          // If this is the first slot of the day, and we've held over an entry, and
+          // this slot is empty or is the start of a different entry, then record the
+          // held entry.
+          if (($s == $morning_slot_seconds) &&
+              isset($held_entry) &&
+              (empty($this_slot) || ($this_slot[0]['id'] != $held_entry['id'])))
+          {
+            $text = $held_entry['name'];
+            $classes = $this->getEntryClasses($held_entry);
+            $html .= $this->flexDivHTML($held_entry['n_slots'], $classes, $text, $text);
+            $slots = 0;
+            unset($held_entry);
+          }
           if (empty($this_slot))
           {
             // This is just a continuation of the previous free slot, so
@@ -161,13 +175,32 @@ class CalendarMultimonthMultiroom extends Calendar
             {
               $html .= $this->flexDivHTML($slots, 'free');
             }
-            // Then record the booking.
             $this_entry = $this_slot[0];
-            $n =    $this_entry['n_slots'];
-            $text = $this_entry['name'];
-            $classes = $this->getEntryClasses($this_entry);
-            $html .= $this->flexDivHTML($n, $classes, $text, $text);
-            $slots = 0;
+            $n = $this_entry['n_slots'];
+            // If this is the last booking of the day, and it's not the last day of the month, then
+            // hold this booking in case it continues the next day.
+            if ((($s + (($n-1) * $resolution)) == $evening_slot_seconds) && ($d != $days_in_month))
+            {
+              // If we've already got a held entry and this entry has the same id, then
+              // increase the number of slots by this one's.
+              if (isset($held_entry) && ($held_entry['id'] == $this_entry['id']))
+              {
+                $held_entry['n_slots'] += $n;
+              }
+              // Otherwise, create a held entry.
+              else
+              {
+                $held_entry = $this_entry;
+              }
+            }
+            // Otherwise record the booking.
+            else
+            {
+              $text = $this_entry['name'];
+              $classes = $this->getEntryClasses($this_entry);
+              $html .= $this->flexDivHTML($n, $classes, $text, $text);
+              $slots = 0;
+            }
           }
           $s = $s + ($n * $resolution);
         }
