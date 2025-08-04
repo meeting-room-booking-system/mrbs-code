@@ -51,7 +51,7 @@ abstract class Calendar
 
   // Gets the number of time slots between the beginning and end of the booking
   // day.   (This is the normal number on a non-DST transition day)
-  protected function getNTimeSlots() : int
+  protected static function getNTimeSlots() : int
   {
     global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
     global $resolution;
@@ -87,7 +87,7 @@ abstract class Calendar
 
     $slots = array();
 
-    $n_time_slots = $this->getNTimeSlots();
+    $n_time_slots = self::getNTimeSlots();
     $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
     $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
 
@@ -138,6 +138,7 @@ abstract class Calendar
   }
 
 
+  // Get classes for weekends, holidays, etc.
   protected function getDateClasses(DateTime $date) : array
   {
     $result = [];

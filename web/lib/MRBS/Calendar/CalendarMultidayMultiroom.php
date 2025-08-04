@@ -85,7 +85,7 @@ class CalendarMultidayMultiroom extends Calendar
     }
 
     // Get the time slots
-    $n_time_slots = $this->getNTimeSlots();
+    $n_time_slots = self::getNTimeSlots();
     $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
     $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
 
@@ -158,7 +158,7 @@ class CalendarMultidayMultiroom extends Calendar
             continue;
           }
 
-          // Add a classes for weekends and classes
+          // Add classes for weekends, holidays, etc.
           $classes = $this->getDateClasses($date);
 
           $tbody .= '<td';
@@ -208,12 +208,22 @@ class CalendarMultidayMultiroom extends Calendar
           while ($s <= $evening_slot_seconds)
           {
             $this_slot = $map->slot($room_id, $j, $s);
-            if (!empty($this_slot))
+            if (empty($this_slot))
             {
+              // This is just a continuation of the previous free slot, so
+              // increment the slot count and proceed to the next slot.
+              $n = 1;
+              $slots++;
+            }
+            else
+            {
+              // We've found a booking.
+              // If we've been accumulating a free slot, then record it.
               if ($slots > 0)
               {
                 $tbody .= $this->flexDivHTML($slots, 'free');
               }
+              // Then record the booking.
               $this_entry = $this_slot[0];
               $n =    $this_entry['n_slots'];
               $text = $this_entry['name'];
@@ -221,14 +231,10 @@ class CalendarMultidayMultiroom extends Calendar
               $tbody .= $this->flexDivHTML($n, $classes, $text, $text);
               $slots = 0;
             }
-            else
-            {
-              $n = 1;
-              $slots++;
-            }
             $s = $s + ($n * $resolution);
           }
 
+          // We've got to the end of the day, so record the free slot, if there is one.
           if ($slots > 0)
           {
             $tbody .= $this->flexDivHTML($slots, 'free');
