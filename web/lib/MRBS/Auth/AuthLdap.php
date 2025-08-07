@@ -926,7 +926,14 @@ class AuthLdap extends Auth
 
 
   // A wrapper for ldap_bind() that optionally suppresses "invalid credentials" errors.
-  private static function ldapBind ($link_identifier, ?string $bind_rdn=null, ?string $bind_password=null) : bool
+  // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
+  // The attribute is only recognised by PHP 8.2 and later.
+  private static function ldapBind (
+    $link_identifier,
+    ?string $bind_rdn=null,
+    #[\SensitiveParameter]
+    ?string $bind_password=null
+  ) : bool
   {
     global $ldap_suppress_invalid_credentials;
 
