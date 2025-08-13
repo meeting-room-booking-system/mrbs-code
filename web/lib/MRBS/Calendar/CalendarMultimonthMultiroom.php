@@ -189,6 +189,7 @@ class CalendarMultimonthMultiroom extends Calendar
             if ($slots > 0)
             {
               $html .= $this->flexDivHTML($slots, 'free');
+              $slots = 0;
             }
             $this_entry = $this_slot[0];
             $n = $this_entry['n_slots'];
