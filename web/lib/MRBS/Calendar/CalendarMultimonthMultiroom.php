@@ -150,15 +150,30 @@ class CalendarMultimonthMultiroom extends Calendar
           // If this is the first slot of the day, and we've held over an entry, and
           // this slot is empty or is the start of a different entry, then record the
           // held entry.
-          if (($s == $morning_slot_seconds) &&
-              isset($held_entry) &&
-              (empty($this_slot) || ($this_slot[0]['id'] != $held_entry['id'])))
+          if (($s == $morning_slot_seconds) && isset($held_entry))
           {
-            $text = $held_entry['name'];
-            $classes = $this->getEntryClasses($held_entry);
-            $html .= $this->flexDivHTML($held_entry['n_slots'], $classes, $text, $text);
-            $slots = 0;
-            unset($held_entry);
+            if (empty($this_slot) || ($this_slot[0]['id'] != $held_entry['id']))
+            {
+              $held_slot_is_complete = true;
+            }
+            elseif ($this_slot[0]['n_slots'] < $n_time_slots)
+            {
+              $n = $this_slot[0]['n_slots'];
+              $held_entry['n_slots'] += $n;
+              $held_slot_is_complete = true;
+              $s = $s + ($n * $resolution);
+              $this_slot = $this->map->slot($room['id'], $j, $s);
+            }
+
+            if (!empty($held_slot_is_complete))
+            {
+              $text = $held_entry['name'];
+              $classes = $this->getEntryClasses($held_entry);
+              $html .= $this->flexDivHTML($held_entry['n_slots'], $classes, $text, $text);
+              $slots = 0;
+              unset($held_entry);
+              unset($held_slot_is_complete);
+            }
           }
           if (empty($this_slot))
           {
