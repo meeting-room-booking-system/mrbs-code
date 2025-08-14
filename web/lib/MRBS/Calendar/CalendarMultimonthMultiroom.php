@@ -139,96 +139,82 @@ class CalendarMultimonthMultiroom extends Calendar
       $link = multisite($link);
       $html .= '<a href="' . escape_html($link) . '">';
 
+      unset($stored_entry);
       $days_in_month = $date->getDaysInMonth();
+
       for ($d=1; $d<=$days_in_month; $d++)
       {
         $s = $morning_slot_seconds;
-        $slots = 0;
         while ($s <= $evening_slot_seconds)
         {
           $this_slot = $this->map->slot($room['id'], $j, $s);
-          // If this is the first slot of the day, and we've held over an entry, and
-          // this slot is empty or is the start of a different entry, then record the
-          // held entry.
-          if (($s == $morning_slot_seconds) && isset($held_entry))
+          if (!isset($stored_entry))
           {
-            if (empty($this_slot) || ($this_slot[0]['id'] != $held_entry['id']))
+            if (empty($this_slot))
             {
-              $held_slot_is_complete = true;
+              $stored_entry = ['free_slots' => 1];
+              $n = 1;
             }
-            elseif ($this_slot[0]['n_slots'] < $n_time_slots)
+            else
             {
+              $stored_entry = $this_slot[0];
               $n = $this_slot[0]['n_slots'];
-              $held_entry['n_slots'] += $n;
-              $held_slot_is_complete = true;
-              $s = $s + ($n * $resolution);
-              $this_slot = $this->map->slot($room['id'], $j, $s);
             }
-
-            if (!empty($held_slot_is_complete))
-            {
-              $text = $held_entry['name'];
-              $classes = $this->getEntryClasses($held_entry);
-              $html .= $this->flexDivHTML($held_entry['n_slots'], $classes, $text, $text);
-              $slots = 0;
-              unset($held_entry);
-              unset($held_slot_is_complete);
-            }
-          }
-          if (empty($this_slot))
-          {
-            // This is just a continuation of the previous free slot, so
-            // increment the slot count and proceed to the next slot.
-            $n = 1;
-            $slots++;
           }
           else
           {
-            // We've found a booking.
-            // If we've been accumulating a free slot, then record it.
-            if ($slots > 0)
+            if (empty($this_slot) && isset($stored_entry['free_slots']))
             {
-              $html .= $this->flexDivHTML($slots, 'free');
-              $slots = 0;
+              $stored_entry['free_slots']++;
+              $n = 1;
             }
-            $this_entry = $this_slot[0];
-            $n = $this_entry['n_slots'];
-            // If this is the last booking of the day, and it's not the last day of the month, then
-            // hold this booking in case it continues the next day.
-            if ((($s + (($n-1) * $resolution)) == $evening_slot_seconds) && ($d != $days_in_month))
+            elseif (!empty($this_slot) && isset($stored_entry['id']) && ($stored_entry['id'] == $this_slot[0]['id']))
             {
-              // If we've already got a held entry and this entry has the same id, then
-              // increase the number of slots by this one's.
-              if (isset($held_entry) && ($held_entry['id'] == $this_entry['id']))
-              {
-                $held_entry['n_slots'] += $n;
-              }
-              // Otherwise, create a held entry.
-              else
-              {
-                $held_entry = $this_entry;
-              }
+              $stored_entry['n_slots'] += $this_slot[0]['n_slots'];
+              $n = $this_slot[0]['n_slots'];
             }
-            // Otherwise record the booking.
+            elseif (isset($stored_entry['free_slots']))
+            {
+              $html .= $this->flexDivHTML($stored_entry['free_slots'], 'free');
+              $stored_entry = $this_slot[0];
+              $n = $this_slot[0]['n_slots'];
+            }
             else
             {
-              $text = $this_entry['name'];
-              $classes = $this->getEntryClasses($this_entry);
-              $html .= $this->flexDivHTML($n, $classes, $text, $text);
-              $slots = 0;
+              $text = $stored_entry['name'];
+              $classes = $this->getEntryClasses($stored_entry);
+              $html .= $this->flexDivHTML($stored_entry['n_slots'], $classes, $text, $text);
+              if (empty($this_slot))
+              {
+                $stored_entry = ['free_slots' => 1];
+                $n = 1;
+              }
+              else
+              {
+                $stored_entry = $this_slot[0];
+                $n = $this_slot[0]['n_slots'];
+              }
             }
           }
           $s = $s + ($n * $resolution);
         }
-
-        // We've got to the end of the day, so record the free slot, if there is one.
-        if ($slots > 0)
-        {
-          $html .= $this->flexDivHTML($slots, 'free');
-        }
-
         $j++;
       }
+
+      if (isset($stored_entry))
+      {
+        if (isset($stored_entry['free_slots']))
+        {
+          $html .= $this->flexDivHTML($stored_entry['free_slots'], 'free');
+        }
+        else
+        {
+          $text = $stored_entry['name'];
+          $classes = $this->getEntryClasses($stored_entry);
+          $html .= $this->flexDivHTML($stored_entry['n_slots'], $classes, $text, $text);
+        }
+      }
+
       $html .= '</a>';
       $html .= "</td>\n";
       $date->modifyMonthsNoOverflow(1, true);
