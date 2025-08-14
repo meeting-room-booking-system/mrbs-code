@@ -141,7 +141,7 @@ class CalendarMultimonthMultiroom extends Calendar
       $link = multisite($link);
       $html .= '<a href="' . escape_html($link) . '">';
 
-      unset($stored_entry);
+      unset($flex_div);
       $days_in_month = $date->getDaysInMonth();
 
       // Loop through the days in the month
@@ -153,75 +153,63 @@ class CalendarMultimonthMultiroom extends Calendar
         {
           // Get the entry for this slot
           $this_slot = $this->map->slot($room['id'], $j, $s);
-          // If we haven't got a stored entry, then store this one
-          if (!isset($stored_entry))
+          // Start a FlexDiv if we haven't got one
+          if (!isset($flex_div))
           {
-            if (empty($this_slot))
+            $flex_div = new FlexDiv($this_slot[0]['id'] ?? null);
+            // If it's a booking, set the properties
+            if (!empty($this_slot))
             {
-              $stored_entry = ['free_slots' => 1];
-              $n = 1;
+              $this_entry = $this_slot[0];
+              $flex_div->setClasses($this->getEntryClasses($this_entry));
+              $flex_div->setLength($this_entry['n_slots']);
+              $flex_div->setName($this_entry['name']);
             }
-            else
-            {
-              $stored_entry = $this_slot[0];
-              $n = $this_slot[0]['n_slots'];
-            }
+            // Work out how many slots to advance
+            $n = $flex_div->getLength();
           }
           // Otherwise, look to see whether this is a continuation of the stored entry,
           // or else a change, in which case output the stored entry and reset.
           else
           {
-            if (empty($this_slot) && isset($stored_entry['free_slots']))
+            // Another free slot
+            if (empty($this_slot) && !isset($flex_div->id))
             {
-              $stored_entry['free_slots']++;
               $n = 1;
+              $flex_div->addLength($n);
             }
-            elseif (!empty($this_slot) && isset($stored_entry['id']) && ($stored_entry['id'] == $this_slot[0]['id']))
+            // A continuation of an existing booking
+            elseif (!empty($this_slot) && isset($flex_div->id) && ($flex_div->id == $this_slot[0]['id']))
             {
-              $stored_entry['n_slots'] += $this_slot[0]['n_slots'];
               $n = $this_slot[0]['n_slots'];
+              $flex_div->addLength($n);
             }
-            elseif (isset($stored_entry['free_slots']))
-            {
-              $html .= $this->flexDivHTML($stored_entry['free_slots'], 'free');
-              $stored_entry = $this_slot[0];
-              $n = $this_slot[0]['n_slots'];
-            }
+            // There's been a change.  Output the FlexDiv and reset
             else
             {
-              $text = $stored_entry['name'];
-              $classes = $this->getEntryClasses($stored_entry);
-              $html .= $this->flexDivHTML($stored_entry['n_slots'], $classes, $text, $text);
-              if (empty($this_slot))
+              $html .= $flex_div->html();
+              $flex_div = new FlexDiv($this_slot[0]['id'] ?? null);
+              // If it's a booking, set the properties
+              if (!empty($this_slot))
               {
-                $stored_entry = ['free_slots' => 1];
-                $n = 1;
+                $this_entry = $this_slot[0];
+                $flex_div->setClasses($this->getEntryClasses($this_entry));
+                $flex_div->setLength($this_entry['n_slots']);
+                $flex_div->setName($this_entry['name']);
               }
-              else
-              {
-                $stored_entry = $this_slot[0];
-                $n = $this_slot[0]['n_slots'];
-              }
+              // Work out how many slots to advance
+              $n = $flex_div->getLength();
             }
           }
-          $s = $s + ($n * $resolution);
+          $s = $s + ($n * $resolution);  // Advance n slots
         }
-        $j++;
+        $j++;  // Advance 1 day
       }
 
-      // We've got to the end.  Output the stored entry
-      if (isset($stored_entry))
+      // Output the final FlexDiv
+      if (isset($flex_div))
       {
-        if (isset($stored_entry['free_slots']))
-        {
-          $html .= $this->flexDivHTML($stored_entry['free_slots'], 'free');
-        }
-        else
-        {
-          $text = $stored_entry['name'];
-          $classes = $this->getEntryClasses($stored_entry);
-          $html .= $this->flexDivHTML($stored_entry['n_slots'], $classes, $text, $text);
-        }
+        $html .= $flex_div->html();
       }
 
       $html .= '</a>';
