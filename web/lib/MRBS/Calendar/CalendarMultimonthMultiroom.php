@@ -130,7 +130,9 @@ class CalendarMultimonthMultiroom extends Calendar
       'room' => $room['id']
     ];
 
-    $j = 0;
+    $j = 0; // Need to keep track of the day in the Calendar interval (zero indexed)
+
+    // Loop through the months in the interval
     for ($i=0; $i<$this->n_months; $i++)
     {
       $html .= "<td>\n";
@@ -142,12 +144,16 @@ class CalendarMultimonthMultiroom extends Calendar
       unset($stored_entry);
       $days_in_month = $date->getDaysInMonth();
 
+      // Loop through the days in the month
       for ($d=1; $d<=$days_in_month; $d++)
       {
         $s = $morning_slot_seconds;
+        // Loop through the slots in the day
         while ($s <= $evening_slot_seconds)
         {
+          // Get the entry for this slot
           $this_slot = $this->map->slot($room['id'], $j, $s);
+          // If we haven't got a stored entry, then store this one
           if (!isset($stored_entry))
           {
             if (empty($this_slot))
@@ -161,6 +167,8 @@ class CalendarMultimonthMultiroom extends Calendar
               $n = $this_slot[0]['n_slots'];
             }
           }
+          // Otherwise, look to see whether this is a continuation of the stored entry,
+          // or else a change, in which case output the stored entry and reset.
           else
           {
             if (empty($this_slot) && isset($stored_entry['free_slots']))
@@ -201,6 +209,7 @@ class CalendarMultimonthMultiroom extends Calendar
         $j++;
       }
 
+      // We've got to the end.  Output the stored entry
       if (isset($stored_entry))
       {
         if (isset($stored_entry['free_slots']))
