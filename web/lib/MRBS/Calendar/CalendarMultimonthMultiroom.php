@@ -141,13 +141,16 @@ class CalendarMultimonthMultiroom extends Calendar
       $link = multisite($link);
       $html .= '<a href="' . escape_html($link) . '">';
 
+      // Clear the FlexDiv at the beginning of the month (they don't cross month boundaries)
       unset($flex_div);
+
       $days_in_month = $date->getDaysInMonth();
 
       // Loop through the days in the month
       for ($d=1; $d<=$days_in_month; $d++)
       {
         $s = $morning_slot_seconds;
+
         // Loop through the slots in the day
         while ($s <= $evening_slot_seconds)
         {
