@@ -205,7 +205,7 @@ class CalendarMultimonthMultiroom extends Calendar
 
       $html .= '</a>';
       $html .= "</td>\n";
-      $date->modifyMonthsNoOverflow(1, true);
+      $date->modifyMonthsNoOverflow(1, true);  // Advance 1 month
     }
 
     if ($row_labels_both_sides)
