@@ -188,17 +188,8 @@ class CalendarMultimonthMultiroom extends Calendar
             else
             {
               $html .= $flex_div->html();
-              $flex_div = new FlexDiv($this_slot[0]['id'] ?? null);
-              // If it's a booking, set the properties
-              if (!empty($this_slot))
-              {
-                $this_entry = $this_slot[0];
-                $flex_div->setClasses($this->getEntryClasses($this_entry));
-                $flex_div->setLength($this_entry['n_slots']);
-                $flex_div->setName($this_entry['name']);
-              }
-              // Work out how many slots to advance
-              $n = $flex_div->getLength();
+              unset($flex_div);
+              $n = 0;
             }
           }
           $s = $s + ($n * $resolution);  // Advance n slots
