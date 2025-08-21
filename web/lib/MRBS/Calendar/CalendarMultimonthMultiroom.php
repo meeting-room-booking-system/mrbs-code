@@ -4,7 +4,6 @@ namespace MRBS\Calendar;
 
 
 use MRBS\DateTime;
-use MRBS\Exception;
 use function MRBS\datetime_format;
 use function MRBS\escape_html;
 use function MRBS\format_iso_date;
@@ -13,48 +12,20 @@ use function MRBS\get_rooms;
 use function MRBS\get_vocab;
 use function MRBS\multisite;
 
-class CalendarMultimonthMultiroom extends Calendar
+class CalendarMultimonthMultiroom extends CalendarMultimonth
 {
-  private $map;
-  private $n_months;
-
   public function __construct(string $view, int $view_all, int $year, int $month, int $day, int $area_id, int $room_id)
   {
-    global $year_start, $resolution;
+    global $resolution;
 
-    $this->view = $view;
-    $this->view_all = $view_all;
-    $this->year = $year;
-    $this->month = $month;
-    $this->day = $day;
-    $this->area_id = $area_id;
-    $this->room_id = $room_id;
+    parent::__construct($view, $view_all, $year, $month, $day, $area_id, $room_id);
 
-    if ($view === 'year')
-    {
-      $this->n_months = MONTHS_PER_YEAR;
-    }
-    else
-    {
-      throw new Exception("Invalid view: '$view'");
-    }
-
-    // Get the entries
-    $start_date = (new DateTime())->setDate($this->year, $this->month, 1);
-    $start_date->setMonthYearStart($year_start);
-    $start_date->setStartFirstSlot();
-
-    $end_date = clone $start_date;
-    $end_date->modify('+' . $this->n_months . ' month');
-    $end_date->modify('-1 day');
-    $end_date->setEndLastSlot();
-
-    // Get the data.  It's much quicker to do a single SQL query getting all the
+    // Get the entries.  It's much quicker to do a single SQL query getting all the
     // entries for the interval in one go, rather than doing a query for each day.
-    $entries = get_entries_by_area($this->area_id, $start_date, $end_date);
+    $entries = get_entries_by_area($this->area_id, $this->start_date, $this->end_date);
 
     // We want to build an array containing all the data we want to show and then spit it out.
-    $this->map = new Map($start_date, $end_date, $resolution);
+    $this->map = new Map($this->start_date, $this->end_date, $resolution);
     $this->map->addEntries($entries);
   }
 

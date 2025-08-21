@@ -58,11 +58,11 @@ abstract class Calendar
   }
 
 
-  private function getDate(int $t) : string
+  protected function getDate(int $t) : string
   {
     global $datetime_formats;
 
-    if ($this->view === 'month')
+    if (in_array($this->view, ['month', 'year']))
     {
       return datetime_format(['pattern' => 'd'], $t);
     }
