@@ -101,12 +101,12 @@ function make_room_select_html (string $view, int $view_all, int $year, int $mon
     $page_date = format_iso_date($year, $month, $day);
     $options = $rooms;
 
-    // If we are in the week or month views and there is more than one room, then add the 'all'
+    // If we are in the week, month or year views and there is more than one room, then add the 'all'
     // option to the room select, which allows the user to display all rooms in the view.
     // And if we are viewing all the rooms then make sure the current room is negative.
     // (The room select uses a negative value of $room to signify that we want to view all
     // rooms in an area.   The absolute value of $room is the current room.)
-    if (in_array($view, array('week', 'month')) && ($always_offer_view_all || ($n_rooms > 1)))
+    if (in_array($view, array('week', 'month', 'year')) && ($always_offer_view_all || ($n_rooms > 1)))
     {
       $all = -abs($current);
       if ($view_all)
