@@ -240,7 +240,7 @@ span.not_allowed {
 }
 
 tr:nth-child(odd) td.new,
-.all_rooms tr:nth-child(odd) td {
+.all_rooms tr:nth-child(odd) td:not(.invalid) {
   background-color: <?php echo $row_odd_color ?>;
 }
 
@@ -260,7 +260,7 @@ tr:nth-child(odd) td.new.holiday,
 }
 
 tr:nth-child(even) td.new,
-.all_rooms tr:nth-child(even) td {
+.all_rooms tr:nth-child(even) td:not(.invalid) {
   background-color: <?php echo $row_even_color ?>;
 }
 

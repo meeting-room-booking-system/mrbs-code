@@ -68,6 +68,13 @@ class CalendarMultimonthOneRoom extends CalendarMultimonth
         $tbody .= "</td>";
       }
 
+      // Fill in the remaining, invalid, days
+      while ($j <= 31)
+      {
+        $tbody .= '<td class="invalid"></td>';
+        $j++;
+      }
+
       // The right-hand header column, if required
       if ($row_labels_both_sides)
       {
