@@ -39,7 +39,20 @@ class CalendarMultimonthOneRoom extends CalendarMultimonth
     $thead .= "</thead>\n";
 
     // Table body
-    $tbody = "<tbody>\n";
+    $tbody = $this->bodyHTML();
+
+    // Table footer
+    $tfoot = ($column_labels_both_ends) ? "<tfoot>\n$header_row</tfoot>\n" : '';
+
+    return $thead . $tfoot . $tbody;
+  }
+
+
+  private function bodyHTML(): string
+  {
+    global $year_start, $datetime_formats, $row_labels_both_sides;
+
+    $html = "<tbody>\n";
 
     $date = (new DateTime())->setDate($this->year, $this->month, 1);  // Set to first day of month
     $date->setMonthYearStart($year_start);
@@ -51,51 +64,43 @@ class CalendarMultimonthOneRoom extends CalendarMultimonth
       'room' => $this->room_id
     ];
 
+    $d = 0; // Need to keep track of the day in the Calendar interval (zero indexed)
+
     for ($i=0; $i<$this->n_months; $i++)
     {
-      $tbody .= "<tr>\n";
+      $html .= "<tr>\n";
       $vars['page_date'] = $date->getISODate();
       $link = 'index.php?' . http_build_query($vars, '', '&');
       $link = multisite($link);
       $month_name = datetime_format($datetime_formats['month_name_year_view'], $date->getTimestamp());
       $first_last_html = '<th><a href="' . escape_html($link) . '">' . escape_html($month_name) . "</a></th>\n";
-      $tbody .= $first_last_html;
+      $html .= $first_last_html;
 
       for ($j=1; $j<=$date->getDaysInMonth(); $j++)
       {
-        $tbody .= $this->bodyCellHTML();
+        $html .= "<td>";
+        $html .= '<a><div class="free"></div></a>'; // Stub
+        $html .= "</td>";
+        $d++;
       }
 
       // Fill in the remaining, invalid, days
       while ($j <= 31)
       {
-        $tbody .= '<td class="invalid"></td>';
+        $html .= '<td class="invalid"></td>';
         $j++;
       }
 
       // The right-hand header column, if required
       if ($row_labels_both_sides)
       {
-        $tbody .= $first_last_html;
+        $html .= $first_last_html;
       }
-      $tbody .= "</tr>\n";
+      $html .= "</tr>\n";
       $date->modifyMonthsNoOverflow(1, true);
     }
 
-    $tbody .= "<tbody>\n";
-
-    // Table footer
-    $tfoot = ($column_labels_both_ends) ? "<tfoot>\n$header_row</tfoot>\n" : '';
-
-    return $thead . $tfoot . $tbody;
-  }
-
-
-  private function bodyCellHTML(): string
-  {
-    $html = "<td>";
-    $html .= '<a><div class="free"></div></a>'; // Stub
-    $html .= "</td>";
+    $html .= "</tbody>\n";
 
     return $html;
   }
