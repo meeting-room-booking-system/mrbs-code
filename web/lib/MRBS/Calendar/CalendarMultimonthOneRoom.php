@@ -54,15 +54,15 @@ class CalendarMultimonthOneRoom extends CalendarMultimonth
 
     $html = "<tbody>\n";
 
-    $date = (new DateTime())->setDate($this->year, $this->month, 1);  // Set to first day of month
-    $date->setMonthYearStart($year_start);
     // The variables for the link query string
     $vars = [
-      'view' => 'month',
-      'view_all' => 0,
+      'view_all' => $this->view_all,
       'area' => $this->area_id,
       'room' => $this->room_id
     ];
+
+    $date = (new DateTime())->setDate($this->year, $this->month, 1);  // Set to first day of month
+    $date->setMonthYearStart($year_start);
 
     $d = 0; // Need to keep track of the day in the Calendar interval (zero indexed)
 
@@ -70,6 +70,7 @@ class CalendarMultimonthOneRoom extends CalendarMultimonth
     {
       $html .= "<tr>\n";
       $vars['page_date'] = $date->getISODate();
+      $vars['view'] = 'month';
       $link = 'index.php?' . http_build_query($vars, '', '&');
       $link = multisite($link);
       $month_name = datetime_format($datetime_formats['month_name_year_view'], $date->getTimestamp());
@@ -78,8 +79,15 @@ class CalendarMultimonthOneRoom extends CalendarMultimonth
 
       for ($j=1; $j<=$date->getDaysInMonth(); $j++)
       {
+        $date->setDay($j);
         $html .= "<td>";
-        $html .= '<a><div class="free"></div></a>'; // Stub
+        $vars['page_date'] = $date->getISODate();
+        $vars['view'] = 'day';
+        $link = 'index.php?' . http_build_query($vars, '', '&');
+        $link = multisite($link);
+        $html .= '<a href="' . escape_html($link) . '">';
+        $html .= '<div class="free"></div>'; // Stub
+        $html .= '</a>';
         $html .= "</td>";
         $d++;
       }
@@ -97,7 +105,7 @@ class CalendarMultimonthOneRoom extends CalendarMultimonth
         $html .= $first_last_html;
       }
       $html .= "</tr>\n";
-      $date->modifyMonthsNoOverflow(1, true);
+      $date->modify('+1 day'); // Advance to the next month
     }
 
     $html .= "</tbody>\n";
