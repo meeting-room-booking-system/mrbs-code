@@ -63,9 +63,7 @@ class CalendarMultimonthOneRoom extends CalendarMultimonth
 
       for ($j=1; $j<=$date->getDaysInMonth(); $j++)
       {
-        $tbody .= "<td>";
-        $tbody .= '<a><div class="free"></div></a>'; // Stub
-        $tbody .= "</td>";
+        $tbody .= $this->bodyCellHTML();
       }
 
       // Fill in the remaining, invalid, days
@@ -91,6 +89,17 @@ class CalendarMultimonthOneRoom extends CalendarMultimonth
 
     return $thead . $tfoot . $tbody;
   }
+
+
+  private function bodyCellHTML(): string
+  {
+    $html = "<td>";
+    $html .= '<a><div class="free"></div></a>'; // Stub
+    $html .= "</td>";
+
+    return $html;
+  }
+
 
   private function headerRowHTML(string $label='') : string
   {
