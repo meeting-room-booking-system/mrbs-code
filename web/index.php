@@ -516,8 +516,12 @@ if ($times_along_top)
 {
   $classes[] .= 'times-along-top';
 }
-if ($view_all && ($view !== 'day'))
+if (($view = 'year') || ($view_all && ($view !== 'day')))
 {
+  // "all_rooms" is a bad description as we now also use the class for a single
+  // room in the year view.  Something like "overview" would be better, but we
+  // keep using "all_rooms" for the moment because there may be people with custom
+  // CSS that have rules using "all_rooms".
   $classes[] = 'all_rooms';
 }
 

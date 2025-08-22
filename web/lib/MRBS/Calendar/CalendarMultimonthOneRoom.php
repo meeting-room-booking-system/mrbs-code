@@ -41,7 +41,7 @@ class CalendarMultimonthOneRoom extends CalendarMultimonth
     // Table body
     $tbody = "<tbody>\n";
 
-    $date = (new DateTime())->setDate($this->year, $this->month, $this->day);
+    $date = (new DateTime())->setDate($this->year, $this->month, 1);  // Set to first day of month
     $date->setMonthYearStart($year_start);
     // The variables for the link query string
     $vars = [
@@ -60,6 +60,13 @@ class CalendarMultimonthOneRoom extends CalendarMultimonth
       $month_name = datetime_format($datetime_formats['month_name_year_view'], $date->getTimestamp());
       $first_last_html = '<th><a href="' . escape_html($link) . '">' . escape_html($month_name) . "</a></th>\n";
       $tbody .= $first_last_html;
+
+      for ($j=1; $j<=$date->getDaysInMonth(); $j++)
+      {
+        $tbody .= "<td>";
+        $tbody .= '<a><div class="free"></div></a>'; // Stub
+        $tbody .= "</td>";
+      }
 
       // The right-hand header column, if required
       if ($row_labels_both_sides)
