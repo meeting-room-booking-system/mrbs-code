@@ -2,8 +2,11 @@
 declare(strict_types=1);
 namespace MRBS\Calendar;
 
+use MRBS\DateTime;
+use function MRBS\datetime_format;
 use function MRBS\escape_html;
 use function MRBS\get_entries_by_room;
+use function MRBS\multisite;
 
 class CalendarMultimonthOneRoom extends CalendarMultimonth
 {
@@ -16,7 +19,7 @@ class CalendarMultimonthOneRoom extends CalendarMultimonth
 
     // Get the entries.  It's much quicker to do a single SQL query getting all the
     // entries for the interval in one go, rather than doing a query for each day.
-    $entries = get_entries_by_room($this->area_id, $this->start_date, $this->end_date);
+    $entries = get_entries_by_room($this->room_id, $this->start_date, $this->end_date);
 
     // We want to build an array containing all the data we want to show and then spit it out.
     $this->map = new Map($this->start_date, $this->end_date, $resolution);
@@ -25,7 +28,7 @@ class CalendarMultimonthOneRoom extends CalendarMultimonth
 
   public function innerHTML(): string
   {
-    global $column_labels_both_ends;
+    global $column_labels_both_ends, $row_labels_both_sides, $year_start, $datetime_formats;
 
     // Table header
     $thead = '<thead';
@@ -37,6 +40,36 @@ class CalendarMultimonthOneRoom extends CalendarMultimonth
 
     // Table body
     $tbody = "<tbody>\n";
+
+    $date = (new DateTime())->setDate($this->year, $this->month, $this->day);
+    $date->setMonthYearStart($year_start);
+    // The variables for the link query string
+    $vars = [
+      'view' => 'month',
+      'view_all' => 0,
+      'area' => $this->area_id,
+      'room' => $this->room_id
+    ];
+
+    for ($i=0; $i<$this->n_months; $i++)
+    {
+      $tbody .= "<tr>\n";
+      $vars['page_date'] = $date->getISODate();
+      $link = 'index.php?' . http_build_query($vars, '', '&');
+      $link = multisite($link);
+      $month_name = datetime_format($datetime_formats['month_name_year_view'], $date->getTimestamp());
+      $first_last_html = '<th><a href="' . escape_html($link) . '">' . escape_html($month_name) . "</a></th>\n";
+      $tbody .= $first_last_html;
+
+      // The right-hand header column, if required
+      if ($row_labels_both_sides)
+      {
+        $tbody .= $first_last_html;
+      }
+      $tbody .= "</tr>\n";
+      $date->modifyMonthsNoOverflow(1, true);
+    }
+
     $tbody .= "<tbody>\n";
 
     // Table footer
