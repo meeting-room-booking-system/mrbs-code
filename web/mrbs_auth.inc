@@ -441,22 +441,7 @@ function is_user_admin() : bool
 // Doesn't do anything at the moment, but allows for customisation or future development
 function is_visible($room) : bool
 {
-  // Change 5 to be the id of the area you want to be only visible to admins.
-  // Better still, make this a config setting.
-  $secret_area_id = 5;
-
-  // Admins can see all rooms
-  if (is_admin())
-  {
-    return true;
-  }
-
-  // Otherwise, ordinary users can't see rooms in one area
-  $sql = "SELECT area_id
-            FROM " . _tbl('room') . "
-           WHERE id=:id";
-  $area_id = db()->query_scalar_non_bool($sql, array(':id' => $room));
-  return ($area_id != $secret_area_id);
+  return true;
 }
 
 
