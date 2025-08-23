@@ -185,7 +185,7 @@ class CalendarMultidayMultiroom extends Calendar
           else
           {
             $vars['view'] = $this->view;
-            $this_slot = $this->map->slot($this->room_id, $j, $morning_slot_seconds);
+            $this_slot = $this->map->slot($this->room_id, $j, Calendar::morningSlotsSeconds());
             if (empty($this_slot))
             {
               $page = 'edit_entry.php';
