@@ -31,6 +31,7 @@ $vocab["goto"]               = "Go to";
 $vocab["nav_day"]            = "Day";
 $vocab["nav_week"]           = "Week";
 $vocab["nav_month"]          = "Month";
+$vocab["nav_year"]           = "Year";
 $vocab["highlight_line"]     = "Highlight this line";
 $vocab["click_to_reserve"]   = "Click on the cell to make a reservation.";
 $vocab["timezone"]           = "Timezone";
@@ -40,6 +41,9 @@ $vocab["gotothisweek"]       = "Go to this week";
 $vocab["monthbefore"]        = "Go to month before";
 $vocab["monthafter"]         = "Go to month after";
 $vocab["gotothismonth"]      = "Go to this month";
+$vocab['yearbefore']         = "Go to year before";
+$vocab['yearafter']          = "Go to year after";
+$vocab['gotothisyear']       = "Go to this year";
 $vocab["no_rooms_for_area"]  = "No rooms defined for this area";
 $vocab["loading"]            = "Loading";
 $vocab["saving"]             = "Saving";
@@ -61,6 +65,7 @@ $vocab["cancel"]             = "Cancel";
 $vocab["viewday"]            = "View Day";
 $vocab["viewweek"]           = "View Week";
 $vocab["viewmonth"]          = "View Month";
+$vocab["viewyear"]          = "View Year";
 $vocab["ppreview"]           = "Print Preview";
 
 // Used in edit_entry.php
@@ -677,8 +682,9 @@ $vocab["events_imported"]             = "events imported";
 $vocab["events_not_imported"]         = "events not imported";
 
 // Used in EntryInterval.php
-$vocab["range_separator"]     = " - ";  // For separating two dates/times in a range
-$vocab["date_time_separator"] = ", ";   // For separating a date from a time
+$vocab["range_separator"]       = " - ";  // For separating two dates/times in a range
+$vocab["year_range_separator"]  = "/";    // For separating two years in a range, eg 2025/26
+$vocab["date_time_separator"]   = ", ";   // For separating a date from a time
 
 // Used in DataTables
 $vocab["dt_all"]             = "All";

@@ -32,6 +32,7 @@ $vocab["goto"]               = "Afficher";
 $vocab["nav_day"]            = "Jour";
 $vocab["nav_week"]           = "Semaine";
 $vocab["nav_month"]          = "Mois";
+$vocab["nav_year"]           = "Année";
 $vocab["highlight_line"]     = "Surligner cette ligne";
 $vocab["click_to_reserve"]   = "Cliquer sur la cellule pour réserver.";
 $vocab["timezone"]           = "Fuseau horaire";
@@ -41,6 +42,9 @@ $vocab["gotothisweek"]       = "Semaine actuelle";
 $vocab["monthbefore"]        = "Mois précédent";
 $vocab["monthafter"]         = "Mois suivant";
 $vocab["gotothismonth"]      = "Mois actuel";
+$vocab["yearbefore"]         = "Année précédente";
+$vocab["yearafter"]          = "Année suivante";
+$vocab["gotothisyear"]       = "Année actuelle";
 $vocab["no_rooms_for_area"]  = "Aucune salle n'est définie pour ce lieu";
 $vocab["loading"]            = "Chargement";
 $vocab["saving"]             = "Enregistrement";
@@ -62,6 +66,7 @@ $vocab["cancel"]             = "Annuler";
 $vocab["viewday"]            = "Afficher par jour";
 $vocab["viewweek"]           = "Afficher par semaine";
 $vocab["viewmonth"]          = "Afficher par mois";
+$vocab["viewyear"]           = "Afficher par année";
 $vocab["ppreview"]           = "Format imprimable";
 
 // Used in edit_entry.php
