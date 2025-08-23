@@ -4,6 +4,8 @@ namespace MRBS\Calendar;
 
 
 use MRBS\DateTime;
+use MRBS\Room;
+use MRBS\Rooms;
 use function MRBS\datetime_format;
 use function MRBS\escape_html;
 use function MRBS\format_iso_date;
@@ -35,9 +37,9 @@ class CalendarMultimonthMultiroom extends CalendarMultimonth
     global $column_labels_both_ends;
 
     // Check to see whether there are any rooms in the area
-    $rooms = get_rooms($this->area_id);
+    $rooms = new Rooms($this->area_id);
 
-    if (count($rooms) == 0)
+    if ($rooms->countVisible() == 0)
     {
       // Add an 'empty' data flag so that the JavaScript knows whether this is a real table or not
       return "<tbody data-empty=1><tr><td><h1>" . get_vocab("no_rooms_for_area") . "</h1></td></tr></tbody>";
@@ -68,7 +70,7 @@ class CalendarMultimonthMultiroom extends CalendarMultimonth
   }
 
 
-  private function bodyRowHTML(array $room): string
+  private function bodyRowHTML(Room $room): string
   {
     global $row_labels_both_sides, $year_start;
 
@@ -80,7 +82,7 @@ class CalendarMultimonthMultiroom extends CalendarMultimonth
     ];
 
     $html = "<tr>\n";
-    $room_link_vars['room'] = $room['id'];
+    $room_link_vars['room'] = $room->id;
     $row_label = $this->roomCellHTML($room, $room_link_vars);
     $html .= $row_label;
 
@@ -92,7 +94,7 @@ class CalendarMultimonthMultiroom extends CalendarMultimonth
       'view' => 'month',
       'view_all' => 0,
       'area' => $this->area_id,
-      'room' => $room['id']
+      'room' => $room->id
     ];
 
     $j = 0; // Need to keep track of the day in the Calendar interval (zero indexed)
@@ -106,7 +108,7 @@ class CalendarMultimonthMultiroom extends CalendarMultimonth
       $link = multisite($link);
       $html .= '<a href="' . escape_html($link) . '">';
       $days_in_month = $date->getDaysInMonth();
-      $html .= $this->flexDivsHTML($room['id'], $j, $j + $days_in_month - 1);
+      $html .= $this->flexDivsHTML($room->id, $j, $j + $days_in_month - 1);
       $html .= '</a>';
       $html .= "</td>\n";
       $j += $days_in_month;
