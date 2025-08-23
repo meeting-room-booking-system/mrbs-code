@@ -25,18 +25,6 @@ use function MRBS\session;
 class CalendarMonthOneRoom extends Calendar
 {
 
-  public function __construct(string $view, int $view_all, int $year, int $month, int $day, int $area_id, int $room_id)
-  {
-    $this->view = $view;
-    $this->view_all = $view_all;  // TODO: is this used?
-    $this->year = $year;
-    $this->month = $month;
-    $this->day = $day;  // TODO: is this used?
-    $this->area_id = $area_id;
-    $this->room_id = $room_id;
-  }
-
-
   public function innerHTML(): string
   {
     global $weekstarts, $view_week_number, $show_plus_link, $monthly_view_entries_details;

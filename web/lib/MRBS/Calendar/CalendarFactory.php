@@ -20,7 +20,7 @@ class CalendarFactory
     switch ($view)
     {
       case 'day':
-        return new CalendarMultislotDay($view, $year, $month, $day, $area_id, $room_id, $timetohighlight, $kiosk);
+        return new CalendarMultislotDay($view, $view_all, $year, $month, $day, $area_id, $room_id, $timetohighlight, $kiosk);
         break;
       case 'week':
         if ($view_all)
