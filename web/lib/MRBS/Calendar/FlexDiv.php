@@ -60,9 +60,9 @@ class FlexDiv
 
   public function html(): string
   {
-    // Fix the size of the div at one pixel per slot.  Allow it to grow,
+    // Fix the size of the div at one pixel per slot.  Allow it to grow proportionately,
     // but not shrink.
-    $html = '<div style="flex: 1 0 ' . $this->getLength() . 'px"';
+    $html = '<div style="flex: ' . $this->getLength() . ' 0 ' . $this->getLength() . 'px"';
 
     if (!empty($this->classes))
     {
