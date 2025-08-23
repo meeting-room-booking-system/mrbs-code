@@ -247,11 +247,12 @@ else
  * General constants - internal use, do not change
  *************************************************/
 
-define('DAYS_PER_WEEK',    7);
-define('MINUTES_PER_DAY',  24*60);
-define('SECONDS_PER_DAY',  MINUTES_PER_DAY * 60);
-define('SECONDS_PER_HOUR', 3600);
-define('SECONDS_PER_MINUTE', 60);
+define('DAYS_PER_WEEK',       7);
+define('MONTHS_PER_YEAR',     12);
+define('MINUTES_PER_DAY',     24*60);
+define('SECONDS_PER_DAY',     MINUTES_PER_DAY * 60);
+define('SECONDS_PER_HOUR',    3600);
+define('SECONDS_PER_MINUTE',  60);
 
 define('MRBS_HEAVY_CHECK_MARK', '&#10004;');
 

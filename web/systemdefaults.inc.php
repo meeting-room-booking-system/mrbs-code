@@ -391,8 +391,15 @@ $prevent_booking_on_weekends = false;
 // [These are all variables that control the appearance of pages and could in time
 //  become per-user settings]
 
-// Start of week: 0 for Sunday, 1 for Monday, etc.
+// Set to false to disable the year view
+$year_view_enabled = true;
+
+// Start of the week: 0 for Sunday, 1 for Monday, etc.
 $weekstarts = 0;
+
+// Start of the year: 1 for January, 2 for February, etc.
+// 0 for the current month
+$year_start = 1;
 
 // Days of the week that are weekdays
 $weekdays = array(1, 2, 3, 4, 5);
@@ -706,6 +713,11 @@ $datetime_formats['day_name'] = array(
 // The format used for the weekly repeat day name on edit_entry.php
 $datetime_formats['day_name_edit'] = array(
   'pattern' => 'ccc'
+);
+
+// The format used for the month name in the year view
+$datetime_formats['month_name_year_view'] = array(
+  'pattern' => 'LLL'
 );
 
 // The format for ranges with both dates and times

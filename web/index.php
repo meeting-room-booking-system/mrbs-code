@@ -102,12 +102,12 @@ function make_room_select_html (string $view, int $view_all, int $year, int $mon
     $page_date = format_iso_date($year, $month, $day);
     $options = $rooms->getNames();
 
-    // If we are in the week or month views and there is more than one room, then add the 'all'
+    // If we are in the week, month or year views and there is more than one room, then add the 'all'
     // option to the room select, which allows the user to display all rooms in the view.
     // And if we are viewing all the rooms then make sure the current room is negative.
     // (The room select uses a negative value of $room to signify that we want to view all
     // rooms in an area.   The absolute value of $room is the current room.)
-    if (in_array($view, array('week', 'month')) && ($always_offer_view_all || ($n_rooms > 1)))
+    if (in_array($view, array('week', 'month', 'year')) && ($always_offer_view_all || ($n_rooms > 1)))
     {
       $all = -abs($current);
       if ($view_all)
@@ -181,6 +181,9 @@ function get_adjacent_link(string $view, int $view_all, int $year, int $month, i
     case 'month':
       $date->modifyMonthsNoOverflow($increment);
       break;
+    case 'year':
+      $date->modifyYearsNoOverflow($increment);
+      break;
     default:
       throw new \Exception("Unknown view '$view'");
       break;
@@ -231,14 +234,23 @@ function get_location_nav(string $view, int $view_all, int $year, int $month, in
 
 function get_view_nav(string $current_view, int $view_all, int $year, int $month, int $day, int $area, int $room) : string
 {
+  global $year_view_enabled;
+
   $html = '';
 
   $html .= '<nav class="view">';
   $html .= '<div class="container">';  // helps the CSS
 
-  $views = array('day' => 'nav_day',
-                 'week' => 'nav_week',
-                 'month' => 'nav_month');
+  $views = [
+    'day' => 'nav_day',
+    'week' => 'nav_week',
+    'month' => 'nav_month'
+  ];
+
+  if ($year_view_enabled)
+  {
+    $views['year'] = 'nav_year';
+  }
 
   foreach ($views as $view => $token)
   {
@@ -288,6 +300,11 @@ function get_arrow_nav(string $view, int $view_all, int $year, int $month, int $
       $title_prev = get_vocab('monthbefore');
       $title_this = get_vocab('gotothismonth');
       $title_next = get_vocab('monthafter');
+      break;
+    case 'year':
+      $title_prev = get_vocab('yearbefore');
+      $title_this = get_vocab('gotothisyear');
+      $title_next = get_vocab('yearafter');
       break;
     default:
       throw new \Exception("Unknown view '$view'");
@@ -342,7 +359,7 @@ function get_calendar_nav(string $view, int $view_all, int $year, int $month, in
 function get_date_heading(string $view, int $year, int $month, int $day) : string
 {
   global $datetime_formats, $display_timezone, $timezone,
-         $weekstarts, $view_week_number;
+         $weekstarts, $year_start, $view_week_number;
 
   $html = '';
   $time = mktime(12, 0, 0, $month, $day, $year);
@@ -381,6 +398,17 @@ function get_date_heading(string $view, int $year, int $month, int $day) : strin
 
     case 'month':
       $html .= datetime_format($datetime_formats['view_month'], $time);
+      break;
+
+    case 'year':
+      $ranger = new YearRanger(get_mrbs_locale());
+      $ranger->setSeparator(get_vocab('year_range_separator'));
+      $start_date = (new DateTime())->setDate($year, $month, $day);
+      $start_date->setMonthYearStart($year_start);
+      $end_date = clone $start_date;
+      $end_date->modifyMonthsNoOverflow(MONTHS_PER_YEAR - 1, true);
+      $range = $ranger->format($start_date, $end_date);
+      $html .= $range;
       break;
 
     default:
@@ -493,8 +521,12 @@ if ($times_along_top)
 {
   $classes[] .= 'times-along-top';
 }
-if ($view_all && ($view !== 'day'))
+if (($view == 'year') || ($view_all && ($view !== 'day')))
 {
+  // "all_rooms" is a bad description as we now also use the class for a single
+  // room in the year view.  Something like "overview" would be better, but we
+  // keep using "all_rooms" for the moment because there may be people with custom
+  // CSS that have rules using "all_rooms".
   $classes[] = 'all_rooms';
 }
 

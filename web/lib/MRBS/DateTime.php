@@ -137,6 +137,59 @@ class DateTime extends \DateTime
   }
 
 
+  // Sets the time to the start of the first slot of the day
+  public function setStartFirstSlot() : self
+  {
+    global $morningstarts, $morningstarts_minutes, $enable_periods;
+
+    if ($enable_periods)
+    {
+      return $this->setTime(12, 0);
+    }
+
+    return $this->setTime($morningstarts, $morningstarts_minutes);
+  }
+
+
+  // Sets the time to the start of the last slot of the day.
+  // (Note that if the booking day extends beyond midnight, then this will
+  // be on the next day.)
+  public function setStartLastSlot() : self
+  {
+    global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes, $enable_periods, $periods;
+
+    if ($enable_periods)
+    {
+      return $this->setTime(12, count($periods) - 1);
+    }
+
+    // Work out if $evening_ends is really on the next day
+    if (hm_before(
+      ['hours' => $eveningends, 'minutes' => $eveningends_minutes],
+      ['hours' => $morningstarts, 'minutes' => $morningstarts_minutes])
+    )
+    {
+      $this->modify('+1 day');
+    }
+
+    return $this->setTime($eveningends, $eveningends_minutes);
+  }
+
+
+  // Sets the time to the end of the last slot of the day.
+  // (Note that if the booking day extends beyond midnight, then this will
+  // be on the next day.)
+  public function setEndLastSlot() : self
+  {
+    global $resolution;
+
+    $this->setStartLastSlot();
+    $this->modify("+$resolution seconds");
+
+    return $this;
+  }
+
+
   // Adds $n (which can be negative) months to this date, without overflowing
   // into the next month.  For example modifying 2023-01-31 by +1 month gives
   // 2023-02-28 rather than 2023-03-03.
@@ -187,6 +240,12 @@ class DateTime extends \DateTime
   }
 
 
+  public function getDaysInMonth() : int
+  {
+    return intval($this->format('t'));
+  }
+
+
   public function getMonth() : int
   {
     return intval($this->format('n'));
@@ -220,6 +279,26 @@ class DateTime extends \DateTime
   public function setDayNoOverflow(int $day) : self
   {
     $this->setDay(min($day, (int) $this->format('t')));
+
+    return $this;
+  }
+
+
+  // Winds the date back to the first $month that is at or before
+  // this date.  Useful for aligning with financial or academic years.
+  // If $month is 0, then no change is made.
+  public function setMonthYearStart(int $month) : self
+  {
+    if ($month !== 0)
+    {
+      $this_month = $this->getMonth();
+      $modification = $month - $this_month;
+      if ($modification > 0)
+      {
+        $modification -= MONTHS_PER_YEAR;
+      }
+      $this->modifyMonthsNoOverflow($modification, true);
+    }
 
     return $this;
   }
