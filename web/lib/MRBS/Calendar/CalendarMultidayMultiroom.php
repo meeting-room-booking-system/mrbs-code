@@ -17,11 +17,56 @@ use function MRBS\multisite;
 class CalendarMultidayMultiroom extends Calendar
 {
 
+  private $day_start_interval;
+  private $n_days;
+  private $start_dow;
+
+  public function __construct(string $view, int $view_all, int $year, int $month, int $day, int $area_id, int $room_id)
+  {
+    global $weekstarts, $resolution;
+
+    parent::__construct($view, $view_all, $year, $month, $day, $area_id, $room_id);
+
+    // Calculate/get:
+    //    the first day of the interval
+    //    how many days there are in it
+    //    the day of the week of the first day in the interval
+    $time = mktime(12, 0, 0, $this->month, $this->day, $this->year);
+    switch ($this->view)
+    {
+      case 'week':
+        $skipback = day_of_MRBS_week($time);
+        $this->day_start_interval = $this->day - $skipback;
+        $this->n_days = DAYS_PER_WEEK;
+        $this->start_dow = $weekstarts;
+        break;
+      case 'month':
+        $this->day_start_interval = 1;
+        $this->n_days = (int) date('t', $time);
+        $this->start_dow = (int) date('N', mktime(12, 0, 0, $this->month, 1, $this->year));
+        break;
+      default:
+        trigger_error("Unsupported view '$this->view'", E_USER_WARNING);
+        break;
+    }
+
+    $this->start_date = (new DateTime())->setTimestamp(get_start_first_slot($this->month, $this->day_start_interval, $this->year));
+    $this->end_date = (new DateTime())->setTimestamp(get_end_last_slot($this->month, $this->day_start_interval + $this->n_days-1, $this->year));
+
+    // Get the data.  It's much quicker to do a single SQL query getting all the
+    // entries for the interval in one go, rather than doing a query for each day.
+    $entries = get_entries_by_area($this->area_id, $this->start_date, $this->end_date);
+
+    // We want to build an array containing all the data we want to show and then spit it out.
+    $this->map = new Map($this->start_date, $this->end_date, $resolution);
+    $this->map->addEntries($entries);
+  }
+
+
   // TODO: Handle the case where there is more than one booking per slot
   public function innerHTML(): string
   {
     global $row_labels_both_sides, $column_labels_both_ends;
-    global $weekstarts;
     global $resolution, $morningstarts, $morningstarts_minutes;
     global $view_all_always_go_to_day_view;
 
@@ -50,49 +95,10 @@ class CalendarMultidayMultiroom extends Calendar
       return "<tbody data-empty=1><tr><td><h1>" . get_vocab("no_rooms_for_area") . "</h1></td></tr></tbody>";
     }
 
-    // Calculate/get:
-    //    the first day of the interval
-    //    how many days there are in it
-    //    the day of the week of the first day in the interval
-    $time = mktime(12, 0, 0, $this->month, $this->day, $this->year);
-    switch ($this->view)
-    {
-      case 'week':
-        $skipback = day_of_MRBS_week($time);
-        $day_start_interval = $this->day - $skipback;
-        $n_days = DAYS_PER_WEEK;
-        $start_dow = $weekstarts;
-        break;
-      case 'month':
-        $day_start_interval = 1;
-        $n_days = (int) date('t', $time);
-        $start_dow = (int) date('N', mktime(12, 0, 0, $this->month, 1, $this->year));
-        break;
-      default:
-        trigger_error("Unsupported view '$this->view'", E_USER_WARNING);
-        break;
-    }
-
-    // Get the time slots
-    $n_time_slots = self::getNTimeSlots();
-    $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
-    $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
-
-    $start_date = (new DateTime())->setTimestamp(get_start_first_slot($this->month, $day_start_interval, $this->year));
-    $end_date = (new DateTime())->setTimestamp(get_end_last_slot($this->month, $day_start_interval + $n_days-1, $this->year));
-
-    // Get the data.  It's much quicker to do a single SQL query getting all the
-    // entries for the interval in one go, rather than doing a query for each day.
-    $entries = get_entries_by_area($this->area_id, $start_date, $end_date);
-
-    // We want to build an array containing all the data we want to show and then spit it out.
-    $map = new Map($start_date, $end_date, $resolution);
-    $map->addEntries($entries);
-
     // TABLE HEADER
     $thead = '<thead';
 
-    $slots = $this->getSlots($this->month, $day_start_interval, $this->year, $n_days, true);
+    $slots = $this->getSlots($this->month, $this->day_start_interval, $this->year, $this->n_days, true);
     if (isset($slots))
     {
       // Add some data to enable the JavaScript to draw the timeline
@@ -105,7 +111,7 @@ class CalendarMultidayMultiroom extends Calendar
 
     if ($days_along_top)
     {
-      $header_inner_rows = $this->multidayHeaderRowsHTML($day_start_interval, $n_days, $start_dow);
+      $header_inner_rows = $this->multidayHeaderRowsHTML($this->day_start_interval, $this->n_days, $this->start_dow);
     }
     else
     {
@@ -140,7 +146,7 @@ class CalendarMultidayMultiroom extends Calendar
         $row_label = $this->roomCellHTML($room, $room_link_vars);
         $tbody .= $row_label;
 
-        for ($j = 0, $date = clone $start_date; $j < $n_days; $j++, $date->modify('+1 day'))
+        for ($j = 0, $date = clone $this->start_date; $j < $this->n_days; $j++, $date->modify('+1 day'))
         {
           if ($date->isHiddenDay())
           {
@@ -169,7 +175,7 @@ class CalendarMultidayMultiroom extends Calendar
           // direct to edit_entry.php if the slot is free, or view_entry.php if it is not.
           // Note: the structure of the cell, with a single link and multiple flex divs,
           // only allows us to direct to the booking if there's only one slot per day.
-          if ($view_all_always_go_to_day_view || ($n_time_slots > 1))
+          if ($view_all_always_go_to_day_view || (self::getNTimeSlots() > 1))
           {
             $page = 'index.php';
             $vars['view'] = 'day';
@@ -177,7 +183,7 @@ class CalendarMultidayMultiroom extends Calendar
           else
           {
             $vars['view'] = $this->view;
-            $this_slot = $map->slot($room_id, $j, $morning_slot_seconds);
+            $this_slot = $this->map->slot($room_id, $j, $morning_slot_seconds);
             if (empty($this_slot))
             {
               $page = 'edit_entry.php';
@@ -192,43 +198,7 @@ class CalendarMultidayMultiroom extends Calendar
           $link = "$page?" . http_build_query($vars, '', '&');
           $link = multisite($link);
           $tbody .= '<a href="' . escape_html($link) . "\">\n";
-          $s = $morning_slot_seconds;
-          $slots = 0;
-          while ($s <= $evening_slot_seconds)
-          {
-            $this_slot = $map->slot($room_id, $j, $s);
-            if (empty($this_slot))
-            {
-              // This is just a continuation of the previous free slot, so
-              // increment the slot count and proceed to the next slot.
-              $n = 1;
-              $slots++;
-            }
-            else
-            {
-              // We've found a booking.
-              // If we've been accumulating a free slot, then record it.
-              if ($slots > 0)
-              {
-                $tbody .= $this->flexDivHTML($slots, 'free');
-              }
-              // Then record the booking.
-              $this_entry = $this_slot[0];
-              $n =    $this_entry['n_slots'];
-              $text = $this_entry['name'];
-              $classes = $this->getEntryClasses($this_entry);
-              $tbody .= $this->flexDivHTML($n, $classes, $text, $text);
-              $slots = 0;
-            }
-            $s = $s + ($n * $resolution);
-          }
-
-          // We've got to the end of the day, so record the free slot, if there is one.
-          if ($slots > 0)
-          {
-            $tbody .= $this->flexDivHTML($slots, 'free');
-          }
-
+          $tbody .= $this->flexDivsHTML($room_id, $j, $j);
           $tbody .= "</a>\n";
           $tbody .= "</td>\n";
         }
