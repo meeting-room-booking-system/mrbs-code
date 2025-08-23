@@ -45,6 +45,7 @@ abstract class CalendarMultimonth extends Calendar
   }
 
 
+  // Get a series of flex divs for a room in a day index interval for the map.
   protected function flexDivsHTML(int $room_id, int $start_day_index, int $end_day_index) : string
   {
     global $morningstarts, $morningstarts_minutes, $resolution;
