@@ -21,6 +21,9 @@ abstract class Calendar
   protected $room_id;
   protected $view;
   protected $view_all;
+  protected $start_date;
+  protected $end_date;
+  protected $map;
 
 
   public function __construct(string $view, int $view_all, int $year, int $month, int $day, int $area_id, int $room_id)
@@ -37,36 +40,78 @@ abstract class Calendar
   abstract public function innerHTML() : string;
 
 
-  // Returns the HTML for a booking, or a free set of slots
-  //    $slots    The number of slots occupied
-  //    $classes  A scalar or array giving the class or classes to be used in the class attribute
-  //    $title    The value of the title attribute
-  //    $text     The value of the text to be used in the div
-  protected function flexDivHTML(int $slots, $classes, ?string $title=null, ?string $text=null) : string
+  // Get a series of flex divs for a room in a day index interval for the map.
+  protected function flexDivsHTML(int $room_id, int $start_day_index, int $end_day_index) : string
   {
-    $result = "<div style=\"flex: $slots\"";
+    global $morningstarts, $morningstarts_minutes, $resolution;
 
-    if (isset($classes))
+    $html = '';
+
+    // Get the time slots
+    $n_time_slots = self::getNTimeSlots();
+    $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
+    $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
+
+    // Loop through the days in the interval
+    for ($i=$start_day_index; $i<=$end_day_index; $i++)
     {
-      $value = (is_array($classes)) ? implode(' ', $classes) : $classes;
-      $result .= ' class="' . escape_html($value) . '"';
+      $s = $morning_slot_seconds;
+
+      // Loop through the slots in the day
+      while ($s <= $evening_slot_seconds)
+      {
+        // Get the entry for this slot
+        $this_slot = $this->map->slot($room_id, $i, $s);
+        // Start a FlexDiv if we haven't got one
+        if (!isset($flex_div))
+        {
+          $flex_div = new FlexDiv($this_slot[0]['id'] ?? null);
+          // If it's a booking, set the properties
+          if (!empty($this_slot))
+          {
+            $this_entry = $this_slot[0];
+            $flex_div->setClasses($this->getEntryClasses($this_entry));
+            $flex_div->setLength($this_entry['n_slots']);
+            $flex_div->setName($this_entry['name']);
+          }
+          // Work out how many slots to advance
+          $n = $flex_div->getLength();
+        }
+        // Otherwise, look to see whether this is a continuation of the stored entry,
+        // or else a change, in which case output the stored entry and reset.
+        else
+        {
+          // Another free slot
+          if (empty($this_slot) && !isset($flex_div->id))
+          {
+            $n = 1;
+            $flex_div->addLength($n);
+          }
+          // A continuation of an existing booking
+          elseif (!empty($this_slot) && isset($flex_div->id) && ($flex_div->id == $this_slot[0]['id']))
+          {
+            $n = $this_slot[0]['n_slots'];
+            $flex_div->addLength($n);
+          }
+          // There's been a change.  Output the FlexDiv and reset
+          else
+          {
+            $html .= $flex_div->html();
+            unset($flex_div);
+            $n = 0;
+          }
+        }
+        $s = $s + ($n * $resolution);  // Advance n slots
+      }
     }
 
-    if (isset($title) && ($title !== ''))
+    // Output the final FlexDiv
+    if (isset($flex_div))
     {
-      $result .= ' title="' . escape_html($title) . '"';
+      $html .= $flex_div->html();
     }
 
-    $result .= '>';
-
-    if (isset($text) && ($text !== ''))
-    {
-      $result .= escape_html($text);
-    }
-
-    $result .= '</div>';
-
-    return $result;
+    return $html;
   }
 
 
@@ -96,7 +141,7 @@ abstract class Calendar
 
   // Gets the number of time slots between the beginning and end of the booking
   // day.   (This is the normal number on a non-DST transition day)
-  protected static function getNTimeSlots() : int
+  public static function getNTimeSlots() : int
   {
     global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
     global $resolution;

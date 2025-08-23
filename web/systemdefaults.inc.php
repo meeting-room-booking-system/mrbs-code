@@ -394,6 +394,13 @@ $prevent_booking_on_weekends = false;
 // Set to false to disable the year view
 $year_view_enabled = true;
 
+// The maximum number of slots per day in an area for the year view to be shown.
+// Because each slot takes a minimum of 1 pixel and there are 365/366 days in a
+// year, the year view can get very wide.  It is therefore only shown if there
+// are only a few slots per day in an area.  Set this to zero to disable the year
+// view completely.
+$max_slots_for_year_view = 4;
+
 // Start of the week: 0 for Sunday, 1 for Monday, etc.
 $weekstarts = 0;
 
