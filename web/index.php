@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use MRBS\Calendar\Calendar;
 use MRBS\Calendar\CalendarFactory;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementSelect;
@@ -233,7 +234,7 @@ function get_location_nav(string $view, int $view_all, int $year, int $month, in
 
 function get_view_nav(string $current_view, int $view_all, int $year, int $month, int $day, int $area, int $room) : string
 {
-  global $year_view_enabled;
+  global $max_slots_for_year_view;
 
   $html = '';
 
@@ -246,7 +247,7 @@ function get_view_nav(string $current_view, int $view_all, int $year, int $month
     'month' => 'nav_month'
   ];
 
-  if ($year_view_enabled)
+  if (Calendar::getNTimeSlots() <= $max_slots_for_year_view)
   {
     $views['year'] = 'nav_year';
   }
