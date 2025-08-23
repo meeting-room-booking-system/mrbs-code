@@ -42,13 +42,13 @@ abstract class Calendar
   // Get a series of flex divs for a room in a day index interval for the map.
   protected function flexDivsHTML(int $room_id, int $start_day_index, int $end_day_index) : string
   {
-    global $morningstarts, $morningstarts_minutes, $resolution;
+    global $resolution;
 
     $html = '';
 
     // Get the time slots
     $n_time_slots = self::getNTimeSlots();
-    $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
+    $morning_slot_seconds = self::morningSlotsSeconds();
     $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
 
     // Loop through the days in the interval
@@ -138,14 +138,22 @@ abstract class Calendar
   }
 
 
+  public static function morningSlotsSeconds() : int
+  {
+    global $morningstarts, $morningstarts_minutes;
+
+    return (($morningstarts * 60) + $morningstarts_minutes) * 60;
+  }
+
+
   // Gets the number of time slots between the beginning and end of the booking
   // day.   (This is the normal number on a non-DST transition day)
   public static function getNTimeSlots() : int
   {
-    global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
+    global $eveningends, $eveningends_minutes;
     global $resolution;
 
-    $start_first = (($morningstarts * 60) + $morningstarts_minutes) * 60;           // seconds
+    $start_first = self::morningSlotsSeconds();           // seconds
     $end_last = ((($eveningends * 60) + $eveningends_minutes) * 60) + $resolution;  // seconds
     $end_last = $end_last % SECONDS_PER_DAY;
     if (day_past_midnight())
@@ -177,7 +185,7 @@ abstract class Calendar
     $slots = array();
 
     $n_time_slots = self::getNTimeSlots();
-    $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
+    $morning_slot_seconds = self::morningSlotsSeconds();
     $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
 
     for ($j = 0; $j < $n_days; $j++)
