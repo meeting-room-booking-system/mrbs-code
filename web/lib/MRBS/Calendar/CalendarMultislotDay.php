@@ -19,14 +19,9 @@ class CalendarMultislotDay extends CalendarMultislot
   private $kiosk;
 
 
-  public function __construct(string $view, int $year, int $month, int $day, int $area_id, int $room_id, ?int $timetohighlight=null, ?string $kiosk=null)
+  public function __construct(string $view, int $view_all, int $year, int $month, int $day, int $area_id, int $room_id, ?int $timetohighlight=null, ?string $kiosk=null)
   {
-    $this->view = $view;
-    $this->year = $year;
-    $this->month = $month;
-    $this->day = $day;
-    $this->area_id = $area_id;
-    $this->room_id = $room_id;
+    parent::__construct($view, $view_all, $year, $month, $day, $area_id, $room_id);
     $this->timetohighlight = $timetohighlight;
     $this->kiosk = $kiosk;
   }

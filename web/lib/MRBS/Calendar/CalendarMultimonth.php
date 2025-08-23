@@ -16,13 +16,7 @@ abstract class CalendarMultimonth extends Calendar
   {
     global $year_start;
 
-    $this->view = $view;
-    $this->view_all = $view_all;
-    $this->year = $year;
-    $this->month = $month;
-    $this->day = $day;
-    $this->area_id = $area_id;
-    $this->room_id = $room_id;
+    parent::__construct($view, $view_all, $year, $month, $day, $area_id, $room_id);
 
     if ($view === 'year')
     {
