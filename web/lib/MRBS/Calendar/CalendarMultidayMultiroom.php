@@ -67,7 +67,6 @@ class CalendarMultidayMultiroom extends Calendar
   public function innerHTML(): string
   {
     global $row_labels_both_sides, $column_labels_both_ends;
-    global $resolution, $morningstarts, $morningstarts_minutes;
     global $view_all_always_go_to_day_view;
 
     // It's theoretically possible to display a transposed table with rooms along the top and days
