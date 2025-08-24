@@ -471,8 +471,8 @@ var Table = {
   },
 
   size: function() {
-      <?php // Don't do anything if this is the all-rooms week view ?>
-      if ((args.view === 'week') && args.view_all)
+      <?php // Don't do anything if this is the year view or all-rooms week view ?>
+      if ((args.view === 'year') || ((args.view === 'week') && args.view_all))
       {
         return;
       }
