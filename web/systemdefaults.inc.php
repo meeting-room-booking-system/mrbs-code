@@ -391,9 +391,6 @@ $prevent_booking_on_weekends = false;
 // [These are all variables that control the appearance of pages and could in time
 //  become per-user settings]
 
-// Set to false to disable the year view
-$year_view_enabled = true;
-
 // The maximum number of slots per day in an area for the year view to be shown.
 // Because each slot takes a minimum of 1 pixel and there are 365/366 days in a
 // year, the year view can get very wide.  It is therefore only shown if there
