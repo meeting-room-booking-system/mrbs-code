@@ -329,7 +329,13 @@ function url_get_contents(string $url, ?string $if_modified_since=null, ?string 
     }
     $result['body'] = $contents;
 
-    curl_close($ch);
+    // curl_close() doesn't do anything from PHP 8.0 onwards (because the curl
+    // handle is an object and not a resource) and is deprecated from PHP 8.5.
+    assert(version_compare(MRBS_MIN_PHP_VERSION, '8.0.0', '<'), "The code below is now redundant.");
+    if (version_compare(PHP_VERSION, '8.0.0') < 0)
+    {
+      curl_close($ch);
+    }
   }
 
   // If there's no cURL then use file_get_contents()
