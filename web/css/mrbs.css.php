@@ -626,6 +626,20 @@ nav.view a:last-child, nav.arrow a:last-child {
   border-bottom-right-radius: 5px;
 }
 
+<?php // Don't display the year button on narrow screens ?>
+@media (max-width: 30rem) {
+
+  nav.view a.year {
+    display: none;
+  }
+
+  nav.view a.month {
+    border-right: 0;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+}
+
 nav.view a {
   padding: 0.2em 0.5em;
 }
@@ -668,7 +682,7 @@ nav a.next.week::before {
 
 <?php // Don't display the << and >> buttons on narrow screens ?>
 @media (max-width: 30rem) {
-  nav a.week {
+  nav.arrow a.week {
     display: none;
   }
 }
