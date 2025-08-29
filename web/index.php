@@ -264,8 +264,12 @@ function get_view_nav(string $current_view, int $view_all, int $year, int $month
 
     $query = http_build_query($vars, '', '&');
     $href = multisite("index.php?$query");
-    $html .= '<a';
-    $html .= ($view == $current_view) ? ' class="selected"' : '';
+    $classes = [$view];
+    if ($view == $current_view)
+    {
+      $classes[] = 'selected';
+    }
+    $html .= '<a class="' . implode(' ', $classes) . '"';
     $html .= ' href="' . escape_html($href) . '">' . escape_html(get_vocab($token)) . '</a>';
   }
 
