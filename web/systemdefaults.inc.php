@@ -403,6 +403,7 @@ $prevent_booking_on_weekends = false;
 // year, the year view can get very wide.  It is therefore only shown if there
 // are only a few slots per day in an area.  Set this to zero to disable the year
 // view completely.
+// Note: the year view button is not displayed on narrow screens.
 $max_slots_for_year_view = 4;
 
 // Start of the week: 0 for Sunday, 1 for Monday, etc.
