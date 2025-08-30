@@ -39,7 +39,7 @@ class DBFactory
     return $class_name::dsn($db_host, $db_name, $db_port);
   }
 
-  
+
   // Check that the appropriate PDO extension is enabled.  This can't always be
   // done in the constructor of the class itself because the class can refer to a
   // driver-specific constant.
@@ -50,7 +50,7 @@ class DBFactory
     {
       case 'mysql':
       case 'mysqli':
-        $constant_name = 'PDO::MYSQL_ATTR_FOUND_ROWS';
+        $constant_name = 'Pdo\Mysql::ATTR_FOUND_ROWS';
         $extension = 'pdo_mysql';
         break;
 
