@@ -4,6 +4,8 @@ namespace MRBS;
 
 
 // A helper class to build a DB object, dependent on the database type required
+use Throwable;
+
 class DBFactory
 {
   // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
@@ -63,12 +65,23 @@ class DBFactory
         return;
     }
 
-    if (!defined($constant_name))
+    // We have to test for the constant in a try/catch block, because if we are using the Pdo\Mysql or
+    // Pdo\Pgsql emulations (ie we are not running PHP 8.4 or later) then the emulations will throw
+    // an error.
+    try
+    {
+      if (!defined($constant_name))
+      {
+        throw new Exception("Undefined constant $constant_name.");
+      }
+    }
+    catch (Throwable $e)
     {
       $message = "Undefined constant $constant_name.  Check that the $extension extension is enabled " .
-                 "in your php.ini file.";
+        "in your php.ini file.";
       throw new Exception($message);
     }
+
   }
 
   private static function getClassName(string $db_system) : string
