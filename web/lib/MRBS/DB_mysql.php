@@ -4,6 +4,7 @@ namespace MRBS;
 
 use Error;
 use PDO;
+use Pdo\Mysql;
 use PDOException;
 
 //
@@ -24,9 +25,9 @@ class DB_mysql extends DB
   const ER_TOO_MANY_USER_CONNECTIONS  = 1203; // User %s already has more than 'max_user_connections' active connections
   const ER_USER_LIMIT_REACHED         = 1226; // User '%s' has exceeded the '%s' resource (current value: %ld)
 
-  private const OPTIONS = array(
-      PDO::MYSQL_ATTR_FOUND_ROWS => true  // Return the number of found (matched) rows, not the number of changed rows.
-    );
+  private const OPTIONS = [
+    Mysql::ATTR_FOUND_ROWS => true  // Return the number of found (matched) rows, not the number of changed rows.
+  ];
 
   private const MIN_VERSIONS = array(
       self::DB_MARIADB => '5.5.3', // '10.0.2' recommended for multiple lock support
@@ -152,22 +153,22 @@ class DB_mysql extends DB
           switch ($key)
           {
             case 'ssl_ca':
-              $index = PDO::MYSQL_ATTR_SSL_CA;
+              $index = Mysql::ATTR_SSL_CA;
               break;
             case 'ssl_capath':
-              $index = PDO::MYSQL_ATTR_SSL_CAPATH;
+              $index = Mysql::ATTR_SSL_CAPATH;
               break;
             case 'ssl_cert':
-              $index = PDO::MYSQL_ATTR_SSL_CERT;
+              $index = Mysql::ATTR_SSL_CERT;
               break;
             case 'ssl_cipher':
-              $index = PDO::MYSQL_ATTR_SSL_CIPHER;
+              $index = Mysql::ATTR_SSL_CIPHER;
               break;
             case 'ssl_key':
-              $index = PDO::MYSQL_ATTR_SSL_KEY;
+              $index = Mysql::ATTR_SSL_KEY;
               break;
             case 'ssl_verify_server_cert':
-              $index = PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT;
+              $index = Mysql::ATTR_SSL_VERIFY_SERVER_CERT;
               break;
             default:
               $index = null;
