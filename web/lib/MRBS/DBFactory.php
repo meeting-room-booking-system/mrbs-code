@@ -55,7 +55,7 @@ class DBFactory
         break;
 
       case 'pgsql':
-        $constant_name = 'PDO::PGSQL_ATTR_DISABLE_PREPARES';
+        $constant_name = 'Pdo\Pgsql::ATTR_DISABLE_PREPARES';
         $extension = 'pdo_pgsql';
         break;
 
