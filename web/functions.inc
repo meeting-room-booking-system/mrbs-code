@@ -366,6 +366,14 @@ function url_get_contents(string $url, ?string $if_modified_since=null, ?string 
       trigger_error("MRBS: could not get contents of $url", E_USER_WARNING);
     }
     $result['body'] = $contents;
+    // We can't use and if ... else or a ternary operator, because if we do we'll get a deprecation
+    // message from the compiler in PHP 8.5.  See https://github.com/php/php-src/issues/19651 .
+    // http_get_last_response_errors() is only available from PHP 8.4.
+    assert(version_compare(MRBS_MIN_PHP_VERSION, '8.4.0', '<'), "The code below can be rewritten.");
+    if (function_exists('http_get_last_response_headers'))
+    {
+      $http_response_header = http_get_last_response_headers();
+    }
     $headers = $http_response_header;
   }
 
