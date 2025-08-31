@@ -97,7 +97,7 @@ function get_arg_string(array $args) : string
 
     switch ($type)
     {
-      case 'boolean';
+      case 'boolean':
         $result[] = ($arg) ? 'true' : 'false';
         break;
 
