@@ -86,7 +86,12 @@ implements CAS_Request_RequestInterface
 
         }
         // close the CURL session
-        curl_close($ch);
+        // curl_close() doesn't do anything from PHP 8.0 onwards (because the curl
+        // handle is an object and not a resource) and is deprecated from PHP 8.5.
+        if (version_compare(PHP_VERSION, '8.0.0') < 0)
+        {
+          curl_close($ch);
+        }
 
         phpCAS::traceEnd($res);
         return $res;
