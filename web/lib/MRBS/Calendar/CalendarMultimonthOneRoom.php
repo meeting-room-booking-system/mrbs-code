@@ -28,7 +28,7 @@ class CalendarMultimonthOneRoom extends CalendarMultimonth
 
   public function innerHTML(): string
   {
-    global $column_labels_both_ends, $row_labels_both_sides, $year_start, $datetime_formats;
+    global $column_labels_both_ends;
 
     // Table header
     $thead = '<thead';
