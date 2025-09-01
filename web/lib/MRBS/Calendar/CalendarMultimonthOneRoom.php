@@ -80,6 +80,8 @@ class CalendarMultimonthOneRoom extends CalendarMultimonth
       for ($j=1; $j<=$date->getDaysInMonth(); $j++)
       {
         $date->setDay($j);
+        // Although it's possible to add date classes (eg for weekends and holidays) the result
+        // doesn't look very good on the screen because the weekdays aren't all in the same column.
         $html .= "<td>";
         $vars['page_date'] = $date->getISODate();
         $vars['view'] = 'day';
