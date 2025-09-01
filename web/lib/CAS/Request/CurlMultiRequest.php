@@ -139,7 +139,12 @@ implements CAS_Request_MultiRequestInterface
             $buf = curl_multi_getcontent($handles[$i]);
             $request->_storeResponseBody($buf);
             curl_multi_remove_handle($multiHandle, $handles[$i]);
-            curl_close($handles[$i]);
+            // curl_close() doesn't do anything from PHP 8.0 onwards (because the curl
+            // handle is an object and not a resource) and is deprecated from PHP 8.5.
+            if (version_compare(PHP_VERSION, '8.0.0') < 0)
+            {
+              curl_close($handles[$i]);
+            }
         }
 
         curl_multi_close($multiHandle);
