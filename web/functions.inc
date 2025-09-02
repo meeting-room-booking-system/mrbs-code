@@ -339,7 +339,8 @@ function url_get_contents(string $url, ?string $if_modified_since=null, ?string 
     }
     $result['body'] = $contents;
     // We can't use and if ... else or a ternary operator, because if we do we'll get a deprecation
-    // message from the compiler in PHP 8.5.  See https://github.com/php/php-src/issues/19651 .
+    // message from the compiler in PHP 8.5.  See https://github.com/php/php-src/issues/19651 and
+    // https://wiki.php.net/rfc/deprecations_php_8_5#deprecate_the_http_response_header_predefined_variable .
     // [Note: we can't put this in a function because $http_response_header is only created in the local scope.]
     // http_get_last_response_errors() is only available from PHP 8.4.
     assert(version_compare(MRBS_MIN_PHP_VERSION, '8.4.0', '<'), "The code below can be rewritten.");
