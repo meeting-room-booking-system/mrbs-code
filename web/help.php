@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use MRBS\DB\DB;
+
 require "defaultincludes.inc";
 require_once "version.inc";
 

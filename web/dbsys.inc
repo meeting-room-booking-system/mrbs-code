@@ -6,6 +6,8 @@ namespace MRBS;
 // Needs to be dynamic rather than static in case we are running a multisite
 // installation and want to switch sites, eg during a database upgrade.
 
+use MRBS\DB\DB;
+use MRBS\DB\DBFactory;
 use PDO;
 
 function _tbl(string $short_name, bool $include_schema=true) : string

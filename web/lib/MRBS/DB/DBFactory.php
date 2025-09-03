@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace MRBS;
+namespace MRBS\DB;
 
 
 // A helper class to build a DB object, dependent on the database type required
