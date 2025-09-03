@@ -2,8 +2,8 @@
 declare(strict_types=1);
 namespace MRBS\Auth;
 
-use MRBS\DBExternalException;
-use MRBS\DBFactory;
+use MRBS\DB\DBExternalException;
+use MRBS\DB\DBFactory;
 use MRBS\User;
 use ValueError;
 
