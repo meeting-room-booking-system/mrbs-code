@@ -1,10 +1,14 @@
 <?php
 declare(strict_types=1);
-namespace MRBS;
+namespace MRBS\DB;
 
+use MRBS\Column;
+use MRBS\Columns;
+use MRBS\Exception;
 use PDO;
 use PDOException;
 use Throwable;
+use function MRBS\mrbs_ignore_user_abort;
 
 
 abstract class DB
@@ -493,7 +497,7 @@ abstract class DB
     }
 
     list('columns' => $columns, 'values' => $values, 'sql_params' => $params) = $this->prepareData($data, $table, $ignore_columns);
-    $quoted_columns = array_map(array(db(), 'quote'), $columns);
+    $quoted_columns = array_map(array(\MRBS\db(), 'quote'), $columns);
     $sql = "INSERT INTO " . $this->quote($table) . "
                         (" . implode(', ', $quoted_columns) . ")
                  VALUES (" . implode(', ', $values) . ") ";
@@ -508,7 +512,7 @@ abstract class DB
       $assignments[] = $this->quote($column) . "=$value";
     }
 
-    $sql .= db()->syntax_on_duplicate_key_update(
+    $sql .= \MRBS\db()->syntax_on_duplicate_key_update(
       $conflict_keys,
       $assignments,
       $has_id_column

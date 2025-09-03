@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace MRBS;
+namespace MRBS\DB;
 
 use Error;
 use PDO;
@@ -530,7 +530,7 @@ class DB_mysql extends DB
   // Return a string identifying the database version and type
   public function version() : string
   {
-    return $this->versionComment() . ' ' . $this->versionString();
+    return $this->versionComment() . ' DB_mysql.php' . $this->versionString();
   }
 
 
