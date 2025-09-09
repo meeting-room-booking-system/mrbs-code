@@ -505,6 +505,15 @@ function validate(form)
         return false;
       }
     }
+    <?php
+    // Check that the repeat end date is not before the start date.  If it is, nothing
+    // will be booked, which is probably not what was intended.
+    ?>
+    if ($('input[name="rep_end_date"]').val() < $('input[name="start_date"]').val())
+    {
+      window.alert("<?php echo get_js_vocab('rep_end_date_before_start_date') ?>");
+      return false;
+    }
   }
 
   <?php
