@@ -354,7 +354,14 @@ $(document).on('page_ready', function() {
     config.weekNumbers = <?php echo ($mincals_week_numbers && ($weekstarts == DateTime::firstDayOfWeek($timezone, get_mrbs_locale()))) ? 'true' : 'false' ?>;
   }
 
-  flatpickr('input[type="date"]:not(.navigation)', config);
+  flatpickr('input[type="date"]:not(.navigation)', config).forEach(function(fp) {
+    <?php // For dates that have a data-min attribute, set the minDate ?>
+    let minDate = $(fp.input).data('min');
+    if (minDate)
+    {
+      fp.set('minDate', minDate);
+    }
+  });
 
   <?php
   // For datepickers used for navigation we need to modify the config to take account

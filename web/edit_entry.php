@@ -851,7 +851,8 @@ function get_fieldset_rep_monthly_details(RepeatRule $repeat_rule, bool $disable
 }
 
 
-function get_field_rep_end_date(RepeatRule $repeat_rule, bool $disabled=false) : FieldInputDate
+// $min is the minimum date for the repeat end date
+function get_field_rep_end_date(RepeatRule $repeat_rule, bool $disabled=false, ?DateTime $min=null) : FieldInputDate
 {
   $field = new FieldInputDate();
 
@@ -859,6 +860,13 @@ function get_field_rep_end_date(RepeatRule $repeat_rule, bool $disabled=false) :
         ->setControlAttributes(array('name'     => 'rep_end_date',
                                      'value'    => $repeat_rule->getEndDate()->getISODate(),
                                      'disabled' => $disabled));
+
+  if (isset($min))
+  {
+    // Make it a data-min, rather than a min, attribute because we need to be able to change it using
+    // JavaScript. If we use min and JavaScript is not running, we are stuck with it.
+    $field->setControlAttribute('data-min', $min->getISODate());
+  }
 
   return $field;
 }
@@ -992,7 +1000,8 @@ function get_fieldset_registration() : ?ElementFieldset
 }
 
 
-function get_fieldset_repeat(RepeatRule $repeat_rule) : ElementFieldset
+// $min is the minimum date for the repeat end date
+function get_fieldset_repeat(RepeatRule $repeat_rule, ?DateTime $min=null) : ElementFieldset
 {
   global $repeats_allowed;
 
@@ -1010,7 +1019,7 @@ function get_fieldset_repeat(RepeatRule $repeat_rule) : ElementFieldset
 
   $fieldset->addElement(get_field_rep_type($repeat_rule, $disabled))
            ->addElement(get_field_rep_interval($repeat_rule, $disabled))
-           ->addElement(get_field_rep_end_date($repeat_rule, $disabled))
+           ->addElement(get_field_rep_end_date($repeat_rule, $disabled, $min))
            ->addElement(get_field_skip_conflicts($disabled));
 
   return $fieldset;
@@ -1798,7 +1807,7 @@ $form->addElement(get_fieldset_registration());
 // a new booking and repeats are allowed.
 if ((isset($id) && $edit_series) || (!isset($id) && $repeats_allowed))
 {
-  $form->addElement(get_fieldset_repeat($repeat_rule));
+  $form->addElement(get_fieldset_repeat($repeat_rule, (new DateTime())->setTimestamp($start_time)));
 }
 
 // Checkbox for no email

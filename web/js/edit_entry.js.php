@@ -1518,6 +1518,25 @@ $(document).on('page_ready', function() {
   });
 
   <?php
+  // When the start date changes, change the minDate on the repeat end date datepicker to match.
+  ?>
+  $('#start_date').on('change', function() {
+    const rep_end_date_selector = '#rep_end_date';
+    const start_date = $(this).val();
+    const old_rep_end_date = $(rep_end_date_selector).val();
+    const fp = document.querySelector(rep_end_date_selector)._flatpickr;
+    fp.set('minDate', start_date);
+    <?php
+    // And if the old flatpickr date was less than the new minimum, set the flatpickr to the minimum,
+    // otherwise it will show a blank field.
+    ?>
+    if (old_rep_end_date < start_date)
+    {
+      fp.setDate(start_date);
+    }
+  });
+
+  <?php
   // Add a change event handler to each of the form fields - except for those that
   // are disabled and anything that might be a submit button - so that when they change
   // the validity of the booking is re-checked.   (This probably causes more checking
