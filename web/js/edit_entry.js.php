@@ -1526,6 +1526,9 @@ $(document).on('page_ready', function() {
     const old_rep_end_date = $(rep_end_date_selector).val();
     const fp = document.querySelector(rep_end_date_selector)._flatpickr;
     fp.set('minDate', start_date);
+    // Note that although the flatpickr documentation says this should work on mobiles, it doesn't seem to.
+    // So we manually set the 'min' attribute for mobiles.
+    $(rep_end_date_selector).next('.flatpickr-input.flatpickr-mobile').attr('min', start_date);
     <?php
     // And if the old flatpickr date was less than the new minimum, set the flatpickr to the minimum,
     // otherwise it will show a blank field.

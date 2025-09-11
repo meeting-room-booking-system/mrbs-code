@@ -357,12 +357,14 @@ $(document).on('page_ready', function() {
   flatpickr('input[type="date"]:not(.navigation)', config).forEach(function(fp) {
     <?php
     // For dates that have a data-min attribute, set the minDate.
-    // Note that although the flatpickr documentation says this should work on mobiles, it doesn't seem to.
     ?>
     let minDate = $(fp.input).data('min');
     if (minDate)
     {
       fp.set('minDate', minDate);
+      // Note that although the flatpickr documentation says this should work on mobiles, it doesn't seem to.
+      // So we manually set the 'min' attribute for mobiles.
+      $('input[type="hidden"][data-min]').next('.flatpickr-input.flatpickr-mobile').attr('min', minDate);
     }
   });
 
