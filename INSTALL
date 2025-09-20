@@ -13,7 +13,7 @@ enable MRBS to use a custom database session handler.  This is more secure than
 the standard file based session handler, easier to configure and enables MRBS
 to be used on clustered web servers.]
 
-You must have at least PHP 7.2, with support for your chosen database system
+You must have at least PHP 7.2.5, with support for your chosen database system
 installed and working for this application. See the PHP (www.php.net), MySQL
 (www.mysql.com), and PostgreSQL (www.postgresql.org) sites for more info on
 setting these up.   You need to know how to install, secure, run, maintain,
