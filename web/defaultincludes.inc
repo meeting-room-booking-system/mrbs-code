@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace MRBS;
 
-define ('MRBS_MIN_PHP_VERSION', '7.2.0');
+define ('MRBS_MIN_PHP_VERSION', '7.2.5');
 
 // Check PHP version
 // Do it now before we start including code that might fail with a syntax error,

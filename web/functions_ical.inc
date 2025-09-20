@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use GuzzleHttp\Client;
 use MRBS\DB\DBStatement;
 use MRBS\ICalendar\RFC5545;
 use MRBS\ICalendar\RFC5545Exception;
@@ -59,11 +60,11 @@ function get_vtimezone_url(string $vtimezone) : ?string
     return null;
   }
 
-  $contents = url_get_contents($tz_url);
-  $vcalendar = $contents['body'];
-
-  if ($vcalendar === false)
-  {
+  try {
+    $vcalendar = (new Client())->get($tz_url)->getBody()->getContents();
+  }
+  catch (\Exception $e) {
+    trigger_error(get_class($e) . ': ' . $e->getMessage(), E_USER_WARNING);
     trigger_error("MRBS: failed to download a new timezone definition from $tz_url", E_USER_WARNING);
     return null;
   }
