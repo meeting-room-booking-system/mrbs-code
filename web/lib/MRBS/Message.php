@@ -16,20 +16,35 @@ class Message
 
   private function __construct(string $text = '', string $from_date = '', string $until_date = '')
   {
+    assert(version_compare(MRBS_MIN_PHP_VERSION, '7.4.0', '<'), "The __wakeup() method is now redundant.");
     $this->setText($text);
     $this->setFromDate($from_date);
     $this->setUntilDate($until_date);
   }
 
+
   private function __clone()
   {
   }
 
+
+  public function __unserialize(array $data) : void
+  {
+    // __unserialize() must have public visibility
+    throw new \Exception("Cannot unserialize a singleton.");
+  }
+
+
+  // __wakeup() is deprecated from PHP 8.5.
+  // "The __wakeup() serialization magic method has been deprecated. Implement __unserialize()
+  // instead (or in addition, if support for old PHP versions is necessary)".
+  // __unserialize() is only available from PHP 7.4.0
   public function __wakeup()
   {
     // __wakeup() must have public visibility
-    throw new \Exception("Cannot un-serialize a singleton.");
+    throw new \Exception("Cannot unserialize a singleton.");
   }
+
 
   public static function getInstance(string $text = '', string $from_date = '', string $until_date = ''): Message
   {
