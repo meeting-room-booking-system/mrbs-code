@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace MRBS\Auth;
 
 use Joomla\CMS\Factory;
@@ -42,7 +43,7 @@ class AuthJoomla extends Auth
       $mainframe = Factory::getApplication('site');
     }
 
-    return $mainframe->login(array('username' => $user, 'password' => $pass));
+    return $mainframe->login(array('username' => $user, 'password' => $pass)) ? $user : false;
   }
 
 

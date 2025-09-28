@@ -144,10 +144,9 @@ function create_details_body(array $data, bool $as_html=false, bool $keep_privat
             // Convert DATE types into a locale friendly form
             if (isset($column) && ('date' == $column->getType()))
             {
-              $date = DateTime::createFromFormat(DateTime::ISO8601_DATE, $data[$key]);
-              if ($date !== false)
+              if (isset($value) && (false !== ($date = DateTime::createFromFormat(DateTime::ISO8601_DATE, $value))))
               {
-                $data[$key] = datetime_format($datetime_formats['date'],  $date->getTimestamp());
+                $data[$key] = datetime_format($datetime_formats['date'], $date->getTimestamp());
               }
             }
           }
