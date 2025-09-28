@@ -677,6 +677,7 @@ function get_field_custom(string $key, bool $disabled=false)
   if ($custom_field['nature'] == 'decimal')
   {
     list( , $decimal_places) = explode(',', $custom_field['length']);
+    $decimal_places = (int) $decimal_places;
     $step = pow(10, -$decimal_places);
     $step = number_format($step, $decimal_places);
     $field->setControlAttribute('step', $step);
