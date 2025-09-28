@@ -41,8 +41,8 @@ class AuthJoomla extends Auth
     {
       $mainframe = Factory::getApplication('site');
     }
-
-    return $mainframe->login(array('username' => $user, 'password' => $pass));
+    $result = $mainframe->login(array('username' => $user, 'password' => $pass));
+    return ($result === true) ? $user : false;
   }
 
 
