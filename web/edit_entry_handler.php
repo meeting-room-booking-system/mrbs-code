@@ -247,6 +247,17 @@ foreach($fields as $field)
       $custom_fields[$field['name']] = trim($custom_fields[$field['name']]);
       $custom_fields[$field['name']] = truncate($custom_fields[$field['name']], 'entry.' . $field['name']);
     }
+
+    // For certain nullable data types convert empty strings into null values, to prevent an SQL error
+    if (in_array($field['nature'], ['decimal', 'timestamp']))
+    {
+      if ($field['is_nullable'] && (!isset($custom_fields[$field['name']]) || ($custom_fields[$field['name']] === '')))
+      {
+        $custom_fields[$field['name']] = null;
+      }
+      // TODO: Validate that the fields are valid for the SQL input before they trigger an SQL error?
+      // TODO: Rewrite all of this so that there is common form validation and processing for all forms.
+    }
   }
 }
 
