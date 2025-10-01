@@ -2,6 +2,10 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use Defuse\Crypto\Crypto;
+use Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException;
+use Defuse\Crypto\Key;
+use MRBS\DB\DBException;
 use PDOException;
 use SessionHandlerInterface;
 use SessionUpdateTimestampHandlerInterface;
@@ -25,9 +29,13 @@ else
 //    (b) it avoids problems with ordinary sessions not working because the PHP session save
 //        directory is not writable
 //    (c) it's more resilient in clustered environments
+//
+// The class also encrypts the session data, using a random key which is stored in a cookie (based on
+// https://github.com/ezimuel/PHP-Secure-Session).
 
 class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestampHandlerInterface
 {
+  private $key;
   private static $table;
 
   public function __construct()
@@ -65,6 +73,14 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
   // returned internally to PHP for processing.
   public function open($path, $name): bool
   {
+    try {
+      $this->key = $this->getKey('KEY_' . $name);
+    }
+    catch (\Exception $e) {
+      trigger_error("Failed to get key: " . $e->getMessage(), E_USER_WARNING);
+      return false;
+    }
+
     return true;
   }
 
@@ -129,14 +145,27 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
     // no doubt soluble - and also upgrading the database is complicated while the roles branch is still under
     // development and there are two sets of upgrades to be merged.  So for the moment we have this rather inelegant
     // workaround.
+    // NOTE: this step is probably not necessary anymore, now that the session data is encrypted.
     if ($dbsys == 'pgsql')
     {
       $decoded = base64_decode($result, true);
       // Test to see if the data is base64 encoded so that we can handle session data written before this change.
       if (($decoded !== false) && (base64_encode($decoded) === $result))
       {
-        return $decoded;
+        $result = $decoded;
       }
+    }
+
+    try {
+      $result = Crypto::decrypt($result, $this->key);
+    }
+    catch (WrongKeyOrModifiedCiphertextException $e) {
+      // Do nothing.  This is to handle the case where we are reading old session data before
+      // encryption was introduced.
+    }
+    catch (\Exception $e) {
+      trigger_error("Failed to decrypt session data: " . $e->getMessage(), E_USER_WARNING);
+      $result = '';
     }
 
     return $result;
@@ -148,6 +177,14 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
   public function write($id, $data): bool
   {
     global $dbsys;
+
+    try {
+      $data = Crypto::encrypt($data, $this->key);
+    }
+    catch (\Exception $e) {
+      trigger_error("Failed to encrypt session data: " . $e->getMessage(), E_USER_WARNING);
+      return false;
+    }
 
     // See comment in read()
     if ($dbsys == 'pgsql')
@@ -254,6 +291,37 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
     db()->mutex_unlock($id);
 
     return $result;
+  }
+
+
+  private function getKey(string $name) : Key
+  {
+    // Get the key from the cookie, or if there isn't one create a random key and
+    // store it in the cookie.
+    if (empty($_COOKIE[$name]))
+    {
+      $key = Key::createNewRandomKey();
+      $ascii_key = $key->saveToAsciiSafeString();
+      // Use the same cookie params as for the session cookie, with a lifetime at least
+      // as long, or zero (expiry on browser close) if that's the case.
+      $cookie_params = session_get_cookie_params();
+      setcookie(
+        $name,
+        $ascii_key,
+        ($cookie_params['lifetime'] > 0) ? time() + $cookie_params['lifetime'] : 0,
+        $cookie_params['path'],
+        $cookie_params['domain'],
+        $cookie_params['secure'],
+        $cookie_params['httponly']
+      );
+      $_COOKIE[$name] = $ascii_key;
+    }
+    else
+    {
+      $key = Key::loadFromAsciiSafeString($_COOKIE[$name]);
+    }
+
+    return $key;
   }
 
 }
