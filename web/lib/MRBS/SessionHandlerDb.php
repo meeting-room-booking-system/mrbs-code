@@ -143,23 +143,8 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
       return '';
     }
 
-    // TODO: fix this properly
-    // In PostgreSQL we store the session base64 encoded.  That's because the session data string (encoded by PHP)
-    // can contain NULL bytes when the User object has protected properties.  The solution is probably to convert
-    // the data column in PostgreSQL to be bytea rather than text.  However this doesn't seem to work for some reason -
-    // no doubt soluble - and also upgrading the database is complicated while the roles branch is still under
-    // development and there are two sets of upgrades to be merged.  So for the moment we have this rather inelegant
-    // workaround.
     // NOTE: this step is probably not necessary anymore, now that the session data is encrypted.
-    if ($dbsys == 'pgsql')
-    {
-      $decoded = base64_decode($result, true);
-      // Test to see if the data is base64 encoded so that we can handle session data written before this change.
-      if (($decoded !== false) && (base64_encode($decoded) === $result))
-      {
-        $result = $decoded;
-      }
-    }
+    $result = base64_decode($result, true);
 
     try {
       $result = Crypto::decrypt($result, $this->key);
