@@ -520,4 +520,28 @@ class DB_pgsql extends DB
 
     return $sql;
   }
+
+
+  // Parse the contents of column_default to get the default value.
+  // Examples of column_default are "nextval('mrbs_users_id_seq'::regclass)", "NULL",
+  // "0" and "'E'::bpchar"
+  // WARNING: this is a very rough and ready parser and only deals with simple cases.
+  // TODO: do something better
+  private function parseDefault($default)
+  {
+    if (is_null($default) || str_starts_with($default, 'NULL::'))
+    {
+      $value = null;
+    }
+    elseif (preg_match("/^'(.*)'::/", $default, $matches))
+    {
+      $value = $matches[1];
+    }
+    else
+    {
+      $value = $default;
+    }
+
+    return ['value' => $value];
+  }
 }
