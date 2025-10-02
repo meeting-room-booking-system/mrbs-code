@@ -223,7 +223,7 @@ function output_row(User $user) : void
             if (isset($select_options["user.$key"]) &&
               is_assoc($select_options["user.$key"]))
             {
-              if (isset($select_options["user.$key"][$user->{$key}]))
+              if (isset($user->{$key}) && isset($select_options["user.$key"][$user->{$key}]))
               {
                 $col_value = $select_options["user.$key"][$user->{$key}];
               }
