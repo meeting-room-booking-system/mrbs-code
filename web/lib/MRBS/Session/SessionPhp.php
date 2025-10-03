@@ -102,7 +102,7 @@ class SessionPhp extends SessionWithLogin
 
     // As a defence against session fixation, regenerate
     // the session id and delete the old session.
-    session_regenerate_id(true);
+    $this->regenerate();
     $_SESSION['user'] = $user;
 
     // Problems have been reported on Windows IIS with session data not being
@@ -140,19 +140,6 @@ class SessionPhp extends SessionWithLogin
       }
     }
 
-    // Unset the session variables
-    // Note that session_unset() only works if a session is active.
-    $_SESSION = [];
-    // Check whether a session is active before destroying it in order to avoid a
-    // "Trying to destroy uninitialized session" warning.
-    if (session_status() === PHP_SESSION_ACTIVE)
-    {
-      session_destroy();
-    }
-
-    // Problems have been reported on Windows IIS with session data not being
-    // written out without a call to session_write_close(). [Is this necessary
-    // after session_destroy() ??]
-    session_write_close();
+    $this->destroy();
   }
 }

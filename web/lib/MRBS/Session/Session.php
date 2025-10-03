@@ -124,6 +124,51 @@ abstract class Session
   }
 
 
+  protected function destroy() : void
+  {
+    // Delete the session data encryption key cookie. If we don't do this then, when
+    // a new session is created, unless the expiry is set to 0 (ie on browser close),
+    // it will have a longer lifetime than the key cookie, which when it was created
+    // was given the same lifetime as the session cookie.  Once the key cookie expires,
+    // the session handler will create a new cookie with a new key.  So when the session
+    // handler comes to decrypt the session data it will be doing so with the new key,
+    // and not the key used to encrypt it.  This will result in the Crypto library
+    // throwing a WrongKeyOrModifiedCiphertextException with the message "Integrity
+    // check failed".
+    //
+    // This needs to be done before the session is destroyed, otherwise the
+    // deleteKeyCookie method won't be able to get the session name (which it needs
+    // in order to delete the key cookie).
+    SessionHandlerDb::deleteKeyCookie();
+
+    // Unset the session variables
+    // Note that session_unset() only works if a session is active.
+    $_SESSION = [];
+    // Check whether a session is active before destroying it in order to avoid a
+    // "Trying to destroy uninitialized session" warning.
+    if (session_status() === PHP_SESSION_ACTIVE)
+    {
+      session_destroy();
+    }
+
+    // Problems have been reported on Windows IIS with session data not being
+    // written out without a call to session_write_close(). [Is this necessary
+    // after session_destroy() ??]
+    session_write_close();
+  }
+
+
+  protected function regenerate() : void
+  {
+    // Regenerate the session id
+    session_regenerate_id(true);
+
+    // Change the lifetime of the key cookie to match the new expiry - see the
+    // comment in destroy().
+    SessionHandlerDb::regenerateKeyCookie();
+  }
+
+
   public function get(string $name)
   {
     return $_SESSION[$name] ?? null;

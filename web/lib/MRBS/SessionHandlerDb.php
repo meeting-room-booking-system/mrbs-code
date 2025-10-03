@@ -35,6 +35,8 @@ else
 
 class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestampHandlerInterface
 {
+  private const KEY_COOKIE_PREFIX = 'KEY_';
+
   private $key;
   private static $table;
 
@@ -74,7 +76,7 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
   public function open($path, $name): bool
   {
     try {
-      $this->key = $this->getKey('KEY_' . $name);
+      $this->key = $this->getKey(self::KEY_COOKIE_PREFIX . $name);
     }
     catch (\Exception $e) {
       trigger_error("Failed to get key: " . $e->getMessage(), E_USER_WARNING);
@@ -307,6 +309,60 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
   }
 
 
+  // Delete the key cookie, but only if the expiry is not zero.
+  public static function deleteKeyCookie() : void
+  {
+    if (false === ($name = session_name()))
+    {
+      return;
+    }
+
+    if (session_get_cookie_params()['lifetime'] !== 0)
+    {
+      $name = self::KEY_COOKIE_PREFIX . $name;
+      unset($_COOKIE[$name]);
+      self::setKeyCookie($name, '', time() - 42000);
+    }
+  }
+
+
+  // Regenerate the key cookie, setting its expiry to be the same as the session cookie's.
+  public static function regenerateKeyCookie() : void
+  {
+    // No need to do anything if we can't get a session name, or if the expiry is zero (browser close).
+    if ((false === ($name = session_name())) || (0 === ($session_lifetime = session_get_cookie_params()['lifetime'])))
+    {
+      return;
+    }
+
+    // And no need to do anything if we can't get a cookie value.
+    $name = self::KEY_COOKIE_PREFIX . $name;
+    if (!isset($_COOKIE[$name]))
+    {
+      return;
+    }
+
+    // But otherwise, set the key cookie lifetime to be the same as the session cookie's.
+    self::setKeyCookie($name, $_COOKIE[$name], time() + $session_lifetime);
+  }
+
+
+  private static function setKeyCookie(string $name, string $value, int $expires) : void
+  {
+    // Use the same cookie params as for the session cookie.
+    $cookie_params = session_get_cookie_params();
+    setcookie(
+      $name,
+      $value,
+      $expires,
+      $cookie_params['path'],
+      $cookie_params['domain'],
+      $cookie_params['secure'],
+      $cookie_params['httponly']
+    );
+  }
+
+
   private function getKey(string $name) : Key
   {
     // Get the key from the cookie, or if there isn't one create a random key and
@@ -315,18 +371,9 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
     {
       $key = Key::createNewRandomKey();
       $ascii_key = $key->saveToAsciiSafeString();
-      // Use the same cookie params as for the session cookie, with a lifetime at least
-      // as long, or zero (expiry on browser close) if that's the case.
-      $cookie_params = session_get_cookie_params();
-      setcookie(
-        $name,
-        $ascii_key,
-        ($cookie_params['lifetime'] > 0) ? time() + $cookie_params['lifetime'] : 0,
-        $cookie_params['path'],
-        $cookie_params['domain'],
-        $cookie_params['secure'],
-        $cookie_params['httponly']
-      );
+      $session_lifetime = session_get_cookie_params()['lifetime'];
+      // Set the expiry to be the same as the session cookie expiry, or else 0 for browser close
+      self::setKeyCookie($name, $ascii_key, ($session_lifetime > 0) ? time() + $session_lifetime : 0);
       $_COOKIE[$name] = $ascii_key;
     }
     else
