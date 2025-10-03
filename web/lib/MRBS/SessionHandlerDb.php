@@ -160,8 +160,21 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
       $result = Crypto::decrypt($result, $this->key);
     }
     catch (WrongKeyOrModifiedCiphertextException $e) {
-      // Do nothing.  This is to handle the case where we are reading old session data before
-      // encryption was introduced.
+      $message = $e->getMessage();
+      if (!str_contains($message, 'Ciphertext has invalid hex encoding'))
+      {
+        // This exception can be caused by (1) the wrong key being used, or (2) the cipher text having
+        // been modified or truncated.  The message will generally be "Integrity check failed".  None
+        // of these should normally happen.  If the cipher text has been truncated, because it was too
+        // long for the database column, then we should have seen an SQL error when the session data
+        // was written.
+        trigger_error(get_class($e) . ': ' . $message, E_USER_WARNING);
+        $result = '';
+      }
+      // Otherwise do nothing.  This is to handle the case where we are reading old session data before
+      // encryption was introduced, when the session data will almost certainly contain non-hex characters.
+      // So just return the undecrypted data from the database (because it was never encrypted in the first
+      // place).
     }
     catch (\Exception $e) {
       trigger_error("Failed to decrypt session data: " . $e->getMessage(), E_USER_WARNING);
