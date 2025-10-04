@@ -80,6 +80,12 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
     }
     catch (\Exception $e) {
       trigger_error("Failed to get key: " . $e->getMessage(), E_USER_WARNING);
+      // The message below is sometimes seen. Log the key cookie value so that we can work out why.
+      if (str_contains($e->getMessage(), 'Encoding::hexToBin() input is not a hex string'))
+      {
+        $key_cookie = $_COOKIE[self::KEY_COOKIE_PREFIX . $name];
+        trigger_error("Key cookie: $key_cookie");
+      }
       return false;
     }
 
