@@ -80,7 +80,14 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
     }
     catch (\Exception $e) {
       trigger_error("Failed to get key: " . $e->getMessage(), E_USER_WARNING);
-      // The message below is sometimes seen. Log the key cookie value so that we can work out why.
+      // The message below is sometimes seen. Log the key cookie value.  It's usually because the cookie value is
+      // 'deleted'.  This is because, as the PHP manual says in https://www.php.net/manual/en/function.setcookie.php,
+      // "Cookies must be deleted with the same parameters as they were set with. If the value argument is an empty
+      // string, and all other arguments match a previous call to setcookie(), then the cookie with the specified name
+      // will be deleted from the remote client. This is internally achieved by setting value to 'deleted' and
+      // expiration time in the past."
+      // However it's not clear why the cookie is being read, given that it has been deleted.   And as it is being read
+      // can we do some kind of retry and set the key cookie with a proper key so that session_start() does not fail?
       if (str_contains($e->getMessage(), 'Encoding::hexToBin() input is not a hex string'))
       {
         $key_cookie = $_COOKIE[self::KEY_COOKIE_PREFIX . $name];
