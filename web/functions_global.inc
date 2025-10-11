@@ -28,6 +28,16 @@ if (!function_exists('mb_ord'))
 }
 
 
+// Emulation of mb_regex_encoding()
+if (!function_exists('mb_regex_encoding'))
+{
+  function mb_regex_encoding(?string $encoding=null)
+  {
+    return Mbstring::mb_regex_encoding($encoding);
+  }
+}
+
+
 // Emulation of mb_stripos()
 if (!function_exists('mb_stripos'))
 {
