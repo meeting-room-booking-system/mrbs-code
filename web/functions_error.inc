@@ -284,10 +284,10 @@ function exception_handler(Throwable $exception) : void
 
   switch ($class)
   {
-    case __NAMESPACE__ . "\\DBExternalException":
+    case __NAMESPACE__ . '\DB\DBExternalException':
       $fatal_message = get_vocab("fatal_db_ext_error");
       break;
-    case __NAMESPACE__ . "\\DBException":
+    case __NAMESPACE__ . '\DB\DBException':
     case 'PDOException':
       $fatal_message = get_vocab("fatal_db_error");
       break;
