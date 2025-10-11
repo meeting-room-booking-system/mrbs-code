@@ -483,6 +483,9 @@ class Mail_mime
     protected function file2str($file_name)
     {
         // Check state of file and raise an error properly
+        if (!is_string($file_name)) {
+            return self::raiseError('Invalid or empty file name');
+        }
         if (!file_exists($file_name)) {
             return self::raiseError('File not found: ' . $file_name);
         }
@@ -514,7 +517,7 @@ class Mail_mime
      * @param mixed $obj The object to add the part to, or
      *                   anything else if a new object is to be created.
      *
-     * @return object The text mimePart object
+     * @return Mail_mimePart The text mimePart object
      */
     protected function addTextPart($obj = null)
     {
@@ -528,7 +531,7 @@ class Mail_mime
      * @param mixed $obj The object to add the part to, or
      *                   anything else if a new object is to be created.
      *
-     * @return object The html mimePart object
+     * @return Mail_mimePart The html mimePart object
      */
     protected function addHtmlPart($obj = null)
     {
@@ -542,7 +545,7 @@ class Mail_mime
      * @param mixed $obj The object to add the part to, or
      *                   anything else if a new object is to be created.
      *
-     * @return object The text mimePart object
+     * @return Mail_mimePart The text mimePart object
      */
     protected function addCalendarPart($obj = null)
     {
@@ -558,7 +561,7 @@ class Mail_mime
      *
      * @param array $params Additional part parameters
      *
-     * @return object The multipart/mixed mimePart object
+     * @return Mail_mimePart The multipart/mixed mimePart object
      */
     protected function addMixedPart($params = array())
     {
@@ -577,7 +580,7 @@ class Mail_mime
      * @param mixed $obj The object to add the part to, or
      *                   anything else if a new object is to be created.
      *
-     * @return object The multipart/mixed mimePart object
+     * @return Mail_mimePart The multipart/mixed mimePart object
      */
     protected function addAlternativePart($obj = null)
     {
@@ -601,7 +604,7 @@ class Mail_mime
      * @param mixed $obj The object to add the part to, or
      *                   anything else if a new object is to be created
      *
-     * @return object The multipart/mixed mimePart object
+     * @return Mail_mimePart The multipart/mixed mimePart object
      */
     protected function addRelatedPart($obj = null)
     {
@@ -624,7 +627,7 @@ class Mail_mime
      * @param object $obj   The mimePart to add the image to
      * @param array  $value The image information
      *
-     * @return object The image mimePart object
+     * @return Mail_mimePart The image mimePart object
      */
     protected function addHtmlImagePart($obj, $value)
     {
@@ -653,7 +656,7 @@ class Mail_mime
      * @param object $obj   The mimePart to add the image to
      * @param mixed  $value The attachment information array or Mail_mimePart object
      *
-     * @return object The image mimePart object
+     * @return Mail_mimePart The image mimePart object
      */
     protected function addAttachmentPart($obj, $value)
     {
@@ -844,12 +847,12 @@ class Mail_mime
      * Builds the multipart message from the list ($this->parts) and
      * returns the mime content.
      *
-     * @param array   $params    Build parameters that change the way the email
-     *                           is built. Should be associative. See $_build_params.
-     * @param mixed   $filename  Output filename or file pointer where to save
-     *                           the message instead of returning it
-     * @param boolean $skip_head True if you want to return/save only the message
-     *                           without headers
+     * @param array $params    Build parameters that change the way the email
+     *                         is built. Should be associative. See $_build_params.
+     * @param mixed $filename  Output filename or file pointer where to save
+     *                         the message instead of returning it
+     * @param bool  $skip_head True if you want to return/save only the message
+     *                         without headers
      *
      * @return mixed The MIME message content string, null or PEAR error object
      */
@@ -975,9 +978,9 @@ class Mail_mime
      *                                         part when no parent_part is
      *                                         received.
      *
-     * @return null|object The main part built inside the method. It will be an
-     *                     alternative part or text, html, or calendar part.
-     *                     Null if no body texts are found.
+     * @return null|Mail_mimePart The main part built inside the method. It will be an
+     *                            alternative part or text, html, or calendar part.
+     *                            Null if no body texts are found.
      */
     protected function buildAlternativeParts($parent_part, $mixed_params = null)
     {
@@ -1540,7 +1543,7 @@ class Mail_mime
      * @param string $ctype Part content type
      * @param string $type  Internal part type
      *
-     * @return object The mimePart object
+     * @return Mail_mimePart The mimePart object
      */
     protected function addBodyPart($obj, $body, $ctype, $type)
     {
