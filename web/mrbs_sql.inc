@@ -4,6 +4,7 @@ namespace MRBS;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use MRBS\DB\DBException;
 use MRBS\ICalendar\RFC5545;
 
 define('INTERVAL_DAY', 0);
