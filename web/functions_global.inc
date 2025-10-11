@@ -38,6 +38,16 @@ if (!function_exists('mb_regex_encoding'))
 }
 
 
+// Emulation of mb_split()
+if (!function_exists('mb_split'))
+{
+  function mb_split(string $pattern, string $string, int $limit = -1)
+  {
+    return Mbstring::mb_split($pattern, $string, $limit);
+  }
+}
+
+
 // Emulation of mb_stripos()
 if (!function_exists('mb_stripos'))
 {

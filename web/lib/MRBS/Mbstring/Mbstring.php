@@ -183,6 +183,12 @@ class Mbstring
   }
 
 
+  public static function mb_split(string $pattern, string $string, int $limit = -1)
+  {
+    return preg_split('/' . $pattern . '/u', $string, $limit);
+  }
+
+
   public static function mb_stripos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
   {
     if (isset($encoding) && (strtoupper($encoding) !== 'UTF-8'))
