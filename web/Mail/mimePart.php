@@ -302,11 +302,11 @@ class Mail_mimePart
      *
      * @param string $boundary Pre-defined boundary string
      *
-     * @return An associative array containing two elements,
-     *         body and headers. The headers element is itself
-     *         an indexed array. On error returns PEAR error object.
+     * @return array An associative array containing two elements,
+     *               body and headers. The headers element is itself
+     *               an indexed array. On error returns PEAR error object.
      */
-    public function encode($boundary=null)
+    public function encode($boundary = null)
     {
         $encoded =& $this->encoded;
 
@@ -365,10 +365,10 @@ class Mail_mimePart
      * Encodes and saves the email into file or stream.
      * Data will be appended to the file/stream.
      *
-     * @param mixed   $filename  Existing file location
-     *                           or file pointer resource
-     * @param string  $boundary  Pre-defined boundary string
-     * @param boolean $skip_head True if you don't want to save headers
+     * @param mixed  $filename  Existing file location
+     *                          or file pointer resource
+     * @param string $boundary  Pre-defined boundary string
+     * @param bool   $skip_head True if you don't want to save headers
      *
      * @return array An associative array containing message headers
      *               or PEAR error object
@@ -411,9 +411,9 @@ class Mail_mimePart
     /**
      * Encodes given email part into file
      *
-     * @param string  $fh        Output file handle
-     * @param string  $boundary  Pre-defined boundary string
-     * @param boolean $skip_head True if you don't want to save headers
+     * @param string $fh        Output file handle
+     * @param string $boundary  Pre-defined boundary string
+     * @param bool   $skip_head True if you don't want to save headers
      *
      * @return array True on sucess or PEAR error object
      */
