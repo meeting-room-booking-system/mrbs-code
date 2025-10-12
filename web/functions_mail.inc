@@ -154,8 +154,8 @@ function get_address_list(array $address_strings) : string
     $address_string = trim($address_string);
     if ($address_string !== '')
     {
-      // Use parseAddresses() to validate the address because it could contain a display name
-      if (count(PHPMailer::parseAddresses($address_string, true, get_mail_charset())) == 0)
+      // Use parse_addresses to validate the address because it could contain a display name
+      if (count(parse_addresses($address_string)) == 0)
       {
         $message = 'Invalid email address "' . $address_string . '"';
         mail_debug($message);
@@ -700,7 +700,7 @@ function address_merge(array $addresses, string $address_string) : array
 {
   $result = $addresses;
 
-  $new_addresses = PHPMailer::parseAddresses($address_string, true, get_mail_charset());
+  $new_addresses = parse_addresses($address_string);
   $mailer = new PHPMailer();
   $mailer->CharSet = get_mail_charset();
 
