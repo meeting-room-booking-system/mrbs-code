@@ -1844,7 +1844,7 @@ function parse_addresses(string $address_string) : array
 {
   $result = [];
 
-  $parser = new Parse();
+  $parser = new Parse(new Logger());
   $parsed_addresses = $parser->parse($address_string);
 
   foreach ($parsed_addresses['email_addresses'] as $parsed_address)
