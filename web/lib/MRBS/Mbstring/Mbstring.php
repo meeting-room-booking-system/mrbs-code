@@ -4,6 +4,7 @@ namespace MRBS\Mbstring;
 
 // A class that provides emulations of the PHP mbstring functions.  This class should
 // normally only be used by the emulation functions themselves or else test software.
+// Only the UTF-8 encoding is supported.
 use IntlChar;
 use InvalidArgumentException;
 use MRBS\Utf8\Utf8String;
@@ -162,6 +163,29 @@ class Mbstring
     }
 
     return 0;
+  }
+
+
+  public static function mb_regex_encoding(?string $encoding=null)
+  {
+    if (!isset($encoding))
+    {
+      return 'UTF-8';
+    }
+
+    if (strtoupper($encoding) === 'UTF-8')
+    {
+      return true;
+    }
+
+    $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
+    throw new InvalidArgumentException($message);
+  }
+
+
+  public static function mb_split(string $pattern, string $string, int $limit = -1)
+  {
+    return preg_split('/' . $pattern . '/u', $string, $limit);
   }
 
 

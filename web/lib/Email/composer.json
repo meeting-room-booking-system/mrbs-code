@@ -1,0 +1,46 @@
+{
+  "name": "mmucklo/email-parse",
+  "type": "library",
+  "description": "email-parse a (reasonably) RFC822 / RF2822-compliant library for batch parsing multiple (and single) email addresses",
+  "license": "MIT",
+  "keywords": [
+    "email",
+    "parse",
+    "RFC822",
+    "RFC2822",
+    "email-parse",
+    "multiple-email",
+    "batch-email"
+  ],
+  "authors": [
+    {
+      "name": "Matthew J. Mucklo",
+      "email": "mmucklo@gmail.com"
+    }
+  ],
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.65",
+    "phpunit/phpunit": "^9.6",
+    "symfony/yaml": "^7.2"
+  },
+  "require": {
+    "php": "^8.2",
+    "ext-mbstring": "*",
+    "laminas/laminas-validator": "^3.0",
+    "psr/log": "^3.0",
+    "symfony/polyfill-intl-idn": "^1.31"
+  },
+  "autoload": {
+    "psr-4": {
+      "Email\\": "src/"
+    }
+  },
+  "config": {
+    "bin-dir": "bin"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Email\\Tests\\": "tests/"
+    }
+  }
+}

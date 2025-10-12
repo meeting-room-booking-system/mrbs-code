@@ -4,6 +4,7 @@ namespace MRBS;
 
 use DateInterval;
 use DateTimeZone;
+use Email\Parse;
 use MRBS\Form\Field;
 use MRBS\Form\FieldSelect;
 use MRBS\ICalendar\RFC5545;
@@ -1836,6 +1837,28 @@ function parse_email(string $email)
   $domain = array_pop($email_parts);
   return array('local' => implode('@', $email_parts),
                'domain' => $domain);
+}
+
+
+function parse_addresses(string $address_string) : array
+{
+  $result = [];
+
+  $parser = new Parse();
+  $parsed_addresses = $parser->parse($address_string);
+
+  foreach ($parsed_addresses['email_addresses'] as $parsed_address)
+  {
+    if (!$parsed_address['invalid'])
+    {
+      $result[] = [
+        'name' => $parsed_address['name_parsed'],
+        'address' => $parsed_address['local_part_parsed'] . '@' . $parsed_address['domain_part']
+      ];
+    }
+  }
+
+  return $result;
 }
 
 

@@ -99,7 +99,7 @@ class MailQueue
     $recipients = (!empty($addresses['to'])) ? $addresses['to'] : '';
     $recipients .= (!empty($addresses['cc'])) ? ',' . $addresses['cc'] : '';
     $recipients .= (!empty($addresses['bcc'])) ? ',' . $addresses['bcc'] : '';
-    $parsed_addresses = PHPMailer::parseAddresses($recipients, true, get_mail_charset());
+    $parsed_addresses = parse_addresses($recipients);
 
     return count($parsed_addresses);
   }
@@ -234,7 +234,7 @@ class MailQueue
 
     if (!empty($addresses['reply_to']))
     {
-      $reply_to_addresses = PHPMailer::parseAddresses($addresses['reply_to'], true, get_mail_charset());
+      $reply_to_addresses = parse_addresses($addresses['reply_to']);
       foreach ($reply_to_addresses as $reply_to_address)
       {
         $mail->addReplyTo($reply_to_address['address'], $reply_to_address['name']);
@@ -243,11 +243,11 @@ class MailQueue
 
     if (isset($addresses['from']))
     {
-      $from_addresses = PHPMailer::parseAddresses($addresses['from'], true, get_mail_charset());
+      $from_addresses = parse_addresses($addresses['from']);
       $mail->setFrom($from_addresses[0]['address'], $from_addresses[0]['name']);
     }
 
-    $to_addresses = PHPMailer::parseAddresses($addresses['to'], true, get_mail_charset());
+    $to_addresses = parse_addresses($addresses['to']);
     foreach ($to_addresses as $to_address)
     {
       $mail->addAddress($to_address['address'], $to_address['name']);
@@ -255,7 +255,7 @@ class MailQueue
 
     if (isset($addresses['cc']))
     {
-      $cc_addresses = PHPMailer::parseAddresses($addresses['cc'], true, get_mail_charset());
+      $cc_addresses = parse_addresses($addresses['cc']);
       foreach ($cc_addresses as $cc_address)
       {
         // for cases where the mail server refuses to send emails with cc set, put the cc addresses on the to line
@@ -273,7 +273,7 @@ class MailQueue
 
     if (isset($addresses['bcc']))
     {
-      $bcc_addresses = PHPMailer::parseAddresses($addresses['bcc'], true, get_mail_charset());
+      $bcc_addresses = parse_addresses($addresses['bcc']);
       foreach ($bcc_addresses as $bcc_address)
       {
         $mail->addBCC($bcc_address['address'], $bcc_address['name']);

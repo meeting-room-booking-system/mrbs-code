@@ -43,6 +43,11 @@ function init_errors() : void
     $error_level = -1;
     ini_set('display_errors', '1');
     ini_set('display_startup_errors', '1');  // ini_set() only accepts non-string values from PHP 8.1.0
+    if (function_exists('opcache_reset'))
+    {
+      // Useful for making compile-time errors obvious
+      opcache_reset();
+    }
   }
 
   error_reporting ($error_level);

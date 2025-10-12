@@ -490,7 +490,7 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
   // if the organizer's email address is the same as the recipient's - presumably because
   // they assume that the recipient already knows about the event.
 
-  $organizer_addresses = PHPMailer::parseAddresses($mail_settings['organizer'], true, get_mail_charset());
+  $organizer_addresses = parse_addresses($mail_settings['organizer']);
   if (empty($organizer_addresses))
   {
     // TODO: Review whether the ORGANIZER property is required.
@@ -531,7 +531,7 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
     $keys = array('to', 'cc');  // We won't do 'bcc' as they need to stay blind
     foreach ($keys as $key)
     {
-      $attendees[$key] = PHPMailer::parseAddresses($attendees[$key], true, get_mail_charset());  // convert the list into an array
+      $attendees[$key] = parse_addresses($attendees[$key]);  // convert the list into an array
     }
     foreach ($keys as $key)
     {
