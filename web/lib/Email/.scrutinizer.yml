@@ -1,0 +1,15 @@
+# .scrutinizer.yml
+
+checks:
+    php:
+        code_rating: true
+        duplication: true
+build:
+    image: default-jammy
+    tests:
+        override:
+            -
+                command: 'XDEBUG_MODE=coverage bin/phpunit --coverage-clover=.coverage'
+                coverage:
+                    file: '.coverage'
+                    format: 'clover'
