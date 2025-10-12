@@ -39,14 +39,13 @@ namespace PHPMailer\PHPMailer;
  * @see https://oauth2-client.thephpleague.com/providers/thirdparty/
  */
 //@see https://github.com/thephpleague/oauth2-google
-use Greew\OAuth2\Client\Provider\Azure;
-use Hayageek\OAuth2\Client\Provider\Yahoo;
 use League\OAuth2\Client\Provider\Google;
-use Stevenmaguire\OAuth2\Client\Provider\Microsoft;
-
 //@see https://packagist.org/packages/hayageek/oauth2-yahoo
+use Hayageek\OAuth2\Client\Provider\Yahoo;
 //@see https://github.com/stevenmaguire/oauth2-microsoft
+use Stevenmaguire\OAuth2\Client\Provider\Microsoft;
 //@see https://github.com/greew/oauth2-azure-provider
+use Greew\OAuth2\Client\Provider\Azure;
 
 if (!isset($_GET['code']) && !isset($_POST['provider'])) {
     ?>
