@@ -64,8 +64,8 @@ class Parse
      * @param LoggerInterface|null $logger  (optional) Psr-compliant logger
      * @param array                $options array (hash) of options
      */
-    public function __construct(LoggerInterface $logger = null,
-                                ParseOptions $options = null)
+    public function __construct(?LoggerInterface $logger = null,
+                                ?ParseOptions $options = null)
     {
         $this->logger = $logger;
         $this->options = $options ?: new ParseOptions(['%', '!']);
