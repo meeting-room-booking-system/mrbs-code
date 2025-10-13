@@ -1909,7 +1909,7 @@ function parse_email(string $email)
   $parser = new Parse(new Logger());
   $parsed_address = $parser->parse($email, false);
 
-  if ($parsed_address['invalid'] !== false)
+  if ($parsed_address['invalid'])
   {
     return false;
   }
