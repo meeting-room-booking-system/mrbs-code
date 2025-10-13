@@ -1906,17 +1906,18 @@ function validate_email_list(string $list) : bool
 // or FALSE if the email address is not valid.
 function parse_email(string $email)
 {
-  if (!filter_var($email, FILTER_VALIDATE_EMAIL))
+  $parser = new Parse(new Logger());
+  $parsed_address = $parser->parse($email, false);
+
+  if ($parsed_address['invalid'] !== false)
   {
     return false;
   }
 
-  // Note that the local part of an email address can contain the '@' character, so the
-  // domain will be the string following the last '@'.
-  $email_parts = explode('@', $email);
-  $domain = array_pop($email_parts);
-  return array('local' => implode('@', $email_parts),
-               'domain' => $domain);
+  return [
+    'local' => $parsed_address['local_part_parsed'],
+    'domain' => $parsed_address['domain_part']
+  ];
 }
 
 
