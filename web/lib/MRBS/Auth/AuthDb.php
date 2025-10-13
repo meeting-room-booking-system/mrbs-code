@@ -712,11 +712,11 @@ class AuthDb extends Auth
 
     $result = array();
 
-    // For the moment we will assume that email addresses are case insensitive.   Whilst it is true
-    // on most systems, it isn't always true.  The domain is case insensitive but the local-part can
-    // be case sensitive.  But before we can take account of this, the email addresses in the database
+    // For the moment we will assume that email addresses are case-insensitive.   Whilst it is true
+    // on most systems, it isn't always true.  The domain is case-insensitive but the local-part can
+    // be case-sensitive.  But before we can take account of this, the email addresses in the database
     // need to be normalised so that all the domain names are stored in lower case.  Then it will be
-    // possible to do a case sensitive comparison.
+    // possible to do a case-sensitive comparison.
     if (mb_strpos($email, '@') === false)
     {
       if (!empty($auth['allow_local_part_email']))
