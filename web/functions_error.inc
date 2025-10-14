@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\BrowserConsoleHandler;
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\StreamHandler;
@@ -17,11 +18,17 @@ function init_errors() : void
 
   $logger = new \Monolog\Logger('MRBS');
   $logger->pushProcessor(new IntrospectionProcessor());
+
   if ($debug)
   {
-    $logger->pushHandler(new StreamHandler('php://output'));
+    $stream_handler = new StreamHandler('php://output');
+    $output = "[%datetime%] %channel%.%level_name% in %extra.file% at line %extra.line%: %message% %context%\n";
+    $formatter = new LineFormatter($output, null, false, true);
+    $stream_handler->setFormatter($formatter);
+    $logger->pushHandler($stream_handler);
     $logger->pushHandler(new BrowserConsoleHandler());
   }
+
   if (ini_get('log_errors'))
   {
     $logger->pushHandler(new ErrorLogHandler());
