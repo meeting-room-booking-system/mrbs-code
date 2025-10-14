@@ -3,7 +3,9 @@ declare(strict_types=1);
 namespace MRBS;
 
 use Monolog\Handler\BrowserConsoleHandler;
+use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\StreamHandler;
+use Monolog\Processor\IntrospectionProcessor;
 use Monolog\Registry;
 use Psr\Log\LogLevel;
 use Throwable;
@@ -14,10 +16,15 @@ function init_errors() : void
   global $debug;
 
   $logger = new \Monolog\Logger('MRBS');
+  $logger->pushProcessor(new IntrospectionProcessor());
   if ($debug)
   {
     $logger->pushHandler(new StreamHandler('php://output'));
     $logger->pushHandler(new BrowserConsoleHandler());
+  }
+  if (ini_get('log_errors'))
+  {
+    $logger->pushHandler(new ErrorLogHandler());
   }
   Registry::addLogger($logger);
 
