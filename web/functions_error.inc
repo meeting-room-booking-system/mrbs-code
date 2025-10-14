@@ -2,12 +2,24 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use Monolog\Handler\BrowserConsoleHandler;
+use Monolog\Handler\StreamHandler;
+use Monolog\Registry;
+use Psr\Log\LogLevel;
 use Throwable;
 
 
 function init_errors() : void
 {
   global $debug;
+
+  $logger = new \Monolog\Logger('MRBS');
+  if ($debug)
+  {
+    $logger->pushHandler(new StreamHandler('php://output'));
+    $logger->pushHandler(new BrowserConsoleHandler());
+  }
+  Registry::addLogger($logger);
 
   // If the error log file is a relative path then turn it into an absolute one in
   // order to avoid problems in shutdown when the working directory can change.

@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use Monolog\Registry;
 use MRBS\DB\DB;
 
 require "defaultincludes.inc";
@@ -23,7 +24,7 @@ $context = array(
 print_header($context);
 
 echo "<h3>" . get_vocab("about_mrbs") . "</h3>\n";
-
+Registry::MRBS()->notice("Testing");
 if (!is_admin())
 {
   echo "<table class=\"details list\">\n";
