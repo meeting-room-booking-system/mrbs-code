@@ -21,22 +21,6 @@ use function MRBS\print_simple_header;
 // (Don't call it Error, to avoid confusion with the PHP class \Error.)
 class Errors
 {
-  private const ERRNO_LEVELS = [
-    E_ERROR => LogLevel::CRITICAL,
-    E_WARNING => LogLevel::WARNING,
-    E_NOTICE => LogLevel::NOTICE,
-    E_CORE_ERROR => LogLevel::CRITICAL,
-    E_CORE_WARNING => LogLevel::WARNING,
-    E_COMPILE_ERROR => LogLevel::CRITICAL,
-    E_COMPILE_WARNING => LogLevel::WARNING,
-    E_DEPRECATED => LogLevel::WARNING,
-    E_USER_ERROR => LogLevel::CRITICAL,
-    E_USER_WARNING => LogLevel::WARNING,
-    E_USER_NOTICE => LogLevel::NOTICE,
-    E_USER_DEPRECATED => LogLevel::WARNING,
-    E_STRICT => LogLevel::WARNING,
-    E_RECOVERABLE_ERROR => LogLevel::CRITICAL
-  ];
 
   private const LOG_LEVELS = [
     LogLevel::EMERGENCY,
@@ -57,6 +41,22 @@ class Errors
     LogLevel::WARNING,
   ];
 
+  private static $errno_levels = [
+    E_ERROR => LogLevel::CRITICAL,
+    E_WARNING => LogLevel::WARNING,
+    E_NOTICE => LogLevel::NOTICE,
+    E_CORE_ERROR => LogLevel::CRITICAL,
+    E_CORE_WARNING => LogLevel::WARNING,
+    E_COMPILE_ERROR => LogLevel::CRITICAL,
+    E_COMPILE_WARNING => LogLevel::WARNING,
+    E_DEPRECATED => LogLevel::WARNING,
+    E_USER_ERROR => LogLevel::CRITICAL,
+    E_USER_WARNING => LogLevel::WARNING,
+    E_USER_NOTICE => LogLevel::NOTICE,
+    E_USER_DEPRECATED => LogLevel::WARNING,
+    E_RECOVERABLE_ERROR => LogLevel::CRITICAL
+  ];
+
 
   public static function init(): void
   {
@@ -66,6 +66,13 @@ class Errors
     {
       // Useful for making compile-time errors more obvious
       opcache_reset();
+    }
+
+    // Add in the E_STRICT level for old versions of PHP
+    assert(version_compare(MRBS_MIN_PHP_VERSION, '8.0.0', '<'), "The if block below can be removed.");
+    if (version_compare(phpversion(), '8.0.0', '<'))
+    {
+      self::$errno_levels[E_STRICT] = LogLevel::WARNING;
     }
 
     self::setErrorLog();
@@ -93,12 +100,12 @@ class Errors
 
     $heading = "\n" . self::get_error_name($errno) . " in $errfile at line $errline\n";
 
-    if (!array_key_exists($errno, self::ERRNO_LEVELS))
+    if (!array_key_exists($errno, self::$errno_levels))
     {
       throw new Exception("Cannot find mapping for ERRNO level $errno");
     }
 
-    self::output_error(self::ERRNO_LEVELS[$errno], $heading, $errstr);
+    self::output_error(self::$errno_levels[$errno], $heading, $errstr);
 
     return true;
   }
