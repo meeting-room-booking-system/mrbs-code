@@ -24,8 +24,7 @@ $context = array(
 print_header($context);
 
 echo "<h3>" . get_vocab("about_mrbs") . "</h3>\n";
-trigger_error("Traditional");
-Registry::MRBS()->notice("Testing", ['foo' => 'bar']);
+
 if (!is_admin())
 {
   echo "<table class=\"details list\">\n";
