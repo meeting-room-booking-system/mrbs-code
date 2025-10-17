@@ -763,7 +763,7 @@ print_header($context);
 // Get the details for this area
 if (!isset($area) || is_null($data = get_area_details($area)))
 {
-  fatal_error(get_vocab('invalid_area'));
+  Errors::fatalError(get_vocab('invalid_area'));
 }
 
 $errors = get_form_var('errors', 'array');

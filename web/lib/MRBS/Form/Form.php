@@ -2,8 +2,8 @@
 declare(strict_types=1);
 namespace MRBS\Form;
 
+use MRBS\Errors;
 use MRBS\Exception;
-use function MRBS\fatal_error;
 use function MRBS\generate_token;
 use function MRBS\get_form_var;
 use function MRBS\get_vocab;
@@ -206,7 +206,7 @@ class Form extends Element
         session()->logoffUser();
       }
 
-      fatal_error(get_vocab("session_expired"));
+      Errors::fatalError(get_vocab("session_expired"));
     }
   }
 

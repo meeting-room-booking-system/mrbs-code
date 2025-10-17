@@ -1193,7 +1193,7 @@ function mrbsCreateEntry(string $table, array $data) : int
     // allow custom fields with spaces in them (or else have custom fields created by MRBS).
     if (mb_strpos($key, ' ') !== FALSE)
     {
-      fatal_error("Custom field names cannot contain spaces.");
+      Errors::fatalError("Custom field names cannot contain spaces.");
     }
 
     // If the key doesn't exist in the $data array then the database will just use its
@@ -1776,7 +1776,7 @@ function get_booking_info(int $id, bool $series, bool $silent=false)
     }
     else
     {
-      fatal_error(($series ? get_vocab("invalid_series_id") : get_vocab("invalid_entry_id")));
+      Errors::fatalError(($series ? get_vocab("invalid_series_id") : get_vocab("invalid_entry_id")));
     }
   }
 
@@ -1847,7 +1847,7 @@ function get_booking_info(int $id, bool $series, bool $silent=false)
         {
           // If this is the entry table then check that the custom field also
           // exists in the repeat table
-          fatal_error("Custom fields problem, '" . $column->name . "' exists in entry table but not in repeat table");
+          Errors::fatalError("Custom fields problem, '" . $column->name . "' exists in entry table but not in repeat table");
         }
 
         array_push($terms, "T." . db()->quote($column->name));
@@ -1893,7 +1893,7 @@ function get_booking_info(int $id, bool $series, bool $silent=false)
     }
     else
     {
-      fatal_error(($series ? get_vocab("invalid_series_id") : get_vocab("invalid_entry_id")));
+      Errors::fatalError(($series ? get_vocab("invalid_series_id") : get_vocab("invalid_entry_id")));
     }
   }
 
@@ -1997,7 +1997,7 @@ function get_booking_info(int $id, bool $series, bool $silent=false)
         }
         else
         {
-          fatal_error(get_vocab("invalid_series_id"));
+          Errors::fatalError(get_vocab("invalid_series_id"));
         }
       }
 

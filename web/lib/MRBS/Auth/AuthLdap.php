@@ -1,9 +1,9 @@
 <?php
 namespace MRBS\Auth;
 
+use MRBS\Errors;
 use MRBS\Exception;
 use MRBS\User;
-use function MRBS\fatal_error;
 use function MRBS\get_microtime;
 use function MRBS\in_arrayi;
 use function MRBS\session;
@@ -164,7 +164,7 @@ class AuthLdap extends Auth
         {
           if (count($$item) != $count)
           {
-            fatal_error("MRBS configuration error: Count of LDAP array config variables doesn't match, aborting!");
+            Errors::fatalError("MRBS configuration error: Count of LDAP array config variables doesn't match, aborting!");
           }
         }
         else

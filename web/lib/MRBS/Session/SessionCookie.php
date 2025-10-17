@@ -2,9 +2,9 @@
 declare(strict_types=1);
 namespace MRBS\Session;
 
+use MRBS\Errors;
 use MRBS\User;
 use function MRBS\auth;
-use function MRBS\fatal_error;
 use function MRBS\get_cookie_path;
 
 
@@ -189,9 +189,9 @@ class SessionCookie extends SessionWithLogin
   {
     if (!function_exists('hash_hmac'))
     {
-      fatal_error("It appears that your PHP has the hash functions " .
-                  "disabled, which are required for the 'cookie' " .
-                  "session scheme.");
+      Errors::fatalError("It appears that your PHP has the hash functions " .
+                         "disabled, which are required for the 'cookie' " .
+                         "session scheme.");
     }
 
     return hash_hmac($algo, $data, $key);

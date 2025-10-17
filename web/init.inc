@@ -12,7 +12,7 @@ if (!empty($ini_directives))
 }
 
 // Initialise error reporting
-init_errors();
+Errors::init();
 
 // Flush the mail queue on shutdown
 register_shutdown_function(__NAMESPACE__ . "\\MailQueue::flush");

@@ -1234,7 +1234,7 @@ if (isset($action) && ($action == "delete"))
 
   if (!isset($user))
   {
-    fatal_error("Fatal error while deleting a user");
+    Errors::fatalError("Fatal error while deleting a user");
   }
 
   // You can't delete a user if you're not some kind of admin, and then you can't

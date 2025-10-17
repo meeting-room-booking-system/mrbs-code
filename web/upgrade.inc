@@ -332,7 +332,7 @@ function db_get_userpass() : void
 // either because they don't exist or we don't have permission.
 if (!db()->table_exists(_tbl('entry')))
 {
-  fatal_error(get_vocab('fatal_no_tables'));
+  Errors::fatalError(get_vocab('fatal_no_tables'));
 }
 
 // Check the database schema versions
@@ -402,7 +402,7 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
       }
       catch (DBException $e) {
         trigger_error($e->getMessage(), E_USER_NOTICE);
-        fatal_error(get_vocab('no_connection'));
+        Errors::fatalError(get_vocab('no_connection'));
       }
     }
   }

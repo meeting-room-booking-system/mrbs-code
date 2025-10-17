@@ -385,7 +385,7 @@ function mrbs_default_timezone_set(?string $tz=null) : void
       // We don't just use a default default timezone such as UTC because then
       // people would start running into DST problems with their bookings.
       $message = 'MRBS configuration error: $timezone has not been set.';
-      // Use die() rather than fatal_error() because unless we have set the timezone
+      // Use die() rather than Errors::fatalError() because unless we have set the timezone
       // PHP starts complaining bitterly if we try and do anything remotely complicated.
       die($message);
     }

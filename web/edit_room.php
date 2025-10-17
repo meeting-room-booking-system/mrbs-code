@@ -294,7 +294,7 @@ print_header($context);
 // Get the details for this room
 if (empty($room) || is_null($data = get_room_details($room)))
 {
-  fatal_error(get_vocab('invalid_room'));
+  Errors::fatalError(get_vocab('invalid_room'));
 }
 
 $errors = get_form_var('errors', 'array');
