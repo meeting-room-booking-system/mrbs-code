@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace MRBS\Session;
 
-use MRBS\Errors;
+use MRBS\Errors\Errors;
 use MRBS\User;
 use function MRBS\auth;
 use function MRBS\get_cookie_path;

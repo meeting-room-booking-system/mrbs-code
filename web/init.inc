@@ -3,6 +3,8 @@ declare(strict_types=1);
 namespace MRBS;
 
 // Site-specific php.ini settings
+use MRBS\Errors\Errors;
+
 if (!empty($ini_directives))
 {
   foreach ($ini_directives as $option => $value)

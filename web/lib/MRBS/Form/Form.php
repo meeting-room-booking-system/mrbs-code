@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace MRBS\Form;
 
-use MRBS\Errors;
+use MRBS\Errors\Errors;
 use MRBS\Exception;
 use function MRBS\generate_token;
 use function MRBS\get_form_var;

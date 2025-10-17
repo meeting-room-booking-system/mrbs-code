@@ -6,6 +6,7 @@ namespace MRBS;
 // isn't always installed).
 
 use IntlDateFormatter;
+use MRBS\Errors\Errors;
 use MRBS\Intl\IntlDateFormatterFactory;
 use MRBS\Intl\IntlDatePatternGenerator;
 use MRBS\Intl\Locale;

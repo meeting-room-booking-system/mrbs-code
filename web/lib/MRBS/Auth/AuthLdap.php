@@ -1,7 +1,7 @@
 <?php
 namespace MRBS\Auth;
 
-use MRBS\Errors;
+use MRBS\Errors\Errors;
 use MRBS\Exception;
 use MRBS\User;
 use function MRBS\get_microtime;

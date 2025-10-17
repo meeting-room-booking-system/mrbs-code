@@ -8,6 +8,7 @@ namespace MRBS;
 
 use MRBS\DB\DB;
 use MRBS\DB\DBFactory;
+use MRBS\Errors\Errors;
 use PDO;
 
 function _tbl(string $short_name, bool $include_schema=true) : string

@@ -26,6 +26,8 @@ namespace MRBS;
 // Acquire mutex to lock out others trying to update the entry table (unlikely because
 // the only other people able to update the database at this stage will be site admins
 // who know the database username and password, but just in case ...)
+use MRBS\Errors\Errors;
+
 if (!$upgrade_handle->mutex_lock(_tbl('entry')))
 {
   Errors::fatalError(get_vocab("failed_to_acquire"));

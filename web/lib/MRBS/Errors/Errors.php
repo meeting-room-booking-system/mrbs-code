@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace MRBS;
+namespace MRBS\Errors;
 
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\BrowserConsoleHandler;
@@ -8,7 +8,13 @@ use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Processor\IntrospectionProcessor;
 use Monolog\Registry;
+use MRBS\Exception;
 use Throwable;
+use function MRBS\escape_html;
+use function MRBS\get_vocab;
+use function MRBS\mrbs_default_timezone_set;
+use function MRBS\print_footer;
+use function MRBS\print_simple_header;
 
 // A class for dealing with errors.
 // (Don't call it Error, to avoid confusion with the PHP class \Error.)

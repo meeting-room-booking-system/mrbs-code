@@ -5,6 +5,7 @@ namespace MRBS;
 use MRBS\DB\DB;
 use MRBS\DB\DBException;
 use MRBS\DB\DBFactory;
+use MRBS\Errors\Errors;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\FieldInputPassword;
 use MRBS\Form\FieldInputSubmit;

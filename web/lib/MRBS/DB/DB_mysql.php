@@ -3,7 +3,7 @@ declare(strict_types=1);
 namespace MRBS\DB;
 
 use Error;
-use MRBS\Errors;
+use MRBS\Errors\Errors;
 use PDO;
 use Pdo\Mysql;
 use PDOException;
