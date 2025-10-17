@@ -237,6 +237,20 @@ class Errors
       $default_timezone_set = true;
     }
 
+    $context = [];
+
+    if ($show_data)
+    {
+      if (isset($get))
+      {
+        $context['get'] = $get;
+      }
+      if (isset($post))
+      {
+        $context['post'] = $post;
+      }
+    }
+
     if ($show_data && (isset($get) || isset($post)))
     {
       $body .= "\n";
