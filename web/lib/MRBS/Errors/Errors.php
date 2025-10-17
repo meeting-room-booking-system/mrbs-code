@@ -267,7 +267,8 @@ class Errors
 
     if ($debug)
     {
-      $body .=  self::generate_backtrace();
+      $backtrace = self::generateBacktrace();
+      $body .=  implode("\n", $backtrace);
     }
 
     //$context = ['backtrace' => self::generate_backtrace(), 'Get' => $_GET, 'Post' => $_POST];
@@ -285,8 +286,8 @@ class Errors
 
 
   // Generate a backtrace.  This function allows us to format the output slightly better
-  // than debug_print_backtrace(), for example by replacing newlines with <br> tags.
-  private static function generate_backtrace() : string
+  // than debug_print_backtrace().
+  private static function generateBacktrace() : array
   {
     global $debug;
 
@@ -302,35 +303,35 @@ class Errors
 
     foreach ($calls as $i => $call)
     {
-      $backtrace = "#$i ";
+      $trace = "#$i ";
 
       if (isset($call['class']) && isset($call['type']))
       {
-        $backtrace .= $call['class'] . $call['type'];
+        $trace .= $call['class'] . $call['type'];
       }
 
       if (isset($call['function']))
       {
-        $backtrace .= $call['function'];
-        $backtrace .= '(';
+        $trace .= $call['function'];
+        $trace .= '(';
         // We're not interested in the args for the first two calls because they
         // are just going to repeat the error message
         if (isset($call['args']) && ($i > 1))
         {
-          $backtrace .= self::getArgString($call['args']);
+          $trace .= self::getArgString($call['args']);
         }
-        $backtrace .= ')';
+        $trace .= ')';
       }
 
       if (isset($call['file']) && isset($call['line']))
       {
-        $backtrace .= ' called at [' . $call['file'] . ':' . $call['line'] . ']';
+        $trace .= ' called at [' . $call['file'] . ':' . $call['line'] . ']';
       }
 
-      $result[] = $backtrace;
+      $result[] = $trace;
     }
 
-    return implode("\n", $result);
+    return $result;
   }
 
 
