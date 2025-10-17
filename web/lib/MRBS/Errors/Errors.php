@@ -9,6 +9,7 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Processor\IntrospectionProcessor;
 use Monolog\Registry;
 use MRBS\Exception;
+use Psr\Log\LogLevel;
 use Throwable;
 use function MRBS\escape_html;
 use function MRBS\get_vocab;
@@ -20,6 +21,43 @@ use function MRBS\print_simple_header;
 // (Don't call it Error, to avoid confusion with the PHP class \Error.)
 class Errors
 {
+  private const ERRNO_LEVELS = [
+    E_ERROR => LogLevel::CRITICAL,
+    E_WARNING => LogLevel::WARNING,
+    E_NOTICE => LogLevel::NOTICE,
+    E_CORE_ERROR => LogLevel::CRITICAL,
+    E_CORE_WARNING => LogLevel::WARNING,
+    E_COMPILE_ERROR => LogLevel::CRITICAL,
+    E_COMPILE_WARNING => LogLevel::WARNING,
+    E_DEPRECATED => LogLevel::WARNING,
+    E_USER_ERROR => LogLevel::CRITICAL,
+    E_USER_WARNING => LogLevel::WARNING,
+    E_USER_NOTICE => LogLevel::NOTICE,
+    E_USER_DEPRECATED => LogLevel::WARNING,
+    E_STRICT => LogLevel::WARNING,
+    E_RECOVERABLE_ERROR => LogLevel::CRITICAL
+  ];
+
+  private const LOG_LEVELS = [
+    LogLevel::EMERGENCY,
+    LogLevel::ALERT,
+    LogLevel::CRITICAL,
+    LogLevel::ERROR,
+    LogLevel::WARNING,
+    LogLevel::NOTICE,
+    LogLevel::INFO,
+    LogLevel::DEBUG
+  ];
+
+  private const MAJOR_LEVELS = [
+    LogLevel::EMERGENCY,
+    LogLevel::ALERT,
+    LogLevel::CRITICAL,
+    LogLevel::ERROR,
+    LogLevel::WARNING,
+  ];
+
+
   public static function init(): void
   {
     global $debug;
@@ -55,10 +93,12 @@ class Errors
 
     $heading = "\n" . self::get_error_name($errno) . " in $errfile at line $errline\n";
 
-    // Show the superglobal data unless the error is minor
-    $show_data = !in_array($errno, array(E_NOTICE, E_USER_NOTICE, E_USER_DEPRECATED));
+    if (!array_key_exists($errno, self::ERRNO_LEVELS))
+    {
+      throw new Exception("Cannot find mapping for ERRNO level $errno");
+    }
 
-    self::output_error($heading, $errstr, $show_data);
+    self::output_error(self::ERRNO_LEVELS[$errno], $heading, $errstr);
 
     return true;
   }
@@ -132,7 +172,7 @@ class Errors
               "On a Unix server, recompile your PHP module with the appropriate option for " .
               "enabling the iconv extension. Consult your PHP server documentation for " .
               "more information about enabling iconv support.\n";
-      self::output_error($heading, $body);
+      self::output_error(LogLevel::NOTICE, $heading, $body);
     }
   }
 
@@ -219,11 +259,11 @@ class Errors
     $body = $exception->getMessage() . "\n" .
       $exception->getTraceAsString() . "\n";
 
-    self::output_error($heading, $body, true);
+    self::output_error(LogLevel::CRITICAL, $heading, $body);
   }
 
 
-  private static function output_error(string $heading, string $body, bool $show_data=false) : void
+  private static function output_error(string $level, string $heading, string $body) : void
   {
     global $debug, $auth, $get, $post;
 
@@ -237,9 +277,14 @@ class Errors
       $default_timezone_set = true;
     }
 
+    if (!in_array($level, self::LOG_LEVELS))
+    {
+      throw new \InvalidArgumentException("Invalid log level '$level'.");
+    }
+
     $context = [];
 
-    if ($show_data)
+    if (in_array($level, self::MAJOR_LEVELS))
     {
       if (isset($get))
       {
@@ -251,7 +296,7 @@ class Errors
       }
     }
 
-    if ($show_data && (isset($get) || isset($post)))
+    if (in_array($level, self::MAJOR_LEVELS) && (isset($get) || isset($post)))
     {
       $body .= "\n";
       if (isset($get))
@@ -279,7 +324,7 @@ class Errors
 
     $body .= "\n";
 
-    if ($debug)
+    if ($debug && in_array($level, self::MAJOR_LEVELS))
     {
       $backtrace = self::generateBacktrace();
       $body .=  implode("\n", $backtrace);
