@@ -6,6 +6,7 @@ use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\BrowserConsoleHandler;
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Monolog\Processor\IntrospectionProcessor;
 use Monolog\Registry;
 use MRBS\Exception;
@@ -236,7 +237,7 @@ class Errors
   {
     global $debug;
 
-    $logger = new \Monolog\Logger('MRBS');
+    $logger = new Logger('MRBS');
     $logger->pushProcessor(new IntrospectionProcessor());
 
     if ($debug)
