@@ -300,6 +300,18 @@ class Errors
       if (isset($post))
       {
         $context['post'] = $post;
+        if (!$auth['log_credentials'])
+        {
+          // Overwrite the username and password to stop them appearing
+          // in error logs.
+          foreach (array('username', 'password') as $var)
+          {
+            if (isset($context[$var]) && ($context[$var] !== ''))
+            {
+              $context[$var] = '****';
+            }
+          }
+        }
       }
     }
 
@@ -335,10 +347,11 @@ class Errors
     {
       $backtrace = self::generateBacktrace();
       $body .=  implode("\n", $backtrace);
+      $context['backtrace'] = $backtrace;
     }
 
-    //$context = ['backtrace' => self::generate_backtrace(), 'Get' => $_GET, 'Post' => $_POST];
-    //Registry::MRBS()->notice("Test backtrace", $context);
+    Registry::MRBS()->log($level, "Test backtrace", $context);
+
     if (ini_get('display_errors'))
     {
       echo "<b>" . self::to_html(escape_html($heading)) . "</b>\n";
