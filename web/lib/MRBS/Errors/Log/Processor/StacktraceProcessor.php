@@ -3,15 +3,23 @@ declare(strict_types=1);
 namespace MRBS\Errors\Log\Processor;
 
 use Monolog\Processor\ProcessorInterface;
+use function MRBS\str_ends_with_array;
 
 class StacktraceProcessor implements ProcessorInterface
 {
   private $ignore_args;
+  private $skip_files;
 
 
-  public function __construct(bool $ignore_args = false)
+  // $skip_classes is an array of classes (usually those concerned with error logging) to
+  // leave out from the stack trace presented to the user.
+  public function __construct(bool $ignore_args = false, array $skip_classes = [])
   {
     $this->ignore_args = $ignore_args;
+    // Add this class to the list of classes to skip.
+    $skip_classes[] = __CLASS__;
+    // Turn these into filenames.
+    $this->skip_files = array_map(function($value) {return "$value.php";}, $skip_classes);
   }
 
 
@@ -26,6 +34,7 @@ class StacktraceProcessor implements ProcessorInterface
       ]
     );
 
+    $record['extra']['skip'] = $this->skip_files;
     return $record;
   }
 
@@ -43,6 +52,14 @@ class StacktraceProcessor implements ProcessorInterface
     }
     $calls = debug_backtrace($options);
 
+    // Get rid of the calls on the stack which are just concerned with error handling and logging.  Note that
+    // the error handler doesn't have a file.
+    while (!empty($calls) && isset($calls[0]['file']) && str_ends_with_array($calls[0]['file'], $this->skip_files))
+    {
+      array_shift($calls);
+    }
+
+
     foreach ($calls as $i => $call)
     {
       $trace = "#$i ";
@@ -56,9 +73,8 @@ class StacktraceProcessor implements ProcessorInterface
       {
         $trace .= $call['function'];
         $trace .= '(';
-        // We're not interested in the args for the first two calls because they
-        // are just going to repeat the error message
-        if (isset($call['args']) && ($i > 1))
+        // Add in the arguments, of required
+        if (isset($call['args']) && ($i > -1))
         {
           $trace .= $this->getArgString($call['args']);
         }
@@ -79,7 +95,7 @@ class StacktraceProcessor implements ProcessorInterface
 
   private function getArgString(array $args) : string
   {
-    $result = array();
+    $result = [];
 
     foreach ($args as $arg)
     {

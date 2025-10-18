@@ -239,7 +239,8 @@ class Errors
     global $debug;
 
     $logger = new Logger('MRBS');
-    $logger->pushProcessor(new StacktraceProcessor(!$debug));
+    $skip_classes = [get_class($logger), __CLASS__];
+    $logger->pushProcessor(new StacktraceProcessor(!$debug, $skip_classes));
 
     if ($debug)
     {
