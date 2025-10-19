@@ -118,13 +118,14 @@ class Errors
   // a fatal error message
   public static function exceptionHandler(Throwable $exception): void
   {
-    var_dump($exception->getTrace());
-    var_dump($exception->getTraceAsString());
-    self::output_exception_error($exception);
-
+    // Log the exception
     $class = get_class($exception);
+    $details = "Uncaught exception '$class' in " . $exception->getFile() . " at line " . $exception->getLine();
+    $message = $exception->getMessage();
+    self::output_error(LogLevel::CRITICAL, $message, $details, $exception);
 
-    switch ($class)
+    // Then output a fatal error
+    switch (get_class($exception))
     {
       case __NAMESPACE__ . '\DB\DBExternalException':
         $fatal_message = get_vocab("fatal_db_ext_error");
