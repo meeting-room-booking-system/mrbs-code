@@ -78,6 +78,7 @@ class Errors
       self::$errno_levels[E_STRICT] = LogLevel::WARNING;
     }
 
+    self::setDisplayErrors();
     self::setErrorLog();
     $error_level = self::getErrorLevel();
     error_reporting($error_level);
@@ -190,6 +191,18 @@ class Errors
   }
 
 
+  private static function setDisplayErrors(): void
+  {
+    global $debug;
+
+    if ($debug)
+    {
+      ini_set('display_errors', '1');
+      ini_set('display_startup_errors', '1');  // ini_set() only accepts non-string values from PHP 8.1.0
+    }
+  }
+
+
   private static function setErrorLog() : void
   {
     // If the error log file is a relative path then turn it into an absolute one in
@@ -211,6 +224,11 @@ class Errors
   {
     global $debug;
 
+    if ($debug)
+    {
+      return -1;
+    }
+
     // Make sure notice errors are not reported; they can break mrbs code.
     $error_level = E_ALL & ~E_NOTICE & ~E_USER_NOTICE;
 
@@ -227,28 +245,18 @@ class Errors
       $error_level = $error_level & ~E_STRICT;
     }
 
-    if ($debug)
-    {
-      $error_level = -1;
-      ini_set('display_errors', '1');
-      ini_set('display_startup_errors', '1');  // ini_set() only accepts non-string values from PHP 8.1.0
-    }
-
     return $error_level;
   }
 
 
   private static function initLogger() : void
   {
-    global $debug;
-
     $logger = new Logger('MRBS');
     $logger->pushProcessor(new IntrospectionProcessor());
 
-    if ($debug)
+    if (ini_get('display_errors'))
     {
       $stream_handler = new StreamHandler('php://output');
-      $output = "[%datetime%] %channel%.%level_name% in %extra.file% at line %extra.line%: %message% %context%\n";
       $formatter = new BrowserFormatter();
       $stream_handler->setFormatter($formatter);
       $logger->pushHandler($stream_handler);
