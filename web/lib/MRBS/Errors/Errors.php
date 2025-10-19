@@ -18,6 +18,7 @@ use function MRBS\get_vocab;
 use function MRBS\mrbs_default_timezone_set;
 use function MRBS\print_footer;
 use function MRBS\print_simple_header;
+use function MRBS\str_ends_with_array;
 
 // A class for dealing with errors.
 // (Don't call it Error, to avoid confusion with the PHP class \Error.)
@@ -117,6 +118,8 @@ class Errors
   // a fatal error message
   public static function exceptionHandler(Throwable $exception): void
   {
+    var_dump($exception->getTrace());
+    var_dump($exception->getTraceAsString());
     self::output_exception_error($exception);
 
     $class = get_class($exception);
@@ -240,7 +243,8 @@ class Errors
 
     $logger = new Logger('MRBS');
     $skip_classes = [get_class($logger), __CLASS__];
-    $logger->pushProcessor(new StacktraceProcessor(!$debug, $skip_classes));
+    $logger->pushProcessor(new IntrospectionProcessor());
+    //$logger->pushProcessor(new StacktraceProcessor(!$debug, $skip_classes));
 
     if ($debug)
     {
@@ -269,11 +273,11 @@ class Errors
     $body = $exception->getMessage() . "\n" .
       $exception->getTraceAsString() . "\n";
 
-    self::output_error(LogLevel::CRITICAL, $heading, $body);
+    self::output_error(LogLevel::CRITICAL, $heading, $body, $exception);
   }
 
 
-  private static function output_error(string $level, string $heading, string $body) : void
+  private static function output_error(string $level, string $heading, string $body, ?Throwable $e = null) : void
   {
     global $debug, $auth, $get, $post;
 
@@ -348,7 +352,7 @@ class Errors
 
     if ($debug && in_array($level, self::MAJOR_LEVELS))
     {
-      $backtrace = self::generateBacktrace();
+      $backtrace = self::generateBacktrace($e);
       $body .=  implode("\n", $backtrace);
       $context['backtrace'] = $backtrace;
     }
@@ -369,48 +373,72 @@ class Errors
 
   // Generate a backtrace.  This function allows us to format the output slightly better
   // than debug_print_backtrace().
-  private static function generateBacktrace() : array
+  private static function generateBacktrace(?Throwable $e = null) : array
   {
     global $debug;
 
     $result = [];
-    $options = DEBUG_BACKTRACE_PROVIDE_OBJECT;
-    // Unless we are debugging ignore arguments as these can give away
-    // database credentials
-    if (!$debug)
-    {
-      $options = $options | DEBUG_BACKTRACE_IGNORE_ARGS;
-    }
-    $calls = debug_backtrace($options);
 
+    // Get the backtrace. If we've been given a throwable then use that to get the
+    // trace as it goes further back in the stack.
+    if (isset($e))
+    {
+      $calls = $e->getTrace();
+    }
+    else
+    {
+      $options = DEBUG_BACKTRACE_PROVIDE_OBJECT;
+      // Unless we are debugging ignore arguments as these can give away
+      // database credentials
+      if (!$debug)
+      {
+        $options = $options | DEBUG_BACKTRACE_IGNORE_ARGS;
+      }
+      $calls = debug_backtrace($options);
+    }
+
+    // Get rid of calls on the stack which are just concerned with error handling and logging.
+    while (!empty($calls) && isset($calls[0]['class']) && ($calls[0]['class'] === __CLASS__))
+    {
+      array_shift($calls);
+    }
+
+    // Turn each call into a string
     foreach ($calls as $i => $call)
     {
-      $trace = "#$i ";
-
-      if (isset($call['class']) && isset($call['type']))
-      {
-        $trace .= $call['class'] . $call['type'];
-      }
-
-      if (isset($call['function']))
-      {
-        $trace .= $call['function'];
-        $trace .= '(';
-        // We're not interested in the args for the first two calls because they
-        // are just going to repeat the error message
-        if (isset($call['args']) && ($i > 1))
-        {
-          $trace .= self::getArgString($call['args']);
-        }
-        $trace .= ')';
-      }
-
-      if (isset($call['file']) && isset($call['line']))
-      {
-        $trace .= ' called at [' . $call['file'] . ':' . $call['line'] . ']';
-      }
-
+      $trace = "#$i " . self::callToString($call);
       $result[] = $trace;
+    }
+
+    return $result;
+  }
+
+
+  private static function callToString(array $call) : string
+  {
+    $result = '';
+
+    if (isset($call['class']) && isset($call['type']))
+    {
+      $result .= $call['class'] . $call['type'];
+    }
+
+    if (isset($call['function']))
+    {
+      $result .= $call['function'];
+      $result .= '(';
+      // Add in the args if required, unless it was trigger_error() that was called
+      // because that will just repeat the error message.
+      if (isset($call['args']) && ($call['function'] !== 'trigger_error'))
+      {
+        $result .= self::getArgString($call['args']);
+      }
+      $result .= ')';
+    }
+
+    if (isset($call['file']) && isset($call['line']))
+    {
+      $result .= ' called at [' . $call['file'] . ':' . $call['line'] . ']';
     }
 
     return $result;

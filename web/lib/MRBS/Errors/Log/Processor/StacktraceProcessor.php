@@ -34,6 +34,7 @@ class StacktraceProcessor implements ProcessorInterface
       ]
     );
 
+    $record['extra']['calls'] = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT);
     $record['extra']['skip'] = $this->skip_files;
     return $record;
   }
