@@ -101,14 +101,14 @@ class Errors
       return true;
     }
 
-    $heading = "\n" . self::get_error_name($errno) . " in $errfile at line $errline\n";
+    $details = self::get_error_name($errno) . " in $errfile at line $errline";
 
     if (!array_key_exists($errno, self::$errno_levels))
     {
       throw new Exception("Cannot find mapping for ERRNO level $errno");
     }
 
-    self::output_error(self::$errno_levels[$errno], $heading, $errstr);
+    self::output_error(self::$errno_levels[$errno], $errstr, $details);
 
     return true;
   }
@@ -171,20 +171,20 @@ class Errors
         !function_exists('iconv'))
     {
       // Help new admins understand what to do in case the iconv error occurs...
-      $heading = "MRBS - iconv module not installed. ";
-      $body = "The iconv module, which provides PHP support for Unicode, is not " .
-              "installed on your system." .
-              "Unicode gives MRBS the ability to easily support languages other " .
-              "than English. Without Unicode, support for non-English-speaking " .
-              "users will be crippled." .
-              "To fix this error, you need to install and enable the iconv module." .
-              "On a Windows server, enable php_iconv.dll in %windir%\\php.ini, and " .
-              "make sure both %phpdir%\\dlls\\iconv.dll and %phpdir%\\extensions\\php_iconv.dll " .
-              "are in the path. One way to do this is to copy these two files to %windir%." .
-              "On a Unix server, recompile your PHP module with the appropriate option for " .
-              "enabling the iconv extension. Consult your PHP server documentation for " .
-              "more information about enabling iconv support.\n";
-      self::output_error(LogLevel::NOTICE, $heading, $body);
+      $message = "MRBS - iconv module not installed. ";
+      $details = "The iconv module, which provides PHP support for Unicode, is not " .
+                 "installed on your system." .
+                 "Unicode gives MRBS the ability to easily support languages other " .
+                 "than English. Without Unicode, support for non-English-speaking " .
+                 "users will be crippled." .
+                 "To fix this error, you need to install and enable the iconv module." .
+                 "On a Windows server, enable php_iconv.dll in %windir%\\php.ini, and " .
+                 "make sure both %phpdir%\\dlls\\iconv.dll and %phpdir%\\extensions\\php_iconv.dll " .
+                 "are in the path. One way to do this is to copy these two files to %windir%." .
+                 "On a Unix server, recompile your PHP module with the appropriate option for " .
+                 "enabling the iconv extension. Consult your PHP server documentation for " .
+                 "more information about enabling iconv support.\n";
+      self::output_error(LogLevel::NOTICE, $message, $details);
     }
   }
 
@@ -264,20 +264,17 @@ class Errors
   }
 
 
-  // Logs an exception (or sends it to the browser if $debug)
-  private static function output_exception_error(Throwable $exception, bool $caught=false) : void
+  // Logs an exception
+  private static function output_exception_error(Throwable $exception) : void
   {
     $class = get_class($exception);
-
-    $heading = (($caught) ? "Caught" : "Uncaught") . " exception '$class' in " . $exception->getFile() . " at line " . $exception->getLine() . "\n";
-    $body = $exception->getMessage() . "\n" .
-      $exception->getTraceAsString() . "\n";
-
-    self::output_error(LogLevel::CRITICAL, $heading, $body, $exception);
+    $details = "Uncaught exception '$class' in " . $exception->getFile() . " at line " . $exception->getLine();
+    $message = $exception->getMessage();
+    self::output_error(LogLevel::CRITICAL, $message, $details, $exception);
   }
 
 
-  private static function output_error(string $level, string $heading, string $body, ?Throwable $e = null) : void
+  private static function output_error(string $level, string $message, string $details, ?Throwable $e = null) : void
   {
     global $debug, $auth, $get, $post;
 
@@ -322,51 +319,23 @@ class Errors
       }
     }
 
-    if (in_array($level, self::MAJOR_LEVELS) && (isset($get) || isset($post)))
-    {
-      $body .= "\n";
-      if (isset($get))
-      {
-        $body .= "MRBS GET: " . print_r($get, true);
-      }
-      if (isset($post))
-      {
-        $post_tmp = $post;
-        if (!$auth['log_credentials'])
-        {
-          // Overwrite the username and password to stop them appearing
-          // in error logs.
-          foreach (array('username', 'password') as $var)
-          {
-            if (isset($post_tmp[$var]) && ($post_tmp[$var] !== ''))
-            {
-              $post_tmp[$var] = '****';
-            }
-          }
-        }
-        $body .= "MRBS POST: " . print_r($post_tmp, true);
-      }
-    }
-
-    $body .= "\n";
-
     if ($debug && in_array($level, self::MAJOR_LEVELS))
     {
       $backtrace = self::generateBacktrace($e);
-      $body .=  implode("\n", $backtrace);
       $context['backtrace'] = $backtrace;
     }
 
-    Registry::MRBS()->log($level, "Test backtrace", $context);
+    $context['details'] = $details;
+    Registry::MRBS()->log($level, $message, $context);
 
     if (ini_get('display_errors'))
     {
-      echo "<b>" . self::to_html(escape_html($heading)) . "</b>\n";
-      echo self::to_html(escape_html($body));
+      //echo "<b>" . self::to_html(escape_html($heading)) . "</b>\n";
+      //echo self::to_html(escape_html($body));
     }
     if (ini_get('log_errors'))
     {
-      error_log($heading . $body);
+      ///error_log($heading . $body);
     }
   }
 
