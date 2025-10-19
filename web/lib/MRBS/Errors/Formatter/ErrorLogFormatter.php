@@ -3,9 +3,8 @@ declare(strict_types=1);
 namespace MRBS\Errors\Formatter;
 
 use Monolog\Formatter\NormalizerFormatter;
-use function MRBS\escape_html;
 
-class BrowserFormatter extends NormalizerFormatter
+class ErrorLogFormatter extends NormalizerFormatter
 {
   public function format(array $record): string
   {
@@ -15,15 +14,15 @@ class BrowserFormatter extends NormalizerFormatter
       // This will be when the logger is called directly from the MRBS code, rather than the Errors class.
       $record['context']['details'] = $record['channel'] . '.' .$record['level_name'] . ' in ' . $record['extra']['file'] . ' at line ' . $record['extra']['line'];
     }
-    $lines[] = '<b>' . escape_html($record['context']['details']) . '</b>';
-    $lines[] = escape_html($record['message']);
+    $lines[] = $record['context']['details'];
+    $lines[] = $record['message'];
 
     // Add in any stacktrace
     if (!empty($record['context']['backtrace']))
     {
       foreach ($record['context']['backtrace'] as $call)
       {
-        $lines[] = escape_html($call);
+        $lines[] = $call;
       }
     }
 
@@ -33,15 +32,12 @@ class BrowserFormatter extends NormalizerFormatter
       if (isset($record['context'][$var]))
       {
         $line = print_r($record['context'][$var], true);
-        // Escape the text and then replace spaces with non-breaking spaces
-        $line = str_replace(' ', '&nbsp;', (escape_html($line)));
         // Remove the final new line
         $line = rtrim($line);
-        $lines[] = "$name: " . str_replace("\n", "<br>\n", $line);
+        $lines[] = $line;
       }
     }
 
-    return "<p>\n" . implode("<br>\n", $lines) . "<p>\n";
+    return implode("\n", $lines);
   }
-
 }

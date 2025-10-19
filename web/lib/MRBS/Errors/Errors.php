@@ -10,6 +10,7 @@ use Monolog\Logger;
 use Monolog\Processor\IntrospectionProcessor;
 use Monolog\Registry;
 use MRBS\Errors\Formatter\BrowserFormatter;
+use MRBS\Errors\Formatter\ErrorLogFormatter;
 use MRBS\Exception;
 use Psr\Log\LogLevel;
 use Throwable;
@@ -256,16 +257,17 @@ class Errors
 
     if (ini_get('display_errors'))
     {
-      $stream_handler = new StreamHandler('php://output');
-      $formatter = new BrowserFormatter();
-      $stream_handler->setFormatter($formatter);
-      $logger->pushHandler($stream_handler);
+      $handler = new StreamHandler('php://output');
+      $handler->setFormatter(new BrowserFormatter());
+      $logger->pushHandler($handler);
       $logger->pushHandler(new BrowserConsoleHandler());
     }
 
     if (ini_get('log_errors'))
     {
-      $logger->pushHandler(new ErrorLogHandler());
+      $handler = new ErrorLogHandler();
+      $handler->setFormatter(new ErrorLogFormatter());
+      $logger->pushHandler($handler);
     }
     Registry::addLogger($logger);
   }
