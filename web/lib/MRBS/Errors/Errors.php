@@ -9,7 +9,6 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Processor\IntrospectionProcessor;
 use Monolog\Registry;
-use MRBS\Errors\Log\Processor\StacktraceProcessor;
 use MRBS\Exception;
 use Psr\Log\LogLevel;
 use Throwable;
@@ -243,9 +242,7 @@ class Errors
     global $debug;
 
     $logger = new Logger('MRBS');
-    $skip_classes = [get_class($logger), __CLASS__];
     $logger->pushProcessor(new IntrospectionProcessor());
-    //$logger->pushProcessor(new StacktraceProcessor(!$debug, $skip_classes));
 
     if ($debug)
     {
