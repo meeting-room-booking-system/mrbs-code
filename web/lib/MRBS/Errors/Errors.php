@@ -448,28 +448,6 @@ class Errors
   }
 
 
-  private static function to_html(string $string) : string
-  {
-    $lines = explode("\n", $string);
-    $lines = array_map([__CLASS__ , 'replace_leading_spaces'], $lines);
-    return implode("<br>\n", $lines);
-  }
-
-
-  // Replace leading spaces in $string with non-breaking spaces
-  private static function replace_leading_spaces(string $string) : string
-  {
-    $pattern = '/\G /';
-    $result = preg_replace($pattern, '&nbsp;', $string);
-    if (!isset($result))
-    {
-      // This should not happen
-      throw new Exception("preg_replace() failed - probably because of an error in the pattern '$pattern'.");
-    }
-    return $result;
-  }
-
-
   // Translate an error constant value into the name of the constant
   private static function get_error_name(int $errno) : string
   {
