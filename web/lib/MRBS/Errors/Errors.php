@@ -9,6 +9,7 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Processor\IntrospectionProcessor;
 use Monolog\Registry;
+use MRBS\Errors\Formatter\BrowserFormatter;
 use MRBS\Exception;
 use Psr\Log\LogLevel;
 use Throwable;
@@ -248,7 +249,7 @@ class Errors
     {
       $stream_handler = new StreamHandler('php://output');
       $output = "[%datetime%] %channel%.%level_name% in %extra.file% at line %extra.line%: %message% %context%\n";
-      $formatter = new LineFormatter($output, null, false, true);
+      $formatter = new BrowserFormatter();
       $stream_handler->setFormatter($formatter);
       $logger->pushHandler($stream_handler);
       $logger->pushHandler(new BrowserConsoleHandler());
