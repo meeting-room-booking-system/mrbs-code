@@ -11,6 +11,11 @@ class BrowserFormatter extends NormalizerFormatter
   public function format(array $record): string
   {
     $lines = [];
+    if (!isset($record['context']['details']))
+    {
+      // This will be when the logger is called directly from the MRBS code, rather than the Errors class.
+      $record['context']['details'] = $record['channel'] . '.' .$record['level_name'] . ' in ' . $record['extra']['file'] . ' at line ' . $record['extra']['line'];
+    }
     $lines[] = '<b>' . escape_html($record['context']['details']) . '</b>';
     $lines[] = escape_html($record['message']);
 
