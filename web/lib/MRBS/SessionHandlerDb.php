@@ -364,15 +364,32 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
   {
     // Use the same cookie params as for the session cookie.
     $cookie_params = session_get_cookie_params();
-    setcookie(
-      $name,
-      $value,
-      $expires,
-      $cookie_params['path'],
-      $cookie_params['domain'],
-      $cookie_params['secure'],
-      $cookie_params['httponly']
-    );
+    assert(version_compare(MRBS_MIN_PHP_VERSION, '7.3.0', '<'), "The else block can be removed.");
+    if (version_compare(PHP_VERSION, '7.3.0', '>='))
+    {
+      // The new way, allowing 'samesite' to be set
+      setcookie($name, $value, [
+        'expires' => $expires,
+        'path' => $cookie_params['path'],
+        'domain' => $cookie_params['domain'],
+        'secure' => $cookie_params['secure'],
+        'httponly' => $cookie_params['httponly'],
+        'samesite' => $cookie_params['samesite']
+      ]);
+    }
+    else
+    {
+      // The old way.  'samesite' wasn't available until PHP 7.3.0.
+      setcookie(
+        $name,
+        $value,
+        $expires,
+        $cookie_params['path'],
+        $cookie_params['domain'],
+        $cookie_params['secure'],
+        $cookie_params['httponly']
+      );
+    }
   }
 
 
