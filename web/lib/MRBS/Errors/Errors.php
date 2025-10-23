@@ -12,6 +12,7 @@ use Monolog\Registry;
 use MRBS\Errors\Formatter\BrowserFormatter;
 use MRBS\Errors\Formatter\ErrorLogFormatter;
 use MRBS\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
 use Psr\Log\LogLevel;
 use Throwable;
 use function MRBS\escape_html;
@@ -269,6 +270,7 @@ class Errors
       $handler->setFormatter(new ErrorLogFormatter());
       $logger->pushHandler($handler);
     }
+
     Registry::addLogger($logger);
   }
 
