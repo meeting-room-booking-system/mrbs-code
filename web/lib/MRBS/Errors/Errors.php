@@ -2,7 +2,6 @@
 declare(strict_types=1);
 namespace MRBS\Errors;
 
-use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\BrowserConsoleHandler;
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\StreamHandler;
@@ -12,7 +11,7 @@ use Monolog\Registry;
 use MRBS\Errors\Formatter\BrowserFormatter;
 use MRBS\Errors\Formatter\ErrorLogFormatter;
 use MRBS\Exception;
-use PHPMailer\PHPMailer\PHPMailer;
+use MRBS\Mailer;
 use Psr\Log\LogLevel;
 use Throwable;
 use function MRBS\escape_html;
@@ -20,7 +19,6 @@ use function MRBS\get_vocab;
 use function MRBS\mrbs_default_timezone_set;
 use function MRBS\print_footer;
 use function MRBS\print_simple_header;
-use function MRBS\str_ends_with_array;
 
 // A class for dealing with errors.
 // (Don't call it Error, to avoid confusion with the PHP class \Error.)
@@ -253,6 +251,8 @@ class Errors
 
   private static function initLogger() : void
   {
+    global $mail_settings, $sendmail_settings, $smtp_settings, $debug_to;
+
     $logger = new Logger('MRBS');
     $logger->pushProcessor(new IntrospectionProcessor());
 
@@ -270,6 +270,10 @@ class Errors
       $handler->setFormatter(new ErrorLogFormatter());
       $logger->pushHandler($handler);
     }
+
+    $mailer = new Mailer($mail_settings, $sendmail_settings, $smtp_settings, true);
+    $mailer->setFromRFC822($mail_settings['from_logging']);
+    $mailer->addAddressesRFC822($debug_to);
 
     Registry::addLogger($logger);
   }

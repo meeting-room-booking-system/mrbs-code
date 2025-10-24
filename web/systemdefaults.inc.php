@@ -27,6 +27,8 @@ require_once 'lib/autoload.inc';
 // information (eg database usernames and passwords).
 $debug = false;
 
+$debug_to = 'logging@your.org';
+
 
 /**********
  * Timezone
@@ -1637,6 +1639,8 @@ $auth['log_credentials'] = false;
 
 // Set the email address of the From field. Default is 'admin_email@your.org'
 $mail_settings['from'] = 'admin_email@your.org';
+
+$mail_settings['from_logging'] = 'logging@your.org';
 
 // By default MRBS will send some emails (eg booking approval emails) as though they have come from
 // the user, rather than the From address above.   However some email servers will not allow this in
