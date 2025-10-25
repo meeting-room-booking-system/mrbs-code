@@ -279,7 +279,7 @@ class Errors
       $mailer->CharSet = get_charset();
       $mailer->setFromRFC822($logger_settings['mail']['from']);
       $mailer->addAddressesRFC822($logger_settings['mail']['to']);
-      $handler = new PHPMailerHandler($mailer);
+      $handler = new PHPMailerHandler($mailer, $logger_settings['mail']['level']);
       $logger->pushHandler($handler);
     }
 
