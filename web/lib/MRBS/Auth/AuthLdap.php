@@ -6,7 +6,6 @@ use MRBS\Exception;
 use MRBS\Group;
 use MRBS\User;
 use function MRBS\array_values_recursive;
-use function MRBS\fatal_error;
 use function MRBS\get_microtime;
 use function MRBS\in_arrayi;
 use function MRBS\session;
