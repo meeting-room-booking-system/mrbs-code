@@ -26,7 +26,7 @@ class Logger implements LoggerInterface
 
   public function error($message, array $context = array())
   {
-    throw new Exception($message);
+    trigger_error($message, E_USER_WARNING);
   }
 
   public function warning($message, array $context = array())
