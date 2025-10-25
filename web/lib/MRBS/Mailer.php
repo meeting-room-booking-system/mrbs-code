@@ -104,21 +104,8 @@ class Mailer extends PHPMailer
   // Sets a From address taking an RFC822 address
   public function setFromRFC822(string $address, bool $auto=true) : bool
   {
-    try
-    {
-      $parser = new Parse(new Logger());
-      $parsed_address = $parser->parse($address, false);
-    }
-    catch (\Exception $e)
-    {
-      // You can get errors of the sort "Email\Parse->parse - corruption during parsing - leftovers:" for a simple
-      // address such as 'kjh'.
-      $parsed_address = [
-        'original_address' => $address,
-        'invalid' => true,
-        'invalid_reason' => $e->getMessage()
-      ];
-    }
+    $parser = new Parse(new Logger());
+    $parsed_address = $parser->parse($address, false);
 
     if ($parsed_address['invalid'])
     {
