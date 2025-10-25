@@ -864,12 +864,12 @@ catch (\Exception $e)
 {
   if ($is_ajax)
   {
-    output_exception_error($e, true);
+    trigger_error('Caught exception: ' . $e->getMessage(), E_USER_WARNING);
     http_response_code(500);
     exit;
   }
 
-  exception_handler($e);
+  throw new Exception($e);
 }
 
 // Everything was OK.   Go back to where we came from

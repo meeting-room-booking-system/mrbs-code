@@ -28,6 +28,20 @@ require_once 'lib/autoload.inc';
 $debug = false;
 
 
+/*********
+ * Logging
+ *********/
+
+// Whether to send log messages by email
+$logger_settings['mail']['enabled'] = false;
+
+// The From address - RFC 822 format
+$logger_settings['mail']['from'] = 'logging@your.org';
+
+// The To address - can be a comma separated list (RFC 822 format)
+$logger_settings['mail']['to'] = 'logging@your.org';
+
+
 /**********
  * Timezone
  **********/

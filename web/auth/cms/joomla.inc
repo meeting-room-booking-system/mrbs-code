@@ -10,7 +10,7 @@ if ($joomla_path === false)
 {
   $message = MRBS_ROOT . '/' . $auth['joomla']['rel_path'] . ' does not exist.  Check the setting ' .
              'of $auth["joomla"]["rel_path"] in your config file.';
-  die($message);  // Too early for fatal_error()
+  die($message);  // Too early for Errors::fatalError()
 }
 
 define('JPATH_BASE', $joomla_path);

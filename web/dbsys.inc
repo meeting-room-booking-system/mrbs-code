@@ -8,6 +8,7 @@ namespace MRBS;
 
 use MRBS\DB\DB;
 use MRBS\DB\DBFactory;
+use MRBS\Errors\Errors;
 use PDO;
 
 function _tbl(string $short_name, bool $include_schema=true) : string
@@ -105,7 +106,7 @@ function db() : DB
     catch (\Exception $e)
     {
       trigger_error($e->getMessage(), E_USER_WARNING);
-      fatal_error(get_vocab('fatal_db_error'));
+      Errors::fatalError(get_vocab('fatal_db_error'));
     }
   }
 

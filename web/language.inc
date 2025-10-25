@@ -6,6 +6,7 @@ namespace MRBS;
 // isn't always installed).
 
 use IntlDateFormatter;
+use MRBS\Errors\Errors;
 use MRBS\Intl\IntlDateFormatterFactory;
 use MRBS\Intl\IntlDatePatternGenerator;
 use MRBS\Intl\Locale;
@@ -180,7 +181,7 @@ function set_mrbs_locale($locale)
 
     if (false === setlocale(LC_ALL, array('C.UTF-8', 'C.utf-8', 'C.utf8', 'C')))
     {
-      fatal_error("Could not set locale at all, not even to 'C'");
+      Errors::fatalError("Could not set locale at all, not even to 'C'");
     }
   }
 }

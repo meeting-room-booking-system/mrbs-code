@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use MRBS\Errors\Errors;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementP;
@@ -285,7 +286,7 @@ function generate_room_form($room_id, $errors=null)
       is_null($room = Room::getById($room_id)) ||
       !$room->isVisible())
   {
-    fatal_error(get_vocab('invalid_room'));
+    Errors::fatalError(get_vocab('invalid_room'));
   }
 
   // Generate the form

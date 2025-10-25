@@ -26,9 +26,11 @@ namespace MRBS;
 // Acquire mutex to lock out others trying to update the entry table (unlikely because
 // the only other people able to update the database at this stage will be site admins
 // who know the database username and password, but just in case ...)
+use MRBS\Errors\Errors;
+
 if (!$upgrade_handle->mutex_lock(_tbl('entry')))
 {
-  fatal_error(get_vocab("failed_to_acquire"));
+  Errors::fatalError(get_vocab("failed_to_acquire"));
 }
 
 $sql = "UPDATE " . _tbl('entry') . "
@@ -49,7 +51,7 @@ $upgrade_handle->mutex_unlock(_tbl('entry'));
 // who know the database username and password, but just in case ...)
 if (!$upgrade_handle->mutex_lock(_tbl('repeat')))
 {
-  fatal_error(get_vocab("failed_to_acquire"));
+  Errors::fatalError(get_vocab("failed_to_acquire"));
 }
 
 $sql = "UPDATE " . _tbl('repeat') . "
@@ -79,7 +81,7 @@ while (false !== ($row = $res->next_row_keyed()))
   if ($result != 1)
   {
     // Something's gone wrong.  No rows have been affected, which should not be the case
-    fatal_error("Failed to update status column in repeat table with approval status.");
+    Errors::fatalError("Failed to update status column in repeat table with approval status.");
   }
 }
 

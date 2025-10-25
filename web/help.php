@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use Monolog\Registry;
 use MRBS\DB\DB;
 
 require "defaultincludes.inc";

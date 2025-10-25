@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use MRBS\Errors\Errors;
 use MRBS\Form\ElementDiv;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputCheckbox;
@@ -779,7 +780,7 @@ print_header($context);
 // Get the details for this area
 if (!isset($area) || is_null($area_object = Area::getById($area)))
 {
-  fatal_error(get_vocab('invalid_area'));
+  Errors::fatalError(get_vocab('invalid_area'));
 }
 
 $errors = get_form_var('errors', 'array');

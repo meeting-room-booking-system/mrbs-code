@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use Email\Parse;
+use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 
 class Mailer extends PHPMailer
@@ -66,6 +68,60 @@ class Mailer extends PHPMailer
           E_USER_WARNING);
         break;
     }
+  }
+
+
+  // Sets a series of To addresses given an RFC822 address string
+  public function addAddressesRFC822(string $address_string) : bool
+  {
+    $parser = new Parse(new Logger());
+    $parsed_addresses = $parser->parse($address_string);
+
+    foreach ($parsed_addresses['email_addresses'] as $parsed_address)
+    {
+      if ($parsed_address['invalid'])
+      {
+        $error_message = "Invalid email address '" . $parsed_address['original_address'] . "': " . $parsed_address['invalid_reason'];
+        $this->setError($error_message);
+        $this->edebug($error_message);
+        if ($this->exceptions) {
+          throw new Exception($error_message);
+        }
+        return false;
+      }
+      $address = $parsed_address['local_part_parsed'] . '@' . $parsed_address['domain_part'];
+      $name = $parsed_address['name_parsed'];
+      if (false === $this->addAddress($address, $name))
+      {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+
+  // Sets a From address taking an RFC822 address
+  public function setFromRFC822(string $address, bool $auto=true) : bool
+  {
+    $parser = new Parse(new Logger());
+    $parsed_address = $parser->parse($address, false);
+
+    if ($parsed_address['invalid'])
+    {
+      $error_message = "Invalid email address '" . $parsed_address['original_address'] . "': " . $parsed_address['invalid_reason'];
+      $this->setError($error_message);
+      $this->edebug($error_message);
+      if ($this->exceptions) {
+        throw new Exception($error_message);
+      }
+      return false;
+    }
+
+    $address = $parsed_address['local_part_parsed'] . '@' . $parsed_address['domain_part'];
+    $name = $parsed_address['name_parsed'];
+
+    return $this->setFrom($address, $name, $auto);
   }
 
 }

@@ -3,9 +3,11 @@ declare(strict_types=1);
 namespace MRBS\DB;
 
 use Error;
+use MRBS\Errors\Errors;
 use PDO;
 use Pdo\Mysql;
 use PDOException;
+use function MRBS\get_vocab;
 
 //
 class DB_mysql extends DB
@@ -184,7 +186,7 @@ class DB_mysql extends DB
         {
           $message = $e->getMessage() . ". Try using the 'nd_pdo_mysql' extension instead of 'pdo_mysql'.";
           trigger_error($message, E_USER_WARNING);
-          fatal_error(get_vocab("fatal_error"));
+          Errors::fatalError(get_vocab("fatal_error"));
         }
       }
     }

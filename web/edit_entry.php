@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use MRBS\Errors\Errors;
 use MRBS\Form\ElementDiv;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputCheckbox;
@@ -1260,7 +1261,7 @@ if (isset($id))
 
   if (is_null($entry))
   {
-    fatal_error(get_vocab("entryid") . $id . get_vocab("not_found"));
+    Errors::fatalError(get_vocab("entryid") . $id . get_vocab("not_found"));
   }
 
   // We've possibly got a new room and area, so we need to update the settings
@@ -1371,7 +1372,7 @@ if (isset($id))
 
     if (!isset($repeat))
     {
-      fatal_error(get_vocab("repeat_id") . $rep_id . get_vocab("not_found"));
+      Errors::fatalError(get_vocab("repeat_id") . $rep_id . get_vocab("not_found"));
     }
 
     $rep_type = $repeat['rep_type'];
