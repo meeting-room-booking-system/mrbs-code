@@ -251,7 +251,7 @@ class Errors
 
   private static function initLogger() : void
   {
-    global $mail_settings, $sendmail_settings, $smtp_settings, $debug_to;
+    global $mail_settings, $sendmail_settings, $smtp_settings, $logger_settings;
 
     $logger = new Logger('MRBS');
     $logger->pushProcessor(new IntrospectionProcessor());
@@ -271,9 +271,12 @@ class Errors
       $logger->pushHandler($handler);
     }
 
-    $mailer = new Mailer($mail_settings, $sendmail_settings, $smtp_settings, true);
-    $mailer->setFromRFC822($mail_settings['from_logging']);
-    $mailer->addAddressesRFC822($debug_to);
+    if ($logger_settings['mail']['enabled'])
+    {
+      $mailer = new Mailer($mail_settings, $sendmail_settings, $smtp_settings, true);
+      $mailer->setFromRFC822($logger_settings['mail']['from']);
+      $mailer->addAddressesRFC822($logger_settings['mail']['to']);
+    }
 
     Registry::addLogger($logger);
   }

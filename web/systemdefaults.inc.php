@@ -27,7 +27,19 @@ require_once 'lib/autoload.inc';
 // information (eg database usernames and passwords).
 $debug = false;
 
-$debug_to = 'logging@your.org';
+
+/*********
+ * Logging
+ *********/
+
+// Whether to send log messages by email
+$logger_settings['mail']['enabled'] = false;
+
+// The From address - RFC 822 format
+$logger_settings['mail']['from'] = 'logging@your.org';
+
+// The To address - can be a comma separated list (RFC 822 format)
+$logger_settings['mail']['to'] = 'logging@your.org';
 
 
 /**********
@@ -1639,8 +1651,6 @@ $auth['log_credentials'] = false;
 
 // Set the email address of the From field. Default is 'admin_email@your.org'
 $mail_settings['from'] = 'admin_email@your.org';
-
-$mail_settings['from_logging'] = 'logging@your.org';
 
 // By default MRBS will send some emails (eg booking approval emails) as though they have come from
 // the user, rather than the From address above.   However some email servers will not allow this in
