@@ -350,16 +350,6 @@ class Errors
 
     $context['details'] = $details;
     Registry::MRBS()->log($level, $message, $context);
-
-    if (ini_get('display_errors'))
-    {
-      //echo "<b>" . self::to_html(escape_html($heading)) . "</b>\n";
-      //echo self::to_html(escape_html($body));
-    }
-    if (ini_get('log_errors'))
-    {
-      ///error_log($heading . $body);
-    }
   }
 
 
