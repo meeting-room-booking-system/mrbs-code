@@ -66,7 +66,11 @@ class AuthDb extends Auth
    *   false    - The pair are invalid or do not exist
    *   string   - The validated username
    */
-  private function validateUsername(string $user, string $pass)
+  private function validateUsername(
+    #[\SensitiveParameter]
+    ?string $user,
+    #[\SensitiveParameter]
+    ?string $pass)
   {
     $sql_params = array();
 
@@ -106,7 +110,11 @@ class AuthDb extends Auth
    * Returns:
    *   array    - An array of valid usernames, empty if none found
    */
-  private function validateEmail(string $email, string $pass) : array
+  private function validateEmail(
+    #[\SensitiveParameter]
+    string $email,
+    #[\SensitiveParameter]
+    string $pass) : array
   {
     $valid_usernames = array();
 
