@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use MRBS\Errors\Errors;
 use MRBS\Form\Form;
 
 require "defaultincludes.inc";
@@ -20,7 +21,7 @@ if (isset($button_save))
   // Lock the table while we update it
   if (!db()->mutex_lock(_tbl(Group::TABLE_NAME)))
   {
-    fatal_error(get_vocab('failed_to_acquire'));
+    Errors::fatalError(get_vocab('failed_to_acquire'));
   }
 
   // Add a new group

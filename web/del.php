@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace MRBS;
 
 use MRBS\DB\DBException;
+use MRBS\Errors\Errors;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\Form;
 
@@ -87,7 +88,7 @@ if ($type == "room")
     // Acquire mutex.
     if (!db()->mutex_lock(_tbl(Room::TABLE_NAME)))
     {
-      fatal_error(get_vocab("failed_to_acquire"));
+      Errors::fatalError(get_vocab("failed_to_acquire"));
     }
 
     db()->begin();
@@ -184,7 +185,7 @@ if ($type == "area")
     // Acquire mutex.
     if (!db()->mutex_lock(_tbl(Area::TABLE_NAME)))
     {
-      fatal_error(get_vocab("failed_to_acquire"));
+      Errors::fatalError(get_vocab("failed_to_acquire"));
     }
 
     Area::deleteById($area);

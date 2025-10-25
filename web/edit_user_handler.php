@@ -4,6 +4,7 @@ namespace MRBS;
 
 require "defaultincludes.inc";
 
+use MRBS\Errors\Errors;
 use MRBS\Form\Form;
 
 
@@ -218,7 +219,7 @@ if (!(isset($update_button) && $initial_user_creation))
 // Lock the table while we alter it
 if (!db()->mutex_lock(_tbl(User::TABLE_NAME)))
 {
-  fatal_error(get_vocab('failed_to_acquire'));
+  Errors::fatalError(get_vocab('failed_to_acquire'));
 }
 
 // Get the user
