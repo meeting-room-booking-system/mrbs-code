@@ -255,7 +255,7 @@ class Errors
   {
     global $mail_settings, $sendmail_settings, $smtp_settings, $logger_settings;
 
-    $logger = new Logger('MRBS');
+    $logger = new Logger($logger_settings['channel_name']);
     $logger->pushProcessor(new IntrospectionProcessor());
 
     if (ini_get('display_errors'))

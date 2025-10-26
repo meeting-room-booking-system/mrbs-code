@@ -32,6 +32,8 @@ $debug = false;
  * Logging
  *********/
 
+$logger_settings['channel_name'] = 'MRBS';
+
 // Whether to send log messages by email
 $logger_settings['mail']['enabled'] = false;
 
