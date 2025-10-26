@@ -32,16 +32,25 @@ class PHPMailerHandler extends MailHandler
   private function buildMessage(string $content, array $records): PHPMailer
   {
     $mailer = clone $this->mailer;
+    var_dump($content);
+    var_dump($records);
 
     $record = $records[0];
-    $mailer->Subject = $record['channel'] . '.' . $record['level_name'];
-    if (isset($record['extra']['file']))
+    if (isset($record['context']['details']))
     {
-      $mailer->Subject .= ' in ' . $record['extra']['file'];
+      $mailer->Subject = $record['context']['details'];
     }
-    if (isset($record['extra']['line']))
+    else
     {
-      $mailer->Subject .= ' at line ' . $record['extra']['line'];
+      $mailer->Subject = $record['channel'] . '.' . $record['level_name'];
+      if (isset($record['extra']['file']))
+      {
+        $mailer->Subject .= ' in ' . $record['extra']['file'];
+      }
+      if (isset($record['extra']['line']))
+      {
+        $mailer->Subject .= ' at line ' . $record['extra']['line'];
+      }
     }
     $mailer->Body = $content;
 
