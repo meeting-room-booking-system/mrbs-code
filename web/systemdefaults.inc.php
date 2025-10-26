@@ -32,6 +32,8 @@ $debug = false;
  * Logging
  *********/
 
+$logger_settings['channel_name'] = 'MRBS';
+
 // Whether to send log messages by email
 $logger_settings['mail']['enabled'] = false;
 
@@ -40,6 +42,9 @@ $logger_settings['mail']['from'] = 'logging@your.org';
 
 // The To address - can be a comma separated list (RFC 822 format)
 $logger_settings['mail']['to'] = 'logging@your.org';
+
+// The level at which to start sending emails. See lib/Psr/Log/LogLevel.php.
+$logger_settings['mail']['level'] = \Psr\Log\LogLevel::ERROR;
 
 
 /**********
