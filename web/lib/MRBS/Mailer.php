@@ -6,12 +6,17 @@ use Email\Parse;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 
+// A wrapper for PHPMailer
 class Mailer extends PHPMailer
 {
 
   public function __construct(array $mail_settings, array $sendmail_settings, array $smtp_settings, ?bool $exceptions = null)
   {
     parent::__construct($exceptions);
+
+    // Set the Auto-Submitted header as this mailer will only be used for automatically
+    // generated emails (eg booking notifications and error logging).
+    $this->addCustomHeader('Auto-Submitted', 'auto-generated');
 
     switch ($mail_settings['admin_backend'])
     {
