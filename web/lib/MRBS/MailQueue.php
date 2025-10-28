@@ -4,7 +4,6 @@ namespace MRBS;
 
 use Mail_mimePart;
 use PHPMailer\PHPMailer\Exception;
-use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
 require_once MRBS_ROOT . '/functions_mail.inc';
