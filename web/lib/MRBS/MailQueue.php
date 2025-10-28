@@ -177,7 +177,6 @@ class MailQueue
 
     $mail->CharSet = get_mail_charset();  // PHPMailer defaults to 'iso-8859-1'
     $mail->AllowEmpty = true;  // remove this for production
-    $mail->addCustomHeader('Auto-Submitted', 'auto-generated');
 
     if (!empty($addresses['reply_to']))
     {
