@@ -43,7 +43,7 @@ class Errors
     LogLevel::ALERT,
     LogLevel::CRITICAL,
     LogLevel::ERROR,
-    LogLevel::WARNING,
+    LogLevel::WARNING
   ];
 
   private static $errno_levels = [
@@ -342,7 +342,7 @@ class Errors
       }
     }
 
-    if ($debug && in_array($level, self::MAJOR_LEVELS))
+    if ($debug || in_array($level, self::MAJOR_LEVELS))
     {
       $backtrace = self::generateBacktrace($e);
       $context['backtrace'] = $backtrace;
