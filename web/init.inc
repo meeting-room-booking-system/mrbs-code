@@ -13,23 +13,6 @@ if (!empty($ini_directives))
   }
 }
 
-// Initialise error reporting
-Errors::init();
-
-// Flush the mail queue on shutdown
-register_shutdown_function(__NAMESPACE__ . "\\MailQueue::flush");
-
-// Check extensions
-if ((version_compare(PHP_VERSION, '8.1.0') >= 0) && !extension_loaded('intl'))
-{
-  // We suppress deprecation messages each time we use strftime() in MRBS's emulation of the IntlDateFormatter
-  // class and just have a single message here, in order to avoid flooding the log with messages.
-  $message = "MRBS has detected that you do not have the PHP 'intl' extension loaded on your server and " .
-             "so it is using the deprecated strftime() function instead.  You are recommended to enable " .
-             "the 'intl' extension.";
-  trigger_error($message, E_USER_DEPRECATED);
-}
-
 // Set the session scheme if it hasn't been already
 if (!isset($auth['session']))
 {
@@ -47,6 +30,43 @@ if (!isset($auth['session']))
   }
 }
 
+// Initialise the session.  This is necessary because some session schemes, eg Joomla,
+// use the same third party interfaces, eg \Psr\Log\LoggerInterface, as MRBS, but of
+// different versions. The MRBS one tends to be an earlier version of the interface than
+// Joomla's, with less strict type declarations.  If the MRBS autoloader loads the MRBS
+// version first, then when the Joomla autoloader tries to load a class that implements
+// the interface you get errors such as
+//
+// "Declaration of Psr\Log\AbstractLogger::emergency(Stringable|string $message, array
+// $context = []): void must be compatible with Psr\Log\LoggerInterface::emergency($message,
+// array $context = [])"
+//
+// But if we initialise the session *before* calling Errors::init(), then this will force the
+// Joomla version of the interface to be loaded first, and there won't be any errors because
+// the MRBS classes implementing the interface are compatible (ie the MRBS type declarations
+// are a superset of the Joomla interface declarations).
+//
+// TODO: is there a better way of solving this problem?  Maybe use a REST API to communicate with
+// TODO: Joomla, rather than including Joomla files?  We'd then also be able to authenticate
+// TODO: against remote servers.
+session();
+
+// Initialise error reporting
+Errors::init();
+
+// Flush the mail queue on shutdown
+register_shutdown_function(__NAMESPACE__ . "\\MailQueue::flush");
+
+// Check extensions
+if ((version_compare(PHP_VERSION, '8.1.0') >= 0) && !extension_loaded('intl'))
+{
+  // We suppress deprecation messages each time we use strftime() in MRBS's emulation of the IntlDateFormatter
+  // class and just have a single message here, in order to avoid flooding the log with messages.
+  $message = "MRBS has detected that you do not have the PHP 'intl' extension loaded on your server and " .
+             "so it is using the deprecated strftime() function instead.  You are recommended to enable " .
+             "the 'intl' extension.";
+  trigger_error($message, E_USER_DEPRECATED);
+}
 
 if (method_exists(session(), 'processForm'))
 {
