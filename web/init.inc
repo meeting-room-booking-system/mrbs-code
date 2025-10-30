@@ -46,7 +46,9 @@ if (!isset($auth['session']))
 // the MRBS classes implementing the interface are compatible (ie the MRBS type declarations
 // are a superset of the Joomla interface declarations).
 //
-// TODO: is there a better way of solving this problem?
+// TODO: is there a better way of solving this problem?  Maybe use a REST API to communicate with
+// TODO: Joomla, rather than including Joomla files?  We'd then also be able to authenticate
+// TODO: against remote servers.
 session();
 
 // Initialise error reporting
