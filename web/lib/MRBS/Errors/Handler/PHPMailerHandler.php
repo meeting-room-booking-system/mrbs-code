@@ -32,8 +32,6 @@ class PHPMailerHandler extends MailHandler
   private function buildMessage(string $content, array $records): PHPMailer
   {
     $mailer = clone $this->mailer;
-    var_dump($content);
-    var_dump($records);
 
     $record = $records[0];
     if (isset($record['context']['details']))
