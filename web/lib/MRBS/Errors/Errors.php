@@ -333,9 +333,9 @@ class Errors
           // in error logs.
           foreach (array('username', 'password') as $var)
           {
-            if (isset($context[$var]) && ($context[$var] !== ''))
+            if (isset($context['post'][$var]) && ($context['post'][$var] !== ''))
             {
-              $context[$var] = '****';
+              $context['post'][$var] = '****';
             }
           }
         }
