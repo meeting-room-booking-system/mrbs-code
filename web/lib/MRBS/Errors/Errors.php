@@ -128,12 +128,13 @@ class Errors
     self::output_error(LogLevel::CRITICAL, $message, $details, $exception);
 
     // Then output a fatal error
+    $namespace_root = strtok(__NAMESPACE__, '\\');
     switch (get_class($exception))
     {
-      case __NAMESPACE__ . '\DB\DBExternalException':
+      case $namespace_root . '\DB\DBExternalException':
         $fatal_message = get_vocab("fatal_db_ext_error");
         break;
-      case __NAMESPACE__ . '\DB\DBException':
+      case $namespace_root . '\DB\DBException':
       case 'PDOException':
         $fatal_message = get_vocab("fatal_db_error");
         break;
