@@ -4,17 +4,16 @@ namespace MRBS\Utf8;
 
 use InvalidArgumentException;
 use Iterator;
-use MRBS\Exception;
 use MRBS\System;
+use RuntimeException;
 
-// A class that allows iteration over the characters in a UTF-8 string.
-// It also has the methods:
-//   toArray()  converts the string into an array of UTF-8 characters
-//   toUtf16()  converts the string to UTF-16
-//
-// Note that we cannot use the PHP string functions, eg strlen() and strpos(),
-// or their mb_ equivalents, in this class, because it is used by MRBS's
-// emulations of the mb_ string functions.
+/**
+ * A class that allows iteration over the characters in a UTF-8 string.
+ * It also has the methods:
+ * * toArray()  converts the string into an array of UTF-8 characters
+ * * toUtf16()  converts the string to UTF-16
+ */
+
 class Utf8String implements Iterator
 {
   private $byte_index;
@@ -24,6 +23,9 @@ class Utf8String implements Iterator
   private $data = [];
   private $string;
 
+  // Note that we cannot use the PHP string functions, eg strlen() and strpos(),
+  // or their mb_ equivalents, in this class, because it is used by MRBS's
+  // emulations of the mb_ string functions.
 
   public function __construct(string $string)
   {
@@ -32,14 +34,18 @@ class Utf8String implements Iterator
   }
 
 
-  // Return the current element
+  /**
+   * Return the current element
+   */
   public function current() : ?string
   {
     return $this->data[$this->char_index] ?? null;
   }
 
 
-  // Move forward to next element
+  /**
+   * Move forward to next element
+   */
   public function next() : void
   {
     $this->byte_index += $this->next_char_length;
@@ -49,21 +55,27 @@ class Utf8String implements Iterator
   }
 
 
-  // Return the key of the current element
+  /**
+   * Return the key of the current element
+   */
   public function key(): int
   {
     return $this->char_index;
   }
 
 
-  // Checks if current position is valid
+  /**
+   * Checks if current position is valid
+   */
   public function valid() : bool
   {
     return isset($this->data[$this->char_index]);
   }
 
 
-  // Rewind the Iterator to the first element
+  /**
+   * Rewind the Iterator to the first element
+   */
   public function rewind() : void
   {
     $this->byte_index = 0;
@@ -73,7 +85,9 @@ class Utf8String implements Iterator
   }
 
 
-  // Returns the string's length in bytes
+  /**
+   * Returns the string's length in bytes
+   */
   public function byteCount() : int
   {
     // Trivial case
@@ -105,27 +119,31 @@ class Utf8String implements Iterator
   }
 
 
-  // Converts the string to an array.
-  //
-  // The $break_point parameter is there for testing purposes only.  Historically
-  // MRBS provided utf8_substr() and utf8_substr_old(), using the preg_match_all()
-  // approach for strings longer than 1000 bytes and doing it manually otherwise,
-  // using an algorithm obtained from a contribution by "frank at jkelloggs dot dk"
-  // in the PHP online manual for substr() which testing had shown was faster.
-  //
-  // However, testing of the method below shows that the preg_match_all() approach
-  // is faster for all string lengths (maybe because the performance of preg_match_all()
-  // has been improved?).  The code for the manual method is left in place just in case
-  // it is needed in the future.
+  /**
+   * Converts the string to an array
+   *
+   * @param int $break_point provided for testing purposes only
+   * @throws RuntimeException
+   */
   public function toArray(int $break_point=0) : array
   {
+    // The $break_point parameter is there for testing purposes only.  Historically
+    // MRBS provided utf8_substr() and utf8_substr_old(), using the preg_match_all()
+    // approach for strings longer than 1000 bytes and doing it manually otherwise,
+    // using an algorithm obtained from a contribution by "frank at jkelloggs dot dk"
+    // in the PHP online manual for substr() which testing had shown was faster.
+    //
+    // However, testing of the method below shows that the preg_match_all() approach
+    // is faster for all string lengths (maybe because the performance of preg_match_all()
+    // has been improved?).  The code for the manual method is left in place just in case
+    // it is needed in the future.
     if (!$this->have_all_chars)
     {
       if (strlen($this->string) > $break_point)
       {
         if (false === preg_match_all("/./su", $this->string, $matches))
         {
-          throw new Exception("preg_match_all() failed");
+          throw new RuntimeException("preg_match_all() failed");
         }
         $this->data = $matches[0];
       }
@@ -141,6 +159,12 @@ class Utf8String implements Iterator
   }
 
 
+  /**
+   * Convert to UTF-16
+   *
+   * @throws InvalidArgumentException
+   * @throws RuntimeException
+   */
   public function toUtf16(?int $endianness=null, bool $strip_bom=false) : string
   {
     // If the endian-ness hasn't been specified, then state it explicitly, because
@@ -168,7 +192,9 @@ class Utf8String implements Iterator
   }
 
 
-  // Strip off the BOM if there is one
+  /**
+   * Strip off the BOM if there is one
+   */
   private static function stripBom(string $string) : string
   {
     $bom = pack('H*','FEFF');
@@ -176,7 +202,12 @@ class Utf8String implements Iterator
   }
 
 
-  // Converts to UTF-16 using iconv()
+  /**
+   * Converts to UTF-16 using iconv()
+   *
+   * @throws InvalidArgumentException
+   * @throws RuntimeException
+   */
   private function toUtf16Iconv(int $endianness) : string
   {
     $in_charset = 'UTF-8';
@@ -199,14 +230,19 @@ class Utf8String implements Iterator
 
     if ($result === false)
     {
-      throw new Exception("iconv() failed converting from '$in_charset' to '$out_charset'");
+      throw new RuntimeException("iconv() failed converting from '$in_charset' to '$out_charset'");
     }
 
     return $result;
   }
 
 
-  // Converts to UTF-16 without using iconv()
+  /**
+   * Converts to UTF-16 without using iconv()
+   *
+   * @throws InvalidArgumentException
+   * @throws RuntimeException
+   */
   private function toUtf16NoIconv(int $endianness) : string
   {
     $result = '';
@@ -221,7 +257,9 @@ class Utf8String implements Iterator
   }
 
 
-  // Get the rest of the UTF-8 characters, preserving the current key
+  /**
+   * Get the rest of the UTF-8 characters, preserving the current key
+   */
   private function getRemainingData() : void
   {
     // Get the rest of the characters if we haven't already got them
@@ -249,10 +287,14 @@ class Utf8String implements Iterator
   }
 
 
-  // Gets the length in bytes of the next UTF-8 char.  Returns
-  // zero if there isn't one.
+  /**
+   * Gets the length in bytes of the next UTF-8 char.
+   *
+   * @return int|null returns zero if there isn't a next char
+   */
   private function nextCharLength() : ?int
   {
+    // TODO: can this ever return null, or does it always return an int?
     $i = $this->byte_index;
 
     if (isset($this->string[$i]))
