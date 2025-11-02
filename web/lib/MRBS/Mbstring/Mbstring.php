@@ -8,9 +8,9 @@ namespace MRBS\Mbstring;
 use IntlChar;
 use InvalidArgumentException;
 use MRBS\Utf8\Utf8String;
+use Normalizer;
 use Transliterator;
 use ValueError;
-use function MRBS\mb_is_string_equal;
 
 class Mbstring
 {
@@ -435,7 +435,7 @@ class Mbstring
       // characters have matched, then we've found the needle; otherwise we
       // reset and start looking for the needle again.
       while ((($increment > 0) ? $h <= $haystack_end : $h >= $haystack_end) && isset($needle_chars[$n]) &&
-             mb_is_string_equal($haystack_chars[$h], $needle_chars[$n], $case_insensitive))
+             self::isStringEqual($haystack_chars[$h], $needle_chars[$n], $case_insensitive))
       {
         if ($n === $needle_end)
         {
@@ -536,4 +536,34 @@ class Mbstring
 
     return $leading . $trailing;
   }
+
+
+  /**
+   * Test to see if two strings are equal, optionally case-insensitively.
+   * See https://stackoverflow.com/questions/5473542/case-insensitive-string-comparison
+   */
+  private static function isStringEqual(string $string1, string $string2, bool $case_insensitive=false) : bool
+  {
+    // Case-sensitive test
+    if (!$case_insensitive)
+    {
+      return ($string1 === $string2);
+    }
+
+    // Case-insensitive
+    // Quick test to see if they are equal in a case-sensitive fashion.
+    if ($string1 === $string2)
+    {
+      return true;
+    }
+    // Otherwise do a case-insensitive check
+    if (method_exists('Normalizer', 'normalize'))
+    {
+      $string1 = Normalizer::normalize($string1, Normalizer::FORM_KC);
+      $string2 = Normalizer::normalize($string2, Normalizer::FORM_KC);
+    }
+    return ((mb_strtolower($string1) === mb_strtolower($string2)) ||
+            (mb_strtoupper($string1) === mb_strtoupper($string2)));
+  }
+
 }
