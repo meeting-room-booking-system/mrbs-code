@@ -2,18 +2,27 @@
 declare(strict_types=1);
 namespace MRBS\Utf8;
 
-use MRBS\Exception;
+use InvalidArgumentException;
 use MRBS\System;
+use RuntimeException;
 
 class Utf8Char
 {
   private $char;
+
 
   public function __construct(string $char)
   {
     $this->char = $char;
   }
 
+
+  /**
+   * Convert to UTF-16
+   *
+   * @throws InvalidArgumentException
+   * @throws RuntimeException
+   */
   public function toUtf16(int $endianness) : string
   {
     switch ($endianness)
@@ -25,7 +34,7 @@ class Utf8Char
         $format = 'v';
         break;
       default:
-        throw new \InvalidArgumentException("Unknown endianness '$endianness'");
+        throw new InvalidArgumentException("Unknown endianness '$endianness'");
         break;
     }
 
@@ -35,6 +44,11 @@ class Utf8Char
   }
 
 
+  /**
+   * Convert a character to UTF-16
+   *
+   * @throws RuntimeException
+   */
   private static function convertCharToUtf16Int(string $char) : int
   {
     $c0 = ord($char[0]);
@@ -75,7 +89,7 @@ class Utf8Char
       return $ucs;
     }
 
-    throw new Exception("Shouldn't get here.");
+    throw new RuntimeException("Shouldn't get here.");
   }
 
 }
