@@ -4,8 +4,8 @@ namespace MRBS\Utf8;
 
 use InvalidArgumentException;
 use Iterator;
-use MRBS\Exception;
 use MRBS\System;
+use RuntimeException;
 
 // A class that allows iteration over the characters in a UTF-8 string.
 // It also has the methods:
@@ -125,7 +125,7 @@ class Utf8String implements Iterator
       {
         if (false === preg_match_all("/./su", $this->string, $matches))
         {
-          throw new Exception("preg_match_all() failed");
+          throw new RuntimeException("preg_match_all() failed");
         }
         $this->data = $matches[0];
       }
@@ -199,7 +199,7 @@ class Utf8String implements Iterator
 
     if ($result === false)
     {
-      throw new Exception("iconv() failed converting from '$in_charset' to '$out_charset'");
+      throw new RuntimeException("iconv() failed converting from '$in_charset' to '$out_charset'");
     }
 
     return $result;

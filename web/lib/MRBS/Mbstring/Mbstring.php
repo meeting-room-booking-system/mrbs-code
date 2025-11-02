@@ -4,9 +4,9 @@ namespace MRBS\Mbstring;
 
 use IntlChar;
 use InvalidArgumentException;
-use MRBS\Exception;
 use MRBS\Utf8\Utf8String;
 use Normalizer;
+use RuntimeException;
 use Transliterator;
 use ValueError;
 
@@ -224,8 +224,8 @@ class Mbstring
    * Emulates mb_stripos().  Only UTF-8 is supported.
    *
    * @return false|int
-   * @throws Exception
    * @throws InvalidArgumentException if **encoding** is not UTF-8
+   * @throws RuntimeException
    * @throws ValueError if **offset** is greater than the length of the **haystack** (PHP 8.0 onwards)
    */
   public static function mb_stripos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
@@ -247,8 +247,8 @@ class Mbstring
    * Emulates mb_strpos().  Only UTF-8 is supported.
    *
    * @return false|int
-   * @throws Exception
    * @throws InvalidArgumentException if **encoding** is not UTF-8
+   * @throws RuntimeException
    * @throws ValueError if **offset** is greater than the length of the **haystack** (PHP 8.0 onwards)
    */
   public static function mb_strpos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
@@ -267,8 +267,8 @@ class Mbstring
    * Emulates mb_strripos().  Only UTF-8 is supported.
    *
    * @return false|int
-   * @throws Exception
    * @throws InvalidArgumentException if **encoding** is not UTF-8
+   * @throws RuntimeException
    * @throws ValueError if **offset** is greater than the length of the **haystack** (PHP 8.0 onwards)
    */
   public static function mb_strripos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
@@ -287,8 +287,8 @@ class Mbstring
    * Emulates mb_strrpos().  Only UTF-8 is supported.
    *
    * @return false|int
-   * @throws Exception
    * @throws InvalidArgumentException if **encoding** is not UTF-8
+   * @throws RuntimeException
    * @throws ValueError if **offset** is greater than the length of the **haystack** (PHP 8.0 onwards)
    */
   public static function mb_strrpos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
@@ -306,8 +306,8 @@ class Mbstring
   /**
    * Emulates mb_strrpos().  Only UTF-8, utf-8 and 8bit are supported.
    *
-   * @throws Exception
    * @throws InvalidArgumentException if **encoding** is not valid
+   * @throws RuntimeException
    */
   public static function mb_strlen(string $string, ?string $encoding=null) : int
   {
@@ -400,7 +400,6 @@ class Mbstring
   /**
    * Emulates mb_substr().  Only UTF-8 is supported.
    *
-   * @throws \Exception
    * @throws InvalidArgumentException if **encoding** is not UTF-8
    */
   public static function mb_substr(string $string, int $start, ?int $length = null, ?string $encoding = null): string
@@ -421,7 +420,7 @@ class Mbstring
    * This function can be tested by test_mb.php in the mrbs-tools repository.
    *
    * @return false|int
-   * @throws Exception
+   * @throws RuntimeException
    * @throws ValueError if **offset** is greater than the length of the **haystack** (PHP 8.0 onwards)
    */
   private static function Utf8StrposGeneric(string $haystack, string $needle, int $offset=0, bool $case_insensitive=false, bool $reverse=false)
