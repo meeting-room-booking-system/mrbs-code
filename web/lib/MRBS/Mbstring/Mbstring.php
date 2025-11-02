@@ -2,20 +2,26 @@
 declare(strict_types=1);
 namespace MRBS\Mbstring;
 
-// A class that provides emulations of the PHP mbstring functions.  This class should
-// normally only be used by the emulation functions themselves or else test software.
-// Only the UTF-8 encoding is supported.
 use IntlChar;
 use InvalidArgumentException;
+use MRBS\Exception;
 use MRBS\Utf8\Utf8String;
 use Normalizer;
 use Transliterator;
 use ValueError;
 
+/**
+ * A class that provides emulations of the PHP mbstring functions.  This class should
+ * normally only be used by the emulation functions themselves or else test software.
+ * Only the UTF-8 encoding is supported.
+ */
+
 class Mbstring
 {
-  // A list of codepoints where the Transliterator provides a different result to
-  // the mbstring library when converting to lowercase.
+  /**
+   * A list of codepoints where the Transliterator provides a different result to
+   * the mbstring library when converting to lowercase.
+   */
   private const TRANSLITERATOR_LOWER_EXCEPTIONS = [
     0x1C89 => 0x1C8A,
     0xA7CB => 0x0264,
@@ -46,8 +52,10 @@ class Mbstring
     0x10D65 => 0x10D85
   ];
 
-  // A list of codepoints where the Transliterator provides a different result to
-  // the mbstring library when converting to uppercase.
+  /**
+   * A list of codepoints where the Transliterator provides a different result to
+   * the mbstring library when converting to uppercase.
+   */
   private const TRANSLITERATOR_UPPER_EXCEPTIONS = [
     0x019B => 0xA7DC,  // LATIN SMALL LETTER LAMBDA WITH STROKE
     0x0264 => 0xA7CB,  // LATIN SMALL LETTER RAMS HORN
@@ -79,6 +87,12 @@ class Mbstring
   ];
 
 
+  /**
+   * Emulates mb_chr().  Only UTF-8 is supported.
+   *
+   * @return false|string
+   * @throws InvalidArgumentException if **encoding** is not UTF-8
+   */
   public static function mb_chr(int $codepoint, ?string $encoding = null)
   {
     if (isset($encoding) && (strtoupper($encoding) !== 'UTF-8'))
@@ -110,6 +124,12 @@ class Mbstring
   }
 
 
+  /**
+   * Emulates mb_ord().  Only UTF-8 is supported.
+   *
+   * @return false|int
+   * @throws InvalidArgumentException if **encoding** is not UTF-8
+   */
   public static function mb_ord(string $string, ?string $encoding=null)
   {
     if (isset($encoding) && (strtoupper($encoding) !== 'UTF-8'))
@@ -166,6 +186,12 @@ class Mbstring
   }
 
 
+  /**
+   * Emulates mb_regex_encoding().  Only UTF-8 is supported.
+   *
+   * @return string|true
+   * @throws InvalidArgumentException if **encoding** is not UTF-8
+   */
   public static function mb_regex_encoding(?string $encoding=null)
   {
     if (!isset($encoding))
@@ -183,12 +209,24 @@ class Mbstring
   }
 
 
+  /**
+   * Emulates mb_split().  Only UTF-8 is supported.
+   *
+   * @return array|false|string[]
+   */
   public static function mb_split(string $pattern, string $string, int $limit = -1)
   {
     return preg_split('/' . $pattern . '/u', $string, $limit);
   }
 
 
+  /**
+   * Emulates mb_stripos().  Only UTF-8 is supported.
+   *
+   * @return false|int
+   * @throws InvalidArgumentException if **encoding** is not UTF-8
+   * @throws ValueError if **offset** is greater than the length of the **haystack** (PHP 8.0 onwards)
+   */
   public static function mb_stripos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
   {
     if (isset($encoding) && (strtoupper($encoding) !== 'UTF-8'))
@@ -204,6 +242,13 @@ class Mbstring
   }
 
 
+  /**
+   * Emulates mb_strpos().  Only UTF-8 is supported.
+   *
+   * @return false|int
+   * @throws InvalidArgumentException if **encoding** is not UTF-8
+   * @throws ValueError if **offset** is greater than the length of the **haystack** (PHP 8.0 onwards)
+   */
   public static function mb_strpos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
   {
     if (isset($encoding) && (strtoupper($encoding) !== 'UTF-8'))
@@ -216,6 +261,13 @@ class Mbstring
   }
 
 
+  /**
+   * Emulates mb_strripos().  Only UTF-8 is supported.
+   *
+   * @return false|int
+   * @throws InvalidArgumentException if **encoding** is not UTF-8
+   * @throws ValueError if **offset** is greater than the length of the **haystack** (PHP 8.0 onwards)
+   */
   public static function mb_strripos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
   {
     if (isset($encoding) && (strtoupper($encoding) !== 'UTF-8'))
@@ -228,6 +280,13 @@ class Mbstring
   }
 
 
+  /**
+   * Emulates mb_strrpos().  Only UTF-8 is supported.
+   *
+   * @return false|int
+   * @throws InvalidArgumentException if **encoding** is not UTF-8
+   * @throws ValueError if **offset** is greater than the length of the **haystack** (PHP 8.0 onwards)
+   */
   public static function mb_strrpos(string $haystack, string $needle, int $offset=0, ?string $encoding=null)
   {
     if (isset($encoding) && (strtoupper($encoding) !== 'UTF-8'))
@@ -240,6 +299,12 @@ class Mbstring
   }
 
 
+  /**
+   * Emulates mb_strrpos().  Only UTF-8, utf-8 and 8bit are supported.
+   *
+   * @throws Exception
+   * @throws InvalidArgumentException if **encoding** is not valid
+   */
   public static function mb_strlen(string $string, ?string $encoding=null) : int
   {
     if ($string === '')
@@ -266,6 +331,11 @@ class Mbstring
   }
 
 
+  /**
+   * Emulates mb_strtolower().  Only UTF-8 is supported.
+   *
+   * @throws InvalidArgumentException if **encoding** is not UTF-8
+   */
   public static function mb_strtolower(string $string, ?string $encoding=null) : string
   {
     if ($string === '')
@@ -292,6 +362,11 @@ class Mbstring
   }
 
 
+  /**
+   * Emulates mb_strtoupper().  Only UTF-8 is supported.
+   *
+   * @throws InvalidArgumentException if **encoding** is not UTF-8
+   */
   public static function mb_strtoupper(string $string, ?string $encoding=null) : string
   {
     if ($string === '')
@@ -318,6 +393,12 @@ class Mbstring
   }
 
 
+  /**
+   * Emulates mb_substr().  Only UTF-8 is supported.
+   *
+   * @throws \Exception
+   * @throws InvalidArgumentException if **encoding** is not UTF-8
+   */
   public static function mb_substr(string $string, int $start, ?int $length = null, ?string $encoding = null): string
   {
     if (isset($encoding) && (strtoupper($encoding) !== 'UTF-8'))
@@ -330,9 +411,14 @@ class Mbstring
   }
 
 
-  // A generic emulation of mb_strpos(), mb_stripos(), mb_strrpos() and mb_strripos() for UTF-8
-  // that has the case-sensitivity and direction as parameters.
-  // This function can be tested by test_mb.php in the mrbs-tools repository.
+  /**
+   * A generic emulation of mb_strpos(), mb_stripos(), mb_strrpos() and mb_strripos() for UTF-8
+   * that has the case-sensitivity and direction as parameters.
+   * This function can be tested by test_mb.php in the mrbs-tools repository.
+   *
+   * @return false|int
+   * @throws ValueError if **offset** is greater than the length of the **haystack** (PHP 8.0 onwards)
+   */
   private static function Utf8StrposGeneric(string $haystack, string $needle, int $offset=0, bool $case_insensitive=false, bool $reverse=false)
   {
     $haystack_chars = (new Utf8String($haystack))->toArray();
