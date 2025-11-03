@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS\Errors;
 
+use InvalidArgumentException;
 use Monolog\Handler\BrowserConsoleHandler;
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\StreamHandler;
@@ -11,9 +12,10 @@ use Monolog\Registry;
 use MRBS\Errors\Formatter\BrowserFormatter;
 use MRBS\Errors\Formatter\ErrorLogFormatter;
 use MRBS\Errors\Handler\PHPMailerHandler;
-use MRBS\Exception;
 use MRBS\Mailer;
+use PHPMailer\PHPMailer\Exception;
 use Psr\Log\LogLevel;
+use RuntimeException;
 use Throwable;
 use function MRBS\escape_html;
 use function MRBS\get_charset;
@@ -22,11 +24,11 @@ use function MRBS\mrbs_default_timezone_set;
 use function MRBS\print_footer;
 use function MRBS\print_simple_header;
 
-// A class for dealing with errors.
-// (Don't call it Error, to avoid confusion with the PHP class \Error.)
-class Errors
+/**
+ * A class for dealing with errors.
+ */
+class Errors // (Don't call the class Error, to avoid confusion with the PHP class \Error.)
 {
-
   private const LOG_LEVELS = [
     LogLevel::EMERGENCY,
     LogLevel::ALERT,
@@ -63,6 +65,11 @@ class Errors
   ];
 
 
+  /**
+   * Initialise the class
+   *
+   * @throws Exception
+   */
   public static function init(): void
   {
     global $debug;
@@ -92,10 +99,14 @@ class Errors
   }
 
 
-  // "If the function returns false then the normal error handler continues."
-  // (https://www.php.net/manual/en/function.set-error-handler.php)
+  /**
+   * @throws RuntimeException
+   */
   public static function errorHandler(int $errno, string $errstr, string $errfile, int $errline): bool
   {
+    // "If the function returns false then the normal error handler continues."
+    // (https://www.php.net/manual/en/function.set-error-handler.php)
+
     // Check to see whether error reporting has been disabled by
     // the error suppression operator (@), because the custom error
     // handler is still called even if errors are suppressed.
@@ -108,7 +119,7 @@ class Errors
 
     if (!array_key_exists($errno, self::$errno_levels))
     {
-      throw new Exception("Cannot find mapping for ERRNO level $errno");
+      throw new RuntimeException("Cannot find mapping for ERRNO level $errno");
     }
 
     self::output_error(self::$errno_levels[$errno], $errstr, $details);
@@ -117,8 +128,11 @@ class Errors
   }
 
 
-  // Custom exception handler.  Logs the error and then outputs
-  // a fatal error message
+  /**
+   * Custom exception handler.  Logs the error and then outputs a fatal error message.
+   *
+   * @return never
+   */
   public static function exceptionHandler(Throwable $exception): void
   {
     // Log the exception
@@ -147,17 +161,26 @@ class Errors
   }
 
 
-  // Converts an error into an exception
-  public static function exceptionThrower(int $errno, string $errstr)
+  /**
+   * Converts an error into an exception
+   *
+   * @return never
+   * @throws \Exception
+   */
+  public static function exceptionThrower(int $errno, string $errstr) : void
   {
     throw new \Exception($errstr, $errno);
   }
 
 
-  // Error handler - this is used to display serious errors such as database
-  // errors without sending incomplete HTML pages. This is only used for
-  // errors which "should never happen", not those caused by bad inputs.
-  // Always outputs the bottom of the page and exits.
+  /**
+   * Error handler - this is used to display serious errors such as database
+   * errors without sending incomplete HTML pages. This is only used for
+   * errors which "should never happen", not those caused by bad inputs.
+   * Always outputs the bottom of the page and exits.
+   *
+   * @return never
+   */
   public static function fatalError(string $message): void
   {
     print_simple_header();
@@ -252,6 +275,9 @@ class Errors
   }
 
 
+  /**
+   * @throws Exception
+   */
   private static function initLogger() : void
   {
     global $mail_settings, $sendmail_settings, $smtp_settings, $logger_settings;
@@ -288,7 +314,9 @@ class Errors
   }
 
 
-  // Logs an exception
+  /**
+   * Logs an exception
+   */
   private static function output_exception_error(Throwable $exception) : void
   {
     $class = get_class($exception);
@@ -314,7 +342,7 @@ class Errors
 
     if (!in_array($level, self::LOG_LEVELS))
     {
-      throw new \InvalidArgumentException("Invalid log level '$level'.");
+      throw new InvalidArgumentException("Invalid log level '$level'.");
     }
 
     $context = [];
@@ -354,8 +382,10 @@ class Errors
   }
 
 
-  // Generate a backtrace.  This function allows us to format the output slightly better
-  // than debug_print_backtrace().
+  /**
+   * Generate a backtrace.  This function allows us to format the output slightly better
+   * than debug_print_backtrace().
+   */
   private static function generateBacktrace(?Throwable $e = null) : array
   {
     global $debug;
@@ -463,7 +493,9 @@ class Errors
   }
 
 
-  // Translate an error constant value into the name of the constant
+  /**
+   * Translate an error constant value into the name of the constant
+   */
   private static function get_error_name(int $errno) : string
   {
     $constants = get_defined_constants(true);
