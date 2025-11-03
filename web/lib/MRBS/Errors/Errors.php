@@ -27,10 +27,8 @@ use function MRBS\print_simple_header;
 /**
  * A class for dealing with errors.
  */
-class Errors
+class Errors // (Don't call the class Error, to avoid confusion with the PHP class \Error.)
 {
-  // (Don't call the class Error, to avoid confusion with the PHP class \Error.)
-
   private const LOG_LEVELS = [
     LogLevel::EMERGENCY,
     LogLevel::ALERT,
