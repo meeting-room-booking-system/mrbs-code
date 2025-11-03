@@ -6,10 +6,15 @@ use Email\Parse;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 
-// A wrapper for PHPMailer
+/**
+ * A wrapper for PHPMailer
+ */
 class Mailer extends PHPMailer
 {
 
+  /**
+   * @throws Exception
+   */
   public function __construct(array $mail_settings, array $sendmail_settings, array $smtp_settings, ?bool $exceptions = null)
   {
     parent::__construct($exceptions);
@@ -76,7 +81,11 @@ class Mailer extends PHPMailer
   }
 
 
-  // Sets a series of To addresses given an RFC822 address string
+  /**
+   * Sets a series of To addresses
+   * @param string $address_string an RFC822 address string
+   * @throws Exception
+   */
   public function addAddressesRFC822(string $address_string) : bool
   {
     $parser = new Parse(new Logger());
@@ -106,7 +115,11 @@ class Mailer extends PHPMailer
   }
 
 
-  // Sets a From address taking an RFC822 address
+  /**
+   * Sets a From address
+   * @param string $address an RFC822 address
+   * @throws Exception
+   */
   public function setFromRFC822(string $address, bool $auto=true) : bool
   {
     $parser = new Parse(new Logger());
