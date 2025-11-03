@@ -12,9 +12,10 @@ use Monolog\Registry;
 use MRBS\Errors\Formatter\BrowserFormatter;
 use MRBS\Errors\Formatter\ErrorLogFormatter;
 use MRBS\Errors\Handler\PHPMailerHandler;
-use MRBS\Exception;
 use MRBS\Mailer;
+use PHPMailer\PHPMailer\Exception;
 use Psr\Log\LogLevel;
+use RuntimeException;
 use Throwable;
 use function MRBS\escape_html;
 use function MRBS\get_charset;
@@ -66,6 +67,11 @@ class Errors
   ];
 
 
+  /**
+   * Initialise the class
+   *
+   * @throws Exception
+   */
   public static function init(): void
   {
     global $debug;
@@ -95,6 +101,9 @@ class Errors
   }
 
 
+  /**
+   * @throws RuntimeException
+   */
   public static function errorHandler(int $errno, string $errstr, string $errfile, int $errline): bool
   {
     // "If the function returns false then the normal error handler continues."
@@ -112,7 +121,7 @@ class Errors
 
     if (!array_key_exists($errno, self::$errno_levels))
     {
-      throw new Exception("Cannot find mapping for ERRNO level $errno");
+      throw new RuntimeException("Cannot find mapping for ERRNO level $errno");
     }
 
     self::output_error(self::$errno_levels[$errno], $errstr, $details);
@@ -268,6 +277,9 @@ class Errors
   }
 
 
+  /**
+   * @throws Exception
+   */
   private static function initLogger() : void
   {
     global $mail_settings, $sendmail_settings, $smtp_settings, $logger_settings;
