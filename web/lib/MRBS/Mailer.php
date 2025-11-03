@@ -20,7 +20,7 @@ class Mailer extends PHPMailer
     parent::__construct($exceptions);
 
     // Set the Auto-Submitted header as this mailer will only be used for automatically
-    // generated emails (eg booking notifications and error logging).
+    // generated emails (e.g. booking notifications and error logging).
     $this->addCustomHeader('Auto-Submitted', 'auto-generated');
 
     switch ($mail_settings['admin_backend'])
@@ -93,19 +93,12 @@ class Mailer extends PHPMailer
 
     foreach ($parsed_addresses['email_addresses'] as $parsed_address)
     {
-      if ($parsed_address['invalid'])
+      if (false === ($name_and_address = $this->getNameAndAddress($parsed_address)))
       {
-        $error_message = "Invalid email address '" . $parsed_address['original_address'] . "': " . $parsed_address['invalid_reason'];
-        $this->setError($error_message);
-        $this->edebug($error_message);
-        if ($this->exceptions) {
-          throw new Exception($error_message);
-        }
         return false;
       }
-      $address = $parsed_address['local_part_parsed'] . '@' . $parsed_address['domain_part'];
-      $name = $parsed_address['name_parsed'];
-      if (false === $this->addAddress($address, $name))
+
+      if (false === $this->addAddress($name_and_address['address'], $name_and_address['name']))
       {
         return false;
       }
@@ -125,6 +118,24 @@ class Mailer extends PHPMailer
     $parser = new Parse(new Logger());
     $parsed_address = $parser->parse($address, false);
 
+    if (false === ($name_and_address = $this->getNameAndAddress($parsed_address)))
+    {
+      return false;
+    }
+
+    return $this->setFrom($name_and_address['address'], $name_and_address['name'], $auto);
+  }
+
+
+  /**
+   * Form a name and address from the output of the address parser
+   *
+   * @param array $parsed_address the output of MRBS\Email\Parse->parse()
+   * @return array|false
+   * @throws Exception
+   */
+  private function getNameAndAddress(array $parsed_address)
+  {
     if ($parsed_address['invalid'])
     {
       $error_message = "Invalid email address '" . $parsed_address['original_address'] . "': " . $parsed_address['invalid_reason'];
@@ -136,10 +147,10 @@ class Mailer extends PHPMailer
       return false;
     }
 
-    $address = $parsed_address['local_part_parsed'] . '@' . $parsed_address['domain_part'];
-    $name = $parsed_address['name_parsed'];
-
-    return $this->setFrom($address, $name, $auto);
+    return [
+      'name' => $parsed_address['name_parsed'],
+      'address' => $parsed_address['local_part_parsed'] . '@' . $parsed_address['domain_part']
+    ];
   }
 
 }
