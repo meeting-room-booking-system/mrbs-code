@@ -14,19 +14,12 @@ use function MRBS\strcasecmp_locale;
 
 abstract class Auth
 {
-
   protected $getDisplayNamesAtOnce = true;
 
-  /* validateUser($user, $pass)
+  /**
+   * Checks if the specified username/password pair are valid.
    *
-   * Checks if the specified username/password pair are valid
-   *
-   * $user  - The user name
-   * $pass  - The password
-   *
-   * Returns:
-   *   false    - The pair are invalid or do not exist
-   *   string   - The validated username
+   * @return false|string the validated username or false
    */
   abstract public function validateUser(
     #[\SensitiveParameter]

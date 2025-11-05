@@ -55,16 +55,7 @@ class AuthPop3 extends Auth
   }
 
 
-  /* validateUser($user, $pass)
-   *
-   * Checks if the specified username/password pair are valid
-   *
-   * $user  - The username
-   * $pass  - The password
-   *
-   * Returns:
-   *   false    - The pair are invalid or do not exist
-   *   string   - The validated username
+  /**
    */
   public function validateUser(
     #[\SensitiveParameter]

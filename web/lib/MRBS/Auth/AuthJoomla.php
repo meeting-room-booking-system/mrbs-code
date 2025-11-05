@@ -17,16 +17,7 @@ class AuthJoomla extends Auth
   }
 
 
-  /* validateUser($user, $pass)
-   *
-   * Checks if the specified username/password pair are valid
-   *
-   * $user  - The user name
-   * $pass  - The password
-   *
-   * Returns:
-   *   false    - The pair are invalid or do not exist
-   *   true     - The user has been validated and logged in
+  /**
    */
   public function validateUser(
     #[\SensitiveParameter]
