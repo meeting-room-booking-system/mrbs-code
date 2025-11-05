@@ -46,6 +46,12 @@ $logger_settings['mail']['to'] = 'logging@your.org';
 // The level at which to start sending emails. See lib/Psr/Log/LogLevel.php.
 $logger_settings['mail']['level'] = \Psr\Log\LogLevel::ERROR;
 
+// Whether to send stream output to the browser
+$logger_settings['stream']['browser'] = true;
+
+// Whether to send stream output to the browser console
+$logger_settings['stream']['console'] = false;
+
 
 /**********
  * Timezone
