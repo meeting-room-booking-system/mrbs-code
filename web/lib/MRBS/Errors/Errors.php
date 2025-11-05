@@ -99,9 +99,6 @@ class Errors // (Don't call the class Error, to avoid confusion with the PHP cla
   }
 
 
-  /**
-   * @throws RuntimeException
-   */
   public static function errorHandler(int $errno, string $errstr, string $errfile, int $errline): bool
   {
     // "If the function returns false then the normal error handler continues."
@@ -385,6 +382,8 @@ class Errors // (Don't call the class Error, to avoid confusion with the PHP cla
   /**
    * Generate a backtrace.  This function allows us to format the output slightly better
    * than debug_print_backtrace().
+   *
+   * @return string[]
    */
   private static function generateBacktrace(?Throwable $e = null) : array
   {
