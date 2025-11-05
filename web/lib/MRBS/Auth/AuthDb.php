@@ -620,6 +620,10 @@ class AuthDb extends Auth
 
 
   /**
+   * Returns a username given an email address.
+   *
+   * Note that if two or more users share the same email address then the first
+   * one found will be returned.  If no user is found then NULL is returned.
    */
   public function getUsernameByEmail(string $email) : ?string
   {
