@@ -166,9 +166,12 @@ abstract class Auth
   }
 
 
-  // Checks whether the authentication type allows the creation of new users.
-  // This will normally return false if users are managed elsewhere (e.g. on
-  // an external database, or on an LDAP server).
+  /**
+   * Checks whether the authentication type allows the creation of new users.
+   *
+   * This will normally return false if users are managed elsewhere (e.g. on
+   * an external database, or on an LDAP server).
+   */
   public function canCreateUsers() : bool
   {
     return false;

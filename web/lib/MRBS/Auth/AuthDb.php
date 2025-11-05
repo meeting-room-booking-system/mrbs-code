@@ -220,7 +220,8 @@ class AuthDb extends Auth
   }
 
 
-  // Checks whether the authentication type allows the creation of new users.
+  /**
+   */
   public function canCreateUsers() : bool
   {
     return true;
