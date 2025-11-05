@@ -382,6 +382,8 @@ class Errors // (Don't call the class Error, to avoid confusion with the PHP cla
   /**
    * Generate a backtrace.  This function allows us to format the output slightly better
    * than debug_print_backtrace().
+   *
+   * @return string[]
    */
   private static function generateBacktrace(?Throwable $e = null) : array
   {
