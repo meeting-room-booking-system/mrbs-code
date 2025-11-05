@@ -4,14 +4,12 @@ namespace MRBS\Auth;
 
 class AuthNone extends Auth
 {
-  /*
+  /**
    * Checks if the specified username/password pair are valid.
    *
-   * For this authentication scheme always validates.
+   * This authentication scheme always validates positively.
    *
-   * @param   string  $user   The user name
-   * @param   string  $pass   The password
-   * @return  string  $user   Always valid
+   * @return string|null
    */
   public function validateUser(
     #[\SensitiveParameter]

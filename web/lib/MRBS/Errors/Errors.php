@@ -286,8 +286,14 @@ class Errors // (Don't call the class Error, to avoid confusion with the PHP cla
     {
       $handler = new StreamHandler('php://output');
       $handler->setFormatter(new BrowserFormatter());
-      $logger->pushHandler($handler);
-      $logger->pushHandler(new BrowserConsoleHandler());
+      if ($logger_settings['stream']['browser'])
+      {
+        $logger->pushHandler($handler);
+      }
+      if ($logger_settings['stream']['console'])
+      {
+        $logger->pushHandler(new BrowserConsoleHandler());
+      }
     }
 
     if (ini_get('log_errors'))

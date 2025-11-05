@@ -19,16 +19,7 @@ namespace MRBS\Auth;
 
 class AuthImap extends Auth
 {
-  /* validateUser($user, $pass)
-   *
-   * Checks if the specified username/password pair are valid
-   *
-   * $user  - The user name
-   * $pass  - The password
-   *
-   * Returns:
-   *   false    - The pair are invalid or do not exist
-   *   string   - The validated username
+  /**
    */
   public function validateUser(
     #[\SensitiveParameter]
