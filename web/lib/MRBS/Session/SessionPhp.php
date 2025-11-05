@@ -7,6 +7,7 @@ use function MRBS\auth;
 use function MRBS\get_form_var;
 use function MRBS\is_ajax;
 use function MRBS\str_ends_with_array;
+use function MRBS\url_base;
 
 // Uses PHP's built-in session handling
 
@@ -55,9 +56,18 @@ class SessionPhp extends SessionWithLogin
   {
     $result = parent::getReferrer();
 
-    if (isset($result) && isset($_SESSION['last_page']))
+    // If the last page is known, and it's well-formed (parse_url() doesn't return false), and it's
+    // not already a fully-qualified URL (ie the scheme is empty), and we've got a url base that
+    // isn't the empty string, then return the basename of the last page prefixed by the url base,
+    // in case there's a proxy in use.
+    if (isset($_SESSION['last_page']))
     {
-      $result = $_SESSION['last_page'];
+      $last_page = $_SESSION['last_page'];
+      $scheme = parse_url($last_page, PHP_URL_SCHEME);
+      if (($scheme === null) && ('' !== ($base = url_base())))
+      {
+        $result = $base . basename($last_page);
+      }
     }
 
     return $result;
