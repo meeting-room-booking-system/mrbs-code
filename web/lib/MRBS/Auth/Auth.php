@@ -288,6 +288,9 @@ abstract class Auth
   }
 
 
+  /**
+   * @return string[]
+   */
   protected function getRegistrantsDisplayNamesUnsorted(int $id, bool $with_registered_by, bool $with_registrant_username) : array
   {
     $display_names = array();

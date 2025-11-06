@@ -515,6 +515,9 @@ class AuthDb extends Auth
   }
 
 
+  /**
+   * @return string[]
+   */
   protected function getRegistrantsDisplayNamesUnsorted(int $id, bool $with_registered_by, $with_registrant_username) : array
   {
     if ($with_registered_by)
