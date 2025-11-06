@@ -166,14 +166,18 @@ abstract class Auth
   }
 
 
-  // Checks whether the method has a password reset facility
+  /**
+   * Checks whether the method has a password reset facility
+   */
   public function canResetPassword() : bool
   {
     return false;
   }
 
 
-  // Checks whether the password by reset by supplying an email address
+  /**
+   * Checks whether the password can be reset by supplying an email address
+   */
   public function canResetByEmail() : bool
   {
     return false;
