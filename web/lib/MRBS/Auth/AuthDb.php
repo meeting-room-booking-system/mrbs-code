@@ -236,7 +236,8 @@ class AuthDb extends Auth
   }
 
 
-  // Checks whether the method has a password reset facility
+  /**
+   */
   public function canResetPassword() : bool
   {
     return true;
