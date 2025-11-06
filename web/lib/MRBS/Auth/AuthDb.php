@@ -244,11 +244,12 @@ class AuthDb extends Auth
   }
 
 
-  // Checks whether the password by reset by supplying an email address.
-  // We allow resetting by email, even if there are multiple users with the
-  // same email address.
+  /**
+   */
   public function canResetByEmail() : bool
   {
+    // We allow resetting by email, even if there are multiple users with the
+    // same email address.
     return $this->canValidateByEmail();
   }
 

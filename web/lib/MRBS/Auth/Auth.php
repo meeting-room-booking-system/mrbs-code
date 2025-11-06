@@ -205,7 +205,9 @@ abstract class Auth
   }
 
 
-  // Checks whether the password by reset by supplying an email address
+  /**
+   * Checks whether the password can be reset by supplying an email address
+   */
   public function canResetByEmail() : bool
   {
     return false;
