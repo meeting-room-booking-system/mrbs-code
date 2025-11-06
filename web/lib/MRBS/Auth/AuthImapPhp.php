@@ -192,7 +192,8 @@ class AuthImapPhp extends Auth
   }
 
 
-  // Checks whether validation of a user by username is possible and allowed.
+  /**
+   */
   public function canValidateByUsername() : bool
   {
     return false;
