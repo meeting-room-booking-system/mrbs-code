@@ -267,7 +267,11 @@ abstract class Auth
   }
 
 
-  // Returns an array of registrants' display names
+  /**
+   * Returns an array of registrants' display names
+   *
+   * @return string[]
+   */
   public function getRegistrantsDisplayNames (array $entry, bool $with_registered_by=false, bool $with_registrant_username=false) : array
   {
     $display_names = array();
