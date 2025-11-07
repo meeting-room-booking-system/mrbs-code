@@ -245,10 +245,20 @@ function display_entry_row(array $row) : void
 
   echo escape_html($link_str) . "</a></td>";
 
-  $duration = get_duration($row['start_time'], $row['end_time'], $GLOBALS['enable_periods'], $row['area_id'], false);
+  $duration = get_duration($row['start_time'], $row['end_time'], !empty($row['enable_periods']), $row['area_id'], false);
   $duration_seconds = $row['end_time'] - $row['start_time'] - cross_dst($row['start_time'], $row['end_time']);
   echo "<td><span title=\"" . $duration_seconds . "\"></span>" . escape_html($duration['duration'] . " " . get_vocab($duration['dur_units'])) . "</td>\n";
-  echo "<td><span title=\"" . $row['end_time'] . "\"></span>" . escape_html($row['enable_periods'] ? period_date_string($row['end_time'], $row['area_id']) : time_date_string($row['end_time'])) . "</td>\n";
+
+  // End date
+  if(empty($row['enable_periods']))
+  {
+    $end_date_str = time_date_string($row['end_time']);
+  }
+  else
+  {
+    list(, $end_date_str) = period_date_string($row['end_time'], $row['area_id'], true);
+  }
+  echo "<td><span title=\"" . $row['end_time'] . "\"></span>" . escape_html($end_date_str) . "</td>\n";
 
   // action buttons
   echo "<td>\n";
