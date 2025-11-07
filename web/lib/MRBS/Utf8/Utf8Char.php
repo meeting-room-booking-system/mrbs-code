@@ -19,6 +19,9 @@ class Utf8Char
 
   /**
    * Convert to UTF-16
+   *
+   * @throws InvalidArgumentException
+   * @throws RuntimeException
    */
   public function toUtf16(int $endianness) : string
   {
@@ -43,6 +46,8 @@ class Utf8Char
 
   /**
    * Convert a character to UTF-16
+   *
+   * @throws RuntimeException
    */
   private static function convertCharToUtf16Int(string $char) : int
   {

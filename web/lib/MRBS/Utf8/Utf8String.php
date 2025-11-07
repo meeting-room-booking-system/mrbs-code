@@ -123,6 +123,7 @@ class Utf8String implements Iterator
    * Converts the string to an array
    *
    * @param int $break_point provided for testing purposes only
+   * @throws RuntimeException
    */
   public function toArray(int $break_point=0) : array
   {
@@ -160,6 +161,9 @@ class Utf8String implements Iterator
 
   /**
    * Convert to UTF-16
+   *
+   * @throws InvalidArgumentException
+   * @throws RuntimeException
    */
   public function toUtf16(?int $endianness=null, bool $strip_bom=false) : string
   {
@@ -200,6 +204,9 @@ class Utf8String implements Iterator
 
   /**
    * Converts to UTF-16 using iconv()
+   *
+   * @throws InvalidArgumentException
+   * @throws RuntimeException
    */
   private function toUtf16Iconv(int $endianness) : string
   {
@@ -232,6 +239,9 @@ class Utf8String implements Iterator
 
   /**
    * Converts to UTF-16 without using iconv()
+   *
+   * @throws InvalidArgumentException
+   * @throws RuntimeException
    */
   private function toUtf16NoIconv(int $endianness) : string
   {
