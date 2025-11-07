@@ -99,9 +99,6 @@ class Errors // (Don't call the class Error, to avoid confusion with the PHP cla
   }
 
 
-  /**
-   * @throws RuntimeException
-   */
   public static function errorHandler(int $errno, string $errstr, string $errfile, int $errline): bool
   {
     // "If the function returns false then the normal error handler continues."
