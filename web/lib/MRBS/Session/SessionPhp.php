@@ -58,15 +58,17 @@ class SessionPhp extends SessionWithLogin
 
     // If the last page is known, and it's well-formed (parse_url() doesn't return false), and it's
     // not already a fully-qualified URL (ie the scheme is empty), and we've got a url base that
-    // isn't the empty string, then return the basename of the last page prefixed by the url base,
-    // in case there's a proxy in use.
+    // isn't the empty string, then return everything after the last '/' from the last page, prefixed
+    // by the url base, in case there's a proxy in use.
     if (isset($_SESSION['last_page']))
     {
       $last_page = $_SESSION['last_page'];
       $scheme = parse_url($last_page, PHP_URL_SCHEME);
       if (($scheme === null) && ('' !== ($base = url_base())))
       {
-        $result = $base . basename($last_page);
+        // Get everything after the last '/'
+        $array = explode('/', $last_page);
+        $result = $base . array_pop($array);
       }
     }
 
