@@ -135,6 +135,8 @@ function display_table_head() : void
   echo "<th class=\"header_area\">" . get_vocab("area") . "</th>\n";
   echo "<th class=\"header_room\">" . get_vocab("room") . "</th>\n";
   echo "<th class=\"header_start_time\"><span class=\"normal\" data-type=\"title-numeric\">" . get_vocab("start_date") . "</span></th>\n";
+  echo "<th class=\"header_duration\"><span class=\"normal\" data-type=\"title-numeric\">" . get_vocab("duration") . "</span></th>\n";
+  echo "<th class=\"header_end_time\"><span class=\"normal\" data-type=\"title-numeric\">" . get_vocab("end_date") . "</span></th>\n";
   echo "<th class=\"header_action\">" . get_vocab("action") . "</th>\n";
   echo "</tr>\n";
   echo "</thead>\n";
@@ -157,6 +159,8 @@ function display_subtable_head(array $row) : void
   echo "<th>" . escape_html($row['room_name']) . "</th>\n";
 
   echo "<th><span class=\"normal\" data-type=\"title-numeric\">" . get_vocab("series") . "</span></th>\n";
+  echo "<th>&nbsp;</th>\n";
+  echo "<th>&nbsp;</th>\n";
 
   echo "<th>&nbsp;</th>\n";
   echo "</tr>\n";
@@ -184,6 +188,9 @@ function display_series_title_row(array $row) : void
   echo get_vocab("series");
   echo "</td>\n";
 
+  echo "<th><span title=\"0\"></span>&nbsp;</th>\n";
+  echo "<th><span title=\"0\"></span>&nbsp;</th>\n";
+
   echo "<td>\n";
   display_buttons($row, true);
   echo "</td>\n";
@@ -200,7 +207,9 @@ function display_entry_row(array $row) : void
 
   // reservation name, with a link to the view_entry page
   echo "<td>";
-  echo '<a href="' . escape_html(multisite('view_entry.php?id=' . $row['id'])) . '">' .
+  // echo '<a href="' . escape_html(multisite('view_entry.php?id=' . $row['id'])) . '">' .
+  echo '<a href="' . escape_html(multisite('view_entry.php?id=' . $row['id'])) . '"' .
+        ' title="' . escape_html($row['description']) . '">' .
         escape_html($row['name']) ."</a></td>\n";
 
   // create_by, area and room names
@@ -227,6 +236,11 @@ function display_entry_row(array $row) : void
 
   $link_str = date_string($row['enable_periods'], $row['start_time'], $row['area_id']);
   echo escape_html($link_str) . "</a></td>";
+
+  $duration = get_duration($row['start_time'], $row['end_time'], $GLOBALS['enable_periods'], $row['area_id'], false);
+  $duration_seconds = $row['end_time'] - $row['start_time'] - cross_dst($row['start_time'], $row['end_time']);
+  echo "<td><span title=\"" . $duration_seconds . "\"></span>" . escape_html($duration['duration'] . " " . get_vocab($duration['dur_units'])) . "</td>\n";
+  echo "<td><span title=\"" . $row['end_time'] . "\"></span>" . escape_html($row['enable_periods'] ? period_date_string($row['end_time'], $row['area_id']) : time_date_string($row['end_time'])) . "</td>\n";
 
   // action buttons
   echo "<td>\n";
@@ -261,7 +275,7 @@ echo "<h1>" . get_vocab("pending") . "</h1>\n";
 
 $sql_approval_enabled = some_area_predicate('approval_enabled');
 
-$sql = "SELECT E.id, E.name, E.room_id, E.start_time, E.create_by, " .
+$sql = "SELECT E.id, E.name, E.description, E.room_id, E.start_time, E.end_time, E.create_by, " .
                db()->syntax_timestamp_to_unix("E.timestamp") . " AS last_updated,
                E.reminded, E.repeat_id,
                M.room_name, M.area_id, A.area_name, A.enable_periods,

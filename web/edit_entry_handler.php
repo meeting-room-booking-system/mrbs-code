@@ -869,7 +869,7 @@ catch (\Exception $e)
     exit;
   }
 
-  throw new Exception($e);
+  throw $e;
 }
 
 // Everything was OK.   Go back to where we came from
