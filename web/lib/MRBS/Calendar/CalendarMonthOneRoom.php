@@ -278,7 +278,7 @@ class CalendarMonthOneRoom extends Calendar
     if ($enable_periods)
     {
       $start_str = escape_html(period_time_string($start, $area));
-      $end_str   = escape_html(period_time_string($end, $area, -1));
+      $end_str   = escape_html(period_time_string($end, $area, true));
     }
     else
     {

@@ -1808,22 +1808,27 @@ function period_date_string(int $t, int $area_id, bool $previous_period=false) :
 }
 
 
-function period_time_string(int $t, int $area_id, int $mod_time=0) : string
+// Returns the name of the period represented by Unix timestamp $t for area $area_id.
+// $mod_time will get the period $mod_time units before or after.
+function period_time_string(int $t, int $area_id, bool $previous_period=false) : string
 {
-  $period_names = get_period_names();
+  $periods = get_period_names();
 
+  $n_periods = count($periods[$area_id]);
   $time = getdate($t);
-  $p_num = $time["minutes"] + $mod_time;
-  if ( $p_num < 0 )
+  $p = $time['minutes'];
+  if ($previous_period)
   {
-    $p_num = 0;
+    $p--;
   }
-  if ( $p_num >= count($period_names[$area_id]) - 1 )
-  {
-    $p_num = count($period_names[$area_id]) - 1;
-  }
-  return $period_names[$area_id][$p_num];
+
+  // Make sure the period is valid
+  $p = max($p, 0);
+  $p = min($p, $n_periods - 1);
+
+  return $periods[$area_id][$p];
 }
+
 
 function time_date_string(int $t) : string
 {
