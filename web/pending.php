@@ -232,16 +232,7 @@ function display_entry_row(array $row) : void
   $query = http_build_query($vars, '', '&');
 
   echo '<a href="' . escape_html(multisite("index.php?$query")) . '">';
-
-  if(empty($row['enable_periods']))
-  {
-    $link_str = time_date_string($row['start_time']);
-  }
-  else
-  {
-    $link_str = period_date_string($row['start_time'], $row['area_id']);
-  }
-
+  $link_str = date_string(!empty($row['enable_periods']), $row['start_time'], $row['area_id']);
   echo escape_html($link_str) . "</a></td>";
 
   $duration = get_duration($row['start_time'], $row['end_time'], !empty($row['enable_periods']), $row['area_id'], false);
