@@ -1832,6 +1832,13 @@ function time_date_string(int $t) : string
   return datetime_format($datetime_formats['date_and_time'], $t);
 }
 
+
+function date_string($use_periods, $t, $area_id, bool $previous_period=false)
+{
+  return ($use_periods) ? period_date_string($t, $area_id, $previous_period) : time_date_string($t);
+}
+
+
 // Wrapper for the standard PHP function nl2br() that sets $use_xhtml to false
 function mrbs_nl2br(string $string) : string
 {
