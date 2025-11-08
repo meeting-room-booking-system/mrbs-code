@@ -242,7 +242,7 @@ function display_entry_row(array $row) : void
   echo "<td><span title=\"" . $duration_seconds . "\"></span>" . escape_html($duration['value'] . " " . get_vocab($duration['units'])) . "</td>\n";
 
   // End date
-  $end_date_str = date_string($row['enable_periods'], $row['end_time'], $row['area_id'], true);
+  $end_date_str = date_string(!empty($row['enable_periods']), $row['end_time'], $row['area_id'], true);
   echo "<td><span title=\"" . $row['end_time'] . "\"></span>" . escape_html($end_date_str) . "</td>\n";
 
   // action buttons
