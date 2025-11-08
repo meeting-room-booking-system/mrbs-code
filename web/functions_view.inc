@@ -248,7 +248,7 @@ function create_details_body(array $data, bool $as_html=false, bool $keep_privat
         // Start date
         if ($enable_periods)
         {
-          list($start_period, $start_date) =  period_date_string($data['start_time'], $data['area_id']);
+          $start_date = period_date_string($data['start_time'], $data['area_id']);
         }
         else
         {
@@ -263,7 +263,7 @@ function create_details_body(array $data, bool $as_html=false, bool $keep_privat
         // End date
         if ($enable_periods)
         {
-          list( , $end_date) =  period_date_string($data['end_time'], $data['area_id'], true);
+          $end_date = period_date_string($data['end_time'], $data['area_id'], true);
         }
         else
         {

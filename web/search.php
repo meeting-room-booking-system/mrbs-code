@@ -98,7 +98,7 @@ function output_row($row, $returl)
   }
   else
   {
-    list(,$link_str) = period_date_string($row['start_time'], $row['area_id']);
+    $link_str = period_date_string($row['start_time'], $row['area_id']);
   }
   $link .= escape_html($link_str) ."</a>";
   //    add a span with the numeric start time in the title for sorting

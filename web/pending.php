@@ -239,7 +239,7 @@ function display_entry_row(array $row) : void
   }
   else
   {
-    list(,$link_str) = period_date_string($row['start_time'], $row['area_id']);
+    $link_str = period_date_string($row['start_time'], $row['area_id']);
   }
 
   echo escape_html($link_str) . "</a></td>";
@@ -255,7 +255,7 @@ function display_entry_row(array $row) : void
   }
   else
   {
-    list(, $end_date_str) = period_date_string($row['end_time'], $row['area_id'], true);
+    $end_date_str = period_date_string($row['end_time'], $row['area_id'], true);
   }
   echo "<td><span title=\"" . $row['end_time'] . "\"></span>" . escape_html($end_date_str) . "</td>\n";
 
