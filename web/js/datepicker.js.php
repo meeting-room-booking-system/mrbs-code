@@ -354,7 +354,11 @@ $(document).on('page_ready', function() {
     config.weekNumbers = <?php echo ($mincals_week_numbers && ($weekstarts == DateTime::firstDayOfWeek($timezone, get_mrbs_locale()))) ? 'true' : 'false' ?>;
   }
 
-  flatpickr('input[type="date"]:not(.navigation)', config).forEach(function(fp) {
+  let fps = flatpickr('input[type="date"]:not(.navigation)', config);
+  // flatpickr will either return a single instance or an array of instances,
+  // so convert a single instance to an array so that the iteration works.
+  fps = (Array.isArray(fps) ? fps : [fps]);
+  fps.forEach(function(fp) {
     <?php
     // For dates that have a data-min attribute, set the minDate.
     ?>
