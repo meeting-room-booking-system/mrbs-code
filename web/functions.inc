@@ -1808,8 +1808,11 @@ function period_date_string(int $t, int $area_id, bool $previous_period=false) :
 }
 
 
-// Returns the name of the period represented by Unix timestamp $t for area $area_id.
-// $mod_time will get the period $mod_time units before or after.
+/**
+ * Returns the name of the period in a given area for a given timestamp.
+ *
+ * @param bool $previous_period Whether the name of the previous period should be used (useful for the end of a period)
+ */
 function period_time_string(int $t, int $area_id, bool $previous_period=false) : string
 {
   $periods = get_period_names();
