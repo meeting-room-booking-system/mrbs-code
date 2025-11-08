@@ -207,7 +207,6 @@ function display_entry_row(array $row) : void
 
   // reservation name, with a link to the view_entry page
   echo "<td>";
-  // echo '<a href="' . escape_html(multisite('view_entry.php?id=' . $row['id'])) . '">' .
   echo '<a href="' . escape_html(multisite('view_entry.php?id=' . $row['id'])) . '"' .
         ' title="' . escape_html($row['description']) . '">' .
         escape_html($row['name']) ."</a></td>\n";
