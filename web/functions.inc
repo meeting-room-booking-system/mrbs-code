@@ -1833,7 +1833,12 @@ function time_date_string(int $t) : string
 }
 
 
-function date_string($use_periods, $t, $area_id, bool $previous_period=false)
+/**
+ * Convert a timestamp into a date string
+ *
+ * @param bool $previous_period Whether the date string for the previous period should be used (useful for the end of a period)
+ */
+function date_string(bool $use_periods, int $t, int $area_id, bool $previous_period=false) : string
 {
   return ($use_periods) ? period_date_string($t, $area_id, $previous_period) : time_date_string($t);
 }
