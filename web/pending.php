@@ -239,7 +239,7 @@ function display_entry_row(array $row) : void
 
   $duration = get_duration($row['start_time'], $row['end_time'], !empty($row['enable_periods']), $row['area_id'], false);
   $duration_seconds = $row['end_time'] - $row['start_time'] - cross_dst($row['start_time'], $row['end_time']);
-  echo "<td><span title=\"" . $duration_seconds . "\"></span>" . escape_html($duration['duration'] . " " . get_vocab($duration['dur_units'])) . "</td>\n";
+  echo "<td><span title=\"" . $duration_seconds . "\"></span>" . escape_html($duration['value'] . " " . get_vocab($duration['units'])) . "</td>\n";
 
   // End date
   if(empty($row['enable_periods']))
