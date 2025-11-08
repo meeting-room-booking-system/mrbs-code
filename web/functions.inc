@@ -1254,16 +1254,18 @@ function fit_to_booking_day(int $t, bool $back=true) : int
 }
 
 
-// Get the duration of an interval given a start time and end time.  Corrects for
-// DST changes so that the duration is what the user would expect to see.  For
-// example 12 noon to 12 noon crossing a DST boundary is 24 hours.
-//
-// Returns an array indexed by 'value' and 'units'
-//
-//    $start_time     int     start time as a Unix timestamp
-//    $end_time       int     end time as a Unix timestamp
-//    $enable_periods boolean whether we are using periods
-//    $translate      boolean whether to translate into the browser language
+/**
+ * Get the duration of an interval given a start time and end time.
+ *
+ * Corrects for DST changes so that the duration is what the user would expect to see.
+ * For example, 12 noon to 12 noon crossing a DST boundary is 24 hours.
+ *
+ * @param int $start_time Unix timestamp
+ * @param int $end_time Unix timestamp
+ * @param bool $enable_periods Whether periods are being used
+ * @param bool $translate Whether to translate into the browser language
+ * @return array{value: int, units: string}
+ */
 function get_duration(int $start_time, int $end_time, bool $enable_periods, int $area_id, bool $translate=true) : array
 {
   $result = array();
