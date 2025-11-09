@@ -328,7 +328,9 @@ abstract class Auth
   }
 
 
-  // Gets the level from the $auth['admin'] array in the config file
+  /**
+   * Gets the level from the $auth['admin'] array in the config file
+   */
   protected function getDefaultLevel(?string $username) : int
   {
     global $auth, $max_level;
@@ -344,7 +346,9 @@ abstract class Auth
   }
 
 
-  // Gets the default email address using config file settings
+  /**
+   * Gets the default email address using config file settings
+   */
   protected function getDefaultEmail(?string $username) : string
   {
     global $mail_settings;
@@ -376,9 +380,12 @@ abstract class Auth
   }
 
 
-  // Trim any leading '@' character. Older versions of MRBS required the '@' character
-  // to be included in $mail_settings['domain'], and we still allow this for backwards
-  // compatibility.
+  /**
+   * Trim any leading '@' character.
+   *
+   * Older versions of MRBS required the '@' character to be included in $mail_settings['domain'],
+   * and we still allow this for backwards compatibility.
+   */
   private static function trimDomain(string $domain) : string
   {
     return ltrim($domain, '@');
