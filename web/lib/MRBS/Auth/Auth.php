@@ -419,8 +419,15 @@ abstract class Auth
   }
 
 
-  // Sorts an array of users indexed by 'username' and 'display_name', eg the
-  // output of getUsernames().   Sorts by display_name then username.
+  /**
+   * Sorts an array of users indexed by 'username' and 'display_name', eg the
+   * output of getUsernames().
+   *
+   * Sorts by display_name then username.
+   *
+   * @param array{array{username: string, display_name: string}} $users
+   * @return void
+   */
   protected static function sortUsers(array &$users) : void
   {
     usort($users, [__CLASS__, 'compareUsers']);
