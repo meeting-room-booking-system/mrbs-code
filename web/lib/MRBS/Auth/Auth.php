@@ -331,7 +331,7 @@ abstract class Auth
 
 
   /**
-   * Gets the default email address using config file settings
+   * Gets the level from the $auth['admin'] array in the config file
    */
   public static function getDefaultLevel(?string $username) : int
   {
