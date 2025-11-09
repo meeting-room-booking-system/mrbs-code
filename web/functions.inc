@@ -1789,22 +1789,10 @@ function period_date_string(int $t, int $area_id, bool $previous_period=false) :
 {
   global $datetime_formats;
 
-  $period_names = get_period_names()[$area_id];
-  $n_periods = count($period_names);
-  $time = getdate($t);
-  $p = $time['minutes'];
-
-  if ($previous_period)
-  {
-    $p--;
-  }
-
-  $p = max($p, 0);
-  $p = min($p, $n_periods - 1);
-
   // The separator is a ',' as a '-' leads to an ambiguous
   // display in report.php when showing end times.
-  return $period_names[$p] . ', ' . datetime_format($datetime_formats['date'], $t);
+  return period_time_string($t, $area_id, $previous_period) .
+    ', ' . datetime_format($datetime_formats['date'], $t);
 }
 
 
