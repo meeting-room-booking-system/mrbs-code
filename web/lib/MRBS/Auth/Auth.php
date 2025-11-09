@@ -434,9 +434,13 @@ abstract class Auth
   }
 
 
-  // Check we've got the right session scheme for the type.
-  // To be called for those authentication types which require the same
-  // session scheme.
+  /**
+   * Check we've got the right session scheme for the type.
+   *
+   * To be called for those authentication types which require the same session scheme.
+   *
+   * @return void|never
+   */
   protected function checkSessionMatchesType()
   {
     global $auth;
