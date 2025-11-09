@@ -391,8 +391,15 @@ abstract class Auth
     return ltrim($domain, '@');
   }
 
-  // Callback function for comparing two users, indexed by 'username' and 'display_name'.
-  // Compares first by 'display_name' and then by 'username'
+
+  /**
+   * Callback function for comparing two users.
+   *
+   * Compares first by 'display_name' and then by 'username'.
+   *
+   * @param array{username: string, display_name: string} $user1
+   * @param array{username: string, display_name: string} $user2
+   */
   private static function compareUsers(array $user1, array $user2) : int
   {
     $display_name1 = get_sortable_name($user1['display_name']);
