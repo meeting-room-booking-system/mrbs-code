@@ -357,9 +357,12 @@ abstract class Auth
   }
 
 
-  // Trim any leading '@' character. Older versions of MRBS required the '@' character
-  // to be included in $mail_settings['domain'], and we still allow this for backwards
-  // compatibility.
+  /**
+   * Trim any leading '@' character.
+   *
+   * Older versions of MRBS required the '@' character to be included in $mail_settings['domain'],
+   * and we still allow this for backwards compatibility.
+   */
   private static function trimDomain(string $domain) : string
   {
     return ltrim($domain, '@');
