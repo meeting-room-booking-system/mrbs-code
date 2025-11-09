@@ -330,7 +330,9 @@ abstract class Auth
   }
 
 
-  // Gets the level from the $auth['admin'] array in the config file
+  /**
+   * Gets the default email address using config file settings
+   */
   public static function getDefaultLevel(?string $username) : int
   {
     global $auth, $max_level;
