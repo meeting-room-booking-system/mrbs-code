@@ -454,8 +454,10 @@ abstract class Auth
   }
 
 
-  // Writes the debug message to the error log together with the calling method and line number.
-  // It assumes that it has been called by a debug method.
+  /**
+   * Writes the debug message to the error log together with the calling method and line number.
+   * It assumes that it has been called by a debug method.
+   */
   protected static function logDebugMessage(string $message) : void
   {
     // Need to go three levels back to get the real calling method.
