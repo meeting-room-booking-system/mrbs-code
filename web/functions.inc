@@ -1745,17 +1745,6 @@ function period_time_string(int $t, int $area_id, bool $previous_period=false) :
 }
 
 
-function period_date_string(int $t, int $area_id, bool $previous_period=false) : string
-{
-  global $datetime_formats;
-
-  // The separator is a ',' as a '-' leads to an ambiguous
-  // display in report.php when showing end times.
-  return period_time_string($t, $area_id, $previous_period) .
-         ', ' . datetime_format($datetime_formats['date'], $t);
-}
-
-
 function time_date_string(int $t) : string
 {
   global $datetime_formats;
