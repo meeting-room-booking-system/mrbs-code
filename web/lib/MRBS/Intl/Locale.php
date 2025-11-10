@@ -60,7 +60,7 @@ class Locale
       }
     }
 
-    return null;
+    return false;
   }
 
 

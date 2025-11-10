@@ -226,7 +226,7 @@ function get_mrbs_locale($header=null) : string
     }
 
     // If everything fails, use English
-    if (!isset($locale))
+    if (!isset($locale) || ($locale === false))
     {
       $locale = 'en';
     }
