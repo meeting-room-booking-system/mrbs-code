@@ -43,8 +43,11 @@ class Locale
   const VALID_LOCALE = 1;
 
 
-  // Tries to find out best available locale based on HTTP "Accept-Language" header
-  // Returns locale in normalised form, or NULL if none found
+  /**
+   * Tries to find out best available locale based on HTTP "Accept-Language" header.
+   *
+   * @return string|false the corresponding locale identifier, or FALSE if none found
+   */
   public static function acceptFromHttp(string $header)
   {
     if (isset($header))
