@@ -8,7 +8,7 @@
 // Further translated by: Emil Støa (emil@consider.no)
 // and Pål Viland Monstad (pmonstad@gmail.com)
 // Tekster for 1.4.8 av thomas.haukland@bouvet.no
-// Tekster for 1.8.0 av Pål Viland Monstad (pmonstad@gmail.com)
+// Tekster for 1.8.0 -> av Pål Viland Monstad (pmonstad@gmail.com)
 //
 // This file is PHP code. Treat it as such.
 
@@ -54,7 +54,14 @@ $vocab["create_new_booking"] = "Ny reservasjon";
 $vocab["select_area"]        = "Velg område";
 $vocab["select_room"]        = "Velg rom";
 $vocab["all"]                = "<alle>";
+$vocab["registration_level_limited"]              = ' [%1$d/%2$d]';
+$vocab["registration_level_limited_with_names"]   = ' [%1$d/%2$d: %3$s]';
+$vocab["registration_level_unlimited"]            = ' [%1$d]';
+$vocab["registration_level_unlimited_with_names"] = ' [%1$d: %2$s]';
+$vocab["exit_kiosk_mode_confirm"]    = "Avbryt kioskmodus?";
+$vocab["close"]              = "Lukk";
 $vocab["viewday"]            = "Vis dag  ";
+$vocab["cancel"]                = "Avbryt";
 $vocab["viewweek"]           = "Vis uke  ";
 $vocab["viewmonth"]          = "Vis måned";
 $vocab["ppreview"]           = "Forhåndsvisning";
@@ -65,7 +72,7 @@ $vocab["copyseries"]         = "Kopier gjentakende reservasjon";
 $vocab["addentry"]           = "Reservasjon";
 $vocab["editentry"]          = "Endre reservasjon";
 $vocab["editseries"]         = "Endre gjentakende reservasjon";
-$vocab["namebooker"]         = "Reserveres for";
+$vocab["namebooker"]         = "Reservert for";
 $vocab["fulldescription"]    = "Merknad";
 $vocab["date"]               = "Dato";
 $vocab["start"]              = "Start";
@@ -75,6 +82,7 @@ $vocab["end_date"]           = "Sluttid";
 $vocab["time"]               = "Tid";
 $vocab["area"]               = "Område";
 $vocab["period"]             = "Time";
+$vocab["unknown_period"]     = "<Periode %d>";
 $vocab["duration"]           = "Varighet";
 $vocab["second_lc"]          = "sekund";
 $vocab["seconds"]            = "sekunder";
@@ -95,6 +103,14 @@ $vocab["periods"]            = "timer";
 $vocab["all_day"]            = "hele dagen";
 $vocab["type"]               = "Type";
 $vocab["save"]               = "Lagre";
+$vocab["allow_registration"]        = "Tillat registrering";
+$vocab["registrant_limit_enabled"]  = "Angi kapasitet";
+$vocab["registrant_limit"]          = "Kapasitet";
+$vocab["registration_opens"]        = "Registrering åpner";
+$vocab["registration_closes"]       = "Registrering stenger";
+$vocab["in_advance"]                = "på forhånd";
+$vocab["in_advance_periods"]        = "før %s";  // a time, eg 09:00 or 9.00am
+$vocab["n_registered"]              = "Nåværende registrerte";
 $vocab["rep_type"]           = "Repetisjon";
 $vocab["rep_type_0"]         = "ingen";
 $vocab["rep_type_1"]         = "daglig";
@@ -114,18 +130,18 @@ $vocab["ord_-5"]             = "femte siste";
 $vocab["rep_end_date"]       = "Repetisjon slutter";
 $vocab["rep_rep_day"]        = "Repetisjonsdag";
 $vocab["rep_interval"]       = "Repeter hver";
-$vocab["month_absolute"]     = "På dato";
+$vocab["month_absolute"]     = "På dag";
 $vocab["month_relative"]     = "På den";
 $vocab["skip_conflicts"]     = "Hopp over konflikter";
 $vocab["no_mail"]            = "Ikke send e-post";
 $vocab["ctrl_click"]         = "Hold inne CTRL-tasten for å velge mer enn ett rom";
 $vocab["entryid"]            = "Reservasjons-ID ";
-$vocab["repeat_id"]          = "Repetisjons-ID "; 
+$vocab["repeat_id"]          = "Repetisjons-ID ";
 $vocab["brief_description"]  = "navn på den som har reservert.";
 $vocab["status"]             = "Status";
 $vocab["public"]             = "Offentlig";
 $vocab["private"]            = "Privat (innhold vises ikke)";
-$vocab["unavailable"]        = "[Privat]";
+$vocab["unavailable"]        = "Privat";
 $vocab["is_mandatory_field"] = "er et obligatorisk felt, vennligst fyll ut en verdi.";
 $vocab["missing_mandatory_field"] = "Du har ikke fylt ut en verdi for det obligatoriske feltet.";
 $vocab["confirmed"]          = "Bekreftet";
@@ -133,19 +149,35 @@ $vocab["start_after_end"]    = "Start dag etter slutt dag";
 $vocab["start_after_end_long"] = "Feil: start kan ikke være før slutt.";
 
 // Used in view_entry.php
-$vocab["invalid_rep_interval"] = "The repeat interval must be greater than zero.";
+$vocab["invalid_rep_interval"] = "Repetisjonsintervallet må være større enn null.";
 $vocab["description"]        = "Beskrivelse";
+$vocab["confirm_rep_end_date"]     = "Det ser ut til at du har glemt å angi sluttdato " .
+                                     "for repetisjonen. Vil du likevel fortsette?";
+$vocab["type_reserved_for_admins"] = "Type '%s' er reservert for administratorer";
+$vocab["multiroom_not_allowed"]    = "Du har ikke rettighet til å reservere flere rom.";
+$vocab["edit_entry_nonexistent_room"] = "Du prøver å opprette eller endre en oppføring i et rom " .
+                                        "som ikke finnes. Dette kan skyldes at du bruker " .
+                                        "et bokmerke som ikke lenger er gyldig. Det er generelt " .
+                                        "ikke anbefalt å bruke bokmerker som tar deg direkte til " .
+                                        "reservasjonsskjema. Gå heller til skjema for reservasjon " .
+                                        "i kalendervisningen.";
+$vocab["home"]                        = "Hjem";
 $vocab["room"]               = "Rom";
 $vocab["createdby"]          = "Reservert av";
 $vocab["modifiedby"]          = "Endret av";
 $vocab["lastupdate"]         = "Sist endret";
-$vocab["repeat_on"]           = "Repeat day";
+$vocab["repeat_on"]           = "Repetisjonsdag";
 $vocab["deleteentry"]        = "Slett reservasjon";
 $vocab["deleteseries"]       = "Slett gjentakende reservasjon";
 $vocab["exportentry"]         = "Last ned kalenderoppføring";
 $vocab["exportseries"]        = "Legg til serie i kalender";
 $vocab["confirmdel"]         = "Er du sikker på at du vil slette reservasjonen?";
 $vocab["returnprev"]         = "Tilbake til forrige side";
+$vocab["confirmdel_series"]       = "Er det sikkert at du vil slette denne serien?";
+$vocab["confirm_edit_series"]     = "ADVARSEL! Brukere har registrert en eller flere hendelser i denne serien " .
+                                    "og redigering av serien vil medføre av navnene deres forsvinner. Hvis du " .
+                                    "vil beholde navnene må du redigere serien i flere steg, en hendelse " .
+                                    "om gangen ved å redigere enkle hendelser. Vil du likevel fortsette?";
 $vocab["invalid_entry_id"]   = "Ugyldig reservasjons-ID.";
 $vocab["invalid_series_id"]  = "Ugyldig serie-ID.";
 $vocab["confirmation_status"] = "Status";
@@ -171,20 +203,31 @@ $vocab["no"]                  = "Nei";
 
 // Used in edit_entry_handler.php
 $vocab["error"]              = "Feil";
+$vocab["event_registration"]      = "registrering";
+$vocab["event_details"]           = "Detaljer";
+$vocab["already_registered"]      = "Du har allerede registrert deg";
+$vocab["register"]                = "Registrer";
+$vocab["cancel_registration"]     = "Avbryt registrering";
+$vocab["registered_by"]           = "Registrert av";
+$vocab["registered_on"]           = "Registrert den";
+$vocab["event_full"]              = "Det er fullt.";
+$vocab["confirm_del_registrant"]  = "Vil du slette denne registreringen på '%s'?";
 $vocab["sched_conflict"]     = "Reservasjonskonflikt";
 $vocab["conflict"]           = "Reservasjonen er i konflikt med følgende andre reservasjon(er):";
 $vocab["no_conflicts"]       = "Ingen kalender-konflikter";
 $vocab["rules_broken"]       = "Den nye reservasjonen vil komme i konflikt med denne regelen";
-$vocab["rules_broken_notices"]   = "[Information only] The new booking would conflict with the following policies:";
+$vocab["rules_broken_notices"]   = "[Kun til informasjony] Den nye reservasjonen kommer i konflikt med følgende regler:";
 $vocab["no_rules_broken"]    = "Ingen regel-konflikter";
 $vocab["schedule"]           = "Planlegge";
 $vocab["policy"]             = "Regel";
-$vocab["too_many_entries"]   = "De valgte innstillinger skaper for mange reservasjoner.<BR>Vennligst bruk andre innstillinger!";
+$vocab["too_many_entries"]   = "De valgte innstillinger oppretter for mange reservasjoner.<BR>Vennligst bruk andre innstillinger!";
+$vocab["conflicts_with_self"]    = "Denne serien inneholder overlappende hendelser. Kontroller sluttdato " .
+                                   "og sluttdato for repetisjon.";
 $vocab["returncal"]          = "Tilbake til kalender";
 $vocab["failed_to_acquire"]  = "Kunne ikke oppnå eksklusiv databasetilgang";
 $vocab["invalid_booking"]    = "Ugyldig reservasjon";
 $vocab["must_set_description"] = "Du må velge en kort beskrivelse av reservasjonen. Vennligst gå tilbake og skriv inn en.";
-$vocab["no_rooms_selected"]      = "You must select a room.";
+$vocab["no_rooms_selected"]      = "Du må velge et rom.";
 $vocab["mail_subject_approved"]  = "Reservasjon godkjent for %s MRBS"; // $mrbs_company
 $vocab["mail_subject_rejected"]  = "Reservasjon avvist for for %s MRBS"; // $mrbs_company
 $vocab["mail_subject_more_info"] = "%s MRBS: trenger mer informasjon"; // $mrbs_company
@@ -208,52 +251,107 @@ $vocab["reason"]                  = "Årsak";
 $vocab["info_requested"]          = "Bedt om informasjon";
 // REMOVED - $vocab["min_time_before"]         = "Minimum intervall mellom nå og starten på en reservasjon er";
 // REMOVED - $vocab["max_time_before"]         = "Maksimum intervall mellom nå og starten på en reservasjon er";
-$vocab["cannot_change_approved_bookings"] = "Bookings that have been approved cannot be edited or deleted";
-$vocab["min_create_time_before"]  = 'You cannot create a booking which starts in less than %1$d %2$s';
-$vocab["max_create_time_before"]  = 'You cannot create a booking which ends in more than %1$d %2$s';
-$vocab["min_delete_time_before"]  = 'You cannot edit or delete a booking which starts in less than %1$d %2$s';
-$vocab["max_delete_time_before"]  = 'You cannot edit or delete a booking which ends in more than %1$d %2$s';
-$vocab["earliest_booking_date"]   = "The earliest booking date is %s";
-$vocab["latest_booking_date"]     = "The latest booking date is %s";
+$vocab["cannot_change_approved_bookings"] = "Reservasjoner som er godkjente kan ikke redigeres eller slettes";
+$vocab["min_create_time_before"]  = 'Du kan ikke opprette en reservasjon som starter om mindre enn %1$d %2$s';
+$vocab["no_simultaneous_bookings"]        = "Du kan ikke reservere mer enn %s rom på samme tid";
+$vocab["no_bookings_on_holidays"] = "Du førsøker å reservere på en fridag (%s)";
+$vocab["no_bookings_on_weekends"] = "Du forsøker å reservere på en helgedag (%s)";
+$vocab["type_not_allowed"]        = 'Reservasjoner med type %1$s er ikke tillatt i %2$s';
+$vocab["type_not_allowed_day"]    = 'Reservasjoner med type %1$s er ikke tillatt i %2$ss';
+$vocab["max_create_time_before"]  = 'Du kan ikke opprette en reservasjon som slutter om mindre enn %1$d %2$s';
+$vocab["min_delete_time_before"]  = 'Du kan ikke redigere eller slette en reservasjon som starter om mindre enn %1$d %2$s';
+$vocab["max_create_time_before_start"]  = 'Du kan ikke opprette en reservasjon som starter om mer enn %1$d %2$s';
+$vocab["max_delete_time_before"]  = 'Du kan ikke redigere eller slette en reservasjon som slutter om mer enn %1$d %2$s';
+$vocab["earliest_booking_date"]   = "Tidligste reservasjonsdato er %s";
+$vocab["max_delete_time_before_start"]  = 'Du kan ikke redigere eller slette en reservasjon som starter om mer enn %1$d %2$s';
+$vocab["latest_booking_date"]     = "Siste reservasjonsdato er %s";
 $vocab["max_booking_duration"]    = "En reservasjon kan ikke være lenger enn";
-$vocab["max_per_day_global"]      = "The maximum number of bookings per day per user across the whole system is";
-$vocab["max_per_week_global"]     = "The maximum number of bookings per week per user across the whole system is";
-$vocab["max_per_month_global"]    = "The maximum number of bookings per month per user across the whole system is";
-$vocab["max_per_year_global"]     = "The maximum number of bookings per year per user across the whole system is";
-$vocab["max_per_future_global"]   = "The maximum number of outstanding bookings per user across the whole system is";
-$vocab["max_per_day_area"]        = "The maximum number of bookings per day per user in this area is";
-$vocab["max_per_week_area"]       = "The maximum number of bookings per week per user in this area is";
-$vocab["max_per_month_area"]      = "The maximum number of bookings per month per user in this area is";
-$vocab["max_per_year_area"]       = "The maximum number of bookings per year per user in this area is";
-$vocab["max_per_future_area"]     = "The maximum number of outstanding bookings per user in this area is";
+$vocab["max_per_day_global"]      = "Maks antall reservasjoner pr. dag pr. bruker i hele systemet er";
+$vocab["max_per_week_global"]     = "Maks antall reservasjoner pr. uke pr. bruker i hele systemet er";
+$vocab["max_per_month_global"]    = "Maks antall reservasjoner pr. måned pr. bruker i hele systemet er";
+$vocab["max_per_year_global"]     = "Maks antall reservasjoner pr. år pr. bruker i hele systemet er";
+$vocab["max_per_future_global"]   = "Maks antall utestående reservasjoner pr. bruker i hele systemet er";
+$vocab["max_per_day_area"]        = "Maks antall reservasjoner pr. dag pr. bruker i dette området er";
+$vocab["max_per_week_area"]       = "Maks antall reservasjoner pr. uke pr. bruker i dette området er";
+$vocab["max_per_month_area"]      = "Maks antall reservasjoner pr. måned pr. bruker i dette området er";
+$vocab["max_per_year_area"]       = "Maks antall reservasjoner pr. år pr. bruker i dette området er";
+$vocab["max_per_future_area"]     = "Maks antall utestående reservasjoner pr. bruker i dette området er";
 $vocab["skip_and_book"]           = "Hopp over og reserver";
-$vocab["skip_and_book_note"]      = "Fortsett med reservasjon, hopp over tidligere tidligere reservasjoner med konflikter";
+$vocab["max_secs_per_day_global"]     = 'Maks lengde på reservasjoner pr. dag pr. bruker i hele systemet er %1$s %2$s';  // eg 2 hours
+$vocab["max_secs_per_week_global"]    = 'Maks lengde på reservasjoner pr. uke pr. bruker i hele systemer er %1$s %2$s';
+$vocab["max_secs_per_month_global"]   = 'Maks lengde på reservasjoner pr. måned pr. bruker i hele systemet er %1$s %2$s';
+$vocab["max_secs_per_year_global"]    = 'Maks lengde på reservasjoner pr. år pr. bruker i hele systemet er %1$s %2$s';
+$vocab["max_secs_per_future_global"]  = 'Maks lengde på utestående reservasjoner pr. bruker i hele systemet er %1$s %2$s';
+$vocab["max_secs_per_day_area"]       = 'Maks lengde på reservasjoner pr. dag pr. bruker i dette området er %1$s %2$s';
+$vocab["max_secs_per_week_area"]      = 'Maks lengde på reservasjoner pr. uke pr. bruker i dette området er %1$s %2$s';
+$vocab["max_secs_per_month_area"]     = 'Maks lengde på reservasjoner pr. måned pr. bruker i dette området er %1$s %2$s';
+$vocab["max_secs_per_year_area"]      = 'Maks lengde på reservasjoner pr. år pr. bruker i dette området er %1$s %2$s';
+$vocab["max_secs_per_future_area"]    = 'Maks lengde på utestående reservasjoner pr. bruker i dette området er %1$s %2$s';
+$vocab["skip_and_book_note"]      = "Fortsett med reservasjon, hopp over tidligere reservasjoner med konflikter";
 
 // Used in pending.php
 $vocab["pending"]            = "Reservasjoner som ikke er bekreftet";
-$vocab["none_outstanding"]   = "Du har ikke noen reservasjoner som ikke er bekreftet.";
+$vocab["edit_message"]  = "Rediger melding";
+$vocab["message"]       = "Systemmelding";
+$vocab["display_from"]  = "Vis fra";
+$vocab["display_until"] = "Vis til";
+$vocab["enter"]                     = "Gå til";
+$vocab["exit"]                      = "Avbryt";
+$vocab["enter_kiosk_intro"]         = "Angi passord for å avbryte kioskmodus";
+$vocab["exit_kiosk_intro"]          = "Angi passord for å avbryte kioskmodus";
+$vocab["enter_kiosk_mode"]          = "Gå til kioskmodus";
+$vocab["exit_kiosk_mode"]           = "Avbryt kioskmodus";
+$vocab["kiosk"]                     = "Kiosk";
+$vocab["kiosk_password"]            = "Kiosk-passord";
+$vocab["none_outstanding"]   = "Du har ingen ubekreftede reservasjoner.";
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Ingen tilgang";
 $vocab["norights"]           = "Du har ingen rettigheter til å endre/lese reservasjonen.";
 $vocab["please_login"]       = "Vennligst logg inn";
 $vocab["users.name"]         = "Brukernavn";
-$vocab["users.email"]        = "Epost-adresse";
+$vocab["users.email"]        = "E-postadresse";
+$vocab["users.display_name"]        = "Navn";
 $vocab["users.password"]     = "Passord";
-$vocab["users.timestamp"]    = "Last updated";
-$vocab["users.last_login"]   = "Last login";
+$vocab["users.timestamp"]    = "Sist oppdatert";
+$vocab["users.last_login"]   = "Sist innlogget";
 $vocab["users.level"]        = "Rettigheter";
 $vocab["unknown_user"]       = "ikke innlogget";
 $vocab["login"]              = "Logg inn";
 $vocab["logoff"]             = "Logg ut";
 // REMOVED - $vocab["user_level"]         = "Rettigheter";
-$vocab["username_or_email"]  = "Brukarnamn eller epostadresse";
+$vocab["username_or_email"]  = "Brukernavn eller e-postadresse";
 
 // Database upgrade code
+$vocab["lost_password"]             = "Glemt passordet?";
+$vocab["get_new_password"]          = "Få nytt passord";
+$vocab["password_reset"]            = "Nullstill passord";
+$vocab["password_reset_subject"]    = "Nødvendig å nullstille passordet";
+$vocab["password_reset_body"]       = 'Det er opprettet en forespørsel om å nullstille passordet for %3$s. ' .
+                                      'Hvis du ikke kjenner til dette, overse denne e-posten. Hvis det er ' .
+                                      'riktig, klikk på lenken under for å nullstille passordet. ' .
+                                      'Lenken vil utløpe om %1$d %2$s.';
+$vocab["enter_username"]            = "Oppgi brukernavnet her.";
+$vocab["enter_username_or_email"]   = "Oppgi brukernavn eller e-postadresse her.";
+$vocab["will_be_sent_instructions"] = "Du vil motta en e-post med instruksjoner om hvordan passordet skal nullstilles. " .
+                                      "Hvis du ikke har en e-postadresse må du kontakte administrator.";
+$vocab["reset_password"]            = "Nullstill passord";
+$vocab["pwd_check_email"]           = "Takk. Om det finnes en brukerkonto som stemmer med detaljene, vil du snart " .
+                                      "motta en e-post med instruksjoner om hvordan passordet blir nullstilt. " .
+                                      "Sjekk søppelposten/spamfilter om du ikke mottar e-posten.";
+$vocab["invalid_link"]              = "Ugyldig lenke";
+$vocab["pwd_request_failed"]        = "E-post kunne ikke sendes denne brukeren.";
+$vocab["link_invalid"]              = "Lenken for å nullstille passordet har utløpt eller er ugyldig.";
+$vocab["enter_new_password"]        = "Angi nytt passord to ganger under.";
+$vocab["pwd_must_contain"]          = "Passordet må minst inneholde:";
+$vocab["pwd_reset_success"]         = "Passordet ble nullstilt.";
 $vocab["database_login"]           = "Database login";
-$vocab["upgrade_required"]         = "Databasen må oppgraderes. Sørg for at du har en backup før du fortsetter!";
-$vocab["supply_userpass"]          = "Oppgi brukernavn og passord til en bruker som har admin rettigheter i databasen.";
+$vocab["upgrade_required"]         = "Databasen må oppgraderes. Sørg for at du har en sikkerhetskopi før du fortsetter!";
+$vocab["supply_userpass"]          = "Oppgi brukernavn og passord til en bruker som har admin-rettigheter i databasen.";
 $vocab["contact_admin"]            = "Hvis du ikke er administrator, kontakt %s."; // $mrbs_admin
+$vocab["upgrading_site"]           = "Oppgraderer installasjonen '%s'";  // site name
+$vocab["upgrading_main_site"]      = "Oppgraderer hovedinstallasjonen";
+$vocab["no_tables_found"]          = "Ingen tabeller funnet";
 $vocab["upgrade_to_version"]       = "Oppgraderer til versjon";
 $vocab["upgrade_to_local_version"] = "Oppgraderer til database lokal versjon";
 $vocab["upgrade_completed"]        = "Database oppgradering er ferdig.";
@@ -292,8 +390,10 @@ $vocab["no_users_create_first_admin"] = "Sett opp en bruker som er administrator
 $vocab["warning_last_admin"] = "Advarsel! Dette er den siste admin-brukeren. Du kan ikke slette eller fjerne dennes admin-rettigheter, ellers ville du vært låst ute fra systemet.";
 
 // Used in search.php
+$vocab["copy_email_addresses"]  = "Kopier e-postadresser";
 $vocab["invalid_search"]     = "Tom eller ugyldig søkestreng.";
-$vocab["search_results"]     = "Søkeresultat for";
+$vocab["search_results"]     = "Søkeresultat";
+$vocab["search_results_unlimited"] = "Søkeresultat for '%s'";
 $vocab["nothing_found"]      = "Ingen poster ble funnet.";
 $vocab["records"]            = "Reservasjon ";
 $vocab["through"]            = " til ";
@@ -306,6 +406,7 @@ $vocab["search_for"]         = "Søk etter";
 $vocab["from"]               = "Fra";
 
 // Used in report.php
+$vocab["export_as_ics"]      = ".ics";
 $vocab["report_on"]          = "Rapport:";
 $vocab["report_start"]       = "Start dato";
 $vocab["report_end"]         = "Slutt dato";
@@ -341,17 +442,30 @@ $vocab["fulldescription_short"] = "Full beskrivelse";
 $vocab["both"]                  = "Alle";
 $vocab["with"]                  = "Med";
 $vocab["without"]               = "Uten";
-$vocab["privacy_status"]        = "Status for tilgjengelighets";
+$vocab["privacy_status"]        = "Status for tilgjengelighet";
 $vocab["search_criteria"]       = "Valg for søk";
 $vocab["presentation_options"]  = "Valg for visning";
 $vocab["delete_entries"]        = "Slette reservasjoner";
-$vocab["delete_entries_warning"] = "ADVARSEL! Dette vil slette alle reservasjoner som matcher søkestrengen." .
+$vocab["delete_entries_warning"] = "ADVARSEL! Dette vil slette alle reservasjoner som samsvarer med søkestrengen." .
                                    "Denne operasjonen kan ikke angres. " .
                                    "Er du sikker på at du vil fortsette?\n\n" .
                                    "Antall reservasjoner som slettes: %%s"; // The % sign is escaped because the string substitution is done by JavaScript
+$vocab["deleting_n_entries"]    = "Sletter %%d oppføringer ..."; // The % sign is escaped because the number substitution is done by JavaScript
 $vocab["delete_entries_failed"] = "Reservasjonene kunne ikke slettes.";
 
 // Used in admin.php
+$vocab["registered"]            = "Registrert";
+$vocab["na"]                    = "[N/A]";
+$vocab["compound_name"]            = '%1$s (%2$s)';  // 1: username, 2: display name
+$vocab["registrant_registered_by"] = '%1$s (av %2$s)';  // 1: Registrant, 2: Registered by
+$vocab["registrant_username_and_registered_by"] = '%1$s (%2$s) (av %3$s)';  // 2: Registrant username, 2: Registrant display name, 3: Registered by
+$vocab["unique_addresses_copied"]  = "%%d unike e-postadresser kopiert til utklippstavlen."; // Specifier substitution done in JavaScript, so escape the '%'
+$vocab["clipboard_copy_failed"]    = "Kopi til utklippstavlen feilet.";
+$vocab["no_message"]         = "Det er ikke angitt en melding som vises over kalenderen.";
+$vocab["this_message"]       = "Meldingen under vil vises over kalenderen.";
+$vocab["this_message_from"]  = "Meldingen under vil vises over kalenderen fra %s.";
+$vocab["this_message_until"] = "Meldingen under vil vises over kalenderen til %s.";
+$vocab["this_message_from_until"] = 'Meldingen under vil vises over kalenderen fra %1$s til %2$s.';
 $vocab["edit"]               = "Endre";
 $vocab["delete"]             = "Slett";
 $vocab["rooms"]              = "Rom";
@@ -365,10 +479,10 @@ $vocab["browserlang"]        = "Din nettleser er satt opp til å bruke følgende
 // REMOVED - $vocab["postbrowserlang"]    = "";
 $vocab["addroom"]            = "Legg til rom";
 $vocab["capacity"]           = "Kapasitet";
-$vocab["norooms"]            = "Ingen ressurser";
+$vocab["norooms"]            = "Ingen rom";
 $vocab["norooms_enabled"]    = "Ingen rom er gjort tilgjengelige.";
 $vocab["administration"]     = "Administrasjon";
-$vocab["invalid_area_name"]  = "Dette område-navnet er allerede i bruk!";
+$vocab["invalid_area_name"]  = "Dette områdenavnet er allerede i bruk!";
 $vocab["empty_name"]         = "Du har ikke skrevet et navn!";
 
 // Used in edit_area.php and/or edit_room.php
@@ -379,18 +493,19 @@ $vocab["viewroom"]           = "Se rom";
 $vocab["not_found"]          = " ble ikke funnet";
 $vocab["room_admin_email"]   = "Romadmins e-post";
 $vocab["area_admin_email"]   = "Områdeadmins e-post";
-$vocab["area_first_slot_start"]   = "Start på første luke";
+$vocab["area_first_slot_start"]   = "Starttid";
 $vocab["area_last_slot_start"]    = "Start på siste luke";
 $vocab["area_res_mins"]           = "Oppløsning (minutter)";
 $vocab["area_def_duration_mins"]  = "Standard varighet (minutter)";
+$vocab["times_along_top"]         = "Tidspunk over";
 $vocab["invalid_area"]            = "Ugylig område!";
 $vocab["invalid_room"]            = "Ugyldig rom!";
 $vocab["invalid_room_name"]       = "Dette rommet er allerede brukt i et annet område!";
 $vocab["invalid_email"]           = "Ugyldig e-postadresse!";
-$vocab["invalid_time_format"]     = "Times must be in the format 'hh:mm'";
+$vocab["invalid_time_format"]     = "Tider må være i formatet 'tt:mm'";
 $vocab["invalid_resolution"]      = "Ugyldig kombinasjon av første luke, siste luke og oppløsning!";
 $vocab["general_settings"]        = "Generelt";
-$vocab["time_settings"]           = "Luketider";
+$vocab["time_settings"]           = "Tidsskala";
 $vocab["period_settings"]         = "Periodenavn";
 $vocab["add_period"]              = "Legg til periode";
 $vocab["confirmation_settings"]   = "Innstillinger for bekreftelse";
@@ -419,6 +534,7 @@ $vocab["booking_policies"]        = "Reservasjonsregler";
 $vocab["booking_creation"]        = "Ny reservasjon";
 $vocab["booking_deletion"]        = "Slette reservasjon";
 $vocab["booking_limits"]          = "Begrens antall reservasjoner";
+$vocab["booking_limits_secs"]     = "Begrensninger på total lengde på reservasjoner pr. bruker (kun tidsmodus)";
 $vocab["booking_durations"]       = "Begrens varigheten på reservasjoner";
 $vocab["max_duration"]            = "Maks varighet";
 $vocab["min_book_ahead"]          = "Forhåndsreservering - minimum";
@@ -431,9 +547,14 @@ $vocab["max_per_week"]            = "Maks antall pr. uke";
 $vocab["max_per_month"]           = "Maks antall pr. måned";
 $vocab["max_per_year"]            = "Maks antall pr. år";
 $vocab["max_per_future"]          = "Maks antall i framtiden";
+$vocab["max_secs_per_day"]        = "Maks tid pr. dag";
+$vocab["max_secs_per_week"]       = "Maks tid pr. uke";
+$vocab["max_secs_per_month"]      = "Maks tid pr. måned";
+$vocab["max_secs_per_year"]       = "Maks tid pr. år";
+$vocab["max_secs_per_future"]     = "Maks tid framover i tid";
 $vocab["custom_html"]             = "Egendefinert HTML";
 $vocab["custom_html_note"]        = "Dette feltet kan brukes for å vise din egen html, f.eks. et embedded Google Map";
-$vocab["email_list_note"]         = "Skriv inn en liste med eposter, adskilt av komma eller linjeskift";
+$vocab["email_list_note"]         = "Skriv inn en liste med e-poster, adskilt av komma eller linjeskift";
 $vocab["mode"]                    = "Modus";
 $vocab["mode_periods"]            = "Perioder";
 $vocab["mode_times"]              = "Tider";
@@ -449,10 +570,18 @@ $vocab["disabled_room_note"]      = "Dersom dette rommet blir deaktivert, så vi
 $vocab["book_ahead_note_periods"] = "Når perioder er i bruk, reservasjoner fram i tid er rundet ned til nærmeste dag.";
 
 // Used in edit_users.php
+$vocab["invalid_types"]           = "Ugyldige typer";
+$vocab["invalid_types_note"]      = "Dette er typer som ikke er gyldige brukt i dette rommet.";
+$vocab["select_note"]             = "Bruk Control-klikk for å slå av/på et valg";
 $vocab["name_empty"]         = "Du må skrive et navn.";
 $vocab["name_not_unique"]    = "finnes allerede. Vennligst velg et annet navn.";
 
 // Used in del.php
+$vocab["invalid_date"]        = "Feltet '%s' må inneholde en gyldig dato i formatet ÅÅÅÅ-MM-DD.";
+$vocab["confirm_delete_user"] = "Er du sikker på at du slette denne brukeren?";
+$vocab["confirm_delete_user_plus"]  = "Er du sikker på at du vil slette denne brukeren? Brukeren er involvert i " .
+                                      "reservasjoner som oppretter, endrer eller registrant, og sletting av bruker " .
+                                      "vil medføre at denne informasjonen forsvinner, som f.eks. navn og e-post.";
 $vocab["deletefollowing"]    = "Dette vil slette følgende reservasjoner";
 $vocab["and_n_more"]         = "og %s til";  // %s rather than %d because n is the output of number_format()
 $vocab["sure"]               = "Er du sikker?";
@@ -463,8 +592,8 @@ $vocab["delarea"]            = "Du må slette alle rommene under området før d
 // Used in help.php
 $vocab["about_mrbs"]         = "Om MRBS";
 $vocab["mrbs_version"]            = "MRBS versjon";
-$vocab["db_schema_version"]       = "Database schema versjon";
-$vocab["db_local_schema_version"] = "Database local schema versjon";
+$vocab["db_schema_version"]       = "Database skjemaversjon";
+$vocab["db_local_schema_version"] = "Database lokal skjemaversjon";
 $vocab["config_details"]          = "Detaljer om konfigurasjon";
 $vocab["server_details"]          = "Detaljer om tjener";
 $vocab["database"]           = "Database";
@@ -476,15 +605,20 @@ $vocab["please_contact"]     = "Vennligst ta kontakt med %s for spørsmål som i
 
 // Used in DataTables
 $vocab["import_icalendar"]            = "Importer en iCal-fil";
+$vocab["source"]                      = "Kilde";
 $vocab["area_room_settings"]          = "Områder og rom";
 $vocab["other_settings"]              = "Andre innstillinger";
-$vocab["import_intro"]                = "Her kan du importere en RFC 5545 fil ";
+$vocab["import_intro"]                = "Her kan du importere en RFC 5545-fil ";
 $vocab["supported_file_types"]        = "Følgende filtyper støttes:";
 $vocab["import_text_file"]            = "ukomprimerte iCal-filer";
 $vocab["import_zip"]                  = "zip-arkiv, inkluder flere filer i ett arkiv";
 $vocab["import_gzip"]                 = "gzip-filer";
 $vocab["import_bzip2"]                = "bzip2-filer";
+$vocab["source_type"]                 = "Kildetype";
+$vocab["file"]                        = "File";
 $vocab["file_name"]                   = "Fil";
+$vocab["url"]                         = "URL";
+$vocab["invalid_url"]                 = "Ugyldig URL";
 $vocab["import"]                      = "Importer";
 $vocab["upload_failed"]               = "Feil ved opplasting";
 $vocab["max_allowed_file_size"]       = "Maks tillat filstørrelse er %s";
@@ -493,16 +627,23 @@ $vocab["could_not_process"]           = "Feil ved importen: kunne ikke behandle 
 $vocab["badly_formed_ics"]            = "Feil i utforming av VCALENDAR-fil";
 $vocab["default_room"]                = "Standardrom";
 $vocab["default_room_note"]           = "Rommet som skal benyttes hvis ingen tilhøriget er oppgitt";
+$vocab["ignore_location"]             = "Bruk standardrom i stedet for LOKASJON";
+$vocab["add_location"]                = "Legg LOKASJON til";
+$vocab["expanded_name"]               = '%1$s [%2$s]'; // 1$ - SUMMARY, 2$ - LOCATION
+$vocab["expanded_empty_name"]         = '[%s]'; // LOCATION
+$vocab["expanded_description"]        = '%1$s [%2$s]'; // 1$ - DESCRIPTION, 2$ - LOCATION
+$vocab["expanded_empty_description"]  = '[%s]'; // LOCATION
 $vocab["area_room_order"]             = "Rekkefølge";
-$vocab["area_room_order_note"]        = "The order of the area and room names in the LOCATION property";
+$vocab["area_room_order_note"]        = "Rekkefølge på område og romnavn i LOKASJON";
 $vocab["area_room"]                   = "Område-rom";
 $vocab["room_area"]                   = "Rom-område";
 $vocab["area_room_delimiter"]         = "Skilletegn";
-$vocab["area_room_delimiter_note"]    = "The string separating the area and room names in the LOCATION property.  " .
+$vocab["area_room_delimiter_note"]    = "Streng som skiller område og romnavn i LOKASJON.  " .
 $vocab["area_room_create"]            = "Opprett rom hvis det er nødvendig";
+$vocab["import_past"]                 = "Importer tidligere reservasjoner";
 $vocab["default_type"]                = "Standardtype";
-$vocab["room_does_not_exist_no_area"] = "room does not exist and cannot be added - no area given";
-$vocab["room_not_unique_no_area"]     = "room name is not unique.  Cannot choose which one without an area.";
+$vocab["room_does_not_exist_no_area"] = "rom eksisterer ikke og kan ikke legges til - område ikke oppgitt";
+$vocab["room_not_unique_no_area"]     = "romnavn er ikke unikt. Kan ikke velge hvilket uten et område.";
 $vocab["area_does_not_exist"]         = "Området finnes ikke:";
 $vocab["room_does_not_exist"]         = "Rommet finnes ikke:";
 $vocab["creating_new_area"]           = "Opprette nytt område:";
@@ -511,15 +652,20 @@ $vocab["could_not_create_area"]       = "Kunne ikke opprette område";
 $vocab["could_not_create_room"]       = "Kunne ikke opprette rom";
 $vocab["could_not_find_room"]         = "Kunne ikke finne rom";
 $vocab["could_not_import"]            = "Kunne ikke importere";
-$vocab["no_LOCATION"]                 = "The VEVENT did not include a LOCATION property";
-$vocab["invalid_RRULE"]               = "Invalid RRULE: missing FREQ part";
-$vocab["more_than_one_BYDAY"]         = "MRBS does not support more than one BYDAY value when FREQ=";
-$vocab["BYDAY_equals_5"]              = "MRBS does not support a BYDAY value of 5";
-$vocab["unsupported_FREQ"]            = "MRBS does not support FREQ=";
-$vocab["unsupported_COUNT"]           = "COUNT not yet supported by MRBS";
-$vocab["no_indefinite_repeats"]       = "Indefinite repeats not yet supported by MRBS";
+$vocab["import_no_SUMMARY"]           = "Omportert reservasjon - ingen OPPSUMMERING tilgjengelig";  // This string cannot be empty
+$vocab["no_LOCATION"]                 = "VEVENT inkluderte ikke en LOCATION-enhet";
+$vocab["invalid_RRULE"]               = "Ugyldig RRULE: mangler FREQ-del";
+$vocab["invalid_RFC5545_day"]         = "Ugyldig dag '%s'";
+$vocab["more_than_one_BYDAY"]         = "MRBS støtter ikke mer enn en BYDAY-verdi når FREQ=";
+$vocab["BYDAY_equals_5"]              = "MRBS støtter ikke BYDAY verdi 5";
+$vocab["unsupported_FREQ"]            = "MRBS støtter ikke FREQ=";
+$vocab["unsupported_COUNT"]           = "COUNT støttes foreløpig ikke av MRBS";
+$vocab["no_indefinite_repeats"]       = "Uendelige repetisjoner støttes ikke av MRBS";
+$vocab["bad_timezone"]                = "Ugyldig eller feil tidssone '%s'";
 $vocab["events_imported"]             = "reservasjoner importert";
 $vocab["events_not_imported"]         = "reservasjoner ikke importert";
+$vocab["range_separator"]     = " - ";  // For separating two dates/times in a range
+$vocab["date_time_separator"] = ", ";   // For separating a date from a time
 $vocab["dt_all"]             = "Alle";
 $vocab["show_hide_columns"]  = "Vis/skjul kolonner";
 $vocab["copy"]               = "Kopier";
@@ -534,9 +680,11 @@ $vocab["type.I"]             = "Intern";
 $vocab["type.E"]             = "Ekstern";
 
 // General
-$vocab["fatal_error"]        = "Whoops!  Unfortunately MRBS has encountered a fatal error.  Please consult your system administrator.";
+$vocab["fatal_error"]        = "Whoops! Beklagligvis har MRBS oppdaget en alvorlig feil. Ta kontakt med systemadministrator.";
+$vocab["resize_error"]       = "Whoops! Beklagligvis har MRBS oppdaget en feil ved endring av denne reservasjonen. Hvis dette " .
+                               "fortsetter å skje må du kontakte systemadministrator.";
 $vocab["fatal_db_error"]     = "Fatal feil: beklageligvis er ikke databasen tilgjengelig for øyeblikket.";
-$vocab["fatal_no_tables"]    = "Fatal error: the MRBS tables do not exist or cannot be accessed.";
+$vocab["fatal_no_tables"]    = "Fatal feil: MRBS-tabeller eksisterer ikke eller kan ikke nås.";
 $vocab["session_expired"]    = "Sesjonen har utløpt.";
 $vocab["browser_not_supported"] = "Beklager, men nettleseren støttes ikke av %s.  Du må bruke en mer moderne " .
 $vocab["back"]               = "Tilbake";
