@@ -354,10 +354,15 @@ function alias_header(string $header, array $aliases) : string
 }
 
 
-// Returns a sorted associative array of acceptable language qualifiers, indexed
-// by language, given an Accept-Language header string.
-// If $translate_wildcard is set then the wildcard language identifier ('*') is
-// translated to a standard language - we use 'en'.
+/**
+ * Returns a sorted associative array of acceptable language qualifiers, indexed
+ * by language.
+ *
+ * @param string|null $header an Accept-Language header string
+ * @param bool $translate_wildcard If set then the wildcard language identifier ('*') is
+ *                                 translated to a standard language - we use 'en'
+ * @return array<string, float>
+ */
 function get_qualifiers(?string $header, bool $translate_wildcard=false) : array
 {
   $result = array();

@@ -298,10 +298,13 @@ class Locale
   }
 
 
-  // Converts an Accept-Language request-header from a string to an
-  // array of acceptable languages with the language as the key and
-  // the quality value as the value, sorted in decreasing order of
-  // quality value.  A wildcard in the header is translated.
+  /**
+   * Converts an Accept-Language request-header to an array of acceptable languages
+   * with the language as the key and the quality value as the value, sorted in
+   * decreasing order of quality value.  A wildcard in the header is translated.
+   *
+   * @return array<string, float>
+   */
   private static function toSortedArray(string $header) : array
   {
     return get_qualifiers($header, true);
