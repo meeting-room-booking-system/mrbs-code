@@ -50,16 +50,13 @@ class Locale
    */
   public static function acceptFromHttp(string $header)
   {
-    if (isset($header))
-    {
-      $accept_languages = self::toSortedArray($header);
+    $accept_languages = self::toSortedArray($header);
 
-      foreach($accept_languages as $accept_language => $value)
+    foreach($accept_languages as $accept_language => $value)
+    {
+      if (System::isAvailableLocale($accept_language))
       {
-        if (System::isAvailableLocale($accept_language))
-        {
-          return $accept_language;
-        }
+        return $accept_language;
       }
     }
 
