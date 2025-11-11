@@ -226,7 +226,7 @@ function get_mrbs_locale($header=null) : string
     }
 
     // If everything fails, use English
-    if (!isset($locale))
+    if (!isset($locale) || ($locale === false))
     {
       $locale = 'en';
     }
@@ -354,10 +354,15 @@ function alias_header(string $header, array $aliases) : string
 }
 
 
-// Returns a sorted associative array of acceptable language qualifiers, indexed
-// by language, given an Accept-Language header string.
-// If $translate_wildcard is set then the wildcard language identifier ('*') is
-// translated to a standard language - we use 'en'.
+/**
+ * Returns a sorted associative array of acceptable language qualifiers, indexed
+ * by language.
+ *
+ * @param string|null $header an Accept-Language header string
+ * @param bool $translate_wildcard If set then the wildcard language identifier ('*') is
+ *                                 translated to a standard language - we use 'en'
+ * @return array<string, float>
+ */
 function get_qualifiers(?string $header, bool $translate_wildcard=false) : array
 {
   $result = array();
@@ -571,7 +576,7 @@ function get_datatable_lang_path() : ?string
   if (!$have_result)
   {
     $dir = 'jquery/datatables/language';
-    $file = get_best_lang_file(__DIR__ . "/$dir", '', '.json');
+    $file = get_best_lang_file(__DIR__ . "/$dir", '', '.json', ['en']);
     $result = (isset($file)) ? "$dir/$file" : null;
     $have_result = true;
   }

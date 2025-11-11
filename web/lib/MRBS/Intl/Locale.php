@@ -43,24 +43,24 @@ class Locale
   const VALID_LOCALE = 1;
 
 
-  // Tries to find out best available locale based on HTTP "Accept-Language" header
-  // Returns locale in normalised form, or NULL if none found
+  /**
+   * Tries to find out best available locale based on HTTP "Accept-Language" header.
+   *
+   * @return string|false the corresponding locale identifier, or FALSE if none found
+   */
   public static function acceptFromHttp(string $header)
   {
-    if (isset($header))
-    {
-      $accept_languages = self::toSortedArray($header);
+    $accept_languages = self::toSortedArray($header);
 
-      foreach($accept_languages as $accept_language => $value)
+    foreach($accept_languages as $accept_language => $value)
+    {
+      if (System::isAvailableLocale($accept_language))
       {
-        if (System::isAvailableLocale($accept_language))
-        {
-          return $accept_language;
-        }
+        return $accept_language;
       }
     }
 
-    return null;
+    return false;
   }
 
 
@@ -298,10 +298,13 @@ class Locale
   }
 
 
-  // Converts an Accept-Language request-header from a string to an
-  // array of acceptable languages with the language as the key and
-  // the quality value as the value, sorted in decreasing order of
-  // quality value.  A wildcard in the header is translated.
+  /**
+   * Converts an Accept-Language request-header to an array of acceptable languages
+   * with the language as the key and the quality value as the value, sorted in
+   * decreasing order of quality value.  A wildcard in the header is translated.
+   *
+   * @return array<string, float>
+   */
   private static function toSortedArray(string $header) : array
   {
     return get_qualifiers($header, true);
