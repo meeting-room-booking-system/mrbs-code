@@ -576,7 +576,7 @@ function get_datatable_lang_path() : ?string
   if (!$have_result)
   {
     $dir = 'jquery/datatables/language';
-    $file = get_best_lang_file(__DIR__ . "/$dir", '', '.json');
+    $file = get_best_lang_file(__DIR__ . "/$dir", '', '.json', ['en']);
     $result = (isset($file)) ? "$dir/$file" : null;
     $have_result = true;
   }
