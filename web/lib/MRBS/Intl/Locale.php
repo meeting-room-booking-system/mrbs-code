@@ -26,7 +26,7 @@ else
 }
 */
 
-use MRBS\Exception;
+use InvalidArgumentException;
 use MRBS\System;
 use function MRBS\get_qualifiers;
 
@@ -262,7 +262,7 @@ class Locale
   {
     if ($canonicalize)
     {
-      throw new Exception('MRBS: the MRBS version of Locale::lookup() does not yet support $canonicalize = true');
+      throw new InvalidArgumentException('MRBS: the MRBS version of Locale::lookup() does not yet support $canonicalize = true');
     }
 
     // Get the langtags and locale in the same format, ie separated by '-' and
