@@ -464,16 +464,18 @@ function get_langtags(string $dir, string $prefix='', string $suffix='') : array
 }
 
 
-// Get the best fit language file from $dir given the set of language preferences.  Returns NULL
-// if none available.
-//   $default_langtags is an array of languages that are already built into the system
-//     and do not need an explicit regional setting.
-//   $lang_map is an associative array that maps a filename (less prefix and suffix)
-//     onto a language tag, for example array('English' => 'en').  Useful when the localisation
-//     files do not follow a language tag naming scheme.
-//
-// The file names are assumed to be of the form $prefix . $lang . $suffix, eg
-// 'datepicker-en-GB.js'
+/**
+ * Get the best fit language file from a directory given the set of language preferences.
+ *
+ * The file names are assumed to be of the form `$prefix . $lang . $suffix`, eg 'datepicker-en-GB.js'.
+ *
+ * @param string[]|null $default_langtags an array of languages that are already built into the system and do not
+ * need an explicit regional setting
+ * @param array<string, string>|null $lang_map an associative array that maps a filename (less prefix and suffix)
+ * onto a language tag, for example array('English' => 'en').  Useful when the localisation files do not follow a
+ * language tag naming scheme.
+ * @return string|null the filename, or NULL if no suitable file is available.
+ */
 function get_best_lang_file(string $dir, string $prefix='', string $suffix='', ?array $default_langtags=null, ?array $lang_map=null) : ?string
 {
   if (!is_dir($dir))
