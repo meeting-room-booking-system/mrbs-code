@@ -1,0 +1,73 @@
+<?php
+// Database settings
+$dbsys = "mysqli";
+$db_host = getenv('DB_HOST') ?: 'localhost';
+$db_database = getenv('DB_NAME') ?: 'mrbs';
+$db_login = getenv('DB_USER') ?: 'mrbs_user';
+$db_password = getenv('DB_PASSWORD') ?: 'mrbs-db-user-2025';
+$db_port = getenv('DB_PORT') ?: 3306;
+
+// Mail settings
+$mrbs_admin_email = getenv('ADMIN_EMAIL') ?: 'derek.crager@gmail.com';
+
+// General settings
+$timezone = "America/New_York";
+$weekstarts = 0;
+$auth["type"] = "db";
+$auth["session"] = "php";
+
+// Enable debugging
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
+// Set table prefix
+$db_tbl_prefix = "mrbs_";
+
+// Authentication settings
+$auth["admin"][] = "admin";
+$auth["user"]["admin"] = "secret";
+
+// Area settings
+$area_list_format = "select";
+
+// Entry settings
+$resolution = 1800;
+$default_duration = 3600;
+$default_duration_all_day = TRUE;
+
+// Display settings
+$default_view = "month";
+$view_week_number = TRUE;
+$times_along_top = FALSE;
+$highlight_past_time = TRUE;
+$show_plus_link = TRUE;
+
+// Calendar settings
+$monthly_view_entries_details = TRUE;
+
+// Room Custom Fields
+$room_custom_fields = array(
+    'features' => array(
+        'label'    => "Room Features",
+        'type'     => 'checkbox',
+        'options'  => array(
+            'projector'   => "Projector",
+            'whiteboard'  => "Whiteboard",
+            'tv'         => "TV/Display",
+            'computer'   => "Computer Workstation",
+            'phone'      => "Conference Phone",
+            'webcam'     => "Video Conference",
+            'accessible' => "Wheelchair Accessible"
+        )
+    )
+);
+
+// Change "Invalid types" to "Room Type"
+$vocab_override['en']['type.'] = "Room Type";
+$booking_types = array(
+    'I' => "Internal",
+    'E' => "External"
+);
+
+// Make custom fields visible on forms
+$edit_entry_field_order = array('name', 'description', 'start_time', 'end_time', 'room_id', 'type', 'confirmation_status');

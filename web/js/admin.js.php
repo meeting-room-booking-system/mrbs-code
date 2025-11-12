@@ -11,22 +11,31 @@ http_headers(array("Content-type: application/x-javascript"),
 'use strict';
 
 $(document).on('page_ready', function() {
+  // Wait for DOM to be fully ready
+  setTimeout(function() {
+    var $table = $('#rooms_table');
+    
+    if ($table.length === 0) {
+      return;
+    }
 
-  var tableOptions = {};
-  var fixedColumnsOptions = {leftColumns: 1};
+    var tableOptions = {
+      pageLength: 25,
+      order: [[0, 'asc']],
+      columnDefs: getTypes($table),
+      drawCallback: function(settings) {
+        var api = this.api();
+        if (api && typeof api.columns === 'function') {
+          api.columns.adjust();
+        }
+      }
+    };
+    
+    var fixedColumnsOptions = {
+      leftColumns: 1,
+      rightColumns: args.isAdmin ? 1 : 0
+    };
 
-  <?php // Get the types and feed those into dataTables ?>
-  tableOptions.columnDefs = getTypes($('#rooms_table'));
-
-  <?php
-  // Turn the list of rooms into a dataTable
-  // If we're an admin, then fix the right hand column
-  ?>
-  if (args.isAdmin)
-  {
-    fixedColumnsOptions.rightColumns = 1;
-  }
-
-  makeDataTable('#rooms_table', tableOptions, fixedColumnsOptions);
+    makeDataTable('#rooms_table', tableOptions, fixedColumnsOptions);
+  }, 0);
 });
-
