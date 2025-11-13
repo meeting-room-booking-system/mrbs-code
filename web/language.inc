@@ -14,14 +14,6 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 require_once "functions.inc";
 
-
-// A map of browser locale aliases
-$lang_aliases = array
-(
-  'no' => 'nb',         // Not all operating systems will accept a locale of 'no'
-  'sh' => 'sr-latn-rs',
-);
-
 // Map non-standard language codes used by flatpickr onto BCP 47 language tags
 $flatpickr_lang_map = array(
   'at'      => 'de-at',
@@ -51,7 +43,6 @@ $rtl_languages = array(
 language_debug('$disable_automatic_language_changing: ' . (($disable_automatic_language_changing) ? 'true' : 'false'));
 language_debug('$default_language_tokens: ' . ($default_language_tokens ?? 'NULL'));
 language_debug('$cli_language: ' . ($cli_language ?? 'NULL'));
-language_debug('$override_locale: ' . ($override_locale ?? 'NULL'));
 
 
 
@@ -66,13 +57,11 @@ language_debug('$override_locale: ' . ($override_locale ?? 'NULL'));
 // trying to find a locale that is available on the server and has a translation available
 // in MRBS and has localisations available in all the third party libraries.
 
-$http_accept_language = $server['HTTP_ACCEPT_LANGUAGE'] ?? '';
-language_debug("HTTP_ACCEPT_LANGUAGE: $http_accept_language");
 
 // Translate languages in the header string to their aliases
 if (isset($server['HTTP_ACCEPT_LANGUAGE']))
 {
-  $aliased_header = alias_header($server['HTTP_ACCEPT_LANGUAGE'], $lang_aliases);
+  $aliased_header = alias_header($server['HTTP_ACCEPT_LANGUAGE'], $lang_aliases ?? []);
 }
 else
 {
@@ -310,8 +299,7 @@ function get_mrbs_lang(?string $locale=null)
 }
 
 
-// Returns a version of the Accept-Language request HTTP header with language
-// strings substituted for their aliases
+
 function alias_header(string $header, array $aliases) : string
 {
   if (!empty($aliases))
