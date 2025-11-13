@@ -54,6 +54,23 @@ session();
 // Initialise error reporting
 Errors::init();
 
+// Check and adjust if necessary the format of $override_locale which changed in versions
+// of MRBS > 1.7.1
+if (!empty($override_locale))
+{
+  $new_override_locale = System::getBCPlocale($override_locale);
+  if (mb_strtolower($override_locale) != mb_strtolower($new_override_locale))
+  {
+    $message = 'The config variable $override_locale should now be in BCP 47 format. ' .
+      "Please change '$override_locale' to '$new_override_locale'.";
+    trigger_error($message, E_USER_NOTICE);
+    $override_locale = $new_override_locale;
+  }
+}
+
+// Initialise the language system
+Language::init($override_locale ?? null);
+
 // Flush the mail queue on shutdown
 register_shutdown_function(__NAMESPACE__ . "\\MailQueue::flush");
 
