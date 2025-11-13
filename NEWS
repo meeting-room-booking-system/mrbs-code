@@ -7,6 +7,207 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.12.0 (Wed 12th November 2025):
+
+[-] Fix TypeError when using $max_booking_date.  See GitHub Issue #3772.
+
+[-] Fix TypeError when using $min_booking_date.  See GitHub Issue #3773.
+
+[*] Update lang.pl. Add $vocab["today"]
+
+[*] Add full description to title attribute in month view.  See GitHub Issue #3780.
+
+[*] Upgrade to PHPMailer 6.9.3.
+
+[*] Upgrade QRCode to latest code from v5.0.x branch.
+
+[*] Upgrade to jQuery 3.7.1 and jQuery Migrate 3.5.0.
+
+[*] Upgrade to jQuery UI 1.14.1.
+
+[-] Fix bug resulting in booking resizing not working.
+
+[-] Fix problem when resizing a booking past the top of the table.
+
+[-] Fix problem when resizing a booking that has a portion it of view at the bottom
+ of the table.
+
+[-] Fix problem when resizing a booking that has a portion it out of view at the left or
+ right of the table.
+
+[+] Add config setting to control auto-scrolling.  See GitHub Issue #3783.
+
+[*] Change "message" to "System message" to make its purpose clearer.  See GitHub Issue
+ #3784.
+
+[*] Make admin pages have level $max_level rather than 2.  See GitHub Issue #3785.
+
+[*] Improve the view after a booking has been saved so that the brief description is visible.
+
+[-] Fix bug causing hidden days to be disabled in custom date fields.
+
+[-] Fix bug causing the wrong timezone to be used for the "last updated" column in the
+ users list if the server timezone differs from timezone of the default area.
+
+[*] Standardise on no leading or trailing spaces for the output of the syntax_* methods.
+
+[*] Improve error handling.  See GitHub Issue #3796.
+
+[-] Fix TypeError.  See GitHub Issue #3797.
+
+[*] Improve styling by adding a margin underneath the search results heading.
+
+[*] German translation updated (#3800)
+
+[-] Fix bug resulting in an unwanted '%' appearing in text when copying email addresses.
+
+[*] Clarified documentation for configuring the database settings.  See GitHub Issue #3801.
+
+[*] Make it easier to extend the AuthDb class by removing tests of the kind
+ $auth['type'] == 'db'.  See GitHub Issue #3803.
+
+[*] Add 'last_updated' key to get_entries_by_area() and get_entries_by_room().  See
+ GitHub Issue #3791.
+
+[-] Fix bug causing incorrect end time to be shown in reports when using periods.
+
+[*] Upgrade to PHPIMAP 6.1.0.
+
+[*] Improvements to database upgrade system.
+
+[*] AuthCas: Change getLevel() method from private to protected to allow extension. 
+ See GitHub Issue #3818.
+
+[*] Enhance get_form_var() to allow arrays of bool, decimal, int or string.
+
+[*] Improve error message when an invalid email address is given for
+ $mail_settings['organizer'].  See GitHub Issue #3831.
+
+[-] Fix TypeError when viewing a period after upgrade from MRBS 1.4.7.  See GitHub
+ Issue #3832.
+
+[*] Display username if the display name cannot be found.  See GitHub Issue #3835.
+
+[-] Fix SQL truncate error when no value is given for a float custom field.
+
+[+] Add support for float custom columns
+
+[-] Fix bug preventing the "last login" column from being sorted if it contains null
+ values.
+
+[+] Add new config setting $default_duration_periods.  See GitHub Issue #3829.
+
+[*] Remove hard-coded square brackets text.  See GitHub Issue #3843.
+
+[+] Add the ability to set php.ini directives using the $ini_directives config variable.
+
+[+] Add a configuration option to allow ordinary users to delete other users' registrations.
+
+[*] Upgrade PHPMailer to Version 6.10.0 introducing full support for RFC 6531 SMTPUTF8,
+ meaning that you are now free to use Unicode characters in email addresses, such as
+ JøeÜser@example.com, and everywhere else, without any complicated encoding schemes. Using 
+ this feature requires that you send through a mail server that advertises support for 
+ SMTPUTF8.
+
+[*] Added an emulation of mb_strlen(), for installations where 'mb' is not
+ available.
+
+[*] Large update to internationalisation/UTF8 support, including new MRBS classes
+ and code.
+
+[*] Replace the second and subsequent spaces in a consecutive sequence with non-breaking
+ space characters to ensure that (a) they are rendered properlty in the select/datalist 
+ element and (b) passed through to the form handler properly.  See GitHub Issue #3871
+
+[*] Strip out any extra whitespace that the user may accidentally have entered in the
+ area or room name.  See GitHub Issue #3871.
+
+[*] Only show the major details for a registration event if the user has write access
+ (to avoid cluttering the page with information that won't be of any use).
+
+[*] Add a new exception class to allow differentiation between errors in the MRBS and
+ external databases.
+
+[*] Update timezone definitions.
+
+[*] Expand error message when an invalid specifier is sent in the Accept-Language
+ request header. See GitHub Issue #3888.
+
+[+] Introduce new config setting $max_slots_per_year
+
+[*] AuthWix: Remove use of curl_close() which is deprecated from PHP 8.5.
+
+[*] Fix use of PDO::MYSQL_* constants, deprecated in PHP 8.5.
+
+[*] Fix use of PDO::PGSQL_* constants, deprecated in PHP 8.5.
+
+[*] Fix use of $http_response_header, deprecated in PHP 8.5.
+
+[*] AuthCas: Fix use of curl_close(), deprecated in PHP 8.5.
+
+[*] Add a check that the repeat end date is not before the start date.  See GitHub
+ Issue #3905.
+
+[*] Prevent the repeat end date datepicker from offering a date before the start date. 
+ See GitHub Issue #3905.
+
+[*] Replace url_get_contents() with GuzzleHttp.
+
+[*] Change minimum required PHP version from 7.2.0 to 7.2.5 (needed for GuzzleHttp).
+
+[*] Fix use of deprecated (by PHP 8.5) __wakeup() magic method.  (The deprecation messages
+ can be triggered by going to index.php or admin.php, restarting the web server, then
+ refreshing the page.)
+
+[-] Fix TypeError when logging in with Joomla!  See GitHub Issue #3903.
+
+[-] Fix TypeError with custom date.  See GitHub Issue #3907.
+
+[-] Fix TypeError with custom decimal.  See GitHub Issue #3907.
+
+[-] Fix uncaught exception SQL error when using custom fields of date or decimal type
+ for which no input is given.  See GitHub Issue #3903.
+
+[+] Add encryption of session data.  Useful now, but will be more useful when we come
+ to store OAuth2 access and refresh tokens in session data.
+
+[*] Fix "Using null as an array offset is deprecated" error.
+
+[*] Upgrade to Mail version 1.10.12.
+
+[*] Upgrade to PEAR version 1.10.16.
+
+[*] Fix PHP 8.4 deprecation errors.
+
+[*] Provide a parse_addresses() function that is more robust than PHPMailer::parseAddresses()
+ which works best when the imap extension is installed. However the imap extension was removed
+ from the PHP core in PHP 8.4.
+
+[*] Upgrade to PHPMailer version 6.11.1
+
+[*] Added a logging class, which allows logging to the browser window or email.
+ Utilises Monolog and Psr/Log.
+
+[*] Move error handling functions into a class.
+
+[*] Use the same 'samesite' setting for the key cookie as the session cookie.
+
+[*] Upgrade PHPMailer to Version 7.0.0 (no change except for version number!)
+
+[+] Add duration, end time, and description (on hover) to the Bookings awaiting approval table
+    Closes #3918
+
+[-] Fix bug causing the Back button on the edit_entry page not to work when using a proxy.
+ See GitHib Issue #3915.
+
+[*] Improve Norwegian language translation.  See GitHub Issue #3922.
+
+[-] Fix bug causing the DataTables language to be set to the best available language in
+ the browser preferences, rather than the $override_locale, when the $override_locale is 
+ set to 'en-XX', where 'XX' is anything other than 'GB', for example 'en-AU'.
+
+
+-------------------------------------------------------------------------------
 Version 1.11.6 (Wed 6th November 2024):
 
 [*] Updated French translations.
