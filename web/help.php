@@ -69,7 +69,7 @@ echo "<p>\n" . get_vocab("browserlang") .":\n";
 
 if (isset($server['HTTP_ACCEPT_LANGUAGE']))
 {
-  echo escape_html(implode(', ', get_browser_langs($server['HTTP_ACCEPT_LANGUAGE'])));
+  echo escape_html(implode(', ', Language::getBrowserPreferences($server['HTTP_ACCEPT_LANGUAGE'])));
 }
 
 echo "\n</p>\n";

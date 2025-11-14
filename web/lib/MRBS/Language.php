@@ -6,27 +6,34 @@ use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\BrowserConsoleHandler;
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Logger;
-use Monolog\Processor\IntrospectionProcessor;
-use MRBS\Errors\Formatter\ErrorLogFormatter;
+use MRBS\Intl\Locale;
 
 class Language
 {
-  // A map of language aliases
+  // A map of language aliases, indexed by the alias
   private const LANG_ALIASES= [
     'no' => 'nb', // Not all operating systems will accept a locale of 'no'
     'sh' => 'sr-latn-rs',
   ];
 
-  private static $aliased_header;
-  private static $override_locale;
-
 
   /**
    * @param string|null $override_locale a locale in BCP 47 format, eg 'en-GB'
    */
-  public static function init(?string $override_locale) : void
+  public static function init(
+    ?string $cli_language,
+    bool $disable_automatic_language_changing,
+    ?string $default_language_tokens,
+    ?string $override_locale
+  ) : void
   {
     global $server;
+
+    self::debug('$cli_language: ' . ($cli_language ?? 'NULL'));
+    self::debug('$disable_automatic_language_changing: ' . (($disable_automatic_language_changing) ? 'true' : 'false'));
+    self::debug('$default_language_tokens: ' . ($default_language_tokens ?? 'NULL'));
+    self::debug('$override_locale: ' . ($override_locale ?? 'NULL'));
+    self::debug('Accept-Language: ' . ($server['HTTP_ACCEPT_LANGUAGE'] ?? 'NULL'));
 
     // Set the default character encoding
     ini_set('default_charset', 'UTF-8');
@@ -37,37 +44,154 @@ class Language
       mb_internal_encoding('UTF-8');
     }
 
-    self::$override_locale = $override_locale;
-    self::debug('$override_locale: ' . ($override_locale ?? 'NULL'));
-
-    // Construct the aliased header
-    self::$aliased_header = (isset($server['HTTP_ACCEPT_LANGUAGE'])) ? self::aliasHeader($server['HTTP_ACCEPT_LANGUAGE']) : null;
-    self::debug('HTTP_ACCEPT_LANGUAGE: ' . ($server['HTTP_ACCEPT_LANGUAGE'] ?? 'NULL'));
-    self::debug('Aliased header: ' . (self::$aliased_header ?? 'NULL'));
+    // Work out the preferred order of locales
+    $preferences = self::getPreferences(
+      $cli_language,
+      $disable_automatic_language_changing,
+      $default_language_tokens,
+      $override_locale
+    );
+    self::debug('$preferences: ' . json_encode($preferences));
   }
 
 
   /**
-   * Returns a version of the Accept-Language request HTTP header with language
-   * strings substituted for their aliases.
+   * Returns a string of acceptable languages, sorted in decreasing order of preference.
+   *
+   * @param bool $translate_wildcard If set then the wildcard language identifier ('*') is
+   *                                 translated to a standard language - we use 'en'
+   * @return string[]
    */
-  private static function aliasHeader(string $header) : string
+  public static function getBrowserPreferences(?string $header, bool $translate_wildcard = false) : array
   {
-    if (!empty(self::LANG_ALIASES))
+    return array_keys(self::getQualifiers($header, $translate_wildcard));
+  }
+
+
+  /**
+   * Returns a sorted associative array of acceptable language qualifiers, indexed
+   * by language.
+   *
+   * @param string|null $header an Accept-Language header string
+   * @param bool $translate_wildcard If set then the wildcard language identifier ('*') is
+   *                                 translated to a standard language - we use 'en'
+   * @return array<string, float>
+   */
+  public static function getQualifiers(?string $header, bool $translate_wildcard = false) : array
+  {
+    $result = array();
+
+    if (!empty($header))
     {
-      $patterns = array();
-      $replacements = array();
+      $lang_specifiers = explode(',', $header);
 
-      foreach (self::LANG_ALIASES as $key => $value)
+      foreach ($lang_specifiers as $specifier)
       {
-        $patterns[] = "/(?<=^|,)($key)(?=,|;|$)/i";
-        $replacements[] = $value;
-      }
+        unset($weight);
+        $specifier = trim($specifier);
 
-      $header = preg_replace($patterns, $replacements, $header);
+        // The regular expressions below are not tight definitions of permissible language tags.
+        // They let through some tags which are not permissible, but they do allow permissible
+        // tags such as 'es-419'.
+        if (preg_match('/^([a-zA-Z0-9\-]+|\*);q=([0-9.]+)$/', $specifier, $matches))
+        {
+          $language = $matches[1];
+          $weight = (float) $matches[2];
+        }
+        else if (preg_match('/^([a-zA-Z0-9\-]+|\*)$/', $specifier, $matches))
+        {
+          $language = $matches[1];
+          $weight = 1.0;
+        }
+        else
+        {
+          $message = "Unexpected specifier format '$specifier' in the Accept-Language request header sent by the client.";
+          trigger_error($message, E_USER_NOTICE);
+        }
+
+        if (isset($weight))
+        {
+          if ($translate_wildcard && ($language == '*'))
+          {
+            // Handle the wildcard language by using English
+            $language = 'en';
+          }
+          // If a language occurs twice (possibly as a result of a wildcard or aliasing) then
+          // only change the weight if it's greater than the one we've already got.
+          if (!isset($result[$language]) || ($weight > $result[$language]))
+          {
+            $result[$language] = $weight;
+          }
+        }
+      }
     }
 
-    return $header;
+    arsort($result, SORT_NUMERIC);
+
+    return $result;
+  }
+
+
+  /**
+   * Convert a language alias to the real language.
+   */
+  private static function unAlias(string $lang) : string
+  {
+    if (!empty(self::LANG_ALIASES) && array_key_exists($lang, self::LANG_ALIASES))
+    {
+      return self::LANG_ALIASES[$lang];
+    }
+
+    return $lang;
+  }
+
+
+  /**
+   * Get the preferred set of locales in descending order.
+   *
+   * @return string[]
+   */
+  private static function getPreferences(
+    ?string $cli_language,
+    bool $disable_automatic_language_changing,
+    ?string $default_language_tokens,
+    ?string $override_locale
+  ) : array
+  {
+    global $server;
+
+    $result = [];
+
+    // If we're running from the CLI then use the CLI language, if set, as first preference.
+    if (is_cli() && isset($cli_language) && ($cli_language !== ''))
+    {
+      $result[] = $cli_language;
+    }
+
+    // Otherwise if we're not using automatic language changing, then use the default language, if set.
+    elseif ($disable_automatic_language_changing && isset($default_language_tokens) && ($default_language_tokens !== ''))
+    {
+      $result[] = $default_language_tokens;
+    }
+
+    // Otherwise use the override locale, if set, and then the browser preferences.
+    else
+    {
+      if (isset($override_locale))
+      {
+        $result[] = $override_locale;
+      }
+      if (isset($server['HTTP_ACCEPT_LANGUAGE']))
+      {
+        $result = array_merge($result, self::getBrowserPreferences($server['HTTP_ACCEPT_LANGUAGE'], true));
+      }
+    }
+
+    // Add a backstop at the very bottom of the list
+    $result[] = 'en';
+
+    // Remove any aliases
+    return array_map([__CLASS__, 'unAlias'], $result);
   }
 
 

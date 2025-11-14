@@ -27,8 +27,9 @@ else
 */
 
 use InvalidArgumentException;
+use MRBS\Language;
 use MRBS\System;
-use function MRBS\get_qualifiers;
+
 
 class Locale
 {
@@ -307,7 +308,7 @@ class Locale
    */
   private static function toSortedArray(string $header) : array
   {
-    return get_qualifiers($header, true);
+    return Language::getQualifiers($header, true);
   }
 
 }

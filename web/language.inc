@@ -39,13 +39,6 @@ $rtl_languages = array(
   'he'
 );
 
-
-language_debug('$disable_automatic_language_changing: ' . (($disable_automatic_language_changing) ? 'true' : 'false'));
-language_debug('$default_language_tokens: ' . ($default_language_tokens ?? 'NULL'));
-language_debug('$cli_language: ' . ($cli_language ?? 'NULL'));
-
-
-
 // Determine locale and language to use.  MRBS's strategy is first to find the locale
 // that best fits the config settings and the user's browser preferences.  Then it
 // finds a language that best fits the locale, subject to any overriding config settings.
