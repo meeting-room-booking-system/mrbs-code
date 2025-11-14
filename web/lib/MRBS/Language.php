@@ -162,6 +162,12 @@ class Language
 
     $result = [];
 
+    // The preference order is determined by the config settings and the browser language
+    // preferences, if appropriate.  The order below is used for backward compatibility
+    // with older versions of MRBS.  However, it's a bit messy.  In particular $override_locale
+    // and $default_language tokens have some overlap.
+    // TODO: Review this and come up with something more logical?
+
     // If we're running from the CLI then use the CLI language, if set, as first preference.
     if (is_cli() && isset($cli_language) && ($cli_language !== ''))
     {
