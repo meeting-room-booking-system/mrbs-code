@@ -23,7 +23,10 @@ $vocab["outstanding"]        = "oczekujących rezerwacji";
 $vocab["bookingsfor"]        = "Rezerwacja dla";
 $vocab["bookingsforpost"]    = ""; // To idzie po dacie
 $vocab["areas"]              = "Strefy";
-$vocab["today"]              = "Dzisiaj";
+$vocab["now_day"]            = "Dzisiaj";
+$vocab["now_week"]           = "Dzisiaj";
+$vocab["now_month"]          = "Dzisiaj";
+$vocab["now_year"]           = "Dzisiaj";
 $vocab["daybefore"]          = "Idź do dnia przed";
 $vocab["dayafter"]           = "Idź do dnia po";
 $vocab["gototoday"]          = "Idź do dnia dzisiejszego";
@@ -322,7 +325,7 @@ $vocab["administration"]     = "Administracja";
 $vocab["invalid_area_name"]  = "Taki budynek juz istnieje!";
 $vocab["empty_name"]         = "Nie podałeś nazwy!";
 
-// Uzyte w edit_area.php edit_room.php 
+// Uzyte w edit_area.php edit_room.php
 $vocab["editarea"]           = "Edytuj Strefę";
 $vocab["change"]             = "Zmień";
 $vocab["editroom"]           = "Edycja Pokoju";

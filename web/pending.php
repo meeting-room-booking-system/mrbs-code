@@ -307,6 +307,8 @@ while (false !== ($row = $res->next_row_keyed()))
   $row['last_updated'] = intval($row['last_updated']);
   $row['entry_info_time'] = intval($row['entry_info_time']);
   $row['repeat_info_time'] = intval($row['repeat_info_time']);
+  // And this comes from the area table
+  $row['area_id'] = intval($row['area_id']);
   if ((strcasecmp_locale($row['create_by'], $mrbs_username) === 0) || is_book_admin($row['room_id']))
   {
     $rows[] = $row;

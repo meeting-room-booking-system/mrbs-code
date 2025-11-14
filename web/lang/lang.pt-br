@@ -25,7 +25,10 @@ $vocab["outstanding"]        = "reservas pendentes";
 $vocab["bookingsfor"]        = "Reservas para";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Áreas";
-$vocab["today"]              = "Hoje";
+$vocab["now_day"]            = "Hoje";
+$vocab["now_week"]           = "Hoje";
+$vocab["now_month"]          = "Hoje";
+$vocab["now_year"]           = "Hoje";
 $vocab["daybefore"]          = "Ir para Dia Anterior";
 $vocab["dayafter"]           = "Ir para Dia Seguinte";
 $vocab["gototoday"]          = "Ir para dia de hoje";
@@ -57,7 +60,7 @@ $vocab["registration_level_unlimited_with_names"] = ' [%1$d: %2$s]';
 $vocab["exit_kiosk_mode_confirm"]    = "Sair do modo quiosque?";
 $vocab["close"]              = "Fechar";
 $vocab["ok"]                 = "OK";
-$vocab["cancel"]             = "Cancelar";						 
+$vocab["cancel"]             = "Cancelar";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Ver Dia";
@@ -135,7 +138,7 @@ $vocab["skip_conflicts"]     = "Skip past conflicts";
 $vocab["no_mail"]            = "Não enviar  email";
 $vocab["ctrl_click"]         = "Precione Control-Click para selecionar mais de uma sala";
 $vocab["entryid"]            = "ID de entrada";
-$vocab["repeat_id"]          = "Repetir ID "; 
+$vocab["repeat_id"]          = "Repetir ID ";
 $vocab["brief_description"]  = "Descrição breve.";
 $vocab["status"]             = "Estado";
 $vocab["public"]             = "Público";
@@ -238,7 +241,7 @@ $vocab["mail_body_reminder"]     = "Alerta - Uma reserva aguarda aprovação; de
 $vocab["mail_body_repeats_booked"]   = "The following dates were booked:";
 $vocab["mail_body_repeats_deleted"]  = "The following bookings were deleted:";
 $vocab["mail_body_exceptions"]       = "The following dates could not be booked due to conflicts:";
-																		  
+
 $vocab["mail_subject_new_entry"] = "Reserva de Salas"; // $mrbs_company
 $vocab["mail_subject_changed_entry"] = "Reserva de Salas"; // $mrbs_company
 $vocab["mail_subject_delete"]     = "Esta reserva foi eliminada"; // $mrbs_company
@@ -294,7 +297,7 @@ $vocab["exit_kiosk_intro"]          = "Enter the password you set when you enter
 $vocab["enter_kiosk_mode"]          = "Enter Kiosk Mode";
 $vocab["exit_kiosk_mode"]           = "Exit Kiosk Mode";
 $vocab["kiosk"]                     = "Kiosk";
-$vocab["kiosk_password"]            = "Kiosk password";																									
+$vocab["kiosk_password"]            = "Kiosk password";
 
 // Used in pending.php
 $vocab["pending"]            = "Reservas pendentes";
@@ -346,7 +349,7 @@ $vocab["upgrading_site"]           = "Upgrading site '%s'";  // site name
 $vocab["upgrading_main_site"]      = "Upgrading the main site";
 $vocab["no_tables_found"]          = "No tables found";
 $vocab["upgrade_to_version"]       = "Atualização de versão";
-$vocab["upgrade_to_local_version"] = "Atualização de versão para versão local"; 
+$vocab["upgrade_to_local_version"] = "Atualização de versão para versão local";
 $vocab["upgrade_completed"]        = "Atualização de versão completa.";
 
 // User access levels

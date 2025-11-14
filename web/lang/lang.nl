@@ -24,7 +24,10 @@ $vocab["outstanding"]        = "Openstaande boekingen";
 $vocab["bookingsfor"]        = "Boekingen voor";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Gebouwen";
-$vocab["today"]              = "Vandaag";
+$vocab["now_day"]            = "Vandaag";
+$vocab["now_week"]           = "Vandaag";
+$vocab["now_month"]          = "Vandaag";
+$vocab["now_year"]           = "Vandaag";
 $vocab["daybefore"]          = "Naar vorige dag";
 $vocab["dayafter"]           = "Naar volgende dag";
 $vocab["gototoday"]          = "Naar vandaag";
@@ -131,7 +134,7 @@ $vocab["skip_conflicts"]     = "Negeer oude conflicten";
 $vocab["no_mail"]            = "Verstuur geen e-mail";
 $vocab["ctrl_click"]         = "Gebruik Ctrl-klik om meer dan 1 ruimte te reserveren";
 $vocab["entryid"]            = "Boeking-ID ";
-$vocab["repeat_id"]          = "Herhalings-ID "; 
+$vocab["repeat_id"]          = "Herhalings-ID ";
 $vocab["brief_description"]  = "Korte omschrijving.";
 $vocab["status"]             = "Status";
 $vocab["public"]             = "Publiek";
@@ -146,9 +149,9 @@ $vocab["invalid_rep_interval"]     = "Het herhaalinterval moet groter zijn dan n
 $vocab["confirm_rep_end_date"]     = "Het lijkt dat je vergeten bent om de einddatum van de herhaling in te stellen. Wil je toch doorgaan?";
 $vocab["type_reserved_for_admins"] = "Het type '%s' is gereserveerd voor beheerders";
 $vocab["multiroom_not_allowed"]    = "Je mag geen boeking maken voor meerdere ruimtes.";
-$vocab["edit_entry_nonexistent_room"] = "Je probeert een boeking te maken voor een ruimte die niet bestaat. " . 
+$vocab["edit_entry_nonexistent_room"] = "Je probeert een boeking te maken voor een ruimte die niet bestaat. " .
                             "Dit zou misschien kunnen omdat je een bladwijzer hebt gevolgd die niet langer geldig is." .
-                            "In het algemeen raden we af om bladwijzers te gebruiken om rechtstreeks naar het " . 
+                            "In het algemeen raden we af om bladwijzers te gebruiken om rechtstreeks naar het " .
                             "boekingsformulier te gaan. In plaats daarvan is het beter om het boekingsformulier " .
                             "te openen vanaf de kalenderweergave.";
 $vocab["home"] = "Thuis";
@@ -215,7 +218,7 @@ $vocab["policy"]                 = "Regels";
 $vocab["conflicts_with_self"]    = "Deze reeks bevat boekingen die overlappen met elkaar. Controleer de boekingseinddatum en de einddatum van de reeks.";
 $vocab["too_many_entries"]   = "Een reeks kan niet meer dan %d boekingen bevatten";
 $vocab["returncal"]          = "Terug naar kalenderweergave";
-$vocab["failed_to_acquire"]  = "Het is niet gelukt om exclusive toegang tot de database te verkrijgen"; 
+$vocab["failed_to_acquire"]  = "Het is niet gelukt om exclusive toegang tot de database te verkrijgen";
 $vocab["invalid_booking"]    = "Verkeerde boeking";
 $vocab["must_set_description"] = "Er moet een korte omschrijving worden gegeven. Ga terug een en geef korte omschrijving.";
 $vocab["no_rooms_selected"]      = "Je moet een ruimte kiezen.";
