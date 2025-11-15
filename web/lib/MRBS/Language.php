@@ -270,6 +270,7 @@ class Language
   {
     // TODO: Use $lang_map
     // TODO: Do something with default language (eg Datatables default is 'en')
+    // TODO: Sort out uz-latn / uz_latn
     $result = [];
 
     if (!is_dir($dir))
@@ -308,11 +309,7 @@ class Language
         if (isset($lang_map[$langtag]))
         {
           // Replace langtag with its mapping
-          array_splice($result,
-            array_search($langtag, $result),
-            1,
-            $lang_map[$langtag]
-          );
+          array_splice($result, array_search($langtag, $result), 1, $lang_map[$langtag]);
         }
       }
     }
