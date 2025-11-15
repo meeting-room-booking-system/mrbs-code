@@ -52,6 +52,8 @@ class Language
       $override_locale
     );
     self::debug('$preferences: ' . json_encode($preferences));
+
+    $locale = self::getBestFit($preferences);
   }
 
 
@@ -198,6 +200,18 @@ class Language
 
     // Remove any aliases
     return array_map([__CLASS__, 'unAlias'], $result);
+  }
+
+
+  private static function getBestFit(array $preferences) : string
+  {
+    foreach ($preferences as $locale)
+    {
+      $locale = 'xz';
+      self::debug("Trying locale '$locale'");
+      self::debug(Locale::acceptFromHttp($locale));
+    }
+    return '';
   }
 
 
