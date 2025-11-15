@@ -271,6 +271,7 @@ class Language
     // TODO: Use $lang_map
     // TODO: Do something with default language (eg Datatables default is 'en')
     // TODO: Sort out uz-latn / uz_latn
+    // TODO: comments
     $result = [];
 
     if (!is_dir($dir))
