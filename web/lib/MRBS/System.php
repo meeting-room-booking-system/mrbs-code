@@ -930,8 +930,13 @@ class System
     return php_uname();
   }
 
-  // Checks whether $langtag is advertised as being available on this system
-  private static function isAdvertisedLocale(string $langtag) : bool
+
+  /**
+   * Checks whether a language tag is advertised as being available on this system.
+   *
+   * @return bool|null NULL if the advertised locales aren't known, otherwise TRUE/FALSE.
+   */
+  private static function isAdvertisedLocale(string $langtag) : ?bool
   {
     if (!class_exists('\\ResourceBundle'))
     {
@@ -939,7 +944,7 @@ class System
       // available on most systems.
       // Could also use IntlCalendar::getAvailableLocales(), but that needs
       // the intl extension, just like ResourceBundle::getLocales().
-      return false;
+      return null;
     }
 
     // Get the available locales
@@ -951,13 +956,17 @@ class System
   }
 
 
-  // Checks whether $langtag, which is in BCP 47 format, is available on this system
+  /**
+   * Checks whether a language tag is available on this system
+   *
+   * @param string $langtag A language tag in BCP 47 format.
+   */
   public static function isAvailableLocale(string $langtag) : bool
   {
-    // If the OS tells us it's available, then that's enough
-    if (self::isAdvertisedLocale($langtag))
+    // If the OS tells us whether it's available, then that's enough
+    if (null !== ($is_advertised = self::isAdvertisedLocale($langtag)))
     {
-      return true;
+      return $is_advertised;
     }
 
     // Otherwise try setting the locale
@@ -1253,9 +1262,16 @@ class System
   }
 
 
-  // Tests whether $langtag can be set on this system. Preserves the current locale.
+  /**
+   * Tests whether a language tag can be set on this system. Preserves the current locale.
+   *
+   * WARNING! This method is unreliable on Windows systems where setlocale(LC_ALL, 'xyz.utf-8')
+   * will return 'xyz.utf-8', even though the locale doesn't exist.
+   */
   private static function testLocale(string $langtag) : bool
   {
+    // TODO: Do something better for Windows systems.
+
     // Save the original locales so that we can restore them later.   Note that
     // there could be different locales for different categories
     $original_locales = explode(';', setlocale(LC_ALL, '0'));
