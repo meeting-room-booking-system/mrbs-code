@@ -11,9 +11,17 @@ use MRBS\Intl\Locale;
 class Language
 {
   // A map of language aliases, indexed by the alias
-  private const LANG_ALIASES= [
+  private const LANG_ALIASES = [
     'no' => 'nb', // Not all operating systems will accept a locale of 'no'
     'sh' => 'sr-latn-rs',
+  ];
+
+  private const LANG_DIRS = [
+    'mrbs' => [
+      'dir' => MRBS_ROOT . '/lang',
+      'prefix' => 'lang.',
+      'suffix' => ''
+    ]
   ];
 
 
@@ -205,12 +213,38 @@ class Language
 
   private static function getBestFit(array $preferences) : string
   {
+    foreach (self::LANG_DIRS as $package => $details)
+    {
+      $available_languages[$package] = get_langtags(...$details);
+      self::debug("Available_languages($package): " . json_encode($available_languages[$package]));
+    }
+
     foreach ($preferences as $locale)
     {
-      $locale = 'xz';
-      self::debug("Trying locale '$locale'");
-      self::debug(Locale::acceptFromHttp($locale));
+      // Check whether setlocale() is going to work
+      self::debug("Trying '$locale'");
+      if (false === Locale::acceptFromHttp($locale))
+      {
+        self::debug('locale: failed');
+        continue;
+      }
+      self::debug('locale: OK');
+
+      // Then check each of the packages to see if there's a language file matching this locale.
+      foreach ($available_languages as $package => $tags)
+      {
+        if ('' === Locale::lookup($tags, $locale))
+        {
+          self::debug("$package: failed");
+          continue 2;
+        }
+        self::debug("$package: OK");
+      }
+
+      // Nothing failed, so this locale will work
+      return $locale;
     }
+
     return '';
   }
 
