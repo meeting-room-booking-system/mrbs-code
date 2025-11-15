@@ -30,12 +30,10 @@ class Language
   private const LANG_DIRS = [
     'mrbs' => [
       'dir' => MRBS_ROOT . '/lang',
-      'prefix' => 'lang.',
-      'suffix' => ''
+      'prefix' => 'lang.'
     ],
     'flatpickr' => [
       'dir' => MRBS_ROOT . '/js/flatpickr/l10n',
-      'prefix' => '',
       'suffix' => '.js',
       'lang_map' => self::LANG_MAP_FLATPICKR
     ]
