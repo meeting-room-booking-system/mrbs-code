@@ -946,10 +946,7 @@ class System
     $locales = ResourceBundle::getLocales('');
     // Put our locale into PHP's format
     $locale = Locale::composeLocale(Locale::parseLocale($langtag));
-    // See whether our locale exists.   Note that if it does we return the original
-    // $langtag, which will be in BCP 47 format, rather than the locale in PHP's
-    // format.  Although PHP will give you locales with underscores, when you try
-    // and set them you need hyphens!
+    // See whether our locale exists.
     return in_array($locale, $locales);
   }
 
