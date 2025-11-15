@@ -16,11 +16,28 @@ class Language
     'sh' => 'sr-latn-rs',
   ];
 
+  private const LANG_MAP_FLATPICKR = [
+    'at'      => 'de-at',
+    'cat'     => 'ca',
+    'ckb'     => 'ku',
+    'gr'      => 'el',
+    'kz'      => 'kk',
+    'sr-cyr'  => 'sr-cyrl',
+    'uz-latn' => 'uz-latn-uz',
+    'vn'      => 'vi'
+  ];
+
   private const LANG_DIRS = [
     'mrbs' => [
       'dir' => MRBS_ROOT . '/lang',
       'prefix' => 'lang.',
       'suffix' => ''
+    ],
+    'flatpickr' => [
+      'dir' => MRBS_ROOT . '/js/flatpickr/l10n',
+      'prefix' => '',
+      'suffix' => '.js',
+      'lang_map' => self::LANG_MAP_FLATPICKR
     ]
   ];
 
@@ -215,7 +232,7 @@ class Language
   {
     foreach (self::LANG_DIRS as $package => $details)
     {
-      $available_languages[$package] = get_langtags(...$details);
+      $available_languages[$package] = self::getLangtags(...$details);
       self::debug("Available_languages($package): " . json_encode($available_languages[$package]));
     }
 
@@ -246,6 +263,63 @@ class Language
     }
 
     return '';
+  }
+
+
+  // Gets all the language tags in a directory where the filenames are of the format
+// $prefix . $lang . $suffix.  Returns an array.
+  private static function getLangtags(string $dir, string $prefix='', string $suffix='', array $lang_map=[]) : array
+  {
+    // TODO: Use $lang_map
+    // TODO: Do something with default language (eg Datatables default is 'en')
+    $result = [];
+
+    if (!is_dir($dir))
+    {
+      trigger_error("MRBS: directory '$dir' does not exist", E_USER_NOTICE);
+      return $result;
+    }
+
+    $files = scandir($dir);
+
+    foreach ($files as $file)
+    {
+      $path = $dir . '/' . $file;
+      // . and .. will be included in the output of scandir(), so
+      // we need to exclude them.  We also want to exclude files
+      // that we can't read.
+      if (!is_dir($path) && is_readable($path))
+      {
+        // Then strip out the language tag from the file name
+        $pattern = sprintf('/%s(.+)%s/i', $prefix, $suffix);
+        if (preg_match($pattern, $file, $matches))
+        {
+          if (isset($matches[1]))
+          {
+            $result[] = $matches[1];
+          }
+        }
+      }
+    }
+
+    // Translate the non-standard names into BCP 47 tags
+    if (!empty($lang_map))
+    {
+      foreach($result as $langtag)
+      {
+        if (isset($lang_map[$langtag]))
+        {
+          // Replace langtag with its mapping
+          array_splice($result,
+            array_search($langtag, $result),
+            1,
+            $lang_map[$langtag]
+          );
+        }
+      }
+    }
+
+    return $result;
   }
 
 
