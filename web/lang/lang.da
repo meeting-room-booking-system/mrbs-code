@@ -23,6 +23,10 @@ $vocab["search"]             = "Søg";
 $vocab["bookingsfor"]        = "Reservation for";
 $vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "Område";
+$vocab["now_day"]            = "I dag";
+$vocab["now_week"]           = "I dag";
+$vocab["now_month"]          = "I dag";
+$vocab["now_year"]           = "I dag";
 $vocab["daybefore"]          = "Gå til forrige dag";
 $vocab["dayafter"]           = "Gå til næste dag";
 $vocab["gototoday"]          = "Gå til idag";
@@ -78,7 +82,7 @@ $vocab["rep_end_date"]       = "Repetitions slut-dato";
 $vocab["rep_rep_day"]        = "Repetitions dag";
 $vocab["ctrl_click"]         = "Hold kontroltasten nede for at vælge mere end et rum";
 $vocab["entryid"]            = "Reservations ID ";
-$vocab["repeat_id"]          = "Serie ID "; 
+$vocab["repeat_id"]          = "Serie ID ";
 $vocab["brief_description"]  = "Kort beskrivelse.";
 
 // Used in view_entry.php
