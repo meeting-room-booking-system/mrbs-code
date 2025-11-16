@@ -6,6 +6,7 @@ use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\BrowserConsoleHandler;
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Logger;
+use MRBS\Errors\Errors;
 use MRBS\Intl\Locale;
 
 class Language
@@ -47,6 +48,7 @@ class Language
   ];
 
   private static $best_locales = [];
+  private static $default_language_tokens;
 
   /**
    * @param string|null $override_locale a locale in BCP 47 format, eg 'en-GB'
@@ -65,6 +67,8 @@ class Language
     self::debug('$default_language_tokens: ' . ($default_language_tokens ?? 'NULL'));
     self::debug('$override_locale: ' . ($override_locale ?? 'NULL'));
     self::debug('Accept-Language: ' . ($server['HTTP_ACCEPT_LANGUAGE'] ?? 'NULL'));
+
+    self::$default_language_tokens = $default_language_tokens;
 
     // Set the default character encoding
     ini_set('default_charset', 'UTF-8');
@@ -93,10 +97,12 @@ class Language
     // Store the best fits
     foreach (array_merge(['locale'], array_keys(self::LANG_DIRS)) as $key)
     {
-      $best_locales[$key] = $best_fits[$key] ?? self::DEFAULT_LOCALE;
-      self::debug("Best[$key]: '" . $best_locales[$key] . "'");
+      self::$best_locales[$key] = $best_fits[$key] ?? self::DEFAULT_LOCALE;
+      self::debug("Best[$key]: '" . self::$best_locales[$key] . "'");
     }
 
+    // Set the locale
+    self::setLocale(self::$best_locales['locale']);
   }
 
 
@@ -174,6 +180,106 @@ class Language
     arsort($result, SORT_NUMERIC);
 
     return $result;
+  }
+
+
+  /**
+   * Gets the vocab string for a given tag.
+   *
+   * @param mixed ...$values Optional values to be inserted into the string, as for sprintf()
+   * @return string The vocab string, or the tag itself if there is no string.
+   */
+  public static function getVocab(string $tag, ...$values) : string
+  {
+    //  Maybe in the future we should switch to using the MessageFormatter
+    //  class as it is more powerful.   However, the Intl extension isn't present
+    //  in all PHP installations and so the class would have to be emulated.
+    static $vocab;
+
+    if (!isset($vocab))
+    {
+      $vocab = self::loadVocab(self::$best_locales['mrbs']);
+    }
+
+    // Return the tag itself if we can't find a vocab string
+    if (!isset($vocab[$tag]))
+    {
+      return $tag;
+    }
+
+    return (count($values) === 0) ? $vocab[$tag] : sprintf($vocab[$tag], ...$values);
+  }
+
+
+  /**
+   * Sets the locale, trying the possible variants appropriate to the OS.
+   */
+  public static function setLocale(string $locale) : void
+  {
+    $os_locale = System::getOSlocale($locale);
+
+    if (false === setlocale(LC_ALL, $os_locale))
+    {
+      // $os_locale will be an array
+      $message = "Server failed to set locale to " . json_encode($os_locale) .
+        " for language tag '$locale'.  Either install the missing locale" .
+        ' or set $override_locale in your MRBS config.inc.php file to a' .
+        ' locale that is available on your server.';
+      trigger_error($message, E_USER_NOTICE);
+
+      if (false === setlocale(LC_ALL, array('C.UTF-8', 'C.utf-8', 'C.utf8', 'C')))
+      {
+        Errors::fatalError("Could not set locale at all, not even to 'C'");
+      }
+    }
+  }
+
+
+  private static function loadVocab(string $lang) : array
+  {
+    global $vocab_override;
+
+    $vocab = [];
+
+    // Set the final fallback language as some of the translations are incomplete.
+    $langs = [self::DEFAULT_LOCALE];
+    // Then set the default language as the fallback before that.
+    if (isset(self::$default_language_tokens) && (self::$default_language_tokens !== ''))
+    {
+      $langs[] = mb_strtolower(self::$default_language_tokens);
+    }
+    // Then set the language we want
+    $langs[] = $lang;  // This is the language we want
+
+    // Eliminate any duplicates.
+    $langs = array_unique($langs);
+
+    // Then load the files in turn, each one overwriting the previous ones.
+    $details = self::LANG_DIRS['mrbs'];
+
+    foreach ($langs as $lang)
+    {
+      $lang_file = $details['dir'] . '/' . ($details['prefix'] ?? '') . $lang . ($details['suffix'] ?? '');
+
+      if (!is_readable($lang_file))
+      {
+        trigger_error("MRBS: could not set language to '$lang'", E_USER_WARNING);
+      }
+
+      // Load the language tokens
+      include "$lang_file";
+    }
+
+    // And apply any site overrides for this language
+    if (isset($vocab_override[$lang]))
+    {
+      foreach ($vocab_override[$lang] as $tag => $str)
+      {
+        $vocab[$tag] = $str;
+      }
+    }
+
+    return $vocab;
   }
 
 

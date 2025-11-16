@@ -74,8 +74,7 @@ else
   language_debug('None of the requested locales are available on this server');
 }
 
-// Then set the locale
-set_mrbs_locale($locale);
+
 
 // Find the best fit for the language that we should be using
 $lang = get_mrbs_lang($locale);
@@ -665,23 +664,13 @@ function get_bom(string $charset) : string
 }
 
 
-// Get a vocab item, in UTF-8
-// Takes additional parameters as for sprintf()
-//
-// [Maybe in the future we should switch to using the MessageFormatter
-//  class as it is more powerful.   However the Intl extension isn't present
-//  in all PHP installations and so the class would have to be emulated]
+/**
+ * A wrapper for Language::getVocab() to avoid (a) having to replace
+ * get_vocab() everywhere, and (b) having to use the long method call.
+ */
 function get_vocab(string $tag, ...$values) : string
 {
-  global $vocab;
-
-  // Return the tag itself if we can't find a vocab string
-  if (!isset($vocab[$tag]))
-  {
-    return $tag;
-  }
-
-  return (count($values) === 0) ? $vocab[$tag] : sprintf($vocab[$tag], ...$values);
+  return Language::getVocab($tag, ...$values);
 }
 
 
