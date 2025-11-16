@@ -32,6 +32,10 @@ class Language
       'dir' => MRBS_ROOT . '/lang',
       'prefix' => 'lang.'
     ],
+    'datatables' => [
+      'dir' => MRBS_ROOT . '/jquery/datatables/language',
+      'suffix' => '.json'
+    ],
     'flatpickr' => [
       'dir' => MRBS_ROOT . '/js/flatpickr/l10n',
       'suffix' => '.js',
