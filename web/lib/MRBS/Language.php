@@ -44,6 +44,10 @@ class Language
       'dir' => 'js/flatpickr/l10n',
       'suffix' => '.js',
       'lang_map' => self::LANG_MAP_FLATPICKR
+    ],
+    'select2' => [
+      'dir' => 'jquery/select2/dist/js/i18n',
+      'suffix' => '.js'
     ]
   ];
 
