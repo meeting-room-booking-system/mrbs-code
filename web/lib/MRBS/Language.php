@@ -10,6 +10,9 @@ use MRBS\Intl\Locale;
 
 class Language
 {
+  // The fall-back locale if nothing else is suitable.
+  private const DEFAULT_LOCALE = 'en';
+
   // A map of language aliases, indexed by the alias
   private const LANG_ALIASES = [
     'no' => 'nb', // Not all operating systems will accept a locale of 'no'
@@ -43,6 +46,8 @@ class Language
     ]
   ];
 
+  private static $locale;
+
 
   /**
    * @param string|null $override_locale a locale in BCP 47 format, eg 'en-GB'
@@ -71,7 +76,7 @@ class Language
       mb_internal_encoding('UTF-8');
     }
 
-    // Work out the preferred order of locales
+    // Work out the preferred order of locales.
     $preferences = self::getPreferences(
       $cli_language,
       $disable_automatic_language_changing,
@@ -80,7 +85,13 @@ class Language
     );
     self::debug('$preferences: ' . json_encode($preferences));
 
-    $locale = self::getBestFit($preferences);
+    // Get the best fit locale, given the preferences.
+    if (null === (self::$locale = self::getBestFit($preferences)))
+    {
+      trigger_error("Could not find a suitable locale; using '" . self::DEFAULT_LOCALE . "'", E_USER_WARNING);
+      self::$locale = self::DEFAULT_LOCALE;
+    }
+
   }
 
 
@@ -223,21 +234,38 @@ class Language
     }
 
     // Add a backstop at the very bottom of the list
-    $result[] = 'en';
+    $result[] = self::DEFAULT_LOCALE;
 
     // Remove any aliases
     return array_map([__CLASS__, 'unAlias'], $result);
   }
 
 
-  private static function getBestFit(array $preferences) : string
+  /**
+   * Given a set of preferences, get the best locale that can be used that will work
+   * throughout MRBS.
+   *
+   * The locale has to be supported by setlocale(), MRBS's language files and the language
+   * files used by third-party packages.  It uses RFC 4647's lookup algorithm for determining
+   * whether a set of language files is suitable.
+   *
+   * @param string[] $preferences Locales in decreasing order of preference.
+   * @return string|null the best fit, or NULL if none could be found.
+   */
+  private static function getBestFit(array $preferences) : ?string
   {
-    foreach (self::LANG_DIRS as $package => $details)
+    // Get the languages supported by each of the software components.
+    foreach (self::LANG_DIRS as $component => $details)
     {
-      $available_languages[$package] = self::getLangtags(...$details);
-      self::debug("Available_languages($package): " . json_encode($available_languages[$package]));
+      $available_languages[$component] = self::getLangtags(...$details);
+      self::debug("Available_languages($component): " . json_encode($available_languages[$component]));
     }
 
+    // Test each locale in decreasing order of preference to see if it is supported throughout MRBS.
+    // (An alternative algorithm, used by earlier versions of MRBS, used the best locale for each
+    // component.  However, while this might result in a more preferred locale for some components,
+    // it could result in inconsistency overall: for example the mini-calendars in one language, but
+    // the main MRBS text in another.)
     foreach ($preferences as $locale)
     {
       // Check whether setlocale() is going to work
@@ -249,22 +277,23 @@ class Language
       }
       self::debug('locale: OK');
 
-      // Then check each of the packages to see if there's a language file matching this locale.
-      foreach ($available_languages as $package => $tags)
+      // Then check each of the components to see if there's a language file matching this locale.
+      foreach ($available_languages as $component => $tags)
       {
         if ('' === Locale::lookup($tags, $locale))
         {
-          self::debug("$package: failed");
+          self::debug("$component: failed");
           continue 2;
         }
-        self::debug("$package: OK");
+        self::debug("$component: OK");
       }
 
       // Nothing failed, so this locale will work
+      self::debug("Best fit locale is '$locale'");
       return $locale;
     }
 
-    return '';
+    return null;
   }
 
 
