@@ -440,6 +440,7 @@ class Language
     // TODO: Do something with default language (eg Datatables default is 'en')
     // TODO: Sort out uz-latn / uz_latn
     // TODO: comments
+    // TODO: turn into a singleton?
     $result = [];
 
     $dir = MRBS_ROOT . "/$dir";
