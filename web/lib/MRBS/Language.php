@@ -46,8 +46,7 @@ class Language
     ]
   ];
 
-  private static $locale;
-
+  private static $best_locales = [];
 
   /**
    * @param string|null $override_locale a locale in BCP 47 format, eg 'en-GB'
@@ -85,11 +84,17 @@ class Language
     );
     self::debug('$preferences: ' . json_encode($preferences));
 
-    // Get the best fit locale, given the preferences.
-    if (null === (self::$locale = self::getBestFit($preferences)))
+    // Get the best fit locales, given the preferences.
+    if (null === ($best_fits = self::getBestFits($preferences, self::LANG_DIRS)))
     {
       trigger_error("Could not find a suitable locale; using '" . self::DEFAULT_LOCALE . "'", E_USER_WARNING);
-      self::$locale = self::DEFAULT_LOCALE;
+    }
+
+    // Store the best fits
+    foreach (array_merge(['locale'], array_keys(self::LANG_DIRS)) as $key)
+    {
+      $best_locales[$key] = $best_fits[$key] ?? self::DEFAULT_LOCALE;
+      self::debug("Best[$key]: '" . $best_locales[$key] . "'");
     }
 
   }
@@ -242,26 +247,31 @@ class Language
 
 
   /**
-   * Given a set of preferences, get the best locale that can be used that will work
+   * Given a set of preferences, get the best locales that can be used that will work
    * throughout MRBS.
    *
-   * The locale has to be supported by setlocale(), MRBS's language files and the language
+   * The locales have to be supported by setlocale(), MRBS's language files and the language
    * files used by third-party packages.  It uses RFC 4647's lookup algorithm for determining
-   * whether a set of language files is suitable.
+   * whether a set of language files is suitable.  The results for each component could be slightly
+   * different: for example 'pt-BR' for one and 'pt' for another, but never 'pt' and 'es'.
    *
    * @param string[] $preferences Locales in decreasing order of preference.
-   * @return string|null the best fit, or NULL if none could be found.
+   * @param array{string, array} $components An array of component details, indexed by component name (e.g. 'mrbs').
+   * @return string[]|null An array of best fits, indexed by 'locale' or component name, or NULL if none could be found.
    */
-  private static function getBestFit(array $preferences) : ?string
+  private static function getBestFits(array $preferences, array $components) : ?array
   {
+    $result = [];
+
     // Get the languages supported by each of the software components.
-    foreach (self::LANG_DIRS as $component => $details)
+    foreach ($components as $component => $details)
     {
       $available_languages[$component] = self::getLangtags(...$details);
       self::debug("Available_languages($component): " . json_encode($available_languages[$component]));
     }
 
     // Test each locale in decreasing order of preference to see if it is supported throughout MRBS.
+    // Record the best locale for each component.
     // (An alternative algorithm, used by earlier versions of MRBS, used the best locale for each
     // component.  However, while this might result in a more preferred locale for some components,
     // it could result in inconsistency overall: for example the mini-calendars in one language, but
@@ -275,22 +285,22 @@ class Language
         self::debug('locale: failed');
         continue;
       }
-      self::debug('locale: OK');
+      self::debug("locale: '$locale'");
+      $result['locale'] = $locale;
 
       // Then check each of the components to see if there's a language file matching this locale.
       foreach ($available_languages as $component => $tags)
       {
-        if ('' === Locale::lookup($tags, $locale))
+        if ('' === ($result[$component] = Locale::lookup($tags, $locale)))
         {
           self::debug("$component: failed");
           continue 2;
         }
-        self::debug("$component: OK");
+        self::debug("$component: '" . $result[$component] . "'");
       }
 
       // Nothing failed, so this locale will work
-      self::debug("Best fit locale is '$locale'");
-      return $locale;
+      return $result;
     }
 
     return null;
