@@ -38,7 +38,8 @@ class Language
     ],
     'datatables' => [
       'dir' => 'jquery/datatables/language',
-      'suffix' => '.json'
+      'suffix' => '.json',
+      'defaults' => ['en']
     ],
     'flatpickr' => [
       'dir' => 'js/flatpickr/l10n',
@@ -248,9 +249,15 @@ class Language
   }
 
 
-  private static function getLangPath(string $component, string $lang) : string
+  private static function getLangPath(string $component, string $lang) : ?string
   {
     $details = self::LANG_DIRS[$component];
+
+    // If it's a default language then we don't need a language file.
+    if (isset($details['defaults']) && in_array($lang, $details['defaults']))
+    {
+      return null;
+    }
 
     return $details['dir'] . '/' . ($details['prefix'] ?? '') . $lang . ($details['suffix'] ?? '');
   }
@@ -434,10 +441,10 @@ class Language
 
   // Gets all the language tags in a directory where the filenames are of the format
 // $prefix . $lang . $suffix.  Returns an array.
-  private static function getLangtags(string $dir, string $prefix='', string $suffix='', array $lang_map=[]) : array
+  private static function getLangtags(string $dir, string $prefix='', string $suffix='', array $lang_map=[], array $defaults=[]) : array
   {
     // TODO: Use $lang_map
-    // TODO: Do something with default language (eg Datatables default is 'en')
+    // TODO: Does defaults need to be an array?  (Maybe, eg to cater for en-* ??)
     // TODO: Sort out uz-latn / uz_latn
     // TODO: comments
     // TODO: turn into a singleton?
@@ -485,6 +492,9 @@ class Language
         }
       }
     }
+
+    // Merge in the default languages
+    $result = array_unique(array_merge($result, $defaults));
 
     return $result;
   }
