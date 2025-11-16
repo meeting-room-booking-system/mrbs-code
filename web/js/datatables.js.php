@@ -297,10 +297,10 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
 
   <?php
   // Set the language file to be used
-  if ($lang_file = get_datatable_lang_path())
+  if ($lang_file = Language::getDatatablesLangPath())
   {
     ?>
-    defaultOptions.language = {url: '<?php echo "./$lang_file" ?>'}
+    defaultOptions.language = {url: '<?php echo url_base() . "$lang_file" ?>'}
     <?php
   }
   ?>

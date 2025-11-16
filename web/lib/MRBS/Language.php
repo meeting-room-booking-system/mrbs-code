@@ -33,15 +33,15 @@ class Language
 
   private const LANG_DIRS = [
     'mrbs' => [
-      'dir' => MRBS_ROOT . '/lang',
+      'dir' => 'lang',
       'prefix' => 'lang.'
     ],
     'datatables' => [
-      'dir' => MRBS_ROOT . '/jquery/datatables/language',
+      'dir' => 'jquery/datatables/language',
       'suffix' => '.json'
     ],
     'flatpickr' => [
-      'dir' => MRBS_ROOT . '/js/flatpickr/l10n',
+      'dir' => 'js/flatpickr/l10n',
       'suffix' => '.js',
       'lang_map' => self::LANG_MAP_FLATPICKR
     ]
@@ -183,9 +183,12 @@ class Language
   }
 
 
-  public static function getDatatableLangPath() : ?string
+  /**
+   * Returns the pathname of the language file to use for the DataTables jQuery plugin.
+   */
+  public static function getDatatablesLangPath() : ?string
   {
-
+    return self::getLangPath('datatables', self::$best_locales['datatables']);
   }
 
 
@@ -271,7 +274,7 @@ class Language
     // Then load the files in turn, each one overwriting the previous ones.
     foreach ($langs as $lang)
     {
-      $lang_file = self::getLangPath('mrbs', $lang);
+      $lang_file = MRBS_ROOT . '/' . self::getLangPath('mrbs', $lang);
 
       if (!is_readable($lang_file))
       {
@@ -434,6 +437,8 @@ class Language
     // TODO: Sort out uz-latn / uz_latn
     // TODO: comments
     $result = [];
+
+    $dir = MRBS_ROOT . "/$dir";
 
     if (!is_dir($dir))
     {
