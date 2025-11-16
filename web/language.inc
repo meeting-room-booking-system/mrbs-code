@@ -526,23 +526,6 @@ function get_flatpickr_property($lang_file)
 }
 
 
-
-function get_datatable_lang_path() : ?string
-{
-  static $have_result = false;
-  static $result = null;
-
-  if (!$have_result)
-  {
-    $dir = 'jquery/datatables/language';
-    $file = get_best_lang_file(__DIR__ . "/$dir", '', '.json', ['en']);
-    $result = (isset($file)) ? "$dir/$file" : null;
-    $have_result = true;
-  }
-
-  return $result;
-}
-
 // Returns the pathname of the language file to use for the Select2
 // plugin.    If no suitable language file exists then returns NULL.
 function get_select2_lang_path()
