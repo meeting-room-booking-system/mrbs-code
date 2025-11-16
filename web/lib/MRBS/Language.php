@@ -183,6 +183,12 @@ class Language
   }
 
 
+  public static function getDatatableLangPath() : ?string
+  {
+
+  }
+
+
   /**
    * Gets the vocab string for a given tag.
    *
@@ -235,6 +241,14 @@ class Language
   }
 
 
+  private static function getLangPath(string $component, string $lang) : string
+  {
+    $details = self::LANG_DIRS[$component];
+
+    return $details['dir'] . '/' . ($details['prefix'] ?? '') . $lang . ($details['suffix'] ?? '');
+  }
+
+
   private static function loadVocab(string $lang) : array
   {
     global $vocab_override;
@@ -255,11 +269,9 @@ class Language
     $langs = array_unique($langs);
 
     // Then load the files in turn, each one overwriting the previous ones.
-    $details = self::LANG_DIRS['mrbs'];
-
     foreach ($langs as $lang)
     {
-      $lang_file = $details['dir'] . '/' . ($details['prefix'] ?? '') . $lang . ($details['suffix'] ?? '');
+      $lang_file = self::getLangPath('mrbs', $lang);
 
       if (!is_readable($lang_file))
       {
