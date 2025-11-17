@@ -526,24 +526,6 @@ function get_flatpickr_property($lang_file)
 }
 
 
-// Returns the pathname of the language file to use for the Select2
-// plugin.    If no suitable language file exists then returns NULL.
-function get_select2_lang_path()
-{
-  static $have_result = false;
-  static $result = null;
-
-  if (!$have_result)
-  {
-    $dir = 'jquery/select2/dist/js/i18n';
-    $file = get_best_lang_file(__DIR__ . "/$dir", '', '.js');
-    $result = (isset($file)) ? "$dir/$file" : null;
-    $have_result = true;
-  }
-
-  return $result;
-}
-
 
 function load_vocab($lang)
 {

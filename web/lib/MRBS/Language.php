@@ -198,6 +198,15 @@ class Language
 
 
   /**
+   * Returns the pathname of the language file to use for the Select2 jQuery plugin.
+   */
+  public static function getSelect2LangPath() : ?string
+  {
+    return self::getLangPath('select2', self::$best_locales['select2']);
+  }
+
+
+  /**
    * Gets the vocab string for a given tag.
    *
    * @param mixed ...$values Optional values to be inserted into the string, as for sprintf()

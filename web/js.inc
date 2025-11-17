@@ -87,7 +87,7 @@ echo script_html($datepicker_src, true);
 
 echo script_html("jquery/select2/dist/js/select2.full.min.js", true);
 
-if (null !== ($select2_lang_path = get_select2_lang_path()))
+if (null !== ($select2_lang_path = Language::getSelect2LangPath()))
 {
   echo script_html($select2_lang_path, true);
 }
