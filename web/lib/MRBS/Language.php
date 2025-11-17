@@ -198,6 +198,15 @@ class Language
 
 
   /**
+   * Returns the pathname of the language file to use for the Flatpickr datepickr.
+   */
+  public static function getFlatpickrLangPath() : ?string
+  {
+    return self::getLangPath('flatpickr', self::$best_locales['flatpickr']);
+  }
+
+
+  /**
    * Returns the pathname of the language file to use for the Select2 jQuery plugin.
    */
   public static function getSelect2LangPath() : ?string
@@ -266,6 +275,12 @@ class Language
     if (isset($details['defaults']) && in_array($lang, $details['defaults']))
     {
       return null;
+    }
+
+    // Reverse any mapping, so that we've got the actual name
+    if (isset($details['lang_map']) && (false !== ($key = array_search($lang, $details['lang_map']))))
+    {
+      $lang = $key;
     }
 
     return $details['dir'] . '/' . ($details['prefix'] ?? '') . $lang . ($details['suffix'] ?? '');

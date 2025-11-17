@@ -171,7 +171,7 @@ $(document).on('page_ready', function() {
   // Could use new URLSearchParams(document.currentScript.src); and get the lang parameter from the
   // file's query string, but document.currentScript is not supported by IE (though that probably
   // doesn't matter much anymore).
-  if (null !== ($flatpickr_lang_path = get_flatpickr_lang_path()))
+  if (null !== ($flatpickr_lang_path = Language::getFlatpickrLangPath()))
   {
     // Map the flatpickr lang file onto a flatpickr l10ns property and then localize
     echo 'flatpickr.localize(flatpickr.l10ns["' . get_flatpickr_property($flatpickr_lang_path) . '"]);';
