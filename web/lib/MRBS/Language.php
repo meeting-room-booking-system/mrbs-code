@@ -65,6 +65,14 @@ class Language
     'zh-tw'   => 'zh_tw'
   ];
 
+  /**
+   *  An array of details for each component in the system.  Each element is itself an array indexed by:
+   * - 'dir' The relative path of the directory containing the language files for that component.
+   * - 'prefix' (Optional) The prefix to the language tag in the filename, eg 'lang.' for 'lang.en'.
+   * - 'suffix' (Optional) The suffix to the language tag, eh '.js' for 'en.js'.
+   * - 'lang_map' (Optional) An array mapping non-standard language tags onto the BCP 47 standard.
+   * - 'defaults' (Optional) An array of language tags that represent the default language of the component.
+   */
   private const LANG_DIRS = [
     'mrbs' => [
       'dir' => 'lang',
@@ -314,6 +322,10 @@ class Language
   }
 
 
+  /**
+   * Gets the pathname of the file containing the translation for a language
+   * @return string|null The pathname, or NULL if the component default can be used.
+   */
   private static function getLangPath(string $component, string $lang) : ?string
   {
     $details = self::LANG_DIRS[$component];
@@ -334,6 +346,10 @@ class Language
   }
 
 
+  /**
+   * Gets the vocab array for a given language, taking into account $vocab_override.
+   * @return array<string, string>
+   */
   private static function loadVocab(string $lang) : array
   {
     global $vocab_override;
@@ -516,9 +532,7 @@ class Language
 // $prefix . $lang . $suffix.  Returns an array.
   private static function getLangtags(string $dir, string $prefix='', string $suffix='', array $lang_map=[], array $defaults=[]) : array
   {
-    // TODO: Does defaults need to be an array?  (Maybe, eg to cater for en-* ??)
     // TODO: Sort out uz-latn / uz_latn
-    // TODO: comments
     // TODO: turn into a singleton?
     $result = [];
 
