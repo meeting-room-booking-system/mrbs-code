@@ -516,7 +516,6 @@ class Language
 // $prefix . $lang . $suffix.  Returns an array.
   private static function getLangtags(string $dir, string $prefix='', string $suffix='', array $lang_map=[], array $defaults=[]) : array
   {
-    // TODO: Use $lang_map when getting the langpath
     // TODO: Does defaults need to be an array?  (Maybe, eg to cater for en-* ??)
     // TODO: Sort out uz-latn / uz_latn
     // TODO: comments
