@@ -43,7 +43,8 @@ class Language
     'kz'      => 'kk',
     'sr-cyr'  => 'sr-cyrl',
     'uz-latn' => 'uz-latn-uz',
-    'vn'      => 'vi'
+    'vn'      => 'vi',
+    'zh-tw'   => 'zh-hant-tw'
   ];
 
   /**
