@@ -478,7 +478,7 @@ class Language
    * different: for example 'pt-BR' for one and 'pt' for another, but never 'pt' and 'es'.
    *
    * @param string[] $preferences Locales in decreasing order of preference.
-   * @param array{string, array} $components An array of component details, indexed by component name (e.g. 'mrbs').
+   * @param array{string, array<string, string|string[]>} $components An array of component details, indexed by component name (e.g. 'mrbs').
    * @return string[]|null An array of best fits, indexed by 'locale' or component name, or NULL if none could be found.
    */
   private static function getBestFits(array $preferences, array $components) : ?array
@@ -529,8 +529,14 @@ class Language
   }
 
 
-  // Gets all the language tags in a directory where the filenames are of the format
-// $prefix . $lang . $suffix.  Returns an array.
+  /**
+   * Gets all the language tags in a directory where the filenames are of the format
+   * `$prefix . $lang . $suffix`.
+   *
+   * @param array<string, string> $lang_map An array mapping non-standard language tags onto the BCP 47 standard.
+   * @param string[] $defaults An array of language tags that represent the default language of the component.
+   * @return string[]
+   */
   private static function getLangtags(string $dir, string $prefix='', string $suffix='', array $lang_map=[], array $defaults=[]) : array
   {
     $result = [];
