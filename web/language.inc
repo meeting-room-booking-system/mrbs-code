@@ -193,61 +193,6 @@ function get_mrbs_locale($header=null) : string
 }
 
 
-// Returns a simple array of BCP 47 language tags in decreasing order of preference.  This
-// is designed for use with third party libraries (eg datepickers, datatables) where the
-// locale used by MRBS, and given by get_mrbs_locale(), may not be available.  So this function
-// returns as wide a list of languages as possible, in the hope that one of them may be
-// supported by the third party library.
-function get_lang_preferences() : array
-{
-  global $cli_language, $disable_automatic_language_changing, $default_language_tokens;
-  global $override_locale;
-  global $aliased_header;
-
-  static $lang_preferences = null;
-
-  if (!isset($lang_preferences))
-  {
-    // Use the aliased browser preferences, if any, as a base.    Although we may add
-    // higher priority languages later, these are a useful fall-back on the grounds
-    // that it's better to have some language rather than none.
-    $lang_preferences = get_browser_langs($aliased_header, true);
-
-    // If we've been told not to use the browser languages then the default
-    // language is more important
-    if ($disable_automatic_language_changing &&
-        isset($default_language_tokens) &&
-        ($default_language_tokens) !== '')
-    {
-      array_unshift($lang_preferences, $default_language_tokens);
-    }
-
-    // If there's an override locale then that's more important still
-    if (!empty($override_locale))
-    {
-      array_unshift($lang_preferences, $override_locale);
-    }
-
-    // If we're running from the CLI then put the CLI language at the top
-    if (is_cli() && !empty($cli_language))
-    {
-      array_unshift($lang_preferences, $cli_language);
-    }
-
-    // Add the default language tokens as a fallback
-    if (isset($default_language_tokens) && ($default_language_tokens !== ''))
-    {
-      array_push($lang_preferences, $default_language_tokens);
-    }
-
-    // Finally, add a backstop at the very bottom of the list
-    array_push($lang_preferences, 'en');
-  }
-
-  return $lang_preferences;
-}
-
-
 // Note: the first time this function is called, it should be called with a $locale.
 // Subsequent calls will just return the static $lang variable which was calculated on
 // the first call
