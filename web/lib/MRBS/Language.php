@@ -9,6 +9,7 @@ use Monolog\Logger;
 use MRBS\Errors\Errors;
 use MRBS\Intl\Locale;
 
+// TODO: turn into a singleton/add initialisation check?
 class Language
 {
   /**
@@ -42,7 +43,7 @@ class Language
     'gr'      => 'el',
     'kz'      => 'kk',
     'sr-cyr'  => 'sr-cyrl',
-    'uz-latn' => 'uz-latn-uz',
+    'uz_latn' => 'uz-latn-uz',
     'vn'      => 'vi',
     'zh-tw'   => 'zh-hant-tw'
   ];
@@ -532,8 +533,6 @@ class Language
 // $prefix . $lang . $suffix.  Returns an array.
   private static function getLangtags(string $dir, string $prefix='', string $suffix='', array $lang_map=[], array $defaults=[]) : array
   {
-    // TODO: Sort out uz-latn / uz_latn
-    // TODO: turn into a singleton?
     $result = [];
 
     $dir = MRBS_ROOT . "/$dir";
