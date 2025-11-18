@@ -174,7 +174,7 @@ $(document).on('page_ready', function() {
   if (null !== ($flatpickr_lang_path = Language::getFlatpickrLangPath()))
   {
     // Map the flatpickr lang file onto a flatpickr l10ns property and then localize
-    echo 'flatpickr.localize(flatpickr.l10ns["' . get_flatpickr_property($flatpickr_lang_path) . '"]);';
+    echo 'flatpickr.localize(flatpickr.l10ns["' . Language::getFlatpickrProperty($flatpickr_lang_path) . '"]);';
   }
 
 

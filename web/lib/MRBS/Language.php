@@ -55,6 +55,16 @@ class Language
     'zh-CN' => 'zh-hans-cn',
   ];
 
+  /**
+   * Map flatpickr language file names onto flatpickr fp.l10ns properties
+   * so that they can be used with flatpickr.localize.
+   */
+  private const FLATPICKR_PROPERTY_MAP = [
+    'ar-dz'   => 'arDz',
+    'sr-cyr'  => 'srCyr',
+    'zh-tw'   => 'zh_tw'
+  ];
+
   private const LANG_DIRS = [
     'mrbs' => [
       'dir' => 'lang',
@@ -237,6 +247,18 @@ class Language
   public static function getSelect2LangPath() : ?string
   {
     return self::getLangPath('select2', self::$best_locales['select2']);
+  }
+
+
+  /**
+   * Given a flatpickr localisation, find the corresponding property for
+   * use with flatpickr.localize()
+   */
+  public static function getFlatpickrProperty(string $lang_file) : string
+  {
+    $basename = basename($lang_file, '.js');
+
+    return (isset(self::FLATPICKR_PROPERTY_MAP[$basename])) ? self::FLATPICKR_PROPERTY_MAP[$basename] : $basename;
   }
 
 

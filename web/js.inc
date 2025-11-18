@@ -81,7 +81,7 @@ if (isset($flatpickr_lang_path))
   echo script_html($flatpickr_lang_path, true);
   // And give the datepicker file a query string parameter to force the browser cache
   // to be flushed when the language changes.
-  $datepicker_src .= '&lang=' . urlencode(get_flatpickr_property($flatpickr_lang_path));
+  $datepicker_src .= '&lang=' . urlencode(Language::getFlatpickrProperty($flatpickr_lang_path));
 }
 echo script_html($datepicker_src, true);
 

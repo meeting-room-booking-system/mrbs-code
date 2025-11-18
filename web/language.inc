@@ -26,13 +26,7 @@ $flatpickr_lang_map = array(
   'vn'      => 'vi'
 );
 
-// Map flatpickr language file names onto flatpickr fp.l10ns properties
-// so that they can be used with flatpickr.localize.
-$flatpickr_property_map = array(
-  'ar-dz'   => 'arDz',
-  'sr-cyr'  => 'srCyr',
-  'zh-tw'   => 'zh_tw'
-);
+
 
 // A list of languages that use Right to Left text
 $rtl_languages = array(
@@ -514,16 +508,7 @@ function get_flatpickr_lang_path() : ?string
 }
 
 
-// Given a flatpickr localisation, find the corresponding property for
-// use with flatpickr.localize
-function get_flatpickr_property($lang_file)
-{
-  global $flatpickr_property_map;
 
-  $basename = basename($lang_file, '.js');
-
-  return (isset($flatpickr_property_map[$basename])) ? $flatpickr_property_map[$basename] : $basename;
-}
 
 
 
