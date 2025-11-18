@@ -98,7 +98,10 @@ class Language
   ];
 
   private static $best_locales = [];
+  private static $cli_language;
+  private static $disable_automatic_language_changing;
   private static $default_language_tokens;
+  private static $override_locale;
 
   /**
    * @param string|null $override_locale a locale in BCP 47 format, eg 'en-GB'
@@ -118,7 +121,10 @@ class Language
     self::debug('$override_locale: ' . ($override_locale ?? 'NULL'));
     self::debug('Accept-Language: ' . ($server['HTTP_ACCEPT_LANGUAGE'] ?? 'NULL'));
 
+    self::$cli_language = $cli_language;
     self::$default_language_tokens = $default_language_tokens;
+    self::$disable_automatic_language_changing = $disable_automatic_language_changing;
+    self::$override_locale = $override_locale;
 
     // Set the default character encoding
     ini_set('default_charset', 'UTF-8');
@@ -130,12 +136,7 @@ class Language
     }
 
     // Work out the preferred order of locales.
-    $preferences = self::getPreferences(
-      $cli_language,
-      $disable_automatic_language_changing,
-      $default_language_tokens,
-      $override_locale
-    );
+    $preferences = self::getPreferences();
     self::debug('$preferences: ' . json_encode($preferences));
 
     // Get the best fit locales, given the preferences.
@@ -419,12 +420,7 @@ class Language
    *
    * @return string[]
    */
-  public static function getPreferences(
-    ?string $cli_language,
-    bool $disable_automatic_language_changing,
-    ?string $default_language_tokens,
-    ?string $override_locale
-  ) : array
+  public static function getPreferences() : array
   {
     global $server;
 
@@ -437,23 +433,25 @@ class Language
     // TODO: Review this and come up with something more logical?
 
     // If we're running from the CLI then use the CLI language, if set, as first preference.
-    if (is_cli() && isset($cli_language) && ($cli_language !== ''))
+    if (is_cli() && isset(self::$cli_language) && (self::$cli_language !== ''))
     {
-      $result[] = $cli_language;
+      $result[] = self::$cli_language;
     }
 
     // Otherwise if we're not using automatic language changing, then use the default language, if set.
-    elseif ($disable_automatic_language_changing && isset($default_language_tokens) && ($default_language_tokens !== ''))
+    elseif (self::$disable_automatic_language_changing &&
+            isset(self::$default_language_tokens) &&
+            self::$default_language_tokens !== '')
     {
-      $result[] = $default_language_tokens;
+      $result[] = self::$default_language_tokens;
     }
 
     // Otherwise use the override locale, if set, and then the browser preferences.
     else
     {
-      if (isset($override_locale))
+      if (isset(self::$override_locale))
       {
-        $result[] = $override_locale;
+        $result[] = self::$override_locale;
       }
       if (isset($server['HTTP_ACCEPT_LANGUAGE']))
       {
