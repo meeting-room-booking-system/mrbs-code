@@ -521,6 +521,7 @@ function print_unsupported_message(?array $context) : void
 function print_theme_header(?array $context=null, bool $simple=false, bool $omit_login=false) : void
 {
   global $multisite, $site, $default_view, $default_view_all, $view_week_number, $style_weekends;
+  global $cli_language, $disable_automatic_language_changing, $default_language_tokens, $override_locale;
 
   if ($simple)
   {
@@ -592,7 +593,12 @@ function print_theme_header(?array $context=null, bool $simple=false, bool $omit
       'page-date'     => format_iso_date($context['year'], $context['month'], $context['day']),
       'is-admin'      => (is_admin()) ? 'true' : 'false',
       'is-book-admin' => (is_book_admin()) ? 'true' : 'false',
-      'lang-prefs'    => json_encode(get_lang_preferences())
+      'lang-prefs'    => json_encode(Language::getPreferences(
+        $cli_language ?? null,
+        !empty($disable_automatic_language_changing),
+        $default_language_tokens ?? null,
+        $override_locale ?? null
+      ))
     );
 
     if ($multisite && isset($site) && ($site !== ''))

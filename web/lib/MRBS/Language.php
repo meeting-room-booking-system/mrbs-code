@@ -419,7 +419,7 @@ class Language
    *
    * @return string[]
    */
-  private static function getPreferences(
+  public static function getPreferences(
     ?string $cli_language,
     bool $disable_automatic_language_changing,
     ?string $default_language_tokens,
