@@ -242,7 +242,7 @@ class Language
 
 
   /**
-   * Returns the pathname of the language file to use for the Flatpickr datepickr.
+   * Returns the pathname of the language file to use for the Flatpickr datepicker.
    */
   public static function getFlatpickrLangPath() : ?string
   {
