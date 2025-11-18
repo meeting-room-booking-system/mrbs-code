@@ -11,15 +11,30 @@ use MRBS\Intl\Locale;
 
 class Language
 {
-  // The fall-back locale if nothing else is suitable.
+  /**
+   * The fall-back locale if nothing else is suitable.
+   */
   private const DEFAULT_LOCALE = 'en';
 
-  // A map of language aliases, indexed by the alias
+  /**
+   * A map of language aliases, indexed by the alias, mapping non-standard language tags
+   * that are typically used by browsers onto their more common BCP 47 equivalents. These
+   * should all be in lowercase.  If the config or browser settings specify the key (in
+   * whatever case), it will be replaced by the value.
+   *
+   * BCP 47 is case-insensitive, although there are conventions for the various subtags.
+   * However, keeping the strings in lowercase helps the array look-up.
+   */
   private const LANG_ALIASES = [
-    'no' => 'nb', // Not all operating systems will accept a locale of 'no'
-    'sh' => 'sr-latn-rs',
+    'no' => 'nb', // Not all operating systems will accept a locale of 'no', but most will support 'nb'
+    'zh-cn' => 'zh-hans-cn', // Most operating systems support 'zh_Hans_CN' or 'zh_Hans', rather than 'zh_CN'
+    'zh-tw' => 'zh-hant-tw', // Most operating systems support 'zh_Hant_TW' or 'zh_Hant', rather than 'zh_TW'
+    'sh' => 'sr-latn-rs', // 'sh' is non-standard
   ];
 
+  /**
+   * Maps the non-standard language tag used in the filename onto the BCP 47 standard
+   */
   private const LANG_MAP_FLATPICKR = [
     'at'      => 'de-at',
     'cat'     => 'ca',
@@ -29,6 +44,14 @@ class Language
     'sr-cyr'  => 'sr-cyrl',
     'uz-latn' => 'uz-latn-uz',
     'vn'      => 'vi'
+  ];
+
+  /**
+   * Maps the non-standard language tag used in the filename onto the BCP 47 standard
+   */
+  private const LANG_MAP_SELECT2 = [
+    'zh-TW' => 'zh-hant-tw',
+    'zh-CN' => 'zh-hans-cn',
   ];
 
   private const LANG_DIRS = [
@@ -48,7 +71,8 @@ class Language
     ],
     'select2' => [
       'dir' => 'jquery/select2/dist/js/i18n',
-      'suffix' => '.js'
+      'suffix' => '.js',
+      'lang_map' => self::LANG_MAP_SELECT2,
     ]
   ];
 
@@ -336,14 +360,16 @@ class Language
   /**
    * Convert a language alias to the real language.
    */
-  private static function unAlias(string $lang) : string
+  private static function unAlias(string $langtag) : string
   {
-    if (!empty(self::LANG_ALIASES) && array_key_exists($lang, self::LANG_ALIASES))
+    // Convert to lowercase, because all the keys in the alias map should be lowercase.
+    $lc_langtag = mb_strtolower($langtag);
+    if (!empty(self::LANG_ALIASES) && array_key_exists($lc_langtag, self::LANG_ALIASES))
     {
-      return self::LANG_ALIASES[$lang];
+      return self::LANG_ALIASES[$lc_langtag];
     }
 
-    return $lang;
+    return $lc_langtag;
   }
 
 

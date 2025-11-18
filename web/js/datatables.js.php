@@ -299,8 +299,16 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   // Set the language file to be used
   if ($lang_file = Language::getDatatablesLangPath())
   {
+    // As we're calling url_base() from a script a level down in the hierarchy we need
+    // to strip off the last directory.
+    // TODO: a better way of doing this?
+    $base = rtrim(url_base(), '/');
+    if (false !== ($pos = strrpos($base, '/')))
+    {
+      $base = substr($base, 0, $pos + 1);
+    }
     ?>
-    defaultOptions.language = {url: '<?php echo url_base() . "$lang_file" ?>'}
+    defaultOptions.language = {url: '<?php echo $base . $lang_file ?>'}
     <?php
   }
   ?>
