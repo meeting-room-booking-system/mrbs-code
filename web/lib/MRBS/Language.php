@@ -549,7 +549,7 @@ class Language
     foreach ($files as $file)
     {
       $path = $dir . '/' . $file;
-      // . and .. will be included in the output of scandir(), so
+      // '.' and '..' will be included in the output of scandir(), so
       // we need to exclude them.  We also want to exclude files
       // that we can't read.
       if (!is_dir($path) && is_readable($path))
