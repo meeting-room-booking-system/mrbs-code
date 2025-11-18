@@ -464,8 +464,8 @@ class Language
     // Add a backstop at the very bottom of the list
     $result[] = self::DEFAULT_LOCALE;
 
-    // Remove any aliases
-    return array_map([__CLASS__, 'unAlias'], $result);
+    // Remove any aliases and duplicates
+    return array_unique(array_map([__CLASS__, 'unAlias'], $result));
   }
 
 
