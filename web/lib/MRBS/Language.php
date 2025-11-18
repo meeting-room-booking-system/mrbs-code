@@ -72,7 +72,8 @@ class Language
    * - 'prefix' (Optional) The prefix to the language tag in the filename, eg 'lang.' for 'lang.en'.
    * - 'suffix' (Optional) The suffix to the language tag, eh '.js' for 'en.js'.
    * - 'lang_map' (Optional) An array mapping non-standard language tags onto the BCP 47 standard.
-   * - 'defaults' (Optional) An array of language tags that represent the default language of the component.
+   * - 'defaults' (Optional) An array of languages that are already built into the system and do not
+   *   need an explicit local setting.
    */
   private const LANG_DIRS = [
     'mrbs' => [
@@ -534,7 +535,8 @@ class Language
    * `$prefix . $lang . $suffix`.
    *
    * @param array<string, string> $lang_map An array mapping non-standard language tags onto the BCP 47 standard.
-   * @param string[] $defaults An array of language tags that represent the default language of the component.
+   * @param string[] $defaults An array of languages that are already built into the system and do not
+   *  need an explicit local setting.
    * @return string[]
    */
   private static function getLangtags(string $dir, string $prefix='', string $suffix='', array $lang_map=[], array $defaults=[]) : array
