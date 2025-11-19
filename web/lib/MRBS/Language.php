@@ -326,6 +326,26 @@ class Language
 
 
   /**
+   * Converts a locale to standard BCP 47 format
+   */
+  public static function convertToBCP47(?string $locale) : ?string
+  {
+    if (!isset($locale))
+    {
+      return null;
+    }
+
+    // Parse it and then recompose it.  This will get the capitalisation correct, eg
+    // "sr-Latn-RS".  Note though that BCP 47 language tags are case-insensitive and
+    // the capitalisation is just a convention.
+    $locale = Locale::composeLocale(Locale::parseLocale($locale));
+    // Replace the underscores with hyphens.  The PHP Locale class will return underscores,
+    // but the BCP 47 standard uses hyphens.
+    return str_replace('_', '-', $locale);
+  }
+
+
+  /**
    * Gets the pathname of the file containing the translation for a language
    * @return string|null The pathname, or NULL if the component default can be used.
    */

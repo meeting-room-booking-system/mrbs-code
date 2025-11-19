@@ -367,7 +367,7 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
   if ($as_html)
   {
     $body .= DOCTYPE . MAIL_EOL;
-    $body .= '<html lang="' . convert_to_BCP47(get_mail_lang()) . '">' . MAIL_EOL;
+    $body .= '<html lang="' . Language::convertToBCP47(get_mail_lang()) . '">' . MAIL_EOL;
     $body .= '<head>' . MAIL_EOL;
     $body .= '<meta http-equiv="Content-Type" content="text/html; charset=' . get_mail_charset() . '">' . MAIL_EOL;
     $body .= '<title>' . escape_html($mrbs_company) . '</title>' . MAIL_EOL;

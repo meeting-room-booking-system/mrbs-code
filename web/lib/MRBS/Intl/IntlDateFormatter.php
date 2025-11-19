@@ -14,8 +14,8 @@ namespace MRBS\Intl;
 
 use DateTimeInterface;
 use MRBS\Exception;
+use MRBS\Language;
 use MRBS\System;
-use function MRBS\convert_to_BCP47;
 use function MRBS\get_mrbs_locale;
 use function MRBS\set_mrbs_locale;
 
@@ -92,7 +92,7 @@ class IntlDateFormatter
       if (is_readable($file)) {
         $patterns = parse_ini_file($file);
         if (!empty($patterns)) {
-          $pattern = $patterns[convert_to_BCP47($this->locale)] ?? $patterns[self::DEFAULT_LOCALE] ?? null;
+          $pattern = $patterns[Language::convertToBCP47($this->locale)] ?? $patterns[self::DEFAULT_LOCALE] ?? null;
         }
       }
     }
