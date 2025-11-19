@@ -56,23 +56,8 @@ else
   language_debug('None of the requested locales are available on this server');
 }
 
-
-
 // Find the best fit for the language that we should be using
 $lang = get_mrbs_lang($locale);
-
-if (isset($lang))
-{
-  language_debug('$lang: ' . $lang);
-}
-else
-{
-  language_debug('No suitable language file found');
-}
-
-// And then set that vocab
-set_vocab($lang);
-
 
 // Determines whether we are using a RTL language
 function using_rtl_lang() : bool
