@@ -2,9 +2,6 @@
 declare(strict_types=1);
 namespace MRBS;
 
-// Note that we are using MRBS\Intl\Locale because \Locale has some bugs in it (and also
-// isn't always installed).
-
 use IntlDateFormatter;
 use MRBS\Errors\Errors;
 use MRBS\Intl\IntlDateFormatterFactory;

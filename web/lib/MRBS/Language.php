@@ -2,6 +2,9 @@
 declare(strict_types=1);
 namespace MRBS;
 
+// Note that we are using MRBS\Intl\Locale because \Locale has some bugs in it (and also
+// isn't always installed).
+
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\BrowserConsoleHandler;
 use Monolog\Handler\ErrorLogHandler;
