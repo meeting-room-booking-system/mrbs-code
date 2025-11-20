@@ -2,8 +2,8 @@
 declare(strict_types=1);
 namespace MRBS;
 
-// Note that we are using MRBS\Intl\Locale because \Locale has some bugs in it (and also
-// isn't always installed).
+// Note that we are using MRBS\Intl\Locale because \Locale isn't always installed and,
+// even if it is, some methods are only available in later releases of PHP.
 
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\BrowserConsoleHandler;
