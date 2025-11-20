@@ -330,6 +330,17 @@ class Language
 
 
   /**
+   * Returns the language being used for MRBS text strings.
+   *
+   * @return string A BCP 47 language tag
+   */
+  public function getMrbsLang() : string
+  {
+    return self::convertToBCP47($this->best_locales['mrbs']);
+  }
+
+
+  /**
    * Gets the vocab string for a given tag.
    *
    * @param mixed ...$values Optional values to be inserted into the string, as for sprintf()
