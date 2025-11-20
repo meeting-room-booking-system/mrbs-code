@@ -592,7 +592,7 @@ function print_theme_header(?array $context=null, bool $simple=false, bool $omit
       'page-date'     => format_iso_date($context['year'], $context['month'], $context['day']),
       'is-admin'      => (is_admin()) ? 'true' : 'false',
       'is-book-admin' => (is_book_admin()) ? 'true' : 'false',
-      'lang-prefs'    => json_encode(Language::getPreferences())
+      'lang-prefs'    => json_encode(Language::getInstance()->getPreferences())
     );
 
     if ($multisite && isset($site) && ($site !== ''))

@@ -297,7 +297,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
 
   <?php
   // Set the language file to be used
-  if ($lang_file = Language::getDatatablesLangPath())
+  if ($lang_file = Language::getInstance()->getDatatablesLangPath())
   {
     // As we're calling url_base() from a script a level down in the hierarchy we need
     // to strip off the last directory.

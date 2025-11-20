@@ -69,12 +69,7 @@ if (!empty($override_locale))
 }
 
 // Initialise the language system
-Language::init(
-  $cli_language ?? null,
-  (bool) $disable_automatic_language_changing,
-  $default_language_tokens ?? null,
-  $override_locale ?? null
-);
+Language::getInstance()->init();
 
 // Flush the mail queue on shutdown
 register_shutdown_function(__NAMESPACE__ . "\\MailQueue::flush");

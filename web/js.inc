@@ -74,7 +74,7 @@ echo script_html("js/general.js.php?$query_string", true);
 
 echo script_html("js/flatpickr/flatpickr.min.js", true);
 $datepicker_src = "js/datepicker.js.php?$query_string";
-$flatpickr_lang_path = Language::getFlatpickrLangPath();
+$flatpickr_lang_path = Language::getInstance()->getFlatpickrLangPath();
 if (isset($flatpickr_lang_path))
 {
   // Add the localisation file
@@ -87,7 +87,7 @@ echo script_html($datepicker_src, true);
 
 echo script_html("jquery/select2/dist/js/select2.full.min.js", true);
 
-if (null !== ($select2_lang_path = Language::getSelect2LangPath()))
+if (null !== ($select2_lang_path = Language::getInstance()->getSelect2LangPath()))
 {
   echo script_html($select2_lang_path, true);
 }

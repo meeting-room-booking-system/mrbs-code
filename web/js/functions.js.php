@@ -78,7 +78,7 @@ jQuery.fn.extend({
   //     resulting in a '...'
   //
   // Get the best available language
-  $select2_lang = basename(Language::getSelect2LangPath(), '.js');
+  $select2_lang = basename(Language::getInstance()->getSelect2LangPath(), '.js');
   ?>
   mrbsSelect: function(tags, useOnMobile) {
     if (tags || useOnMobile || !isMobile())

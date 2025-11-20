@@ -366,7 +366,7 @@ function get_bom(string $charset) : string
  */
 function get_vocab(string $tag, ...$values) : string
 {
-  return Language::getVocab($tag, ...$values);
+  return Language::getInstance()->getVocab($tag, ...$values);
 }
 
 

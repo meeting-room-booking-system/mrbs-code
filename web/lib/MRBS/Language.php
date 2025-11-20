@@ -12,7 +12,9 @@ use Monolog\Logger;
 use MRBS\Errors\Errors;
 use MRBS\Intl\Locale;
 
-// TODO: turn into a singleton/add initialisation check?
+/**
+ * A singleton class for handling localisation in MRBS.
+ */
 class Language
 {
   /**
@@ -100,37 +102,33 @@ class Language
     ]
   ];
 
+  private static $instance;
   /**
    * @var array<string, string> An array of BCP 47 language tags, indexed by component (eg 'locale', 'mrbs', etc.)
    */
-  private static $best_locales = [];
-  private static $cli_language;
-  private static $disable_automatic_language_changing;
-  private static $default_language_tokens;
-  private static $override_locale;
+  private $best_locales = [];
+  private $cli_language;
+  private $disable_automatic_language_changing;
+  private $default_language_tokens;
+  private $override_locale;
+  private $logger;
 
-  /**
-   * @param string|null $override_locale a locale in BCP 47 format, eg 'en-GB'
-   */
-  public static function init(
-    ?string $cli_language,
-    bool $disable_automatic_language_changing,
-    ?string $default_language_tokens,
-    ?string $override_locale
-  ) : void
+
+  private function __construct()
   {
     global $server;
+    global $cli_language, $disable_automatic_language_changing, $default_language_tokens, $override_locale;
 
-    self::debug('$cli_language: ' . ($cli_language ?? 'NULL'));
-    self::debug('$disable_automatic_language_changing: ' . (($disable_automatic_language_changing) ? 'true' : 'false'));
-    self::debug('$default_language_tokens: ' . ($default_language_tokens ?? 'NULL'));
-    self::debug('$override_locale: ' . ($override_locale ?? 'NULL'));
-    self::debug('Accept-Language: ' . ($server['HTTP_ACCEPT_LANGUAGE'] ?? 'NULL'));
+    $this->debug('$cli_language: ' . ($cli_language ?? 'NULL'));
+    $this->debug('$disable_automatic_language_changing: ' . (($disable_automatic_language_changing) ? 'true' : 'false'));
+    $this->debug('$default_language_tokens: ' . ($default_language_tokens ?? 'NULL'));
+    $this->debug('$override_locale: ' . ($override_locale ?? 'NULL'));
+    $this->debug('Accept-Language: ' . ($server['HTTP_ACCEPT_LANGUAGE'] ?? 'NULL'));
 
-    self::$cli_language = $cli_language;
-    self::$default_language_tokens = $default_language_tokens;
-    self::$disable_automatic_language_changing = $disable_automatic_language_changing;
-    self::$override_locale = $override_locale;
+    $this->cli_language = $cli_language ?? null;
+    $this->default_language_tokens = $default_language_tokens ?? null;
+    $this->disable_automatic_language_changing = $disable_automatic_language_changing ?? null;
+    $this->override_locale = $override_locale ?? null;
 
     // Set the default character encoding
     ini_set('default_charset', 'UTF-8');
@@ -142,11 +140,11 @@ class Language
     }
 
     // Work out the preferred order of locales.
-    $preferences = self::getPreferences();
-    self::debug('$preferences: ' . json_encode($preferences));
+    $preferences = $this->getPreferences();
+    $this->debug('$preferences: ' . json_encode($preferences));
 
     // Get the best fit locales, given the preferences.
-    if (null === ($best_fits = self::getBestFits($preferences, self::LANG_DIRS)))
+    if (null === ($best_fits = $this->getBestFits($preferences, self::LANG_DIRS)))
     {
       trigger_error("Could not find a suitable locale; using '" . self::DEFAULT_LOCALE . "'", E_USER_WARNING);
     }
@@ -154,12 +152,58 @@ class Language
     // Store the best fits
     foreach (array_merge(['locale'], array_keys(self::LANG_DIRS)) as $key)
     {
-      self::$best_locales[$key] = $best_fits[$key] ?? self::DEFAULT_LOCALE;
-      self::debug("Best[$key]: '" . self::$best_locales[$key] . "'");
+      $this->best_locales[$key] = $best_fits[$key] ?? self::DEFAULT_LOCALE;
+      $this->debug("Best[$key]: '" . $this->best_locales[$key] . "'");
     }
 
     // Set the locale
-    self::setLocale(self::$best_locales['locale']);
+    self::setLocale($this->best_locales['locale']);
+  }
+
+
+
+  private function __clone()
+  {
+  }
+
+
+  public function __unserialize(array $data) : void
+  {
+    // __unserialize() must have public visibility
+    throw new \Exception("Cannot unserialize a singleton.");
+  }
+
+
+  // __wakeup() is deprecated from PHP 8.5.
+  // "The __wakeup() serialization magic method has been deprecated. Implement __unserialize()
+  // instead (or in addition, if support for old PHP versions is necessary)".
+  // __unserialize() is only available from PHP 7.4.0
+  public function __wakeup()
+  {
+    // __wakeup() must have public visibility
+    throw new \Exception("Cannot unserialize a singleton.");
+  }
+
+
+  public static function getInstance() : self
+  {
+    if (!isset(self::$instance))
+    {
+      self::$instance = new self();
+    }
+
+    return self::$instance;
+  }
+
+
+  /**
+   * Initialise the language system
+   */
+  public function init() : void
+  {
+    // Doesn't do anything, but can only be called if an instance has already been created, and
+    // therefore the class will have been initialised by the constructor.  It's not necessary
+    // to have this method, but it makes it clearer what's happening.
   }
 
 
@@ -243,27 +287,27 @@ class Language
   /**
    * Returns the pathname of the language file to use for the DataTables jQuery plugin.
    */
-  public static function getDatatablesLangPath() : ?string
+  public function getDatatablesLangPath() : ?string
   {
-    return self::getLangPath('datatables', self::$best_locales['datatables']);
+    return self::getLangPath('datatables', $this->best_locales['datatables']);
   }
 
 
   /**
    * Returns the pathname of the language file to use for the Flatpickr datepicker.
    */
-  public static function getFlatpickrLangPath() : ?string
+  public function getFlatpickrLangPath() : ?string
   {
-    return self::getLangPath('flatpickr', self::$best_locales['flatpickr']);
+    return self::getLangPath('flatpickr', $this->best_locales['flatpickr']);
   }
 
 
   /**
    * Returns the pathname of the language file to use for the Select2 jQuery plugin.
    */
-  public static function getSelect2LangPath() : ?string
+  public function getSelect2LangPath() : ?string
   {
-    return self::getLangPath('select2', self::$best_locales['select2']);
+    return self::getLangPath('select2', $this->best_locales['select2']);
   }
 
 
@@ -285,7 +329,7 @@ class Language
    * @param mixed ...$values Optional values to be inserted into the string, as for sprintf()
    * @return string The vocab string, or the tag itself if there is no string.
    */
-  public static function getVocab(string $tag, ...$values) : string
+  public function getVocab(string $tag, ...$values) : string
   {
     //  Maybe in the future we should switch to using the MessageFormatter
     //  class as it is more powerful.   However, the Intl extension isn't present
@@ -294,7 +338,7 @@ class Language
 
     if (!isset($vocab))
     {
-      $vocab = self::loadVocab(self::$best_locales['mrbs']);
+      $vocab = $this->loadVocab($this->best_locales['mrbs']);
     }
 
     // Return the tag itself if we can't find a vocab string
@@ -379,7 +423,7 @@ class Language
    * Gets the vocab array for a given language, taking into account $vocab_override.
    * @return array<string, string>
    */
-  private static function loadVocab(string $lang) : array
+  private function loadVocab(string $lang) : array
   {
     global $vocab_override;
 
@@ -388,9 +432,9 @@ class Language
     // Set the final fallback language as some of the translations are incomplete.
     $langs = [self::DEFAULT_LOCALE];
     // Then set the default language as the fallback before that.
-    if (isset(self::$default_language_tokens) && (self::$default_language_tokens !== ''))
+    if (isset($this->default_language_tokens) && ($this->default_language_tokens !== ''))
     {
-      $langs[] = mb_strtolower(self::$default_language_tokens);
+      $langs[] = mb_strtolower($this->default_language_tokens);
     }
     // Then set the language we want
     $langs[] = $lang;  // This is the language we want
@@ -446,7 +490,7 @@ class Language
    *
    * @return string[] An array of BCP 47 language tags
    */
-  public static function getPreferences() : array
+  public function getPreferences() : array
   {
     global $server;
 
@@ -459,25 +503,25 @@ class Language
     // TODO: Review this and come up with something more logical?
 
     // If we're running from the CLI then use the CLI language, if set, as first preference.
-    if (is_cli() && isset(self::$cli_language) && (self::$cli_language !== ''))
+    if (is_cli() && isset($this->cli_language) && ($this->cli_language !== ''))
     {
-      $result[] = self::$cli_language;
+      $result[] = $this->cli_language;
     }
 
     // Otherwise if we're not using automatic language changing, then use the default language, if set.
-    elseif (self::$disable_automatic_language_changing &&
-            isset(self::$default_language_tokens) &&
-            self::$default_language_tokens !== '')
+    elseif ($this->disable_automatic_language_changing &&
+            isset($this->default_language_tokens) &&
+            $this->default_language_tokens !== '')
     {
-      $result[] = self::$default_language_tokens;
+      $result[] = $this->default_language_tokens;
     }
 
     // Otherwise use the override locale, if set, and then the browser preferences.
     else
     {
-      if (isset(self::$override_locale))
+      if (isset($this->override_locale))
       {
-        $result[] = self::$override_locale;
+        $result[] = $this->override_locale;
       }
       if (isset($server['HTTP_ACCEPT_LANGUAGE']))
       {
@@ -506,7 +550,7 @@ class Language
    * @param array{string, array<string, string|string[]>} $components An array of component details, indexed by component name (e.g. 'mrbs').
    * @return string[]|null An array of best fit BCP 47 language tags, indexed by 'locale' or component name, or NULL if none could be found.
    */
-  private static function getBestFits(array $preferences, array $components) : ?array
+  private function getBestFits(array $preferences, array $components) : ?array
   {
     $result = [];
 
@@ -514,7 +558,7 @@ class Language
     foreach ($components as $component => $details)
     {
       $available_languages[$component] = self::getLangtags(...$details);
-      self::debug("Available_languages($component): " . json_encode($available_languages[$component]));
+      $this->debug("Available_languages($component): " . json_encode($available_languages[$component]));
     }
 
     // Test each locale in decreasing order of preference to see if it is supported throughout MRBS.
@@ -526,13 +570,13 @@ class Language
     foreach ($preferences as $locale)
     {
       // Check whether setlocale() is going to work
-      self::debug("Trying '$locale'");
+      $this->debug("Trying '$locale'");
       if (false === Locale::acceptFromHttp($locale))
       {
-        self::debug('locale: failed');
+        $this->debug('locale: failed');
         continue;
       }
-      self::debug("locale: '$locale'");
+      $this->debug("locale: '$locale'");
       $result['locale'] = $locale;
 
       // Then check each of the components to see if there's a language file matching this locale.
@@ -540,10 +584,10 @@ class Language
       {
         if ('' === ($result[$component] = Locale::lookup($tags, $locale)))
         {
-          self::debug("$component: failed");
+          $this->debug("$component: failed");
           continue 2;
         }
-        self::debug("$component: '" . $result[$component] . "'");
+        $this->debug("$component: '" . $result[$component] . "'");
       }
 
       // Nothing failed, so this locale will work
@@ -617,24 +661,22 @@ class Language
   }
 
 
-  private static function debug(string $message) : void
+  private function debug(string $message) : void
   {
     global $language_debug;
 
-    static $logger;
-
     if ($language_debug)
     {
-      if (!isset($logger))
+      if (!isset($this->logger))
       {
         // Set up the logger to send output to the browser console and the error log
-        $logger = new Logger('MRBS.Language');
-        $logger->pushHandler(new BrowserConsoleHandler());
+        $this->logger = new Logger('MRBS.Language');
+        $this->logger->pushHandler(new BrowserConsoleHandler());
         $handler = new ErrorLogHandler();
         $handler->setFormatter(new LineFormatter('%channel%.%level_name%: %message%'));
-        $logger->pushHandler($handler);
+        $this->logger->pushHandler($handler);
       }
-      $logger->debug($message);
+      $this->logger->debug($message);
     }
   }
 
