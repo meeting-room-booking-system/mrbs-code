@@ -42,6 +42,13 @@ class Locale
   const PRIVATE_TAG            = 'private';
   const ACTUAL_LOCALE = 0;
   const VALID_LOCALE = 1;
+  /**
+   * A list of languages that use Right to Left text
+   */
+  private const RTL_LANGUAGES = [
+    // TODO: Expand this list
+    'he'
+  ];
 
 
   /**
@@ -250,6 +257,12 @@ class Locale
     }
 
     return $result;
+  }
+
+
+  public static function isRightToLeft(string $locale): bool
+  {
+    return in_array(mb_strtolower($locale), self::RTL_LANGUAGES);
   }
 
 
