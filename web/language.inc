@@ -334,15 +334,6 @@ function get_csv_charset() : string
 }
 
 
-// Returns the language that MRBS is using, in BCP-47 format
-function get_lang() : string
-{
-  global $lang;
-
-  return $lang;
-}
-
-
 function get_bom(string $charset) : string
 {
   switch(mb_strtolower($charset))

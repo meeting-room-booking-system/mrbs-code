@@ -2,9 +2,9 @@
 namespace MRBS\Auth;
 
 use MRBS\Intl\Locale;
+use MRBS\Language;
 use MRBS\User;
 use phpCAS;
-use function MRBS\get_lang;
 use function MRBS\is_https;
 
 class AuthCas extends Auth
@@ -98,7 +98,7 @@ class AuthCas extends Auth
       'zh' => PHPCAS_LANG_CHINESE_SIMPLIFIED
     );
 
-    $locale = Locale::parseLocale(get_lang());
+    $locale = Locale::parseLocale(Language::getInstance()->getMrbsLang());
 
     if (isset($cas_lang_map[$locale['language']]))
     {
