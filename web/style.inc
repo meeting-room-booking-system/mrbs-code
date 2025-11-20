@@ -4,6 +4,10 @@ namespace MRBS;
 
 
 // Generates the HTML for a <link> element
+
+// We use \MRBS\Intl\Locale rather than \Locale because (a) we use isRightToLeft() method
+// which is only available from PHP 8.5, and (b) because we can't guarantee that the intl
+// extension is installed.
 use MRBS\Intl\Locale;
 
 function link_html(string $href, bool $add_version=false, ?string $media=null) : string
