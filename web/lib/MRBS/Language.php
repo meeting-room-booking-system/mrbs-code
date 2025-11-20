@@ -109,7 +109,13 @@ class Language
   private $best_locales = [];
   private $cli_language;
   private $disable_automatic_language_changing;
+  /**
+   * @var string|null A BCP 47 language tag
+   */
   private $default_language_tokens;
+  /**
+   * @var string|null A BCP 47 language tag
+   */
   private $override_locale;
   private $logger;
 
