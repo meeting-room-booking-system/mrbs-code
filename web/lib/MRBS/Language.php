@@ -100,6 +100,9 @@ class Language
     ]
   ];
 
+  /**
+   * @var array<string, string> An array of BCP 47 language tags, indexed by component (eg 'locale', 'mrbs', etc.)
+   */
   private static $best_locales = [];
   private static $cli_language;
   private static $disable_automatic_language_changing;
@@ -165,7 +168,7 @@ class Language
    *
    * @param bool $translate_wildcard If set then the wildcard language identifier ('*') is
    *                                 translated to a standard language - we use 'en'
-   * @return string[]
+   * @return string[] An array of BCP 47 language tags
    */
   public static function getBrowserPreferences(?string $header, bool $translate_wildcard = false) : array
   {
@@ -180,7 +183,7 @@ class Language
    * @param string|null $header an Accept-Language header string
    * @param bool $translate_wildcard If set then the wildcard language identifier ('*') is
    *                                 translated to a standard language - we use 'en'
-   * @return array<string, float>
+   * @return array<string, float> An array of qualifiers, indexed by BCP 47 language tag
    */
   public static function getQualifiers(?string $header, bool $translate_wildcard = false) : array
   {
@@ -441,7 +444,7 @@ class Language
   /**
    * Get the preferred set of locales in descending order.
    *
-   * @return string[]
+   * @return string[] An array of BCP 47 language tags
    */
   public static function getPreferences() : array
   {
@@ -501,7 +504,7 @@ class Language
    *
    * @param string[] $preferences Locales in decreasing order of preference.
    * @param array{string, array<string, string|string[]>} $components An array of component details, indexed by component name (e.g. 'mrbs').
-   * @return string[]|null An array of best fits, indexed by 'locale' or component name, or NULL if none could be found.
+   * @return string[]|null An array of best fit BCP 47 language tags, indexed by 'locale' or component name, or NULL if none could be found.
    */
   private static function getBestFits(array $preferences, array $components) : ?array
   {
