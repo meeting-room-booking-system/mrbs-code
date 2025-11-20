@@ -53,9 +53,6 @@ else
   language_debug('None of the requested locales are available on this server');
 }
 
-// Find the best fit for the language that we should be using
-$lang = get_mrbs_lang($locale);
-
 
 // Converts a locale to standard BCP 47 format
 function convert_to_BCP47(?string $locale) : ?string
@@ -152,44 +149,6 @@ function get_mrbs_locale($header=null) : string
 
   return $locale;
 }
-
-
-// Note: the first time this function is called, it should be called with a $locale.
-// Subsequent calls will just return the static $lang variable which was calculated on
-// the first call
-function get_mrbs_lang(?string $locale=null)
-{
-  global $disable_automatic_language_changing,
-         $default_language_tokens,
-         $cli_language;
-
-  static $lang = null;
-
-  if (!isset($lang))
-  {
-    // If we're running from the CLI, use the config setting
-    if (!empty($cli_language) && is_cli())
-    {
-      $lang = $cli_language;
-    }
-    // Otherwise, if we've been told to use a fixed language, then use that
-    elseif ($disable_automatic_language_changing &&
-            isset($default_language_tokens) &&
-            ($default_language_tokens !== ''))
-    {
-      $lang = $default_language_tokens;
-    }
-    // Otherwise, use the best available language following browser preferences
-    elseif (isset($locale))
-    {
-      $available_languages = get_langtags(MRBS_ROOT . '/lang', 'lang.');
-      $lang = Locale::lookup($available_languages, $locale, false, $default_language_tokens);
-    }
-  }
-
-  return $lang;
-}
-
 
 
 function alias_header(string $header, array $aliases) : string
