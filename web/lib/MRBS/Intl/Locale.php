@@ -7,6 +7,7 @@ namespace MRBS\Intl;
 //      Locale::acceptFromHttp('zh-TW') [See https://www.php.net/manual/en/locale.acceptfromhttp.php#122623]
 //      [See also https://sourceforge.net/p/mrbs/support-requests/2178/]
 //  (b) the intl extension isn't enabled on all sites.
+//  (c) it implements the isRightToLeft() method that is only available from PHP 8.5.
 //
 // If \Locale were working properly then one possibility would be to add conditional code as for the
 // other MRBS\Intl classes, do that the emulation is only a fallback if the PHP class doesn't exist eg
