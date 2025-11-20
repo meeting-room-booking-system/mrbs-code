@@ -56,15 +56,6 @@ else
 // Find the best fit for the language that we should be using
 $lang = get_mrbs_lang($locale);
 
-// Determines whether we are using a RTL language
-function using_rtl_lang() : bool
-{
-  global $rtl_languages;
-
-  $lang = get_mrbs_lang();
-  return in_array(mb_strtolower($lang), $rtl_languages);
-}
-
 
 // Converts a locale to standard BCP 47 format
 function convert_to_BCP47(?string $locale) : ?string
