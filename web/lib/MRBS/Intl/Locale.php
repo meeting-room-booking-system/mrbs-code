@@ -34,15 +34,16 @@ use MRBS\System;
 
 class Locale
 {
-  const LANG_TAG               = 'language';
-  const EXTLANG_TAG            = 'extlang';
-  const SCRIPT_TAG             = 'script';
-  const REGION_TAG             = 'region';
-  const VARIANT_TAG            = 'variant';
-  const GRANDFATHERED_LANG_TAG = 'grandfathered';
-  const PRIVATE_TAG            = 'private';
-  const ACTUAL_LOCALE = 0;
-  const VALID_LOCALE = 1;
+  public const LANG_TAG = 'language';
+  public const EXTLANG_TAG = 'extlang';
+  public const SCRIPT_TAG = 'script';
+  public const REGION_TAG = 'region';
+  public const VARIANT_TAG = 'variant';
+  public const GRANDFATHERED_LANG_TAG = 'grandfathered';
+  public const PRIVATE_TAG = 'private';
+  public const ACTUAL_LOCALE = 0;
+  public const VALID_LOCALE = 1;
+
   /**
    * A list of languages that use Right to Left text
    */
@@ -50,6 +51,8 @@ class Locale
     // TODO: Expand this list
     'he'
   ];
+
+
 
 
   /**
