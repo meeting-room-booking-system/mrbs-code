@@ -264,12 +264,6 @@ function set_vocab($lang)
 }
 
 
-function get_charset() : string
-{
-  return 'utf-8';
-}
-
-
 function get_mail_charset() : string
 {
   return PHPMailer::CHARSET_UTF8;
@@ -280,7 +274,7 @@ function get_csv_charset() : string
 {
   global $csv_charset;
 
-  return (empty($csv_charset)) ? get_charset() : $csv_charset;
+  return (empty($csv_charset)) ? Language::MRBS_CHARSET : $csv_charset;
 }
 
 

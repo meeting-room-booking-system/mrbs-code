@@ -17,6 +17,7 @@ use MRBS\Intl\Locale;
  */
 class Language
 {
+  public const MRBS_CHARSET = 'utf-8';
   /**
    * The fall-back locale if nothing else is suitable.
    */

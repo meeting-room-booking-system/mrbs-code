@@ -5,8 +5,8 @@ namespace MRBS\ICalendar;
 use DateTimeZone;
 use MRBS\DateTime;
 use MRBS\Exception;
+use MRBS\Language;
 use MRBS\Utf8\Utf8String;
-use function MRBS\get_charset;
 use function MRBS\get_mail_charset;
 use function MRBS\get_vocab;
 
@@ -263,7 +263,7 @@ class RFC5545
     // We assume that we are using UTF-8 and therefore that a space character
     // is one octet long.  If we ever switched for some reason to using, for
     // example, UTF-16, this assumption would be invalid.
-    if ((get_charset() != 'utf-8') || (get_mail_charset() != 'utf-8'))
+    if ((Language::MRBS_CHARSET != 'utf-8') || (get_mail_charset() != 'utf-8'))
     {
       throw new Exception("MRBS: internal error - using unsupported character set");
     }

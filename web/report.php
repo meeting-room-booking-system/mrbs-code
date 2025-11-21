@@ -482,7 +482,7 @@ function get_fieldset_submit_buttons() : ElementFieldset
 // to be used for CSV files
 function csv_conv(string $string) : string
 {
-  $in_charset = mb_strtoupper(get_charset());
+  $in_charset = mb_strtoupper(Language::MRBS_CHARSET);
   $out_charset = mb_strtoupper(get_csv_charset());
 
   if ($in_charset == $out_charset)
@@ -700,7 +700,7 @@ function report_header() : void
 
 
   // Find out what the non-breaking space is in this character set
-  $charset = get_charset();
+  $charset = Language::MRBS_CHARSET;
   $nbsp = html_entity_decode('&nbsp;', ENT_NOQUOTES, $charset);
   foreach($values as $key => $value)
   {
@@ -1842,7 +1842,7 @@ else
     default:
       require_once "functions_ical.inc";
       $filename .= '.ics';
-      $content_type = "application/ics; charset=" . get_charset() . "; name=\"$filename\"";
+      $content_type = "application/ics; charset=" . Language::MRBS_CHARSET . "; name=\"$filename\"";
       break;
   }
   if (!$cli_mode)

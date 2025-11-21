@@ -16,7 +16,7 @@ function print_head(bool $simple=false) : void
 
   echo "<head>\n";
 
-  echo "<meta charset=\"" . get_charset() . "\">\n";
+  echo "<meta charset=\"" . Language::MRBS_CHARSET . "\">\n";
 
   // Set IE=edge so that IE10 will display MRBS properly, even if compatibility mode is used
   // on the browser.  If we don't do this then MRBS will treat IE10 as an unsupported browser
@@ -638,7 +638,7 @@ function print_theme_header(?array $context=null, bool $simple=false, bool $omit
 
   }
 
-  $headers = array("Content-Type: text/html; charset=" . get_charset());
+  $headers = array("Content-Type: text/html; charset=" . Language::MRBS_CHARSET);
   http_headers($headers);
 
   echo DOCTYPE . "\n";
