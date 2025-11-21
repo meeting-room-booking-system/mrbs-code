@@ -351,7 +351,7 @@ $(document).on('page_ready', function() {
   else
   {
     <?php // Only display the week number if the MRBS week starts on the first day of the week ?>
-    config.weekNumbers = <?php echo ($mincals_week_numbers && ($weekstarts == DateTime::firstDayOfWeek($timezone, get_mrbs_locale()))) ? 'true' : 'false' ?>;
+    config.weekNumbers = <?php echo ($mincals_week_numbers && ($weekstarts == DateTime::firstDayOfWeek($timezone, Language::getInstance()->getMrbsLocale()))) ? 'true' : 'false' ?>;
   }
 
   let fps = flatpickr('input[type="date"]:not(.navigation)', config);

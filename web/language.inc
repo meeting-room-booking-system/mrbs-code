@@ -42,7 +42,7 @@ else
 language_debug('$aliased_header: ' . $aliased_header);
 
 // Get the locale that we should be using
-$locale = get_mrbs_locale($aliased_header);
+//$locale = get_mrbs_locale($aliased_header);
 
 if (isset($locale))
 {
@@ -362,7 +362,7 @@ function datetime_format(array $format, ?int $timestamp=null, ?string $locale=nu
 
   if (!isset($locale))
   {
-    $locale = get_mrbs_locale();
+    $locale = Language::getInstance()->getMrbsLocale();
   }
 
   if (isset($format['skeleton']))
@@ -415,7 +415,7 @@ function is_ampm(?string $locale=null) : ?bool
 
   if (!isset($locale))
   {
-    $locale = get_mrbs_locale();
+    $locale = Language::getInstance()->getMrbsLocale();
   }
 
   // Work out what pattern is being used for times.

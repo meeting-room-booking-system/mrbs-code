@@ -16,7 +16,6 @@ use DateTimeInterface;
 use MRBS\Exception;
 use MRBS\Language;
 use MRBS\System;
-use function MRBS\get_mrbs_locale;
 use function MRBS\set_mrbs_locale;
 
 // We need to check that the 'intl' extension is loaded because earlier versions of
@@ -228,7 +227,7 @@ class IntlDateFormatter
       // the script itself never called setlocale(). This happens due to other scripts
       // running in different threads of the same process at the same time, changing the
       // process-wide locale using setlocale()."
-      $new_locale = get_mrbs_locale();
+      $new_locale = Language::getInstance()->getMrbsLocale();
       set_mrbs_locale($new_locale);
     }
     else {
