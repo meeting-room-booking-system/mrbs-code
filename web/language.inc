@@ -130,9 +130,6 @@ function set_vocab($lang)
 }
 
 
-
-
-
 /**
  * A wrapper for Language::getVocab() to avoid (a) having to replace
  * get_vocab() everywhere, and (b) having to use the long method call.
