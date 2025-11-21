@@ -14,6 +14,23 @@ use TypeError;
 require_once "mrbs_sql.inc";
 
 
+function get_bom(string $charset) : string
+{
+  switch(mb_strtolower($charset))
+  {
+    case 'utf-8':
+      return pack('CCC', 0xEF, 0xBB, 0xBF);
+      break;
+    case 'utf-16':
+      return pack('S', 0xFEFF);
+      break;
+    default:
+      return '';
+      break;
+  }
+}
+
+
 // Strips out extra whitespace from a string.  Useful for sanitizing
 // user input before it is inserted into the database, eg when the
 // user has accidentally typed "Joe  Smith" instead of "Joe Smith".

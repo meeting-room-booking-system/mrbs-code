@@ -284,21 +284,7 @@ function get_csv_charset() : string
 }
 
 
-function get_bom(string $charset) : string
-{
-  switch(mb_strtolower($charset))
-  {
-    case 'utf-8':
-      return pack('CCC', 0xEF, 0xBB, 0xBF);
-      break;
-    case 'utf-16':
-      return pack('S', 0xFEFF);
-      break;
-    default:
-      return '';
-      break;
-  }
-}
+
 
 
 /**
