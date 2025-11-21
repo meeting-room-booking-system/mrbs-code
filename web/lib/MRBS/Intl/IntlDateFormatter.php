@@ -91,7 +91,7 @@ class IntlDateFormatter
       if (is_readable($file)) {
         $patterns = parse_ini_file($file);
         if (!empty($patterns)) {
-          $pattern = $patterns[Language::convertToBCP47($this->locale)] ?? $patterns[self::DEFAULT_LOCALE] ?? null;
+          $pattern = $patterns[Language::convertToBcp47($this->locale)] ?? $patterns[self::DEFAULT_LOCALE] ?? null;
         }
       }
     }

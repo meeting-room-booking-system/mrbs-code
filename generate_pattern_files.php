@@ -47,7 +47,7 @@ foreach ($skeletons as $skeleton) {
   $fp = fopen($filename, 'w');
   foreach ($locales as $locale)
   {
-    $locale = Language::convertToBCP47($locale);
+    $locale = Language::convertToBcp47($locale);
     $pattern_generator = new IntlDatePatternGenerator($locale);
     $pattern = $pattern_generator->getBestPattern($skeleton);
     write_line($fp, $locale, $pattern);
@@ -85,7 +85,7 @@ foreach ($types as $date_key => $date_value)
     echo "Generating $filename ...";
     $fp = fopen($filename, 'w');
     foreach ($locales as $locale) {
-      $locale = Language::convertToBCP47($locale);
+      $locale = Language::convertToBcp47($locale);
       $formatter = new IntlDateFormatter($locale, $date_value, $time_value);
       $pattern = $formatter->getPattern();
       write_line($fp, $locale, $pattern);

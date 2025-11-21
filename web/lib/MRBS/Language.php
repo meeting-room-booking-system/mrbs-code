@@ -340,7 +340,7 @@ class Language
    */
   public function getMrbsLang() : string
   {
-    return self::convertToBCP47($this->best_locales['mrbs']);
+    return self::convertToBcp47($this->best_locales['mrbs']);
   }
 
 
@@ -351,7 +351,7 @@ class Language
    */
   public function getMrbsLocale() : string
   {
-    return self::convertToBCP47($this->best_locales['locale']);
+    return self::convertToBcp47($this->best_locales['locale']);
   }
 
 
@@ -410,7 +410,7 @@ class Language
   /**
    * Converts a locale to standard BCP 47 format
    */
-  public static function convertToBCP47(?string $locale) : ?string
+  public static function convertToBcp47(?string $locale) : ?string
   {
     if (!isset($locale))
     {

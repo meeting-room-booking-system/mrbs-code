@@ -48,7 +48,7 @@ else
       if (is_readable($file)) {
         $patterns = parse_ini_file($file);
         if (!empty($patterns)) {
-          return $patterns[Language::convertToBCP47($this->locale)] ?? $patterns[self::DEFAULT_LOCALE] ?? false;
+          return $patterns[Language::convertToBcp47($this->locale)] ?? $patterns[self::DEFAULT_LOCALE] ?? false;
         }
       }
 
