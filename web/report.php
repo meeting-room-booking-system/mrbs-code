@@ -20,6 +20,14 @@ use MRBS\Utf8\Utf8String;
 require "defaultincludes.inc";
 
 
+function get_csv_charset() : string
+{
+  global $csv_charset;
+
+  return (empty($csv_charset)) ? Language::MRBS_CHARSET : $csv_charset;
+}
+
+
 function get_field_from_date(array $data) : FieldInputDate
 {
   $label = get_vocab('report_start');

@@ -264,12 +264,7 @@ function set_vocab($lang)
 }
 
 
-function get_csv_charset() : string
-{
-  global $csv_charset;
 
-  return (empty($csv_charset)) ? Language::MRBS_CHARSET : $csv_charset;
-}
 
 
 /**
