@@ -11,14 +11,6 @@ use MRBS\Intl\Locale;
 require_once "functions.inc";
 
 
-
-// A list of languages that use Right to Left text
-$rtl_languages = array(
-  'he'
-);
-
-
-
 function set_mrbs_locale($locale)
 {
   if (!isset($locale))
