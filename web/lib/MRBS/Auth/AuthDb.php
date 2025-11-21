@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS\Auth;
 
+use MRBS\Language;
 use MRBS\MailQueue;
 use MRBS\User;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -10,7 +11,6 @@ use function MRBS\auth;
 use function MRBS\db;
 use function MRBS\format_compound_name;
 use function MRBS\generate_token;
-use function MRBS\get_mail_charset;
 use function MRBS\get_vocab;
 use function MRBS\multisite;
 use function MRBS\parse_email;
@@ -553,7 +553,7 @@ class AuthDb extends Auth
         ($users[0]['display_name'] !== ''))
     {
       $mailer = new PHPMailer();
-      $mailer->CharSet = get_mail_charset();
+      $mailer->CharSet = Language::MAIL_CHARSET;
       // Note that addrFormat() returns a MIME-encoded address
       $addresses['to'] = $mailer->addrFormat(array($users[0]['email'], $users[0]['display_name']));
       $name = $users[0]['display_name'];
@@ -593,7 +593,7 @@ class AuthDb extends Auth
         strip_tags($body),
         $body,
         null,
-        get_mail_charset()
+        Language::MAIL_CHARSET
       );
 
     return true;

@@ -11,6 +11,7 @@ use Monolog\Handler\ErrorLogHandler;
 use Monolog\Logger;
 use MRBS\Errors\Errors;
 use MRBS\Intl\Locale;
+use PHPMailer\PHPMailer\PHPMailer;
 
 /**
  * A singleton class for handling localisation in MRBS.
@@ -18,6 +19,8 @@ use MRBS\Intl\Locale;
 class Language
 {
   public const MRBS_CHARSET = 'utf-8';
+  public const MAIL_CHARSET = PHPMailer::CHARSET_UTF8;
+
   /**
    * The fall-back locale if nothing else is suitable.
    */

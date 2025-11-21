@@ -369,7 +369,7 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
     $body .= DOCTYPE . MAIL_EOL;
     $body .= '<html lang="' . Language::convertToBCP47(get_mail_lang()) . '">' . MAIL_EOL;
     $body .= '<head>' . MAIL_EOL;
-    $body .= '<meta http-equiv="Content-Type" content="text/html; charset=' . get_mail_charset() . '">' . MAIL_EOL;
+    $body .= '<meta http-equiv="Content-Type" content="text/html; charset=' . Language::MAIL_CHARSET . '">' . MAIL_EOL;
     $body .= '<title>' . escape_html($mrbs_company) . '</title>' . MAIL_EOL;
     $body .= '<style type="text/css">' . MAIL_EOL;
     $css_file = 'css/mrbs-mail.css.php';
@@ -702,7 +702,7 @@ function address_merge(array $addresses, string $address_string) : array
 
   $new_addresses = parse_addresses($address_string);
   $mailer = new PHPMailer();
-  $mailer->CharSet = get_mail_charset();
+  $mailer->CharSet = Language::MAIL_CHARSET;
 
   foreach ($new_addresses as $new_address)
   {
@@ -951,7 +951,7 @@ function notifyAdminOnBooking(array $data, array $mail_previous, bool $new_entry
       $text_body,
       $html_body ?? null,
       $attachment,
-      get_mail_charset()
+      Language::MAIL_CHARSET
     );
 }
 
@@ -1035,7 +1035,7 @@ function notifyAdminOnDelete($data, $start_times, bool $series=false, string $ac
       $text_body,
       $html_body ?? null,
       $attachment,
-      get_mail_charset()
+      Language::MAIL_CHARSET
     );
 }
 
