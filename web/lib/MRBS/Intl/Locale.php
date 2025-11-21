@@ -23,6 +23,8 @@ class Locale
   {
     if (method_exists('\Locale', $name))
     {
+      // Check that the method we're calling also exists in the emulator class, in case the 'intl' extension is not enabled.
+      assert(method_exists(__NAMESPACE__ . '\LocaleEmulator', $name), "Call to \Locale::$name which hasn't been emulated.");
       return \Locale::$name(...$arguments);
     }
 
