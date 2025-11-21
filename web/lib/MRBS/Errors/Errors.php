@@ -74,6 +74,16 @@ class Errors // (Don't call the class Error, to avoid confusion with the PHP cla
   {
     global $debug;
 
+    // Enable/disable asertions, depending on whether we are in debug mode.
+    // Note that if 'zend.assertions' is set to -1 in the php.ini file, we can't
+    // make any changes because no code has been produced (and trying to make a
+    // change will produce a warning).
+    if (intval(ini_get('zend.assertions')) !== -1)
+    {
+      // We can't set zend.assertions to -1, because the code has already been produced.
+      ini_set('zend.assertions', ($debug) ? '1' : '0');
+    }
+
     if ($debug && function_exists('opcache_reset'))
     {
       // Useful for making compile-time errors more obvious
@@ -218,7 +228,8 @@ class Errors // (Don't call the class Error, to avoid confusion with the PHP cla
   {
     global $debug;
 
-    if ($debug)
+    //if ($debug)
+    if (true)
     {
       ini_set('display_errors', '1');
       ini_set('display_startup_errors', '1');  // ini_set() only accepts non-string values from PHP 8.1.0
