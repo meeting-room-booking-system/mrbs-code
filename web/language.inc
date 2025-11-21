@@ -30,28 +30,7 @@ $rtl_languages = array(
 // in MRBS and has localisations available in all the third party libraries.
 
 
-// Translate languages in the header string to their aliases
-if (isset($server['HTTP_ACCEPT_LANGUAGE']))
-{
-  $aliased_header = alias_header($server['HTTP_ACCEPT_LANGUAGE'], $lang_aliases ?? []);
-}
-else
-{
-  $aliased_header = null;
-}
-language_debug('$aliased_header: ' . $aliased_header);
 
-// Get the locale that we should be using
-//$locale = get_mrbs_locale($aliased_header);
-
-if (isset($locale))
-{
-  language_debug('$locale: ' . $locale);
-}
-else
-{
-  language_debug('None of the requested locales are available on this server');
-}
 
 
 // Converts a locale to standard BCP 47 format
@@ -95,79 +74,6 @@ function set_mrbs_locale($locale)
       Errors::fatalError("Could not set locale at all, not even to 'C'");
     }
   }
-}
-
-
-// Work out which locale we want to use
-// Note: the first time this function is called, it should be called with a $header string.
-// Subsequent calls will just return the static $locale variable which was calculated on
-// the first call
-function get_mrbs_locale($header=null) : string
-{
-  global $override_locale, $disable_automatic_language_changing, $default_language_tokens;
-  global $cli_language;
-
-  static $locale = null;
-  static $have_locale = false;   // $locale could be null, even when we've got it
-
-  if (!$have_locale)
-  {
-
-    // Use the override locale if we've been given one
-    if (!empty($override_locale))
-    {
-      $locale = $override_locale;
-    }
-    // Otherwise, if we're running from the CLI, use the config setting
-    elseif (!empty($cli_language) && is_cli())
-    {
-      $locale = $cli_language;
-    }
-    // Otherwise, if we've been told to use a fixed language, then use that
-    elseif ($disable_automatic_language_changing &&
-            isset($default_language_tokens) &&
-            ($default_language_tokens !== ''))
-    {
-      $locale = $default_language_tokens;
-    }
-    // Otherwise, use the best available language following browser preferences
-    elseif (!empty($header))
-    {
-      $locale = Locale::acceptFromHttp($header);
-    }
-
-    // If everything fails, use English
-    if (!isset($locale) || ($locale === false))
-    {
-      $locale = 'en';
-    }
-
-    // Convert it to BCP 47 format (eg convert 'en_US' to 'en-US')
-    $locale = convert_to_BCP47($locale);
-    $have_locale = true;
-  }
-
-  return $locale;
-}
-
-
-function alias_header(string $header, array $aliases) : string
-{
-  if (!empty($aliases))
-  {
-    $patterns = array();
-    $replacements = array();
-
-    foreach ($aliases as $key => $value)
-    {
-      $patterns[] = "/(?<=^|,)($key)(?=,|;|$)/i";
-      $replacements[] = $value;
-    }
-
-    $header = preg_replace($patterns, $replacements, $header);
-  }
-
-  return $header;
 }
 
 
