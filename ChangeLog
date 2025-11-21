@@ -1,4 +1,73 @@
-commit c1c419a51 (HEAD -> main)
+commit 7d2f0938c (HEAD -> main)
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Fri Nov 14 14:03:33 2025 +0000
+
+    Updated version for release of 1.12.1.
+
+ web/version_num.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 6b72b19e2 (origin/main, origin/HEAD)
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Nov 14 11:22:27 2025 +0000
+
+    Provide four different language tokens for "Today" to allow sites the option of having different strings in the day, week, month and year views.  See GitHub Issue #3931.
+
+ web/index.php       |  2 +-
+ web/lang/lang.ca    |  5 ++++-
+ web/lang/lang.de    |  7 +++++--
+ web/lang/lang.en    |  5 ++++-
+ web/lang/lang.es    |  7 +++++--
+ web/lang/lang.fr    |  5 ++++-
+ web/lang/lang.ms    |  5 ++++-
+ web/lang/lang.nb    |  5 ++++-
+ web/lang/lang.nl    | 13 ++++++++-----
+ web/lang/lang.nn    |  5 ++++-
+ web/lang/lang.no    |  5 ++++-
+ web/lang/lang.pl    |  7 +++++--
+ web/lang/lang.pt-br | 15 +++++++++------
+ web/lang/lang.sv    |  5 ++++-
+ web/lang/lang.zh-cn |  5 ++++-
+ 15 files changed, 69 insertions(+), 27 deletions(-)
+
+commit 38e743dae
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Nov 14 01:24:47 2025 +0000
+
+    Fix typo in comment
+
+ web/pending.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 69c8cff47
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Nov 14 01:16:04 2025 +0000
+
+    Fix TypeError causing "DataTables warning: table id=pending_table - Incorrect column count" error.  See GitHub Issue #3930.
+
+ web/pending.php | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit 5dfdea663 (tag: v1.12.0)
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Wed Nov 12 18:21:34 2025 +0000
+
+    Fixed Docker build and updated PHP version to 8.4.
+
+ Dockerfile | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit 587fb0aae
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Wed Nov 12 17:54:11 2025 +0000
+
+    Updated ChangeLog and NEWS for release of 1.12.0.
+
+ ChangeLog | 7243 ++++++++++++++++++++++++++++++++++++++++++++++++++-
+ NEWS      |  201 ++
+ 2 files changed, 7442 insertions(+), 2 deletions(-)
+
+commit c1c419a51
 Author: John Beranek <jberanek@users.sourceforge.net>
 Date:   Wed Nov 12 16:21:51 2025 +0000
 
@@ -7,7 +76,7 @@ Date:   Wed Nov 12 16:21:51 2025 +0000
  web/version_num.inc | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit 751173bdf (origin/main, origin/HEAD)
+commit 751173bdf
 Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
 Date:   Tue Nov 11 16:52:36 2025 +0000
 
@@ -17066,7 +17135,7 @@ Date:   Sun May 21 15:49:43 2023 +0100
     
     Support for date formatting with Intl
 
-commit d31149fa8 (origin/intl_date, intl_date)
+commit d31149fa8 (origin/intl_date)
 Merge: 3b0e7909c d6b11c454
 Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
 Date:   Sat May 20 18:19:39 2023 +0100
@@ -38817,7 +38886,7 @@ Date:   Fri Apr 17 09:48:13 2020 +0100
 
     Merge with multisite
 
-commit 748250f1f (origin/multisite, multisite)
+commit 748250f1f (origin/multisite)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Fri Apr 17 09:47:41 2020 +0100
 

@@ -19,8 +19,8 @@ installed and working for this application. See the PHP (www.php.net), MySQL
 setting these up.   You need to know how to install, secure, run, maintain,
 and back up your chosen database system.
 
-MRBS also requires that 'iconv' PHP extension, to provide
-internationalisation.
+MRBS also requires that 'iconv' PHP extension, to provide internationalisation.
+The 'intl' and 'mbstring' extensions are recommended.
 
 You can run PHP either as a CGI or with a direct module interface (also called
 SAPI). These servers include Apache, Microsoft Internet Information Server,

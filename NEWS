@@ -7,6 +7,16 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.12.1 (Fri 14th November 2025):
+
+[-] Fix TypeError causing "DataTables warning: table id=pending_table - Incorrect column count"
+ error.  See GitHub Issue #3930.
+
+[*] Provide four different language tokens for "Today" to allow sites the option of
+ having different strings in the day, week, month and year views.  See GitHub Issue #3931.
+
+
+-------------------------------------------------------------------------------
 Version 1.12.0 (Wed 12th November 2025):
 
 [-] Fix TypeError when using $max_booking_date.  See GitHub Issue #3772.

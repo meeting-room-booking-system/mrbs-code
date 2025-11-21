@@ -331,7 +331,7 @@ function get_arrow_nav(string $view, int $view_all, int $year, int $month, int $
     $html .= "<a class=\"prev week symbol prefetch\" title=\"$title_prev_week\" aria-label=\"$title_prev_week\" href=\"" . escape_html($link_prev_week) . "\"></a>";
   }
   $html .= "<a class=\"prev symbol prefetch\" title=\"$title_prev\" aria-label=\"$title_prev\" href=\"" . escape_html($link_prev) . "\"></a>";
-  $html .= "<a title= \"$title_this\" aria-label=\"$title_this\" href=\"" . escape_html($link_today) . "\">" . get_vocab('today') . "</a>";
+  $html .= "<a title= \"$title_this\" aria-label=\"$title_this\" href=\"" . escape_html($link_today) . "\">" . get_vocab("now_$view") . "</a>";
   $html .= "<a class=\"next symbol prefetch\" title=\"$title_next\" aria-label=\"$title_next\" href=\"" . escape_html($link_next) . "\"></a>";
   if ($view == 'day')
   {
