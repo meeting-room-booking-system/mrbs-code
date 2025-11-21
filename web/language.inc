@@ -7,7 +7,6 @@ use MRBS\Errors\Errors;
 use MRBS\Intl\IntlDateFormatterFactory;
 use MRBS\Intl\IntlDatePatternGenerator;
 use MRBS\Intl\Locale;
-use PHPMailer\PHPMailer\PHPMailer;
 
 require_once "functions.inc";
 
@@ -18,37 +17,6 @@ $rtl_languages = array(
   'he'
 );
 
-// Determine locale and language to use.  MRBS's strategy is first to find the locale
-// that best fits the config settings and the user's browser preferences.  Then it
-// finds a language that best fits the locale, subject to any overriding config settings.
-//
-// Locales will also be needed for third party JavaScript libraries such as datepickers.
-// MRBS tries to find the best match for these depending on the localisations available
-// for the library.   This may sometimes mean that the locale for the library, eg the
-// datepicker, is different from the main locale.   But this is probably better than
-// trying to find a locale that is available on the server and has a translation available
-// in MRBS and has localisations available in all the third party libraries.
-
-
-
-
-
-// Converts a locale to standard BCP 47 format
-function convert_to_BCP47(?string $locale) : ?string
-{
-  if (!isset($locale))
-  {
-    return null;
-  }
-
-  // Parse it and then recompose it.  This will get the capitalisation correct, eg
-  // "sr-Latn-RS".  Note though that BCP 47 language tags are case-insensitive and
-  // the capitalisation is just a convention.
-  $locale = Locale::composeLocale(Locale::parseLocale($locale));
-  // Replace the underscores with hyphens.  The PHP Locale class will return underscores,
-  // but the BCP 47 standard uses hyphens.
-  return str_replace('_', '-', $locale);
-}
 
 
 function set_mrbs_locale($locale)
@@ -348,15 +316,4 @@ function is_ampm(?string $locale=null) : ?bool
 
   // And see if it contains an 'a'
   return str_contains($pattern, 'a');
-}
-
-
-function language_debug(string $message) : void
-{
-  global $language_debug;
-
-  if ($language_debug)
-  {
-    error_log("[MRBS DEBUG] $message");
-  }
 }
