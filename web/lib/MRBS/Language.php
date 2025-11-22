@@ -106,6 +106,8 @@ class Language
     ]
   ];
 
+  private const WEB_COMPONENTS = ['mrbs', 'datatables', 'flatpickr', 'select2'];
+
   private static $instance;
   /**
    * @var array<string, string> An array of BCP 47 language tags, indexed by component (eg 'locale', 'mrbs', etc.)
@@ -154,13 +156,13 @@ class Language
     $this->debug('$preferences: ' . json_encode($preferences));
 
     // Get the best fit locales, given the preferences.
-    if (null === ($best_fits = $this->getBestFits($preferences, self::LANG_DIRS)))
+    if (null === ($best_fits = $this->getBestFits($preferences, self::WEB_COMPONENTS)))
     {
       trigger_error("Could not find a suitable locale; using '" . self::DEFAULT_LOCALE . "'", E_USER_WARNING);
     }
 
     // Store the best fits
-    foreach (array_merge(['locale'], array_keys(self::LANG_DIRS)) as $key)
+    foreach (array_merge(['locale'], self::WEB_COMPONENTS) as $key)
     {
       $this->best_locales[$key] = $best_fits[$key] ?? self::DEFAULT_LOCALE;
       $this->debug("Best[$key]: '" . $this->best_locales[$key] . "'");
@@ -579,7 +581,7 @@ class Language
    * different: for example 'pt-BR' for one and 'pt' for another, but never 'pt' and 'es'.
    *
    * @param string[] $preferences Locales in decreasing order of preference.
-   * @param array{string, array<string, string|string[]>} $components An array of component details, indexed by component name (e.g. 'mrbs').
+   * @param string[] $components An array of components to find the best fits for
    * @return string[]|null An array of best fit BCP 47 language tags, indexed by 'locale' or component name, or NULL if none could be found.
    */
   private function getBestFits(array $preferences, array $components) : ?array
@@ -587,8 +589,9 @@ class Language
     $result = [];
 
     // Get the languages supported by each of the software components.
-    foreach ($components as $component => $details)
+    foreach ($components as $component)
     {
+      $details = self::LANG_DIRS[$component];
       $available_languages[$component] = self::getLangtags(...$details);
       $this->debug("Available_languages($component): " . json_encode($available_languages[$component]));
     }
