@@ -227,7 +227,7 @@ class IntlDateFormatter
       // the script itself never called setlocale(). This happens due to other scripts
       // running in different threads of the same process at the same time, changing the
       // process-wide locale using setlocale()."
-      $new_locale = Language::getInstance()->getMrbsLocale();
+      $new_locale = Language::getInstance()->getWebLocale();
       set_mrbs_locale($new_locale);
     }
     else {

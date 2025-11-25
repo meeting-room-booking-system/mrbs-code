@@ -1104,7 +1104,7 @@ class System
     {
       if (!isset($locale))
       {
-        $locale = Language::getInstance()->getMrbsLocale();
+        $locale = Language::getInstance()->getWebLocale();
       }
 
       $locale = mb_strtolower($locale);

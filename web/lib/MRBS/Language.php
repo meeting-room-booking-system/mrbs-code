@@ -372,18 +372,18 @@ class Language
    *
    * @return string A BCP 47 language tag
    */
-  public function getMrbsLang() : string
+  public function getWebLang() : string
   {
     return self::convertToBcp47($this->best_web_locales['mrbs']);
   }
 
 
   /**
-   * Returns the language being used for setting the locale.
+   * Returns the language being used for setting the locale on the web.
    *
    * @return string A BCP 47 language tag
    */
-  public function getMrbsLocale() : string
+  public function getWebLocale() : string
   {
     return self::convertToBcp47($this->best_web_locales['locale']);
   }

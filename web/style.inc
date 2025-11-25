@@ -35,7 +35,7 @@ echo link_html('js/flatpickr/css/flatpickr.min.css', true);
 echo link_html('jquery/select2/dist/css/select2.min.css', true);
 echo link_html(multisite('css/mrbs.css.php'), true);
 
-$using_rtl_lang = Locale::isRightToLeft(Language::getInstance()->getMrbsLang());
+$using_rtl_lang = Locale::isRightToLeft(Language::getInstance()->getWebLang());
 if ($using_rtl_lang)
 {
   echo link_html(multisite('css/mrbs-rtl.css.php'), true);

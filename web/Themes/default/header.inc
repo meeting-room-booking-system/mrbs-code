@@ -645,7 +645,7 @@ function print_theme_header(?array $context=null, bool $simple=false, bool $omit
 
   // We produce two <html> tags: one for versions of IE that we don't support and one for all
   // other browsers.  This enables us to use CSS to hide and show the appropriate text.
-  $mrbs_lang = Language::getInstance()->getMrbsLang();
+  $mrbs_lang = Language::getInstance()->getWebLang();
   echo "<!--[if lte IE 9]>\n";
   echo "<html lang=\"" . escape_html($mrbs_lang) . "\" class=\"unsupported_browser\">\n";
   echo "<![endif]-->\n";

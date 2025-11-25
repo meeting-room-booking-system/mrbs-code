@@ -111,7 +111,7 @@ class CalendarMonthOneRoom extends Calendar
         ];
 
         // If it's the first day of the week, show the week number
-        if ($view_week_number && $date->isFirstDayOfWeek(Language::getInstance()->getMrbsLocale()))
+        if ($view_week_number && $date->isFirstDayOfWeek(Language::getInstance()->getWebLocale()))
         {
           $vars['view'] = 'week';
           $query = http_build_query($vars, '', '&');

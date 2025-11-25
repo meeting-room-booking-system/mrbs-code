@@ -136,7 +136,7 @@ function set_vocab($lang)
  */
 function get_vocab(string $tag, ...$values) : string
 {
-  return Language::getInstance()->getVocab($tag, Language::getInstance()->getMrbsLang(), ...$values);
+  return Language::getInstance()->getVocab($tag, Language::getInstance()->getWebLang(), ...$values);
 }
 
 
@@ -225,7 +225,7 @@ function datetime_format(array $format, ?int $timestamp=null, ?string $locale=nu
 
   if (!isset($locale))
   {
-    $locale = Language::getInstance()->getMrbsLocale();
+    $locale = Language::getInstance()->getWebLocale();
   }
 
   if (isset($format['skeleton']))
@@ -278,7 +278,7 @@ function is_ampm(?string $locale=null) : ?bool
 
   if (!isset($locale))
   {
-    $locale = Language::getInstance()->getMrbsLocale();
+    $locale = Language::getInstance()->getWebLocale();
   }
 
   // Work out what pattern is being used for times.

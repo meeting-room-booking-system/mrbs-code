@@ -98,7 +98,7 @@ class AuthCas extends Auth
       'zh' => PHPCAS_LANG_CHINESE_SIMPLIFIED
     );
 
-    $locale = Locale::parseLocale(Language::getInstance()->getMrbsLang());
+    $locale = Locale::parseLocale(Language::getInstance()->getWebLang());
 
     if (isset($cas_lang_map[$locale['language']]))
     {
