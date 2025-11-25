@@ -624,7 +624,15 @@ class Language
     foreach ($components as $component)
     {
       $details = self::LANG_DIRS[$component];
-      $available_languages[$component] = self::getLangtags(...$details);
+      // From PHP 8.0, which supports named arguments, we can use ...$details for the arguments
+      assert(version_compare(MRBS_MIN_PHP_VERSION, '8.0.0', '<'), "The splat operator can be used.");
+      $available_languages[$component] = self::getLangtags(
+        $details['dir'],
+        $details['prefix'] ?? '',
+        $details['suffix'] ?? '',
+        $details['lang_map'] ?? [],
+        $details['defaults'] ?? []
+      );
       $this->debug("Available_languages($component): " . json_encode($available_languages[$component]));
     }
 
