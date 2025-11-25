@@ -368,7 +368,18 @@ class Language
 
 
   /**
-   * Returns the language being used for MRBS text strings.
+   * Returns the language being used for mail text strings.
+   *
+   * @return string A BCP 47 language tag
+   */
+  public function getMailLang() : string
+  {
+    return self::convertToBcp47($this->best_mail_locales['mrbs']);
+  }
+
+
+  /**
+   * Returns the language being used for web text strings.
    *
    * @return string A BCP 47 language tag
    */

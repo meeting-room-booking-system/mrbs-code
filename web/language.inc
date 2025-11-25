@@ -140,6 +140,16 @@ function get_vocab(string $tag, ...$values) : string
 }
 
 
+/**
+ * A wrapper for Language::getVocab() to avoid (a) having to replace
+ * get_vocab() everywhere, and (b) having to use the long method call.
+ */
+function get_mail_vocab(string $tag, ...$values) : string
+{
+  return Language::getInstance()->getVocab($tag, Language::getInstance()->getMailLang(), ...$values);
+}
+
+
 function get_mail_lang() : ?string
 {
   global $mail_settings, $default_language_tokens;
@@ -160,34 +170,6 @@ function get_mail_lang() : ?string
 function get_js_vocab(string $tag, ...$values) : string
 {
   return escape_js(get_vocab($tag, ...$values));
-}
-
-
-// Same as get_vocab(), but uses the mailing language
-function get_mail_vocab(string $tag, ...$values) : string
-{
-  global $vocab;
-
-  static $mail_vocab = null;
-
-  if (!isset($mail_vocab))
-  {
-    $web_vocab = $vocab;   // Save $vocab before it gets overwritten
-    // Get the best language available for mail
-    set_vocab(get_mail_lang());
-    $mail_vocab = $vocab;
-    $vocab = $web_vocab;  // Restore $vocab
-  }
-
-  // Return the tag itself if we can't find a vocab string
-  if (!isset($mail_vocab[$tag]))
-  {
-    return $tag;
-  }
-
-  $result = (count($values) === 0) ? $mail_vocab[$tag] : sprintf($mail_vocab[$tag], ...$values);
-
-  return str_replace('&nbsp;', ' ', $result);
 }
 
 
