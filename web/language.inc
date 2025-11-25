@@ -150,22 +150,6 @@ function get_mail_vocab(string $tag, ...$values) : string
 }
 
 
-function get_mail_lang() : ?string
-{
-  global $mail_settings, $default_language_tokens;
-
-  static $mail_lang;
-
-  if (!isset($mail_lang))
-  {
-    $available_languages = get_langtags(MRBS_ROOT . '/lang', 'lang.');
-    $mail_lang = Locale::lookup($available_languages, $mail_settings['admin_lang'], false, $default_language_tokens ?? 'en');
-  }
-
-  return $mail_lang;
-}
-
-
 // Same as get_vocab(), but escapes the result for use in JavaScript
 function get_js_vocab(string $tag, ...$values) : string
 {
