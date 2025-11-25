@@ -390,30 +390,30 @@ class Language
 
 
   /**
-   * Gets the vocab string for a given tag.
+   * Gets the vocab string for a given tag and locale.
    *
    * @param mixed ...$values Optional values to be inserted into the string, as for sprintf()
    * @return string The vocab string, or the tag itself if there is no string.
    */
-  public function getVocab(string $tag, ...$values) : string
+  public function getVocab(string $tag, string $locale, ...$values) : string
   {
     //  Maybe in the future we should switch to using the MessageFormatter
     //  class as it is more powerful.   However, the Intl extension isn't present
     //  in all PHP installations and so the class would have to be emulated.
     static $vocab;
 
-    if (!isset($vocab))
+    if (!isset($vocab[$locale]))
     {
-      $vocab = $this->loadVocab($this->best_web_locales['mrbs']);
+      $vocab[$locale] = $this->loadVocab($locale);
     }
 
     // Return the tag itself if we can't find a vocab string
-    if (!isset($vocab[$tag]))
+    if (!isset($vocab[$locale][$tag]))
     {
       return $tag;
     }
 
-    return (count($values) === 0) ? $vocab[$tag] : sprintf($vocab[$tag], ...$values);
+    return (count($values) === 0) ? $vocab[$locale][$tag] : sprintf($vocab[$locale][$tag], ...$values);
   }
 
 
@@ -487,6 +487,8 @@ class Language
 
   /**
    * Gets the vocab array for a given language, taking into account $vocab_override.
+   *
+   * @param string $lang a BCP 47 language tag
    * @return array<string, string>
    */
   private function loadVocab(string $lang) : array
@@ -503,7 +505,7 @@ class Language
       $langs[] = mb_strtolower($this->default_language_tokens);
     }
     // Then set the language we want
-    $langs[] = $lang;  // This is the language we want
+    $langs[] = mb_strtolower($lang);  // This is the language we want
 
     // Eliminate any duplicates.
     $langs = array_unique($langs);

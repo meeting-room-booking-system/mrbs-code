@@ -136,7 +136,7 @@ function set_vocab($lang)
  */
 function get_vocab(string $tag, ...$values) : string
 {
-  return Language::getInstance()->getVocab($tag, ...$values);
+  return Language::getInstance()->getVocab($tag, Language::getInstance()->getMrbsLang(), ...$values);
 }
 
 
