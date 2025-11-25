@@ -107,12 +107,14 @@ class Language
   ];
 
   private const WEB_COMPONENTS = ['mrbs', 'datatables', 'flatpickr', 'select2'];
+  private const MAIL_COMPONENTS = ['mrbs']; // We don't need the JavaScript components for mail
 
   private static $instance;
   /**
    * @var array<string, string> An array of BCP 47 language tags, indexed by component (eg 'locale', 'mrbs', etc.)
    */
-  private $best_locales = [];
+  private $best_web_locales = [];
+  private $best_mail_locales = [];
   private $cli_language;
   private $disable_automatic_language_changing;
   /**
@@ -128,7 +130,7 @@ class Language
 
   private function __construct()
   {
-    global $server;
+    global $mail_settings, $server;
     global $cli_language, $disable_automatic_language_changing, $default_language_tokens, $override_locale;
 
     $this->debug('$cli_language: ' . ($cli_language ?? 'NULL'));
@@ -151,6 +153,8 @@ class Language
       mb_internal_encoding('UTF-8');
     }
 
+    // GET THE BEST SET OF LOCALES FOR THE WEB
+    $this->debug("Getting web locales.");
     // Work out the preferred order of locales.
     $preferences = $this->getPreferences();
     $this->debug('$preferences: ' . json_encode($preferences));
@@ -158,20 +162,48 @@ class Language
     // Get the best fit locales, given the preferences.
     if (null === ($best_fits = $this->getBestFits($preferences, self::WEB_COMPONENTS)))
     {
-      trigger_error("Could not find a suitable locale; using '" . self::DEFAULT_LOCALE . "'", E_USER_WARNING);
+      trigger_error("Could not find suitable locales for the web; using '" . self::DEFAULT_LOCALE . "'", E_USER_WARNING);
     }
 
     // Store the best fits
     foreach (array_merge(['locale'], self::WEB_COMPONENTS) as $key)
     {
-      $this->best_locales[$key] = $best_fits[$key] ?? self::DEFAULT_LOCALE;
-      $this->debug("Best[$key]: '" . $this->best_locales[$key] . "'");
+      $this->best_web_locales[$key] = $best_fits[$key] ?? self::DEFAULT_LOCALE;
+      $this->debug("Best[$key]: '" . $this->best_web_locales[$key] . "'");
     }
 
     // Set the locale
-    self::setLocale($this->best_locales['locale']);
-  }
+    self::setLocale($this->best_web_locales['locale']);
 
+    // GET THE BEST SET OF LOCALES FOR MAIL
+    $this->debug("Getting mail locales.");
+    // Set the preferences: (1) the mail admin language, (2) the default language tokens, (3) the default locale
+    $preferences = [];
+    if (isset($mail_settings['admin_lang']))
+    {
+      $preferences[] = $mail_settings['admin_lang'];
+    }
+    if (isset($default_language_tokens))
+    {
+      $preferences[] = $default_language_tokens;
+    }
+    $preferences[] = self::DEFAULT_LOCALE;
+    $preferences = array_unique($preferences);
+    $this->debug('$preferences: ' . json_encode($preferences));
+
+    // Get the best fit locales, given the preferences.
+    if (null === ($best_fits = $this->getBestFits($preferences, self::MAIL_COMPONENTS)))
+    {
+      trigger_error("Could not find suitable locales for the web; using '" . self::DEFAULT_LOCALE . "'", E_USER_WARNING);
+    }
+
+    // Store the best fits
+    foreach (array_merge(['locale'], self::MAIL_COMPONENTS) as $key)
+    {
+      $this->best_mail_locales[$key] = $best_fits[$key] ?? self::DEFAULT_LOCALE;
+      $this->debug("Best[$key]: '" . $this->best_mail_locales[$key] . "'");
+    }
+  }
 
 
   private function __clone()
@@ -301,7 +333,7 @@ class Language
    */
   public function getDatatablesLangPath() : ?string
   {
-    return self::getLangPath('datatables', $this->best_locales['datatables']);
+    return self::getLangPath('datatables', $this->best_web_locales['datatables']);
   }
 
 
@@ -310,7 +342,7 @@ class Language
    */
   public function getFlatpickrLangPath() : ?string
   {
-    return self::getLangPath('flatpickr', $this->best_locales['flatpickr']);
+    return self::getLangPath('flatpickr', $this->best_web_locales['flatpickr']);
   }
 
 
@@ -319,7 +351,7 @@ class Language
    */
   public function getSelect2LangPath() : ?string
   {
-    return self::getLangPath('select2', $this->best_locales['select2']);
+    return self::getLangPath('select2', $this->best_web_locales['select2']);
   }
 
 
@@ -342,7 +374,7 @@ class Language
    */
   public function getMrbsLang() : string
   {
-    return self::convertToBcp47($this->best_locales['mrbs']);
+    return self::convertToBcp47($this->best_web_locales['mrbs']);
   }
 
 
@@ -353,7 +385,7 @@ class Language
    */
   public function getMrbsLocale() : string
   {
-    return self::convertToBcp47($this->best_locales['locale']);
+    return self::convertToBcp47($this->best_web_locales['locale']);
   }
 
 
@@ -372,7 +404,7 @@ class Language
 
     if (!isset($vocab))
     {
-      $vocab = $this->loadVocab($this->best_locales['mrbs']);
+      $vocab = $this->loadVocab($this->best_web_locales['mrbs']);
     }
 
     // Return the tag itself if we can't find a vocab string
