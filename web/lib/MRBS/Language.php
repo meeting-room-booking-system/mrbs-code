@@ -37,6 +37,7 @@ class Language
    */
   private const LANG_ALIASES = [
     'no' => 'nb', // Not all operating systems will accept a locale of 'no', but most will support 'nb'
+    'no-no' => 'nb-no',
     'zh-cn' => 'zh-hans-cn', // Most operating systems support 'zh_Hans_CN' or 'zh_Hans', rather than 'zh_CN'
     'zh-tw' => 'zh-hant-tw', // Most operating systems support 'zh_Hant_TW' or 'zh_Hant', rather than 'zh_TW'
     'sh' => 'sr-latn-rs', // 'sh' is non-standard
