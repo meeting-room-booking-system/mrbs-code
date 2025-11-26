@@ -2257,6 +2257,12 @@ form#show_my_entries input.link[type="submit"] {
 ?>
 
 .color_key {
+  column-gap: 5px;
+  row-gap: 5px;
+  margin-top: 1em;
+}
+
+.color_key {
   display: -ms-flexbox;
   display: flex;
   -ms-flex-wrap: wrap;
@@ -2267,17 +2273,17 @@ form#show_my_entries input.link[type="submit"] {
   display: inline-grid;
   grid-template-columns: repeat(auto-fill, minmax(20ch, 1fr));
   width: 100%;
-  margin-top: 1em;
 }
 
 .color_key > div {
   width: 12em;
   color: <?php echo $color_key_font_color ?>;
+  text-align: center;
   word-wrap: break-word;
   padding: 0.3em;
   margin: -1px 0 0 -1px; <?php // to collapse the borders ?>
   font-weight: bold;
-  border: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_h_border_color ?>
+  border-radius: 5px;
 }
 
 @supports (display: grid) {
