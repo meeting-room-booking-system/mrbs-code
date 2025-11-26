@@ -51,7 +51,7 @@ class RepeatRule
     global $weekstarts;
 
     $names = array();
-    $locale = ($for_mail) ? get_mail_locale() : null;
+    $locale = ($for_mail) ? Language::getInstance()->getMailLocale() : null;
 
     for ($i=0; $i<DAYS_PER_WEEK; $i++)
     {

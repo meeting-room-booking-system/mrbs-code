@@ -40,26 +40,6 @@ function need_to_send_mail() : bool
 }
 
 
-function get_mail_locale() : string
-{
-  global $mail_settings;
-
-  return $mail_settings['admin_lang'] ?? 'en';
-}
-
-
-function get_mail_os_locale()
-{
-  static $mail_os_locale;
-
-  if (!isset($mail_os_locale))
-  {
-    $mail_os_locale = System::getOSlocale(get_mail_locale());
-  }
-
-  return $mail_os_locale;
-}
-
 // Get localized (for email) field name for a user defined table column
 // Looks for a tag of the format tablename.columnname (where tablename is
 // stripped of the table prefix) and if it can't find a string for that tag will
@@ -103,7 +83,7 @@ function getMailPeriodDateString(int $t, int $mod_time=0) : array
   $mailperiod = $periods[$p_num];
 
   // The separator is a ',' as a '-' leads to an ambiguous display in report.php when showing end times.
-  return array($p_num, $mailperiod . ', ' . datetime_format($datetime_formats['date'], $t, get_mail_locale()));
+  return array($p_num, $mailperiod . ', ' . datetime_format($datetime_formats['date'], $t, Language::getInstance()->getMailLocale()));
 }
 
 // }}}
@@ -121,7 +101,7 @@ function getMailTimeDateString(int $t, bool $inc_time=true) : string
   global $datetime_formats;
 
   $format = ($inc_time) ? $datetime_formats['date_and_time'] : $datetime_formats['date'];
-  return datetime_format($format, $t, get_mail_locale());
+  return datetime_format($format, $t, Language::getInstance()->getMailLocale());
 }
 
 

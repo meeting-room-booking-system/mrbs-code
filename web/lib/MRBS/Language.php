@@ -379,6 +379,17 @@ class Language
 
 
   /**
+   * Returns the language being used for setting the locale for mail messages.
+   *
+   * @return string A BCP 47 language tag
+   */
+  public function getMailLocale() : string
+  {
+    return self::convertToBcp47($this->best_mail_locales['locale']);
+  }
+
+
+  /**
    * Returns the language being used for web text strings.
    *
    * @return string A BCP 47 language tag
