@@ -584,7 +584,14 @@ class Language
   {
     global $server;
 
-    $result = [];
+    static $preferences;
+
+    if (isset($preferences))
+    {
+      return $preferences;
+    }
+
+    $preferences = [];
 
     // The preference order is determined by the config settings and the browser language
     // preferences, if appropriate.  The order below is used for backward compatibility
@@ -595,7 +602,7 @@ class Language
     // If we're running from the CLI then use the CLI language, if set, as first preference.
     if (is_cli() && isset($this->cli_language) && ($this->cli_language !== ''))
     {
-      $result[] = $this->cli_language;
+      $preferences[] = $this->cli_language;
     }
 
     // Otherwise if we're not using automatic language changing, then use the default language, if set.
@@ -603,7 +610,7 @@ class Language
             isset($this->default_language_tokens) &&
             $this->default_language_tokens !== '')
     {
-      $result[] = $this->default_language_tokens;
+      $preferences[] = $this->default_language_tokens;
     }
 
     // Otherwise use the override locale, if set, and then the browser preferences.
@@ -611,19 +618,21 @@ class Language
     {
       if (isset($this->override_locale) && ($this->override_locale !== ''))
       {
-        $result[] = $this->override_locale;
+        $preferences[] = $this->override_locale;
       }
       if (isset($server['HTTP_ACCEPT_LANGUAGE']))
       {
-        $result = array_merge($result, self::getBrowserPreferences($server['HTTP_ACCEPT_LANGUAGE'], true));
+        $preferences = array_merge($preferences, self::getBrowserPreferences($server['HTTP_ACCEPT_LANGUAGE'], true));
       }
     }
 
     // Add a backstop at the very bottom of the list
-    $result[] = self::DEFAULT_LOCALE;
+    $preferences[] = self::DEFAULT_LOCALE;
 
     // Remove any aliases and duplicates
-    return array_unique(array_map([__CLASS__, 'unAlias'], $result));
+    $preferences = array_unique(array_map([__CLASS__, 'unAlias'], $preferences));
+
+    return $preferences;
   }
 
 
