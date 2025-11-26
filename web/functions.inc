@@ -14,6 +14,41 @@ use TypeError;
 require_once "mrbs_sql.inc";
 
 
+
+/**
+ * A wrapper for Language::getVocab() to avoid (a) having to replace
+ * get_vocab() everywhere, and (b) having to use the long method call.
+ */
+function get_vocab(string $tag, ...$values) : string
+{
+  return Language::getInstance()->getVocab($tag, Language::getInstance()->getWebLang(), ...$values);
+}
+
+
+/**
+ * A wrapper for Language::getVocab() to avoid (a) having to replace
+ * get_vocab() everywhere, and (b) having to use the long method call.
+ */
+function get_mail_vocab(string $tag, ...$values) : string
+{
+  return Language::getInstance()->getVocab($tag, Language::getInstance()->getMailLang(), ...$values);
+}
+
+
+// Same as get_vocab(), but escapes the result for use in JavaScript
+function get_js_vocab(string $tag, ...$values) : string
+{
+  return escape_js(get_vocab($tag, ...$values));
+}
+
+
+// Get localised booking type name
+function get_type_vocab(string $type) : string
+{
+  return get_vocab("type.$type");
+}
+
+
 function get_bom(string $charset) : string
 {
   switch(mb_strtolower($charset))

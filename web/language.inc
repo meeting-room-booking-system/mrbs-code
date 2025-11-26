@@ -36,41 +36,6 @@ function set_mrbs_locale($locale)
   }
 }
 
-
-/**
- * A wrapper for Language::getVocab() to avoid (a) having to replace
- * get_vocab() everywhere, and (b) having to use the long method call.
- */
-function get_vocab(string $tag, ...$values) : string
-{
-  return Language::getInstance()->getVocab($tag, Language::getInstance()->getWebLang(), ...$values);
-}
-
-
-/**
- * A wrapper for Language::getVocab() to avoid (a) having to replace
- * get_vocab() everywhere, and (b) having to use the long method call.
- */
-function get_mail_vocab(string $tag, ...$values) : string
-{
-  return Language::getInstance()->getVocab($tag, Language::getInstance()->getMailLang(), ...$values);
-}
-
-
-// Same as get_vocab(), but escapes the result for use in JavaScript
-function get_js_vocab(string $tag, ...$values) : string
-{
-  return escape_js(get_vocab($tag, ...$values));
-}
-
-
-// Get localised booking type name
-function get_type_vocab(string $type) : string
-{
-  return get_vocab("type.$type");
-}
-
-
 // Get localized field name for a user defined table column
 // Looks for a tag of the format tablename.columnname (where tablename is
 // stripped of the table prefix) and if can't find a string for that tag will
