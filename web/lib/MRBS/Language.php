@@ -609,7 +609,7 @@ class Language
     // Otherwise use the override locale, if set, and then the browser preferences.
     else
     {
-      if (isset($this->override_locale))
+      if (isset($this->override_locale) && ($this->override_locale !== ''))
       {
         $result[] = $this->override_locale;
       }
