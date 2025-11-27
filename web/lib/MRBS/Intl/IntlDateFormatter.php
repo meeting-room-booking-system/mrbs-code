@@ -296,13 +296,13 @@ class IntlDateFormatter
 
     // %p doesn't actually work in some locales, so we have to patch it up ourselves by using
     // date() instead of strftime().
-    if (preg_match('/%p/', $format))
+    // Note that we may be using %p instead of %P, because %P isn't supported for this locale. If that's
+    // the case we're going to get a lowercase result, instead of uppercase as intended.  But that
+    // probably doesn't matter as that locale would almost certainly be using a 24-hour format anyway,
+    // which is why %P isn't supported in the first place.
+    if (preg_match('/%p/', $format) && (false === self::doStrftime('%p', $timestamp)))
     {
-      if (false === ($ampm = self::doStrftime('%p', $timestamp)))
-      {
-        $ampm = date('a', $timestamp);
-      }
-      $format = preg_replace('/%p/', $ampm, $format);
+      $format = preg_replace('/%p/', date('a', $timestamp), $format);
     }
 
     $result = '';
