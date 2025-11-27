@@ -246,7 +246,11 @@ class IntlDateFormatter
   }
 
 
-  // Wrapper for strftime()
+  /**
+   * Wrapper for strftime() that suppresses deprecation errors
+   *
+   * @return false|string
+   */
   private static function doStrftime(string $format, ?int $timestamp = null)
   {
     // Temporarily suppress deprecation errors so that we are not flooded with them.
@@ -278,8 +282,7 @@ class IntlDateFormatter
     {
       if (preg_match("/$strftime_format/", $format))
       {
-        $ampm = self::doStrftime($strftime_format, $timestamp);
-        if ($ampm == '')
+        if (false === ($ampm = self::doStrftime($strftime_format, $timestamp)))
         {
           $ampm = date($date_format, $timestamp);
         }
