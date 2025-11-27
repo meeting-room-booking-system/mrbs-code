@@ -272,14 +272,19 @@ class IntlDateFormatter
       $format = str_replace("%e", "%#d", $format);
     }
 
-    // %p doesn't actually work in some locales, we have to patch it up ourselves
-    if (preg_match('/%p/', $format)) {
-      $ampm = self::doStrftime('%p', $timestamp);
-      if ($ampm == '') {
-        $ampm = date('a', $timestamp);
+    // %p and %P don't actually work in some locales, so we have to patch them up ourselves by using
+    // date() instead of strftime().
+    foreach (['%p' => 'a', '%P' => 'A'] as $strftime_format => $date_format)
+    {
+      if (preg_match("/$strftime_format/", $format))
+      {
+        $ampm = self::doStrftime($strftime_format, $timestamp);
+        if ($ampm == '')
+        {
+          $ampm = date($date_format, $timestamp);
+        }
+        $format = preg_replace("/$strftime_format/", $ampm, $format);
       }
-
-      $format = preg_replace('/%p/', $ampm, $format);
     }
 
     $result = '';
