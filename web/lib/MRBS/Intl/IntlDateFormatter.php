@@ -264,30 +264,45 @@ class IntlDateFormatter
   }
 
 
-  private static function doStrftimePlus(string $format, int $timestamp, ?string $locale): string
+  /**
+   * Test whether a specifier is supported by strftime() and replace it with an alternative if not.
+   */
+  private static function testAndReplaceFormat(string $specifier, string $replacement, string $format) : string
   {
-    $server_os = System::getServerOS();
-
-    if ($server_os == "windows") {
-      // Some formats not supported on Windows.   Replace with suitable alternatives
-      $format = str_replace("%R", "%H:%M", $format);
-      $format = str_replace("%P", "%p", $format);
-      $format = str_replace("%l", "%I", $format);
-      $format = str_replace("%e", "%#d", $format);
+    if (false === strftime($specifier))
+    {
+      return str_replace($specifier, $replacement, $format);
     }
 
-    // %p and %P don't actually work in some locales, so we have to patch them up ourselves by using
-    // date() instead of strftime().
-    foreach (['%p' => 'a', '%P' => 'A'] as $strftime_format => $date_format)
+    return $format;
+  }
+
+
+  private static function doStrftimePlus(string $format, int $timestamp, ?string $locale): string
+  {
+    // Test whether certain specifiers are supported on this OS for this locale.  We do an actual test,
+    // rather than just checking which OS we are running on, because it is more reliable.
+    $doubtful_specifiers = [
+      '%R' => '%H:%M',  // Not supported on Windows
+      '%P' => '%p',     // Not supported on Windows, macOS and also some locales
+      '%l' => '%I',     // Not supported on Windows
+      '%e' => '%#d'     // Not supported on Windows
+    ];
+
+    foreach ($doubtful_specifiers as $specifier => $replacement)
     {
-      if (preg_match("/$strftime_format/", $format))
+      $format = self::testAndReplaceFormat($specifier, $replacement, $format);
+    }
+
+    // %p doesn't actually work in some locales, so we have to patch it up ourselves by using
+    // date() instead of strftime().
+    if (preg_match('/%p/', $format))
+    {
+      if (false === ($ampm = self::doStrftime('%p', $timestamp)))
       {
-        if (false === ($ampm = self::doStrftime($strftime_format, $timestamp)))
-        {
-          $ampm = date($date_format, $timestamp);
-        }
-        $format = preg_replace("/$strftime_format/", $ampm, $format);
+        $ampm = date('a', $timestamp);
       }
+      $format = preg_replace('/%p/', $ampm, $format);
     }
 
     $result = '';
