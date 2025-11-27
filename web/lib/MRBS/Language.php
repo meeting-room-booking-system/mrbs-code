@@ -190,6 +190,7 @@ class Language
     }
     $preferences[] = self::DEFAULT_LOCALE;
     $preferences = array_unique($preferences);
+    $preferences = array_values($preferences); // Renumber the keys
     $this->debug('$preferences: ' . json_encode($preferences));
 
     // Get the best fit locales, given the preferences.
@@ -532,6 +533,8 @@ class Language
 
     // Eliminate any duplicates.
     $langs = array_unique($langs);
+    // Renumber the keys
+    $langs = array_values($langs);
 
     // Then load the files in turn, each one overwriting the previous ones.
     foreach ($langs as $lang)
@@ -632,6 +635,8 @@ class Language
 
     // Remove any aliases and duplicates
     $preferences = array_unique(array_map([__CLASS__, 'unAlias'], $preferences));
+    // Renumber the keys
+    $preferences = array_values($preferences);
 
     return $preferences;
   }
@@ -765,6 +770,8 @@ class Language
 
     // Merge in the default languages
     $result = array_unique(array_merge($result, $defaults));
+    // Renumber the keys
+    $result = array_values($result);
 
     return $result;
   }
