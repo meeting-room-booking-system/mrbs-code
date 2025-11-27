@@ -246,7 +246,11 @@ class IntlDateFormatter
   }
 
 
-  // Wrapper for strftime()
+  /**
+   * Wrapper for strftime() that suppresses deprecation errors
+   *
+   * @return false|string
+   */
   private static function doStrftime(string $format, ?int $timestamp = null)
   {
     // Temporarily suppress deprecation errors so that we are not flooded with them.
@@ -260,26 +264,45 @@ class IntlDateFormatter
   }
 
 
-  private static function doStrftimePlus(string $format, int $timestamp, ?string $locale): string
+  /**
+   * Test whether a specifier is supported by strftime() and replace it with an alternative if not.
+   */
+  private static function testAndReplaceFormat(string $specifier, string $replacement, string $format) : string
   {
-    $server_os = System::getServerOS();
-
-    if ($server_os == "windows") {
-      // Some formats not supported on Windows.   Replace with suitable alternatives
-      $format = str_replace("%R", "%H:%M", $format);
-      $format = str_replace("%P", "%p", $format);
-      $format = str_replace("%l", "%I", $format);
-      $format = str_replace("%e", "%#d", $format);
+    if (false === strftime($specifier))
+    {
+      return str_replace($specifier, $replacement, $format);
     }
 
-    // %p doesn't actually work in some locales, we have to patch it up ourselves
-    if (preg_match('/%p/', $format)) {
-      $ampm = self::doStrftime('%p', $timestamp);
-      if ($ampm == '') {
-        $ampm = date('a', $timestamp);
-      }
+    return $format;
+  }
 
-      $format = preg_replace('/%p/', $ampm, $format);
+
+  private static function doStrftimePlus(string $format, int $timestamp, ?string $locale): string
+  {
+    // Test whether certain specifiers are supported on this OS for this locale.  We do an actual test,
+    // rather than just checking which OS we are running on, because it is more reliable.
+    $doubtful_specifiers = [
+      '%R' => '%H:%M',  // Not supported on Windows
+      '%P' => '%p',     // Not supported on Windows, macOS and also some locales
+      '%l' => '%I',     // Not supported on Windows
+      '%e' => '%#d'     // Not supported on Windows
+    ];
+
+    foreach ($doubtful_specifiers as $specifier => $replacement)
+    {
+      $format = self::testAndReplaceFormat($specifier, $replacement, $format);
+    }
+
+    // %p doesn't actually work in some locales, so we have to patch it up ourselves by using
+    // date() instead of strftime().
+    // Note that we may be using %p instead of %P, because %P isn't supported for this locale. If that's
+    // the case we're going to get a lowercase result, instead of uppercase as intended.  But that
+    // probably doesn't matter as that locale would almost certainly be using a 24-hour format anyway,
+    // which is why %P isn't supported in the first place.
+    if (preg_match('/%p/', $format) && (false === self::doStrftime('%p', $timestamp)))
+    {
+      $format = preg_replace('/%p/', date('a', $timestamp), $format);
     }
 
     $result = '';
