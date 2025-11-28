@@ -197,6 +197,20 @@ $(document).on('page_ready', function() {
       ?>
       if (window.Intl && (formatStr === 'custom'))
       {
+        <?php
+        if ($language_debug)
+        {
+          ?>
+          console.debug("MRBS language preferences: " + JSON.stringify(locales));
+          console.debug("MRBS: locales supported by Intl.DateTimeFormat: " + JSON.stringify(Intl.DateTimeFormat.supportedLocalesOf(locales)));
+          <?php
+        }
+        // Check whether we can use our first choice locale for date and time formatting.
+        ?>
+        if (!Intl.DateTimeFormat.supportedLocalesOf(locales[0]).length)
+        {
+          console.warn("MRBS: Intl.DateTimeFormat in this browser does not support the '" + locales[0] + "' locale.");
+        }
         return (typeof locales === 'undefined') ?
                 new Intl.DateTimeFormat().format(dateObj) :
                 new Intl.DateTimeFormat(locales).format(dateObj);

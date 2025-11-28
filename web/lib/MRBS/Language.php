@@ -107,6 +107,9 @@ class Language
     ]
   ];
 
+  // Note that we also reply on support in the JavaScript by Intl.Collator and Intl.DateTimeFormat for our
+  // chosen locale. However, the test for support would need to be done on the client side, which would be
+  // difficult, so we don't test and just hope that it is supported.  If not, it's not a major disaster.
   private const WEB_COMPONENTS = ['mrbs', 'datatables', 'flatpickr', 'select2'];
   private const MAIL_COMPONENTS = ['mrbs']; // We don't need the JavaScript components for mail
 

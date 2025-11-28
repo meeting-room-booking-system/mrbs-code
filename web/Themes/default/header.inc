@@ -583,7 +583,15 @@ function print_theme_header(?array $context=null, bool $simple=false, bool $omit
 
     // Put some data attributes in the body element for the benefit of JavaScript.  Note that we
     // cannot use these PHP variables directly in the JavaScript files as those files are cached.
-    $data = array(
+
+    // Get the language preferences
+    $lang_preferences = Language::getInstance()->getPreferences();
+    // Add to the beginning of the list the best fit locale (which may not necessarily have been the first choice)
+    array_unshift($lang_preferences, mb_strtolower(Language::getInstance()->getWebLocale()));
+    // Remove duplicates and renumber keys
+    $lang_preferences = array_values(array_unique($lang_preferences));
+
+    $data = [
       'view'          => $context['view'],
       'view_all'      => $context['view_all'],
       'area'          => $context['area'],
@@ -592,8 +600,8 @@ function print_theme_header(?array $context=null, bool $simple=false, bool $omit
       'page-date'     => format_iso_date($context['year'], $context['month'], $context['day']),
       'is-admin'      => (is_admin()) ? 'true' : 'false',
       'is-book-admin' => (is_book_admin()) ? 'true' : 'false',
-      'lang-prefs'    => json_encode(Language::getInstance()->getPreferences())
-    );
+      'lang-prefs'    => json_encode($lang_preferences)
+    ];
 
     if ($multisite && isset($site) && ($site !== ''))
     {

@@ -369,7 +369,22 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   }
 
   <?php // Localise the sorting.  See https://datatables.net/blog/2017-02-28 ?>
-  $.fn.dataTable.ext.order.intl($('body').data('langPrefs'));
+  const locales = $('body').data('langPrefs');
+  $.fn.dataTable.ext.order.intl(locales);
+  <?php
+  if ($language_debug)
+  {
+    ?>
+    console.debug("MRBS language preferences: " + JSON.stringify(locales));
+    console.debug("MRBS: locales supported by Intl.Collator: " + JSON.stringify(Intl.Collator.supportedLocalesOf(locales)));
+    <?php
+  }
+  // Check whether we can use our first choice locale for collation.
+  ?>
+  if (window.Intl && !Intl.Collator.supportedLocalesOf(locales[0]).length)
+  {
+    console.warn("MRBS: Intl.Collator in this browser does not support the '" + locales[0] + "' locale.");
+  }
 
   dataTable = table.DataTable(mergedOptions);
 
