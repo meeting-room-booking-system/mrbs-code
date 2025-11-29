@@ -99,18 +99,29 @@ function get_bom(string $charset) : string
 }
 
 
-// Strips out extra whitespace from a string.  Useful for sanitizing
-// user input before it is inserted into the database, eg when the
-// user has accidentally typed "Joe  Smith" instead of "Joe Smith".
+/**
+ * Removes extra whitespace from the given string by replacing multiple
+ * consecutive whitespace characters with a single space.
+ *
+ * Useful for sanitising user input before it is inserted into the database, eg when the
+ * user has accidentally typed "Joe  Smith" instead of "Joe Smith"
+ */
 function remove_extra_whitespace(string $string) : string
 {
   return preg_replace('/\s+/', ' ', $string);
 }
 
 
-// Constrain an integer to fit a certain type.  Useful for making sure
-// that integers will fit within the range for a database type.
-// Only 4 byte unsigned integers supported at the moment.
+/**
+ * Constrains an integer value within the range defined by the specified number of bytes.
+ *
+ * Useful for making sure that integers will fit within the range for a database type.
+ *
+ * @param int $n The integer value to be constrained.
+ * @param int<4,4> $bytes The number of bytes defining the range. Currently, only 4 bytes are supported.
+ * @param bool $unsigned Flag indicating whether the range should be treated as unsigned. Defaults to false.
+ * @return int The constrained integer value within the valid range.
+ */
 function constrain_int(int $n, int $bytes, bool $unsigned=false) : int
 {
   if (!$unsigned && ($bytes == 4))
@@ -120,25 +131,38 @@ function constrain_int(int $n, int $bytes, bool $unsigned=false) : int
   }
   else
   {
-    throw new \Exception("Other combinations not yet supported");
+    throw new InvalidArgumentException("Other combinations not yet supported");
   }
 
   return max(min($n, $max_limit), $min_limit);
 }
 
 
-// Case-insensitive in_array
-// See https://www.php.net/manual/en/function.in-array.php#Hcom89256
+/**
+ * Performs a case-insensitive check if a value exists in an array.
+ *
+ * @param mixed $needle The searched value.
+ * @param array $haystack The array to search in.
+ * @param bool $strict [optional] If true, also checks the type of the needle in the haystack.
+ * @return bool Returns true if the needle is found in the haystack, false otherwise.
+ */
 function in_arrayi($needle, array $haystack, bool $strict=false) : bool
 {
-  return in_array(mb_strtolower($needle),
-                  array_map('mb_strtolower', $haystack),
-                  $strict);
+  return in_array(
+    mb_strtolower($needle),
+    array_map('mb_strtolower', $haystack),
+    $strict
+  );
 }
 
 
-
-// Checks if a string ends with one of an array of given substrings
+/**
+ * Checks if a given string ends with any of the strings in the provided array.
+ *
+ * @param string $haystack The string to search in.
+ * @param array $needles An array of strings to check as endings for the haystack.
+ * @return bool Returns true if the haystack ends with any of the strings in needles, otherwise false.
+ */
 function str_ends_with_array(string $haystack, array $needles) : bool
 {
   foreach ($needles as $needle)
@@ -153,6 +177,16 @@ function str_ends_with_array(string $haystack, array $needles) : bool
 }
 
 
+/**
+ * Generates a random token as a hexadecimal string.
+ *
+ * @param int $length The desired length of the random token.
+ * This length represents the number of bytes to generate before converting to hexadecimal,
+ * so the resulting string will be twice as long.
+ *
+ * @return string A random token as a hexadecimal string. The method uses multiple strategies
+ * for randomness, falling back to less secure options if necessary.
+ */
 function generate_token(int $length) : string
 {
   if (function_exists('random_bytes'))
@@ -177,7 +211,16 @@ function generate_token(int $length) : string
 }
 
 
-// A locale aware version of strcasecmp()
+/**
+ * Compares two strings using a locale-aware, case-insensitive comparison.
+ * This function determines the relative order of two strings based on
+ * the current locale settings.
+ *
+ * @param string $string1 The first string to compare.
+ * @param string $string2 The second string to compare.
+ * @return int Returns 0 if the strings are equal, -1 if $string1 is less than $string2,
+ *             and 1 if $string1 is greater than $string2.
+ */
 function strcasecmp_locale(string $string1, string $string2) : int
 {
   // Trivial case
@@ -186,10 +229,10 @@ function strcasecmp_locale(string $string1, string $string2) : int
     return 0;
   }
 
-  // Sort the array.  If the order is reversed then $string1 > $string2
+  // Sort the array.  If the order is reversed then $string1 > $string2.
   // (When this function is being used as a callback for usort, and if the original array
-  // is sorted in ascending order, which it well might be if it's the result of
-  // an SQL query with an ORDER BY, then it's fastest to test for $string1 > $string2
+  // is sorted in ascending order - which it well might be if it's the result of
+  // an SQL query with an ORDER BY - then it's fastest to test for $string1 > $string2
   // first, as below.)
   $original_array = array($string1, $string2);
   $array = $original_array;
