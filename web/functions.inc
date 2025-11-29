@@ -5,6 +5,7 @@ namespace MRBS;
 use DateInterval;
 use DateTimeZone;
 use Email\Parse;
+use InvalidArgumentException;
 use MRBS\Form\Field;
 use MRBS\Form\FieldSelect;
 use MRBS\ICalendar\RFC5545;
@@ -38,24 +39,31 @@ function get_mail_vocab(string $tag, ...$values) : string
 }
 
 
-// Same as get_vocab(), but escapes the result for use in JavaScript
+/**
+ * A wrapper for get_vocab() that escapes the returned string for safe use in JavaScript.
+ */
 function get_js_vocab(string $tag, ...$values) : string
 {
   return escape_js(get_vocab($tag, ...$values));
 }
 
 
-// Get localised booking type name
+/**
+ * Get localised booking type name.
+ */
 function get_type_vocab(string $type) : string
 {
   return get_vocab("type.$type");
 }
 
 
-// Get localized field name for a user defined table column
-// Looks for a tag of the format tablename.columnname (where tablename is
-// stripped of the table prefix) and if can't find a string for that tag will
-// return the column name
+/**
+ * Get the localised field name for a user-defined table column.
+ *
+ * Looks for a tag of the format tablename.columnname (where tablename is
+ * stripped of the table prefix) and if can't find a string for that tag will
+ * return the column name
+ */
 function get_loc_field_name(string $table, string $name) : string
 {
   global $vocab;
@@ -68,6 +76,12 @@ function get_loc_field_name(string $table, string $name) : string
 }
 
 
+/**
+ * Generates the Byte Order Mark (BOM) for a specific character encoding.
+ *
+ * @param string $charset The character encoding for which the BOM is required. Supported values are 'utf-8' and 'utf-16'.
+ * @return string The generated BOM string for the specified character encoding.
+ */
 function get_bom(string $charset) : string
 {
   switch(mb_strtolower($charset))
@@ -79,7 +93,7 @@ function get_bom(string $charset) : string
       return pack('S', 0xFEFF);
       break;
     default:
-      return '';
+      throw new InvalidArgumentException("Unsupported character encoding: $charset");
       break;
   }
 }
