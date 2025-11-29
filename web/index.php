@@ -380,7 +380,7 @@ function get_date_heading(string $view, int $year, int $month, int $day) : strin
     case 'week':
       // Display the week number if required, provided the MRBS week starts on the first day
       // of the week, otherwise it's spanning two weeks and doesn't make sense.
-      if ($view_week_number && ($weekstarts == DateTime::firstDayOfWeek($timezone, get_mrbs_locale())))
+      if ($view_week_number && ($weekstarts == DateTime::firstDayOfWeek($timezone, Language::getInstance()->getWebLocale())))
       {
         $html .= '<span class="week_number">' .
                  get_vocab('week_number', datetime_format($datetime_formats['week_number'], $time)) .
@@ -389,7 +389,7 @@ function get_date_heading(string $view, int $year, int $month, int $day) : strin
       // Then display the actual dates
       $day_of_week = date('w', $time);
       $our_day_of_week = ($day_of_week + DAYS_PER_WEEK - $weekstarts) % DAYS_PER_WEEK;
-      $ranger = new Ranger(get_mrbs_locale());
+      $ranger = new Ranger(Language::getInstance()->getWebLocale());
       $ranger
         ->setRangeSeparator(get_vocab('range_separator'))
         ->setDateType($datetime_formats['view_week']['date_type'] ?? IntlDateFormatter::LONG)
@@ -406,7 +406,7 @@ function get_date_heading(string $view, int $year, int $month, int $day) : strin
       break;
 
     case 'year':
-      $ranger = new YearRanger(get_mrbs_locale());
+      $ranger = new YearRanger(Language::getInstance()->getWebLocale());
       $ranger->setSeparator(get_vocab('year_range_separator'));
       $start_date = (new DateTime())->setDate($year, $month, $day);
       $start_date->setMonthYearStart($year_start);

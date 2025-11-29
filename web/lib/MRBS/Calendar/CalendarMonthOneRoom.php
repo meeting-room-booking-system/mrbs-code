@@ -3,13 +3,13 @@ declare(strict_types=1);
 namespace MRBS\Calendar;
 
 use MRBS\DateTime;
+use MRBS\Language;
 use MRBS\Room;
 use function MRBS\datetime_format;
 use function MRBS\day_name;
 use function MRBS\escape_html;
 use function MRBS\get_end_last_slot;
 use function MRBS\get_entries_by_room;
-use function MRBS\get_mrbs_locale;
 use function MRBS\get_room_name;
 use function MRBS\get_start_first_slot;
 use function MRBS\get_vocab;
@@ -113,7 +113,7 @@ class CalendarMonthOneRoom extends Calendar
         ];
 
         // If it's the first day of the week, show the week number
-        if ($view_week_number && $date->isFirstDayOfWeek(get_mrbs_locale()))
+        if ($view_week_number && $date->isFirstDayOfWeek(Language::getInstance()->getWebLocale()))
         {
           $vars['view'] = 'week';
           $query = http_build_query($vars, '', '&');

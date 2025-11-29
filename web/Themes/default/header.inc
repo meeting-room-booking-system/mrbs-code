@@ -16,7 +16,7 @@ function print_head(bool $simple=false) : void
 
   echo "<head>\n";
 
-  echo "<meta charset=\"" . get_charset() . "\">\n";
+  echo "<meta charset=\"" . Language::MRBS_CHARSET . "\">\n";
 
   // Set IE=edge so that IE10 will display MRBS properly, even if compatibility mode is used
   // on the browser.  If we don't do this then MRBS will treat IE10 as an unsupported browser
@@ -585,7 +585,15 @@ function print_theme_header(?array $context=null, bool $simple=false, bool $omit
 
     // Put some data attributes in the body element for the benefit of JavaScript.  Note that we
     // cannot use these PHP variables directly in the JavaScript files as those files are cached.
-    $data = array(
+
+    // Get the language preferences
+    $lang_preferences = Language::getInstance()->getPreferences();
+    // Add to the beginning of the list the best fit locale (which may not necessarily have been the first choice)
+    array_unshift($lang_preferences, mb_strtolower(Language::getInstance()->getWebLocale()));
+    // Remove duplicates and renumber keys
+    $lang_preferences = array_values(array_unique($lang_preferences));
+
+    $data = [
       'view'          => $context['view'],
       'view_all'      => $context['view_all'],
       'area'          => $context['area'],
@@ -594,8 +602,8 @@ function print_theme_header(?array $context=null, bool $simple=false, bool $omit
       'page-date'     => format_iso_date($context['year'], $context['month'], $context['day']),
       'is-admin'      => (is_admin()) ? 'true' : 'false',
       'is-book-admin' => (is_book_admin()) ? 'true' : 'false',
-      'lang-prefs'    => json_encode(get_lang_preferences())
-    );
+      'lang-prefs'    => json_encode($lang_preferences)
+    ];
 
     if ($multisite && isset($site) && ($site !== ''))
     {
@@ -640,18 +648,19 @@ function print_theme_header(?array $context=null, bool $simple=false, bool $omit
 
   }
 
-  $headers = array("Content-Type: text/html; charset=" . get_charset());
+  $headers = array("Content-Type: text/html; charset=" . Language::MRBS_CHARSET);
   http_headers($headers);
 
   echo DOCTYPE . "\n";
 
   // We produce two <html> tags: one for versions of IE that we don't support and one for all
   // other browsers.  This enables us to use CSS to hide and show the appropriate text.
+  $mrbs_lang = Language::getInstance()->getWebLang();
   echo "<!--[if lte IE 9]>\n";
-  echo "<html lang=\"" . escape_html(get_mrbs_lang()) . "\" class=\"unsupported_browser\">\n";
+  echo "<html lang=\"" . escape_html($mrbs_lang) . "\" class=\"unsupported_browser\">\n";
   echo "<![endif]-->\n";
   echo "<!--[if (!IE)|(gt IE 9)]><!-->\n";
-  echo "<html lang=\"" . escape_html(get_mrbs_lang()) . "\">\n";
+  echo "<html lang=\"" . escape_html($mrbs_lang) . "\">\n";
   echo "<!--<![endif]-->\n";
 
   print_head($simple);

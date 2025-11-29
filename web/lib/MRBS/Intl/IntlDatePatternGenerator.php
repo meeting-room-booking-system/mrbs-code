@@ -6,7 +6,7 @@ namespace MRBS\Intl;
 // provides a basic emulation of PHP's IntlDatePatternGenerator class.
 
 use MRBS\Exception;
-use function MRBS\convert_to_BCP47;
+use MRBS\Language;
 
 // We need to check that the 'intl' extension is loaded because earlier versions of
 // MRBS had the IntlDatePatternGenerator emulation class at the top level in lib.  If users
@@ -48,7 +48,7 @@ else
       if (is_readable($file)) {
         $patterns = parse_ini_file($file);
         if (!empty($patterns)) {
-          return $patterns[convert_to_BCP47($this->locale)] ?? $patterns[self::DEFAULT_LOCALE] ?? false;
+          return $patterns[Language::convertToBcp47($this->locale)] ?? $patterns[self::DEFAULT_LOCALE] ?? false;
         }
       }
 

@@ -175,7 +175,7 @@ class MailQueue
       }
     }
 
-    $mail->CharSet = get_mail_charset();  // PHPMailer defaults to 'iso-8859-1'
+    $mail->CharSet = Language::MAIL_CHARSET;  // PHPMailer defaults to 'iso-8859-1'
     $mail->AllowEmpty = true;  // remove this for production
 
     if (!empty($addresses['reply_to']))

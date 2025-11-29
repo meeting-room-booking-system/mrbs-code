@@ -171,10 +171,10 @@ $(document).on('page_ready', function() {
   // Could use new URLSearchParams(document.currentScript.src); and get the lang parameter from the
   // file's query string, but document.currentScript is not supported by IE (though that probably
   // doesn't matter much anymore).
-  if (null !== ($flatpickr_lang_path = get_flatpickr_lang_path()))
+  if (null !== ($flatpickr_lang_path = Language::getInstance()->getFlatpickrLangPath()))
   {
     // Map the flatpickr lang file onto a flatpickr l10ns property and then localize
-    echo 'flatpickr.localize(flatpickr.l10ns["' . get_flatpickr_property($flatpickr_lang_path) . '"]);';
+    echo 'flatpickr.localize(flatpickr.l10ns["' . Language::getFlatpickrProperty($flatpickr_lang_path) . '"]);';
   }
 
 
@@ -197,6 +197,20 @@ $(document).on('page_ready', function() {
       ?>
       if (window.Intl && (formatStr === 'custom'))
       {
+        <?php
+        if ($language_debug)
+        {
+          ?>
+          console.debug("MRBS language preferences: " + JSON.stringify(locales));
+          console.debug("MRBS: locales supported by Intl.DateTimeFormat: " + JSON.stringify(Intl.DateTimeFormat.supportedLocalesOf(locales)));
+          <?php
+        }
+        // Check whether we can use our first choice locale for date and time formatting.
+        ?>
+        if (!Intl.DateTimeFormat.supportedLocalesOf(locales[0]).length)
+        {
+          console.warn("MRBS: Intl.DateTimeFormat in this browser does not support the '" + locales[0] + "' locale.");
+        }
         return (typeof locales === 'undefined') ?
                 new Intl.DateTimeFormat().format(dateObj) :
                 new Intl.DateTimeFormat(locales).format(dateObj);
@@ -351,7 +365,7 @@ $(document).on('page_ready', function() {
   else
   {
     <?php // Only display the week number if the MRBS week starts on the first day of the week ?>
-    config.weekNumbers = <?php echo ($mincals_week_numbers && ($weekstarts == DateTime::firstDayOfWeek($timezone, get_mrbs_locale()))) ? 'true' : 'false' ?>;
+    config.weekNumbers = <?php echo ($mincals_week_numbers && ($weekstarts == DateTime::firstDayOfWeek($timezone, Language::getInstance()->getWebLocale()))) ? 'true' : 'false' ?>;
   }
 
   let fps = flatpickr('input[type="date"]:not(.navigation)', config);

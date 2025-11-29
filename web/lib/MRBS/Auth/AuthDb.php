@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS\Auth;
 
+use MRBS\Language;
 use MRBS\MailQueue;
 use MRBS\User;
 use function MRBS\_tbl;
@@ -9,7 +10,6 @@ use function MRBS\auth;
 use function MRBS\db;
 use function MRBS\format_compound_name;
 use function MRBS\generate_token;
-use function MRBS\get_mail_charset;
 use function MRBS\get_vocab;
 use function MRBS\multisite;
 use function MRBS\parse_email;
@@ -535,7 +535,7 @@ class AuthDb extends Auth
         strip_tags($body),
         $body,
         null,
-        get_mail_charset()
+        Language::MAIL_CHARSET
       );
 
     return true;

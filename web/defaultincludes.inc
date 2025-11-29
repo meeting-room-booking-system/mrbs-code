@@ -27,7 +27,6 @@ require_once 'site_config.inc';
 require_once 'internalconfig.inc.php';
 require_once 'functions_global.inc';
 require_once 'functions.inc';
-require_once 'language.inc';
 require_once 'theme.inc';
 require_once 'dbsys.inc';
 require_once 'mrbs_auth.inc';

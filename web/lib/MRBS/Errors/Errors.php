@@ -14,11 +14,11 @@ use MRBS\Errors\Formatter\ErrorLogFormatter;
 use MRBS\Errors\Handler\PHPMailerHandler;
 use MRBS\Mailer;
 use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
 use Psr\Log\LogLevel;
 use RuntimeException;
 use Throwable;
 use function MRBS\escape_html;
-use function MRBS\get_charset;
 use function MRBS\get_vocab;
 use function MRBS\mrbs_default_timezone_set;
 use function MRBS\print_footer;
@@ -317,7 +317,7 @@ class Errors // (Don't call the class Error, to avoid confusion with the PHP cla
     if ($logger_settings['mail']['enabled'])
     {
       $mailer = new Mailer($mail_settings, $sendmail_settings, $smtp_settings, true);
-      $mailer->CharSet = get_charset();
+      $mailer->CharSet = PHPMailer::CHARSET_UTF8;
       $mailer->setFromRFC822($logger_settings['mail']['from']);
       $mailer->addAddressesRFC822($logger_settings['mail']['to']);
       $handler = new PHPMailerHandler($mailer, $logger_settings['mail']['level']);

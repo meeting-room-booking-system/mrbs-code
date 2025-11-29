@@ -922,7 +922,7 @@ if (isset($action) && ($action == "export"))
     // Export the calendar
     require_once "functions_ical.inc";
 
-    $content_type = "application/ics;  charset=" . get_charset(). "; name=\"" . $mail_settings['ics_filename'] . ".ics\"";
+    $content_type = "application/ics;  charset=" . Language::MRBS_CHARSET . "; name=\"" . $mail_settings['ics_filename'] . ".ics\"";
     $content_disposition = "attachment; filename=\"" . $mail_settings['ics_filename'] . ".ics\"";
     http_headers(array("Content-Type: $content_type",
                        "Content-Disposition: $content_disposition"));

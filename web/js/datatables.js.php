@@ -297,10 +297,18 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
 
   <?php
   // Set the language file to be used
-  if ($lang_file = get_datatable_lang_path())
+  if ($lang_file = Language::getInstance()->getDatatablesLangPath())
   {
+    // As we're calling url_base() from a script a level down in the hierarchy we need
+    // to strip off the last directory.
+    // TODO: a better way of doing this?
+    $base = rtrim(url_base(), '/');
+    if (false !== ($pos = strrpos($base, '/')))
+    {
+      $base = substr($base, 0, $pos + 1);
+    }
     ?>
-    defaultOptions.language = {url: '<?php echo "./$lang_file" ?>'}
+    defaultOptions.language = {url: '<?php echo $base . $lang_file ?>'}
     <?php
   }
   ?>
@@ -361,7 +369,22 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   }
 
   <?php // Localise the sorting.  See https://datatables.net/blog/2017-02-28 ?>
-  $.fn.dataTable.ext.order.intl($('body').data('langPrefs'));
+  const locales = $('body').data('langPrefs');
+  $.fn.dataTable.ext.order.intl(locales);
+  <?php
+  if ($language_debug)
+  {
+    ?>
+    console.debug("MRBS language preferences: " + JSON.stringify(locales));
+    console.debug("MRBS: locales supported by Intl.Collator: " + JSON.stringify(Intl.Collator.supportedLocalesOf(locales)));
+    <?php
+  }
+  // Check whether we can use our first choice locale for collation.
+  ?>
+  if (window.Intl && !Intl.Collator.supportedLocalesOf(locales[0]).length)
+  {
+    console.warn("MRBS: Intl.Collator in this browser does not support the '" + locales[0] + "' locale.");
+  }
 
   dataTable = table.DataTable(mergedOptions);
 

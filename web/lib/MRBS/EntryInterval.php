@@ -44,7 +44,7 @@ class EntryInterval
     $date_type = $datetime_formats['range_datetime']['date_type'] ?? self::DEFAULT_DATE_TYPE;
     $time_type = $datetime_formats['range_datetime']['time_type'] ?? self::DEFAULT_TIME_TYPE;
 
-    $ranger = new Ranger(get_mrbs_locale());
+    $ranger = new Ranger(Language::getInstance()->getWebLocale());
     $ranger
       ->setRangeSeparator(get_vocab('range_separator'))
       ->setDateTimeSeparator(get_vocab('date_time_separator'))
@@ -59,7 +59,7 @@ class EntryInterval
       // Note that we are using the global IntlDateFormatter, rather than using the
       // IntlDateFormatterFactory, because that's what Ranger will have used, so we
       // want the same result, regardless of whether it's correct or not.
-      $formatter = new IntlDateFormatter(get_mrbs_locale(), IntlDateFormatter::NONE, $time_type);
+      $formatter = new IntlDateFormatter(Language::getInstance()->getWebLocale(), IntlDateFormatter::NONE, $time_type);
       $start_time_string = $formatter->format($start_time);
       $start_period_name = period_name_timestamp($start_time);
       $range = str_replace($start_time_string, $start_period_name, $range);
