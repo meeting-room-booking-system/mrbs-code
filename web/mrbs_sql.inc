@@ -2199,8 +2199,11 @@ function get_room_names(int $area_id, bool $all=false) : array
 }
 
 
-// Get all the room details for $room_id.
-// Returns NULL if $room_id does not exist or is invisible.
+/**
+ * Retrieves the details of a room by its ID.
+ *
+ * @return array|null An associative array containing room details, or null if the room is not visible or doesn't exist.
+ */
 function get_room_details(int $room_id) : ?array
 {
   if (!is_visible($room_id))
@@ -2215,7 +2218,15 @@ function get_room_details(int $room_id) : ?array
 
   $res = db()->query($sql, array($room_id));
 
-  $details = ($res->count() == 0) ? null : $res->next_row_keyed();
+  if (false === ($row = $res->next_row_keyed()))
+  {
+    $details = null;
+  }
+  else
+  {
+    row_cast_columns($row, 'room');
+    $details = $row;
+  }
 
   // The invalid types column is json_encoded
   if (isset($details['invalid_types']))
