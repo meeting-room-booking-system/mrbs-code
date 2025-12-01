@@ -934,6 +934,9 @@ class System
   /**
    * Checks whether a language tag is advertised as being available on this system.
    *
+   * Note that this method just tells us which locales are supported by the 'intl' extension.  It
+   * doesn't tell us which locales are supported by setlocale(), which uses a different library.
+   *
    * @return bool|null NULL if the advertised locales aren't known, otherwise TRUE/FALSE.
    */
   private static function isAdvertisedLocale(string $langtag) : ?bool
@@ -963,10 +966,10 @@ class System
    */
   public static function isAvailableLocale(string $langtag) : bool
   {
-    // If the OS tells us whether it's available, then that's enough
-    if (null !== ($is_advertised = self::isAdvertisedLocale($langtag)))
+    // If the OS tells us whether it's not available, then return false
+    if (false === self::isAdvertisedLocale($langtag))
     {
-      return $is_advertised;
+      return false;
     }
 
     // Otherwise try setting the locale
@@ -1141,13 +1144,13 @@ class System
     {
       $locale = Locale::composeLocale($subtags);
 
-      // First locale to try is one with hyphens instead of underscores.  These work on newer
+      // The first locale to try is one with hyphens instead of underscores.  These work on newer
       // Windows systems, whereas underscores do not.  Also, on Windows systems, although
       // setlocale will succeed with, for example, both 'en_GB' and 'en-GB', only 'en-GB' (and
       // indeed 'eng') will give the date in the correct format when using strftime('%x').
       $locales[] = str_replace('_', '-', $locale);
 
-      // Next locale to try is a PHP style locale, ie with underscores
+      // The next locale to try is a PHP style locale, ie with underscores.
       // Make sure we haven't already got it
       if (!in_array($locale, $locales))
       {
@@ -1173,6 +1176,14 @@ class System
         {
           $locales = array_merge($locales, self::getLocaleAlternatives(Locale::composeLocale($subtags)));
         }
+      }
+
+      // Finally, if there's a script subtag, then add a locale with the script removed.  For example,
+      // setlocale() will usually fail with 'zh-Hant-TW' but succeed with 'zh-TW'.
+      if (isset($subtags['script']))
+      {
+        unset($subtags['script']);
+        $locales = array_merge($locales, self::getLocaleAlternatives(Locale::composeLocale($subtags)));
       }
     }
 
