@@ -21,7 +21,10 @@ class Locale
 
   public static function __callStatic(string $name, array $arguments)
   {
-    if (method_exists('\Locale', $name))
+    // Use the PHP method if it exists, unless it's the acceptFromHttp() method.  Until we stop using setlocale(), we
+    // can't rely on PHP's acceptFromHttp() to tell us whether the locale is valid for setlocale() and have to use
+    // the emulator, which does further checks.
+    if (($name !== 'acceptFromHttp') && method_exists('\Locale', $name))
     {
       // Check that the method we're calling also exists in the emulator class, in case the 'intl' extension is not enabled.
       assert(method_exists(__NAMESPACE__ . '\LocaleEmulator', $name), "Call to \Locale::$name which hasn't been emulated.");
