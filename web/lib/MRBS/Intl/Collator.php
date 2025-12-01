@@ -33,8 +33,20 @@ class Collator
   public const SORT_STRING = 1;
   public const SORT_NUMERIC = 2;
 
+  private $locale;
+
+
   public function __construct(string $locale)
   {
+    $this->locale = $locale;
+  }
 
+
+  /**
+   * @see \Collator::asort
+   */
+  public function asort(array &$array, int $flags = self::SORT_REGULAR): bool
+  {
+    throw new \Exception("Not yet implemented");
   }
 }
