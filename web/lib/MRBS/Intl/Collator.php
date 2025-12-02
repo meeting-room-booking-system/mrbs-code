@@ -34,6 +34,7 @@ class Collator
   public const SORT_NUMERIC = 2;
 
   private $locale;
+  private $strength;
 
 
   /**
@@ -42,6 +43,7 @@ class Collator
   public function __construct(string $locale)
   {
     $this->locale = $locale;
+    $this->strength = self::DEFAULT_STRENGTH;
   }
 
 
@@ -128,7 +130,7 @@ class Collator
    */
   public function getStrength(): int
   {
-    throw new \Exception("Not yet implemented");
+    return $this->strength;
   }
 
 
@@ -147,7 +149,21 @@ class Collator
    */
   public function setStrength(int $strength)
   {
-    throw new \Exception("Not yet implemented");
+    $possible_values = [
+      self::PRIMARY,
+      self::SECONDARY,
+      self::TERTIARY,
+      self::QUATERNARY,
+      self::IDENTICAL,
+      self::DEFAULT_STRENGTH
+    ];
+
+    if (in_array($strength, $possible_values))
+    {
+      $this->strength = $strength;
+    }
+
+    return true;
   }
 
 
