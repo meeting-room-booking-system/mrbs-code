@@ -966,7 +966,7 @@ class System
    */
   public static function isAvailableLocale(string $langtag) : bool
   {
-    // If the OS tells us whether it's not available, then return false
+    // If the OS tells us that it's not available, then return false
     if (false === self::isAdvertisedLocale($langtag))
     {
       return false;
