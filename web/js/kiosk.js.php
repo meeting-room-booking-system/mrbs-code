@@ -20,7 +20,12 @@ $(document).on('page_ready', function() {
 
   function whenUserIdle()
   {
-    window.location.replace('index.php');
+    let url = 'index.php';
+    if (Object.hasOwn(args, 'site'))
+    {
+      url += '?site=' + encodeURIComponent(args.site);
+    }
+    window.location.replace(url);
   }
 
   var idleTimer;
