@@ -960,7 +960,10 @@ class System
 
 
   /**
-   * Checks whether a language tag is available on this system
+   * Checks whether a language tag is available on this system.
+   *
+   * WARNING! This method is not reliable on Windows. It may return TRUE even if the locale is not
+   * available on the system.
    *
    * @param string $langtag A language tag in BCP 47 format.
    */
@@ -1281,7 +1284,10 @@ class System
    */
   private static function testLocale(string $langtag) : bool
   {
-    // TODO: Do something better for Windows systems.
+    // TODO: Do something better for Windows systems?  Could check whether the locale exists in
+    // TODO: a known list of locales.  However, it's probably not worth it because (a) we will
+    // TODO: only ever use this method with locales that are suported by other MRBS components,
+    // TODO: and (b) we will eventually move to using the intl extension anyway.
 
     // Save the original locales so that we can restore them later.   Note that
     // there could be different locales for different categories
