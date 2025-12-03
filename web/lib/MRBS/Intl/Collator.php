@@ -7,7 +7,7 @@ use Exception;
 
 /**
  * A partial emulation of the PHP \Collator class.
- * @see https://www.php.net/manual/en/class.collator.php
+ * @see \Collator
  */
 class Collator
 {
@@ -38,7 +38,7 @@ class Collator
 
   /**
    * Default values for attributes.
-   * @see https://www.php.net/manual/en/class.collator.php
+   * @see \Collator
    */
   private const ATTRIBUTES_DEFAULT_VALUES = [
     self::FRENCH_COLLATION => self::OFF,
@@ -53,7 +53,7 @@ class Collator
 
   /**
   * Possible values for attributes.
-  * @see https://www.php.net/manual/en/class.collator.php
+  * @see \Collator
   */
   private const ATTRIBUTES_POSSIBLE_VALUES = [
     self::FRENCH_COLLATION => [self::ON, self::OFF, self::DEFAULT_VALUE],
