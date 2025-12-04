@@ -89,6 +89,10 @@ class Collator
    */
   public function asort(array &$array, int $flags = self::SORT_REGULAR): bool
   {
+    $locale_switcher = new LocaleSwitcher(LC_COLLATE, $this->locale);
+    $locale_switcher->switch();
+    // Do the collation in the current locale
+    $locale_switcher->restore();
     throw new Exception("Not yet implemented");
   }
 
