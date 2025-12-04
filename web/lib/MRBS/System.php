@@ -1060,12 +1060,17 @@ class System
   // hyphens and some as special codes.
   public static function getOSlocale(string $langtag) : array
   {
-    $locales = self::getLocaleAlternatives($langtag);
+    static $locales = [];
 
-    // Add on a codeset [is this still necessary??]
-    $locales = array_map(self::class . '::addCodeset', $locales);
+    if (!isset($locales[$langtag]))
+    {
+      $locales[$langtag] = self::getLocaleAlternatives($langtag);
 
-    return $locales;
+      // Add on a codeset [is this still necessary??]
+      $locales[$langtag] = array_map(self::class . '::addCodeset', $locales[$langtag]);;
+    }
+
+    return $locales[$langtag];
   }
 
 
