@@ -267,7 +267,7 @@ class IntlDateFormatter
    */
   private static function testAndReplaceFormat(string $specifier, string $replacement, string $format) : string
   {
-    if (false === strftime($specifier))
+    if (false === self::doStrftime($specifier))
     {
       return str_replace($specifier, $replacement, $format);
     }
