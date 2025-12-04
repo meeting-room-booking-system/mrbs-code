@@ -1054,10 +1054,15 @@ class System
   }
 
 
-  // Returns an array of locales in the correct format for the server OS given
-  // a BCP 47 language tag.  There is an array of locales to try because some
-  // operating systems and versions accept locales with underscores, some with
-  // hyphens and some as special codes.
+  /**
+   * Returns an array of locales in the correct format for the server OS given a BCP 47 language tag.
+   *
+   * There is an array of locales to try because some operating systems and versions accept locales
+   * with underscores, some with hyphens and some as special codes.
+   *
+   * @param string $langtag A BCP 47 language tag.
+   * @return string[]
+   */
   public static function getOSlocale(string $langtag) : array
   {
     static $locales = [];
