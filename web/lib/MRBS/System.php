@@ -1079,11 +1079,13 @@ class System
   }
 
 
-  // The inverse of getOSlocale.  Turns an OS-specific locale into a BCP 47 style
-  // language tag.    This is provided for backwards compatibility with old versions
-  // of MRBS where the $override_locale config setting was required to be operating
-  // system specific (eg 'en_GB.utf-8' on Unix systems or 'eng' on Windows).  Now
-  // $override_locale should be in BCP 47 format, but we accept old-style settings.
+  /**
+   * The inverse of getOSlocale().  Turns an OS-specific locale into a BCP 47 style language tag.
+   *
+   * This is provided for backwards compatibility with old versions of MRBS where the $override_locale
+   * config setting was required to be operating-system-specific (eg 'en_GB.utf-8' on Unix systems or
+   * 'eng' on Windows).  Now $override_locale should be in BCP 47 format, but we accept old-style settings.
+   */
   public static function getBCPlocale(string $locale) : string
   {
     $result = $locale;
