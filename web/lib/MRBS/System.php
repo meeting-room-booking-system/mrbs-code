@@ -1096,14 +1096,14 @@ class System
       $result = strstr($locale, '.', true);
     }
 
-    // Convert an old style Windows locale, eg 'eng' to a BCP 47 one, eg 'en-gb'
+    // Convert an old-style Windows locale, eg 'eng' to a BCP 47 one, eg 'en-gb'
     if ((self::getServerOS() == 'windows') && in_array($result, self::$lang_map_windows))
     {
       $result = array_search($result, self::$lang_map_windows);
     }
 
     // Parse it and then recompose it.  This will get the capitalisation correct, eg
-    // "sr-Latn-RS".  Note though that BCP 47 language tags are case insensitive and
+    // "sr-Latn-RS".  Note, though, that BCP 47 language tags are case-insensitive and
     // the capitalisation is just a convention.
     $result = Locale::composeLocale(Locale::parseLocale($result));
 
