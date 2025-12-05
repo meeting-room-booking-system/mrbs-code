@@ -1177,7 +1177,7 @@ class System
 
     if (!array_key_exists($aix_locale, self::$aixlocale_codepage_map))
     {
-      // Default code page of locale could not be found; return string unchanged
+      // The default code page of locale could not be found; return string unchanged
       return $string;
     }
 
