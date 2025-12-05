@@ -228,8 +228,7 @@ class Errors // (Don't call the class Error, to avoid confusion with the PHP cla
   {
     global $debug;
 
-    //if ($debug)
-    if (true)
+    if ($debug)
     {
       ini_set('display_errors', '1');
       ini_set('display_startup_errors', '1');  // ini_set() only accepts non-string values from PHP 8.1.0
