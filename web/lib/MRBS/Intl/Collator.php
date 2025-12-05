@@ -3,8 +3,11 @@ declare(strict_types=1);
 namespace MRBS\Intl;
 
 
+use Exception;
+
 /**
  * A partial emulation of the PHP \Collator class.
+ * @see \Collator
  */
 class Collator
 {
@@ -33,6 +36,37 @@ class Collator
   public const SORT_STRING = 1;
   public const SORT_NUMERIC = 2;
 
+  /**
+   * Default values for attributes.
+   * @see \Collator
+   */
+  private const ATTRIBUTES_DEFAULT_VALUES = [
+    self::FRENCH_COLLATION => self::OFF,
+    self::ALTERNATE_HANDLING => self::NON_IGNORABLE,
+    self::CASE_FIRST => self::OFF,
+    self::CASE_LEVEL => self::OFF,
+    self::NORMALIZATION_MODE => self::OFF,
+    self::STRENGTH => self::DEFAULT_STRENGTH,
+    self::HIRAGANA_QUATERNARY_MODE => self::OFF,
+    self::NUMERIC_COLLATION => self::OFF
+  ];
+
+  /**
+  * Possible values for attributes.
+  * @see \Collator
+  */
+  private const ATTRIBUTES_POSSIBLE_VALUES = [
+    self::FRENCH_COLLATION => [self::ON, self::OFF, self::DEFAULT_VALUE],
+    self::ALTERNATE_HANDLING => [self::NON_IGNORABLE, self::SHIFTED, self::DEFAULT_VALUE],
+    self::CASE_FIRST => [self::OFF, self::LOWER_FIRST, self::UPPER_FIRST, self::DEFAULT_VALUE],
+    self::CASE_LEVEL => [self::OFF, self::ON, self::DEFAULT_VALUE],
+    self::NORMALIZATION_MODE => [self::OFF, self::ON, self::DEFAULT_VALUE],
+    self::STRENGTH => [self::PRIMARY, self::SECONDARY, self::TERTIARY, self::QUATERNARY, self::IDENTICAL, self::DEFAULT_STRENGTH],
+    self::HIRAGANA_QUATERNARY_MODE => [self::OFF, self::ON, self::DEFAULT_VALUE],
+    self::NUMERIC_COLLATION => [self::OFF, self::ON, self::DEFAULT_VALUE],
+  ];
+
+  private $attributes = [];
   private $locale;
 
 
@@ -42,6 +76,11 @@ class Collator
   public function __construct(string $locale)
   {
     $this->locale = $locale;
+    // Set the default values for the attributes
+    foreach(self::ATTRIBUTES_DEFAULT_VALUES as $attribute => $default_value)
+    {
+      $this->setAttribute($attribute, $default_value);
+    }
   }
 
 
@@ -50,7 +89,11 @@ class Collator
    */
   public function asort(array &$array, int $flags = self::SORT_REGULAR): bool
   {
-    throw new \Exception("Not yet implemented");
+    $locale_switcher = new LocaleSwitcher(LC_COLLATE, $this->locale);
+    $locale_switcher->switch();
+    // Do the collation in the current locale
+    $locale_switcher->restore();
+    throw new Exception("Not yet implemented");
   }
 
 
@@ -60,7 +103,7 @@ class Collator
    */
   public function compare(string $string1, string $string2)
   {
-    throw new \Exception("Not yet implemented");
+    throw new Exception("Not yet implemented");
   }
 
 
@@ -79,7 +122,12 @@ class Collator
    */
   public function getAttribute(int $attribute)
   {
-    throw new \Exception("Not yet implemented");
+    if (!array_key_exists($attribute, $this->attributes))
+    {
+      return false;
+    }
+
+    return $this->attributes[$attribute];
   }
 
 
@@ -89,7 +137,7 @@ class Collator
    */
   public function getErrorCode()
   {
-    throw new \Exception("Not yet implemented");
+    throw new Exception("Not yet implemented");
   }
 
 
@@ -99,7 +147,7 @@ class Collator
    */
   public function getErrorMessage()
   {
-    throw new \Exception("Not yet implemented");
+    throw new Exception("Not yet implemented");
   }
 
 
@@ -109,7 +157,7 @@ class Collator
    */
   public function getLocale()
   {
-    throw new \Exception("Not yet implemented");
+    throw new Exception("Not yet implemented");
   }
 
 
@@ -119,7 +167,7 @@ class Collator
    */
   public function getSortKey(string $string)
   {
-    throw new \Exception("Not yet implemented");
+    throw new Exception("Not yet implemented");
   }
 
 
@@ -128,7 +176,7 @@ class Collator
    */
   public function getStrength(): int
   {
-    throw new \Exception("Not yet implemented");
+    return $this->getAttribute(self::STRENGTH);
   }
 
 
@@ -137,7 +185,18 @@ class Collator
    */
   public function setAttribute(int $attribute, int $value): bool
   {
-    throw new \Exception("Not yet implemented");
+    if (!in_array($attribute, self::ATTRIBUTES_POSSIBLE_VALUES))
+    {
+      return false;
+    }
+
+    // TODO: The manual (https://www.php.net/manual/en/class.collator.php#collator.constants.french-collation)
+    // TODO: says that FRENCH_COLLATION "is automatically set to On for the French locales and a few others".
+    // TODO: However, this doesn't seem to be the case in testing: it's always Off.  Probably doesn't matter
+    // TODO: in practice though as this emulator won't be able to do anything about it anyway.
+    $this->attributes[$attribute] = ($value === self::DEFAULT_VALUE) ? self::ATTRIBUTES_DEFAULT_VALUES[$attribute] : $value;
+
+    return true;
   }
 
 
@@ -147,7 +206,8 @@ class Collator
    */
   public function setStrength(int $strength)
   {
-    throw new \Exception("Not yet implemented");
+    $this->setAttribute(self::STRENGTH, $strength);
+    return true;
   }
 
 
@@ -156,7 +216,7 @@ class Collator
    */
   public function sort(array &$array, int $flags = self::SORT_REGULAR): bool
   {
-    throw new \Exception("Not yet implemented");
+    throw new Exception("Not yet implemented");
   }
 
 
@@ -165,7 +225,7 @@ class Collator
    */
   public function sortWithSortKeys(array &$array): bool
   {
-    throw new \Exception("Not yet implemented");
+    throw new Exception("Not yet implemented");
   }
 
 }

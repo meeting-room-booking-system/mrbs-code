@@ -960,13 +960,16 @@ class System
 
 
   /**
-   * Checks whether a language tag is available on this system
+   * Checks whether a language tag is available on this system.
+   *
+   * WARNING! This method is not reliable on Windows. It may return TRUE even if the locale is not
+   * available on the system.
    *
    * @param string $langtag A language tag in BCP 47 format.
    */
   public static function isAvailableLocale(string $langtag) : bool
   {
-    // If the OS tells us whether it's not available, then return false
+    // If the OS tells us that it's not available, then return false
     if (false === self::isAdvertisedLocale($langtag))
     {
       return false;
@@ -1051,26 +1054,38 @@ class System
   }
 
 
-  // Returns an array of locales in the correct format for the server OS given
-  // a BCP 47 language tag.  There is an array of locales to try because some
-  // operating systems and versions accept locales with underscores, some with
-  // hyphens and some as special codes.
+  /**
+   * Returns an array of locales in the correct format for the server OS given a BCP 47 language tag.
+   *
+   * There is an array of locales to try because some operating systems and versions accept locales
+   * with underscores, some with hyphens and some as special codes.
+   *
+   * @param string $langtag A BCP 47 language tag.
+   * @return string[]
+   */
   public static function getOSlocale(string $langtag) : array
   {
-    $locales = self::getLocaleAlternatives($langtag);
+    static $locales = [];
 
-    // Add on a codeset [is this still necessary??]
-    $locales = array_map(self::class . '::addCodeset', $locales);
+    if (!isset($locales[$langtag]))
+    {
+      $locales[$langtag] = self::getLocaleAlternatives($langtag);
 
-    return $locales;
+      // Add on a codeset [is this still necessary??]
+      $locales[$langtag] = array_map(self::class . '::addCodeset', $locales[$langtag]);;
+    }
+
+    return $locales[$langtag];
   }
 
 
-  // The inverse of getOSlocale.  Turns an OS-specific locale into a BCP 47 style
-  // language tag.    This is provided for backwards compatibility with old versions
-  // of MRBS where the $override_locale config setting was required to be operating
-  // system specific (eg 'en_GB.utf-8' on Unix systems or 'eng' on Windows).  Now
-  // $override_locale should be in BCP 47 format, but we accept old-style settings.
+  /**
+   * The inverse of getOSlocale().  Turns an OS-specific locale into a BCP 47 style language tag.
+   *
+   * This is provided for backwards compatibility with old versions of MRBS where the $override_locale
+   * config setting was required to be operating-system-specific (eg 'en_GB.utf-8' on Unix systems or
+   * 'eng' on Windows).  Now $override_locale should be in BCP 47 format, but we accept old-style settings.
+   */
   public static function getBCPlocale(string $locale) : string
   {
     $result = $locale;
@@ -1081,14 +1096,14 @@ class System
       $result = strstr($locale, '.', true);
     }
 
-    // Convert an old style Windows locale, eg 'eng' to a BCP 47 one, eg 'en-gb'
+    // Convert an old-style Windows locale, eg 'eng' to a BCP 47 one, eg 'en-gb'
     if ((self::getServerOS() == 'windows') && in_array($result, self::$lang_map_windows))
     {
       $result = array_search($result, self::$lang_map_windows);
     }
 
     // Parse it and then recompose it.  This will get the capitalisation correct, eg
-    // "sr-Latn-RS".  Note though that BCP 47 language tags are case insensitive and
+    // "sr-Latn-RS".  Note, though, that BCP 47 language tags are case-insensitive and
     // the capitalisation is just a convention.
     $result = Locale::composeLocale(Locale::parseLocale($result));
 
@@ -1281,7 +1296,10 @@ class System
    */
   private static function testLocale(string $langtag) : bool
   {
-    // TODO: Do something better for Windows systems.
+    // TODO: Do something better for Windows systems?  Could check whether the locale exists in
+    // TODO: a known list of locales.  However, it's probably not worth it because (a) we will
+    // TODO: only ever use this method with locales that are suported by other MRBS components,
+    // TODO: and (b) we will eventually move to using the intl extension anyway.
 
     // Save the original locales so that we can restore them later.   Note that
     // there could be different locales for different categories

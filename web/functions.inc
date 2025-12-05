@@ -66,13 +66,11 @@ function get_type_vocab(string $type) : string
  */
 function get_loc_field_name(string $table, string $name) : string
 {
-  global $vocab;
-
   $tag = get_table_short_name($table) . ".$name";
-
+  $result = get_vocab($tag);
   // If there's a string in the vocab array for $tag use that,
   // otherwise just use the fieldname
-  return (isset($vocab[$tag])) ? get_vocab($tag) : $name;
+  return ($result === $tag) ? $name : $result;
 }
 
 
