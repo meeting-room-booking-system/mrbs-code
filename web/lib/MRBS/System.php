@@ -1144,7 +1144,9 @@ class System
   }
 
 
-  // Returns the default region for a language
+  /**
+   * Returns the default region for a language.
+   */
   private static function getDefaultRegion(string $language) : string
   {
     if (isset(self::$default_regions[$language]))
