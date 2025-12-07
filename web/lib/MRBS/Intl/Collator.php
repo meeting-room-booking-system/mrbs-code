@@ -96,10 +96,10 @@ class Collator
     switch ($flags)
     {
       case self::SORT_REGULAR:
-        $flags = SORT_REGULAR;
+        $flags = SORT_REGULAR | SORT_LOCALE_STRING;
         break;
       case self::SORT_STRING:
-        $flags = SORT_LOCALE_STRING;
+        $flags = SORT_STRING | SORT_LOCALE_STRING;
         break;
       case self::SORT_NUMERIC:
         $flags = SORT_NUMERIC;
@@ -108,6 +108,7 @@ class Collator
         throw new \InvalidArgumentException("Invalid flags value '$flags'");
         break;
     }
+
     asort($array, $flags);
     $locale_switcher->restore();
     return true;
