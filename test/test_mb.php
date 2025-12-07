@@ -10,6 +10,7 @@ use MRBS\Mbstring\Mbstring;
 use Throwable;
 
 include 'defaultincludes.inc';
+require_once 'functions_test.inc';
 
 error_reporting(-1);
 ini_set('display_errors', '1');
@@ -139,23 +140,6 @@ function codepoint_notation(int $codepoint) : string
 {
   // OK to user strtoupper here instead of mb_ because we're only looking at the hex characters
   return 'U+' . str_pad(strtoupper(dechex($codepoint)), 4, '0', STR_PAD_LEFT);
-}
-
-
-function thead_html(array $function_arg_names) : string
-{
-  $html = "<thead>\n";
-  $html .= '<tr>';
-  $html .= '<th>function</th>';
-  foreach ($function_arg_names as $name)
-  {
-    $html .= '<th>$' . $name . '</th>';
-  }
-  $html .= '<th>result - mbstring</th><th>result - mrbs</th><th>Summary</th>';
-  $html .= "<tr>\n";
-  $html .= "</thead>\n";
-
-  return $html;
 }
 
 

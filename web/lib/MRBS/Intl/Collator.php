@@ -91,9 +91,26 @@ class Collator
   {
     $locale_switcher = new LocaleSwitcher(LC_COLLATE, $this->locale);
     $locale_switcher->switch();
-    // Do the collation in the current locale
+    // Do the sort in the current locale
+    // Convert the flags to the equivalent value for asort().
+    switch ($flags)
+    {
+      case self::SORT_REGULAR:
+        $flags = SORT_REGULAR;
+        break;
+      case self::SORT_STRING:
+        $flags = SORT_LOCALE_STRING;
+        break;
+      case self::SORT_NUMERIC:
+        $flags = SORT_NUMERIC;
+        break;
+      default:
+        throw new \InvalidArgumentException("Invalid flags value '$flags'");
+        break;
+    }
+    asort($array, $flags);
     $locale_switcher->restore();
-    throw new Exception("Not yet implemented");
+    return true;
   }
 
 
