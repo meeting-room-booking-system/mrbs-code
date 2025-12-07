@@ -108,11 +108,15 @@ function test_asort()
   $locale = 'en-US';
   $array = ['a10', 'b2', 'A2', 'B10'];
   do_asort($locale, $array);
+  do_asort($locale, $array, \Collator::SORT_NUMERIC);
+  $array = ['a1', 'a2', 'a10', 'b2', 'b10'];
+  do_asort($locale, $array, \Collator::SORT_NUMERIC);
 
   $numeric_collation = \Collator::ON;
   $locale = 'fr';
   $array = ['1', '2', '10'];
   do_asort($locale, $array, \Collator::SORT_REGULAR, $numeric_collation);
+  do_asort($locale, $array, \Collator::SORT_NUMERIC, $numeric_collation);
 
   echo "</tbody>\n";
   echo "</table>\n";
