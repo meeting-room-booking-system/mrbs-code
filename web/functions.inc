@@ -2581,31 +2581,36 @@ function generate_global_uid(string $str) : string
   return $uid;
 }
 
-// Tests whether an array is associative
-//
-// Thanks to magentix at gmail dot com at http://php.net/manual/function.is-array.php
+
+/**
+ * Tests whether an array is associative.
+ */
 function is_assoc(array $arr) : bool
 {
+  // Thanks to magentix at gmail dot com at http://php.net/manual/function.is-array.php
   return (is_array($arr) && count(array_filter(array_keys($arr),'is_string')) == count($arr));
 }
 
 
-// Checks whether we are running as a CLI module
-//
-// Based on code from mniewerth at ultimediaos dot com at
-// http://php.net/manual/features.commandline.php
+/**
+ * Checks whether the application is running as a CGI module.
+ */
 function is_cgi() : bool
 {
+  // Based on code from mniewerth at ultimediaos dot com at
+  // http://php.net/manual/features.commandline.php
   return (substr(PHP_SAPI, 0, 3) == 'cgi');
 }
 
 
-// Checks whether we are running from the CLI
-//
-// Based on code from mniewerth at ultimediaos dot com at
-// http://php.net/manual/features.commandline.php
+/**
+ * Checks whether the application is being run from the CLI.
+ */
 function is_cli() : bool
 {
+  // Based on code from mniewerth at ultimediaos dot com
+  // at http://php.net/manual/features.commandline.php
+
   global $allow_cli;
 
   if (!$allow_cli)
@@ -2628,7 +2633,9 @@ function is_cli() : bool
 }
 
 
-// Determine whether this is a GET request
+/**
+ * Determines if the current request method is a GET request.
+ */
 function is_get_request() : bool
 {
   global $server;
@@ -2637,7 +2644,9 @@ function is_get_request() : bool
 }
 
 
-// Determines whether we are in kiosk mode
+/**
+ * Checks whether the application is in kiosk mode.
+ */
 function is_kiosk_mode() : bool
 {
   return session()->isset('kiosk_password_hash');
