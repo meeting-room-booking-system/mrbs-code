@@ -6,7 +6,8 @@ namespace MRBS\Intl;
 use Exception;
 
 /**
- * A partial emulation of the PHP \Collator class.
+ * A partial emulation of the PHP \Collator class.  Some methods are not implemented, and
+ * some attributes are not supported.
  * @see \Collator
  */
 class Collator
@@ -91,9 +92,34 @@ class Collator
   {
     $locale_switcher = new LocaleSwitcher(LC_COLLATE, $this->locale);
     $locale_switcher->switch();
-    // Do the collation in the current locale
+    // Do the sort in the current locale
+    // Convert the flags to the equivalent value for the ordinary function asort().
+    switch ($flags)
+    {
+      case self::SORT_REGULAR:
+        $ordinary_flags = SORT_REGULAR | SORT_LOCALE_STRING;
+        break;
+      case self::SORT_STRING:
+        $ordinary_flags = SORT_STRING | SORT_LOCALE_STRING;
+        break;
+      case self::SORT_NUMERIC:
+        $ordinary_flags = SORT_NUMERIC;
+        break;
+      default:
+        throw new \InvalidArgumentException("Invalid flags value '$flags'");
+        break;
+    }
+
+    // If NUMERIC_COLLATION is on, then use SORT_NATURAL.
+    if (in_array($flags, [self::SORT_REGULAR, self::SORT_STRING], true) &&
+        $this->getAttribute(self::NUMERIC_COLLATION) === self::ON)
+    {
+      $ordinary_flags |= SORT_NATURAL;
+    }
+
+    asort($array, $ordinary_flags);
     $locale_switcher->restore();
-    throw new Exception("Not yet implemented");
+    return true;
   }
 
 
@@ -185,7 +211,7 @@ class Collator
    */
   public function setAttribute(int $attribute, int $value): bool
   {
-    if (!in_array($attribute, self::ATTRIBUTES_POSSIBLE_VALUES))
+    if (!in_array($value, self::ATTRIBUTES_POSSIBLE_VALUES[$attribute]))
     {
       return false;
     }

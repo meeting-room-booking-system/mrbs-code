@@ -10,8 +10,12 @@ class System
   public const BIG_ENDIAN = 0;
   public const LITTLE_ENDIAN = 1;
 
-  // A set of special cases for mapping a language to a default region
-  // (normally the region is the same as the language, eg 'fr' => 'FR')
+
+  /**
+   * A set of special cases where the default region is different from the language.
+   * (Normally the region is the same as the language, eg 'fr' => 'FR'.)
+   * @var array<string, string> $default_regions
+   */
   private static $default_regions = array(
       'ca' => 'ES',
       'cs' => 'CZ',
@@ -686,25 +690,6 @@ class System
       'zzz' => 'utf-8'
     );
 
-  // These are special cases, generally we can convert from the HTTP
-  // language specifier to a locale specifier without a map
-  private static $lang_map_unix = array(
-      'ca' => 'ca-ES',
-      'cs' => 'cs-CZ',
-      'da' => 'da-DK',
-      'el' => 'el-GR',
-      'en' => 'en-GB',
-      'et' => 'et-EE',
-      'eu' => 'eu-ES',
-      'ja' => 'ja-JP',
-      'ko' => 'ko-KR',
-      'nb' => 'nb-NO',
-      'nn' => 'nn-NO',
-      'sh' => 'sr-RS',
-      'sl' => 'sl-SI',
-      'sv' => 'sv-SE',
-      'zh' => 'zh-CN',
-    );
 
   // IBM AIX locale to code set table
   // See http://publibn.boulder.ibm.com/doc_link/en_US/a_doc_lib/libs/basetrf2/setlocale.htm
@@ -976,54 +961,7 @@ class System
     }
 
     // Otherwise try setting the locale
-    if (self::testLocale($langtag))
-    {
-      return true;
-    }
-
-    // If that didn't work then we might just be running on a very old OS that does
-    // things differently
-    $server_os = self::getServerOS();
-
-    // Windows systems
-    if ($server_os == "windows")
-    {
-      $langtag_lower = mb_strtolower($langtag);
-      if (!isset(self::$lang_map_windows[$langtag_lower]))
-      {
-        return false;
-      }
-      $locale = self::$lang_map_windows[$langtag_lower];
-    }
-    // All of these Unix OSes work in mostly the same way...
-    elseif (in_array($server_os, array('linux', 'sunos', 'bsd', 'aix', 'macosx')))
-    {
-      // Construct the locale name
-      if (strlen($langtag) == 2)
-      {
-        if (isset(self::$lang_map_unix[$langtag]) && (self::$lang_map_unix[$langtag]))
-        {
-          $locale = self::$lang_map_unix[$langtag];
-        }
-        else
-        {
-          // Convert locale=xx to xx_XX
-          $locale = mb_strtolower($langtag) . "-" . mb_strtoupper($langtag);
-        }
-      }
-      else
-      {
-        $locale = $langtag;
-      }
-    }
-    // Unsupported OS
-    else
-    {
-      return false;
-    }
-
-    // Then test it
-    return self::testLocale($locale);
+    return self::testLocale($langtag);
   }
 
 
@@ -1206,7 +1144,9 @@ class System
   }
 
 
-  // Returns the default region for a language
+  /**
+   * Returns the default region for a language.
+   */
   private static function getDefaultRegion(string $language) : string
   {
     if (isset(self::$default_regions[$language]))
@@ -1237,7 +1177,7 @@ class System
 
     if (!array_key_exists($aix_locale, self::$aixlocale_codepage_map))
     {
-      // Default code page of locale could not be found; return string unchanged
+      // The default code page of locale could not be found; return string unchanged
       return $string;
     }
 

@@ -3,9 +3,13 @@ declare(strict_types=1);
 namespace MRBS;
 
 include 'defaultincludes.inc';
+require_once 'functions_test.inc';
 
 error_reporting(-1);
 ini_set('display_errors', '1');
+
+$color_fail = 'pink';
+$color_pass = 'palegreen';
 
 function test_constants()
 {
@@ -32,4 +36,97 @@ function test_constants()
   }
 }
 
+
+function do_asort(
+  string $locale,
+  array &$array,
+  int $flags=\Collator::SORT_REGULAR,
+  int $numeric_collation = \Collator::DEFAULT_VALUE
+)
+{
+  global $color_fail, $color_pass;
+
+  $php_collator = new \Collator($locale);
+  $php_collator->setAttribute(\Collator::NUMERIC_COLLATION, $numeric_collation);
+  $mrbs_collator = new \MRBS\Intl\Collator($locale);
+  $mrbs_collator->setAttribute(\MRBS\Intl\Collator::NUMERIC_COLLATION, $numeric_collation);
+
+  echo "<tr>";
+  echo "<td>asort</td>";
+  echo "<td>" . escape_html($locale) . "</td>";
+  echo "<td>" . implode(',', $array) . "</td>";
+  echo "<td>" . escape_html($flags) . "</td>";
+  echo "<td>" . $php_collator->getAttribute(\Collator::NUMERIC_COLLATION) . "</td>";
+
+  $php_array = $array;
+  $mrbs_array = $array;
+  $php_collator->asort($php_array, $flags);
+  $mrbs_collator->asort($mrbs_array, $flags);
+
+  echo "<td>" . implode(',', $php_array) . "</td>";
+  echo "<td>" . implode(',', $mrbs_array) . "</td>";
+  // Compare the results
+  $passed = ($php_array === $mrbs_array);;
+  $color = ($passed) ? $color_pass : $color_fail;
+  echo '<td style="background-color: ' . $color . '">';
+  echo ($passed) ? 'Pass' : 'Fail';
+  echo "</td>";
+
+  echo "</tr>\n";
+}
+
+function test_asort()
+{
+  echo "<table>\n";
+  echo thead_html(['locale', 'array', 'flags', 'numeric_collation']);
+  echo "<tbody>\n";
+
+  $locale = 'en-US';
+  $array = ['aò', 'Ao', 'ao'];
+  do_asort($locale, $array);
+
+  $locale = 'en-US';
+  $array = ['a', 'b', 'A', 'B'];
+  do_asort($locale, $array);
+
+  $locale = 'en-US';
+  $array = ['aBc', 'abC', 'Abc', 'ABc'];
+  do_asort($locale, $array);
+
+  $locale = 'sv';
+  $array = ['ö', 'ä', 'å'];
+  do_asort($locale, $array);
+
+  $locale = 'sv-SE';
+  $array = ['ö', 'ä', 'å'];
+  do_asort($locale, $array);
+
+  $locale = 'sv';
+  $array = ['ö', 'ä', 'å', 'o', 'a', 'e'];
+  do_asort($locale, $array);
+
+  $locale = 'en-US';
+  $array = ['a10', 'b2', 'A2', 'B10'];
+  do_asort($locale, $array);
+  do_asort($locale, $array, \Collator::SORT_NUMERIC);
+  $array = ['a1', 'a2', 'a10', 'b2', 'b10'];
+  do_asort($locale, $array, \Collator::SORT_NUMERIC);
+
+  $numeric_collation = \Collator::ON;
+  $locale = 'fr';
+  $array = ['1', '2', '10'];
+  do_asort($locale, $array, \Collator::SORT_REGULAR, $numeric_collation);
+  do_asort($locale, $array, \Collator::SORT_NUMERIC, $numeric_collation);
+
+  $array = ['a', 'à', 'â', 'e', 'é'];
+  do_asort($locale, $array);
+  $array = array_reverse($array);
+  do_asort($locale, $array);
+
+  echo "</tbody>\n";
+  echo "</table>\n";
+}
+
+
 test_constants();
+test_asort();
