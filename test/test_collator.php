@@ -40,21 +40,26 @@ function test_constants()
 function do_asort(
   string $locale,
   array &$array,
-  int $flags=\Collator::SORT_REGULAR
+  int $flags=\Collator::SORT_REGULAR,
+  int $numeric_collation = \Collator::DEFAULT_VALUE
 )
 {
   global $color_fail, $color_pass;
+
+  $php_collator = new \Collator($locale);
+  $php_collator->setAttribute(\Collator::NUMERIC_COLLATION, $numeric_collation);
+  $mrbs_collator = new \MRBS\Intl\Collator($locale);
+  $mrbs_collator->setAttribute(\MRBS\Intl\Collator::NUMERIC_COLLATION, $numeric_collation);
 
   echo "<tr>";
   echo "<td>asort</td>";
   echo "<td>" . escape_html($locale) . "</td>";
   echo "<td>" . implode(',', $array) . "</td>";
   echo "<td>" . escape_html($flags) . "</td>";
+  echo "<td>" . $php_collator->getAttribute(\Collator::NUMERIC_COLLATION) . "</td>";
 
   $php_array = $array;
   $mrbs_array = $array;
-  $php_collator = new \Collator($locale);
-  $mrbs_collator = new \MRBS\Intl\Collator($locale);
   $php_collator->asort($php_array, $flags);
   $mrbs_collator->asort($mrbs_array, $flags);
 
@@ -73,7 +78,7 @@ function do_asort(
 function test_asort()
 {
   echo "<table>\n";
-  echo thead_html(['locale', 'array', 'flags']);
+  echo thead_html(['locale', 'array', 'flags', 'numeric_collation']);
   echo "<tbody>\n";
 
   $locale = 'en-US';
@@ -99,6 +104,11 @@ function test_asort()
   $locale = 'sv';
   $array = ['ö', 'ä', 'å', 'o', 'a', 'e'];
   do_asort($locale, $array);
+
+  $numeric_collation = \Collator::ON;
+  $locale = 'fr';
+  $array = ['1', '2', '10'];
+  do_asort($locale, $array, \Collator::SORT_REGULAR, $numeric_collation);
 
   echo "</tbody>\n";
   echo "</table>\n";
