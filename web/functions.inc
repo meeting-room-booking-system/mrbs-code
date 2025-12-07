@@ -49,7 +49,7 @@ function get_js_vocab(string $tag, ...$values) : string
 
 
 /**
- * Get localised booking type name.
+ * Get a localised booking type name.
  */
 function get_type_vocab(string $type) : string
 {
