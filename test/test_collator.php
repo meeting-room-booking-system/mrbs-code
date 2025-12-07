@@ -77,6 +77,11 @@ function test_asort()
   $flags = \Collator::SORT_REGULAR;
   do_asort($locale, $array, $flags);
 
+  $locale = 'en-US';
+  $array = ['a', 'b', 'A', 'B'];
+  $flags = \Collator::SORT_REGULAR;
+  do_asort($locale, $array, $flags);
+
   $locale = 'sv';
   $array = ['ö', 'ä', 'å'];
   $flags = \Collator::SORT_REGULAR;
@@ -84,6 +89,11 @@ function test_asort()
 
   $locale = 'sv-SE';
   $array = ['ö', 'ä', 'å'];
+  $flags = \Collator::SORT_REGULAR;
+  do_asort($locale, $array, $flags);
+
+  $locale = 'sv';
+  $array = ['ö', 'ä', 'å', 'o', 'a', 'e'];
   $flags = \Collator::SORT_REGULAR;
   do_asort($locale, $array, $flags);
 
