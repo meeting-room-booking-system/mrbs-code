@@ -37,7 +37,11 @@ function test_constants()
 }
 
 
-function do_asort(string $locale, array &$array, int $flags)
+function do_asort(
+  string $locale,
+  array &$array,
+  int $flags=\Collator::SORT_REGULAR
+)
 {
   global $color_fail, $color_pass;
 
@@ -74,28 +78,27 @@ function test_asort()
 
   $locale = 'en-US';
   $array = ['aò', 'Ao', 'ao'];
-  $flags = \Collator::SORT_REGULAR;
-  do_asort($locale, $array, $flags);
+  do_asort($locale, $array);
 
   $locale = 'en-US';
   $array = ['a', 'b', 'A', 'B'];
-  $flags = \Collator::SORT_REGULAR;
-  do_asort($locale, $array, $flags);
+  do_asort($locale, $array);
+
+  $locale = 'en-US';
+  $array = ['aBc', 'abC', 'Abc', 'ABc'];
+  do_asort($locale, $array);
 
   $locale = 'sv';
   $array = ['ö', 'ä', 'å'];
-  $flags = \Collator::SORT_REGULAR;
-  do_asort($locale, $array, $flags);
+  do_asort($locale, $array);
 
   $locale = 'sv-SE';
   $array = ['ö', 'ä', 'å'];
-  $flags = \Collator::SORT_REGULAR;
-  do_asort($locale, $array, $flags);
+  do_asort($locale, $array);
 
   $locale = 'sv';
   $array = ['ö', 'ä', 'å', 'o', 'a', 'e'];
-  $flags = \Collator::SORT_REGULAR;
-  do_asort($locale, $array, $flags);
+  do_asort($locale, $array);
 
   echo "</tbody>\n";
   echo "</table>\n";
