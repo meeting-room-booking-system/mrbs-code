@@ -118,6 +118,9 @@ function test_asort()
   do_asort($locale, $array, \Collator::SORT_REGULAR, $numeric_collation);
   do_asort($locale, $array, \Collator::SORT_NUMERIC, $numeric_collation);
 
+  $array = ['a', 'à', 'â', 'e', 'é'];
+  do_asort('fr', $array);
+
   echo "</tbody>\n";
   echo "</table>\n";
 }
