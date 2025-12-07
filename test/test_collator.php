@@ -105,6 +105,10 @@ function test_asort()
   $array = ['ö', 'ä', 'å', 'o', 'a', 'e'];
   do_asort($locale, $array);
 
+  $locale = 'en-US';
+  $array = ['a10', 'b2', 'A2', 'B10'];
+  do_asort($locale, $array);
+
   $numeric_collation = \Collator::ON;
   $locale = 'fr';
   $array = ['1', '2', '10'];

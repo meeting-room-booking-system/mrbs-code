@@ -92,24 +92,31 @@ class Collator
     $locale_switcher = new LocaleSwitcher(LC_COLLATE, $this->locale);
     $locale_switcher->switch();
     // Do the sort in the current locale
-    // Convert the flags to the equivalent value for asort().
+    // Convert the flags to the equivalent value for the ordinary function asort().
     switch ($flags)
     {
       case self::SORT_REGULAR:
-        $flags = SORT_REGULAR | SORT_LOCALE_STRING;
+        $ordinary_flags = SORT_REGULAR | SORT_LOCALE_STRING;
         break;
       case self::SORT_STRING:
-        $flags = SORT_STRING | SORT_LOCALE_STRING;
+        $ordinary_flags = SORT_STRING | SORT_LOCALE_STRING;
         break;
       case self::SORT_NUMERIC:
-        $flags = SORT_NUMERIC;
+        $ordinary_flags = SORT_NUMERIC;
         break;
       default:
         throw new \InvalidArgumentException("Invalid flags value '$flags'");
         break;
     }
 
-    asort($array, $flags);
+    // If NUMERIC_COLLATION is on, then use SORT_NATURAL instead of SORT_NUMERIC.
+    if (in_array($flags, [self::SORT_REGULAR, self::SORT_STRING], true) &&
+        $this->getAttribute(self::NUMERIC_COLLATION) === self::ON)
+    {
+      $ordinary_flags |= SORT_NATURAL;
+    }
+
+    asort($array, $ordinary_flags);
     $locale_switcher->restore();
     return true;
   }
@@ -203,7 +210,7 @@ class Collator
    */
   public function setAttribute(int $attribute, int $value): bool
   {
-    if (!in_array($attribute, self::ATTRIBUTES_POSSIBLE_VALUES))
+    if (!in_array($value, self::ATTRIBUTES_POSSIBLE_VALUES[$attribute]))
     {
       return false;
     }
