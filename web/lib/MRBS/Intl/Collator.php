@@ -109,7 +109,7 @@ class Collator
         break;
     }
 
-    // If NUMERIC_COLLATION is on, then use SORT_NATURAL instead of SORT_NUMERIC.
+    // If NUMERIC_COLLATION is on, then use SORT_NATURAL.
     if (in_array($flags, [self::SORT_REGULAR, self::SORT_STRING], true) &&
         $this->getAttribute(self::NUMERIC_COLLATION) === self::ON)
     {
