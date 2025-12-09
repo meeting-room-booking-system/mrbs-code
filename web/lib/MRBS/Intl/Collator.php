@@ -129,7 +129,36 @@ class Collator
    */
   public function compare(string $string1, string $string2)
   {
-    throw new Exception("Not yet implemented");
+    // Trivial case
+    if ($string1 === $string2)
+    {
+      return 0;
+    }
+
+    // Sort the array.  If the order is reversed, then $string1 > $string2.
+    // (When this function is being used as a callback for usort, and if the original array
+    // is sorted in ascending order - which it well might be if it's the result of
+    // an SQL query with an ORDER BY - then it's fastest to test for $string1 > $string2
+    // first, as below.)
+    $original_array = [$string1, $string2];
+    $array = $original_array;
+    $this->asort($array);
+    if ($array !== $original_array)
+    {
+      return 1;
+    }
+
+    // Otherwise, flip the array and try again.  If the order is reversed, then $string2 > $string1.
+    $original_array = [$string2, $string1];
+    $array = $original_array;
+    $this->asort($array);
+    if ($array !== $original_array)
+    {
+      return -1;
+    }
+
+    // Otherwise they must be equal
+    return 0;
   }
 
 

@@ -1160,16 +1160,12 @@ function mrbsDelEntry(int $id, bool $series, bool $all)
 }
 
 
-/** mrbsCreateEntry()
- *
+/**
  * Create an entry in the database
  *
- * $table         - The table in which to create the entry
- * $data          - An array containing the row data for the entry
- *
- * Returns:
- *   0        - An error occurred while inserting the entry
- *   non-zero - The entry's ID
+ * @param string $table The table in which to create the entry
+ * @param array $data The entry data
+ * @return int The entry ID, or 0 on error
  */
 function mrbsCreateEntry(string $table, array $data) : int
 {
@@ -1274,7 +1270,7 @@ function mrbsCreateEntry(string $table, array $data) : int
           {
             $sql_col[] = $key;
 
-            // Depending on the nature of the custom field the treatment will vary
+            // Depending on the nature of the custom field, the treatment will vary
             switch ($field['nature'])
             {
               case 'integer':
@@ -1282,8 +1278,9 @@ function mrbsCreateEntry(string $table, array $data) : int
                 {
                   // Try and set it to NULL when we can because there will be cases when we
                   // want to distinguish between NULL and 0 - especially when the field
-                  // is a genuine integer.
-                  $value = ($field['is_nullable']) ? null : 0;
+                  // is a genuine integer. Otherwise, set it to the default value if there
+                  // is one, and failing that, 0.
+                  $value = ($field['is_nullable']) ? null : ($field['default'] ?? 0);
                 }
                 else
                 {
@@ -1293,7 +1290,7 @@ function mrbsCreateEntry(string $table, array $data) : int
               default:
                 if (!isset($data[$key]))
                 {
-                  $value = ($field['is_nullable']) ? null : '';
+                  $value = ($field['is_nullable']) ? null : ($field['default'] ?? '');
                 }
                 else
                 {
