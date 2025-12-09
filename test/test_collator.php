@@ -128,7 +128,7 @@ function test_asort()
 }
 
 
-function do_compare(string $locale, string $string1, string $string2)
+function do_compare(string $locale, string $string1, string $string2, int $strength=\Collator::DEFAULT_STRENGTH)
 {
   global $color_fail, $color_pass;
 
@@ -141,6 +141,7 @@ function do_compare(string $locale, string $string1, string $string2)
   echo "<td>" . escape_html($locale) . "</td>";
   echo "<td>" . escape_html($string1) . "</td>";
   echo "<td>" . escape_html($string2) . "</td>";
+  echo "<td>" . escape_html($strength) . "</td>";
 
   $php_compare = $php_collator->compare($string1, $string2);
   $mrbs_compare = $mrbs_collator->compare($string1, $string2);
@@ -162,13 +163,32 @@ function do_compare(string $locale, string $string1, string $string2)
 function test_compare()
 {
   echo "<table>\n";
-  echo thead_html(['locale', 'string1', 'string2']);
+  echo thead_html(['locale', 'string1', 'string2', 'strength']);
   echo "<tbody>\n";
 
   $locale = 'en';
   $string1 = 'a';
   $string2 = 'A';
   do_compare($locale, $string1, $string2);
+
+  $locale = 'fr';
+  $string1 = 'é';
+  $string2 = 'è';
+  do_compare($locale, $string1, $string2);
+  do_compare($locale, $string1, $string2, \Collator::PRIMARY);
+  do_compare($locale, $string1, $string2, \Collator::SECONDARY);
+  do_compare($locale, $string1, $string2, \Collator::QUATERNARY);
+  do_compare($locale, $string1, $string2, \Collator::IDENTICAL);
+
+  $locale = 'fr';
+  $string1 = 'è';
+  $string2 = 'é';
+  do_compare($locale, $string1, $string2);
+  do_compare($locale, $string1, $string2, \Collator::PRIMARY);
+  do_compare($locale, $string1, $string2, \Collator::SECONDARY);
+  do_compare($locale, $string1, $string2, \Collator::QUATERNARY);
+  do_compare($locale, $string1, $string2, \Collator::IDENTICAL);
+
 
   echo "</tbody>\n";
   echo "</table>\n";
