@@ -1280,21 +1280,9 @@ function mrbsCreateEntry(string $table, array $data) : int
                 {
                   // Try and set it to NULL when we can because there will be cases when we
                   // want to distinguish between NULL and 0 - especially when the field
-                  // is a genuine integer.
-                  if ($field['is_nullable'])
-                  {
-                    $value = null;
-                  }
-                  // Otherwise set it to the default value if there is one.
-                  elseif (isset($field['default']))
-                  {
-                    $value = $field['default'];
-                  }
-                  // Otherwise set it to 0.
-                  else
-                  {
-                    $value = 0;
-                  }
+                  // is a genuine integer. Otherwise, set it to the default value if there
+                  // is one, and failing that, 0.
+                  $value = ($field['is_nullable']) ? null : ($field['default'] ?? 0);
                 }
                 else
                 {
