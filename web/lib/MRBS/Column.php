@@ -34,6 +34,11 @@ class Column
   }
 
 
+  /**
+   * Gets the default value for this column.
+   *
+   * @return null|mixed
+   */
   public function getDefault()
   {
     return $this->default;
