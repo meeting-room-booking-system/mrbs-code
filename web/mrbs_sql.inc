@@ -1292,7 +1292,7 @@ function mrbsCreateEntry(string $table, array $data) : int
               default:
                 if (!isset($data[$key]))
                 {
-                  $value = ($field['is_nullable']) ? null : '';
+                  $value = ($field['is_nullable']) ? null : ($field['default'] ?? '');
                 }
                 else
                 {
