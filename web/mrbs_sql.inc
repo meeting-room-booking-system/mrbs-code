@@ -1158,16 +1158,12 @@ function mrbsDelEntry(int $id, bool $series, bool $all)
 }
 
 
-/** mrbsCreateEntry()
- *
+/**
  * Create an entry in the database
  *
- * $table         - The table in which to create the entry
- * $data          - An array containing the row data for the entry
- *
- * Returns:
- *   0        - An error occurred while inserting the entry
- *   non-zero - The entry's ID
+ * @param string $table The table in which to create the entry
+ * @param array $data The entry data
+ * @return int The entry ID, or 0 on error
  */
 function mrbsCreateEntry(string $table, array $data) : int
 {
