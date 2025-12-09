@@ -1517,6 +1517,16 @@ else
   $rep_days = array(date('w', $start_time));
   $rep_interval = 1;
   $month_type = RepeatRule::MONTHLY_ABSOLUTE;
+
+  // Populate the default values for the custom fields
+  $columns = Columns::getInstance(_tbl('entry'));
+  foreach ($columns as $column)
+  {
+    if (!in_array($column->name, $standard_fields['entry']) && (null !== ($default = $column->getDefault())))
+    {
+      $custom_fields[$column->name] = $default;
+    }
+  }
 }
 
 $repeat_rule = new RepeatRule();
