@@ -66,7 +66,7 @@ function do_asort(
   echo "<td>" . implode(',', $php_array) . "</td>";
   echo "<td>" . implode(',', $mrbs_array) . "</td>";
   // Compare the results
-  $passed = ($php_array === $mrbs_array);;
+  $passed = ($php_array === $mrbs_array);
   $color = ($passed) ? $color_pass : $color_fail;
   echo '<td style="background-color: ' . $color . '">';
   echo ($passed) ? 'Pass' : 'Fail';
@@ -128,5 +128,52 @@ function test_asort()
 }
 
 
+function do_compare(string $locale, string $string1, string $string2)
+{
+  global $color_fail, $color_pass;
+
+
+  $php_collator = new \Collator($locale);
+  $mrbs_collator = new \MRBS\Intl\Collator($locale);
+
+  echo "<tr>";
+  echo "<td>asort</td>";
+  echo "<td>" . escape_html($locale) . "</td>";
+  echo "<td>" . escape_html($string1) . "</td>";
+  echo "<td>" . escape_html($string2) . "</td>";
+
+  $php_compare = $php_collator->compare($string1, $string2);
+  $mrbs_compare = $mrbs_collator->compare($string1, $string2);
+
+  echo "<td>$php_compare</td>";
+  echo "<td>$mrbs_compare</td>";
+
+  // Compare the results
+  $passed = ($php_compare === $mrbs_compare);
+  $color = ($passed) ? $color_pass : $color_fail;
+  echo '<td style="background-color: ' . $color . '">';
+  echo ($passed) ? 'Pass' : 'Fail';
+  echo "</td>";
+
+  echo "</tr>\n";
+}
+
+
+function test_compare()
+{
+  echo "<table>\n";
+  echo thead_html(['locale', 'string1', 'string2']);
+  echo "<tbody>\n";
+
+  $locale = 'en';
+  $string1 = 'a';
+  $string2 = 'A';
+  do_compare($locale, $string1, $string2);
+
+  echo "</tbody>\n";
+  echo "</table>\n";
+}
+
 test_constants();
 test_asort();
+test_compare();
