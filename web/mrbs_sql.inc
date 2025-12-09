@@ -1272,7 +1272,7 @@ function mrbsCreateEntry(string $table, array $data) : int
           {
             $sql_col[] = $key;
 
-            // Depending on the nature of the custom field the treatment will vary
+            // Depending on the nature of the custom field, the treatment will vary
             switch ($field['nature'])
             {
               case 'integer':
@@ -1281,7 +1281,20 @@ function mrbsCreateEntry(string $table, array $data) : int
                   // Try and set it to NULL when we can because there will be cases when we
                   // want to distinguish between NULL and 0 - especially when the field
                   // is a genuine integer.
-                  $value = ($field['is_nullable']) ? null : 0;
+                  if ($field['is_nullable'])
+                  {
+                    $value = null;
+                  }
+                  // Otherwise set it to the default value if there is one.
+                  elseif (isset($field['default']))
+                  {
+                    $value = $field['default'];
+                  }
+                  // Otherwise set it to 0.
+                  else
+                  {
+                    $value = 0;
+                  }
                 }
                 else
                 {
