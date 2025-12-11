@@ -175,60 +175,32 @@ function test_compare()
   echo thead_html(['locale', 'string1', 'string2', 'strength']);
   echo "<tbody>\n";
 
-  $locale = 'fr';
-  $string1 = 'é';
-  $string2 = 'è';
-  do_compare($locale, $string1, $string2, \Collator::PRIMARY);
-  do_compare($locale, $string1, $string2, \Collator::SECONDARY);
-  do_compare($locale, $string1, $string2, \Collator::TERTIARY);
-  do_compare($locale, $string1, $string2, \Collator::QUATERNARY);
-  do_compare($locale, $string1, $string2, \Collator::IDENTICAL);
+  $tests = [
+    ['locale' => 'fr', 'string1' => 'é', 'string2' => 'è'],
+    ['locale' => 'fr', 'string1' => 'è', 'string2' => 'é'],
+    ['locale' => 'en-GB', 'string1' => 'é', 'string2' => 'è'],
+    ['locale' => 'en-GB', 'string1' => 'Séan', 'string2' => 'Sean'],
+    ['locale' => 'en-GB', 'string1' => 'a', 'string2' => 'A'],
+    ['locale' => 'en-GB', 'string1' => 'A', 'string2' => 'a'],
+    ['locale' => 'en-GB', 'string1' => 'bA', 'string2' => 'Ba']
+  ];
 
-  $locale = 'fr';
-  $string1 = 'è';
-  $string2 = 'é';
-  do_compare($locale, $string1, $string2, \Collator::PRIMARY);
-  do_compare($locale, $string1, $string2, \Collator::SECONDARY);
-  do_compare($locale, $string1, $string2, \Collator::TERTIARY);
-  do_compare($locale, $string1, $string2, \Collator::QUATERNARY);
-  do_compare($locale, $string1, $string2, \Collator::IDENTICAL);
+  $strengths = [
+    \Collator::PRIMARY,
+    \Collator::SECONDARY,
+    \Collator::TERTIARY,
+    \Collator::QUATERNARY,
+    \Collator::IDENTICAL
+  ];
 
-  $locale = 'en-GB';
-  $string1 = 'é';
-  $string2 = 'è';
-  do_compare($locale, $string1, $string2, \Collator::PRIMARY);
-  do_compare($locale, $string1, $string2, \Collator::SECONDARY);
-  do_compare($locale, $string1, $string2, \Collator::TERTIARY);
-  do_compare($locale, $string1, $string2, \Collator::QUATERNARY);
-  do_compare($locale, $string1, $string2, \Collator::IDENTICAL);
-
-  $locale = 'en';
-  $string1 = 'Séan';
-  $string2 = 'Sean';
-  do_compare($locale, $string1, $string2, \Collator::PRIMARY);
-  do_compare($locale, $string1, $string2, \Collator::SECONDARY);
-  do_compare($locale, $string1, $string2, \Collator::TERTIARY);
-  do_compare($locale, $string1, $string2, \Collator::QUATERNARY);
-  do_compare($locale, $string1, $string2, \Collator::IDENTICAL);
-
-  $locale = 'en';
-  $string1 = 'a';
-  $string2 = 'A';
-  do_compare($locale, $string1, $string2, \Collator::PRIMARY);
-  do_compare($locale, $string1, $string2, \Collator::SECONDARY);
-  do_compare($locale, $string1, $string2, \Collator::TERTIARY);
-  do_compare($locale, $string1, $string2, \Collator::QUATERNARY);
-  do_compare($locale, $string1, $string2, \Collator::IDENTICAL);
-
-  $locale = 'en';
-  $string1 = 'A';
-  $string2 = 'a';
-  do_compare($locale, $string1, $string2, \Collator::PRIMARY);
-  do_compare($locale, $string1, $string2, \Collator::SECONDARY);
-  do_compare($locale, $string1, $string2, \Collator::TERTIARY);
-  do_compare($locale, $string1, $string2, \Collator::QUATERNARY);
-  do_compare($locale, $string1, $string2, \Collator::IDENTICAL);
-
+  foreach ($tests as $test)
+  {
+    list('locale' => $locale, 'string1' => $string1, 'string2' => $string2) = $test;
+    foreach ($strengths as $strength)
+    {
+      do_compare($locale, $string1, $string2, $strength);
+    }
+  }
 
   echo "</tbody>\n";
   echo "</table>\n";
