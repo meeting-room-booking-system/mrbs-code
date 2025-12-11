@@ -154,6 +154,9 @@ function test_asort()
   $array = ['ABC', 'aBc', 'Abc', 'Abc', 'ABc'];
   do_asort($locale, $array);
 
+  $array = ['ABC', 'aBc', 'Abc', 'Abc', 'ABc'];
+  do_asort($locale, $array, \Collator::SORT_STRING);
+
   echo "</tbody>\n";
   echo "</table>\n";
 }
