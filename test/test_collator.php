@@ -130,6 +130,11 @@ function test_asort()
   $array = array_reverse($array);
   do_asort($locale, $array);
 
+  $array = ['Ba', 'aB'];
+  do_asort($locale, $array);
+  $array = array_reverse($array);
+  do_asort($locale, $array);
+
   echo "</tbody>\n";
   echo "</table>\n";
 }
