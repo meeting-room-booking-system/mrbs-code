@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS;
 
+
 include 'defaultincludes.inc';
 require_once 'functions_test.inc';
 
@@ -63,8 +64,9 @@ function do_asort(
   $php_collator->asort($php_array, $flags);
   $mrbs_collator->asort($mrbs_array, $flags);
 
-  echo "<td>" . implode(',', $php_array) . "</td>";
-  echo "<td>" . implode(',', $mrbs_array) . "</td>";
+  echo "<td>[" . implode(',', array_keys($php_array)) . '] [' .  implode(',', array_values($php_array)) . "]</td>";
+  echo "<td>[" . implode(',', array_keys($mrbs_array)) . '] [' .  implode(',', array_values($mrbs_array)) . "]</td>";
+
   // Compare the results
   $passed = ($php_array === $mrbs_array);
   $color = ($passed) ? $color_pass : $color_fail;
@@ -123,6 +125,11 @@ function test_asort()
   $array = array_reverse($array);
   do_asort($locale, $array);
 
+  $array = ['a', 'A'];
+  do_asort($locale, $array);
+  $array = array_reverse($array);
+  do_asort($locale, $array);
+
   echo "</tbody>\n";
   echo "</table>\n";
 }
@@ -139,7 +146,7 @@ function do_compare(string $locale, string $string1, string $string2, int $stren
   $mrbs_collator->setStrength($strength);
 
   echo "<tr>";
-  echo "<td>asort</td>";
+  echo "<td>compare</td>";
   echo "<td>" . escape_html($locale) . "</td>";
   echo "<td>" . escape_html($string1) . "</td>";
   echo "<td>" . escape_html($string2) . "</td>";
@@ -207,6 +214,15 @@ function test_compare()
   $locale = 'en';
   $string1 = 'a';
   $string2 = 'A';
+  do_compare($locale, $string1, $string2, \Collator::PRIMARY);
+  do_compare($locale, $string1, $string2, \Collator::SECONDARY);
+  do_compare($locale, $string1, $string2, \Collator::TERTIARY);
+  do_compare($locale, $string1, $string2, \Collator::QUATERNARY);
+  do_compare($locale, $string1, $string2, \Collator::IDENTICAL);
+
+  $locale = 'en';
+  $string1 = 'A';
+  $string2 = 'a';
   do_compare($locale, $string1, $string2, \Collator::PRIMARY);
   do_compare($locale, $string1, $string2, \Collator::SECONDARY);
   do_compare($locale, $string1, $string2, \Collator::TERTIARY);
