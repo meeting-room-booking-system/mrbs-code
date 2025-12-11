@@ -52,35 +52,50 @@ function do_asort(
   $mrbs_collator = new \MRBS\Intl\Collator($locale);
   $mrbs_collator->setAttribute(\MRBS\Intl\Collator::NUMERIC_COLLATION, $numeric_collation);
 
-  echo "<tr>";
-  echo "<td>asort</td>";
-  echo "<td>" . escape_html($locale) . "</td>";
-  echo "<td>" . implode(',', $array) . "</td>";
-  echo "<td>" . escape_html($flags) . "</td>";
-  echo "<td>" . $php_collator->getAttribute(\Collator::NUMERIC_COLLATION) . "</td>";
+  $strengths = [
+    \Collator::PRIMARY,
+    \Collator::SECONDARY,
+    \Collator::TERTIARY,
+    \Collator::QUATERNARY,
+    \Collator::IDENTICAL
+  ];
 
-  $php_array = $array;
-  $mrbs_array = $array;
-  $php_collator->asort($php_array, $flags);
-  $mrbs_collator->asort($mrbs_array, $flags);
+  foreach ($strengths as $strength)
+  {
+    $php_collator->setStrength($strength);
+    $mrbs_collator->setStrength($strength);
 
-  echo "<td>[" . implode(',', array_keys($php_array)) . '] [' .  implode(',', array_values($php_array)) . "]</td>";
-  echo "<td>[" . implode(',', array_keys($mrbs_array)) . '] [' .  implode(',', array_values($mrbs_array)) . "]</td>";
+    echo "<tr>";
+    echo "<td>asort</td>";
+    echo "<td>" . escape_html($locale) . "</td>";
+    echo "<td>" . implode(',', $array) . "</td>";
+    echo "<td>" . escape_html($flags) . "</td>";
+    echo "<td>" . $php_collator->getAttribute(\Collator::NUMERIC_COLLATION) . "</td>";
+    echo "<td>" . $php_collator->getStrength() . "</td>";
 
-  // Compare the results
-  $passed = ($php_array === $mrbs_array);
-  $color = ($passed) ? $color_pass : $color_fail;
-  echo '<td style="background-color: ' . $color . '">';
-  echo ($passed) ? 'Pass' : 'Fail';
-  echo "</td>";
+    $php_array = $array;
+    $mrbs_array = $array;
+    $php_collator->asort($php_array, $flags);
+    $mrbs_collator->asort($mrbs_array, $flags);
 
-  echo "</tr>\n";
+    echo "<td>[" . implode(',', array_keys($php_array)) . '] [' . implode(',', array_values($php_array)) . "]</td>";
+    echo "<td>[" . implode(',', array_keys($mrbs_array)) . '] [' . implode(',', array_values($mrbs_array)) . "]</td>";
+
+    // Compare the results
+    $passed = ($php_array === $mrbs_array);
+    $color = ($passed) ? $color_pass : $color_fail;
+    echo '<td style="background-color: ' . $color . '">';
+    echo ($passed) ? 'Pass' : 'Fail';
+    echo "</td>";
+
+    echo "</tr>\n";
+  }
 }
 
 function test_asort()
 {
   echo "<table>\n";
-  echo thead_html(['locale', 'array', 'flags', 'numeric_collation']);
+  echo thead_html(['locale', 'array', 'flags', 'numeric_collation', 'strength']);
   echo "<tbody>\n";
 
   $locale = 'en-US';
@@ -133,6 +148,9 @@ function test_asort()
   $array = ['Ba', 'aB'];
   do_asort($locale, $array);
   $array = array_reverse($array);
+  do_asort($locale, $array);
+
+  $array = ['ABC', 'aBc', 'Abc', 'Abc', 'ABc'];
   do_asort($locale, $array);
 
   echo "</tbody>\n";
