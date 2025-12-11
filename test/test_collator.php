@@ -90,6 +90,7 @@ function do_asort(
 
     echo "</tr>\n";
   }
+  echo "<tr><td colspan=\"9\"></td></tr>\n";
 }
 
 function test_asort()
