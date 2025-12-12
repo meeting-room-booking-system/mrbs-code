@@ -410,6 +410,7 @@ abstract class Auth
     $display_name2 = (isset($display_name2) && ($display_name2 !== '')) ? $display_name2 : $user2['username'];
 
     $collator = new \Collator(Language::getInstance()->getWebLocale());
+    $collator->setStrength(\Collator::SECONDARY);  // Case-insensitive, but accent-sensitive
     $display_name_comparison = $collator->compare($display_name1, $display_name2);
 
     if ($display_name_comparison === 0)
