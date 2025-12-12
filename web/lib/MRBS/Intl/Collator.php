@@ -109,6 +109,15 @@ class Collator
    */
   public function compare(string $string1, string $string2)
   {
+    // Primary and secondary strengths are case-insensitive.  The sort() method in this class
+    // cannot perform a locale aware, case-insensitive sort, so make the two strings the same
+    // case here, before trying the sort.
+    if (in_array($this->getStrength(), [self::PRIMARY, self::SECONDARY], true))
+    {
+      $string1 = mb_strtolower($string1);
+      $string2 = mb_strtolower($string2);
+    }
+
     // Trivial case
     if ($string1 === $string2)
     {
