@@ -337,7 +337,9 @@ function get_sortable_name(?string $name) : ?string
 
 function compare_display_names(string $name1, string $name2) : int
 {
-  return strcasecmp_locale(get_sortable_name($name1), get_sortable_name($name2));
+  $collator = new \Collator(Language::getInstance()->getWebLocale());
+  $collator->setStrength(\Collator::SECONDARY);  // Case-insensitive, but accent-sensitive
+  return $collator->compare(get_sortable_name($name1), get_sortable_name($name2));
 }
 
 

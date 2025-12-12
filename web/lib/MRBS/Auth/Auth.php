@@ -10,7 +10,6 @@ use function MRBS\get_sortable_name;
 use function MRBS\get_vocab;
 use function MRBS\in_arrayi;
 use function MRBS\session;
-use function MRBS\strcasecmp_locale;
 
 
 abstract class Auth
