@@ -6,8 +6,9 @@ namespace MRBS\Intl;
 use Exception;
 
 /**
- * A partial emulation of the PHP \Collator class.  Some methods are not implemented, and
- * some attributes are not supported.
+ * A partial, very basic, emulation of the PHP \Collator class.  Some methods are not implemented, and
+ * some attributes are not supported.  This class is only intended as a very basic fallback if the intl
+ * extension is not available. For best results use the intl extension.
  * @see \Collator
  */
 class Collator
