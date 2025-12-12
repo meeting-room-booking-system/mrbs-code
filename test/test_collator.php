@@ -14,7 +14,7 @@ $color_pass = 'palegreen';
 
 function test_constants()
 {
-  echo "Testing constants...";
+  echo "<h1>Testing constants</h1>\n";
   $passed = true;
   $php_constants = (new \ReflectionClass('Collator'))->getConstants();
   $emulation_constants = (new \ReflectionClass('MRBS\Intl\Collator'))->getConstants();
@@ -95,6 +95,8 @@ function do_asort(
 
 function test_asort()
 {
+  echo "<h1>Testing asort()</h1>\n";
+
   echo "<table>\n";
   echo thead_html(['locale', 'array', 'flags', 'numeric_collation', 'strength']);
   echo "<tbody>\n";
@@ -198,6 +200,8 @@ function do_compare(string $locale, string $string1, string $string2, int $stren
 
 function test_compare()
 {
+  echo "<h1>Testing compare()</h1>\n";
+
   echo "<table>\n";
   echo thead_html(['locale', 'string1', 'string2', 'strength']);
   echo "<tbody>\n";
@@ -228,10 +232,27 @@ function test_compare()
     {
       do_compare($locale, $string1, $string2, $strength);
     }
+    echo "<tr><td colspan=\"8\"></td></tr>\n";
   }
 
   echo "</tbody>\n";
   echo "</table>\n";
+}
+
+
+$loaded_extensions = get_loaded_extensions();
+
+echo "PHP version: " . PHP_VERSION;
+echo "<br>\n";
+echo "mbstring enabled: " . var_export(in_array('mbstring', $loaded_extensions), true);
+echo "<br>\n";
+echo "intl enabled: " . var_export(in_array('intl', $loaded_extensions), true);
+echo "<br>\n";
+echo "<br>\n";
+
+if (!in_array('intl', $loaded_extensions))
+{
+  die("This test needs the 'intl' PHP extension to be loaded.");
 }
 
 test_constants();
