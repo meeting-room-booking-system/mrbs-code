@@ -209,6 +209,7 @@ function test_compare()
     ['locale' => 'en-GB', 'string1' => 'Séan', 'string2' => 'Sean'],
     ['locale' => 'en-GB', 'string1' => 'a', 'string2' => 'A'],
     ['locale' => 'en-GB', 'string1' => 'A', 'string2' => 'a'],
+    ['locale' => 'en-GB', 'string1' => 'a', 'string2' => 'b'],
     ['locale' => 'en-GB', 'string1' => 'bA', 'string2' => 'Ba']
   ];
 
