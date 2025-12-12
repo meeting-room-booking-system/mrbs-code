@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS\Auth;
 
+use MRBS\Language;
 use MRBS\User;
 use function MRBS\format_compound_name;
 use function MRBS\get_registrants;
@@ -387,11 +388,13 @@ abstract class Auth
     $display_name1 = (isset($display_name1) && ($display_name1 !== '')) ? $display_name1 : $user1['username'];
     $display_name2 = (isset($display_name2) && ($display_name2 !== '')) ? $display_name2 : $user2['username'];
 
-    $display_name_comparison = strcasecmp_locale($display_name1, $display_name2);
+    $collator = new \Collator(Language::getInstance()->getWebLocale());
+    $collator->setStrength(\Collator::SECONDARY);  // Case-insensitive, but accent-sensitive
+    $display_name_comparison = $collator->compare($display_name1, $display_name2);
 
     if ($display_name_comparison === 0)
     {
-      return strcasecmp_locale($user1['username'], $user2['username']);
+      return $collator->compare($user1['username'], $user2['username']);
     }
 
     return $display_name_comparison;

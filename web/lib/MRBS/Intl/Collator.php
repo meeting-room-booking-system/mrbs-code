@@ -6,8 +6,9 @@ namespace MRBS\Intl;
 use Exception;
 
 /**
- * A partial emulation of the PHP \Collator class.  Some methods are not implemented, and
- * some attributes are not supported.
+ * A partial, very basic, emulation of the PHP \Collator class.  Some methods are not implemented, and
+ * some attributes are not supported.  This class is only intended as a very basic fallback if the intl
+ * extension is not available. For best results use the intl extension.
  * @see \Collator
  */
 class Collator
@@ -90,36 +91,16 @@ class Collator
    */
   public function asort(array &$array, int $flags = self::SORT_REGULAR): bool
   {
-    $locale_switcher = new LocaleSwitcher(LC_COLLATE, $this->locale);
-    $locale_switcher->switch();
-    // Do the sort in the current locale
-    // Convert the flags to the equivalent value for the ordinary function asort().
-    switch ($flags)
-    {
-      case self::SORT_REGULAR:
-        $ordinary_flags = SORT_REGULAR | SORT_LOCALE_STRING;
-        break;
-      case self::SORT_STRING:
-        $ordinary_flags = SORT_STRING | SORT_LOCALE_STRING;
-        break;
-      case self::SORT_NUMERIC:
-        $ordinary_flags = SORT_NUMERIC;
-        break;
-      default:
-        throw new \InvalidArgumentException("Invalid flags value '$flags'");
-        break;
-    }
+    return $this->genericSort(true, $array, $flags);
+  }
 
-    // If NUMERIC_COLLATION is on, then use SORT_NATURAL.
-    if (in_array($flags, [self::SORT_REGULAR, self::SORT_STRING], true) &&
-        $this->getAttribute(self::NUMERIC_COLLATION) === self::ON)
-    {
-      $ordinary_flags |= SORT_NATURAL;
-    }
 
-    asort($array, $ordinary_flags);
-    $locale_switcher->restore();
-    return true;
+  /**
+   * @see \Collator::sort()
+   */
+  public function sort(array &$array, int $flags = self::SORT_REGULAR): bool
+  {
+    return $this->genericSort(false, $array, $flags);
   }
 
 
@@ -129,6 +110,15 @@ class Collator
    */
   public function compare(string $string1, string $string2)
   {
+    // Primary and secondary strengths are case-insensitive.  The sort() method in this class
+    // cannot perform a locale aware, case-insensitive sort, so make the two strings the same
+    // case here, before trying the sort.
+    if (in_array($this->getStrength(), [self::PRIMARY, self::SECONDARY], true))
+    {
+      $string1 = mb_strtolower($string1);
+      $string2 = mb_strtolower($string2);
+    }
+
     // Trivial case
     if ($string1 === $string2)
     {
@@ -142,7 +132,7 @@ class Collator
     // first, as below.)
     $original_array = [$string1, $string2];
     $array = $original_array;
-    $this->asort($array);
+    $this->sort($array);
     if ($array !== $original_array)
     {
       return 1;
@@ -151,7 +141,7 @@ class Collator
     // Otherwise, flip the array and try again.  If the order is reversed, then $string2 > $string1.
     $original_array = [$string2, $string1];
     $array = $original_array;
-    $this->asort($array);
+    $this->sort($array);
     if ($array !== $original_array)
     {
       return -1;
@@ -267,15 +257,6 @@ class Collator
 
 
   /**
-   * @see \Collator::sort()
-   */
-  public function sort(array &$array, int $flags = self::SORT_REGULAR): bool
-  {
-    throw new Exception("Not yet implemented");
-  }
-
-
-  /**
    * @see \Collator::sortWithSortKeys()
    */
   public function sortWithSortKeys(array &$array): bool
@@ -283,4 +264,48 @@ class Collator
     throw new Exception("Not yet implemented");
   }
 
+
+  private function genericSort(bool $maintain_index_association, array &$array, int $flags = self::SORT_REGULAR): bool
+  {
+    $locale_switcher = new LocaleSwitcher(LC_COLLATE, $this->locale);
+    $locale_switcher->switch();
+
+    // Convert the flags to the equivalent value for the ordinary functions sort()/asort().
+    // Note that the sort()/asort() flags can be just one of SORT_REGULAR, SORT_NUMERIC, SORT_STRING, SORT_LOCALE_STRING or SORT_NATURAL.
+    // Then SORT_FLAG_CASE can be combined with SORT_STRING or SORT_NATURAL.
+    // This means that the ordinary PHP sort() functions do not support locale-aware natural or case-insensitive sorting.
+    switch ($flags)
+    {
+      case self::SORT_STRING:
+      case self::SORT_REGULAR:
+      // If NUMERIC_COLLATION is on, then use SORT_NATURAL, otherwise use SORT_LOCALE_STRING
+        $ordinary_flags = ($this->getAttribute(self::NUMERIC_COLLATION) === self::ON) ? SORT_NATURAL : SORT_LOCALE_STRING;
+        break;
+      case self::SORT_NUMERIC:
+        $ordinary_flags = SORT_NUMERIC;
+        break;
+      default:
+        throw new \InvalidArgumentException("Invalid flags value '$flags'");
+        break;
+    }
+
+    // Primary and secondary strengths are case-insensitive.
+    // SORT_FLAG_CASE can only be used with SORT_STRING or SORT_NATURAL.
+    if (in_array($ordinary_flags, [SORT_STRING, SORT_NATURAL]) && in_array($this->getStrength(), [self::PRIMARY, self::SECONDARY], true))
+    {
+      $ordinary_flags |= SORT_FLAG_CASE;
+    }
+
+    if ($maintain_index_association)
+    {
+      asort($array, $ordinary_flags);
+    }
+    else
+    {
+      sort($array, $ordinary_flags);
+    }
+
+    $locale_switcher->restore();
+    return true;
+  }
 }
