@@ -259,14 +259,17 @@ class Collator
   {
     $locale_switcher = new LocaleSwitcher(LC_COLLATE, $this->locale);
     $locale_switcher->switch();
-    // Do the sort in the current locale
-    // Convert the flags to the equivalent value for the ordinary function asort().
-    switch ($flags) {
-      case self::SORT_REGULAR:
-        $ordinary_flags = SORT_REGULAR | SORT_LOCALE_STRING;
-        break;
+
+    // Convert the flags to the equivalent value for the ordinary functions sort()/asort().
+    // Note that the sort()/asort() flags can be just one of SORT_REGULAR, SORT_NUMERIC, SORT_STRING, SORT_LOCALE_STRING or SORT_NATURAL.
+    // Then SORT_FLAG_CASE can be combined with SORT_STRING or SORT_NATURAL.
+    // This means that the ordinary PHP sort() functions do not support locale-aware natural or case-insensitive sorting.
+    switch ($flags)
+    {
       case self::SORT_STRING:
-        $ordinary_flags = SORT_STRING | SORT_LOCALE_STRING;
+      case self::SORT_REGULAR:
+      // If NUMERIC_COLLATION is on, then use SORT_NATURAL, otherwise use SORT_LOCALE_STRING
+        $ordinary_flags = ($this->getAttribute(self::NUMERIC_COLLATION) === self::ON) ? SORT_NATURAL : SORT_LOCALE_STRING;
         break;
       case self::SORT_NUMERIC:
         $ordinary_flags = SORT_NUMERIC;
@@ -276,16 +279,9 @@ class Collator
         break;
     }
 
-    // If NUMERIC_COLLATION is on, then use SORT_NATURAL
-    if (in_array($flags, [self::SORT_REGULAR, self::SORT_STRING], true) &&
-        ($this->getAttribute(self::NUMERIC_COLLATION) === self::ON))
-    {
-      $ordinary_flags |= SORT_NATURAL;
-    }
-
     // Primary and secondary strengths are case-insensitive.
-    // SORT_FLAG_CASE can only be used with SORT_NATURAL or SORT_STRING.
-    if (($ordinary_flags & (SORT_NATURAL | SORT_STRING)) && in_array($this->getStrength(), [self::PRIMARY, self::SECONDARY], true))
+    // SORT_FLAG_CASE can only be used with SORT_STRING or SORT_NATURAL.
+    if (in_array($ordinary_flags, [SORT_STRING, SORT_NATURAL]) && in_array($this->getStrength(), [self::PRIMARY, self::SECONDARY], true))
     {
       $ordinary_flags |= SORT_FLAG_CASE;
     }
