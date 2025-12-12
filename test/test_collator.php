@@ -159,6 +159,18 @@ function test_asort()
   $array = ['ABC', 'aBc', 'Abc', 'Abc', 'ABc'];
   do_asort($locale, $array, \Collator::SORT_STRING);
 
+  $locale = 'no';
+  $array = ['æ', 'ø', 'å', 'A', 'AA', 'AB', 'Åb', 'åb'];
+  do_asort($locale, $array, \Collator::SORT_REGULAR, $numeric_collation);
+
+  $locale = 'sv';
+  $array = ['ä', 'ö', 'å', 'A', 'AA', 'Åb', 'åb'];
+  do_asort($locale, $array, \Collator::SORT_REGULAR, $numeric_collation);
+
+  $locale = 'en-GB';
+  $array = ['a', 'b', 'c', 'A', 'B', 'aa', 'Aa', 'AB', 'z', 'zb'];
+  do_asort($locale, $array, \Collator::SORT_REGULAR, $numeric_collation);
+
   echo "</tbody>\n";
   echo "</table>\n";
 }
