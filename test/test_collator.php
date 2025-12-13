@@ -12,31 +12,6 @@ ini_set('display_errors', '1');
 $color_fail = 'pink';
 $color_pass = 'palegreen';
 
-function test_constants()
-{
-  echo "<h1>Testing constants</h1>\n";
-  $passed = true;
-  $php_constants = (new \ReflectionClass('Collator'))->getConstants();
-  $emulation_constants = (new \ReflectionClass('MRBS\Intl\Collator'))->getConstants();
-  foreach ($php_constants as $name => $value)
-  {
-    if (!isset($emulation_constants[$name]))
-    {
-      $passed = false;
-      echo "Failed to find constant $name<br>\n";
-    }
-    else if ($value != $emulation_constants[$name])
-    {
-      $passed = false;
-      echo "Constant $name has different value in PHP and MRBS<br>\n";
-    }
-  }
-  if ($passed)
-  {
-    echo "Passed<br>\n";
-  }
-}
-
 
 function do_asort(
   string $locale,
@@ -267,6 +242,6 @@ if (!in_array('intl', $loaded_extensions))
   die("This test needs the 'intl' PHP extension to be loaded.");
 }
 
-test_constants();
+test_constants('Collator');
 test_asort();
 test_compare();
