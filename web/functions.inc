@@ -238,49 +238,6 @@ function generate_token(int $length) : string
 }
 
 
-/**
- * Compares two strings using a locale-aware, case-insensitive comparison.
- * This function determines the relative order of two strings based on
- * the current locale settings.
- *
- * @param string $string1 The first string to compare.
- * @param string $string2 The second string to compare.
- * @return int Returns 0 if the strings are equal, -1 if $string1 is less than $string2,
- *             and 1 if $string1 is greater than $string2.
- */
-function strcasecmp_locale(string $string1, string $string2) : int
-{
-  // Trivial case
-  if ($string1 === $string2)
-  {
-    return 0;
-  }
-
-  // Sort the array.  If the order is reversed then $string1 > $string2.
-  // (When this function is being used as a callback for usort, and if the original array
-  // is sorted in ascending order - which it well might be if it's the result of
-  // an SQL query with an ORDER BY - then it's fastest to test for $string1 > $string2
-  // first, as below.)
-  $original_array = array($string1, $string2);
-  $array = $original_array;
-  asort($array,SORT_LOCALE_STRING | SORT_FLAG_CASE);
-  if ($array !== $original_array)
-  {
-    return 1;
-  }
-  // Otherwise, flip the array and try again.  If the order is reversed then $string2 > $string1
-  $original_array = array($string2, $string1);
-  $array = $original_array;
-  asort($array,SORT_LOCALE_STRING | SORT_FLAG_CASE);
-  if ($array !== $original_array)
-  {
-    return -1;
-  }
-  // Otherwise they must be equal
-  return 0;
-}
-
-
 // Returns a name in the format last_name first_name for sorting
 function get_sortable_name(?string $name) : ?string
 {
@@ -340,6 +297,22 @@ function compare_display_names(string $name1, string $name2) : int
   $collator = new \Collator(Language::getInstance()->getWebLocale());
   $collator->setStrength(\Collator::SECONDARY);  // Case-insensitive, but accent-sensitive
   return $collator->compare(get_sortable_name($name1), get_sortable_name($name2));
+}
+
+
+/**
+ * Compares two strings using a locale-aware, case-insensitive comparison.
+ * This function determines the relative order of two strings based on
+ * the current locale settings.
+ *
+ * @return int<-1,1> Returns 0 if the usernames are equal, -1 if $username1
+ * is less than $username2, and 1 if $username1 is greater than $username2.
+ */
+function compare_usernames(string $username1, string $username2) : int
+{
+  $collator = new \Collator(Language::getInstance()->getWebLocale());
+  $collator->setStrength(\Collator::SECONDARY);  // Case-insensitive, but accent-sensitive
+  return $collator->compare($username1, $username2);
 }
 
 
