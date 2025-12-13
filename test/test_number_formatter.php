@@ -20,6 +20,12 @@ function test_constants($class)
   $emulation_constants = (new \ReflectionClass("MRBS\Intl\\$class"))->getConstants();
   foreach ($php_constants as $name => $value)
   {
+    // We are only interested in public constants
+    if (!(new \ReflectionClassConstant($class, $name))->isPublic())
+    {
+      continue;
+    }
+
     if (!isset($emulation_constants[$name]))
     {
       $passed = false;
