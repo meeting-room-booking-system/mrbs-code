@@ -22,6 +22,8 @@ class NumberFormatter
   public const PATTERN_RULEBASED = 9;
   public const IGNORE = 0;
   public const CURRENCY_ACCOUNTING = 12;
+  public const DECIMAL_COMPACT_SHORT = 14; // PHP 8.5 onwards
+  public const DECIMAL_COMPACT_LONG= 15;  // PHP 8.5 onwards
   public const DEFAULT_STYLE = 1;
   public const ROUND_CEILING = 0;
   public const ROUND_FLOOR = 1;
@@ -88,10 +90,9 @@ class NumberFormatter
   public const TYPE_INT64 = 2;
   public const TYPE_DOUBLE = 3;
   public const TYPE_CURRENCY = 4;
-
-  public function dummy()
-  {
-    //\NumberFormatter::P
-  }
+  public const CURRENCY_ISO = 10; // PHP 8.5 onwards
+  public const CURRENCY_PLURAL = 11; // PHP 8.5 onwards
+  public const CASH_CURRENCY = 13; // PHP 8.5 onwards
+  public const CURRENCY_STANDARD = 16; // PHP 8.5 onwards
 
 }

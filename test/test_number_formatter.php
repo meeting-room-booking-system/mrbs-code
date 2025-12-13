@@ -29,7 +29,7 @@ function test_constants($class)
     if (!isset($emulation_constants[$name]))
     {
       $passed = false;
-      echo "Failed to find constant $name<br>\n";
+      echo "Failed to find constant $name ($value)<br>\n";
     }
     else if ($value != $emulation_constants[$name])
     {
