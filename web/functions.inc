@@ -314,6 +314,22 @@ function compare_display_names(string $name1, string $name2) : int
 }
 
 
+/**
+ * Compares two strings using a locale-aware, case-insensitive comparison.
+ * This function determines the relative order of two strings based on
+ * the current locale settings.
+ *
+ * @return int<-1,1> Returns 0 if the usernames are equal, -1 if $username1
+ * is less than $username2, and 1 if $username1 is greater than $username2.
+ */
+function compare_usernames(string $username1, string $username2) : int
+{
+  $collator = new \Collator(Language::getInstance()->getWebLocale());
+  $collator->setStrength(\Collator::SECONDARY);  // Case-insensitive, but accent-sensitive
+  return $collator->compare($username1, $username2);
+}
+
+
 // Tests whether the request has come via an Ajax call or not.
 function is_ajax() : bool
 {

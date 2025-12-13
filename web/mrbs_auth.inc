@@ -299,7 +299,7 @@ function getWritable($creator, $rooms=null, $all=true) : bool
 
   // Always allowed to modify your own stuff
   $mrbs_user = session()->getCurrentUser();
-  if (isset($mrbs_user) && isset($creator) && (strcasecmp_locale($creator, $mrbs_user->username) === 0))
+  if (isset($mrbs_user) && isset($creator) && (compare_usernames($creator, $mrbs_user->username) === 0))
   {
     return true;
   }
