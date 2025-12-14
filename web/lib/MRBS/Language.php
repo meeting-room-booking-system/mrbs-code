@@ -673,10 +673,11 @@ class Language
    * Given a set of preferences, get the best locales that can be used that will work
    * throughout MRBS.
    *
-   * The locales have to be supported by setlocale(), MRBS's language files and the language
-   * files used by third-party packages.  It uses RFC 4647's lookup algorithm for determining
-   * whether a set of language files is suitable.  The results for each component could be slightly
-   * different: for example 'pt-BR' for one and 'pt' for another, but never 'pt' and 'es'.
+   * The locales have to be supported by the 'intl' extension (or setlocale() if the 'intl' extension
+   * is not available), MRBS's language files and the language files used by third-party packages.
+   * It uses RFC 4647's lookup algorithm for determining whether a set of language files is suitable.
+   * The results for each component could be slightly different: for example 'pt-BR' for one and 'pt' for
+   * another, but never 'pt' and 'es'.
    *
    * @param string[] $preferences Locales in decreasing order of preference.
    * @param string[] $components An array of components to find the best fits for
@@ -710,7 +711,8 @@ class Language
     // the main MRBS text in another.)
     foreach ($preferences as $locale)
     {
-      // Check whether setlocale() is going to work
+      // Check whether the 'intl' extension supports this locale (or if the extension is not available
+      // whether setlocale() is going to work).
       $this->debug("Trying '$locale'");
       if (false === Locale::acceptFromHttp($locale))
       {

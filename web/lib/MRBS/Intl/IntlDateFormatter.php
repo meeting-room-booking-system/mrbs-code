@@ -207,7 +207,7 @@ class IntlDateFormatter
     // so we need to find out which locale actually worked.
     if (!empty($this->locale)) {
       $old_locale = setlocale(LC_TIME, '0');
-      if (false === ($new_locale = setlocale(LC_TIME, System::getOSlocale($this->locale))))
+      if (false === ($new_locale = Language::setLocale(LC_TIME, $this->locale)))
       {
         $new_locale = $old_locale;
         $locale = is_array($this->locale) ? json_encode($this->locale) : "'$this->locale'";
