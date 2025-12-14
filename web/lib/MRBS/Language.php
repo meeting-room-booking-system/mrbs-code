@@ -480,7 +480,7 @@ class Language
         " for language tag '$locale'.  Either (a) enable the PHP 'intl' extension on your server," .
         ' or (b) install the missing locale, or (c) set $override_locale in your MRBS config.inc.php' .
         ' file to a locale that is available on your server.';
-      trigger_error($messages[$locale], E_USER_WARNING);
+      trigger_error($messages[$locale], E_USER_NOTICE);
     }
 
     return $result;
