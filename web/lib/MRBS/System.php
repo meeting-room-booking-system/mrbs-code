@@ -1245,10 +1245,8 @@ class System
     // there could be different locales for different categories
     $original_locales = explode(';', setlocale(LC_ALL, '0'));
 
-    $os_locale = self::getOSLocale($langtag);
-
     // Try the test locale
-    $result = setlocale(LC_ALL, $os_locale);
+    $result = Language::setlocale(LC_ALL, $langtag);
 
     // Restore the original settings
     foreach ($original_locales as $locale_setting)
