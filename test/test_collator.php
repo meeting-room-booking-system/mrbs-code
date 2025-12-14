@@ -155,7 +155,6 @@ function do_compare(string $locale, string $string1, string $string2, int $stren
 {
   global $color_fail, $color_pass;
 
-
   $php_collator = new \Collator($locale);
   $php_collator->setStrength($strength);
   $mrbs_collator = new \MRBS\Intl\Collator($locale);

@@ -586,7 +586,7 @@ $vocab["confirm_delete_user_plus"]  = "Er du sikker på at du vil slette denne b
                                       "reservasjoner som oppretter, endrer eller registrant, og sletting av bruker " .
                                       "vil medføre at denne informasjonen forsvinner, som f.eks. navn og e-post.";
 $vocab["deletefollowing"]    = "Dette vil slette følgende reservasjoner";
-$vocab["and_n_more"]         = "og %s til";  // %s rather than %d because n is the output of number_format()
+$vocab["and_n_more"]         = "og %s til";  // %s rather than %d because n is the output of NumberFormatter::format()
 $vocab["sure"]               = "Er du sikker?";
 $vocab["YES"]                = "JA";
 $vocab["NO"]                 = "NEI";

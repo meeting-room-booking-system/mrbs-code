@@ -445,7 +445,7 @@ $vocab["name_not_unique"]    = "telah wujud.   SIla pilih nama lain.";
 
 // Used in del.php
 $vocab["deletefollowing"]    = "Ini akan memadam tempahan berikut";
-$vocab["and_n_more"]         = "dan %s lagi";  // %s rather than %d because n is the output of number_format()
+$vocab["and_n_more"]         = "dan %s lagi";  // %s rather than %d because n is the output of NumberFormatter::format()
 $vocab["sure"]               = "Adakah anda pasti?";
 $vocab["YES"]                = "YA";
 $vocab["NO"]                 = "TIDAK";

@@ -507,7 +507,7 @@ $vocab["confirm_delete_user"] = "Är du säker på att du vill radera användare
 
 // Used in del.php
 $vocab["deletefollowing"]    = "Detta raderar följande bokningar";
-$vocab["and_n_more"]         = "och ytterligare %s";  // %s rather than %d because n is the output of number_format()
+$vocab["and_n_more"]         = "och ytterligare %s";  // %s rather than %d because n is the output of NumberFormatter::format()
 $vocab["sure"]               = "Är du säker?";
 $vocab["YES"]                = "JA";
 $vocab["NO"]                 = "NEJ";

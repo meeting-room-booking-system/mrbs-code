@@ -460,9 +460,14 @@ class Language
       LC_CTYPE,
       LC_MONETARY,
       LC_NUMERIC,
-      LC_TIME,
-      LC_MESSAGES
+      LC_TIME
     ];
+
+    // LC_MESSAGES is only available if PHP was compiled with libintl
+    if (defined('LC_MESSAGES'))
+    {
+      $valid_categories[] = LC_MESSAGES;
+    }
 
     if (!in_array($category, $valid_categories, true))
     {

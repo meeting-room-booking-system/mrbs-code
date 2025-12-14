@@ -550,7 +550,7 @@ $vocab["confirm_delete_user"] = "Weet je zeker dat je deze gebruiker wilt verwij
 
 // Used in del.php
 $vocab["deletefollowing"]    = "U gaat hiermee de volgende boekingen verwijderen";
-$vocab["and_n_more"]         = "en %s meer";  // %s rather than %d because n is the output of number_format()
+$vocab["and_n_more"]         = "en %s meer";  // %s rather than %d because n is the output of NumberFormatter::format()
 $vocab["sure"]               = "Weet U het zeker?";
 $vocab["YES"]                = "JA";
 $vocab["NO"]                 = "NEE";

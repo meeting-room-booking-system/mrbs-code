@@ -509,7 +509,7 @@ $vocab["name_not_unique"]    = "已存在.   请选用另外一个名字.";
 
 // Used in del.php
 $vocab["deletefollowing"]    = "这个操作会删除下列的预约";
-$vocab["and_n_more"]         = "且多 %s ";  // %s rather than %d because n is the output of number_format()
+$vocab["and_n_more"]         = "且多 %s ";  // %s rather than %d because n is the output of NumberFormatter::format()
 $vocab["sure"]               = "确定吗?";
 $vocab["YES"]                = "是";
 $vocab["NO"]                 = "否";

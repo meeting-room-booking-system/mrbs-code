@@ -156,7 +156,8 @@ if ($type == "room")
       if ($n_entries > $limit)
       {
         echo "<p>";
-        echo get_vocab("and_n_more", number_format_locale($n_entries - $limit)) . '.';
+        $formatter = new \NumberFormatter(Language::getInstance()->getWebLocale(), \NumberFormatter::DEFAULT_STYLE);
+        echo get_vocab("and_n_more", $formatter->format($n_entries - $limit)) . '.';
         echo "</p>";
       }
     }
