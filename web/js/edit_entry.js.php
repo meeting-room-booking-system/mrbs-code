@@ -768,7 +768,7 @@ function durFormat(r)
 
   r = r.toFixed(2);
   r = parseFloat(r);
-  r = r.toLocaleString();
+  r = r.toLocaleString(args.langPrefs);
 
   if ((r.indexOf('.') >= 0) || (r.indexOf(',') >= 0))
   {
