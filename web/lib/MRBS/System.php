@@ -1246,7 +1246,7 @@ class System
     $original_locales = explode(';', setlocale(LC_ALL, '0'));
 
     // Try the test locale
-    $result = Language::setlocale(LC_ALL, $langtag);
+    $result = Language::setLocale(LC_ALL, $langtag);
 
     // Restore the original settings
     foreach ($original_locales as $locale_setting)
