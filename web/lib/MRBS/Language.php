@@ -177,7 +177,7 @@ class Language
     }
 
     // Set the locale
-    self::setLocale($this->best_web_locales['locale']);
+    self::setLocale(LC_ALL, $this->best_web_locales['locale']);
 
     // GET THE BEST SET OF LOCALES FOR MAIL
     $this->debug("Getting mail locales.");
@@ -445,26 +445,45 @@ class Language
 
 
   /**
-   * Sets the locale, trying the possible variants appropriate to the OS.
+   * Sets the locale, removing any aliases and trying the possible variants appropriate to the OS.
+   *
+   * @return string|false The new current locale, or false if the locale functionality is not implemented
+   * on your platform, the specified locale does not exist or the category name is invalid.
    */
-  public static function setLocale(string $locale) : void
+  public static function setLocale(int $category, string $locale)
   {
-    $os_locale = System::getOSlocale($locale);
+    static $messages = [];
 
-    if (false === setlocale(LC_ALL, $os_locale))
+    $valid_categories = [
+      LC_ALL,
+      LC_COLLATE,
+      LC_CTYPE,
+      LC_MONETARY,
+      LC_NUMERIC,
+      LC_TIME,
+      LC_MESSAGES
+    ];
+
+    if (!in_array($category, $valid_categories, true))
+    {
+      trigger_error("Invalid category '$category'", E_USER_WARNING);
+      return false;
+    }
+
+    $os_locale = System::getOSlocale(self::unAlias($locale));
+
+    // To avoid clogging up the error log, we only trigger the error once for each locale.
+    if (false === ($result = setlocale($category, $os_locale)) && !isset($messages[$locale]))
     {
       // $os_locale will be an array
-      $message = "Server failed to set locale to " . json_encode($os_locale) .
-        " for language tag '$locale'.  Either install the missing locale" .
-        ' or set $override_locale in your MRBS config.inc.php file to a' .
-        ' locale that is available on your server.';
-      trigger_error($message, E_USER_NOTICE);
-
-      if (false === setlocale(LC_ALL, array('C.UTF-8', 'C.utf-8', 'C.utf8', 'C')))
-      {
-        Errors::fatalError("Could not set locale at all, not even to 'C'");
-      }
+      $messages[$locale] = "Server failed to set locale to " . json_encode($os_locale) .
+        " for language tag '$locale'.  Either (a) enable the PHP 'intl' extension on your server," .
+        ' or (b) install the missing locale, or (c) set $override_locale in your MRBS config.inc.php' .
+        ' file to a locale that is available on your server.';
+      trigger_error($messages[$locale], E_USER_WARNING);
     }
+
+    return $result;
   }
 
 

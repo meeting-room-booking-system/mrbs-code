@@ -227,7 +227,7 @@ class IntlDateFormatter
       // running in different threads of the same process at the same time, changing the
       // process-wide locale using setlocale()."
       $new_locale = Language::getInstance()->getWebLocale();
-      Language::setLocale($new_locale);
+      Language::setLocale(LC_ALL, $new_locale);
     }
     else {
       $new_locale = null;
