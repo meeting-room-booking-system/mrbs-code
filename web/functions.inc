@@ -403,15 +403,6 @@ function truncate(string $value, string $column) : string
 }
 
 
-// Formats a number taking into account the current locale.  (Could use
-// the NumberFormatter class, but the intl extension isn't always installed.)
-function number_format_locale($number, int $decimals=0) : string
-{
-  $locale_info = localeconv();
-  return number_format($number, $decimals, $locale_info['decimal_point'], $locale_info['thousands_sep']);
-}
-
-
 function get_microtime()
 {
   if (function_exists('microtime'))

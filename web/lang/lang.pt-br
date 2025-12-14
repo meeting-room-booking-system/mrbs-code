@@ -567,7 +567,7 @@ $vocab["confirm_delete_user"] = "Are you sure you want to delete this user?";
 
 // Used in del.php
 $vocab["deletefollowing"]    = "Esta ação apagará as seguintes Marcações";
-$vocab["and_n_more"]         = "and %s more";  // %s rather than %d because n is the output of number_format()
+$vocab["and_n_more"]         = "and %s more";  // %s rather than %d because n is the output of NumberFormatter::format()
 $vocab["sure"]               = "Tem a certeza?";
 $vocab["YES"]                = "Sim";
 $vocab["NO"]                 = "Não";

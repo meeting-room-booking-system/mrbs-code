@@ -560,7 +560,7 @@ $vocab["confirm_delete_user"] = "Möchten Sie diesen Benutzer wirklich löschen?
 
 // Used in del.php
 $vocab["deletefollowing"]    = "Dadurch werden die folgenden Einträge gelöscht";
-$vocab["and_n_more"]         = "und %s weitere";  // %s rather than %d because n is the output of number_format()
+$vocab["and_n_more"]         = "und %s weitere";  // %s rather than %d because n is the output of NumberFormatter::format()
 $vocab["sure"]               = "Sind Sie sicher?";
 $vocab["YES"]                = "JA";
 $vocab["NO"]                 = "NEIN";

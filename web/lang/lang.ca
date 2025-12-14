@@ -583,7 +583,7 @@ $vocab["confirm_delete_user_plus"] = "Esteu segur que voleu suprimir aquest usua
 
 // S'utilitza a del.php
 $vocab["deletefollowing"] = "Això suprimirà les reserves següents";
-$vocab["and_n_more"] = "i %s més"; // %s en lloc de %d perquè n és la sortida de number_format()
+$vocab["and_n_more"] = "i %s més"; // %s en lloc de %d perquè n és la sortida de NumberFormatter::format()
 $vocab["sure"] = "Estàs segur?";
 $vocab["YES"] = "SÍ";
 $vocab["NO"] = "NO";
