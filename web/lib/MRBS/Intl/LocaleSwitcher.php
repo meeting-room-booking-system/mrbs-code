@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS\Intl;
 
+use MRBS\Language;
 use MRBS\System;
 
 class LocaleSwitcher
@@ -32,11 +33,7 @@ class LocaleSwitcher
     // due to other scripts running in different threads of the same process at the same time, changing the
     // process-wide locale using setlocale()."
     $this->old_locale = setlocale($this->category, '0');
-    if (false === setlocale($this->category, System::getOSlocale($this->locale)))
-    {
-      $message = "Could not set locale to '" . $this->locale . "'; continuing to use '" . $this->old_locale . "'.";
-      trigger_error($message, E_USER_WARNING);
-    }
+    Language::setLocale($this->category, $this->locale);
   }
 
 
