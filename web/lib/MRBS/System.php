@@ -1238,7 +1238,7 @@ class System
   {
     // TODO: Do something better for Windows systems?  Could check whether the locale exists in
     // TODO: a known list of locales.  However, it's probably not worth it because (a) we will
-    // TODO: only ever use this method with locales that are suported by other MRBS components,
+    // TODO: only ever use this method with locales that are supported by other MRBS components,
     // TODO: and (b) we will eventually move to using the intl extension anyway.
 
     // Save the original locales so that we can restore them later.   Note that
