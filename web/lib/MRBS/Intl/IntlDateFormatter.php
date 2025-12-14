@@ -251,6 +251,9 @@ class IntlDateFormatter
    */
   private static function doStrftime(string $format, ?int $timestamp = null)
   {
+    assert(version_compare(MRBS_MIN_PHP_VERSION, '8.0.0', '<'), "The line below can be removed.");
+    $timestamp = $timestamp ?? time();  // $timestamp only became nullable in strftime() in PHP 8.0.0
+
     // Temporarily suppress deprecation errors so that we are not flooded with them.
     // We have a single message in init.inc.
     $error_level = error_reporting();
