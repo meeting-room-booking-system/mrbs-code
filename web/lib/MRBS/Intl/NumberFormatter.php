@@ -95,4 +95,51 @@ class NumberFormatter
   public const CASH_CURRENCY = 13; // PHP 8.5 onwards
   public const CURRENCY_STANDARD = 16; // PHP 8.5 onwards
 
+  public const VALID_STYLES = [
+    self::PATTERN_DECIMAL,
+    self::DECIMAL,
+    self::CURRENCY,
+    self::PERCENT,
+    self::SCIENTIFIC,
+    self::SPELLOUT,
+    self::ORDINAL,
+    self::DURATION,
+    self::PATTERN_RULEBASED,
+    self::CURRENCY_ACCOUNTING,
+    self::DEFAULT_STYLE,
+    self::IGNORE
+  ];
+
+  private $locale;
+  private $style;
+
+  /**
+   * @see \NumberFormatter::__construct()
+   */
+  public function __construct(string $locale, int $style, ?string $pattern = null)
+  {
+    $this->locale = $locale;
+
+    if (!in_array($style, self::VALID_STYLES, true))
+    {
+      throw new \IntlException(str_replace(__NAMESPACE__ . '\\', '', __METHOD__) . '(): number formatter creation failed');
+    }
+    $this->style = $style;
+  }
+
+
+  /**
+   * @see \NumberFormatter::format()
+   */
+  public function format($num, int $type = self::TYPE_DEFAULT)
+  {
+    $locale_switcher = new LocaleSwitcher(LC_NUMERIC, $this->locale);
+    $locale_switcher->switch();
+
+    $locale_info = localeconv();
+
+    $locale_switcher->restore();
+    return number_format($num, 0, $locale_info['decimal_point'], $locale_info['thousands_sep']);
+  }
+
 }
