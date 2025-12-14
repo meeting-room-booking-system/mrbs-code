@@ -954,10 +954,11 @@ class System
    */
   public static function isAvailableLocale(string $langtag) : bool
   {
-    // If the OS tells us that it's not available, then return false
-    if (false === self::isAdvertisedLocale($langtag))
+    // If the OS is able to tell us whether the locale is supported, then
+    // use that answer.
+    if (null !== ($result = self::isAdvertisedLocale($langtag)))
     {
-      return false;
+      return $result;
     }
 
     // Otherwise try setting the locale
