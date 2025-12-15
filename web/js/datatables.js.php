@@ -369,7 +369,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   }
 
   <?php // Localise the sorting.  See https://datatables.net/blog/2017-02-28 ?>
-  const locales = $('body').data('langPrefs');
+  const locales = args.langPrefs;
   $.fn.dataTable.ext.order.intl(locales);
   <?php
   if ($language_debug)
