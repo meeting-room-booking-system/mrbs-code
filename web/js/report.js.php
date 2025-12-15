@@ -120,7 +120,7 @@ $(document).on('page_ready', function() {
         requests = [];
         requestsCompleted = 0;
         requestsAborted = 0;
-        title = title.replace('%d', nEntries.toLocaleString());
+        title = title.replace('%d', nEntries.toLocaleString(args.langPrefs));
         progressContainer.find('span').text(title);
       }
 
@@ -223,7 +223,7 @@ $(document).on('page_ready', function() {
             }
 
             var message = "<?php echo get_js_vocab('delete_entries_warning') ?>";
-            message = message.replace('%s', nEntries.toLocaleString());
+            message = message.replace('%s', nEntries.toLocaleString(args.langPrefs));
             if (!window.confirm(message)) {
               return;
             }
