@@ -160,7 +160,7 @@ function datesInRange(startDate, endDate, excludeHiddenDays) {
 
 $(document).on('page_ready', function() {
 
-  var locales = $('body').data('langPrefs');
+  const locales = args.langPrefs;
 
   <?php
   // Set up datepickers.  We convert all inputs of type 'date' into flatpickr

@@ -449,8 +449,8 @@ $vocab["delete_entries"] = "Eliminar entrades";
 $vocab["delete_entries_warning"] = "ADVERTIMENT! Això esborrarà totes les entrades que coincideixin " .
 "els criteris de cerca. L'operació no es pot desfer. Són " .
 "Estàs segur que vols continuar?\n\n" .
-"Nombre total d'entrades que s'eliminaran: %%s"; // El signe % s'escapa perquè la substitució de la cadena la fa JavaScript
-$vocab["deleting_n_entries"] = "S'estan suprimint %%d entrades..."; // El signe % s'escapa perquè la substitució de números la fa JavaScript
+"Nombre total d'entrades que s'eliminaran: %s";
+$vocab["deleting_n_entries"] = "S'estan suprimint %d entrades...";
 $vocab["delete_entries_failed"] = "No s'han pogut suprimir les entrades.";
 $vocab["cancel"] = "Cancel·la";
 $vocab["registered"] = "Registrat";

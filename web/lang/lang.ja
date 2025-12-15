@@ -94,7 +94,7 @@ $vocab["rep_interval"]       = "繰り返し周期";
 $vocab["skip_conflicts"]     = "過去の競合をスキップする";
 $vocab["ctrl_click"]         = "複数の部屋を選択するときは、<br>Controlキーを押しながらクリックしてください。";
 $vocab["entryid"]            = "予約ID ";
-$vocab["repeat_id"]          = "定例予約ID "; 
+$vocab["repeat_id"]          = "定例予約ID ";
 $vocab["brief_description"]  = "簡単な説明";
 $vocab["status"]             = "状況";
 $vocab["public"]             = "公開";
@@ -151,7 +151,7 @@ $vocab["schedule"]           = "予定";
 $vocab["policy"]             = "指針";
 $vocab["too_many_entries"]   = "選択されたオプションは大量のエントリーを作成します。<br>別のオプションを使用して下さい!";
 $vocab["returncal"]          = "カレンダー表示に戻る";
-$vocab["failed_to_acquire"]  = "データベースへの排他的なアクセスの確保に失敗しました"; 
+$vocab["failed_to_acquire"]  = "データベースへの排他的なアクセスの確保に失敗しました";
 $vocab["invalid_booking"]    = "無効な予約";
 $vocab["must_set_description"] = "予約のための簡単な説明を設定する必要があります。戻って入力してください。";
 $vocab["mail_subject_approved"]  = "%s MRBSのエントリが承認されました"; // $mrbs_company
@@ -304,7 +304,7 @@ $vocab["delete_entries"]        = "エントリーを削除する";
 $vocab["delete_entries_warning"] = "警告! この操作は、検索文字列に一致する全てのエントリーを削除します。 " .
                                    "操作を取り消すことはできません。" .
                                    "継続してもよろしいですが\n\n" .
-                                   "削除されるエントリーの合計: %%s"; // The % sign is escaped because the string substitution is done by JavaScript
+                                   "削除されるエントリーの合計: %s";
 $vocab["delete_entries_failed"] = "エントリーを削除することができませんでした。";
 
 // Used in admin.php
@@ -463,7 +463,7 @@ $vocab["restore_original"]   = "元に戻す";
 // Entry types
 $vocab["type.I"]            = "内部";
 $vocab["type.E"]            = "外部";
- 
+
 // General
 $vocab["fatal_db_error"]     = "致命的なエラー: 残念ながら、データベースは現在利用可能ではありません。";
 $vocab["back"]               = "戻る";

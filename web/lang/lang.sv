@@ -395,7 +395,7 @@ $vocab["delete_entries"]        = "Ta bort poster";
 $vocab["delete_entries_warning"] = "VARNING! Detta tar bort alla poster som matchar " .
                                    "söksträngen.  Operationen kan inte ångras." .
                                    "Vill du verkligen fortsätta?\n\n" .
-                                   "Totalt antal poster som ska tas bort: %%s"; // The % sign is escaped because the string substitution is done by JavaScript
+                                   "Totalt antal poster som ska tas bort: %s";
 $vocab["delete_entries_failed"] = "Posterna kunde inte tas bort";
 
 // Used in admin.php

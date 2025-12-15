@@ -97,7 +97,7 @@ $vocab["rep_rep_day"]        = "Ismétlődés napja";
 $vocab["skip_conflicts"]     = "Múltbéli ütközések figyelmen kívül hagyása";
 $vocab["ctrl_click"]         = "A Ctrl gomb nyomva tartásával több helyet is kijelölhetsz.";
 $vocab["entryid"]            = "Bejegyzés azonosító ";
-$vocab["repeat_id"]          = "Ismétlődés azonosító "; 
+$vocab["repeat_id"]          = "Ismétlődés azonosító ";
 $vocab["brief_description"]  = "rövid leírás.";
 $vocab["status"]             = "Állapot";
 $vocab["public"]             = "Nyilvános";
@@ -293,7 +293,7 @@ $vocab["delete_entries"]        = "Bejegyzések törlése";
 $vocab["delete_entries_warning"] = "FIGYELEM! Ez a művelet törölni fogja az összes olyan rekordot " .
                                    "amire illeszkednek a keresési feltételek. Ez a művelet nem vonható vissza. " .
                                    "Biztos vagy benne, hogy törlöd a bejegyzéseket?\n\n" .
-                                   "Törlendő rekordok száma: %%s"; // The % sign is escaped because the string substitution is done by JavaScript
+                                   "Törlendő rekordok száma: %s";
 $vocab["delete_entries_failed"] = "A bejegyzéseket nem sikerült törölni.";
 
 // Used in admin.php
@@ -401,7 +401,7 @@ $vocab["restore_original"]   = "Eredeti állapot visszaállítása";
 // Entry types
 $vocab["type.I"]            = "Belső";
 $vocab["type.E"]            = "Külső";
- 
+
 // General
 $vocab["fatal_db_error"]     = "Súlyos hiba történt: az adatbázis nem érhető el jelen pillanatban, kérlek, próbáld újra később.";
 $vocab["back"]               = "Vissza";

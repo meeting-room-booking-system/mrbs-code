@@ -106,7 +106,7 @@ $vocab["skip_conflicts"]     = "Ignora conflicte";
 $vocab["no_mail"]            = "Nu trimite email";
 $vocab["ctrl_click"]         = "Foloseste Control-Click pentru a selecta mai multe sali";
 $vocab["entryid"]            = "ID rezervare ";
-$vocab["repeat_id"]          = "ID repetare "; 
+$vocab["repeat_id"]          = "ID repetare ";
 $vocab["brief_description"]  = "Descriere sumara.";
 $vocab["status"]             = "Status";
 $vocab["public"]             = "Public";
@@ -327,7 +327,7 @@ $vocab["delete_entries"]        = "Sterge rezervari";
 $vocab["delete_entries_warning"] = "ATENTIE!  Se vor sterge toate rezervarile continand" .
                                    "string de cautare.  Operatia nu poate fi reversibila.  Esti " .
                                    "sigur ca vrei sa continui?\n\n" .
-                                   "Numar total de rezervari ce vor fi sterse: %%s"; // The % sign is escaped because the string substitution is done by JavaScript
+                                   "Numar total de rezervari ce vor fi sterse: %s";
 $vocab["delete_entries_failed"] = "Rezervarile nu au putut fi sterse.";
 
 // Used in admin.php
@@ -506,7 +506,7 @@ $vocab["restore_original"]   = "Revenire la original";
 $vocab["type."]             = "Selecteaza un tip";
 $vocab["type.I"]            = "Intern";
 $vocab["type.E"]            = "Extern";
- 
+
 // General
 $vocab["fatal_error"]        = "Whoops!  Din nefericire MRBS a intampinat o eroare fatala.  Te rugam sa consulti administratorul sistemului";
 $vocab["fatal_db_error"]     = "Eroare fatala: din nefericire baza de date nu este disponibila momentan.";

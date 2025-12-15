@@ -96,7 +96,7 @@ $vocab["rep_for_nweekly"]    = "(za n-nedeljno)";
 $vocab["skip_conflicts"]     = "Preskoči konflikte koji su prošli";
 $vocab["ctrl_click"]         = "Pritisnite Ctrl da biste označili više prostorija";
 $vocab["entryid"]            = "ID Unosa";
-$vocab["repeat_id"]          = "ID Ponavljanja"; 
+$vocab["repeat_id"]          = "ID Ponavljanja";
 $vocab["brief_description"]  = "Kratak opis.";
 $vocab["status"]             = "Status";
 $vocab["public"]             = "Javno";
@@ -305,7 +305,7 @@ $vocab["delete_entries"]        = "Delete entries";
 $vocab["delete_entries_warning"] = "WARNING!  This will delete all the entries matching " .
                                    "the search string.  The operation cannot be undone.  Are " .
                                    "you sure you want to continue?\n\n" .
-                                   "Total number of entries that will be deleted: %%s"; // The % sign is escaped because the string substitution is done by JavaScript
+                                   "Total number of entries that will be deleted: %s";
 $vocab["delete_entries_failed"] = "The entries could not be deleted.";
 
 // Used in admin.php
@@ -471,7 +471,7 @@ $vocab["type.N"]            = "Neradni dani";
 $vocab["type.IV"]			= "Izborno veće";
 $vocab["type.NNV"]			= "NN veće";
 $vocab["type.SN"]			= "Studijska nedelja";
- 
+
 // General
 $vocab["fatal_db_error"]     = "Fatal error: unfortunately the database is not available at the moment.";
 $vocab["back"]               = "Back";

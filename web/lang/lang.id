@@ -319,7 +319,7 @@ $vocab["delete_entries"]        = "Hapus entri";
 $vocab["delete_entries_warning"] = "PERHATIAN!  Aksi berikut akan menghapus entri yg cocok " .
                                    "sesuai kata kunci yg anda masukkan. Data terhapus tidak dapat dikembalikan lagi. Apakah " .
                                    "anda yakin melanjutkan?\n\n" .
-                                   "Jumlah entri yang akan dihapus: %%s"; // The % sign is escaped because the string substitution is done by JavaScript
+                                   "Jumlah entri yang akan dihapus: %s";
 $vocab["delete_entries_failed"] = "Entri tidak dapat dihapus.";
 
 // Used in admin.php
@@ -432,7 +432,7 @@ $vocab["import_icalendar"]            = "Import berkas kalender iCal";
 $vocab["area_room_settings"]          = "Area dan Ruangan";
 $vocab["other_settings"]              = "Aturan Lain";
 $vocab["import_intro"]                = "Anda bisa mengimpor berkas iCalendar RFC 5545 dengan formulir ini. " .
-                                        "Bila ada event yg berulang lebih dari satu kali pada berkas " . 
+                                        "Bila ada event yg berulang lebih dari satu kali pada berkas " .
                                         "pastikan event tersebut sesuai dengan aturan yg ada di Sistem " .
                                         "agar ikut dalam proses peng-imporan".
 $vocab["file_name"]                   = "Berkas";
@@ -477,7 +477,7 @@ $vocab["restore_original"]   = "Kembalikan ke aturan semula";
 // Entry types
 $vocab["type.I"]            = "Internal";
 $vocab["type.E"]            = "Eksternal";
- 
+
 // General
 $vocab["fatal_db_error"]     = "Kesalahan Fatal: sayangnya database belum siap untuk saat ini.";
 $vocab["back"]               = "Kembali";
