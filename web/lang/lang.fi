@@ -93,7 +93,7 @@ $vocab["rep_for_nweekly"]    = "(määräaikaiselle viikottaiselle)";
 $vocab["skip_conflicts"]     = "Ohita menneet ristiriidat";
 $vocab["ctrl_click"]         = "Pidä CTRL-nappi pohjassa valitaksesi useita huoneita.";
 $vocab["entryid"]            = "Varauksen ID ";
-$vocab["repeat_id"]          = "Toiston ID "; 
+$vocab["repeat_id"]          = "Toiston ID ";
 $vocab["brief_description"]  = "Lyhyt kuvaus";
 $vocab["status"]             = "Tila";
 $vocab["public"]             = "Julkinen";
@@ -150,7 +150,7 @@ $vocab["schedule"]           = "Aikataulu"; //NOTE onko fiksu käännös?
 $vocab["policy"]             = "Käytäntö";
 $vocab["too_many_entries"]   = "Valituilla ehdoilla tulisi liian monta varausta.<br>Valittuja ehtoja on muutettava.";
 $vocab["returncal"]          = "Paluu kalenterinäkymään";
-$vocab["failed_to_acquire"]  = "Tietokantaan ei saatu (varauksetonta) yhteyttä."; 
+$vocab["failed_to_acquire"]  = "Tietokantaan ei saatu (varauksetonta) yhteyttä.";
 $vocab["invalid_booking"]    = "Virheellinen varaus";
 $vocab["must_set_description"] = "Varaukselle tulee asettaa kuvaus. Palaa takaisin ja korjaa puutteet.";
 $vocab["mail_subject_approved"]  = "Varaus hyväksytty yrityksen %s MRBS-järjestelmässä"; // $mrbs_company
@@ -303,7 +303,7 @@ $vocab["delete_entries"]        = "Poista varaukset";
 $vocab["delete_entries_warning"] = "VAROITUS! Olet poistamassa kaikkia hakusanan löytyvät " .
                                    "varaukset. Tämä poistaa varaukset lopullisesti. " .
                                    "Haluatko varmasti jatkaa?\n\n" .
-                                   "Poistettavien merkintöjen määrä: %%s"; // The % sign is escaped because the string substitution is done by JavaScript
+                                   "Poistettavien merkintöjen määrä: %s";
 $vocab["delete_entries_failed"] = "Varauksia ei voitu poistaa.";
 
 // Used in admin.php

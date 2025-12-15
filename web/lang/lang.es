@@ -412,7 +412,7 @@ $vocab["delete_entries"]         = "Eliminar entradas";
 $vocab["delete_entries_warning"] = "¡ATENCIÓN!  Esto eliminará todas las entradas que coinciden " .
                                    "con la cadena buscada.  Esta operación no se puede anular. " .
                                    "¿Está seguro de continuar?\n\n" .
-                                   "Número total de entradas que serán eliminadas: %%s"; // The % sign is escaped because the string substitution is done by JavaScript
+                                   "Número total de entradas que serán eliminadas: %s";
 $vocab["delete_entries_failed"]  = "Las entradas no se pudieron eliminar.";
 // Used in admin.php
 $vocab["edit"]               = "Modificar";

@@ -105,7 +105,7 @@ $vocab["month_relative"]     = "V";
 $vocab["skip_conflicts"]     = "Vynechat předchozí konflikty";
 $vocab["ctrl_click"]         = "Použijte Ctrl + kliknutí pro výběr více místností";
 $vocab["entryid"]            = "ID záznamu";
-$vocab["repeat_id"]          = "ID opakování"; 
+$vocab["repeat_id"]          = "ID opakování";
 $vocab["brief_description"]  = "Krátký popis.";
 $vocab["status"]             = "Stav";
 $vocab["public"]             = "Veřejný";
@@ -318,7 +318,7 @@ $vocab["delete_entries"]        = "Odstranění položek";
 $vocab["delete_entries_warning"] = "UPOZORNĚNÍ! Vymaže všechny položky odpovídající " .
                                    "danému hledanému řetězci. Tuto operaci nelze vrátit zpět. Opravdu " .
                                    "chcete pokračovat?\n\n" .
-                                   "Celkový počet položek, které budou smazány: %%s"; // The % sign is escaped because the string substitution is done by JavaScript
+                                   "Celkový počet položek, které budou smazány: %s";
 $vocab["delete_entries_failed"] = "Položky nemohou být odstraněny.";
 
 // Used in admin.php
