@@ -133,9 +133,21 @@ class NumberFormatter
     self::IGNORE
   ];
 
+  public const VALID_TEXT_ATTRIBUTES = [
+    self::POSITIVE_PREFIX,
+    self::POSITIVE_SUFFIX,
+    self::NEGATIVE_PREFIX,
+    self::NEGATIVE_SUFFIX,
+    self::PADDING_CHARACTER,
+    self::CURRENCY_CODE,
+    self::DEFAULT_RULESET,
+    self::PUBLIC_RULESETS
+  ];
+
   private $attributes;
   private $locale;
   private $style;
+  private $text_attributes;
 
   /**
    * @see \NumberFormatter::__construct()
@@ -178,6 +190,21 @@ class NumberFormatter
     }
 
     $this->attributes[$attribute] = $value;
+    return true;
+  }
+
+
+  /**
+   * @see \NumberFormatter::setTextAttribute()
+   */
+  public function setTextAttribute(int $attribute, string $value): bool
+  {
+    if (!in_array($attribute, self::VALID_TEXT_ATTRIBUTES, true))
+    {
+      return false;
+    }
+
+    $this->text_attributes[$attribute] = $value;
     return true;
   }
 
