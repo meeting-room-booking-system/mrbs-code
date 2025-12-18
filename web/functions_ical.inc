@@ -5,6 +5,8 @@ namespace MRBS;
 use GuzzleHttp\Client;
 use MRBS\DB\DBException;
 use MRBS\DB\DBStatement;
+use MRBS\ICalendar\Event;
+use MRBS\ICalendar\Property;
 use MRBS\ICalendar\RFC5545;
 use MRBS\ICalendar\RFC5545Exception;
 use MRBS\ICalendar\Series;
@@ -396,12 +398,229 @@ function get_repeat_rule(string $rrule, int $start_time, array &$errors)
 function create_ical_event(string $method, array $data, ?array $addresses=null, bool $series=false) : string
 {
   require_once "functions_mail.inc";
+  // TODO: custom fields
 
   global $mail_settings, $timezone, $default_area_room_delimiter;
   global $partstat_accepted;
 
   $vtimezone = get_vtimezone($timezone);
 
+  $event = new Event();
+  // REQUIRED properties, but MUST NOT occur more than once
+  $event->addProperty(new Property('UID', $data['ical_uid']));
+  $event->addProperty(new Property('DTSTAMP', gmdate(RFC5545::DATETIME_FORMAT . '\Z')));
+  // Optional properties
+  $last_modified = empty($data['last_updated']) ? time() : $data['last_updated'];
+  $event->addProperty(new Property('LAST-MODIFIED', gmdate(RFC5545::DATETIME_FORMAT . '\Z', $last_modified)));
+
+  // Note: we try and write the event times in the format of a local time with
+  // a timezone reference (ie RFC 5545 Form #3).   Only if we can't do that do we
+  // fall back to a UTC time (ie RFC 5545 Form #2).
+  //
+  // The reason for this is that although this is not required by RFC 5545 (see
+  // Appendix A.2), its predecessor, RFC 2445, did require it for recurring
+  // events and is the standard against which older applications, notably Exchange
+  // 2007, are written.   Note also that when using a local timezone format the
+  // VTIMEZONE component must be provided (this is done in create_icalendar() ).  Some
+  // applications will work without the VTIMEZONE component, but many follow the
+  // standard and do require it.  Here is an extract from RFC 2445:
+
+  // 'When used with a recurrence rule, the "DTSTART" and "DTEND" properties MUST be
+  // specified in local time and the appropriate set of "VTIMEZONE" calendar components
+  // MUST be included.'
+
+  if ($vtimezone === false)
+  {
+    $event->addProperty(new Property('DTSTART', gmdate(RFC5545::DATETIME_FORMAT . '\Z', $data['start_time'])));
+    $event->addProperty(new Property('DTEND', gmdate(RFC5545::DATETIME_FORMAT . '\Z', $data['end_time'])));
+  }
+  else
+  {
+    $property = new Property('DTSTART', date(RFC5545::DATETIME_FORMAT, $data['start_time']));
+    $property->addParameter('TZID', $timezone);
+    $event->addProperty($property);
+    $property = new Property('DTEND', date(RFC5545::DATETIME_FORMAT, $data['end_time']));
+    $property->addParameter('TZID', $timezone);
+    $event->addProperty($property);
+  }
+
+  if ($series)
+  {
+    $event->addProperty(new Property('RRULE', $data['repeat_rule']->toRFC5545Rule()));
+    if (!empty($data['skip_list']))
+    {
+      $property = new Property('EXDATE', RFC5545::createExdateList($data['skip_list'], ($vtimezone === false) ? null : $timezone));
+      if ($vtimezone !== false)
+      {
+        $property->addParameter('TZID', $timezone);
+      }
+    }
+    // TODO: validate property method in Event
+    // TODO: do quoting in toString??
+    // TODO: eliminate duplicate code in createEXDATEProperty()
+  }
+
+  $event->addProperty(new Property('SUMMARY', $data['name']));
+  if (isset($data['description']))
+  {
+    $event->addProperty(new Property('DESCRIPTION', $data['description']));
+  }
+  $event->addProperty(new Property('LOCATION', $data['area_name'] . $default_area_room_delimiter . $data['room_name']));
+  $event->addProperty(new Property('SEQUENCE', $data['ical_sequence']));
+  // If this is an individual member of a series, then set the recurrence id.
+  if (!$series && ($data['entry_type'] != ENTRY_SINGLE))
+  {
+    $event->addProperty(new Property('RECURRENCE-ID', $data['ical_recur_id']));
+  }
+  // STATUS: As we can have confirmed and tentative bookings, we will send that information
+  // in the Status property, as some calendar apps will use it.  For example, Outlook 2007 will
+  // distinguish between tentative and confirmed bookings.  However, having sent it, we need to
+  // send a STATUS:CANCELLED on cancellation.  It's not clear from the spec whether this is
+  // strictly necessary, but it can do no harm, and there are some apps that seem to need it -
+  // for example, Outlook 2003 (but not 2007).
+  if ($method === 'CANCEL')
+  {
+    $status = 'CANCELLED';
+  }
+  else
+  {
+    $status = ($data['tentative']) ? 'TENTATIVE' : 'CONFIRMED';
+  }
+  $event->addProperty(new Property('STATUS', $status));
+
+  /*
+  Class is commented out for the moment.  To be useful it probably needs to go
+  hand in hand with an ORGANIZER, otherwise people won't be able to see their own
+  bookings
+  $event->addProperty(new Property('CLASS', ($data['private']) ? 'PRIVATE' : 'PUBLIC'));
+  */
+
+  // ORGANIZER
+  // The organizer is MRBS.  We don't make the create_by user the organizer because there
+  // are some mail systems such as IBM Domino that silently discard the email notification
+  // if the organizer's email address is the same as the recipient's - presumably because
+  // they assume that the recipient already knows about the event.
+
+  $organizer_addresses = parse_addresses($mail_settings['organizer']);
+  if (empty($organizer_addresses))
+  {
+    // TODO: Review whether the ORGANIZER property is required.
+    // RFC 5545 states:
+    // "This property MUST be specified in an iCalendar object
+    // that specifies a group-scheduled calendar entity.  This property
+    // MUST be specified in an iCalendar object that specifies the
+    // publication of a calendar user's busy time.  This property MUST
+    // NOT be specified in an iCalendar object that specifies only a time
+    // zone definition or that defines calendar components that are not
+    // group-scheduled components, but are components only on a single
+    // user's calendar."
+    // Does MRBS count as a user? If so, does this mean that as long as
+    // there is at least one ATTENDEE the property MUST be specified?
+    $message = "The value '" . $mail_settings['organizer'] . "' supplied for " . '$mail_settings["organizer"]' .
+      " is not a valid RFC822-style email address.  Please check your MRBS config file.";
+    throw new Exception($message);
+  }
+
+  $organizer = $organizer_addresses[0];
+  if (isset($organizer['address']) && ($organizer['address'] !== ''))
+  {
+    if (!isset($organizer['name']) || ($organizer['name'] === ''))
+    {
+      $organizer['name'] = get_mail_vocab('mrbs');
+    }
+    $property = new Property('ORGANIZER', 'mailto:' . $organizer['address']);
+    $property->addParameter('CN', $organizer['name']);
+    $event->addProperty($property);
+  }
+
+  // Put the people on the "to" list as required participants and those on the cc
+  // list as non-participants.  In theory the email client can then decide whether
+  // to enter the booking automatically on the user's calendar - although at the
+  // time of writing (Dec 2010) there don't seem to be any that do so!
+  if (!empty($addresses))
+  {
+    $attendees = $addresses;  // take a copy of $addresses as we're going to alter it
+    $keys = array('to', 'cc');  // We won't do 'bcc' as they need to stay blind
+    foreach ($keys as $key)
+    {
+      $attendees[$key] = parse_addresses($attendees[$key]);  // convert the list into an array
+    }
+    foreach ($keys as $key)
+    {
+      foreach ($attendees[$key] as $attendee)
+      {
+        if (!empty($attendee))
+        {
+          switch ($key)
+          {
+            case 'to':
+              $role = "REQ-PARTICIPANT";
+              break;
+            default:
+              if (in_array($attendee, $attendees['to']))
+              {
+                // It's possible that an address could appear on more than one
+                // line, in which case we only want to have one ATTENDEE property
+                // for that address and we'll choose the REQ-PARTICIPANT.   (Apart
+                // from two conflicting ATTENDEES not making sense, it also breaks
+                // some applications, eg Apple Mail/iCal)
+                continue 2;  // Move on to the next attendeee
+              }
+              $role = "NON-PARTICIPANT";
+              break;
+          }
+          $property = new Property('ATTENDEE', 'mailto:' . $attendee['address']);
+          // Use the common name if there is one
+          if (isset($attendee['name']) && ($attendee['name'] !== ''))
+          {
+            $property->addParameter('CN', $attendee['name']);
+          }
+          $property->addParameter('ROLE', $role);
+          $property->addParameter('PARTSTAT', ($partstat_accepted) ? 'ACCEPTED' : 'NEEDS-ACTION');
+          $event->addProperty($property);
+        }
+      }
+    }
+  }
+
+  // MRBS specific properties
+  // Type
+  $event->addProperty(new Property('X-MRBS-TYPE', get_type_vocab($data['type'])));
+
+  // Registration properties
+  if (isset($data['allow_registration']))
+  {
+    $properties = [
+      'allow_registration',
+      'registrant_limit',
+      'registrant_limit_enabled',
+      'registration_opens',
+      'registration_opens_enabled',
+      'registration_closes',
+      'registration_closes_enabled'
+    ];
+    foreach ($properties as $property)
+    {
+      $event->addProperty(new Property('X-MRBS-' . strtoupper(str_replace('_', '-', $property)), strval($data[$property])));
+    }
+    // Registrants (but only for individual entries)
+    if (!$series)
+    {
+      $registrants = get_registrants($data['id'], false);
+      foreach ($registrants as $registrant)
+      {
+        // We can't use the ATTENDEE property because its value has to be a URI.
+        $property = new Property('X-MRBS-REGISTRANT', $registrant['username']);
+        $property->addParameter('X-MRBS-REGISTERED', strval($registrant['registered']));
+        $property->addParameter('X-MRBS-CREATE-BY', $registrant['create_by']);
+        $event->addProperty($property);
+      }
+    }
+  }
+
+  return $event->toString();
+
+  // FOR THE MOMENT KEEP THE OLD CODE FOR TESTING
   $results = array();
 
   $results[] = "BEGIN:VEVENT";
@@ -600,6 +819,13 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
 
   $results[] = "END:VEVENT";
 
+  if ($event->toString() !== implode(RFC5545::EOL, $results))
+  {
+    echo $event->toString();
+    echo implode(RFC5545::EOL, $results);
+    exit;
+  }
+
   // No CRLF at end: that will be added later
   return implode(RFC5545::EOL, $results);
 }
@@ -693,7 +919,7 @@ function export_icalendar(DBStatement $res, bool $keep_private, int $export_end=
     // If this is an individual entry, then construct an event
     if (!isset($row['rep_type']) || ($row['rep_type'] == RepeatRule::NONE))
     {
-      $ical_events[] = create_ical_event($method, $row);
+      $ical_events[] = trim(create_ical_event($method, $row), "\r\n");
     }
 
     // Otherwise it's a series

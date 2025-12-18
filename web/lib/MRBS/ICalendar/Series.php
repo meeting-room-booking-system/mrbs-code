@@ -99,14 +99,14 @@ class Series
     $events = array();
 
     $this->repeat['skip_list'] = array_diff($this->expected_start_times, $this->actual_start_times);
-    $events[] = create_ical_event($method, $this->repeat, null, true);
+    $events[] = trim(create_ical_event($method, $this->repeat, null, true), "\r\n");
 
     // Then iterate through the series looking for changed entries
     foreach($this->data as $entry)
     {
       if ($entry['entry_type'] == ENTRY_RPT_CHANGED)
       {
-        $events[] = create_ical_event($method, $entry);
+        $events[] = trim(create_ical_event($method, $entry), "\r\n");
       }
     }
 

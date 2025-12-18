@@ -127,6 +127,25 @@ class RFC5545
   }
 
 
+  public static function createExdateList(array $timestamps, ?string $timezone) : array
+  {
+    $dates = array();
+
+    foreach ($timestamps as $timestamp)
+    {
+      if (isset($timezone))
+      {
+        $dates[] = date(self::DATETIME_FORMAT, $timestamp);
+      }
+      else
+      {
+        $dates[] = gmdate(self::DATETIME_FORMAT . '\Z', $timestamp);
+      }
+    }
+
+    return $dates;
+  }
+
   // Returns a UNIX timestamp given an RFC5545 date or date-time
   // $params is an optional second argument and is an array of property parameters
   public static function getTimestamp(string $value, ?array $params=null) : int
