@@ -104,24 +104,13 @@ class RFC5545
   public static function createExdateProperty(array $timestamps, ?string $timezone) : string
   {
     $result = "EXDATE";
-    $dates = array();
 
     if (isset($timezone))
     {
       $result .= ";TZID=$timezone";
     }
 
-    foreach ($timestamps as $timestamp)
-    {
-      if (isset($timezone))
-      {
-        $dates[] = date(self::DATETIME_FORMAT, $timestamp);
-      }
-      else
-      {
-        $dates[] = gmdate(self::DATETIME_FORMAT . '\Z', $timestamp);
-      }
-    }
+    $dates = self::createExdateList($timestamps, $timezone);
 
     return "$result:" . implode(',', $dates);
   }

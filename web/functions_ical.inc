@@ -455,8 +455,6 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
         $property->addParameter('TZID', $timezone);
       }
     }
-
-    // TODO: eliminate duplicate code in createEXDATEProperty()
   }
 
   $event->addProperty(new Property('SUMMARY', $data['name']));
