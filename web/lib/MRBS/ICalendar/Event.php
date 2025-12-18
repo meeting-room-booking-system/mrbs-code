@@ -73,7 +73,7 @@ class Event extends Component
   }
 
 
-  public function addProperty(Property $property) : void
+  public function validateProperty(Property $property) : void
   {
     $name = $property->getName();
 
@@ -115,8 +115,6 @@ class Event extends Component
     {
       trigger_error("Property '$name' is recommended to be set only once", E_USER_WARNING);
     }
-
-    parent::addProperty($property);
   }
 
 }

@@ -10,8 +10,11 @@ abstract class Component
 
   public function addProperty(Property $property) : void
   {
+    $this->validateProperty($property);
     $this->properties[] = $property;
   }
+
+  abstract public function validateProperty(Property $property) : void;
 
   public function toString(): string
   {
