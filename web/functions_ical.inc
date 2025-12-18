@@ -397,7 +397,6 @@ function get_repeat_rule(string $rrule, int $start_time, array &$errors)
 // Create an RFC 5545 iCalendar Event component
 function create_ical_event(string $method, array $data, ?array $addresses=null, bool $series=false) : string
 {
-  require_once "functions_mail.inc";
   // TODO: custom fields
 
   global $mail_settings, $timezone, $default_area_room_delimiter;
@@ -618,6 +617,8 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
   return $event->toString();
 
   // FOR THE MOMENT KEEP THE OLD CODE FOR TESTING
+  require_once "functions_mail.inc";
+
   $results = array();
 
   $results[] = "BEGIN:VEVENT";
