@@ -33,6 +33,11 @@ abstract class Component
 
   public function addProperty(Property $property) : self
   {
+    if (isset($this->content))
+    {
+      throw new \LogicException('Cannot add properties to a component once it has been converted to a string');
+    }
+
     $this->validateProperty($property);
     $this->properties[] = $property;
     return $this;
