@@ -4,9 +4,6 @@ namespace MRBS\ICalendar;
 
 use DateTimeZone;
 use MRBS\DateTime;
-use MRBS\Exception;
-use MRBS\Language;
-use MRBS\Utf8\Utf8String;
 use function MRBS\get_vocab;
 
 class RFC5545
