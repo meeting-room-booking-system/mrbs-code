@@ -837,41 +837,25 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
 //    $components  array    an array of iCalendar components, each a string
 function create_icalendar(string $method, array $components) : string
 {
-  require_once "version.inc";
-
   global $timezone;
 
-  $vtimezone = get_vtimezone($timezone);
-
-  $results = array();
-  $results[] = "BEGIN:VCALENDAR";
-  // Compulsory properties
-  $results[] = "PRODID:-//MRBS//NONSGML " . get_mrbs_version() . "//EN";
-  $results[] = "VERSION:2.0";
-  // Optional properties
-  $results[] = "CALSCALE:GREGORIAN";
-  $results[] = "METHOD:$method";
+  $calendar = new Calendar($method);
 
   // Add in the VTIMEZONE component if there is one (see the comment in
   // create_ical_event() above)
+  $vtimezone = get_vtimezone($timezone);
   if ($vtimezone)
   {
-    $results[] = $vtimezone;
+    $calendar->addComponent(new Timezone($vtimezone));
   }
 
   // Add in each component
   foreach ($components as $component)
   {
-    $results[] = $component;
+    $calendar->addComponent(new Event($component));
   }
 
-  $results[] = "END:VCALENDAR";
-
-  $result = implode(RFC5545::EOL, $results);
-  $result .= RFC5545::EOL;  // Has to end with the correct line ending
-  $result = RFC5545::fold($result);
-
-  return $result;
+  return $calendar->toString();
 }
 
 
@@ -959,7 +943,6 @@ function export_icalendar(DBStatement $res, bool $keep_private, int $export_end=
             $calendar->addComponents($series->toEvents($method));
           }
         }
-
       }
     }
   }
