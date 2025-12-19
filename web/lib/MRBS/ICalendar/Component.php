@@ -31,10 +31,11 @@ abstract class Component
   abstract public function validateProperty(Property $property) : void;
 
 
-  public function addProperty(Property $property) : void
+  public function addProperty(Property $property) : self
   {
     $this->validateProperty($property);
     $this->properties[] = $property;
+    return $this;
   }
 
 
