@@ -10,6 +10,11 @@ abstract class Component
   protected $content = null;
   protected $properties = [];
 
+
+  /**
+   * Constructor. Can either be called with no arguments, and then properties can be added
+   * later, or with a string containing the component content.
+   */
   public function __construct(?string $content = null)
   {
     if (isset($content))
@@ -22,13 +27,16 @@ abstract class Component
     }
   }
 
+
+  abstract public function validateProperty(Property $property) : void;
+
+
   public function addProperty(Property $property) : void
   {
     $this->validateProperty($property);
     $this->properties[] = $property;
   }
 
-  abstract public function validateProperty(Property $property) : void;
 
   public function toString(): string
   {
