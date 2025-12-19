@@ -13,6 +13,7 @@ class Calendar
   private $components = [];
   private $properties = [];
 
+
   public function __construct(?string $method=null)
   {
     $this->properties[] = new Property('PRODID', '-//MRBS//NONSGML ' . get_mrbs_version() . '//EN');
@@ -25,18 +26,20 @@ class Calendar
   }
 
 
-  public function addComponent(Component $component)
+  public function addComponent(Component $component) : self
   {
     $this->components[] = $component;
+    return $this;
   }
 
 
-  public function addComponents(array $components)
+  public function addComponents(array $components) : self
   {
     foreach ($components as $component)
     {
       $this->addComponent($component);
     }
+    return $this;
   }
 
   public function toString(): string
