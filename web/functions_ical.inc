@@ -5,11 +5,13 @@ namespace MRBS;
 use GuzzleHttp\Client;
 use MRBS\DB\DBException;
 use MRBS\DB\DBStatement;
+use MRBS\ICalendar\Calendar;
 use MRBS\ICalendar\Event;
 use MRBS\ICalendar\Property;
 use MRBS\ICalendar\RFC5545;
 use MRBS\ICalendar\RFC5545Exception;
 use MRBS\ICalendar\Series;
+use MRBS\ICalendar\Timezone;
 use PHPMailer\PHPMailer\PHPMailer;
 
 
@@ -397,6 +399,7 @@ function get_repeat_rule(string $rrule, int $start_time, array &$errors)
 // Create an RFC 5545 iCalendar Event component
 function create_ical_event(string $method, array $data, ?array $addresses=null, bool $series=false) : string
 {
+  // TODO: return an Event object, rather than a string
   // TODO: custom fields
 
   global $mail_settings, $timezone, $default_area_room_delimiter;
@@ -882,6 +885,8 @@ function create_icalendar(string $method, array $components) : string
 //    $export_end int       a Unix timestamp giving the end limit for the export
 function export_icalendar(DBStatement $res, bool $keep_private, int $export_end=PHP_INT_MAX) : void
 {
+  global $timezone;
+
   require_once "functions_view.inc";
   require_once "mrbs_sql.inc";
 
@@ -901,10 +906,13 @@ function export_icalendar(DBStatement $res, bool $keep_private, int $export_end=
   // we're just exporting the calendar.   Furthermore, if we don't use PUBLISH then some
   // calendar apps (eg Outlook, at least 2010 and 2013) won't open the full calendar.
   $method = "PUBLISH";
+  $calendar = new Calendar($method);
+  $vtimezone = get_vtimezone($timezone);
+  if ($vtimezone)
+  {
+    $calendar->addComponent(new Timezone($vtimezone));
+  }
 
-  // Initialize an array to hold the events and a variable to keep track
-  // of the last repeat id we've seen
-  $ical_events = array();
   $n_rows = $res->count();
 
   for ($i=0; (false !== ($row = $res->next_row_keyed())); $i++)
@@ -917,7 +925,7 @@ function export_icalendar(DBStatement $res, bool $keep_private, int $export_end=
     // If this is an individual entry, then construct an event
     if (!isset($row['rep_type']) || ($row['rep_type'] == RepeatRule::NONE))
     {
-      $ical_events[] = trim(create_ical_event($method, $row), "\r\n");
+      $calendar->addComponent(new Event(create_ical_event($method, $row)));
     }
 
     // Otherwise it's a series
@@ -939,7 +947,7 @@ function export_icalendar(DBStatement $res, bool $keep_private, int $export_end=
       // rows, then process the series
       if (($row['repeat_id'] != $series->repeat_id) || ($i == $n_rows - 1))
       {
-        $ical_events = array_merge($ical_events, $series->toEvents($method));
+        $calendar->addComponents($series->toEvents($method));
         // If we're at the start of a new series then create a new series
         if ($row['repeat_id'] != $series->repeat_id)
         {
@@ -948,7 +956,7 @@ function export_icalendar(DBStatement $res, bool $keep_private, int $export_end=
           // then process the new series
           if ($i == $n_rows - 1)
           {
-            $ical_events = array_merge($ical_events, $series->toEvents($method));
+            $calendar->addComponents($series->toEvents($method));
           }
         }
 
@@ -956,7 +964,5 @@ function export_icalendar(DBStatement $res, bool $keep_private, int $export_end=
     }
   }
 
-  // Build the iCalendar from the array of events and output it
-  $icalendar = create_icalendar($method, $ical_events);
-  echo $icalendar;
+  echo $calendar->toString();
 }

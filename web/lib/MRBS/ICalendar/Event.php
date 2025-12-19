@@ -4,6 +4,8 @@ namespace MRBS\ICalendar;
 
 class Event extends Component
 {
+  protected const NAME = 'VEVENT';
+
   /**
    * The following are REQUIRED, but MUST NOT occur more than once.
    */
@@ -65,12 +67,6 @@ class Event extends Component
   ];
 
   private $property_names = [];
-
-
-  public function __construct()
-  {
-    $this->name = 'VEVENT';
-  }
 
 
   public function validateProperty(Property $property) : void

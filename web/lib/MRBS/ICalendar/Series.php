@@ -106,7 +106,7 @@ class Series
     {
       if ($entry['entry_type'] == ENTRY_RPT_CHANGED)
       {
-        $events[] = trim(create_ical_event($method, $entry), "\r\n");
+        $events[] = new Event(create_ical_event($method, $entry));
       }
     }
 

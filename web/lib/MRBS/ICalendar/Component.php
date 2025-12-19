@@ -4,9 +4,23 @@ namespace MRBS\ICalendar;
 
 abstract class Component
 {
-  protected $name;
+  // Self-referential 'abstract' declaration.  Must be overridden by subclasses.
+  protected const NAME = self::NAME;
 
+  protected $content = null;
   protected $properties = [];
+
+  public function __construct(?string $content = null)
+  {
+    if (isset($content))
+    {
+      if (!str_ends_with($content, RFC5545::EOL))
+      {
+        $content .= RFC5545::EOL;
+      }
+      $this->content = $content;
+    }
+  }
 
   public function addProperty(Property $property) : void
   {
@@ -18,15 +32,19 @@ abstract class Component
 
   public function toString(): string
   {
-    $result = 'BEGIN:' . $this->name . RFC5545::EOL;
-
-    foreach ($this->properties as $property)
+    if (!isset($this->content))
     {
-      $result .= $property->toString();
+      $this->content = 'BEGIN:' . static::NAME . RFC5545::EOL;
+
+      foreach ($this->properties as $property)
+      {
+        $this->content .= $property->toString();
+      }
+
+      $this->content .= 'END:' . static::NAME . RFC5545::EOL;
     }
 
-    $result .= 'END:' . $this->name . RFC5545::EOL;
-    return $result;
+    return $this->content;
   }
 
 }
