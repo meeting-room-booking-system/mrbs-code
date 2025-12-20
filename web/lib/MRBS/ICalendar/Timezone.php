@@ -50,7 +50,7 @@ class Timezone extends Component
           if (isset($vtimezone))
           {
             // We've got a valid VTIMEZONE, so we can update the database and the static variable
-            self::updateDb($tz, $vtimezone);
+            self::upsertDb($tz, $vtimezone);
             $vtimezones[$tz] = new self($vtimezone);
           }
           else
@@ -71,7 +71,7 @@ class Timezone extends Component
         if (isset($vtimezone))
         {
           // And put it in the database if it's valid
-          self::insertIntoDb($tz, $vtimezone);
+          self::upsertDb($tz, $vtimezone);
           $vtimezones[$tz] = new self($vtimezone);
         }
         else
@@ -192,45 +192,6 @@ class Timezone extends Component
   }
 
 
-  // Insert a new VTIMEZONE definition for a timezone into the database
-  private static function insertIntoDb(string $tz, string $vtimezone) : void
-  {
-    global $zoneinfo_outlook_compatible;
-
-    try
-    {
-      $sql = "INSERT INTO " . _tbl('zoneinfo') . "
-                          (vtimezone, last_updated, timezone, outlook_compatible)
-                   VALUES (:vtimezone, :last_updated, :timezone, :outlook_compatible)";
-
-      $sql_params = array(
-        ':vtimezone' => $vtimezone,
-        ':last_updated' => time(),
-        ':timezone' => $tz,
-        ':outlook_compatible' => ($zoneinfo_outlook_compatible) ? 1 : 0
-      );
-
-      db()->command($sql, $sql_params);
-    }
-    catch (DBException $e)
-    {
-      // Catch any database exception because it's just possible that someone else has inserted a row just
-      // before us and then we'll get an error because of the unique constraint.   If we do then that's
-      // fine and we can ignore it, but trigger an error anyway just in case it's some other kind of error.
-      // (Ideally we'd want to be more specific about looking for constraint errors, but we have to consider
-      // both MySQL and PostgreSQL).
-      //
-      // We could have used an INSERT IGNORE, but there isn't an easy PostgreSQL alternative until
-      // PostgreSQL 9.5.
-      //
-      // We can't put a mutex lock round the SELECT - INSERT operation because we're normally already
-      // inside another lock from edit_entry_handler and you can only, in the MYSQL implementation, have
-      // one active lock.
-      trigger_error($e->getMessage(), E_USER_NOTICE);
-    }
-  }
-
-
   // Update the last_updated time for a timezone in the database
   private static function touchDb(string $tz) : void
   {
@@ -251,24 +212,22 @@ class Timezone extends Component
   }
 
 
-  // Update the database with a new VTIMEZONE definition for a timezone
-  private static function updateDb(string $tz, string $vtimezone) : void
+  /**
+   * Inserts or updates a database record in the `zoneinfo` table with the VTIMEZONE data
+   * for a timezone.
+   */
+  private static function upsertDb(string $tz, string $vtimezone) : void
   {
     global $zoneinfo_outlook_compatible;
 
-    $sql = "UPDATE " . _tbl('zoneinfo') . "
-               SET vtimezone=:vtimezone,
-                   last_updated=:last_updated
-             WHERE timezone=:timezone
-               AND outlook_compatible=:outlook_compatible";
-
-    $sql_params = array(
-      ':vtimezone' => $vtimezone,
-      ':last_updated' => time(),
-      ':timezone' => $tz,
-      ':outlook_compatible' => ($zoneinfo_outlook_compatible) ? 1 : 0
-    );
-
+    $sql_params = [];
+    $data = [
+      'vtimezone' => $vtimezone,
+      'last_updated' => time(),
+      'timezone' => $tz,
+      'outlook_compatible' => ($zoneinfo_outlook_compatible) ? 1 : 0
+    ];
+    $sql = db()->syntax_upsert($data, _tbl('zoneinfo'), $sql_params,  ['timezone', 'outlook_compatible'], ['id'], true);
     db()->command($sql, $sql_params);
   }
 
