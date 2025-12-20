@@ -20,6 +20,13 @@ class Property
   }
 
 
+  public static function createFromLine(string $line) : self
+  {
+    // TODO: implement
+
+  }
+
+
   /**
    * Adds a parameter to the propert
    *
@@ -86,6 +93,26 @@ class Property
   private static function escapeText(string $text) : string
   {
     return RFC5545::escapeText($text);
+  }
+
+
+  /**
+   * Reverses RFC 5545 escaping of text.
+   */
+  private static function unescapeText(string $str) : string
+  {
+    // Unescape '\N'
+    $str = str_replace("\\N", "\N", $str);
+    // Unescape '\n'
+    $str = str_replace("\\n", "\n", $str);
+    // Unescape ','
+    $str = str_replace("\,", ",", $str);
+    // Unescape ';'
+    $str = str_replace("\;", ";", $str);
+    // Unescape '\'
+    $str = str_replace("\\\\", "\\", $str);
+
+    return $str;
   }
 
 }
