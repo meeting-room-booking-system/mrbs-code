@@ -32,14 +32,14 @@ class Timezone extends Component
    */
   public static function createFromTimezoneName (string $tz)
   {
-    global $zoneinfo_update, $zoneinfo_expiry;
+    global $zoneinfo_update, $zoneinfo_expiry, $zoneinfo_outlook_compatible;
 
     static $vtimezones = array();  // Cache the components for performance
 
     if (!isset($vtimezones[$tz]))
     {
       // Look for a timezone definition in the database
-      $vtimezone_db = self::getFromDb($tz);
+      $vtimezone_db = self::getFromDb($tz, $zoneinfo_outlook_compatible);
       if (isset($vtimezone_db['vtimezone']))
       {
         $vtimezones[$tz] = new self($vtimezone_db['vtimezone']);
@@ -50,7 +50,7 @@ class Timezone extends Component
           if (isset($vtimezone))
           {
             // We've got a valid VTIMEZONE, so we can update the database and the static variable
-            self::upsertDb($tz, $vtimezone);
+            self::upsertDb($tz, $zoneinfo_outlook_compatible, $vtimezone);
             $vtimezones[$tz] = new self($vtimezone);
           }
           else
@@ -60,18 +60,18 @@ class Timezone extends Component
             // This will mean that we don't keep encountering a timeout delay. (The most
             // likely reason that we couldn't get a new VTIMEZONE is that the site doesn't
             // have external internet access, so there's no point in retrying for a while).
-            self::touchDb($tz);
+            self::touchDb($tz, $zoneinfo_outlook_compatible);
           }
         }
       }
       else
       {
         // If there's nothing in the database, get one from the filesystem
-        $vtimezone = self::getFromFile($tz);
+        $vtimezone = self::getFromFile($tz, $zoneinfo_outlook_compatible);
         if (isset($vtimezone))
         {
           // And put it in the database if it's valid
-          self::upsertDb($tz, $vtimezone);
+          self::upsertDb($tz, $zoneinfo_outlook_compatible, $vtimezone);
           $vtimezones[$tz] = new self($vtimezone);
         }
         else
@@ -93,10 +93,8 @@ class Timezone extends Component
    * @return array{'vtimezone': string, 'last_updated': int} Returns an associative array containing the
    *    timezone information and last updated timestamp, or null if no matching record is found.
    */
-  private static function getFromDb(string $tz) : ?array
+  private static function getFromDb(string $tz, bool $zoneinfo_outlook_compatible) : ?array
   {
-    global $zoneinfo_outlook_compatible;
-
     $sql = "SELECT vtimezone, last_updated
               FROM " . _tbl('zoneinfo') . "
              WHERE timezone=:timezone
@@ -124,10 +122,8 @@ class Timezone extends Component
   /**
    * Fetch the VTIMEZONE component from a file for a given timezone identifier.
    */
-  private static function getFromFile(string $tz) : ?string
+  private static function getFromFile(string $tz, bool $zoneinfo_outlook_compatible) : ?string
   {
-    global $zoneinfo_outlook_compatible;
-
     $tz_dir = ($zoneinfo_outlook_compatible) ? TZDIR_OUTLOOK : TZDIR;
     $tz_file = "$tz_dir/$tz.ics";
 
@@ -193,10 +189,8 @@ class Timezone extends Component
 
 
   // Update the last_updated time for a timezone in the database
-  private static function touchDb(string $tz) : void
+  private static function touchDb(string $tz, bool $zoneinfo_outlook_compatible) : void
   {
-    global $zoneinfo_outlook_compatible;
-
     $sql = "UPDATE " . _tbl('zoneinfo') . "
                SET last_updated=:last_updated
              WHERE timezone=:timezone
@@ -216,10 +210,8 @@ class Timezone extends Component
    * Inserts or updates a database record in the `zoneinfo` table with the VTIMEZONE data
    * for a timezone.
    */
-  private static function upsertDb(string $tz, string $vtimezone) : void
+  private static function upsertDb(string $tz, bool $zoneinfo_outlook_compatible, string $vtimezone) : void
   {
-    global $zoneinfo_outlook_compatible;
-
     $sql_params = [];
     $data = [
       'vtimezone' => $vtimezone,
