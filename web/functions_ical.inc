@@ -14,244 +14,6 @@ use MRBS\ICalendar\Series;
 use MRBS\ICalendar\Timezone;
 use PHPMailer\PHPMailer\PHPMailer;
 
-
-// Gets a VTIMEZONE definition from the file system.
-// Returns NULL if none found or it's empty.
-function get_vtimezone_file(string $tz) : ?string
-{
-  global $zoneinfo_outlook_compatible;
-
-  $tz_dir = ($zoneinfo_outlook_compatible) ? TZDIR_OUTLOOK : TZDIR;
-  $tz_file = "$tz_dir/$tz.ics";
-
-  if (!is_readable($tz_file))
-  {
-    return null;
-  }
-
-  $vcalendar = file_get_contents($tz_file);
-
-  if (empty($vcalendar))
-  {
-    return null;
-  }
-
-  $vtimezone = RFC5545::extractVtimezone($vcalendar);
-
-  return (empty($vtimezone)) ? null : $vtimezone;
-}
-
-
-// Gets a VTIMEZONE definition from the TZURL defined in the $vtimezone component
-function get_vtimezone_url(string $vtimezone) : ?string
-{
-  // (Note that a VTIMEZONE component can contain a TZURL property which
-  // gives the URL of the most up-to-date version.  Calendar applications
-  // should be able to check this themselves, but we might as well give them
-  // the most up-to-date version in the first place).
-  $properties = explode("\r\n", RFC5545::unfold($vtimezone));
-  foreach ($properties as $property)
-  {
-    if (mb_strpos($property, "TZURL:") === 0)
-    {
-      $tz_url = mb_substr($property, 6);  // 6 is the length of "TZURL:"
-      break;
-    }
-  }
-
-  if (!isset($tz_url))
-  {
-    trigger_error("The VTIMEZONE component didn't contain a TZURL property.", E_USER_NOTICE);
-    return null;
-  }
-
-  try {
-    $vcalendar = (new Client())->get($tz_url)->getBody()->getContents();
-  }
-  catch (\Exception $e) {
-    trigger_error(get_class($e) . ': ' . $e->getMessage(), E_USER_WARNING);
-    trigger_error("MRBS: failed to download a new timezone definition from $tz_url", E_USER_WARNING);
-    return null;
-  }
-
-  $new_vtimezone = RFC5545::extractVtimezone($vcalendar);
-  if (empty($new_vtimezone))
-  {
-    trigger_error("MRBS: $tz_url did not contain a valid VTIMEZONE", E_USER_WARNING);
-    return null;
-  }
-
-  return $new_vtimezone;
-}
-
-
-// Get a VTIMEZONE definition from the database.  Returns an array indexed by
-// 'vtimezone' and 'last_updated', or NULL if none found.
-function get_vtimezone_db(string $tz) : ?array
-{
-  global $zoneinfo_outlook_compatible;
-
-  $sql = "SELECT vtimezone, last_updated
-            FROM " . _tbl('zoneinfo') . "
-           WHERE timezone=:timezone
-             AND outlook_compatible=:outlook_compatible
-           LIMIT 1";
-
-  $sql_params = array(
-    ':timezone' => $tz,
-    ':outlook_compatible' => ($zoneinfo_outlook_compatible) ? 1 : 0
-  );
-
-  $res = db()->query($sql, $sql_params);
-
-  return ($res->count() === 0) ? null : $res->next_row_keyed();
-}
-
-
-// Update the last_updated time for a timezone in the database
-function touch_vtimezone_db(string $tz) : void
-{
-  global $zoneinfo_outlook_compatible;
-
-  $sql = "UPDATE " . _tbl('zoneinfo') . "
-             SET last_updated=:last_updated
-           WHERE timezone=:timezone
-             AND outlook_compatible=:outlook_compatible";
-
-  $sql_params = array(
-    ':last_updated' => time(),
-    ':timezone' => $tz,
-    ':outlook_compatible' => ($zoneinfo_outlook_compatible) ? 1 : 0
-  );
-
-  db()->command($sql, $sql_params);
-}
-
-
-// Insert a new VTIMEZONE definition for a timezone into the database
-function insert_vtimezone_db(string $tz, string $vtimezone) : void
-{
-  global $zoneinfo_outlook_compatible;
-
-  try
-  {
-    $sql = "INSERT INTO " . _tbl('zoneinfo') . "
-                      (vtimezone, last_updated, timezone, outlook_compatible)
-               VALUES (:vtimezone, :last_updated, :timezone, :outlook_compatible)";
-
-    $sql_params = array(
-      ':vtimezone' => $vtimezone,
-      ':last_updated' => time(),
-      ':timezone' => $tz,
-      ':outlook_compatible' => ($zoneinfo_outlook_compatible) ? 1 : 0
-    );
-
-    db()->command($sql, $sql_params);
-  }
-  catch (DBException $e)
-  {
-    // Catch any database exception because it's just possible that someone else has inserted a row just
-    // before us and then we'll get an error because of the unique constraint.   If we do then that's
-    // fine and we can ignore it, but trigger an error anyway just in case it's some other kind of error.
-    // (Ideally we'd want to be more specific about looking for constraint errors, but we have to consider
-    // both MySQL and PostgreSQL).
-    //
-    // We could have used an INSERT IGNORE, but there isn't an easy PostgreSQL alternative until
-    // PostgreSQL 9.5.
-    //
-    // We can't put a mutex lock round the SELECT - INSERT operation because we're normally already
-    // inside another lock from edit_entry_handler and you can only, in the MYSQL implementation, have
-    // one active lock.
-    trigger_error($e->getMessage(), E_USER_NOTICE);
-  }
-}
-
-
-// Update the database with a new VTIMEZONE definition for a timezone
-function update_vtimezone_db(string $tz, string $vtimezone) : void
-{
-  global $zoneinfo_outlook_compatible;
-
-  $sql = "UPDATE " . _tbl('zoneinfo') . "
-             SET vtimezone=:vtimezone,
-                 last_updated=:last_updated
-           WHERE timezone=:timezone
-             AND outlook_compatible=:outlook_compatible";
-
-  $sql_params = array(
-    ':vtimezone' => $vtimezone,
-    ':last_updated' => time(),
-    ':timezone' => $tz,
-    ':outlook_compatible' => ($zoneinfo_outlook_compatible) ? 1 : 0
-  );
-
-  db()->command($sql, $sql_params);
-}
-
-
-// Get a VTIMEZONE component for the timezone $tz.
-// If none available returns FALSE.
-//
-// We cache the latest VTIMEZONE component in the database.  If it has expired
-// we go to the web for the latest version or if there's nothing in the database
-// in the first place we try and populate it from the VTIMEZONE definitions in
-// the filesystem.
-function get_vtimezone(string $tz)
-{
-  global $zoneinfo_update, $zoneinfo_expiry;
-
-  static $vtimezones = array();  // Cache the components for performance
-
-  if (!isset($vtimezones[$tz]))
-  {
-    // Look for a timezone definition in the database
-    $vtimezone_db = get_vtimezone_db($tz);
-    if (isset($vtimezone_db['vtimezone']))
-    {
-      $vtimezones[$tz] = $vtimezone_db['vtimezone'];
-      // If the definition has expired, and we're updating it, then get a fresh definition from the URL
-      if ($zoneinfo_update && ((time() - $vtimezone_db['last_updated']) >= $zoneinfo_expiry))
-      {
-        $vtimezone = get_vtimezone_url($vtimezone_db['vtimezone']);
-        if (isset($vtimezone))
-        {
-          // We've got a valid VTIMEZONE, so we can update the database and the static variable
-          update_vtimezone_db($tz, $vtimezone);
-          $vtimezones[$tz] = $vtimezone;
-        }
-        else
-        {
-          // If we didn't manage to get a new VTIMEZONE, update the last_updated field
-          // so that MRBS will not try again until after the expiry interval has passed.
-          // This will mean that we don't keep encountering a timeout delay. (The most
-          // likely reason that we couldn't get a new VTIMEZONE is that the site doesn't
-          // have external internet access, so there's no point in retrying for a while).
-          touch_vtimezone_db($tz);
-        }
-      }
-    }
-    else
-    {
-      // If there's nothing in the database, get one from the filesystem
-      $vtimezone = get_vtimezone_file($tz);
-      if (isset($vtimezone))
-      {
-        // And put it in the database if it's valid
-        insert_vtimezone_db($tz, $vtimezone);
-        $vtimezones[$tz] = $vtimezone;
-      }
-      else
-      {
-        // Everything has failed
-        $vtimezones[$tz] = false;
-      }
-    }
-  }
-
-  return $vtimezones[$tz];
-}
-
-
 // Gets a username given an ORGANIZER value.   Returns NULL if none found
 function get_create_by(string $organizer) : ?string
 {
@@ -405,7 +167,7 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
   global $mail_settings, $timezone, $default_area_room_delimiter;
   global $partstat_accepted;
 
-  $vtimezone = get_vtimezone($timezone);
+  $vtimezone = Timezone::createFromTimezoneName($timezone);
 
   $event = new Event();
   // REQUIRED properties, but MUST NOT occur more than once
@@ -843,10 +605,10 @@ function create_icalendar(string $method, array $components) : string
 
   // Add in the VTIMEZONE component if there is one (see the comment in
   // create_ical_event() above)
-  $vtimezone = get_vtimezone($timezone);
+  $vtimezone = Timezone::createFromTimezoneName($timezone);
   if ($vtimezone)
   {
-    $calendar->addComponent(new Timezone($vtimezone));
+    $calendar->addComponent($vtimezone);
   }
 
   // Add in each component
@@ -891,10 +653,10 @@ function export_icalendar(DBStatement $res, bool $keep_private, int $export_end=
   // calendar apps (eg Outlook, at least 2010 and 2013) won't open the full calendar.
   $method = "PUBLISH";
   $calendar = new Calendar($method);
-  $vtimezone = get_vtimezone($timezone);
+  $vtimezone = Timezone::createFromTimezoneName($timezone);
   if ($vtimezone)
   {
-    $calendar->addComponent(new Timezone($vtimezone));
+    $calendar->addComponent($vtimezone);
   }
 
   $n_rows = $res->count();

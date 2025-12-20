@@ -28,7 +28,7 @@ abstract class Component
   }
 
 
-  abstract public function validateProperty(Property $property) : void;
+  abstract protected function validateProperty(Property $property) : void;
 
 
   public function addProperty(Property $property) : self

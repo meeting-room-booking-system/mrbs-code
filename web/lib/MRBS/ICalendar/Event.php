@@ -69,7 +69,7 @@ class Event extends Component
   private $property_names = [];
 
 
-  public function validateProperty(Property $property) : void
+  protected function validateProperty(Property $property) : void
   {
     $name = $property->getName();
 
