@@ -478,17 +478,21 @@ abstract class DB
   // Determines whether the database supports multiple locks
   abstract public function supportsMultipleLocks(): bool;
 
-  // Returns the syntax for an "upsert" query.  Unfortunately getting the id of the
-  // last row differs between MySQL and PostgreSQL.   In PostgreSQL the query will
-  // return a row with the id in the 'id' column.  However there isn't a corresponding
-  // way of doing this in MySQL, but db()->insert_id() will work, regardless of whether
-  // an insert or update was performed.
-  //
-  //  $data             an associative array of values indexed by column name
-  //  $table            the table to insert into or update
-  //  &$params          an array which will hold the SQL params
-  //  $conflict_keys    the key(s) which is/are unique; can be a scalar or an array
-  //  $has_id_column    whether the table has an id column
+  /**
+   * Constructs an SQL upsert (insert or update) query based on the provided data and parameters.
+   *
+   * Unfortunately, getting the id of the last row differs between MySQL and PostgreSQL.   In PostgreSQL the query will
+   * return a row with the id in the 'id' column.  However, there isn't a corresponding way of doing this in MySQL, but
+   * db()->insert_id() will work, regardless of whether an insert or update was performed.
+   *
+   * @param array $data An associative array of data to be inserted or updated, indexed by column name.
+   * @param string $table The table name where the data should be inserted or updated.
+   * @param array &$params A reference to an array where the generated SQL parameters will be stored.
+   * @param array|string $conflict_keys A list of column names or a single column name that will be used to detect conflicts (e.g., unique constraints).
+   * @param array $ignore_columns A list of columns to be excluded from the query.
+   * @param bool $has_id_column Indicates whether the table includes an ID column that requires special handling.
+   * @return string The constructed SQL upsert query string.
+   */
   public function syntax_upsert(array $data, string $table, array &$params, $conflict_keys=[], array $ignore_columns=[], bool $has_id_column = false): string
   {
     if (is_scalar($conflict_keys))
