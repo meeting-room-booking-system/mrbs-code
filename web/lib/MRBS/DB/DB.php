@@ -151,15 +151,21 @@ abstract class DB
   }
 
 
-  // Execute a non-SELECT SQL command (insert/update/delete).
-  // Returns the number of tuples matched (whether affected or not) if OK (a number >= 0).
-  // Throws a DBException on error.
+  /**
+   * Execute a non-SELECT SQL command (insert/update/delete).
+   *
+   * @return int The number of tuples matched (whether affected or not) if OK (a number >= 0)
+   * @throws DBException
+   */
   public function command(string $sql, array $params = array()): int
   {
-    try {
+    try
+    {
       $sth = $this->dbh->prepare($sql);
       $sth->execute($params);
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e)
+    {
       throw new DBException($e->getMessage(), 0, $e, $sql, $params);
     }
 
