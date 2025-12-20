@@ -86,8 +86,6 @@ class Timezone extends Component
   }
 
 
-  // Get a VTIMEZONE definition from the database.  Returns an array indexed by
-  // 'vtimezone' and 'last_updated', or NULL if none found.
   /**
    * Fetch timezone information from the database based on the given timezone identifier.
    *
@@ -123,8 +121,9 @@ class Timezone extends Component
   }
 
 
-  // Gets a VTIMEZONE definition from the file system.
-  // Returns NULL if none found or it's empty.
+  /**
+   * Fetch the VTIMEZONE component from a file for a given timezone identifier.
+   */
   private static function getFromFile(string $tz) : ?string
   {
     global $zoneinfo_outlook_compatible;
