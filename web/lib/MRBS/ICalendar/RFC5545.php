@@ -204,26 +204,6 @@ class RFC5545
   }
 
 
-  // Escape text for use in an iCalendar text value
-  public static function escapeText(string $str) : string
-  {
-    // Escape '\'
-    $str = str_replace("\\", "\\\\", $str);
-    // Escape ';'
-    $str = str_replace(";", "\;", $str);
-    // Escape ','
-    $str = str_replace(",", "\,", $str);
-    // EOL can only be \n
-    $str = str_replace("\r\n", "\n", $str);
-    // Escape '\n'
-    $str = str_replace("\n", "\\n", $str);
-    // Escape '\N'
-    $str = str_replace("\N", "\\N", $str);
-
-    return $str;
-  }
-
-
   // Reverses RFC 5545 escaping of text
   private static function unescapeText(string $str) : string
   {

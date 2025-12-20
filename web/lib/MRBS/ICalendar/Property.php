@@ -90,9 +90,25 @@ class Property
   }
 
 
+  /**
+   * Escape text for use in a property TEXT value.
+   */
   private static function escapeText(string $text) : string
   {
-    return RFC5545::escapeText($text);
+    // Escape '\'
+    $text = str_replace("\\", "\\\\", $text);
+    // Escape ';'
+    $text = str_replace(";", "\;", $text);
+    // Escape ','
+    $text = str_replace(",", "\,", $text);
+    // EOL can only be \n
+    $text = str_replace("\r\n", "\n", $text);
+    // Escape '\n'
+    $text = str_replace("\n", "\\n", $text);
+    // Escape '\N'
+    $text = str_replace("\N", "\\N", $text);
+
+    return $text;
   }
 
 
