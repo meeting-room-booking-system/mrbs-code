@@ -37,6 +37,9 @@ abstract class Component
    */
   public function getPropertyValues(string $name) : array
   {
+    // TODO: Make this more efficient, so that it doesn't have to loop through all the properties
+    // TODO: if we know that there is only one of a particular property.  Either add a limit
+    // TODO: parameter?  Or check the Component class for once-only properties?
     $result = [];
 
     foreach ($this->properties as $property)
