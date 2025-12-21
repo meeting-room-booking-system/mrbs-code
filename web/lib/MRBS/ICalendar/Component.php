@@ -4,6 +4,9 @@ namespace MRBS\ICalendar;
 
 abstract class Component
 {
+  // Self-referential 'abstract' declaration
+  public const NAME = self::NAME;
+
   /**
    * @var Property[]
    */
