@@ -64,8 +64,6 @@ class Property
   // 1. Can a parameter have multiple values?
   // 2. Add support for parsing multiple valuees
   // 3. Rewrite import to use this class
-  // 4. Rename to createFromString
-  // 5. Add createFromString methods foe other classes
 
   // Parse a content line which is a property (ie is inside a component).   Returns
   // an associative array:
