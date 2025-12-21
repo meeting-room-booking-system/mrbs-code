@@ -10,8 +10,7 @@ use function MRBS\row_cast_columns;
 
 class Timezone extends Component
 {
-  protected const NAME = 'VTIMEZONE';
-
+  public const NAME = 'VTIMEZONE';
 
   protected function validateProperty(Property $property): void
   {
@@ -42,7 +41,7 @@ class Timezone extends Component
       $vtimezone_db = self::getFromDb($tz, $zoneinfo_outlook_compatible);
       if (isset($vtimezone_db['vtimezone']))
       {
-        $vtimezones[$tz] = new self($vtimezone_db['vtimezone']);
+        $vtimezones[$tz] = ComponentFactory::createFromString($vtimezone_db['vtimezone']);
         // If the definition has expired, and we're updating it, then get a fresh definition from the URL
         if ($zoneinfo_update && ((time() - $vtimezone_db['last_updated']) >= $zoneinfo_expiry))
         {
@@ -51,7 +50,7 @@ class Timezone extends Component
           {
             // We've got a valid VTIMEZONE, so we can update the database and the static variable
             self::upsertDb($tz, $zoneinfo_outlook_compatible, $vtimezone);
-            $vtimezones[$tz] = new self($vtimezone);
+            $vtimezones[$tz] = ComponentFactory::createFromString($vtimezone);
           }
           else
           {
@@ -72,7 +71,7 @@ class Timezone extends Component
         {
           // And put it in the database if it's valid
           self::upsertDb($tz, $zoneinfo_outlook_compatible, $vtimezone);
-          $vtimezones[$tz] = new self($vtimezone);
+          $vtimezones[$tz] = ComponentFactory::createFromString($vtimezone);
         }
         else
         {

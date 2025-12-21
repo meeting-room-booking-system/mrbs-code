@@ -4,7 +4,7 @@ namespace MRBS\ICalendar;
 
 class Event extends Component
 {
-  protected const NAME = 'VEVENT';
+  public const NAME = 'VEVENT';
 
   /**
    * The following are REQUIRED, but MUST NOT occur more than once.

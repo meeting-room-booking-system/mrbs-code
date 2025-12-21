@@ -6,6 +6,7 @@ use GuzzleHttp\Client;
 use MRBS\DB\DBException;
 use MRBS\DB\DBStatement;
 use MRBS\ICalendar\Calendar;
+use MRBS\ICalendar\ComponentFactory;
 use MRBS\ICalendar\Event;
 use MRBS\ICalendar\Property;
 use MRBS\ICalendar\RFC5545;
@@ -403,7 +404,7 @@ function create_icalendar(string $method, array $components) : string
   // Add in each component
   foreach ($components as $component)
   {
-    $calendar->addComponent(new Event($component));
+    $calendar->addComponent(ComponentFactory::createFromString($component));
   }
 
   return $calendar->toString();
@@ -460,7 +461,7 @@ function export_icalendar(DBStatement $res, bool $keep_private, int $export_end=
     // If this is an individual entry, then construct an event
     if (!isset($row['rep_type']) || ($row['rep_type'] == RepeatRule::NONE))
     {
-      $calendar->addComponent(new Event(create_ical_event($method, $row)));
+      $calendar->addComponent(ComponentFactory::createFromString(create_ical_event($method, $row)));
     }
 
     // Otherwise it's a series
