@@ -39,9 +39,9 @@ class Property
   /**
    * Adds a parameter to the property
    */
-  public function addParameter(string $name, string $value) : void
+  public function addParameter(string $name, string $values) : void
   {
-    $this->params[$name] = $value;
+    $this->params[$name] = array ($values);
   }
 
 
@@ -57,7 +57,7 @@ class Property
 
     foreach ($this->params as $name => $value)
     {
-      $result .= ';' . $name . '=' . self::escapeParamValue($value);
+      $result .= ';' . $name . '=' . implode(',', array_map([self::class, 'escapeParamValue'], $this->values));
     }
 
     $result .= ':' . implode(',', array_map([self::class, 'escapeText'], $this->values));
