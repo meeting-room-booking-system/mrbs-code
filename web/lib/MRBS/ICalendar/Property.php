@@ -9,6 +9,10 @@ class Property
   private $values = [];
 
 
+  // TODO: Properties can have multiple values.  Add support for that.
+  // TODO: Property parameters can have multiple values (see https://datatracker.ietf.org/doc/html/rfc5545#section-3.2.4) .  Add support for that.
+  // TODO: Rewrite import.php to use these classes.
+
   /**
    * @param string|string[] $values
    */
@@ -60,10 +64,6 @@ class Property
     return $result . RFC5545::EOL;
   }
 
-  // TODO:
-  // 1. Can a parameter have multiple values?
-  // 2. Add support for parsing multiple valuees
-  // 3. Rewrite import to use this class
 
   // Parse a content line which is a property (ie is inside a component).   Returns
   // an associative array:
