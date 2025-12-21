@@ -3,7 +3,6 @@ declare(strict_types=1);
 namespace MRBS\ICalendar;
 
 use GuzzleHttp\Client;
-use MRBS\DB\DBException;
 use function MRBS\_tbl;
 use function MRBS\db;
 use function MRBS\row_cast_columns;

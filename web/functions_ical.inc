@@ -2,8 +2,6 @@
 declare(strict_types=1);
 namespace MRBS;
 
-use GuzzleHttp\Client;
-use MRBS\DB\DBException;
 use MRBS\DB\DBStatement;
 use MRBS\ICalendar\Calendar;
 use MRBS\ICalendar\ComponentFactory;
@@ -13,7 +11,6 @@ use MRBS\ICalendar\RFC5545;
 use MRBS\ICalendar\RFC5545Exception;
 use MRBS\ICalendar\Series;
 use MRBS\ICalendar\Timezone;
-use PHPMailer\PHPMailer\PHPMailer;
 
 // Gets a username given an ORGANIZER value.   Returns NULL if none found
 function get_create_by(string $organizer) : ?string
