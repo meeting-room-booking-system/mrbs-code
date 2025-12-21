@@ -4,15 +4,7 @@ namespace MRBS\ICalendar;
 
 abstract class Component
 {
-  protected $name;
-  protected $content = null;
   protected $properties = [];
-
-
-  public function __construct()
-  {
-    $this->name = static::NAME;
-  }
 
 
   protected function validateProperty(Property $property)
