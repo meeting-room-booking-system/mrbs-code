@@ -10,7 +10,7 @@ class Property
 
 
   // TODO: Properties can have multiple values.  Add support for that in parseLine().
-  // TODO: Property parameters can have multiple values (see https://datatracker.ietf.org/doc/html/rfc5545#section-3.2.4) .  Add support for that.
+  // TODO: Property parameters can have multiple values (see https://datatracker.ietf.org/doc/html/rfc5545#section-3.2.4) .  Add support for that in parseLine().
   // TODO: Rewrite import.php to use these classes.
 
   /**
