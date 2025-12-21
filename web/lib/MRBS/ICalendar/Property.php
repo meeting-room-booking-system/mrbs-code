@@ -37,10 +37,11 @@ class Property
 
 
   /**
-   * Adds a parameter to the property
+   * Adds a parameter to the property.
    */
   public function addParameter(string $name, string $values) : void
   {
+    // Parameters can have multiple values.  See, for example, DELEGATED-FROM and DELEGATED-TO in RFC 5545.
     $this->params[$name] = array ($values);
   }
 
