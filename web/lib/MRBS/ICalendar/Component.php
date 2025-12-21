@@ -7,12 +7,20 @@ abstract class Component
   protected $properties = [];
 
 
-  protected function validateProperty(Property $property)
+  /**
+   * Validate a property by checking that the name is valid for the component and
+   * that it hasn't yet been added to the component if only one instance of a
+   * property is allowed.
+   */
+  protected function validateProperty(Property $property) : void
   {
 
   }
 
 
+  /**
+   * Add a property to the component.
+   */
   public function addProperty(Property $property) : self
   {
     $this->validateProperty($property);
@@ -21,6 +29,9 @@ abstract class Component
   }
 
 
+  /**
+   * Convert the component to a string.
+   */
   public function toString(): string
   {
     $result = 'BEGIN:' . static::NAME . RFC5545::EOL;

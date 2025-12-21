@@ -11,6 +11,7 @@ class Timezone extends Component
 {
   public const NAME = 'VTIMEZONE';
 
+
   protected function validateProperty(Property $property): void
   {
     // TODO: Implement validateProperty() method.
@@ -143,7 +144,9 @@ class Timezone extends Component
   }
 
 
-  // Gets a VTIMEZONE definition from the TZURL defined in the $vtimezone component
+  /**
+   * Gets a VTIMEZONE definition from the TZURL defined in the $vtimezone component string.
+   */
   private static function getFromUrl(string $vtimezone) : ?string
   {
     // (Note that a VTIMEZONE component can contain a TZURL property which
