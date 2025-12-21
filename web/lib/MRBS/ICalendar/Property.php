@@ -42,16 +42,22 @@ class Property
   public function addParameter(string $name, string $values) : void
   {
     // Parameter names are case-insensitive, but by convention we use uppercase.
-    $this->name = mb_strtoupper($name);
+
     // Parameters can have multiple values [param         = param-name "=" param-value *("," param-value)].
     // See, for example, DELEGATED-FROM and DELEGATED-TO in RFC 5545.
-    $this->params[$name] = array ($values);
+    $this->params[mb_strtoupper($name)] = array ($values);
   }
 
 
   public function getName() : string
   {
     return $this->name;
+  }
+
+
+  public function getValues() : array
+  {
+    return $this->values;
   }
 
 

@@ -4,6 +4,9 @@ namespace MRBS\ICalendar;
 
 abstract class Component
 {
+  /**
+   * @var Property[]
+   */
   protected $properties = [];
 
 
@@ -26,6 +29,26 @@ abstract class Component
     $this->validateProperty($property);
     $this->properties[] = $property;
     return $this;
+  }
+
+
+  /**
+   * Get the values of a property.
+   */
+  public function getPropertyValues(string $name) : array
+  {
+    $result = [];
+
+    foreach ($this->properties as $property)
+    {
+      if ($property->getName() == $name)
+      {
+        // There could be more than one property with the same name
+        $result = array_merge($result, $property->getValues());
+      }
+    }
+
+    return $result;
   }
 
 

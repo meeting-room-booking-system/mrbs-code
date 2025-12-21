@@ -147,27 +147,26 @@ class Timezone extends Component
   /**
    * Gets a VTIMEZONE definition from the TZURL defined in the $vtimezone component string.
    */
-  private static function getFromUrl(string $vtimezone) : ?string
+  private static function getFromUrl(string $vtimezone_string) : ?string
   {
     // (Note that a VTIMEZONE component can contain a TZURL property which
-    // gives the URL of the most up-to-date version.  Calendar applications
+    // gives the URL of the most up-to-date version. Calendar applications
     // should be able to check this themselves, but we might as well give them
     // the most up-to-date version in the first place).
-    $properties = explode("\r\n", RFC5545::unfold($vtimezone));
-    foreach ($properties as $property)
+    if (false === ($vtimezone = ComponentFactory::createFromString($vtimezone_string)))
     {
-      if (mb_strpos($property, "TZURL:") === 0)
-      {
-        $tz_url = mb_substr($property, 6);  // 6 is the length of "TZURL:"
-        break;
-      }
+      return null;
     }
 
-    if (!isset($tz_url))
+    $tz_url_values = $vtimezone->getPropertyValues('TZURL');
+
+    if (empty($tz_url_values))
     {
       trigger_error("The VTIMEZONE component didn't contain a TZURL property.", E_USER_NOTICE);
       return null;
     }
+
+    $tz_url = $tz_url_values[0];
 
     try {
       $vcalendar = (new Client())->get($tz_url)->getBody()->getContents();
