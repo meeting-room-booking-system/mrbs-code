@@ -117,17 +117,17 @@ class Property
   }
 
 
-  private static function parseParamValues(string $values) : array
+  private static function parseParamValues(string $value_string) : array
   {
     // TODO: properly parse a list of values
-    return [self::unescapeParamValue($values)];
+    return [self::unescapeParamValue($value_string)];
   }
 
 
-  private static function parsePropertyValues(string $values) : array
+  private static function parsePropertyValues(string $value_string) : array
   {
     // TODO: properly parse a list of values
-    return [self::unescapeText($values)];
+    return [self::unescapeText($value_string)];
   }
 
 
