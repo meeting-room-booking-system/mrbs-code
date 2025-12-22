@@ -119,14 +119,14 @@ class Property
 
   private static function parseParamValues(string $value_string) : array
   {
-    // TODO: properly parse a list of values
+    // TODO: properly parse a list of values, allowing for multiple values
     return [self::unescapeParamValue($value_string)];
   }
 
 
   private static function parsePropertyValues(string $value_string) : array
   {
-    // TODO: properly parse a list of values
+    // TODO: properly parse a list of values, allowing for multiple values
     return [self::unescapeText($value_string)];
   }
 
