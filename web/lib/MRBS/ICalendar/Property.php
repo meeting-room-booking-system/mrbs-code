@@ -131,7 +131,6 @@ class Property
   }
 
 
-
   /**
    * Escapes a parameter value, if necessary, so that it can be used in an iCalendar property.
    */
