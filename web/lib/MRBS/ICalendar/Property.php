@@ -65,9 +65,9 @@ class Property
   {
     $result = $this->name;
 
-    foreach ($this->params as $name => $value)
+    foreach ($this->params as $name => $values)
     {
-      $result .= ';' . $name . '=' . implode(',', array_map([self::class, 'escapeParamValue'], $this->values));
+      $result .= ';' . $name . '=' . implode(',', array_map([self::class, 'escapeParamValue'], $values));
     }
 
     $result .= ':' . implode(',', array_map([self::class, 'escapeText'], $this->values));
@@ -82,49 +82,54 @@ class Property
   //   'value'      the property value.  The value will have escaping reversed
   private static function parseLine(string $line) : array
   {
-    $result = array();
-    // First of all get the string up to the first colon or semicolon.   This will
-    // be the property name.   We also want to get the delimiter so that we know
-    // whether there are any parameters to come.   The split will return an array
-    // with three elements:  0 - the string before the delimiter, 1 - the delimiter
-    // and 2 the rest of the string
-    $tmp = self::split($line);
-    $result['name'] = $tmp[0];
-    $params = array();
-    if ($tmp[1] != ':')
+    $result = [];
+    $params = [];
+
+    // Get the property name, which will be the part before the first colon or semicolon.
+    $split = preg_split('/([:;])/', $line, 2, PREG_SPLIT_DELIM_CAPTURE);
+    $result['name'] = $split[0];
+
+    // Get any parameters, which come after a semicolon that isn't in a double-quoted string.
+    while ($split[1] == ';')
     {
-      // Get all the property parameters
-      do
-      {
-        $tmp = self::split($tmp[2]);
-        list($param_name, $param_value) = explode('=', $tmp[0], 2);
-        // The parameter value can be a quoted string, so get rid of any double quotes
-        $params[$param_name] = self::unescapeParamValue($param_value);
-      }
-      while ($tmp[1] != ':');
+      $split = preg_split('/([:;](?![^"]*"{1}[:;]))/', $split[2], 2, PREG_SPLIT_DELIM_CAPTURE);
+      $param = self::parseParam($split[0]);
+      $params[$param['name']] = $param['values'];
     }
     $result['params'] = $params;
-    $result['value'] = self::unescapeText($tmp[2]);
+
+    // Finally get the property values, which come after a colon that isn't in a double-quoted string.
+    // TODO: change to 'values'
+    $result['value'] = self::parsePropertyValues($split[2]);
+
     return $result;
   }
 
 
-  // Splits a string at the first colon or semicolon (the delimiter) unless the delimiter
-  // is inside a quoted string.  Used for parsing iCalendar lines to get property parameters
-  // It assumes the string will always have at least one more delimiter to come, so can
-  // only be used when you know you've still got the colon to come.
-  //
-  // Returns an array of three elements (the second is the delimiter)
-  // or just one element if the delimiter is not found
-  private static function split(string $string) : array
+  private static function parseParam(string $param) : array
   {
-    // We want to split the string up to the first delimiter which isn't inside a quoted
-    // string.   So the look ahead must not contain exactly one double quote before the next
-    // delimiter.   Note that (a) you cannot escape double quotes inside a quoted string, so
-    // we don't have to worry about that complication (b) we assume there will always be a
-    // second delimiter
-    return preg_split('/([:;](?![^"]*"{1}[:;]))/', $string, 2, PREG_SPLIT_DELIM_CAPTURE);
+    $result = [];
+    $split = preg_split('/(=)/', $param, 2, PREG_SPLIT_DELIM_CAPTURE);
+    $result['name'] = $split[0];
+    // TODO: take the whole array, not the first element
+    $result['values'] = self::parseParamValues($split[2])[0];
+    return $result;
   }
+
+
+  private static function parseParamValues(string $values) : array
+  {
+    // TODO: properly parse a list of values
+    return [self::unescapeParamValue($values)];
+  }
+
+
+  private static function parsePropertyValues(string $values) : array
+  {
+    // TODO: properly parse a list of values
+    return [self::unescapeText($values)];
+  }
+
 
 
   /**
