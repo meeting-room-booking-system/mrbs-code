@@ -24,6 +24,11 @@ class Property
   }
 
 
+  /**
+   * Create a property instance given a string.
+   *
+   * @param string $string An unfolded property line
+   */
   public static function createFromString(string $string) : self
   {
     $parsed_string = self::parseLine($string);
@@ -75,11 +80,14 @@ class Property
   }
 
 
-  // Parse a content line which is a property (ie is inside a component).   Returns
-  // an associative array:
-  //   'name'       the property name
-  //   'params'     an associative array of parameters indexed by parameter name
-  //   'value'      the property value.  The value will have escaping reversed
+  // TODO: Fix @return definition for 'params'
+
+  /**
+   * Parse a property content line
+   *
+   * @param string $line An unfolded property line
+   * @return array{'name': string, 'params': array, 'values': string[]}
+   */
   private static function parseLine(string $line) : array
   {
     $result = [];
