@@ -127,8 +127,10 @@ class Property
 
   private static function parseParamValues(string $value_string) : array
   {
-    // TODO: properly parse a list of values, allowing for multiple values
-    return [self::unescapeParamValue($value_string)];
+    // Split the sting by unescaped commas.
+    $result = preg_split('/(,(?![^"]*"{1},))/', $value_string);
+    // Unescape the values
+    return array_map([self::class, 'unescapeParamValue'], $result);
   }
 
 
