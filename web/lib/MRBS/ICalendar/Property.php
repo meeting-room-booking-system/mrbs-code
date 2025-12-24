@@ -57,18 +57,27 @@ class Property
   }
 
 
+  /*
+   * Get the property name.
+   */
   public function getName() : string
   {
     return $this->name;
   }
 
 
+  /**
+   * Get the property values.
+   */
   public function getValues() : array
   {
     return $this->values;
   }
 
 
+  /**
+   * Convert the property to an unfolded string.
+   */
   public function toString() : string
   {
     $result = $this->name;
