@@ -33,24 +33,27 @@ class Property
   {
     $parsed_string = self::parseLine($string);
     $property = new self($parsed_string['name'], $parsed_string['value']);
-    foreach ($parsed_string['params'] as $name => $value)
+    foreach ($parsed_string['params'] as $name => $values)
     {
-      $property->addParameter($name, $value);
+      $property->addParameter($name, $values);
     }
     return $property;
   }
 
 
   /**
-   * Adds a parameter to the property.
+   * Adds a parameter/parameters to the property.
+   *
+   * @param string|string[] $values
    */
-  public function addParameter(string $name, string $values) : void
+  public function addParameter(string $name, $values) : void
   {
     // Parameter names are case-insensitive, but by convention we use uppercase.
 
     // Parameters can have multiple values [param         = param-name "=" param-value *("," param-value)].
     // See, for example, DELEGATED-FROM and DELEGATED-TO in RFC 5545.
-    $this->params[mb_strtoupper($name)] = array ($values);
+    $uc_name = mb_strtoupper($name);
+    $this->params[$uc_name] = array_merge($this->params[$uc_name] ?? [], (array) $values);
   }
 
 
@@ -120,7 +123,7 @@ class Property
     $split = preg_split('/(=)/', $param, 2, PREG_SPLIT_DELIM_CAPTURE);
     $result['name'] = $split[0];
     // TODO: take the whole array, not the first element
-    $result['values'] = self::parseParamValues($split[2])[0];
+    $result['values'] = self::parseParamValues($split[2]);
     return $result;
   }
 
