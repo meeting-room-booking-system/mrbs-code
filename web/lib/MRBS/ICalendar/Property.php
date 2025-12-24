@@ -32,7 +32,7 @@ class Property
   public static function createFromString(string $string) : self
   {
     $parsed_string = self::parseLine($string);
-    $property = new self($parsed_string['name'], $parsed_string['value']);
+    $property = new self($parsed_string['name'], $parsed_string['values']);
     foreach ($parsed_string['params'] as $name => $values)
     {
       $property->addParameter($name, $values);
@@ -109,9 +109,8 @@ class Property
     }
     $result['params'] = $params;
 
-    // Finally get the property values, which come after a colon that isn't in a double-quoted string.
-    // TODO: change to 'values'
-    $result['value'] = self::parsePropertyValues($split[2]);
+    // Finally, get the property values, which come after a colon that isn't in a double-quoted string.
+    $result['values'] = self::parsePropertyValues($split[2]);
 
     return $result;
   }
