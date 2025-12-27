@@ -160,7 +160,7 @@ class Property
       {
         if (!in_array($current_char, ["\\", ";", ",", "\n", "\N"]))
         {
-          $message = "Invalid escape sequence '$current_char' in value string '$value_string'.";
+          $message = "Invalid escape sequence '\\$current_char' in value string '$value_string'.";
           trigger_error($message, E_USER_WARNING);
         }
         $value .= $current_char;
