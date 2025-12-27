@@ -129,7 +129,6 @@ class Property
     $result = [];
     $split = preg_split('/(=)/', $param, 2, PREG_SPLIT_DELIM_CAPTURE);
     $result['name'] = $split[0];
-    // TODO: take the whole array, not the first element
     $result['values'] = self::parseParamValues($split[2]);
     return $result;
   }
