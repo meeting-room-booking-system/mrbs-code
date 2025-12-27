@@ -10,9 +10,6 @@ class Property
   private $params = [];
   private $values = [];
 
-
-  // TODO: Properties can have multiple values.  Add support for that in parseLine().
-  // TODO: Property parameters can have multiple values (see https://datatracker.ietf.org/doc/html/rfc5545#section-3.2.4) .  Add support for that in parseLine().
   // TODO: Rewrite import.php to use these classes.
 
   /**
@@ -138,8 +135,12 @@ class Property
   }
 
 
+  /**
+   * Parse a parameter value string.
+   */
   private static function parseParamValues(string $value_string) : array
   {
+    // Property parameters can have multiple values (see https://datatracker.ietf.org/doc/html/rfc5545#section-3.2.4).
     // Split the sting by unescaped commas.
     $result = preg_split('/(,(?![^"]*"{1},))/', $value_string);
     // Unescape the values
@@ -147,8 +148,15 @@ class Property
   }
 
 
+  /**
+   * Parse a property value string.
+   */
   private static function parsePropertyValues(string $value_string) : array
   {
+    // Properties can have multiple values, separated by commas. These are difficult
+    // to parse using a regex as look-behinds need to be fixed width, so we can't look
+    // for an odd or even number of backslashes.  Instead, we just iterate through the
+    // characters in the string.
     $result = [];
     $value = '';
     $in_escape = false;
