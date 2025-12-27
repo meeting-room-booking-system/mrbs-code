@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace MRBS\ICalendar;
 
+use MRBS\Utf8\Utf8String;
+
 class Property
 {
   private $name;
@@ -147,8 +149,41 @@ class Property
 
   private static function parsePropertyValues(string $value_string) : array
   {
-    // TODO: properly parse a list of values, allowing for multiple values
-    return [self::unescapeText($value_string)];
+    $result = [];
+    $value = '';
+    $in_escape = false;
+
+    $iterator = new Utf8String($value_string);
+    while (null !== ($current_char = $iterator->current()))
+    {
+      if ($in_escape)
+      {
+        if (!in_array($current_char, ["\\", ";", ",", "\n", "\N"]))
+        {
+          $message = "Invalid escape sequence '$current_char' in value string '$value_string'.";
+          trigger_error($message, E_USER_WARNING);
+        }
+        $value .= $current_char;
+        $in_escape = false;
+      }
+      elseif ($current_char == "\\")
+      {
+        $in_escape = true;
+      }
+      elseif ($current_char == ",")
+      {
+        $result[] = $value;
+        $value = '';
+      }
+      else
+      {
+        $value .= $current_char;
+      }
+      $iterator->next();
+    }
+
+    $result[] = $value;
+    return $result;
   }
 
 
