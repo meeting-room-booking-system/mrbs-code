@@ -91,13 +91,11 @@ class Property
   }
 
 
-  // TODO: Fix @return definition for 'params'
-
   /**
    * Parse a property content line
    *
    * @param string $line An unfolded property line
-   * @return array{'name': string, 'params': array, 'values': string[]}
+   * @return array{'name': string, 'params': array<string, string[]>, 'values': string[]}
    */
   private static function parseLine(string $line) : array
   {
