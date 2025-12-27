@@ -257,6 +257,8 @@ class Property
 
   /**
    * Reverses RFC 5545 escaping of text.
+   *
+   * Only suitable for a single value, not a list of values.
    */
   private static function unescapeText(string $str) : string
   {
