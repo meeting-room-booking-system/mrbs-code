@@ -194,52 +194,6 @@ function get_skip_list(string $values, array $params) : array
   return $result;
 }
 
-// Get the next line, after unfolding, from the stream.
-// Returns FALSE when EOF is reached
-function get_unfolded_line($handle)
-{
-  static $buffer_line;
-
-  // If there's something in the buffer line left over
-  // from the last call, then start with that.
-  if (isset($buffer_line))
-  {
-    $unfolded_line = $buffer_line;
-    $buffer_line = null;
-  }
-
-  // Theoretically the line should be folded if it's longer than 75 octets
-  // but just in case the file has been created without using folding we
-  // will read a large number (4096) of bytes to make sure that we get as
-  // far as the CRLF.
-  while (false !== ($line = stream_get_line($handle, 4096, "\r\n")))
-  {
-    if (!isset($unfolded_line))
-    {
-      $unfolded_line = $line;
-    }
-    else
-    {
-      $first_char = mb_substr($line, 0, 1);
-      // If the first character of the line is a space or tab then it's
-      // part of a fold
-      if (($first_char == " ") || ($first_char == "\t"))
-      {
-        $unfolded_line .= mb_substr($line, 1);
-      }
-      // Otherwise we've reached the start of the next unfolded line, so
-      // save it for next time and finish
-      else
-      {
-        $buffer_line = $line;
-        break;
-      }
-    }
-  }
-
-  return (isset($unfolded_line)) ? $unfolded_line : false;
-}
-
 
 /**
  * Get the next event from the stream.
@@ -261,6 +215,7 @@ function get_event($handle)
     {
       if ($line == 'BEGIN:VEVENT')
       {
+        // We've reached the start of a new event, so start saving the lines.
         $lines[] = $line;
       }
     }
@@ -269,6 +224,7 @@ function get_event($handle)
       $lines[] = $line;
       if ($line == 'END:VEVENT')
       {
+        // We've reached the end of the event, so return the Event object.
         $content = implode(RFC5545::EOL, $lines);
         return ComponentFactory::createFromString( $content);
       }
@@ -276,25 +232,6 @@ function get_event($handle)
   }
 
   return false;
-
-  // Advance to the beginning of the event
-  while ((false !== ($ical_line = get_unfolded_line($handle))) && ($ical_line != 'BEGIN:VEVENT'))
-  {
-  }
-
-  // No more events
-  if ($ical_line === false)
-  {
-    return false;
-  }
-  // Get the event
-  $vevent = array();
-  while ((false !== ($ical_line = get_unfolded_line($handle))) && ($ical_line != 'END:VEVENT'))
-  {
-    $vevent[] = $ical_line;
-  }
-
-  return $vevent;
 }
 
 
