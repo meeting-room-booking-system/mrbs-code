@@ -15,8 +15,10 @@ class Calendar
   private const CR = "\r";
   private const LF = "\n";
   private const MAX_OCTETS_IN_LINE =75;  // The maximum line length allowed
-  private const LINE_FOLD = RFC5545::EOL . ' '; // The RFC also allows a horizontal tab instead of a space
+  private const LINE_FOLD = self::EOL . ' '; // The RFC also allows a horizontal tab instead of a space
   private const LINE_FOLD_OCTETS = 1;
+
+  public const EOL = self::CR . self::LF;
 
   private $components = [];
   private $properties = [];
@@ -52,7 +54,7 @@ class Calendar
 
   public function toString(): string
   {
-    $result = 'BEGIN:' . self::NAME . RFC5545::EOL;
+    $result = 'BEGIN:' . self::NAME . self::EOL;
 
     foreach ($this->properties as $property)
     {
@@ -64,7 +66,7 @@ class Calendar
       $result .= $component->toString();
     }
 
-    $result .= 'END:' . self::NAME . RFC5545::EOL;
+    $result .= 'END:' . self::NAME . self::EOL;
     return self::fold($result);
   }
 
@@ -126,7 +128,7 @@ class Calendar
       if (($char == self::LF) && (count($previous) == 2) && ($previous[0] == self::CR))
       {
         // Output the EOL, clear the previous characters and reset the octet count
-        $result .= RFC5545::EOL;
+        $result .= self::EOL;
         $previous = [];
         $octets = 0;
         continue;

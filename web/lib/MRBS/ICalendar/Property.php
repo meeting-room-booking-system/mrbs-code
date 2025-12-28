@@ -87,7 +87,7 @@ class Property
     }
 
     $result .= ':' . implode(',', array_map([self::class, 'escapeText'], $this->values));
-    return $result . RFC5545::EOL;
+    return $result . Calendar::EOL;
   }
 
 

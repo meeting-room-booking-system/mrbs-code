@@ -12,7 +12,6 @@ class RFC5545
   // An array which can be used to map day of the week numbers (0..6)
   // onto days of the week as defined in RFC 5545
   public const DAYS = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
-  public const EOL = "\r\n";  // Lines must be terminated by CRLF
 
 
   // Convert an RFC 5545 day to an ordinal number representing the day of the week,

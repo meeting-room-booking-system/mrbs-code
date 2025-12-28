@@ -63,14 +63,14 @@ abstract class Component
    */
   public function toString(): string
   {
-    $result = 'BEGIN:' . static::NAME . RFC5545::EOL;
+    $result = 'BEGIN:' . static::NAME . Calendar::EOL;
 
     foreach ($this->properties as $property)
     {
       $result .= $property->toString();
     }
 
-    $result .= 'END:' . static::NAME . RFC5545::EOL;
+    $result .= 'END:' . static::NAME . Calendar::EOL;
     return $result;
   }
 

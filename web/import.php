@@ -14,6 +14,7 @@ use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldInputUrl;
 use MRBS\Form\FieldSelect;
 use MRBS\Form\Form;
+use MRBS\ICalendar\Calendar;
 use MRBS\ICalendar\ComponentFactory;
 use MRBS\ICalendar\Event;
 use MRBS\ICalendar\RFC5545;
@@ -209,7 +210,7 @@ function get_event($handle)
   // but, just in case the file has been created without using folding, we
   // will read a large number (4096) of bytes to make sure that we get as
   // far as the end of the line.
-  while (false !== ($line = stream_get_line($handle, 4096, RFC5545::EOL)))
+  while (false !== ($line = stream_get_line($handle, 4096, Calendar::EOL)))
   {
     if (empty($lines))
     {
@@ -225,7 +226,7 @@ function get_event($handle)
       if ($line == 'END:VEVENT')
       {
         // We've reached the end of the event, so return the Event object.
-        $content = implode(RFC5545::EOL, $lines);
+        $content = implode(Calendar::EOL, $lines);
         return ComponentFactory::createFromString( $content);
       }
     }
@@ -277,7 +278,7 @@ function process_event(Event $event) : bool
 
   // TODO: Process the event without converting back to lines
   // Strip off the BEGIN and END lines
-  $lines = explode(RFC5545::EOL, $event->toString());
+  $lines = explode(Calendar::EOL, $event->toString());
   array_shift($lines);
   array_pop($lines);
 

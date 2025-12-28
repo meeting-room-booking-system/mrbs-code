@@ -13,7 +13,7 @@ class ComponentFactory
   public static function createFromString(string $content)
   {
     // Trim and unfold the content, then split it into lines,
-    $lines = explode(RFC5545::EOL, Calendar::unfold(trim($content)));
+    $lines = explode(Calendar::EOL, Calendar::unfold(trim($content)));
 
     // It should have at least two lines: the first BEGIN: line and the last END: line.
     if (count($lines) < 2)
