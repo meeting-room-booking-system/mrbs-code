@@ -14,6 +14,8 @@ use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldInputUrl;
 use MRBS\Form\FieldSelect;
 use MRBS\Form\Form;
+use MRBS\ICalendar\ComponentFactory;
+use MRBS\ICalendar\Event;
 use MRBS\ICalendar\RFC5545;
 use ReflectionClass;
 use ZipArchive;
@@ -239,12 +241,42 @@ function get_unfolded_line($handle)
 }
 
 
-// Get the next event from the stream.
-// Returns FALSE if EOF has been reached, or else an array
-// of lines for the event.  The BEGIN:VEVENT and END:VEVENT
-// lines are not included in the array.
+/**
+ * Get the next event from the stream.
+ *
+ * @param resource $handle
+ * @return Event|false An Event object or FALSE if EOF has been reached.
+ */
 function get_event($handle)
 {
+  $lines = [];
+
+  // Theoretically the line should be folded if it's longer than 75 octets,
+  // but, just in case the file has been created without using folding, we
+  // will read a large number (4096) of bytes to make sure that we get as
+  // far as the end of the line.
+  while (false !== ($line = stream_get_line($handle, 4096, RFC5545::EOL)))
+  {
+    if (empty($lines))
+    {
+      if ($line == 'BEGIN:VEVENT')
+      {
+        $lines[] = $line;
+      }
+    }
+    else
+    {
+      $lines[] = $line;
+      if ($line == 'END:VEVENT')
+      {
+        $content = implode(RFC5545::EOL, $lines);
+        return ComponentFactory::createFromString( $content);
+      }
+    }
+  }
+
+  return false;
+
   // Advance to the beginning of the event
   while ((false !== ($ical_line = get_unfolded_line($handle))) && ($ical_line != 'BEGIN:VEVENT'))
   {
@@ -267,7 +299,7 @@ function get_event($handle)
 
 
 // Add a VEVENT to MRBS.   Returns TRUE on success, FALSE if the event wasn't added
-function process_event(array $vevent) : bool
+function process_event(Event $event) : bool
 {
   global $import_default_room, $import_default_type, $import_past, $skip;
   global $morningstarts, $morningstarts_minutes, $resolution;
@@ -306,7 +338,13 @@ function process_event(array $vevent) : bool
   $properties = array();
   $problems = array();
 
-  $line = current($vevent);
+  // TODO: Process the event without converting back to lines
+  // Strip off the BEGIN and END lines
+  $lines = explode(RFC5545::EOL, $event->toString());
+  array_shift($lines);
+  array_pop($lines);
+
+  $line = current($lines);
   while ($line !== false)
   {
     $property = RFC5545::parseProperty($line);
@@ -327,12 +365,12 @@ function process_event(array $vevent) : bool
     {
       $component = $property['value'];
       while (!(($property['name'] == 'END') && ($property['value'] == $component)) &&
-             ($line = next($vevent)))
+             ($line = next($lines)))
       {
         $property = RFC5545::parseProperty($line);
       }
     }
-    $line = next($vevent);
+    $line = next($lines);
   }
 
   if (!isset($booking['start_time']))
