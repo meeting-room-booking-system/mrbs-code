@@ -62,4 +62,50 @@ class ComponentFactory
     return $component;
   }
 
+
+  public static function getNextFromStream($stream, ?string $component_name=null)
+  {
+    $lines = [];
+
+    // Theoretically the line should be folded if it's longer than 75 octets,
+    // but, just in case the file has been created without using folding, we
+    // will read a large number (4096) of bytes to make sure that we get as
+    // far as the end of the line.
+    while (false !== ($line = stream_get_line($stream, 4096, Calendar::EOL)))
+    {
+      if (empty($lines))
+      {
+        if (str_starts_with($line, 'BEGIN:'))
+        {
+          // Work out what kind of component this is from the first line and see if it's the
+          // one we're looking for.  If it is, or if we're not looking for a specific component,
+          // then start saving the content lines.
+          $this_component_name = mb_strtoupper(mb_substr($line, mb_strlen('BEGIN:')));
+          if (!isset($component_name))
+          {
+            $component_name = $this_component_name;
+          }
+          elseif ($component_name !== $this_component_name)
+          {
+            continue;
+          }
+          // We've reached the start of a new component, so start saving the lines.
+          $lines[] = $line;
+        }
+      }
+      else
+      {
+        $lines[] = $line;
+        if ($line == "END:$this_component_name")
+        {
+          // We've reached the end of the event, so return the Component object.
+          $content = implode(Calendar::EOL, $lines);
+          return ComponentFactory::createFromString($content);
+        }
+      }
+    }
+
+    return false;
+  }
+
 }

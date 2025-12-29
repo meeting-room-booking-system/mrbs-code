@@ -204,6 +204,7 @@ function get_skip_list(string $values, array $params) : array
  */
 function get_event($handle)
 {
+  return ComponentFactory::getNextFromStream($handle, Event::NAME);
   $lines = [];
 
   // Theoretically the line should be folded if it's longer than 75 octets,
