@@ -196,47 +196,6 @@ function get_skip_list(string $values, array $params) : array
 }
 
 
-/**
- * Get the next event from the stream.
- *
- * @param resource $handle
- * @return Event|false An Event object or FALSE if EOF has been reached.
- */
-function get_event($handle)
-{
-  return ComponentFactory::getNextFromStream($handle, Event::NAME);
-  $lines = [];
-
-  // Theoretically the line should be folded if it's longer than 75 octets,
-  // but, just in case the file has been created without using folding, we
-  // will read a large number (4096) of bytes to make sure that we get as
-  // far as the end of the line.
-  while (false !== ($line = stream_get_line($handle, 4096, Calendar::EOL)))
-  {
-    if (empty($lines))
-    {
-      if ($line == 'BEGIN:VEVENT')
-      {
-        // We've reached the start of a new event, so start saving the lines.
-        $lines[] = $line;
-      }
-    }
-    else
-    {
-      $lines[] = $line;
-      if ($line == 'END:VEVENT')
-      {
-        // We've reached the end of the event, so return the Event object.
-        $content = implode(Calendar::EOL, $lines);
-        return ComponentFactory::createFromString( $content);
-      }
-    }
-  }
-
-  return false;
-}
-
-
 // Add a VEVENT to MRBS.   Returns TRUE on success, FALSE if the event wasn't added
 function process_event(Event $event) : bool
 {
@@ -1140,7 +1099,7 @@ if (!empty($import))
         }
         else
         {
-          while (false !== ($vevent = get_event($handle)))
+          while (false !== ($vevent = ComponentFactory::getNextFromStream($handle, Event::NAME)))
           {
             (process_event($vevent)) ? $n_success++ : $n_failure++;
           }

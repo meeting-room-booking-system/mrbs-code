@@ -63,6 +63,14 @@ class ComponentFactory
   }
 
 
+  /**
+   * Reads the next component from a stream and creates a corresponding component object.
+   *
+   * @param resource $stream The input stream to read the component from.
+   * @param string|null $component_name The specific component name to look for, or null to read any component.
+   *
+   * @return Component|false         The component object if a valid component is found, or false if there are no more components.
+   */
   public static function getNextFromStream($stream, ?string $component_name=null)
   {
     $lines = [];
