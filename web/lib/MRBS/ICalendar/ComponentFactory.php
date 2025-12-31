@@ -59,34 +59,34 @@ class ComponentFactory
     // Go through the lines and add the properties to the component.
     while (null !== ($line = array_shift($lines)))
     {
-      // Check for a nested component.
+      // Check for a nested component
       if (!str_starts_with($line, 'BEGIN:'))
       {
+        // Not a nested component, so add the line as a property.
         $component->addProperty(Property::createFromString($line));
       }
       else
       {
-        // Convert the remaining lines into a stream.
-        array_unshift($lines, $line);
-        $remaining_content = implode(Calendar::EOL, $lines);
-        $stream = fopen('php://temp', 'r+');
-        fwrite($stream, $remaining_content);
-        // Get the nested component and add it to the component.
-        if (false !== ($nested_component = ComponentFactory::getNextFromStream($stream)))
+        // We've got a nested component.
+        $nested_component_name = mb_strtoupper(mb_substr($line, mb_strlen('BEGIN:')));
+        // Save the lines until we reach the END: line
+        $nested_lines = [];
+        do {
+          $nested_lines[] = $line;
+        } while (null !== ($line = array_shift($lines)) && ("END:$nested_component_name" !== $line));
+        if (null === $line)
         {
-          $component->addComponent($nested_component);
+          trigger_error("Nested $nested_component_name component does not have an END: line", E_USER_WARNING);
+          return false;
         }
-        // Convert the stream back into an array of lines and close the stream.
-        $remaining_content = stream_get_contents($stream);
-        if ($remaining_content === '')
+        // Add the END: line to the nested lines.
+        $nested_lines[] = $line;
+        // Get the nested component and add it to this component.
+        if (false === ($nested_component = self::createFromString(implode(Calendar::EOL, $nested_lines))))
         {
-          $lines = [];
+          return false;
         }
-        else
-        {
-          $lines = explode(Calendar::EOL, $remaining_content);
-        }
-        fclose($stream);
+        $component->addComponent($nested_component);
       }
     }
 
