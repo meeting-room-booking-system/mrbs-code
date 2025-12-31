@@ -47,8 +47,17 @@ class ComponentFactory
       case Event::NAME:
         $component = new Event();
         break;
+      case FreeBusy::NAME:
+        $component = new FreeBusy();
+        break;
+      case Journal::NAME:
+        $component = new Journal();
+        break;
       case Timezone::NAME:
         $component = new Timezone();
+        break;
+      case Todo::NAME:
+        $component = new Todo();
         break;
       default:
         trigger_error("Unknown component type: '$component_name'", E_USER_WARNING);
