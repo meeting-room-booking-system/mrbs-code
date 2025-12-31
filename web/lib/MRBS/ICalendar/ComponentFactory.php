@@ -82,6 +82,7 @@ class ComponentFactory
         // Add the END: line to the nested lines.
         $nested_lines[] = $line;
         // Get the nested component and add it to this component.
+        // This code allows for an unlimited depth of nested components, though in practice only one level should be needed.
         if (false === ($nested_component = self::createFromString(implode(Calendar::EOL, $nested_lines))))
         {
           return false;
