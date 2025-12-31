@@ -41,6 +41,9 @@ class ComponentFactory
     // Create the component object.
     switch ($component_name)
     {
+      case Alarm::NAME:
+        $component = new Alarm();
+        break;
       case Event::NAME:
         $component = new Event();
         break;
@@ -54,9 +57,37 @@ class ComponentFactory
     }
 
     // Go through the lines and add the properties to the component.
-    foreach ($lines as $line)
+    while (null !== ($line = array_shift($lines)))
     {
-      $component->addProperty(Property::createFromString($line));
+      // Check for a nested component.
+      if (!str_starts_with($line, 'BEGIN:'))
+      {
+        $component->addProperty(Property::createFromString($line));
+      }
+      else
+      {
+        // Convert the remaining lines into a stream.
+        array_unshift($lines, $line);
+        $remaining_content = implode(Calendar::EOL, $lines);
+        $stream = fopen('php://temp', 'r+');
+        fwrite($stream, $remaining_content);
+        // Get the nested component and add it to the component.
+        if (false !== ($nested_component = ComponentFactory::getNextFromStream($stream)))
+        {
+          $component->addComponent($nested_component);
+        }
+        // Convert the stream back into an array of lines and close the stream.
+        $remaining_content = stream_get_contents($stream);
+        if ($remaining_content === '')
+        {
+          $lines = [];
+        }
+        else
+        {
+          $lines = explode(Calendar::EOL, $remaining_content);
+        }
+        fclose($stream);
+      }
     }
 
     return $component;
@@ -106,7 +137,7 @@ class ComponentFactory
         $lines[] = $line;
         if ($line == "END:$this_component_name")
         {
-          // We've reached the end of the event, so return the Component object.
+          // We've reached the end of the component, so return the Component object.
           $content = implode(Calendar::EOL, $lines);
           return ComponentFactory::createFromString($content);
         }

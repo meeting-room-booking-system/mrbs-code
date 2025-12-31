@@ -8,6 +8,11 @@ abstract class Component
   public const NAME = self::NAME;
 
   /**
+   * Components can contain other components, eg a VEVENT can contain a VALARM.
+   * @var Component[]
+   */
+  protected $components = [];
+  /**
    * @var Property[]
    */
   protected $properties = [];
@@ -21,6 +26,16 @@ abstract class Component
   protected function validateProperty(Property $property) : void
   {
 
+  }
+
+
+  /**
+   * Add a subcomponent to the component.
+   */
+  public function addComponent(Component $component) : self
+  {
+    $this->components[] = $component;
+    return $this;
   }
 
 
@@ -64,6 +79,11 @@ abstract class Component
   public function toString(): string
   {
     $result = 'BEGIN:' . static::NAME . Calendar::EOL;
+
+    foreach ($this->components as $component)
+    {
+      $result .= $component->toString();
+    }
 
     foreach ($this->properties as $property)
     {
