@@ -29,7 +29,7 @@ class ComponentFactory
       trigger_error("First line of component is not BEGIN: line: '$first_line'", E_USER_WARNING);
       return false;
     }
-    $component_name = mb_strtoupper(mb_substr($first_line, mb_strlen('BEGIN:')));
+    $component_name = mb_substr($first_line, mb_strlen('BEGIN:'));
 
     // Check that the last line is a matching END: line.
     if ("END:$component_name" !== ($last_line = array_pop($lines)))
@@ -68,7 +68,7 @@ class ComponentFactory
       else
       {
         // We've got a nested component.
-        $nested_component_name = mb_strtoupper(mb_substr($line, mb_strlen('BEGIN:')));
+        $nested_component_name = mb_substr($line, mb_strlen('BEGIN:'));
         // Save the lines until we reach the END: line
         $nested_lines = [];
         do {
@@ -119,7 +119,7 @@ class ComponentFactory
           // Work out what kind of component this is from the first line and see if it's the
           // one we're looking for.  If it is, or if we're not looking for a specific component,
           // then start saving the content lines.
-          $this_component_name = mb_strtoupper(mb_substr($line, mb_strlen('BEGIN:')));
+          $this_component_name = mb_substr($line, mb_strlen('BEGIN:'));
           if (!isset($component_name))
           {
             $component_name = $this_component_name;
