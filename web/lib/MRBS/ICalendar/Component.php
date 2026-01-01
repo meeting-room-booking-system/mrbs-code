@@ -82,14 +82,14 @@ abstract class Component
   {
     $result = 'BEGIN:' . static::NAME . Calendar::EOL;
 
-    foreach ($this->components as $component)
-    {
-      $result .= $component->toString();
-    }
-
     foreach ($this->properties as $property)
     {
       $result .= $property->toString();
+    }
+
+    foreach ($this->components as $component)
+    {
+      $result .= $component->toString();
     }
 
     $result .= 'END:' . static::NAME . Calendar::EOL;

@@ -392,11 +392,13 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
     'confirmation_enabled'
   ];
 
-  // These fields are in the entry table and can be ignored for the moment.  However we need to do something in the future.
+  // These fields are in the entry table and can be ignored for the moment.  However we need to do something
+  // in the future about 'awaiting_approval' and 'private'.
   // TODO
   $special_fields = [
     'awaiting_approval',
-    'private'
+    'private',
+    'repeat_rule'
   ];
 
   $ignore_fields = array_merge($standard_fields['entry'], $already_handled, $area_table_fields, $special_fields);
