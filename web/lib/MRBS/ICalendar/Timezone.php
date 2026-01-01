@@ -138,7 +138,7 @@ class Timezone extends Component
       return null;
     }
 
-    $vtimezone = RFC5545::extractVtimezone($vcalendar);
+    $vtimezone = self::extractVtimezone($vcalendar);
 
     return (empty($vtimezone)) ? null : $vtimezone;
   }
@@ -177,7 +177,7 @@ class Timezone extends Component
       return null;
     }
 
-    $new_vtimezone = RFC5545::extractVtimezone($vcalendar);
+    $new_vtimezone = self::extractVtimezone($vcalendar);
     if (empty($new_vtimezone))
     {
       trigger_error("MRBS: $tz_url did not contain a valid VTIMEZONE", E_USER_WARNING);
@@ -185,6 +185,16 @@ class Timezone extends Component
     }
 
     return $new_vtimezone;
+  }
+
+
+  // Extracts a VTIMEZONE component from a VCALENDAR.
+  private static function extractVtimezone(string $content) : string
+  {
+    // The VTIMEZONE components are enclosed in a VCALENDAR, so we want to
+    // extract the VTIMEZONE component.
+    preg_match('/BEGIN:VTIMEZONE[\s\S]*?END:VTIMEZONE/', $content, $matches);
+    return $matches[0] ?? '';
   }
 
 

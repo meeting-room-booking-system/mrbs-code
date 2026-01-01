@@ -82,16 +82,6 @@ class RFC5545
   }
 
 
-  // Extracts a VTIMEZONE component from a VCALENDAR.
-  public static function extractVtimezone(string $vcalendar) : string
-  {
-    // The VTIMEZONE components are enclosed in a VCALENDAR, so we want to
-    // extract the VTIMEZONE component.
-    preg_match('/BEGIN:VTIMEZONE[\s\S]*?END:VTIMEZONE/', $vcalendar, $matches);
-    return $matches[0] ?? '';
-  }
-
-
   // Create a comma separated list of dates in an EXDATE property.
   public static function createExdateProperty(array $timestamps, ?string $timezone) : string
   {
