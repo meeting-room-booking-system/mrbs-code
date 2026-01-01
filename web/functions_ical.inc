@@ -162,7 +162,7 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
   // TODO: return an Event object, rather than a string
   // TODO: custom fields
 
-  global $mail_settings, $timezone, $default_area_room_delimiter;
+  global $mail_settings, $timezone, $default_area_room_delimiter, $standard_fields;
   global $partstat_accepted;
 
   $vtimezone = Timezone::createFromTimezoneName($timezone);
@@ -374,6 +374,44 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
         $property->addParameter('X-MRBS-CREATE-BY', $registrant['create_by']);
         $event->addProperty($property);
       }
+    }
+  }
+
+  // Custom fields
+  // These fields have already been handled above.
+  $already_handled = [
+    'last_updated',
+    'tentative',
+    'area_name',
+    'room_name'
+  ];
+
+  // These fields are in the area table and can be ignored.
+  $area_table_fields = [
+    'approval_enabled',
+    'confirmation_enabled'
+  ];
+
+  // These fields are in the entry table and can be ignored for the moment.  However we need to do something in the future.
+  // TODO
+  $special_fields = [
+    'awaiting_approval',
+    'private'
+  ];
+
+  $ignore_fields = array_merge($standard_fields['entry'], $already_handled, $area_table_fields, $special_fields);
+
+  foreach ($data as $key => $value)
+  {
+    if (!in_array($key, $ignore_fields) && isset($value))
+    {
+      // Column names are case-insensitive in MySQL, so we can safely convert them to upper-case to comply with
+      // the RFC 5545 standard that they are case-insensitive but by convention written in upper-case.  In PostgreSQL
+      // column names are also case-insensitive, unless they are quoted, in which case they are case-sensitive.  For
+      // PostgreSQL it is therefore recommended to use unquoted column names.
+      // Property names can only consist of ALPHA, DIGIT and "-" characters, so we convert "_" to "-".
+      $property = new Property('X-MRBS-' . mb_strtoupper(str_replace('_', '-', $key)), $value);
+      $event->addProperty($property);
     }
   }
 
