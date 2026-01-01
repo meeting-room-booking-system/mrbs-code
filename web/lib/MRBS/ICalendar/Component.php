@@ -8,7 +8,9 @@ abstract class Component
   public const NAME = self::NAME;
 
   /**
-   * Components can contain other components, eg a VEVENT can contain a VALARM.
+   * Components can contain other components, eg a VEVENT can contain a VALARM, or a VTIMEZONE can contain
+   * STANDARD and DAYLIGHT components.
+   *
    * @var Component[]
    */
   protected $components = [];
