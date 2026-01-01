@@ -188,7 +188,9 @@ class Timezone extends Component
   }
 
 
-  // Extracts a VTIMEZONE component from a VCALENDAR.
+  /**
+   * Extract a VTIMEZONE component from a VCALENDAR.
+   */
   private static function extractVtimezone(string $content) : string
   {
     // The VTIMEZONE components are enclosed in a VCALENDAR, so we want to
