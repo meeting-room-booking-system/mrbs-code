@@ -6,9 +6,25 @@ use MRBS\Utf8\Utf8String;
 
 class Property
 {
+  private const VALUE_TYPE_BINARY = 'BINARY';
+  private const VALUE_TYPE_BOOLEAN = 'BOOLEAN';
+  private const VALUE_TYPE_CAL_ADDRESS = 'CAL-ADDRESS';
+  private const VALUE_TYPE_DATE = 'DATE';
+  private const VALUE_TYPE_DATE_TIME = 'DATE-TIME';
+  private const VALUE_TYPE_DURATION = 'DURATION';
+  private const VALUE_TYPE_FLOAT = 'FLOAT';
+  private const VALUE_TYPE_INTEGER = 'INTEGER';
+  private const VALUE_TYPE_PERIOD = 'PERIOD';
+  private const VALUE_TYPE_RECUR = 'RECUR';
+  private const VALUE_TYPE_TEXT = 'TEXT';
+  private const VALUE_TYPE_TIME = 'TIME';
+  private const VALUE_TYPE_URI = 'URI';
+  private const VALUE_TYPE_UTC_OFFSET = 'UTC-OFFSET';
+
   private $name;
   private $params = [];
   private $values = [];
+  private $value_type;
 
   // TODO: Rewrite import.php to use these classes.
 
@@ -20,6 +36,7 @@ class Property
     // Property names are case-insensitive, but by convention we use uppercase.
     $this->name = mb_strtoupper($name);
     $this->values = (array) $values;
+    $this->setImplicitValueType();
   }
 
 
@@ -53,6 +70,12 @@ class Property
     // See, for example, DELEGATED-FROM and DELEGATED-TO in RFC 5545.
     $uc_name = mb_strtoupper($name);
     $this->params[$uc_name] = array_merge($this->params[$uc_name] ?? [], (array) $values);
+
+    // If the value type has been set explicitly using a VALUE parameter then update the value type.
+    if ($uc_name == 'VALUE')
+    {
+      $this->value_type = mb_strtoupper($values);
+    }
   }
 
 
@@ -86,8 +109,16 @@ class Property
       $result .= ';' . $name . '=' . implode(',', array_map([self::class, 'escapeParamValue'], $values));
     }
 
-    $result .= ':' . implode(',', array_map([self::class, 'escapeText'], $this->values));
-    return $result . Calendar::EOL;
+    if ($this->value_type == self::VALUE_TYPE_TEXT)
+    {
+      $value_string = implode(',', array_map([self::class, 'escapeText'], $this->values));
+    }
+    else
+    {
+      $value_string = implode(',', $this->values);
+    }
+
+    return "$result:$value_string" . Calendar::EOL;
   }
 
 
@@ -274,6 +305,71 @@ class Property
     $str = str_replace("\\\\", "\\", $str);
 
     return $str;
+  }
+
+
+  private function setImplicitValueType() : void
+  {
+    // See RFC 5545 for the default value types for each property.
+    switch ($this->name)
+    {
+      case 'ATTENDEE':
+      case 'ORGANIZER':
+        $this->value_type = self::VALUE_TYPE_CAL_ADDRESS;
+        break;
+
+      case 'COMPLETED':
+      case 'CREATED':
+      case 'DTEND':
+      case 'DTSTAMP':
+      case 'DTSTART':
+      case 'DUE':
+      case 'EXDATE':
+      case 'LAST-MODIFIED':
+      case 'RDATE':
+      case 'RECURRENCE-ID':
+        $this->value_type = self::VALUE_TYPE_DATE_TIME;
+        break;
+
+      case 'DURATION':
+      case 'TRIGGER':
+        $this->value_type = self::VALUE_TYPE_DURATION;
+        break;
+
+      case 'GEO':
+        $this->value_type = self::VALUE_TYPE_FLOAT;
+        break;
+
+      case 'PERCENT-COMPLETE':
+      case 'PRIORITY':
+      case 'REPEAT':
+      case 'SEQUENCE':
+        $this->value_type = self::VALUE_TYPE_INTEGER;
+        break;
+
+      case 'FREEBUSY':
+        $this->value_type = self::VALUE_TYPE_PERIOD;
+        break;
+
+      case 'RRULE':
+        $this->value_type = self::VALUE_TYPE_RECUR;
+        break;
+
+      case 'ATTACH':
+      case 'TZURL':
+      case 'URL':
+        $this->value_type = self::VALUE_TYPE_URI;
+        break;
+
+      case 'TZOFFSETFROM':
+      case 'TZOFFSETTO':
+        $this->value_type = self::VALUE_TYPE_UTC_OFFSET;
+        break;
+
+      default:
+        $this->value_type = self::VALUE_TYPE_TEXT;
+        break;
+    }
   }
 
 }
