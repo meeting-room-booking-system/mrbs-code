@@ -289,6 +289,7 @@ Technical explanation of the restriction on column names for custom fields
 // - as the column name in the database
 // - as part of an HTML name attribute for a form input
 // - as part of a PHP variable name
+// - as part of a property name in an iCalendar file
 //
 // MySQL, PostgreSQL, HTML and PHP all have different rules for these tokens:
 // - MySQL: almost anything is allowed except that:
@@ -320,12 +321,15 @@ Technical explanation of the restriction on column names for custom fields
 //   underscores ("_"), colons (":"), and periods (".")."
 //   (http://www.w3.org/TR/html401/types.html#type-cdata)
 //
+// - iCalendar: A name consists of ALPHA / DIGIT / "-" characters.
+//
 // In order to avoid complications with using names in each of these contexts,
 // we restrict custom field names to the set of names which conforms to all
-// four rules, taking into account the fact that when MRBS uses column names
+// five rules, taking into account the fact that when MRBS uses column names
 // in PHP and HTML it always prefixes them with a string beginning with a letter.
 // This gives us the rule that custom field names must consist of letters,
-// numbers or underscores.
+// numbers or underscores (which are converted to hyphens when exported to an
+// iCalendar file).
 
 
 CONFIGURING MRBS

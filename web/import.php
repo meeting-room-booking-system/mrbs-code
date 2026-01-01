@@ -381,6 +381,7 @@ function process_event(Event $event) : bool
         {
           $key = substr($property['name'], strlen($mrbs_prefix));
           $key = strtolower($key);
+          // Convert hyphens back to underscores
           $key = str_replace('-', '_', $key);
           // Type
           if ($key == 'type')
@@ -411,7 +412,11 @@ function process_event(Event $event) : bool
               'create_by'   => RFC5545::unescapeQuotedString($property['params']['X-MRBS-CREATE-BY'])
             );
           }
-          // TODO: custom fields
+          // Custom fields
+          else
+          {
+            $booking[$key] = RFC5545::unescapeText($property['value']);
+          }
         }
         break;
     }

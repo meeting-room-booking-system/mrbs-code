@@ -194,7 +194,7 @@ class RFC5545
 
 
   // Reverses RFC 5545 escaping of text
-  private static function unescapeText(string $str) : string
+  public static function unescapeText(string $str) : string
   {
     // Unescape '\N'
     $str = str_replace("\\N", "\N", $str);
