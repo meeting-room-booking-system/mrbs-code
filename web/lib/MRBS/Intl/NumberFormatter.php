@@ -95,6 +95,29 @@ class NumberFormatter
   public const CASH_CURRENCY = 13; // PHP 8.5 onwards
   public const CURRENCY_STANDARD = 16; // PHP 8.5 onwards
 
+  public const VALID_ATTRIBUTES = [
+    self::PARSE_INT_ONLY,
+    self::GROUPING_USED,
+    self::DECIMAL_ALWAYS_SHOWN,
+    self::MAX_INTEGER_DIGITS,
+    self::MIN_INTEGER_DIGITS,
+    self::INTEGER_DIGITS,
+    self::MAX_FRACTION_DIGITS,
+    self::MIN_FRACTION_DIGITS,
+    self::FRACTION_DIGITS,
+    self::MULTIPLIER,
+    self::GROUPING_SIZE,
+    self::ROUNDING_MODE,
+    self::ROUNDING_INCREMENT,
+    self::FORMAT_WIDTH,
+    self::PADDING_POSITION,
+    self::SECONDARY_GROUPING_SIZE,
+    self::SIGNIFICANT_DIGITS_USED,
+    self::MIN_SIGNIFICANT_DIGITS,
+    self::MAX_SIGNIFICANT_DIGITS,
+    self::LENIENT_PARSE
+  ];
+
   public const VALID_STYLES = [
     self::PATTERN_DECIMAL,
     self::DECIMAL,
@@ -110,8 +133,21 @@ class NumberFormatter
     self::IGNORE
   ];
 
+  public const VALID_TEXT_ATTRIBUTES = [
+    self::POSITIVE_PREFIX,
+    self::POSITIVE_SUFFIX,
+    self::NEGATIVE_PREFIX,
+    self::NEGATIVE_SUFFIX,
+    self::PADDING_CHARACTER,
+    self::CURRENCY_CODE,
+    self::DEFAULT_RULESET,
+    self::PUBLIC_RULESETS
+  ];
+
+  private $attributes;
   private $locale;
   private $style;
+  private $text_attributes;
 
   /**
    * @see \NumberFormatter::__construct()
@@ -140,6 +176,36 @@ class NumberFormatter
 
     $locale_switcher->restore();
     return number_format($num, 0, $locale_info['decimal_point'], $locale_info['thousands_sep']);
+  }
+
+
+  /**
+   * @see \NumberFormatter::setAttribute()
+   */
+  public function setAttribute(int $attribute, $value): bool
+  {
+    if (!in_array($attribute, self::VALID_ATTRIBUTES, true))
+    {
+      return false;
+    }
+
+    $this->attributes[$attribute] = $value;
+    return true;
+  }
+
+
+  /**
+   * @see \NumberFormatter::setTextAttribute()
+   */
+  public function setTextAttribute(int $attribute, string $value): bool
+  {
+    if (!in_array($attribute, self::VALID_TEXT_ATTRIBUTES, true))
+    {
+      return false;
+    }
+
+    $this->text_attributes[$attribute] = $value;
+    return true;
   }
 
 }

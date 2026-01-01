@@ -920,7 +920,7 @@ function notifyAdminOnBooking(array $data, array $mail_previous, bool $new_entry
     // TODO: the addresses have by this stage been MIME-encoded.  It would probably be better to
     // TODO: pass unencoded addresses to create_ical_event() so that we don't have to decode them,
     // TODO: as mb_decode_mimeheader() isn't guaranteed to exist.
-    $ical_components[] = create_ical_event($attachment['method'], $data, $addresses, $series);
+    $ical_components[] = trim(create_ical_event($attachment['method'], $data, $addresses, $series), "\r\n");
     $attachment['content']  = create_icalendar($attachment['method'], $ical_components);
     $attachment['name']     = $mail_settings['ics_filename'] . ".ics";
   }
@@ -1004,7 +1004,7 @@ function notifyAdminOnDelete($data, $start_times, bool $series=false, string $ac
   {
     $attachment['method']   = "CANCEL";
     $ical_components = array();
-    $ical_components[] = create_ical_event($attachment['method'], $data, $addresses, $series);
+    $ical_components[] = trim(create_ical_event($attachment['method'], $data, $addresses, $series), "\r\n");
     $attachment['content']  = create_icalendar($attachment['method'], $ical_components);
     $attachment['name']     = $mail_settings['ics_filename'] . ".ics";
   }

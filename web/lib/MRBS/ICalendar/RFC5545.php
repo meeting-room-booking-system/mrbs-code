@@ -4,9 +4,6 @@ namespace MRBS\ICalendar;
 
 use DateTimeZone;
 use MRBS\DateTime;
-use MRBS\Exception;
-use MRBS\Language;
-use MRBS\Utf8\Utf8String;
 use function MRBS\get_vocab;
 
 class RFC5545
@@ -15,12 +12,7 @@ class RFC5545
   // An array which can be used to map day of the week numbers (0..6)
   // onto days of the week as defined in RFC 5545
   public const DAYS = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
-  public const EOL = "\r\n";  // Lines must be terminated by CRLF
-  private const CR = "\r";
-  private const LF = "\n";
-  private const LINE_FOLD = self::EOL . ' '; // The RFC also allows a horizontal tab instead of a space
-  private const LINE_FOLD_OCTETS = 1;
-  private const MAX_OCTETS_IN_LINE =75;  // The maximum line length allowed
+
 
   // Convert an RFC 5545 day to an ordinal number representing the day of the week,
   // eg "MO" returns "1"
@@ -90,26 +82,25 @@ class RFC5545
   }
 
 
-  // Extracts a VTIMEZONE component from a VCALENDAR.
-  public static function extractVtimezone(string $vcalendar) : string
-  {
-    // The VTIMEZONE components are enclosed in a VCALENDAR, so we want to
-    // extract the VTIMEZONE component.
-    preg_match('/BEGIN:VTIMEZONE[\s\S]*?END:VTIMEZONE/', $vcalendar, $matches);
-    return $matches[0] ?? '';
-  }
-
-
   // Create a comma separated list of dates in an EXDATE property.
   public static function createExdateProperty(array $timestamps, ?string $timezone) : string
   {
     $result = "EXDATE";
-    $dates = array();
 
     if (isset($timezone))
     {
       $result .= ";TZID=$timezone";
     }
+
+    $dates = self::createExdateList($timestamps, $timezone);
+
+    return "$result:" . implode(',', $dates);
+  }
+
+
+  public static function createExdateList(array $timestamps, ?string $timezone) : array
+  {
+    $dates = array();
 
     foreach ($timestamps as $timestamp)
     {
@@ -123,9 +114,8 @@ class RFC5545
       }
     }
 
-    return "$result:" . implode(',', $dates);
+    return $dates;
   }
-
 
   // Returns a UNIX timestamp given an RFC5545 date or date-time
   // $params is an optional second argument and is an array of property parameters
@@ -203,26 +193,6 @@ class RFC5545
   }
 
 
-  // Escape text for use in an iCalendar text value
-  public static function escapeText(string $str) : string
-  {
-    // Escape '\'
-    $str = str_replace("\\", "\\\\", $str);
-    // Escape ';'
-    $str = str_replace(";", "\;", $str);
-    // Escape ','
-    $str = str_replace(",", "\,", $str);
-    // EOL can only be \n
-    $str = str_replace("\r\n", "\n", $str);
-    // Escape '\n'
-    $str = str_replace("\n", "\\n", $str);
-    // Escape '\N'
-    $str = str_replace("\N", "\\N", $str);
-
-    return $str;
-  }
-
-
   // Reverses RFC 5545 escaping of text
   private static function unescapeText(string $str) : string
   {
@@ -238,92 +208,6 @@ class RFC5545
     $str = str_replace("\\\\", "\\", $str);
 
     return $str;
-  }
-
-
-  // "Folds" lines longer than 75 octets. Multibyte safe.
-  //
-  // "Lines of text SHOULD NOT be longer than 75 octets, excluding the line
-  // break.  Long content lines SHOULD be split into a multiple line
-  // representations using a line "folding" technique.  That is, a long
-  // line can be split between any two characters by inserting a CRLF
-  // immediately followed by a single linear white-space character (i.e.,
-  // SPACE or HTAB).  Any sequence of CRLF followed immediately by a
-  // single linear white-space character is ignored (i.e., removed) when
-  // processing the content type."  (RFC 5545)
-  public static function fold(string $str) : string
-  {
-    // Deal with the trivial case
-    if ($str === '')
-    {
-      return $str;
-    }
-
-    // We assume that we are using UTF-8 and therefore that a space character
-    // is one octet long.  If we ever switched for some reason to using, for
-    // example, UTF-16, this assumption would be invalid.
-    if ((Language::MRBS_CHARSET != 'utf-8') || (Language::MAIL_CHARSET != 'utf-8'))
-    {
-      throw new Exception("MRBS: internal error - using unsupported character set");
-    }
-
-    $utf8_string = new Utf8String($str);
-
-    // Simple case: no folding necessary
-    if ($utf8_string->byteCount() <= self::MAX_OCTETS_IN_LINE)
-    {
-      return $str;
-    }
-
-    // Iterate through the characters working out when to insert a fold
-    $result = '';
-    $n_chars = count($utf8_string->toArray());
-    $octets = 0;
-    $previous = [];
-
-    foreach ($utf8_string as $i => $char)
-    {
-      // Store the character
-      $previous[] = $char;
-
-      // If it's a CR and there's at least one more character to come, then get that one.
-      if (($char == self::CR) && ($i < $n_chars - 1))
-      {
-        continue;
-      }
-
-      // If it's a LF and the previous character was a CR, then we've reached the end of a line
-      if (($char == self::LF) && (count($previous) == 2) && ($previous[0] == self::CR))
-      {
-        // Output the EOL, clear the previous characters and reset the octet count
-        $result .= self::EOL;
-        $previous = [];
-        $octets = 0;
-        continue;
-      }
-
-      // Otherwise output the previous characters, inserting a fold if necessary
-      while (null !== ($previous_char = array_shift($previous)))
-      {
-        $previous_char_octets = (new Utf8String($previous_char))->byteCount();
-        // If this character would take us over the line length limit, then output a line fold
-        if ($octets + $previous_char_octets > self::MAX_OCTETS_IN_LINE)
-        {
-          $result .= self::LINE_FOLD;
-          // Reset the octet count to account for the whitespace introduced during folding.
-          // [Note:  It's not entirely clear from the RFC whether the octet that is introduced
-          // when folding counts towards the 75 octets.   Some implementations (eg Google
-          // Calendar as of Jan 2011) do not count it.  However, it can do no harm to err on
-          // the safe side and include the initial whitespace in the count.]
-          $octets = self::LINE_FOLD_OCTETS;
-        }
-        // Now output the character and add on the octets just output.
-        $result .= $previous_char;
-        $octets += $previous_char_octets;
-      }
-    }
-
-    return $result;
   }
 
 

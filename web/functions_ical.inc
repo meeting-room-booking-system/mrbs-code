@@ -2,251 +2,15 @@
 declare(strict_types=1);
 namespace MRBS;
 
-use GuzzleHttp\Client;
-use MRBS\DB\DBException;
 use MRBS\DB\DBStatement;
+use MRBS\ICalendar\Calendar;
+use MRBS\ICalendar\ComponentFactory;
+use MRBS\ICalendar\Event;
+use MRBS\ICalendar\Property;
 use MRBS\ICalendar\RFC5545;
 use MRBS\ICalendar\RFC5545Exception;
 use MRBS\ICalendar\Series;
-use PHPMailer\PHPMailer\PHPMailer;
-
-
-// Gets a VTIMEZONE definition from the file system.
-// Returns NULL if none found or it's empty.
-function get_vtimezone_file(string $tz) : ?string
-{
-  global $zoneinfo_outlook_compatible;
-
-  $tz_dir = ($zoneinfo_outlook_compatible) ? TZDIR_OUTLOOK : TZDIR;
-  $tz_file = "$tz_dir/$tz.ics";
-
-  if (!is_readable($tz_file))
-  {
-    return null;
-  }
-
-  $vcalendar = file_get_contents($tz_file);
-
-  if (empty($vcalendar))
-  {
-    return null;
-  }
-
-  $vtimezone = RFC5545::extractVtimezone($vcalendar);
-
-  return (empty($vtimezone)) ? null : $vtimezone;
-}
-
-
-// Gets a VTIMEZONE definition from the TZURL defined in the $vtimezone component
-function get_vtimezone_url(string $vtimezone) : ?string
-{
-  // (Note that a VTIMEZONE component can contain a TZURL property which
-  // gives the URL of the most up-to-date version.  Calendar applications
-  // should be able to check this themselves, but we might as well give them
-  // the most up-to-date version in the first place).
-  $properties = explode("\r\n", RFC5545::unfold($vtimezone));
-  foreach ($properties as $property)
-  {
-    if (mb_strpos($property, "TZURL:") === 0)
-    {
-      $tz_url = mb_substr($property, 6);  // 6 is the length of "TZURL:"
-      break;
-    }
-  }
-
-  if (!isset($tz_url))
-  {
-    trigger_error("The VTIMEZONE component didn't contain a TZURL property.", E_USER_NOTICE);
-    return null;
-  }
-
-  try {
-    $vcalendar = (new Client())->get($tz_url)->getBody()->getContents();
-  }
-  catch (\Exception $e) {
-    trigger_error(get_class($e) . ': ' . $e->getMessage(), E_USER_WARNING);
-    trigger_error("MRBS: failed to download a new timezone definition from $tz_url", E_USER_WARNING);
-    return null;
-  }
-
-  $new_vtimezone = RFC5545::extractVtimezone($vcalendar);
-  if (empty($new_vtimezone))
-  {
-    trigger_error("MRBS: $tz_url did not contain a valid VTIMEZONE", E_USER_WARNING);
-    return null;
-  }
-
-  return $new_vtimezone;
-}
-
-
-// Get a VTIMEZONE definition from the database.  Returns an array indexed by
-// 'vtimezone' and 'last_updated', or NULL if none found.
-function get_vtimezone_db(string $tz) : ?array
-{
-  global $zoneinfo_outlook_compatible;
-
-  $sql = "SELECT vtimezone, last_updated
-            FROM " . _tbl('zoneinfo') . "
-           WHERE timezone=:timezone
-             AND outlook_compatible=:outlook_compatible
-           LIMIT 1";
-
-  $sql_params = array(
-    ':timezone' => $tz,
-    ':outlook_compatible' => ($zoneinfo_outlook_compatible) ? 1 : 0
-  );
-
-  $res = db()->query($sql, $sql_params);
-
-  return ($res->count() === 0) ? null : $res->next_row_keyed();
-}
-
-
-// Update the last_updated time for a timezone in the database
-function touch_vtimezone_db(string $tz) : void
-{
-  global $zoneinfo_outlook_compatible;
-
-  $sql = "UPDATE " . _tbl('zoneinfo') . "
-             SET last_updated=:last_updated
-           WHERE timezone=:timezone
-             AND outlook_compatible=:outlook_compatible";
-
-  $sql_params = array(
-    ':last_updated' => time(),
-    ':timezone' => $tz,
-    ':outlook_compatible' => ($zoneinfo_outlook_compatible) ? 1 : 0
-  );
-
-  db()->command($sql, $sql_params);
-}
-
-
-// Insert a new VTIMEZONE definition for a timezone into the database
-function insert_vtimezone_db(string $tz, string $vtimezone) : void
-{
-  global $zoneinfo_outlook_compatible;
-
-  try
-  {
-    $sql = "INSERT INTO " . _tbl('zoneinfo') . "
-                      (vtimezone, last_updated, timezone, outlook_compatible)
-               VALUES (:vtimezone, :last_updated, :timezone, :outlook_compatible)";
-
-    $sql_params = array(
-      ':vtimezone' => $vtimezone,
-      ':last_updated' => time(),
-      ':timezone' => $tz,
-      ':outlook_compatible' => ($zoneinfo_outlook_compatible) ? 1 : 0
-    );
-
-    db()->command($sql, $sql_params);
-  }
-  catch (DBException $e)
-  {
-    // Catch any database exception because it's just possible that someone else has inserted a row just
-    // before us and then we'll get an error because of the unique constraint.   If we do then that's
-    // fine and we can ignore it, but trigger an error anyway just in case it's some other kind of error.
-    // (Ideally we'd want to be more specific about looking for constraint errors, but we have to consider
-    // both MySQL and PostgreSQL).
-    //
-    // We could have used an INSERT IGNORE, but there isn't an easy PostgreSQL alternative until
-    // PostgreSQL 9.5.
-    //
-    // We can't put a mutex lock round the SELECT - INSERT operation because we're normally already
-    // inside another lock from edit_entry_handler and you can only, in the MYSQL implementation, have
-    // one active lock.
-    trigger_error($e->getMessage(), E_USER_NOTICE);
-  }
-}
-
-
-// Update the database with a new VTIMEZONE definition for a timezone
-function update_vtimezone_db(string $tz, string $vtimezone) : void
-{
-  global $zoneinfo_outlook_compatible;
-
-  $sql = "UPDATE " . _tbl('zoneinfo') . "
-             SET vtimezone=:vtimezone,
-                 last_updated=:last_updated
-           WHERE timezone=:timezone
-             AND outlook_compatible=:outlook_compatible";
-
-  $sql_params = array(
-    ':vtimezone' => $vtimezone,
-    ':last_updated' => time(),
-    ':timezone' => $tz,
-    ':outlook_compatible' => ($zoneinfo_outlook_compatible) ? 1 : 0
-  );
-
-  db()->command($sql, $sql_params);
-}
-
-
-// Get a VTIMEZONE component for the timezone $tz.
-// If none available returns FALSE.
-//
-// We cache the latest VTIMEZONE component in the database.  If it has expired
-// we go to the web for the latest version or if there's nothing in the database
-// in the first place we try and populate it from the VTIMEZONE definitions in
-// the filesystem.
-function get_vtimezone(string $tz)
-{
-  global $zoneinfo_update, $zoneinfo_expiry;
-
-  static $vtimezones = array();  // Cache the components for performance
-
-  if (!isset($vtimezones[$tz]))
-  {
-    // Look for a timezone definition in the database
-    $vtimezone_db = get_vtimezone_db($tz);
-    if (isset($vtimezone_db['vtimezone']))
-    {
-      $vtimezones[$tz] = $vtimezone_db['vtimezone'];
-      // If the definition has expired, and we're updating it, then get a fresh definition from the URL
-      if ($zoneinfo_update && ((time() - $vtimezone_db['last_updated']) >= $zoneinfo_expiry))
-      {
-        $vtimezone = get_vtimezone_url($vtimezone_db['vtimezone']);
-        if (isset($vtimezone))
-        {
-          // We've got a valid VTIMEZONE, so we can update the database and the static variable
-          update_vtimezone_db($tz, $vtimezone);
-          $vtimezones[$tz] = $vtimezone;
-        }
-        else
-        {
-          // If we didn't manage to get a new VTIMEZONE, update the last_updated field
-          // so that MRBS will not try again until after the expiry interval has passed.
-          // This will mean that we don't keep encountering a timeout delay. (The most
-          // likely reason that we couldn't get a new VTIMEZONE is that the site doesn't
-          // have external internet access, so there's no point in retrying for a while).
-          touch_vtimezone_db($tz);
-        }
-      }
-    }
-    else
-    {
-      // If there's nothing in the database, get one from the filesystem
-      $vtimezone = get_vtimezone_file($tz);
-      if (isset($vtimezone))
-      {
-        // And put it in the database if it's valid
-        insert_vtimezone_db($tz, $vtimezone);
-        $vtimezones[$tz] = $vtimezone;
-      }
-      else
-      {
-        // Everything has failed
-        $vtimezones[$tz] = false;
-      }
-    }
-  }
-
-  return $vtimezones[$tz];
-}
-
+use MRBS\ICalendar\Timezone;
 
 // Gets a username given an ORGANIZER value.   Returns NULL if none found
 function get_create_by(string $organizer) : ?string
@@ -395,21 +159,21 @@ function get_repeat_rule(string $rrule, int $start_time, array &$errors)
 // Create an RFC 5545 iCalendar Event component
 function create_ical_event(string $method, array $data, ?array $addresses=null, bool $series=false) : string
 {
-  require_once "functions_mail.inc";
+  // TODO: return an Event object, rather than a string
+  // TODO: custom fields
 
   global $mail_settings, $timezone, $default_area_room_delimiter;
   global $partstat_accepted;
 
-  $vtimezone = get_vtimezone($timezone);
+  $vtimezone = Timezone::createFromTimezoneName($timezone);
 
-  $results = array();
-
-  $results[] = "BEGIN:VEVENT";
-  $results[] = "UID:" . $data['ical_uid'];  // compulsory
-  $results[] = "DTSTAMP:" . gmdate(RFC5545::DATETIME_FORMAT . '\Z');  // compulsory
+  $event = new Event();
+  // REQUIRED properties, but MUST NOT occur more than once
+  $event->addProperty(new Property('UID', $data['ical_uid']));
+  $event->addProperty(new Property('DTSTAMP', gmdate(RFC5545::DATETIME_FORMAT . '\Z')));
+  // Optional properties
   $last_modified = empty($data['last_updated']) ? time() : $data['last_updated'];
-  $results[] = "LAST-MODIFIED:" . gmdate(RFC5545::DATETIME_FORMAT . '\Z', $last_modified);
-
+  $event->addProperty(new Property('LAST-MODIFIED', gmdate(RFC5545::DATETIME_FORMAT . '\Z', $last_modified)));
 
   // Note: we try and write the event times in the format of a local time with
   // a timezone reference (ie RFC 5545 Form #3).   Only if we can't do that do we
@@ -429,63 +193,69 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
 
   if ($vtimezone === false)
   {
-    $results[] = "DTSTART:" . gmdate(RFC5545::DATETIME_FORMAT . '\Z', $data['start_time']);
-    $results[] = "DTEND:" . gmdate(RFC5545::DATETIME_FORMAT . '\Z', $data['end_time']);
+    $event->addProperty(new Property('DTSTART', gmdate(RFC5545::DATETIME_FORMAT . '\Z', $data['start_time'])));
+    $event->addProperty(new Property('DTEND', gmdate(RFC5545::DATETIME_FORMAT . '\Z', $data['end_time'])));
   }
   else
   {
-    $results[] = "DTSTART;TZID=$timezone:" . date(RFC5545::DATETIME_FORMAT, $data['start_time']);
-    $results[] = "DTEND;TZID=$timezone:" . date(RFC5545::DATETIME_FORMAT, $data['end_time']);
+    $property = new Property('DTSTART', date(RFC5545::DATETIME_FORMAT, $data['start_time']));
+    $property->addParameter('TZID', $timezone);
+    $event->addProperty($property);
+    $property = new Property('DTEND', date(RFC5545::DATETIME_FORMAT, $data['end_time']));
+    $property->addParameter('TZID', $timezone);
+    $event->addProperty($property);
   }
 
   if ($series)
   {
-    $results[] = "RRULE:" . $data['repeat_rule']->toRFC5545Rule();
+    $event->addProperty(new Property('RRULE', $data['repeat_rule']->toRFC5545Rule()));
     if (!empty($data['skip_list']))
     {
-      $results[] = RFC5545::createExdateProperty(
-        $data['skip_list'],
-        ($vtimezone === false) ? null : $timezone
-      );
+      $property = new Property('EXDATE', RFC5545::createExdateList($data['skip_list'], ($vtimezone === false) ? null : $timezone));
+      if ($vtimezone !== false)
+      {
+        $property->addParameter('TZID', $timezone);
+      }
     }
   }
-  $results[] = "SUMMARY:" . RFC5545::escapeText($data['name']);
+
+  $event->addProperty(new Property('SUMMARY', $data['name']));
   if (isset($data['description']))
   {
-    $results[] = "DESCRIPTION:" . RFC5545::escapeText($data['description']);
+    $event->addProperty(new Property('DESCRIPTION', $data['description']));
   }
-  $results[] = "LOCATION:" . RFC5545::escapeText($data['area_name'] . $default_area_room_delimiter . $data['room_name']);
-  $results[] = "SEQUENCE:" . $data['ical_sequence'];
-  // If this is an individual member of a series then set the recurrence id
+  $event->addProperty(new Property('LOCATION', $data['area_name'] . $default_area_room_delimiter . $data['room_name']));
+  $event->addProperty(new Property('SEQUENCE', $data['ical_sequence']));
+  // If this is an individual member of a series, then set the recurrence id.
   if (!$series && ($data['entry_type'] != ENTRY_SINGLE))
   {
-    $results[] = "RECURRENCE-ID:" . $data['ical_recur_id'];
+    $event->addProperty(new Property('RECURRENCE-ID', $data['ical_recur_id']));
   }
-  // STATUS:  As we can have confirmed and tentative bookings we will send that information
-  // in the Status property, as some calendar apps will use it.   For example Outlook 2007 will
-  // distinguish between tentative and confirmed bookings.  However, having sent it we need to
-  // send a STATUS:CANCELLED on cancellation.    It's not clear to me from the spec whether this
-  // is strictly necessary, but it can do no harm and there are some apps that seem to need it -
-  // for example Outlook 2003 (but not 2007).
-  if ($method == "CANCEL")
+  // STATUS: As we can have confirmed and tentative bookings, we will send that information
+  // in the Status property, as some calendar apps will use it.  For example, Outlook 2007 will
+  // distinguish between tentative and confirmed bookings.  However, having sent it, we need to
+  // send a STATUS:CANCELLED on cancellation.  It's not clear from the spec whether this is
+  // strictly necessary, but it can do no harm, and there are some apps that seem to need it -
+  // for example, Outlook 2003 (but not 2007).
+  if ($method === 'CANCEL')
   {
-    $results[] = "STATUS:CANCELLED";
+    $status = 'CANCELLED';
   }
   else
   {
-    $results[] = "STATUS:" . ((empty($data['tentative'])) ? "CONFIRMED" : "TENTATIVE");
+    $status = ($data['tentative']) ? 'TENTATIVE' : 'CONFIRMED';
   }
+  $event->addProperty(new Property('STATUS', $status));
 
   /*
   Class is commented out for the moment.  To be useful it probably needs to go
   hand in hand with an ORGANIZER, otherwise people won't be able to see their own
   bookings
-  // CLASS
-  $results[] = "CLASS:" . (($data['private']) ? "PRIVATE" : "PUBLIC");
+  $event->addProperty(new Property('CLASS', ($data['private']) ? 'PRIVATE' : 'PUBLIC'));
   */
 
   // ORGANIZER
-  // The organizer is MRBS.   We don't make the create_by user the organizer because there
+  // The organizer is MRBS.  We don't make the create_by user the organizer because there
   // are some mail systems such as IBM Domino that silently discard the email notification
   // if the organizer's email address is the same as the recipient's - presumably because
   // they assume that the recipient already knows about the event.
@@ -511,18 +281,19 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
   }
 
   $organizer = $organizer_addresses[0];
-  if (!isset($organizer['name']) || ($organizer['name'] === ''))
-  {
-    $organizer['name'] = get_mail_vocab('mrbs');
-  }
-
   if (isset($organizer['address']) && ($organizer['address'] !== ''))
   {
-    $results[] = 'ORGANIZER;CN=' . RFC5545::escapeQuotedString($organizer['name']) . ':mailto:' . $organizer['address'];
+    if (!isset($organizer['name']) || ($organizer['name'] === ''))
+    {
+      $organizer['name'] = get_mail_vocab('mrbs');
+    }
+    $property = new Property('ORGANIZER', 'mailto:' . $organizer['address']);
+    $property->addParameter('CN', $organizer['name']);
+    $event->addProperty($property);
   }
 
   // Put the people on the "to" list as required participants and those on the cc
-  // list as non-participants.   In theory the email client can then decide whether
+  // list as non-participants.  In theory the email client can then decide whether
   // to enter the booking automatically on the user's calendar - although at the
   // time of writing (Dec 2010) there don't seem to be any that do so!
   if (!empty($addresses))
@@ -557,24 +328,28 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
               $role = "NON-PARTICIPANT";
               break;
           }
+          $property = new Property('ATTENDEE', 'mailto:' . $attendee['address']);
           // Use the common name if there is one
-          $partstat = ($partstat_accepted) ? "ACCEPTED" : "NEEDS-ACTION";
-          $results[] = "ATTENDEE;" .
-                       ((isset($attendee['name']) && ($attendee['name'] !== '')) ? 'CN=' . RFC5545::escapeQuotedString($attendee['name']) . ';' : '') .
-                       "PARTSTAT=$partstat;ROLE=$role:mailto:" . $attendee['address'];
+          if (isset($attendee['name']) && ($attendee['name'] !== ''))
+          {
+            $property->addParameter('CN', $attendee['name']);
+          }
+          $property->addParameter('ROLE', $role);
+          $property->addParameter('PARTSTAT', ($partstat_accepted) ? 'ACCEPTED' : 'NEEDS-ACTION');
+          $event->addProperty($property);
         }
       }
-      // TODO: custom fields
     }
   }
 
   // MRBS specific properties
   // Type
-  $results[] = "X-MRBS-TYPE:" . RFC5545::escapeText(get_type_vocab($data['type']));
+  $event->addProperty(new Property('X-MRBS-TYPE', get_type_vocab($data['type'])));
+
   // Registration properties
   if (isset($data['allow_registration']))
   {
-    $properties = array(
+    $properties = [
       'allow_registration',
       'registrant_limit',
       'registrant_limit_enabled',
@@ -582,26 +357,27 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
       'registration_opens_enabled',
       'registration_closes',
       'registration_closes_enabled'
-    );
-    foreach ($properties as $property) {
-      $results[] = "X-MRBS-" . strtoupper(str_replace('_', '-', $property)) . ":" . $data[$property];
+    ];
+    foreach ($properties as $property)
+    {
+      $event->addProperty(new Property('X-MRBS-' . strtoupper(str_replace('_', '-', $property)), strval($data[$property])));
     }
     // Registrants (but only for individual entries)
-    if (!$series) {
+    if (!$series)
+    {
       $registrants = get_registrants($data['id'], false);
-      foreach ($registrants as $registrant) {
+      foreach ($registrants as $registrant)
+      {
         // We can't use the ATTENDEE property because its value has to be a URI.
-        $results[] = "X-MRBS-REGISTRANT;X-MRBS-REGISTERED=" . $registrant['registered'] .
-          ';' . 'X-MRBS-CREATE-BY=' . RFC5545::escapeQuotedString($registrant['create_by']) .
-          ':' . RFC5545::escapeText($registrant['username']);
+        $property = new Property('X-MRBS-REGISTRANT', $registrant['username']);
+        $property->addParameter('X-MRBS-REGISTERED', strval($registrant['registered']));
+        $property->addParameter('X-MRBS-CREATE-BY', $registrant['create_by']);
+        $event->addProperty($property);
       }
     }
   }
 
-  $results[] = "END:VEVENT";
-
-  // No CRLF at end: that will be added later
-  return implode(RFC5545::EOL, $results);
+  return $event->toString();
 }
 
 
@@ -610,41 +386,25 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
 //    $components  array    an array of iCalendar components, each a string
 function create_icalendar(string $method, array $components) : string
 {
-  require_once "version.inc";
-
   global $timezone;
 
-  $vtimezone = get_vtimezone($timezone);
-
-  $results = array();
-  $results[] = "BEGIN:VCALENDAR";
-  // Compulsory properties
-  $results[] = "PRODID:-//MRBS//NONSGML " . get_mrbs_version() . "//EN";
-  $results[] = "VERSION:2.0";
-  // Optional properties
-  $results[] = "CALSCALE:GREGORIAN";
-  $results[] = "METHOD:$method";
+  $calendar = new Calendar($method);
 
   // Add in the VTIMEZONE component if there is one (see the comment in
   // create_ical_event() above)
+  $vtimezone = Timezone::createFromTimezoneName($timezone);
   if ($vtimezone)
   {
-    $results[] = $vtimezone;
+    $calendar->addComponent($vtimezone);
   }
 
   // Add in each component
   foreach ($components as $component)
   {
-    $results[] = $component;
+    $calendar->addComponent(ComponentFactory::createFromString($component));
   }
 
-  $results[] = "END:VCALENDAR";
-
-  $result = implode(RFC5545::EOL, $results);
-  $result .= RFC5545::EOL;  // Has to end with the correct line ending
-  $result = RFC5545::fold($result);
-
-  return $result;
+  return $calendar->toString();
 }
 
 
@@ -658,6 +418,8 @@ function create_icalendar(string $method, array $components) : string
 //    $export_end int       a Unix timestamp giving the end limit for the export
 function export_icalendar(DBStatement $res, bool $keep_private, int $export_end=PHP_INT_MAX) : void
 {
+  global $timezone;
+
   require_once "functions_view.inc";
   require_once "mrbs_sql.inc";
 
@@ -677,10 +439,13 @@ function export_icalendar(DBStatement $res, bool $keep_private, int $export_end=
   // we're just exporting the calendar.   Furthermore, if we don't use PUBLISH then some
   // calendar apps (eg Outlook, at least 2010 and 2013) won't open the full calendar.
   $method = "PUBLISH";
+  $calendar = new Calendar($method);
+  $vtimezone = Timezone::createFromTimezoneName($timezone);
+  if ($vtimezone)
+  {
+    $calendar->addComponent($vtimezone);
+  }
 
-  // Initialize an array to hold the events and a variable to keep track
-  // of the last repeat id we've seen
-  $ical_events = array();
   $n_rows = $res->count();
 
   for ($i=0; (false !== ($row = $res->next_row_keyed())); $i++)
@@ -693,7 +458,7 @@ function export_icalendar(DBStatement $res, bool $keep_private, int $export_end=
     // If this is an individual entry, then construct an event
     if (!isset($row['rep_type']) || ($row['rep_type'] == RepeatRule::NONE))
     {
-      $ical_events[] = create_ical_event($method, $row);
+      $calendar->addComponent(ComponentFactory::createFromString(create_ical_event($method, $row)));
     }
 
     // Otherwise it's a series
@@ -715,7 +480,7 @@ function export_icalendar(DBStatement $res, bool $keep_private, int $export_end=
       // rows, then process the series
       if (($row['repeat_id'] != $series->repeat_id) || ($i == $n_rows - 1))
       {
-        $ical_events = array_merge($ical_events, $series->toEvents($method));
+        $calendar->addComponents($series->toEvents($method));
         // If we're at the start of a new series then create a new series
         if ($row['repeat_id'] != $series->repeat_id)
         {
@@ -724,15 +489,12 @@ function export_icalendar(DBStatement $res, bool $keep_private, int $export_end=
           // then process the new series
           if ($i == $n_rows - 1)
           {
-            $ical_events = array_merge($ical_events, $series->toEvents($method));
+            $calendar->addComponents($series->toEvents($method));
           }
         }
-
       }
     }
   }
 
-  // Build the iCalendar from the array of events and output it
-  $icalendar = create_icalendar($method, $ical_events);
-  echo $icalendar;
+  echo $calendar->toString();
 }

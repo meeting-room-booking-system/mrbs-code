@@ -14,6 +14,9 @@ use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldInputUrl;
 use MRBS\Form\FieldSelect;
 use MRBS\Form\Form;
+use MRBS\ICalendar\Calendar;
+use MRBS\ICalendar\ComponentFactory;
+use MRBS\ICalendar\Event;
 use MRBS\ICalendar\RFC5545;
 use ReflectionClass;
 use ZipArchive;
@@ -190,82 +193,9 @@ function get_skip_list(string $values, array $params) : array
   return $result;
 }
 
-// Get the next line, after unfolding, from the stream.
-// Returns FALSE when EOF is reached
-function get_unfolded_line($handle)
-{
-  static $buffer_line;
-
-  // If there's something in the buffer line left over
-  // from the last call, then start with that.
-  if (isset($buffer_line))
-  {
-    $unfolded_line = $buffer_line;
-    $buffer_line = null;
-  }
-
-  // Theoretically the line should be folded if it's longer than 75 octets
-  // but just in case the file has been created without using folding we
-  // will read a large number (4096) of bytes to make sure that we get as
-  // far as the CRLF.
-  while (false !== ($line = stream_get_line($handle, 4096, "\r\n")))
-  {
-    if (!isset($unfolded_line))
-    {
-      $unfolded_line = $line;
-    }
-    else
-    {
-      $first_char = mb_substr($line, 0, 1);
-      // If the first character of the line is a space or tab then it's
-      // part of a fold
-      if (($first_char == " ") || ($first_char == "\t"))
-      {
-        $unfolded_line .= mb_substr($line, 1);
-      }
-      // Otherwise we've reached the start of the next unfolded line, so
-      // save it for next time and finish
-      else
-      {
-        $buffer_line = $line;
-        break;
-      }
-    }
-  }
-
-  return (isset($unfolded_line)) ? $unfolded_line : false;
-}
-
-
-// Get the next event from the stream.
-// Returns FALSE if EOF has been reached, or else an array
-// of lines for the event.  The BEGIN:VEVENT and END:VEVENT
-// lines are not included in the array.
-function get_event($handle)
-{
-  // Advance to the beginning of the event
-  while ((false !== ($ical_line = get_unfolded_line($handle))) && ($ical_line != 'BEGIN:VEVENT'))
-  {
-  }
-
-  // No more events
-  if ($ical_line === false)
-  {
-    return false;
-  }
-  // Get the event
-  $vevent = array();
-  while ((false !== ($ical_line = get_unfolded_line($handle))) && ($ical_line != 'END:VEVENT'))
-  {
-    $vevent[] = $ical_line;
-  }
-
-  return $vevent;
-}
-
 
 // Add a VEVENT to MRBS.   Returns TRUE on success, FALSE if the event wasn't added
-function process_event(array $vevent) : bool
+function process_event(Event $event) : bool
 {
   global $import_default_room, $import_default_type, $import_past, $skip;
   global $morningstarts, $morningstarts_minutes, $resolution;
@@ -304,7 +234,13 @@ function process_event(array $vevent) : bool
   $properties = array();
   $problems = array();
 
-  $line = current($vevent);
+  // TODO: Process the event without converting back to lines
+  // Strip off the BEGIN and END lines
+  $lines = explode(Calendar::EOL, $event->toString());
+  array_shift($lines);
+  array_pop($lines);
+
+  $line = current($lines);
   while ($line !== false)
   {
     $property = RFC5545::parseProperty($line);
@@ -325,12 +261,12 @@ function process_event(array $vevent) : bool
     {
       $component = $property['value'];
       while (!(($property['name'] == 'END') && ($property['value'] == $component)) &&
-             ($line = next($vevent)))
+             ($line = next($lines)))
       {
         $property = RFC5545::parseProperty($line);
       }
     }
-    $line = next($vevent);
+    $line = next($lines);
   }
 
   if (!isset($booking['start_time']))
@@ -1143,7 +1079,7 @@ if (!empty($import))
         }
         else
         {
-          while (false !== ($vevent = get_event($handle)))
+          while (false !== ($vevent = ComponentFactory::getNextFromStream($handle, Event::NAME)))
           {
             (process_event($vevent)) ? $n_success++ : $n_failure++;
           }
