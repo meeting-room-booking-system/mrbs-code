@@ -44,6 +44,9 @@ class ComponentFactory
       case Alarm::NAME:
         $component = new Alarm();
         break;
+      case Daylight::NAME:
+        $component = new Daylight();
+        break;
       case Event::NAME:
         $component = new Event();
         break;
@@ -52,6 +55,9 @@ class ComponentFactory
         break;
       case Journal::NAME:
         $component = new Journal();
+        break;
+      case Standard::NAME:
+        $component = new Standard();
         break;
       case Timezone::NAME:
         $component = new Timezone();
