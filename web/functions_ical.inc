@@ -12,16 +12,6 @@ use MRBS\ICalendar\RFC5545Exception;
 use MRBS\ICalendar\Series;
 use MRBS\ICalendar\Timezone;
 
-// Gets a username given an ORGANIZER value.   Returns NULL if none found
-function get_create_by(string $organizer) : ?string
-{
-  // Get the email address.   Stripping off the 'mailto' is a very simplistic
-  // method.  It will work in the majority of cases, but this needs to be improved
-  $email = preg_replace('/^mailto:/', '', $organizer);
-
-  return auth()->getUsernameByEmail($email);
-}
-
 
 // Given an RFC 5545 recurrence rule, returns a RepeatRule object giving the MRBS repeat
 // details.

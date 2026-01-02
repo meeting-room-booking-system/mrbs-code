@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace MRBS\ICalendar;
 
+use DateTimeZone;
+use MRBS\DateTime;
 use MRBS\Utf8\Utf8String;
 
 class Property
@@ -97,6 +99,12 @@ class Property
   }
 
 
+  public function getParamValues(string $name) : array
+  {
+    return $this->params[$name] ?? [];
+  }
+
+
   /**
    * Convert the property to an unfolded string.
    */
@@ -119,6 +127,57 @@ class Property
     }
 
     return "$result:$value_string" . Calendar::EOL;
+  }
+
+
+  /**
+   * Converts a property of value type DATE-TIME to UNIX timestamps.
+   *
+   * @see https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.5
+   *
+   * @return int[]
+   */
+  public function toTimestamps() : array
+  {
+    if ($this->value_type !== self::VALUE_TYPE_DATE_TIME)
+    {
+      throw new \Exception("Property '$this->name' is not of type DATE-TIME");
+    }
+
+    $result = [];
+
+    foreach ($this->values as $value)
+    {
+      if (!isset($this->params['TZID']))
+      {
+        // FORM #1: DATE WITH LOCAL TIME
+        if (!str_ends_with($value, 'Z'))
+        {
+          throw new \Exception("Floating times not supported");
+        }
+
+        // FORM #2: DATE WITH UTC TIME
+        $value = rtrim($value, 'Z');
+        $tzid = 'UTC';
+      }
+      else
+      {
+        // FORM #3: DATE WITH LOCAL TIME AND TIME ZONE REFERENCE
+        if (!str_ends_with($value, 'Z'))
+        {
+          $tzid = $this->params['TZID'][0];
+        }
+        else
+        {
+          throw new \Exception("Both a TZID parameter and a Z suffix are not supported (see RFC 5545 section 3.3.5");
+        }
+      }
+
+      $datetime = DateTime::createFromFormat('Ymd\THis', $value, new DateTimeZone($tzid));
+      $result[] = $datetime->getTimestamp();
+    }
+
+    return $result;
   }
 
 

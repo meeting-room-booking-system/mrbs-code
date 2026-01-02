@@ -56,6 +56,16 @@ function get_compression_wrappers() : array
   return $result;
 }
 
+// Gets a username given an ORGANIZER value.   Returns NULL if none found
+function get_create_by(string $organizer) : ?string
+{
+  // Get the email address.   Stripping off the 'mailto' is a very simplistic
+  // method.  It will work in the majority of cases, but this needs to be improved
+  $email = preg_replace('/^mailto:/', '', $organizer);
+
+  return auth()->getUsernameByEmail($email);
+}
+
 
 // Gets the id of the area/room with the LOCATION property value of $location,
 // creating an area and room if allowed.
@@ -197,6 +207,8 @@ function get_skip_list(string $values, array $params) : array
 
 
 // Add a VEVENT to MRBS.   Returns TRUE on success, FALSE if the event wasn't added
+// Ignore any sub-components (eg a VALARM inside a VEVENT) as MRBS does not
+// yet handle things like reminders.
 function process_event(Event $event) : bool
 {
   global $import_default_room, $import_default_type, $import_past, $skip;
@@ -231,71 +243,40 @@ function process_event(Event $event) : bool
   $booking['type'] = $import_default_type;
   $booking['room_id'] = $import_default_room;
 
-  // Parse all the lines first because we'll need to get the start date
-  // for calculating some of the other settings
-  $properties = array();
-  $problems = array();
-
-  // TODO: Process the event without converting back to lines
-  // Strip off the BEGIN and END lines
-  $lines = explode(Calendar::EOL, $event->toString());
-  array_shift($lines);
-  array_pop($lines);
-
-  $line = current($lines);
-  while ($line !== false)
-  {
-    $property = RFC5545::parseProperty($line);
-    // Ignore any sub-components (eg a VALARM inside a VEVENT) as MRBS does not
-    // yet handle things like reminders.  Skip through to the end of the sub-
-    // component.   Just in case you can have sub-components at a greater depth
-    // than 1 (not sure if you can), make sure we've got to the matching END.
-    if ($property['name'] != 'BEGIN')
-    {
-      $properties[] = $property;
-      // Get the start time because we'll need it later
-      if ($property['name'] == 'DTSTART')
-      {
-        $booking['start_time'] = RFC5545::getTimestamp($property['value'], $property['params']);
-      }
-    }
-    else
-    {
-      $component = $property['value'];
-      while (!(($property['name'] == 'END') && ($property['value'] == $component)) &&
-             ($line = next($lines)))
-      {
-        $property = RFC5545::parseProperty($line);
-      }
-    }
-    $line = next($lines);
-  }
-
-  if (!isset($booking['start_time']))
+  // Get the start time because we'll need it later.
+  $dt_start = $event->getProperties('DTSTART', 1)[0];
+  if (empty($dt_start))
   {
     trigger_error("No DTSTART", E_USER_WARNING);
   }
+  $booking['start_time'] = $dt_start->toTimestamps()[0];
 
-  // Now go through the properties
-  foreach($properties as $property)
+  // Then iterate over the properties to get the rest of the details.
+  $problems = [];
+  $properties = $event->getProperties();
+
+  foreach ($properties as $property)
   {
-    switch ($property['name'])
+    $name = $property->getName();
+    $values = $property->getValues();
+
+    switch ($name)
     {
       case 'ORGANIZER':
-        $booking['create_by'] = get_create_by($property['value']);
+        $booking['create_by'] = get_create_by($values[0]);
         $booking['modified_by'] = '';
         break;
 
       case 'SUMMARY':
-        $booking['name'] = $property['value'];
+        $booking['name'] = $values[0];
         break;
 
       case 'DESCRIPTION':
-        $booking['description'] = $property['value'];
+        $booking['description'] = $values[0];
         break;
 
       case 'LOCATION':
-        $location = $property['value']; // We may need the original LOCATION later
+        $location = $values[0]; // We may need the original LOCATION later
         if ($ignore_location)
         {
           $booking['room_id'] = $import_default_room;
@@ -316,7 +297,7 @@ function process_event(Event $event) : bool
         break;
 
       case 'DTEND':
-        $booking['end_time'] = RFC5545::getTimestamp($property['value'], $property['params']);
+        $booking['end_time'] = $property->toTimestamps()[0];
         break;
 
       case 'DURATION':
@@ -324,8 +305,8 @@ function process_event(Event $event) : bool
         break;
 
       case 'RRULE':
-        $rrule_errors = array();
-        $repeat_rule = get_repeat_rule($property['value'], $booking['start_time'], $rrule_errors);
+        $rrule_errors = [];
+        $repeat_rule = get_repeat_rule($values[0], $booking['start_time'], $rrule_errors);
         if ($repeat_rule === false)
         {
           $problems = array_merge($problems, $rrule_errors);
@@ -339,49 +320,48 @@ function process_event(Event $event) : bool
       case 'EXDATE':
         try
         {
-          $booking['skip_list'] = get_skip_list($property['value'], $property['params']);
+          $booking['skip_list'] = $property->toTimestamps();
         }
         catch (\Exception $e)
         {
           // If it's a bad timezone, flag that as a problem, otherwise rethrow the exception
           if (str_contains($e->getMessage(), 'Unknown or bad timezone'))
           {
-            $problems[] = get_vocab('bad_timezone', $property['params']['TZID'] ?? 'UTC');
+            $problems[] = get_vocab('bad_timezone', $property->getParamValues('TZID')[0]);
           }
           else
           {
-            throw new \Exception($e);
+            throw $e;
           }
         }
         break;
 
       case 'CLASS':
-        $booking['private'] = in_array($property['value'], array('PRIVATE', 'CONFIDENTIAL'));
+        $booking['private'] = in_array($values[0], ['PRIVATE', 'CONFIDENTIAL']);
         break;
 
       case 'STATUS':
-        $booking['tentative'] = ($property['value'] == 'TENTATIVE');
+        $booking['tentative'] = ($values[0] == 'TENTATIVE');
         break;
 
       case 'UID':
-        $booking['ical_uid'] = $property['value'];
+        $booking['ical_uid'] = $values[0];
         break;
 
       case 'SEQUENCE':
-        $booking['ical_sequence'] = $property['value'];
+        $booking['ical_sequence'] = $values[0];
         break;
 
       case 'LAST-MODIFIED':
-        // We probably ought to do something with LAST-MODIFIED and use it
-        // for the timestamp field
+        // TODO: We probably ought to do something with LAST-MODIFIED and use it for the timestamp field
         break;
 
       default:
         // MRBS specific properties
         $mrbs_prefix = 'X-MRBS-';
-        if (str_starts_with($property['name'], $mrbs_prefix))
+        if (str_starts_with($name, $mrbs_prefix))
         {
-          $key = substr($property['name'], strlen($mrbs_prefix));
+          $key = substr($name, strlen($mrbs_prefix));
           $key = strtolower($key);
           // Convert hyphens back to underscores
           $key = str_replace('-', '_', $key);
@@ -392,7 +372,7 @@ function process_event(Event $event) : bool
             {
               foreach ($booking_types as $type)
               {
-                if ($property['value'] == get_type_vocab($type))
+                if ($values[0] == get_type_vocab($type))
                 {
                   $booking['type'] = $type;
                   break;
@@ -403,21 +383,21 @@ function process_event(Event $event) : bool
           // Registration keys
           elseif (in_array($key, $registration_keys))
           {
-            $booking[$key] = $property['value'];
+            $booking[$key] = $values[0];
           }
           // Registrants
           elseif ($key == 'registrant')
           {
             $registrants[] = array(
-              'username'    => $property['value'],
-              'registered'  => $property['params']['X-MRBS-REGISTERED'],
-              'create_by'   => RFC5545::unescapeQuotedString($property['params']['X-MRBS-CREATE-BY'])
+              'username'    => $values[0],
+              'registered'  => $property->getParamValues('X-MRBS-REGISTERED')[0],
+              'create_by'   => $property->getParamValues('X-MRBS-CREATE-BY')[0]
             );
           }
           // Custom fields
           else
           {
-            $booking[$key] = RFC5545::unescapeText($property['value']);
+            $booking[$key] = $values[0];
           }
         }
         break;
@@ -429,7 +409,7 @@ function process_event(Event $event) : bool
     return false;
   }
 
-  // If we didn't manage to work out a username then just put the booking
+  // If we didn't manage to work out a username, then just put the booking
   // under the name of the current user
   if (!isset($booking['create_by']))
   {
@@ -438,7 +418,7 @@ function process_event(Event $event) : bool
     $booking['create_by'] = $mrbs_username;
   }
 
-  // On the other hand a UID is mandatory in RFC 5545.   We'll be lenient and
+  // On the other hand, a UID is mandatory in RFC 5545.   We'll be lenient and
   // provide one if it is missing
   if (!isset($booking['ical_uid']))
   {
@@ -494,9 +474,9 @@ function process_event(Event $event) : bool
   }
 
   // LOCATION is optional in RFC 5545 but is obviously mandatory in MRBS.
-  // If there is no LOCATION property we use the default_room specified on
+  // If there is no LOCATION property, we use the default_room specified on
   // the form, but if there is no default room (most likely because no rooms
-  // have been created) then this error message is created).
+  // have been created), then this error message is created.
   if (!isset($booking['room_id']))
   {
     $problems[] = get_vocab("no_LOCATION");
@@ -504,7 +484,7 @@ function process_event(Event $event) : bool
 
   if (empty($problems))
   {
-    // Get the area settings for this room, if we haven't got them already
+    // Get the area settings for this room if we haven't got them already
     if (!isset($room_settings[$booking['room_id']]))
     {
       get_area_settings(get_area($booking['room_id']));
@@ -532,7 +512,7 @@ function process_event(Event $event) : bool
 
     if ($result['valid_booking'])
     {
-      // If the bookings been made then add the registrants
+      // If the bookings have been made, then add the registrants
       add_registrants($result['new_details'][0]['id'], $registrants);
       return true;
     }
