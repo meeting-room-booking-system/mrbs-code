@@ -444,8 +444,8 @@ function process_event(Event $event) : bool
     }
   }
 
-  // A SUMMARY is optional in RFC 5545, however a brief description is mandatory
-  // in MRBS.   So if the VEVENT didn't include a name, we'll give it one
+  // A SUMMARY is optional in RFC 5545, but a brief description is mandatory in MRBS.
+  // So if the VEVENT didn't include a name, we'll give it one.
   if (!isset($booking['name']) || ($booking['name']) === '')
   {
     $tag = 'import_no_SUMMARY';
