@@ -158,14 +158,4 @@ class Calendar
     return $result;
   }
 
-
-  /**
-   * Reverse the RFC 5545 folding process, which splits lines into groups
-   * of max 75 octets separated by 'CRLFspace' or 'CRLFtab'.
-   */
-  public static function unfold(string $str) : string
-  {
-    return preg_replace('/\r\n[ \t]/u', '', $str);
-  }
-
 }
