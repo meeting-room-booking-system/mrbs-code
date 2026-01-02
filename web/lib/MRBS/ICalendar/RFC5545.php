@@ -211,14 +211,6 @@ class RFC5545
   }
 
 
-  // Reverse the RFC 5545 folding process, which splits lines into groups
-  // of max 75 octets separated by 'CRLFspace' or 'CRLFtab'
-  public static function unfold(string $str) : string
-  {
-    return preg_replace('/\r\n[ \t]/u', '', $str);
-  }
-
-
   // Splits a string at the first colon or semicolon (the delimiter) unless the delimiter
   // is inside a quoted string.  Used for parsing iCalendar lines to get property parameters
   // It assumes the string will always have at least one more delimiter to come, so can
