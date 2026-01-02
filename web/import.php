@@ -187,9 +187,14 @@ function get_room_id($location, &$error)
 }
 
 
-// Add a VEVENT to MRBS.   Returns TRUE on success, FALSE if the event wasn't added
-// Ignore any sub-components (eg a VALARM inside a VEVENT) as MRBS does not
-// yet handle things like reminders.
+/**
+ * Add a VEVENT to the MRBS database.
+ *
+ * Ignores any subcomponents (eg a VALARM inside a VEVENT) as MRBS does not
+ * yet handle things like reminders.
+ *
+ * @return boolean TRUE on success, FALSE if the event wasn't added.
+ */
 function process_event(Event $event) : bool
 {
   global $import_default_room, $import_default_type, $import_past, $skip;
