@@ -187,25 +187,6 @@ function get_room_id($location, &$error)
 }
 
 
-// Turn an EXDATE property into an array of timestamps
-function get_skip_list(string $values, array $params) : array
-{
-  $result = array();
-
-  $tzid = $params['TZID'] ?? 'UTC';
-  $date_time_zone = new DateTimeZone($tzid);
-  $exdates = explode(',', $values);
-
-  foreach ($exdates as $exdate)
-  {
-    $date = new DateTime($exdate, $date_time_zone);
-    $result[] = $date->getTimestamp();
-  }
-
-  return $result;
-}
-
-
 // Add a VEVENT to MRBS.   Returns TRUE on success, FALSE if the event wasn't added
 // Ignore any sub-components (eg a VALARM inside a VEVENT) as MRBS does not
 // yet handle things like reminders.
