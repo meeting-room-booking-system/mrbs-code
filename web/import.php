@@ -201,7 +201,6 @@ function process_event(Event $event) : bool
   global $morningstarts, $morningstarts_minutes, $resolution;
   global $booking_types;
   global $ignore_location, $add_location;
-  global $default_type;
 
   // We are going to cache the settings ($resolution etc.) for the rooms
   // in order to avoid lots of database lookups
