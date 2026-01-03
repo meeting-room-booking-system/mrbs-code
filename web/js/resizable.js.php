@@ -294,14 +294,16 @@ var Table = {
     var table = $(Table.selector);
     var container = table.parent();
     <?php
-    // Initialise the bookedMap, which is an array of booked slots. Each member of the array is an
-    // object with four properties (n, s, e, w) representing the cooordinates (x or y)
+    // TODO: rename bookedMap to something more descriptive.
+    // Initialise the bookedMap, which is an array of booked slots and slots that are not
+    // allowed to be booked (eg if booking is not allowed at weekends). Each member of the array
+    // is an object with four properties (n, s, e, w) representing the coordinates (x or y)
     // of the side.   We will use this array to test whether a proposed
     // booking overlaps an existing booking. Select just the visible cells because there
     // could be hidden days.
     ?>
     Table.bookedMap = [];
-    table.find('td.booked:visible').each(function() {
+    table.find('td.booked:visible').add(table.find('.not_allowed').parent()).each(function() {
         Table.bookedMap.push(getSides($(this)));
       });
     <?php // Size the table ?>
@@ -956,6 +958,12 @@ $(document).on('page_ready', function() {
       var mouseDown = false;
 
       var downHandler = function(e) {
+          <?php // Ignore the click if the user is not allowed to make a boooking in this slot. ?>
+          if ($(e.target).hasClass('not_allowed'))
+          {
+            return;
+          }
+
           mouseDown = true;
 
           <?php // Save the original scroll position ?>
@@ -1024,6 +1032,14 @@ $(document).on('page_ready', function() {
         };
 
       var moveHandler = function(e) {
+          <?php
+          // Don't do anything if the mouse button isn't considered to be down, eg
+          // if the user wasn't allowed to make a booking in the origin slot.
+          ?>
+          if (!mouseDown)
+          {
+            return;
+          }
           <?php
           // Check to see if we're only allowed to go one slot wide/high
           // and have gone over that limit.  If so, do nothing and return
@@ -1136,6 +1152,14 @@ $(document).on('page_ready', function() {
 
 
       var upHandler = function(e) {
+          <?php
+          // Don't do anything if the mouse button isn't considered to be down, eg
+          // if the user wasn't allowed to make a booking in the origin slot.
+          ?>
+          if (!mouseDown)
+          {
+            return;
+          }
           mouseDown = false;
           e.preventDefault();
           var tolerance = 2; <?php // px ?>
