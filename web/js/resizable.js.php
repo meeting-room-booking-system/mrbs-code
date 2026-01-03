@@ -295,7 +295,7 @@ var Table = {
     var container = table.parent();
     <?php
     // Initialise the bookedMap, which is an array of booked slots. Each member of the array is an
-    // object with four properties (n, s, e, w) representing the cooordinates (x or y)
+    // object with four properties (n, s, e, w) representing the coordinates (x or y)
     // of the side.   We will use this array to test whether a proposed
     // booking overlaps an existing booking. Select just the visible cells because there
     // could be hidden days.
