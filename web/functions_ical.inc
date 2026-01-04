@@ -129,7 +129,7 @@ function get_repeat_rule(string $rrule, int $start_time, array &$errors)
     // part MUST be specified as a date with UTC time" - so in nearly all cases
     // supported by MRBS the value will be a UTC time.
     $repeat_end_date = new DateTime();
-    $repeat_end_date->setTimestamp(RFC5545::getTimestamp($rules['UNTIL']));
+    $repeat_end_date->setTimestamp(Property::convertDatetimeValue($rules['UNTIL']));
     $repeat_rule->setEndDate($repeat_end_date);
   }
   elseif (isset($rules['COUNT']))
