@@ -67,10 +67,28 @@ class Property
    */
   public static function createFromTimestamps(string $name, $timestamps, ?string $tzid=null) : self
   {
+    $result = new self($name, self::createDatetimeValues($timestamps, $tzid));
+
+    if (isset($tzid))
+    {
+      $result->addParameter('TZID', $tzid);
+    }
+
+    return $result;
+  }
+
+
+  /**
+   * Create a list of DATE-TIME values from UNIX timestamps.
+   *
+   * @param int|int[] $timestamps
+   * @return string[]
+   */
+  public static function createDatetimeValues($timestamps, ?string $tzid=null) : array
+  {
     $values = [];
     $timestamps = (array) $timestamps;
     $format = self::DATETIME_FORMAT;
-    $add_tzid_parameter = isset($tzid);
 
     if (!isset($tzid))
     {
@@ -85,14 +103,7 @@ class Property
       $values[] = $date->format($format);
     }
 
-    $result = new self($name, $values);
-
-    if ($add_tzid_parameter)
-    {
-      $result->addParameter('TZID', $tzid);
-    }
-
-    return $result;
+    return $values;
   }
 
 
