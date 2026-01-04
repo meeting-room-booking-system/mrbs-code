@@ -8,7 +8,6 @@ use function MRBS\get_vocab;
 
 class RFC5545
 {
-  public const DATETIME_FORMAT = 'Ymd\THis';  // Format for expressing iCalendar dates
   // An array which can be used to map day of the week numbers (0..6)
   // onto days of the week as defined in RFC 5545
   public const DAYS = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
