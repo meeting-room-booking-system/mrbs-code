@@ -60,6 +60,9 @@ class Property
   }
 
 
+  /**
+   * Create a property instance of type DATE-TIME from UNIX timestamps.
+   */
   public static function createFromTimestamps(string $name, array $timestamps, ?string $tzid=null) : self
   {
     $values = [];
