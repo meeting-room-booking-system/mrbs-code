@@ -206,6 +206,7 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
       {
         $property->addParameter('TZID', $timezone);
       }
+      $event->addProperty($property);
     }
   }
 
@@ -388,7 +389,8 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
   $special_fields = [
     'awaiting_approval',
     'private',
-    'repeat_rule'
+    'repeat_rule',
+    'skip_list'
   ];
 
   $ignore_fields = array_merge($standard_fields['entry'], $already_handled, $area_table_fields, $special_fields);
