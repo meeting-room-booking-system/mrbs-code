@@ -47,22 +47,6 @@ class RFC5545
   }
 
 
-  // Create a comma separated list of dates in an EXDATE property.
-  public static function createExdateProperty(array $timestamps, ?string $timezone) : string
-  {
-    $result = "EXDATE";
-
-    if (isset($timezone))
-    {
-      $result .= ";TZID=$timezone";
-    }
-
-    $dates = self::createExdateList($timestamps, $timezone);
-
-    return "$result:" . implode(',', $dates);
-  }
-
-
   public static function createExdateList(array $timestamps, ?string $timezone) : array
   {
     $dates = array();
