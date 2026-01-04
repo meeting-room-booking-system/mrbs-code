@@ -201,11 +201,7 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
     $event->addProperty(new Property('RRULE', $data['repeat_rule']->toRFC5545Rule()));
     if (!empty($data['skip_list']))
     {
-      $property = new Property('EXDATE', RFC5545::createExdateList($data['skip_list'], ($vtimezone === false) ? null : $timezone));
-      if ($vtimezone !== false)
-      {
-        $property->addParameter('TZID', $timezone);
-      }
+      $property = Property::createFromTimestamps('EXDATE', $data['skip_list'], ($vtimezone === false) ? null : $timezone);
       $event->addProperty($property);
     }
   }

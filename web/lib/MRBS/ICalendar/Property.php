@@ -8,6 +8,7 @@ use MRBS\Utf8\Utf8String;
 
 class Property
 {
+  private const DATETIME_FORMAT = 'Ymd\THis';  // Format for expressing iCalendar dates
   private const VALUE_TYPE_BINARY = 'BINARY';
   private const VALUE_TYPE_BOOLEAN = 'BOOLEAN';
   private const VALUE_TYPE_CAL_ADDRESS = 'CAL-ADDRESS';
@@ -56,6 +57,36 @@ class Property
       $property->addParameter($name, $values);
     }
     return $property;
+  }
+
+
+  public static function createFromTimestamps(string $name, array $timestamps, ?string $tzid=null) : self
+  {
+    $values = [];
+    $format = self::DATETIME_FORMAT;
+    $add_tzid_parameter = isset($tzid);
+
+    if (!isset($tzid))
+    {
+      $tzid = 'UTC';
+      $format .= '\Z';
+    }
+
+    foreach ($timestamps as $timestamp)
+    {
+      $date = new DateTime('now', new DateTimeZone($tzid));
+      $date->setTimestamp($timestamp);
+      $values[] = $date->format($format);
+    }
+
+    $result = new self($name, $values);
+
+    if ($add_tzid_parameter)
+    {
+      $result->addParameter('TZID', $tzid);
+    }
+
+    return $result;
   }
 
 
