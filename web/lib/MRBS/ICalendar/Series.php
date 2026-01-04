@@ -92,8 +92,12 @@ class Series
   }
 
 
-  // Convert the series to an array of iCalendar events.
-  // $method ids the METHOD, eg 'PUBLISH'.
+  /**
+   * Convert the series to an array of iCalendar events
+   *
+   * @param string $method  the METHOD, eg 'PUBLISH'
+   * @return Event[]
+   */
   public function toEvents(string $method) : array
   {
     $events = array();
