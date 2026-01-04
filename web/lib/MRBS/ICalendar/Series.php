@@ -99,14 +99,14 @@ class Series
     $events = array();
 
     $this->repeat['skip_list'] = array_diff($this->expected_start_times, $this->actual_start_times);
-    $events[] = trim(create_ical_event($method, $this->repeat, null, true), "\r\n");
+    $events[] = ComponentFactory::createFromString(create_ical_event($method, $this->repeat, null, true));
 
     // Then iterate through the series looking for changed entries
     foreach($this->data as $entry)
     {
       if ($entry['entry_type'] == ENTRY_RPT_CHANGED)
       {
-        $events[] = new Event(create_ical_event($method, $entry));
+        $events[] = ComponentFactory::createFromString(create_ical_event($method, $entry));
       }
     }
 
