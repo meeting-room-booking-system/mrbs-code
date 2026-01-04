@@ -233,7 +233,7 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
   }
   else
   {
-    $status = ($data['tentative']) ? 'TENTATIVE' : 'CONFIRMED';
+    $status = (empty($data['tentative'])) ? 'CONFIRMED' : 'TENTATIVE';
   }
   $event->addProperty(new Property('STATUS', $status));
 
