@@ -79,6 +79,37 @@ class Property
 
 
   /**
+   * Convert a DATE-TIME value to a UNIX timestamp.
+   */
+  public static function convertDatetimeValue(string $value, ?string $tzid=null) : int
+  {
+    if (!isset($tzid))
+    {
+      // FORM #1: DATE WITH LOCAL TIME
+      if (!str_ends_with($value, 'Z'))
+      {
+        throw new \Exception("Floating times not supported");
+      }
+
+      // FORM #2: DATE WITH UTC TIME
+      $value = rtrim($value, 'Z');
+      $tzid = 'UTC';
+    }
+    else
+    {
+      if (str_ends_with($value, 'Z'))
+      {
+        throw new \Exception("Both a TZID parameter and a Z suffix are not supported (see RFC 5545 section 3.3.5");
+      }
+      // FORM #3: DATE WITH LOCAL TIME AND TIME ZONE REFERENCE
+    }
+
+    $datetime = DateTime::createFromFormat('Ymd\THis', $value, new DateTimeZone($tzid));
+    return $datetime->getTimestamp();
+  }
+
+
+  /**
    * Convert an array of UNIX timestamps to DATE-TIME values.
    *
    * @param int|int[] $timestamps
@@ -193,36 +224,11 @@ class Property
     }
 
     $result = [];
+    $tzid = (isset($this->params['TZID'])) ? $this->params['TZID'][0] : null;
 
     foreach ($this->values as $value)
     {
-      if (!isset($this->params['TZID']))
-      {
-        // FORM #1: DATE WITH LOCAL TIME
-        if (!str_ends_with($value, 'Z'))
-        {
-          throw new \Exception("Floating times not supported");
-        }
-
-        // FORM #2: DATE WITH UTC TIME
-        $value = rtrim($value, 'Z');
-        $tzid = 'UTC';
-      }
-      else
-      {
-        // FORM #3: DATE WITH LOCAL TIME AND TIME ZONE REFERENCE
-        if (!str_ends_with($value, 'Z'))
-        {
-          $tzid = $this->params['TZID'][0];
-        }
-        else
-        {
-          throw new \Exception("Both a TZID parameter and a Z suffix are not supported (see RFC 5545 section 3.3.5");
-        }
-      }
-
-      $datetime = DateTime::createFromFormat('Ymd\THis', $value, new DateTimeZone($tzid));
-      $result[] = $datetime->getTimestamp();
+      $result[] = self::convertDatetimeValue($value, $tzid);
     }
 
     return $result;
