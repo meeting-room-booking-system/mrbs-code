@@ -156,6 +156,7 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
   global $partstat_accepted;
 
   $vtimezone = Timezone::createFromTimezoneName($timezone);
+  $tzid = ($vtimezone === false) ? null : $timezone;
 
   $event = new Event();
   // REQUIRED properties, but MUST NOT occur more than once
@@ -181,28 +182,15 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
   // specified in local time and the appropriate set of "VTIMEZONE" calendar components
   // MUST be included.'
 
-  if ($vtimezone === false)
-  {
-    $event->addProperty(new Property('DTSTART', gmdate(RFC5545::DATETIME_FORMAT . '\Z', $data['start_time'])));
-    $event->addProperty(new Property('DTEND', gmdate(RFC5545::DATETIME_FORMAT . '\Z', $data['end_time'])));
-  }
-  else
-  {
-    $property = new Property('DTSTART', date(RFC5545::DATETIME_FORMAT, $data['start_time']));
-    $property->addParameter('TZID', $timezone);
-    $event->addProperty($property);
-    $property = new Property('DTEND', date(RFC5545::DATETIME_FORMAT, $data['end_time']));
-    $property->addParameter('TZID', $timezone);
-    $event->addProperty($property);
-  }
+  $event->addProperty(Property::createFromTimestamps('DTSTART', $data['start_time'], $tzid));
+  $event->addProperty(Property::createFromTimestamps('DTEND', $data['end_time'], $tzid));
 
   if ($series)
   {
     $event->addProperty(new Property('RRULE', $data['repeat_rule']->toRFC5545Rule()));
     if (!empty($data['skip_list']))
     {
-      $property = Property::createFromTimestamps('EXDATE', $data['skip_list'], ($vtimezone === false) ? null : $timezone);
-      $event->addProperty($property);
+      $event->addProperty(Property::createFromTimestamps('EXDATE', $data['skip_list'], $tzid));
     }
   }
 
