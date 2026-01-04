@@ -62,10 +62,13 @@ class Property
 
   /**
    * Create a property instance of type DATE-TIME from UNIX timestamps.
+   *
+   * @param int|int[] $timestamps
    */
-  public static function createFromTimestamps(string $name, array $timestamps, ?string $tzid=null) : self
+  public static function createFromTimestamps(string $name, $timestamps, ?string $tzid=null) : self
   {
     $values = [];
+    $timestamps = (array) $timestamps;
     $format = self::DATETIME_FORMAT;
     $add_tzid_parameter = isset($tzid);
 

@@ -160,10 +160,10 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
   $event = new Event();
   // REQUIRED properties, but MUST NOT occur more than once
   $event->addProperty(new Property('UID', $data['ical_uid']));
-  $event->addProperty(new Property('DTSTAMP', gmdate(RFC5545::DATETIME_FORMAT . '\Z')));
+  $event->addProperty(Property::createFromTimestamps('DTSTAMP', time()));
   // Optional properties
   $last_modified = empty($data['last_updated']) ? time() : $data['last_updated'];
-  $event->addProperty(new Property('LAST-MODIFIED', gmdate(RFC5545::DATETIME_FORMAT . '\Z', $last_modified)));
+  $event->addProperty(Property::createFromTimestamps('LAST-MODIFIED', $last_modified));
 
   // Note: we try and write the event times in the format of a local time with
   // a timezone reference (ie RFC 5545 Form #3).   Only if we can't do that do we
