@@ -46,61 +46,6 @@ class RFC5545
   }
 
 
-  // Returns a UNIX timestamp given an RFC5545 date or date-time
-  // $params is an optional second argument and is an array of property parameters
-  public static function getTimestamp(string $value, ?array $params=null) : int
-  {
-    // If we haven't got any parameters default to "UTC".   Not strictly correct,
-    // but in most cases it will be true.  Need to do something better.
-    if (empty($params))
-    {
-      $event_timezone = 'UTC';
-    }
-
-    $value_type = 'DATE-TIME';  // the default
-
-    // Work out which, if any, parameters have been set
-    if (isset($params))
-    {
-      foreach ($params as $param_name => $param_value)
-      {
-        switch ($param_name)
-        {
-          case 'VALUE':
-            $value_type = $param_value;
-            break;
-          case 'TZID':
-            $event_timezone = $param_value;
-            break;
-        }
-      }
-    }
-
-    if (str_ends_with($value, 'Z'))
-    {
-      $value = rtrim($value, 'Z');
-      $event_timezone = 'UTC';
-    }
-
-    if (!isset($event_timezone))
-    {
-      $event_timezone = date_default_timezone_get();
-      if ($value_type == 'DATE-TIME')
-      {
-        trigger_error("Floating times not supported", E_USER_NOTICE);
-      }
-    }
-
-    if ($value_type == 'DATE')
-    {
-      $value .= 'T000000';
-    }
-
-    $datetime = DateTime::createFromFormat('Ymd\THis', $value, new DateTimeZone($event_timezone));
-    return $datetime->getTimestamp();
-  }
-
-
   // Escape text for use as an iCalendar quoted string
   public static function escapeQuotedString(string $str) : string
   {
