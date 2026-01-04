@@ -67,7 +67,7 @@ class Property
    */
   public static function createFromTimestamps(string $name, $timestamps, ?string $tzid=null) : self
   {
-    $result = new self($name, self::createDatetimeValues($timestamps, $tzid));
+    $result = new self($name, self::convertTimestamps($timestamps, $tzid));
 
     if (isset($tzid))
     {
@@ -79,12 +79,12 @@ class Property
 
 
   /**
-   * Create a list of DATE-TIME values from UNIX timestamps.
+   * Convert an array of UNIX timestamps to DATE-TIME values.
    *
    * @param int|int[] $timestamps
    * @return string[]
    */
-  public static function createDatetimeValues($timestamps, ?string $tzid=null) : array
+  public static function convertTimestamps($timestamps, ?string $tzid=null) : array
   {
     $values = [];
     $timestamps = (array) $timestamps;

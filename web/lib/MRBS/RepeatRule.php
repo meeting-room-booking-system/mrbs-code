@@ -459,7 +459,7 @@ class RepeatRule
     }
 
     // The UNTIL date-time "MUST be specified in UTC time"
-    $rule .= ";UNTIL=" . Property::createDatetimeValues($this->getEndDate()->getTimestamp())[0];
+    $rule .= ";UNTIL=" . Property::convertTimestamps($this->getEndDate()->getTimestamp())[0];
 
     return $rule;
   }

@@ -1376,7 +1376,7 @@ function mrbsCreateSingleEntry(array $data) : int
     // keep this value, even if the start time is subsequently changed.
     if ($data['entry_type'] == ENTRY_RPT_ORIGINAL)
     {
-      $data['ical_recur_id'] = Property::createDatetimeValues($data['start_time'])[0];
+      $data['ical_recur_id'] = Property::convertTimestamps($data['start_time'])[0];
     }
     return mrbsCreateEntry(_tbl('entry'), $data);
   }
