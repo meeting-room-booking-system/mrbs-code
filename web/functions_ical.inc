@@ -150,7 +150,6 @@ function get_repeat_rule(string $rrule, int $start_time, array &$errors)
 function create_ical_event(string $method, array $data, ?array $addresses=null, bool $series=false) : string
 {
   // TODO: return an Event object, rather than a string
-  // TODO: custom fields
 
   global $mail_settings, $timezone, $default_area_room_delimiter, $standard_fields;
   global $partstat_accepted;
