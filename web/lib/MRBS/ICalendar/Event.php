@@ -75,16 +75,13 @@ class Event extends Component
   private $property_names = [];
 
 
-  // TODO: Complete DocBlock
   /**
    * Create an instance of an Event component given the booking data.
    *
    * @param string $method Specifies the calendar method, such as 'CANCEL', which determines the event status.
-   * @param array $data The structured event data, including keys like 'ical_uid', 'start_time', 'end_time', 'name', and other optional details for the event.
-   * @param array|null $addresses An associative array of attendee addresses categorized as 'to', 'cc', and optional 'bcc', used to populate event participants.
+   * @param array $data The event data.
+   * @param array<string, string>|null $addresses An associative array of attendee addresses indexed by 'to' and 'cc'.
    * @param bool $series Indicates whether the event is part of a recurring series (true) or a standalone event (false).
-   * @return self The fully populated Event instance.
-   * @throws Exception If the ORGANIZER property cannot be correctly set due to invalid configuration or missing mandatory values.
    */
   public static function createFromData(string $method, array $data, ?array $addresses=null, bool $series=false) : self
   {

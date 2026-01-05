@@ -473,7 +473,7 @@ function export_icalendar(DBStatement $res, bool $keep_private, int $export_end=
     // If this is an individual entry, then construct an event
     if (!isset($row['rep_type']) || ($row['rep_type'] == RepeatRule::NONE))
     {
-      $calendar->addComponent(ComponentFactory::createFromString(create_ical_event($method, $row)));
+      $calendar->addComponent(Event::createFromData($method, $row));
     }
 
     // Otherwise it's a series
