@@ -234,7 +234,7 @@ a:hover {
 
 span.not_allowed {
   cursor: not-allowed;
-  display: block;
+  display: table; /* Needs to be table rather than block to work on Firefox */
   width: 100%;
   height: 100%;
 }
