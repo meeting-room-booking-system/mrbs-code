@@ -196,7 +196,7 @@ class Calendar
     // we're just exporting the calendar.   Furthermore, if we don't use PUBLISH then some
     // calendar apps (eg Outlook, at least 2010 and 2013) won't open the full calendar.
     $method = "PUBLISH";
-    $calendar = new Calendar($method);
+    $calendar = new self($method);
     $vtimezone = Timezone::createFromTimezoneName($timezone);
     if ($vtimezone)
     {
