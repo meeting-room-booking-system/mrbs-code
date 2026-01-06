@@ -2,6 +2,9 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use MRBS\ICalendar\Calendar;
+use MRBS\ICalendar\Event;
+use MRBS\ICalendar\Timezone;
 use PHPMailer\PHPMailer\PHPMailer;
 
 // +---------------------------------------------------------------------------+
@@ -838,7 +841,7 @@ function create_addresses(array $data, string $action) : array
 function notifyAdminOnBooking(array $data, array $mail_previous, bool $new_entry, bool $series, array $start_times, string $action='book', ?string $note=null) : void
 {
   global $mail_settings, $enable_periods;
-  global $mrbs_company;
+  global $mrbs_company, $timezone;
 
   mail_debug('Preparing email for new or changed booking ...');
 
@@ -915,13 +918,20 @@ function notifyAdminOnBooking(array $data, array $mail_previous, bool $new_entry
       !$enable_periods &&
       !in_array($action, array('more_info', 'remind')))
   {
+    // Create the iCalendar.
     $attachment['method']   = "REQUEST";
-    $ical_components = array();
+    $calendar = new Calendar($attachment['method']);
+    // Add in the VTIMEZONE component if we can.
+    if (false !== ($vtimezone = Timezone::createFromTimezoneName($timezone)))
+    {
+      $calendar->addComponent($vtimezone);
+    }
+    // Add in the VEVENT component.
     // TODO: the addresses have by this stage been MIME-encoded.  It would probably be better to
-    // TODO: pass unencoded addresses to create_ical_event() so that we don't have to decode them,
+    // TODO: pass unencoded addresses to createFromData() so that we don't have to decode them,
     // TODO: as mb_decode_mimeheader() isn't guaranteed to exist.
-    $ical_components[] = trim(create_ical_event($attachment['method'], $data, $addresses, $series), "\r\n");
-    $attachment['content']  = create_icalendar($attachment['method'], $ical_components);
+    $calendar->addComponent(Event::createFromData($attachment['method'], $data, $addresses, $series));
+    $attachment['content']  = $calendar->toString();
     $attachment['name']     = $mail_settings['ics_filename'] . ".ics";
   }
 
@@ -950,7 +960,7 @@ function notifyAdminOnBooking(array $data, array $mail_previous, bool $new_entry
 function notifyAdminOnDelete($data, $start_times, bool $series=false, string $action='delete', ?string $note=null)
 {
   global $mail_settings, $enable_periods;
-  global $mrbs_company;
+  global $mrbs_company, $timezone;
 
   if ($mail_settings['debug'])
   {
@@ -1002,10 +1012,17 @@ function notifyAdminOnDelete($data, $start_times, bool $series=false, string $ac
   $attachment = array();
   if ($mail_settings['icalendar'] && !$enable_periods)
   {
+    // Create the iCalendar.
     $attachment['method']   = "CANCEL";
-    $ical_components = array();
-    $ical_components[] = trim(create_ical_event($attachment['method'], $data, $addresses, $series), "\r\n");
-    $attachment['content']  = create_icalendar($attachment['method'], $ical_components);
+    $calendar = new Calendar($attachment['method']);
+    // Add in the VTIMEZONE component if we can.
+    if (false !== ($vtimezone = Timezone::createFromTimezoneName($timezone)))
+    {
+      $calendar->addComponent($vtimezone);
+    }
+    // Add in the VEVENT component.
+    $calendar->addComponent(Event::createFromData($attachment['method'], $data, $addresses, $series));
+    $attachment['content']  = $calendar->toString();
     $attachment['name']     = $mail_settings['ics_filename'] . ".ics";
   }
 
