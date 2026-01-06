@@ -107,7 +107,7 @@ class Event extends Component
     // Appendix A.2), its predecessor, RFC 2445, did require it for recurring
     // events and is the standard against which older applications, notably Exchange
     // 2007, are written.   Note also that when using a local timezone format the
-    // VTIMEZONE component must be provided (this is done in create_icalendar() ).  Some
+    // VTIMEZONE component must be provided in the calendar.  Some
     // applications will work without the VTIMEZONE component, but many follow the
     // standard and do require it.  Here is an extract from RFC 2445:
 
