@@ -163,14 +163,19 @@ class Calendar
   }
 
 
-  // outputs an iCalendar based on the data in $res, the result of an SQL query.
-  //
-  //    &$res       resource  the result of an SQL query on the entry table, which
-  //                          has been sorted by repeat_id, start_time (both ascending).
-  //                          As well as all the fields in the entry table, the rows will
-  //                          also contain the area name, the room name and the repeat
-  //                          details (rep_type, end_date, rep_opt, rep_interval)
-  //    $export_end int       a Unix timestamp giving the end limit for the export
+  /**
+   * Creates and returns an iCalendar object from a database query result.
+   *
+   * @param DBStatement $res The result set from an SQL query on the entry table, which
+   *                         has been sorted by repeat_id, start_time (both ascending).
+   *                         As well as all the fields in the entry table, the rows will
+   *                         also contain the area name, the room name and the repeat
+   *                         details (rep_type, end_date, rep_opt, rep_interval)
+   * @param bool $keep_private Whether to mark events as private.
+   * @param int $export_end Optional parameter specifying the end timestamp for exporting events. Defaults to PHP_INT_MAX.
+   *
+   * @return self The constructed iCalendar object.
+   */
   public static function createFromStatement(DBStatement $res, bool $keep_private, int $export_end=PHP_INT_MAX) : self
   {
     global $timezone;
