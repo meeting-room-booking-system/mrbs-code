@@ -5,7 +5,6 @@ namespace MRBS\ICalendar;
 use MRBS\DateTime;
 use MRBS\Exception;
 use MRBS\RepeatRule;
-use function MRBS\create_ical_event;
 use function MRBS\entry_has_registrants;
 use function MRBS\get_repeat;
 
@@ -103,14 +102,14 @@ class Series
     $events = array();
 
     $this->repeat['skip_list'] = array_diff($this->expected_start_times, $this->actual_start_times);
-    $events[] = ComponentFactory::createFromString(create_ical_event($method, $this->repeat, null, true));
+    $events[] = Event::createFromData($method, $this->repeat, null, true);
 
     // Then iterate through the series looking for changed entries
     foreach($this->data as $entry)
     {
       if ($entry['entry_type'] == ENTRY_RPT_CHANGED)
       {
-        $events[] = ComponentFactory::createFromString(create_ical_event($method, $entry));
+        $events[] = Event::createFromData($method, $entry);
       }
     }
 
