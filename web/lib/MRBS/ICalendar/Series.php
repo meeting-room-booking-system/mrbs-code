@@ -20,12 +20,14 @@ class Series
   private $repeat;
   private $expected_start_times;
   private $actual_start_times;
+  private $tzid;
 
   // Constructs a new Series object and adds $row to it.
   // $limit is the limiting UNIX timestamp for the series.  This may be before the actual end
   // of the series.   Defaults to null, ie no limit.  This enables the series extract to be truncated.
-  public function __construct(array $row, ?int $limit=null)
+  public function __construct(array $row, ?string $tzid=null, ?int $limit=null)
   {
+    $this->tzid = $tzid;
     $row = self::fixUpRow($row);
 
     $this->data = array();
@@ -102,14 +104,14 @@ class Series
     $events = array();
 
     $this->repeat['skip_list'] = array_diff($this->expected_start_times, $this->actual_start_times);
-    $events[] = Event::createFromData($method, $this->repeat, null, true);
+    $events[] = Event::createFromData($method, $this->repeat, $this->tzid, null, true);
 
     // Then iterate through the series looking for changed entries
     foreach($this->data as $entry)
     {
       if ($entry['entry_type'] == ENTRY_RPT_CHANGED)
       {
-        $events[] = Event::createFromData($method, $entry);
+        $events[] = Event::createFromData($method, $entry, $this->tzid);
       }
     }
 

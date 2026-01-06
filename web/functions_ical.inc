@@ -181,6 +181,7 @@ function export_icalendar(DBStatement $res, bool $keep_private, int $export_end=
   $vtimezone = Timezone::createFromTimezoneName($timezone);
   if ($vtimezone)
   {
+    $tzid = $timezone;
     $calendar->addComponent($vtimezone);
   }
 
@@ -196,7 +197,7 @@ function export_icalendar(DBStatement $res, bool $keep_private, int $export_end=
     // If this is an individual entry, then construct an event
     if (!isset($row['rep_type']) || ($row['rep_type'] == RepeatRule::NONE))
     {
-      $calendar->addComponent(Event::createFromData($method, $row));
+      $calendar->addComponent(Event::createFromData($method, $row, ($vtimezone === false) ? null : $timezone));
     }
 
     // Otherwise it's a series
@@ -205,7 +206,7 @@ function export_icalendar(DBStatement $res, bool $keep_private, int $export_end=
       // If we haven't started a series, then start one
       if (!isset($series))
       {
-        $series = new Series($row, $export_end);
+        $series = new Series($row, $tzid, $export_end);
       }
 
       // Otherwise, if this row is a member of the current series, add the row to the series.
@@ -222,7 +223,7 @@ function export_icalendar(DBStatement $res, bool $keep_private, int $export_end=
         // If we're at the start of a new series then create a new series
         if ($row['repeat_id'] != $series->repeat_id)
         {
-          $series = new Series($row, $export_end);
+          $series = new Series($row, $tzid, $export_end);
           // And if this is the last row, ie the only member of the new series
           // then process the new series
           if ($i == $n_rows - 1)

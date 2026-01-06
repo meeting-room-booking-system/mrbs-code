@@ -80,16 +80,15 @@ class Event extends Component
    *
    * @param string $method Specifies the calendar method, such as 'CANCEL', which determines the event status.
    * @param array $data The event data.
+   * @param string|null $tzid The timezone identifier.  If null, DATE-TIME values will be written in UTC format,
+   *                         otherwise they will be written in the local timezone format.
    * @param array<string, string>|null $addresses An associative array of attendee addresses indexed by 'to' and 'cc'.
    * @param bool $series Indicates whether the event is part of a recurring series (true) or a standalone event (false).
    */
-  public static function createFromData(string $method, array $data, ?array $addresses=null, bool $series=false) : self
+  public static function createFromData(string $method, array $data, ?string $tzid=null, ?array $addresses=null, bool $series=false) : self
   {
     global $mail_settings, $timezone, $default_area_room_delimiter, $standard_fields;
     global $partstat_accepted;
-
-    $vtimezone = Timezone::createFromTimezoneName($timezone);
-    $tzid = ($vtimezone === false) ? null : $timezone;
 
     $event = new Event();
     // REQUIRED properties, but MUST NOT occur more than once
