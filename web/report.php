@@ -14,6 +14,7 @@ use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldSelect;
 use MRBS\Form\Form;
+use MRBS\ICalendar\Calendar;
 use MRBS\Utf8\Utf8String;
 
 
@@ -1941,7 +1942,8 @@ if ($phase == 2)
     {
       // We set $keep_private to FALSE here because we excluded all private
       // events in the SQL query
-      export_icalendar($res, FALSE, $report_end);
+      $calendar = Calendar::createFromStatement($res, false, $report_end);
+      echo $calendar->toString();
       exit;
     }
 

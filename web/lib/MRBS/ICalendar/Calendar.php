@@ -2,10 +2,14 @@
 declare(strict_types=1);
 namespace MRBS\ICalendar;
 
+use MRBS\DB\DBStatement;
 use MRBS\Exception;
 use MRBS\Language;
+use MRBS\RepeatRule;
 use MRBS\Utf8\Utf8String;
 use function MRBS\get_mrbs_version;
+use function MRBS\row_cast_columns;
+use function MRBS\unpack_status;
 
 require_once MRBS_ROOT . '/version.inc';
 
@@ -156,6 +160,96 @@ class Calendar
     }
 
     return $result;
+  }
+
+
+  // outputs an iCalendar based on the data in $res, the result of an SQL query.
+  //
+  //    &$res       resource  the result of an SQL query on the entry table, which
+  //                          has been sorted by repeat_id, start_time (both ascending).
+  //                          As well as all the fields in the entry table, the rows will
+  //                          also contain the area name, the room name and the repeat
+  //                          details (rep_type, end_date, rep_opt, rep_interval)
+  //    $export_end int       a Unix timestamp giving the end limit for the export
+  public static function createFromStatement(DBStatement $res, bool $keep_private, int $export_end=PHP_INT_MAX) : self
+  {
+    global $timezone;
+
+    // We construct an iCalendar by going through the rows from the SQL query.  Because
+    // it was sorted by repeat_id we will
+    //    - get all the individual entries (which will not have a repeat_id)
+    //    - then get the series.    For each series we have to:
+    //        - identify the series information.
+    //        - identify any events that have been changed from the standard, ie events
+    //          with entry_type == ENTRY_RPT_CHANGED
+    //        - identify any events from the original series that have been cancelled.  We
+    //          can do this because we know from the repeat information the events that
+    //          should be there, and we can tell from the start times the events that are
+    //          actually there.
+
+    // We use PUBLISH rather than REQUEST because we're not inviting people to these meetings,
+    // we're just exporting the calendar.   Furthermore, if we don't use PUBLISH then some
+    // calendar apps (eg Outlook, at least 2010 and 2013) won't open the full calendar.
+    $method = "PUBLISH";
+    $calendar = new Calendar($method);
+    $vtimezone = Timezone::createFromTimezoneName($timezone);
+    if ($vtimezone)
+    {
+      $tzid = $timezone;
+      $calendar->addComponent($vtimezone);
+    }
+
+    $n_rows = $res->count();
+
+    for ($i=0; (false !== ($row = $res->next_row_keyed())); $i++)
+    {
+      row_cast_columns($row, 'entry');
+      // Turn the last_updated column into an int (some MySQL drivers will return a string,
+      // and it won't have been caught by row_cast_columns as it's a derived result).
+      $row['last_updated'] = intval($row['last_updated']);
+      unpack_status($row);
+      // If this is an individual entry, then construct an event
+      if (!isset($row['rep_type']) || ($row['rep_type'] == RepeatRule::NONE))
+      {
+        $calendar->addComponent(Event::createFromData($method, $row, ($vtimezone === false) ? null : $timezone));
+      }
+
+      // Otherwise it's a series
+      else
+      {
+        // If we haven't started a series, then start one
+        if (!isset($series))
+        {
+          $series = new Series($row, $tzid, $export_end);
+        }
+
+        // Otherwise, if this row is a member of the current series, add the row to the series.
+        elseif ($row['repeat_id'] == $series->repeat_id)
+        {
+          $series->addRow($row);
+        }
+
+        // If it's a series that we haven't seen yet, or we've got no more
+        // rows, then process the series
+        if (($row['repeat_id'] != $series->repeat_id) || ($i == $n_rows - 1))
+        {
+          $calendar->addComponents($series->toEvents($method));
+          // If we're at the start of a new series then create a new series
+          if ($row['repeat_id'] != $series->repeat_id)
+          {
+            $series = new Series($row, $tzid, $export_end);
+            // And if this is the last row, ie the only member of the new series
+            // then process the new series
+            if ($i == $n_rows - 1)
+            {
+              $calendar->addComponents($series->toEvents($method));
+            }
+          }
+        }
+      }
+    }
+
+    return $calendar;
   }
 
 }

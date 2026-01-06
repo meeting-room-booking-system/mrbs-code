@@ -8,6 +8,7 @@ use MRBS\Form\FieldDiv;
 use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldTextarea;
 use MRBS\Form\Form;
+use MRBS\ICalendar\Calendar;
 
 
 require "defaultincludes.inc";
@@ -926,7 +927,8 @@ if (isset($action) && ($action == "export"))
     http_headers(array("Content-Type: $content_type",
                        "Content-Disposition: $content_disposition"));
 
-    export_icalendar($res, $keep_private);
+    $calendar = Calendar::createFromStatement($res, $keep_private);
+    echo $calendar->toString();
     exit;
   }
 }
