@@ -890,7 +890,7 @@ if (isset($action) && ($action == "export"))
     $sql = "SELECT E.*, "
          .  db()->syntax_timestamp_to_unix("E.timestamp") . " AS last_updated, "
          . "A.area_name, R.room_name, "
-         . "A.approval_enabled, A.confirmation_enabled";
+         . "A.approval_enabled, A.confirmation_enabled, A.timezone";
     if ($series)
     {
       // If it's a series we want the repeat information
