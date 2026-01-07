@@ -353,7 +353,7 @@ if (!$ajax_capable || $is_ajax || $ics)
   // Now we set up the "real" query
   $sql = "SELECT E.*, " .
                 db()->syntax_timestamp_to_unix("E.timestamp") . " AS last_updated, " .
-                "A.area_name, R.room_name, R.area_id, A.enable_periods
+                "A.area_name, R.room_name, R.area_id, A.enable_periods, A.timezone
             FROM " . _tbl('entry') . " E
        LEFT JOIN " . _tbl('room') . " R
               ON E.room_id = R.id

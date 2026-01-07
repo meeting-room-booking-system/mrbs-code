@@ -169,8 +169,8 @@ class Calendar
    * @param DBStatement $res The result set from an SQL query on the entry table, which
    *                         has been sorted by repeat_id, start_time (both ascending).
    *                         As well as all the fields in the entry table, the rows will
-   *                         also contain the area name, the room name and the repeat
-   *                         details (rep_type, end_date, rep_opt, rep_interval)
+   *                         also contain the area name, the room name, the timezone and
+   *                         the repeat details (rep_type, end_date, rep_opt, rep_interval).
    * @param bool $keep_private Whether to mark events as private.
    * @param int $export_end Optional parameter specifying the end timestamp for exporting events. Defaults to PHP_INT_MAX.
    *
@@ -178,8 +178,6 @@ class Calendar
    */
   public static function createFromStatement(DBStatement $res, bool $keep_private, int $export_end=PHP_INT_MAX) : self
   {
-    global $timezone;
-
     // We construct an iCalendar by going through the rows from the SQL query.  Because
     // it was sorted by repeat_id we will
     //    - get all the individual entries (which will not have a repeat_id)
@@ -197,12 +195,10 @@ class Calendar
     // calendar apps (eg Outlook, at least 2010 and 2013) won't open the full calendar.
     $method = "PUBLISH";
     $calendar = new self($method);
-    $vtimezone = Timezone::createFromTimezoneName($timezone);
-    if ($vtimezone)
-    {
-      $tzid = $timezone;
-      $calendar->addComponent($vtimezone);
-    }
+
+    // We need to find all the timezones used in the result set before we can build the calendar.
+    $timezones = [];
+    $events = [];
 
     $n_rows = $res->count();
 
@@ -213,10 +209,18 @@ class Calendar
       // and it won't have been caught by row_cast_columns as it's a derived result).
       $row['last_updated'] = intval($row['last_updated']);
       unpack_status($row);
+
+      // Generate a timezone component for this row, if we haven't already done so.
+      if (!isset($timezones[$row['timezone']]))
+      {
+        $timezones[$row['timezone']] = Timezone::createFromTimezoneName($row['timezone']);
+      }
+      $tzid = ($row['timezone'] === false) ? null : $row['timezone'];
+
       // If this is an individual entry, then construct an event
       if (!isset($row['rep_type']) || ($row['rep_type'] == RepeatRule::NONE))
       {
-        $calendar->addComponent(Event::createFromData($method, $row, ($vtimezone === false) ? null : $timezone));
+        $events[] = Event::createFromData($method, $row, $tzid);
       }
 
       // Otherwise it's a series
@@ -238,7 +242,7 @@ class Calendar
         // rows, then process the series
         if (($row['repeat_id'] != $series->repeat_id) || ($i == $n_rows - 1))
         {
-          $calendar->addComponents($series->toEvents($method));
+          $events = array_merge($events, $series->toEvents($method));
           // If we're at the start of a new series then create a new series
           if ($row['repeat_id'] != $series->repeat_id)
           {
@@ -247,11 +251,27 @@ class Calendar
             // then process the new series
             if ($i == $n_rows - 1)
             {
-              $calendar->addComponents($series->toEvents($method));
+              $events = array_merge($events, $series->toEvents($method));
             }
           }
         }
       }
+    }
+
+    // Now we've got all the timezones and events, add them to the calendar.
+    foreach ($timezones as $timezone)
+    {
+      if ($timezone !== false)
+      {
+        $calendar->addComponent($timezone);
+      }
+    }
+
+    // Use array_shift rather than foreach to save memory, by reducing the size
+    // of the $events array while building the calendar.
+    while (null !== ($event = array_shift($events)))
+    {
+      $calendar->addComponent($event);
     }
 
     return $calendar;
