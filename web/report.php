@@ -1653,7 +1653,7 @@ if ($phase == 2)
   $sql = "SELECT E.*, "
        .  db()->syntax_timestamp_to_unix("E.timestamp") . " AS last_updated, "
        . "A.area_name, A.sort_key AS area_sort_key, R.room_name, R.sort_key AS room_sort_key, R.area_id, "
-       . "A.approval_enabled, A.confirmation_enabled, A.enable_periods";
+       . "A.approval_enabled, A.confirmation_enabled, A.enable_periods, A.timezone";
   if ($output_format == OUTPUT_ICAL)
   {
     // If we're producing an iCalendar then we'll also need the repeat
