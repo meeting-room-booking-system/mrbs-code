@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use MRBS\DB\DBException;
 use MRBS\Errors\Errors;
+use MRBS\ICalendar\Property;
 use MRBS\ICalendar\RFC5545;
 
 define('INTERVAL_DAY', 0);
@@ -1377,7 +1378,7 @@ function mrbsCreateSingleEntry(array $data) : int
     // keep this value, even if the start time is subsequently changed.
     if ($data['entry_type'] == ENTRY_RPT_ORIGINAL)
     {
-      $data['ical_recur_id'] = gmdate(RFC5545::DATETIME_FORMAT . '\Z', $data['start_time']);
+      $data['ical_recur_id'] = Property::convertTimestamps($data['start_time'])[0];
     }
     return mrbsCreateEntry(_tbl('entry'), $data);
   }

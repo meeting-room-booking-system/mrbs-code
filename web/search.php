@@ -8,6 +8,7 @@ use MRBS\Form\FieldInputDate;
 use MRBS\Form\FieldInputSearch;
 use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\Form;
+use MRBS\ICalendar\Calendar;
 
 require "defaultincludes.inc";
 
@@ -412,7 +413,8 @@ if ($ics)
   );
   // We set $keep_private to FALSE here because we excluded all private
   // events in the SQL query
-  export_icalendar($result, false);
+  $calendar = Calendar::createFromStatement($result, false);
+  echo $calendar->toString();
   exit;
 }
 

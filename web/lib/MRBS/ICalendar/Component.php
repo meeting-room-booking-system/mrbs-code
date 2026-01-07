@@ -76,6 +76,40 @@ abstract class Component
 
 
   /**
+   * Get properties in the component, optionally filtered by name.  Note that there could be more than one
+   * property with the same name, so the result is an array of Property objects.
+   *
+   * @param string|null $name  The name of the property to return.  If null, return all properties.
+   * @param int|null    $limit The maximum number of properties to return.  If null, return all properties.
+   * @return Property[]
+   */
+  public function getProperties(?string $name=null, ?int $limit=null) : array
+  {
+    if (!isset($name) && !isset($limit))
+    {
+      return $this->properties;
+    }
+
+    $result = [];
+
+    foreach ($this->properties as $property)
+    {
+      if (($name === null) || ($property->getName() === $name))
+      {
+        $result[] = $property;
+      }
+
+      if (isset($limit) && count($result) >= $limit)
+      {
+        break;
+      }
+    }
+
+    return $result;
+  }
+
+
+  /**
    * Convert the component to a string.
    */
   public function toString(): string

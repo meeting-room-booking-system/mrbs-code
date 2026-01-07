@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace MRBS;
 
 use InvalidArgumentException;
+use MRBS\ICalendar\Property;
 use MRBS\ICalendar\RFC5545;
 
 class RepeatRule
@@ -458,7 +459,7 @@ class RepeatRule
     }
 
     // The UNTIL date-time "MUST be specified in UTC time"
-    $rule .= ";UNTIL=" . gmdate(RFC5545::DATETIME_FORMAT . '\Z', $this->getEndDate()->getTimestamp());
+    $rule .= ";UNTIL=" . Property::convertTimestamps($this->getEndDate()->getTimestamp())[0];
 
     return $rule;
   }
