@@ -22,14 +22,6 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 define('MAIL_EOL', "\r\n");  // See RFC 5322 2.1
 
-global $mail_settings;
-
-if ($mail_settings['icalendar'])
-{
-  require_once "functions_ical.inc";
-}
-
-
 // Determines whether an email might need to be sent
 function need_to_send_mail() : bool
 {

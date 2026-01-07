@@ -1849,7 +1849,6 @@ else
       $content_type = "text/csv; charset=" . get_csv_charset();
       break;
     default:
-      require_once "functions_ical.inc";
       $filename .= '.ics';
       $content_type = "application/ics; charset=" . Language::MRBS_CHARSET . "; name=\"$filename\"";
       break;

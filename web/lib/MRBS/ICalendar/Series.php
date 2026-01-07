@@ -8,7 +8,6 @@ use MRBS\RepeatRule;
 use function MRBS\entry_has_registrants;
 use function MRBS\get_repeat;
 
-require_once MRBS_ROOT . '/functions_ical.inc';
 require_once MRBS_ROOT . '/mrbs_sql.inc';
 
 

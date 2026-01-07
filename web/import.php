@@ -25,7 +25,6 @@ use ZipArchive;
 
 
 require "defaultincludes.inc";
-require_once "functions_ical.inc";
 require_once "mrbs_sql.inc";
 
 $wrapper_mime_types = array('file'            => 'text/calendar',
