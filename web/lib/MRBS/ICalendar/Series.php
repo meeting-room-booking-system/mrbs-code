@@ -5,11 +5,9 @@ namespace MRBS\ICalendar;
 use MRBS\DateTime;
 use MRBS\Exception;
 use MRBS\RepeatRule;
-use function MRBS\create_ical_event;
 use function MRBS\entry_has_registrants;
 use function MRBS\get_repeat;
 
-require_once MRBS_ROOT . '/functions_ical.inc';
 require_once MRBS_ROOT . '/mrbs_sql.inc';
 
 
@@ -21,12 +19,14 @@ class Series
   private $repeat;
   private $expected_start_times;
   private $actual_start_times;
+  private $tzid;
 
   // Constructs a new Series object and adds $row to it.
   // $limit is the limiting UNIX timestamp for the series.  This may be before the actual end
   // of the series.   Defaults to null, ie no limit.  This enables the series extract to be truncated.
-  public function __construct(array $row, ?int $limit=null)
+  public function __construct(array $row, ?string $tzid=null, ?int $limit=null)
   {
+    $this->tzid = $tzid;
     $row = self::fixUpRow($row);
 
     $this->data = array();
@@ -92,21 +92,25 @@ class Series
   }
 
 
-  // Convert the series to an array of iCalendar events.
-  // $method ids the METHOD, eg 'PUBLISH'.
+  /**
+   * Convert the series to an array of iCalendar events
+   *
+   * @param string $method  the METHOD, eg 'PUBLISH'
+   * @return Event[]
+   */
   public function toEvents(string $method) : array
   {
     $events = array();
 
     $this->repeat['skip_list'] = array_diff($this->expected_start_times, $this->actual_start_times);
-    $events[] = trim(create_ical_event($method, $this->repeat, null, true), "\r\n");
+    $events[] = Event::createFromData($method, $this->repeat, $this->tzid, null, true);
 
     // Then iterate through the series looking for changed entries
     foreach($this->data as $entry)
     {
       if ($entry['entry_type'] == ENTRY_RPT_CHANGED)
       {
-        $events[] = new Event(create_ical_event($method, $entry));
+        $events[] = Event::createFromData($method, $entry, $this->tzid);
       }
     }
 

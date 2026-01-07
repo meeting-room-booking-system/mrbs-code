@@ -13,7 +13,7 @@ class ComponentFactory
   public static function createFromString(string $content)
   {
     // Trim and unfold the content, then split it into lines,
-    $lines = explode(Calendar::EOL, Calendar::unfold(trim($content)));
+    $lines = explode(Calendar::EOL, self::unfold(trim($content)));
 
     // It should have at least two lines: the first BEGIN: line and the last END: line.
     if (count($lines) < 2)
@@ -161,6 +161,16 @@ class ComponentFactory
     }
 
     return false;
+  }
+
+
+  /**
+   * Reverse the RFC 5545 folding process, which splits lines into groups
+   * of max 75 octets separated by 'CRLFspace' or 'CRLFtab'.
+   */
+  private static function unfold(string $str) : string
+  {
+    return preg_replace('/\r\n[ \t]/u', '', $str);
   }
 
 }

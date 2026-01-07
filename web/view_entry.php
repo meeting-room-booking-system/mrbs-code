@@ -8,6 +8,7 @@ use MRBS\Form\FieldDiv;
 use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldTextarea;
 use MRBS\Form\Form;
+use MRBS\ICalendar\Calendar;
 
 
 require "defaultincludes.inc";
@@ -919,14 +920,13 @@ if (isset($action) && ($action == "export"))
     $res = db()->query($sql, $sql_params);
 
     // Export the calendar
-    require_once "functions_ical.inc";
-
     $content_type = "application/ics;  charset=" . Language::MRBS_CHARSET . "; name=\"" . $mail_settings['ics_filename'] . ".ics\"";
     $content_disposition = "attachment; filename=\"" . $mail_settings['ics_filename'] . ".ics\"";
     http_headers(array("Content-Type: $content_type",
                        "Content-Disposition: $content_disposition"));
 
-    export_icalendar($res, $keep_private);
+    $calendar = Calendar::createFromStatement($res, $keep_private);
+    echo $calendar->toString();
     exit;
   }
 }

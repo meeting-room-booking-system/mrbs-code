@@ -4,7 +4,6 @@ namespace MRBS;
 
 require 'defaultincludes.inc';
 require_once 'mrbs_sql.inc';
-require_once 'functions_ical.inc';
 require_once 'functions_mail.inc';
 
 use MRBS\Calendar\CalendarFactory;
