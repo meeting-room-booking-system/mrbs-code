@@ -135,7 +135,7 @@ if (!function_exists('str_contains'))
 {
   function str_contains(string $haystack, string $needle) : bool
   {
-    if (!isset($needle) || ($needle === ''))
+    if ($needle === '')
     {
       // This is the way the PHP function behaves
       return true;
@@ -155,7 +155,7 @@ if (!function_exists('str_starts_with'))
 {
   function str_starts_with(string $haystack, string $needle) : bool
   {
-    if (!isset($needle) || ($needle === ''))
+    if ($needle === '')
     {
       // This is the way the PHP function behaves
       return true;
