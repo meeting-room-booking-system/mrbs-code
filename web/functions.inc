@@ -724,8 +724,20 @@ function location_header(string $location) : void
 }
 
 
+/**
+ * Add a query parameter in a URL.  If the parameter already exists, it will be overwritten.
+ * This function does not currently handle array parameters, eg 'room[]'.
+ *
+ * @param string|int $value
+ */
 function add_query_parameter(string $location, string $name, $value) : string
 {
+  if (str_ends_with($name, '[]'))
+  {
+    // TODO: handle arrays
+    throw new \Exception("Cannot yet handle array parameters");
+  }
+
   $parts = parse_url($location);
 
   if ($parts === false)
@@ -745,8 +757,18 @@ function add_query_parameter(string $location, string $name, $value) : string
 }
 
 
+/**
+ * Remove a query parameter from a URL.  If the parameter doesn't exist, nothing happens.
+ * This function does not currently handle array parameters, eg 'room[]'.
+ */
 function remove_query_parameter(string $location, string $name) : string
 {
+  if (str_ends_with($name, '[]'))
+  {
+    // TODO: handle arrays
+    throw new \Exception("Cannot yet handle array parameters");
+  }
+
   $parts = parse_url($location);
 
   if ($parts === false)
