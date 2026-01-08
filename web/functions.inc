@@ -586,8 +586,11 @@ function url_base() : string
     unset($parsed_url['query'], $parsed_url['fragment']);
     // Rebuild the URL
     $result = build_url($parsed_url);
-    // Add a trailing '/'
-    $result .= '/';
+    // Add a trailing '/' if there isn't one already.
+    if (!str_ends_with($result, '/'))
+    {
+      $result .= '/';
+    }
   }
 
   return $result;
