@@ -668,20 +668,24 @@ function rfc1123_date(int $timestamp) : string
 }
 
 
-// Rebuilds a url that has been decompomosed into parts by parse_url().
-// See https://www.php.net/manual/en/function.parse-url.php#106731
+/**
+ * Rebuild a url that has been decomposed into parts by parse_url().
+ *
+ * @param array<string,string> $parts
+ */
 function build_url(array $parts) : string
 {
+  // See https://www.php.net/manual/en/function.parse-url.php#106731
     return (isset($parts['scheme']) ? "{$parts['scheme']}:" : '') .
-          ((isset($parts['user']) || isset($parts['host'])) ? '//' : '') .
-          (isset($parts['user']) ? "{$parts['user']}" : '') .
-          (isset($parts['pass']) ? ":{$parts['pass']}" : '') .
-          (isset($parts['user']) ? '@' : '') .
-          (isset($parts['host']) ? "{$parts['host']}" : '') .
-          (isset($parts['port']) ? ":{$parts['port']}" : '') .
-          (isset($parts['path']) ? "{$parts['path']}" : '') .
-          (isset($parts['query']) ? "?{$parts['query']}" : '') .
-          (isset($parts['fragment']) ? "#{$parts['fragment']}" : '');
+           ((isset($parts['user']) || isset($parts['host'])) ? '//' : '') .
+           (isset($parts['user']) ? "{$parts['user']}" : '') .
+           (isset($parts['pass']) ? ":{$parts['pass']}" : '') .
+           (isset($parts['user']) ? '@' : '') .
+           (isset($parts['host']) ? "{$parts['host']}" : '') .
+           (isset($parts['port']) ? ":{$parts['port']}" : '') .
+           (isset($parts['path']) ? "{$parts['path']}" : '') .
+           (isset($parts['query']) ? "?{$parts['query']}" : '') .
+           (isset($parts['fragment']) ? "#{$parts['fragment']}" : '');
 }
 
 
