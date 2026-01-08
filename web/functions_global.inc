@@ -135,7 +135,7 @@ if (!function_exists('str_contains'))
 {
   function str_contains(string $haystack, string $needle) : bool
   {
-    if (!isset($needle) || ($needle === ''))
+    if ($needle === '')
     {
       // This is the way the PHP function behaves
       return true;
@@ -155,7 +155,7 @@ if (!function_exists('str_starts_with'))
 {
   function str_starts_with(string $haystack, string $needle) : bool
   {
-    if (!isset($needle) || ($needle === ''))
+    if ($needle === '')
     {
       // This is the way the PHP function behaves
       return true;
@@ -175,16 +175,20 @@ if (!function_exists('str_ends_with'))
 {
   function str_ends_with(string $haystack, string $needle) : bool
   {
-    if (!isset($needle) || ($needle === ''))
+    if ($needle === '')
     {
       // This is the way the PHP function behaves
       return true;
     }
     else
     {
-      // This works with multibyte characters because strpos() and strlen()
-      // will either both be overloaded with the mb_ versions or both not.
-      return (strpos($haystack, $needle) === strlen($haystack) - strlen($needle));
+      $pos = mb_strrpos($haystack, $needle);
+      if ($pos === false)
+      {
+        // The needle doesn't exist at all, so the haystack can't end with it.
+        return false;
+      }
+      return ($pos === (mb_strlen($haystack) - mb_strlen($needle)));
     }
   }
 }

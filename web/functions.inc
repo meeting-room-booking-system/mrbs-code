@@ -602,16 +602,24 @@ function url_base() : string
     $result = '';
   }
 
-  // Add a scheme if we haven't got one
-  if (null === parse_url($result, PHP_URL_SCHEME))
+  if ($result !== '')
   {
-    $result = ((is_https()) ? 'https' : 'http') . '://' . $result;
-  }
-
-  // Add a trailing '/' if there isn't one
-  if (($result !== '') && (substr($result, -1) !== '/'))
-  {
-    $result .= '/';
+    // Tidy up the URL
+    $parsed_url = parse_url($result);
+    // Add a scheme if we haven't got one
+    if (!isset($parsed_url['scheme']))
+    {
+      $parsed_url['scheme'] = is_https() ? 'https' : 'http';
+    }
+    // Remove any query and fragment (which shouldn't be there anyway, but just in case)
+    unset($parsed_url['query'], $parsed_url['fragment']);
+    // Rebuild the URL
+    $result = build_url($parsed_url);
+    // Add a trailing '/' if there isn't one already.
+    if (!str_ends_with($result, '/'))
+    {
+      $result .= '/';
+    }
   }
 
   return $result;
