@@ -553,9 +553,11 @@ function url_path()
 }
 
 
-// Returns the base URL for MRBS.  If the config variable $url_base is set then that
-// overrides the automatic calculation.  A '/' will be appended to the end of the string,
-// unless it is empty or already ends in a '/'.
+/**
+ * Returns the base URL for MRBS.  If the config variable $url_base is set, then that
+ * overrides the automatic calculation.  A '/' will be appended to the end of the string,
+ * unless it is empty or already ends in a '/'.
+ */
 function url_base() : string
 {
   global $url_base, $server;
