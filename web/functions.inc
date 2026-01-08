@@ -582,9 +582,11 @@ function url_path()
 }
 
 
-// Returns the base URL for MRBS.  If the config variable $url_base is set then that
-// overrides the automatic calculation.  A '/' will be appended to the end of the string,
-// unless it is empty or already ends in a '/'.
+/**
+ * Returns the base URL for MRBS.  If the config variable $url_base is set, then that
+ * overrides the automatic calculation.  A '/' will be appended to the end of the string,
+ * unless it is empty or already ends in a '/'.
+ */
 function url_base() : string
 {
   global $url_base, $server;
@@ -688,12 +690,13 @@ function this_page(bool $with_query_string=false, string $suffix='') : string
 }
 
 
-// Format a timestamp in RFC 1123 format, for HTTP headers
-//
-// e.g. Wed, 28 Jul 2010 12:43:58 GMT
-function rfc1123_date(int $timestamp) : string
+/**
+ * Format a timestamp in RFC 7231 format, for HTTP headers.
+ * E.g. Wed, 28 Jul 2010 12:43:58 GMT
+ */
+function rfc7231_date(int $timestamp) : string
 {
-  return gmdate("D, d M Y G:i:s \\G\\M\\T", $timestamp);
+  return gmdate(DATE_RFC7231, $timestamp);
 }
 
 
@@ -718,8 +721,12 @@ function build_url(array $parts) : string
 }
 
 
-// A wrapper for sending a Location header.  This function will urlencode and add
-// the site parameter as necessary
+/**
+ * A wrapper for sending a Location header.  This function will urlencode and add
+ * the site parameter as necessary.
+ *
+ * @return never
+ */
 function location_header(string $location) : void
 {
   global $debug;
@@ -746,8 +753,20 @@ function location_header(string $location) : void
 }
 
 
+/**
+ * Add a query parameter in a URL.  If the parameter already exists, it will be overwritten.
+ * This function does not currently handle array parameters, eg 'room[]'.
+ *
+ * @param string|int $value
+ */
 function add_query_parameter(string $location, string $name, $value) : string
 {
+  if (str_ends_with($name, '[]'))
+  {
+    // TODO: handle arrays
+    throw new \Exception("Cannot yet handle array parameters");
+  }
+
   $parts = parse_url($location);
 
   if ($parts === false)
@@ -767,8 +786,18 @@ function add_query_parameter(string $location, string $name, $value) : string
 }
 
 
+/**
+ * Remove a query parameter from a URL.  If the parameter doesn't exist, nothing happens.
+ * This function does not currently handle array parameters, eg 'room[]'.
+ */
 function remove_query_parameter(string $location, string $name) : string
 {
+  if (str_ends_with($name, '[]'))
+  {
+    // TODO: handle arrays
+    throw new \Exception("Cannot yet handle array parameters");
+  }
+
   $parts = parse_url($location);
 
   if ($parts === false)
@@ -831,7 +860,7 @@ function expires_header(int $seconds) : void
   {
     // We also send a couple of extra headers as the "Expires" header alone
     // does not always result in caching.
-    header("Expires: " . rfc1123_date(time() + $seconds));
+    header("Expires: " . rfc7231_date(time() + $seconds));
     header("Pragma: cache");
     header("Cache-Control: max-age=$seconds");
   }

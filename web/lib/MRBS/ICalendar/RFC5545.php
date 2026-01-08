@@ -45,43 +45,4 @@ class RFC5545
     return $result;
   }
 
-
-  // Escape text for use as an iCalendar quoted string
-  public static function escapeQuotedString(string $str) : string
-  {
-    // From RFC 5545:
-    //    quoted-string = DQUOTE *QSAFE-CHAR DQUOTE
-
-    //    QSAFE-CHAR    = WSP / %x21 / %x23-7E / NON-US-ASCII
-    //    ; Any character except CONTROL and DQUOTE
-
-    // We'll just get rid of any double quotes, replacing them with a space.
-    // (There is no way of escaping double quotes)
-    return '"' . str_replace('"', ' ', $str) . '"';
-  }
-
-
-  public static function unescapeQuotedString(string $str) : string
-  {
-    return trim($str, '"');
-  }
-
-
-  // Reverses RFC 5545 escaping of text
-  public static function unescapeText(string $str) : string
-  {
-    // Unescape '\N'
-    $str = str_replace("\\N", "\N", $str);
-    // Unescape '\n'
-    $str = str_replace("\\n", "\n", $str);
-    // Unescape ','
-    $str = str_replace("\,", ",", $str);
-    // Unescape ';'
-    $str = str_replace("\;", ";", $str);
-    // Unescape '\'
-    $str = str_replace("\\\\", "\\", $str);
-
-    return $str;
-  }
-
 }
