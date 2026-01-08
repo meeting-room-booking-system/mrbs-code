@@ -661,12 +661,13 @@ function this_page(bool $with_query_string=false, string $suffix='') : string
 }
 
 
-// Format a timestamp in RFC 1123 format, for HTTP headers
-//
-// e.g. Wed, 28 Jul 2010 12:43:58 GMT
-function rfc1123_date(int $timestamp) : string
+/**
+ * Format a timestamp in RFC 7231 format, for HTTP headers.
+ * E.g. Wed, 28 Jul 2010 12:43:58 GMT
+ */
+function rfc7231_date(int $timestamp) : string
 {
-  return gmdate("D, d M Y G:i:s \\G\\M\\T", $timestamp);
+  return gmdate(DATE_RFC7231, $timestamp);
 }
 
 
@@ -806,7 +807,7 @@ function expires_header(int $seconds) : void
   {
     // We also send a couple of extra headers as the "Expires" header alone
     // does not always result in caching.
-    header("Expires: " . rfc1123_date(time() + $seconds));
+    header("Expires: " . rfc7231_date(time() + $seconds));
     header("Pragma: cache");
     header("Cache-Control: max-age=$seconds");
   }
