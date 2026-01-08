@@ -692,8 +692,12 @@ function build_url(array $parts) : string
 }
 
 
-// A wrapper for sending a Location header.  This function will urlencode and add
-// the site parameter as necessary
+/**
+ * A wrapper for sending a Location header.  This function will urlencode and add
+ * the site parameter as necessary.
+ *
+ * @return never
+ */
 function location_header(string $location) : void
 {
   global $debug;
