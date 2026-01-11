@@ -87,7 +87,7 @@ class Event extends Component
    */
   public static function createFromData(string $method, array $data, ?string $tzid=null, ?array $addresses=null, bool $series=false) : self
   {
-    global $mail_settings, $timezone, $default_area_room_delimiter, $standard_fields;
+    global $mail_settings, $default_area_room_delimiter, $standard_fields;
     global $partstat_accepted;
 
     $event = new Event();
