@@ -2,6 +2,10 @@
 declare(strict_types=1);
 namespace MRBS\ICalendar;
 
+/**
+ * Represents an abstract calendar component that can contain subcomponents and properties.
+ * This class serves as a base for specific calendar components such as VEVENT and VTIMEZONE.
+ */
 abstract class Component
 {
   // Self-referential 'abstract' declaration

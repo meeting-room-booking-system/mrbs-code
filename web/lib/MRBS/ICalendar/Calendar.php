@@ -13,6 +13,10 @@ use function MRBS\unpack_status;
 
 require_once MRBS_ROOT . '/version.inc';
 
+/**
+ * The Calendar class is used to construct and manipulate calendar data
+ * in compliance with the iCalendar (RFC 5545) specification.
+ */
 class Calendar
 {
   private const NAME = 'VCALENDAR';
