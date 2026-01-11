@@ -3,15 +3,15 @@ namespace MRBS\Auth;
 
 use MRBS\User;
 
-// A class for authenticating against a Wix system.  It requires code to be installed in
-// http-functions.js in the Wix backend.  See wix/README for full details.
-//
-// It would be nice to be able to use Wix's OAuth2 server, but it seems to be limited to Wix
-// apps.
-//
-// Another approach might be to use the Wix backend function getMember(), but this doesn't
-// work inside http_functions as the URL endpoint for http_functions is not associated with
-// a user session.
+/**
+ * A class for authenticating against a Wix system.  It requires code to be installed in
+ * http-functions.js in the Wix backend.  See wix/README for full details.
+ *
+ * It would be nice to be able to use Wix's OAuth2 server, but it seems to be limited to Wix apps.
+ *
+ * Another approach might be to use the Wix backend function getMember(), but this doesn't work inside
+ * http_functions as the URL endpoint for http_functions is not associated with a user session.
+ */
 class AuthWix extends Auth
 {
 
