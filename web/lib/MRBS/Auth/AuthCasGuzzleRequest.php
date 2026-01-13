@@ -64,12 +64,6 @@ class AuthCasGuzzleRequest extends CAS_Request_AbstractRequest implements CAS_Re
   }
 
 
-  public function getErrorMessage()
-  {
-    // TODO: Implement getErrorMessage() method.
-  }
-
-
   /**
    * @see CAS_Request_AbstractRequest::sendRequest()
    */
