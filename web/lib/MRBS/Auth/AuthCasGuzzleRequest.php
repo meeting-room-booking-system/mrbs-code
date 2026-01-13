@@ -7,6 +7,10 @@ use CAS_Request_AbstractRequest;
 use CAS_Request_RequestInterface;
 use GuzzleHttp\Client;
 
+/**
+ *  A CAS request class that uses Guzzle to make the request, rather than the default curl.  Guzzle will
+ *  use curl if possible but falls back to the native PHP functions if curl is not available.
+ */
 class AuthCasGuzzleRequest extends CAS_Request_AbstractRequest implements CAS_Request_RequestInterface
 {
   private $client;
@@ -30,11 +34,17 @@ class AuthCasGuzzleRequest extends CAS_Request_AbstractRequest implements CAS_Re
   public function addCookie($name, $value) : void
   {
     // TODO: Implement addCookie() method.
+    throw new \Exception('Not yet implemented');
   }
 
-  public function addCookies(array $cookies)
+
+  /**
+   * @see CAS_Request_RequestInterface::addCookies()
+   */
+  public function addCookies(array $cookies) : void
   {
     // TODO: Implement addCookies() method.
+    throw new \Exception('Not yet implemented');
   }
 
 
@@ -71,14 +81,24 @@ class AuthCasGuzzleRequest extends CAS_Request_AbstractRequest implements CAS_Re
     }
   }
 
-  public function makePost()
+
+  /**
+   * @see CAS_Request_RequestInterface::makePost()
+   */
+  public function makePost() : void
   {
-    // TODO: Implement makePost() method.
+    parent::makePost();
+    $this->method = 'POST';
   }
 
-  public function setPostBody($body)
+
+  /**
+   * @see CAS_Request_RequestInterface::setPostBody()
+   */
+  public function setPostBody($body) : void
   {
-    // TODO: Implement setPostBody() method.
+    parent::setPostBody($body);
+    parse_str($body, $this->options['form_params']);
   }
 
 
@@ -87,11 +107,7 @@ class AuthCasGuzzleRequest extends CAS_Request_AbstractRequest implements CAS_Re
    */
   public function setSslCaCert($caCertPath, $validate_cn = true) : void
   {
-    if ($this->sent)
-    {
-      throw new CAS_OutOfSequenceException('Request has already been sent cannot '.__METHOD__);
-    }
-
+    parent::setSslCaCert($caCertPath, $validate_cn);
     $this->options['verify'] = ($validate_cn) ? $caCertPath : false;
   }
 
