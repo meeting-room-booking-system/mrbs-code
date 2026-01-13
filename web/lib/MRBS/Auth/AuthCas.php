@@ -106,6 +106,21 @@ class AuthCas extends Auth
     }
 
     $init_complete = true;
+    // TESTING BELOW
+    $url = "https://www.tzurl.org/zoneinfo-outlook/Europe/London.ics";
+    ini_set('display_errors', 1);
+    error_reporting(E_ALL);
+    $client = phpCAS::getCasClient();
+    $client->setRequestImplementation(__NAMESPACE__ . '\AuthCasGuzzleRequest');
+    //echo "Reading</br>\n";
+
+    $tmp = $client->_readURL($url, $headers, $body, $err_msg);
+    //echo "Read</br>\n";
+    var_dump($tmp);
+    var_dump($headers);
+    var_dump($body);
+    var_dump($err_msg);
+    exit;
   }
 
 

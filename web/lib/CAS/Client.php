@@ -3051,7 +3051,7 @@ class CAS_Client
      * @return bool true on success, false otherwise (in this later case, $err_msg
      * contains an error message).
      */
-    private function _readURL($url, &$headers, &$body, &$err_msg)
+    public function _readURL($url, &$headers, &$body, &$err_msg)
     {
         phpCAS::traceBegin();
         $className = $this->_requestImplementation;
