@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS\Auth;
 
+use CAS_OutOfSequenceException;
 use CAS_Request_AbstractRequest;
 use CAS_Request_RequestInterface;
 use GuzzleHttp\Client;
@@ -11,6 +12,8 @@ class AuthCasGuzzleRequest extends CAS_Request_AbstractRequest implements CAS_Re
 
   private $client;
   private $method = 'GET';
+  private $response_status_code;
+  private $sent = false;  // $_sent is private in CAS_Request_AbstractRequest
 
 
   public function __construct()
@@ -58,9 +61,17 @@ class AuthCasGuzzleRequest extends CAS_Request_AbstractRequest implements CAS_Re
   }
 
 
-  public function getResponseStatusCode()
+  /**
+   * @see CAS_Request_RequestInterface::getResponseStatusCode()
+   */
+  public function getResponseStatusCode() : int
   {
-    // TODO: Implement getResponseStatusCode() method.
+    if (!$this->sent)
+    {
+      throw new CAS_OutOfSequenceException('Request has not been sent yet. Cannot '.__METHOD__);
+    }
+
+    return $this->response_status_code;
   }
 
 
@@ -71,6 +82,7 @@ class AuthCasGuzzleRequest extends CAS_Request_AbstractRequest implements CAS_Re
   {
     try
     {
+      $this->sent = true;
       $response = $this->client->request($this->method, $this->url);
       $this->storeResponseBody($response->getBody()->getContents());
       foreach ($response->getHeaders() as $name => $values)
