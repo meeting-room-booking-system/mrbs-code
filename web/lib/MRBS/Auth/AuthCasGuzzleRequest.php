@@ -56,9 +56,20 @@ class AuthCasGuzzleRequest extends CAS_Request_AbstractRequest implements CAS_Re
   }
 
 
-  public function addHeaders(array $headers)
+  /**
+   * @see CAS_Request_RequestInterface::addHeaders()
+   */
+  public function addHeaders(array $headers) : void
   {
-    // TODO: Implement addHeaders() method.
+    if ($this->sent)
+    {
+      throw new CAS_OutOfSequenceException('Request has already been sent cannot '.__METHOD__);
+    }
+
+    foreach ($headers as $header)
+    {
+      $this->addHeader($header);
+    }
   }
 
   public function makePost()
