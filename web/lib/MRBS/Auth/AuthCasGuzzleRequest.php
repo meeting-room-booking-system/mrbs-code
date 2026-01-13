@@ -12,6 +12,7 @@ class AuthCasGuzzleRequest extends CAS_Request_AbstractRequest implements CAS_Re
 
   private $client;
   private $method = 'GET';
+  private $options = [];
   private $response_status_code;
   private $sent = false;  // $_sent is private in CAS_Request_AbstractRequest
 
@@ -55,9 +56,18 @@ class AuthCasGuzzleRequest extends CAS_Request_AbstractRequest implements CAS_Re
     // TODO: Implement setPostBody() method.
   }
 
-  public function setSslCaCert($caCertPath, $validate_cn = true)
+
+  /**
+   * @see CAS_Request_RequestInterface::setSslCaCert()
+   */
+  public function setSslCaCert($caCertPath, $validate_cn = true) : void
   {
-    // TODO: Implement setSslCaCert() method.
+    if ($this->sent)
+    {
+      throw new CAS_OutOfSequenceException('Request has already been sent cannot '.__METHOD__);
+    }
+
+    $this->options['verify'] = ($validate_cn) ? $caCertPath : false;
   }
 
 
@@ -83,7 +93,7 @@ class AuthCasGuzzleRequest extends CAS_Request_AbstractRequest implements CAS_Re
     try
     {
       $this->sent = true;
-      $response = $this->client->request($this->method, $this->url);
+      $response = $this->client->request($this->method, $this->url, $this->options);
       $this->storeResponseBody($response->getBody()->getContents());
       foreach ($response->getHeaders() as $name => $values)
       {
