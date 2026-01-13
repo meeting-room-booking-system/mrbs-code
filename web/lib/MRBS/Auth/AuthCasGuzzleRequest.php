@@ -9,7 +9,6 @@ use GuzzleHttp\Client;
 
 class AuthCasGuzzleRequest extends CAS_Request_AbstractRequest implements CAS_Request_RequestInterface
 {
-
   private $client;
   private $method = 'GET';
   private $options = [
@@ -120,6 +119,7 @@ class AuthCasGuzzleRequest extends CAS_Request_AbstractRequest implements CAS_Re
     {
       $this->sent = true;
       $response = $this->client->request($this->method, $this->url, $this->options);
+      $this->response_status_code = $response->getStatusCode();
       $this->storeResponseBody($response->getBody()->getContents());
       foreach ($response->getHeaders() as $name => $values)
       {
