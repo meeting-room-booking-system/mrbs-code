@@ -12,7 +12,9 @@ class AuthCasGuzzleRequest extends CAS_Request_AbstractRequest implements CAS_Re
 
   private $client;
   private $method = 'GET';
-  private $options = [];
+  private $options = [
+    'headers' => []
+  ];
   private $response_status_code;
   private $sent = false;  // $_sent is private in CAS_Request_AbstractRequest
 
@@ -36,10 +38,23 @@ class AuthCasGuzzleRequest extends CAS_Request_AbstractRequest implements CAS_Re
     // TODO: Implement addCookies() method.
   }
 
-  public function addHeader($header)
+
+  /**
+   * @see CAS_Request_RequestInterface::addHeader()
+   */
+  public function addHeader($header) : void
   {
-    // TODO: Implement addHeader() method.
+    if ($this->sent)
+    {
+      throw new CAS_OutOfSequenceException('Request has already been sent cannot '.__METHOD__);
+    }
+
+    if (preg_match('/^([^:]+):\s*(.+)$/', $header, $matches))
+    {
+      $this->options['headers'][$matches[1]] = $matches[2];
+    }
   }
+
 
   public function addHeaders(array $headers)
   {
