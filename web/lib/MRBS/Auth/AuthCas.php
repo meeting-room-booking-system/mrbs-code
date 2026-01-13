@@ -117,9 +117,13 @@ class AuthCas extends Auth
     $tmp = $client->_readURL($url, $headers, $body, $err_msg);
     //echo "Read</br>\n";
     var_dump($tmp);
+    echo "</br>\n";
     var_dump($headers);
+    echo "</br>\n";
     var_dump($body);
+    echo "</br>\n";
     var_dump($err_msg);
+    echo "</br>\n";
     exit;
   }
 

@@ -2,17 +2,27 @@
 declare(strict_types=1);
 namespace MRBS\Auth;
 
+use CAS_Request_AbstractRequest;
 use CAS_Request_RequestInterface;
+use GuzzleHttp\Client;
 
-class AuthCasGuzzleRequest implements CAS_Request_RequestInterface
+class AuthCasGuzzleRequest extends CAS_Request_AbstractRequest implements CAS_Request_RequestInterface
 {
 
-  public function setUrl($url)
+  private $client;
+  private $method = 'GET';
+
+
+  public function __construct()
   {
-    // TODO: Implement setUrl() method.
+    $this->client = new Client();
   }
 
-  public function addCookie($name, $value)
+
+  /**
+   * @see CAS_Request_RequestInterface::addCookie()
+   */
+  public function addCookie($name, $value) : void
   {
     // TODO: Implement addCookie() method.
   }
@@ -47,28 +57,39 @@ class AuthCasGuzzleRequest implements CAS_Request_RequestInterface
     // TODO: Implement setSslCaCert() method.
   }
 
-  public function send()
-  {
-    // TODO: Implement send() method.
-  }
-
-  public function getResponseHeaders()
-  {
-    // TODO: Implement getResponseHeaders() method.
-  }
 
   public function getResponseStatusCode()
   {
     // TODO: Implement getResponseStatusCode() method.
   }
 
-  public function getResponseBody()
-  {
-    // TODO: Implement getResponseBody() method.
-  }
 
   public function getErrorMessage()
   {
     // TODO: Implement getErrorMessage() method.
   }
+
+
+  /**
+   * @see CAS_Request_AbstractRequest::sendRequest()
+   */
+  protected function sendRequest() : bool
+  {
+    try
+    {
+      $response = $this->client->request($this->method, $this->url);
+      $this->storeResponseBody($response->getBody()->getContents());
+      foreach ($response->getHeaders() as $name => $values)
+      {
+        $this->storeResponseHeader(mb_strtolower($name) . ': ' . implode(', ', $values));
+      }
+      return true;
+    }
+    catch (\Exception $e)
+    {
+      $this->storeErrorMessage( $e->getMessage());
+      return false;
+    }
+  }
+
 }
