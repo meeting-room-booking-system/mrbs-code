@@ -1,9 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2025b//EN
+PRODID:-//tzurl.org//NONSGML Olson 2025c//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
 TZID:America/Indiana/Vincennes
-LAST-MODIFIED:20250410T142246Z
+LAST-MODIFIED:20251211T094730Z
 TZURL:https://www.tzurl.org/zoneinfo/America/Indiana/Vincennes
 X-LIC-LOCATION:America/Indiana/Vincennes
 X-PROLEPTIC-TZNAME:LMT
