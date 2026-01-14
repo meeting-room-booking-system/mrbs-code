@@ -14,7 +14,6 @@ use GuzzleHttp\Client;
 class AuthCasGuzzleRequest extends CAS_Request_AbstractRequest implements CAS_Request_RequestInterface
 {
   private $client;
-  private $method = 'GET';
   private $options = [
     'headers' => []
   ];
@@ -83,16 +82,6 @@ class AuthCasGuzzleRequest extends CAS_Request_AbstractRequest implements CAS_Re
 
 
   /**
-   * @see CAS_Request_RequestInterface::makePost()
-   */
-  public function makePost() : void
-  {
-    parent::makePost();
-    $this->method = 'POST';
-  }
-
-
-  /**
    * @see CAS_Request_RequestInterface::setPostBody()
    */
   public function setPostBody($body) : void
@@ -133,8 +122,9 @@ class AuthCasGuzzleRequest extends CAS_Request_AbstractRequest implements CAS_Re
   {
     try
     {
+      $method = ($this->isPost) ? 'POST' : 'GET';
       $this->sent = true;
-      $response = $this->client->request($this->method, $this->url, $this->options);
+      $response = $this->client->request($method, $this->url, $this->options);
       $this->response_status_code = $response->getStatusCode();
       $this->storeResponseBody($response->getBody()->getContents());
       foreach ($response->getHeaders() as $name => $values)
