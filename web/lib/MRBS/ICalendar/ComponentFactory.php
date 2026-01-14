@@ -50,8 +50,8 @@ class ComponentFactory
       case Event::NAME:
         $component = new Event();
         break;
-      case FreeBusy::NAME:
-        $component = new FreeBusy();
+      case Freebusy::NAME:
+        $component = new Freebusy();
         break;
       case Journal::NAME:
         $component = new Journal();
