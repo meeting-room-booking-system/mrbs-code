@@ -562,23 +562,33 @@ function url_base() : string
 {
   global $url_base, $server;
 
+  // Use the $url_base if there is one and it is well-formed.
   if (isset($url_base))
   {
-    $result = $url_base;
+    $parsed_url = parse_url($url_base);
+    if ($parsed_url === false)
+    {
+      trigger_error('Cannot parse $url_base of "' . $url_base . '"', E_USER_WARNING);
+    }
   }
-  elseif (isset($server['HTTP_HOST']))
+
+  // Otherwise construct it from the $_SERVER variables if we can.
+  if (!is_array($parsed_url) && isset($server['HTTP_HOST']))
   {
-    $result = $server['HTTP_HOST'] . dirname(url_path());
+    $parsed_url = [
+      'host' => $server['HTTP_HOST'],
+      'path' => dirname(url_path())
+    ];
   }
-  else
+
+  // If we haven't got any URL parts, then return an empty string.
+  if (!is_array($parsed_url))
   {
     $result = '';
   }
-
-  if ($result !== '')
+  // Otherwise tidy up the URL parts and rebuild it.
+  else
   {
-    // Tidy up the URL
-    $parsed_url = parse_url($result);
     // Add a scheme if we haven't got one
     if (!isset($parsed_url['scheme']))
     {
@@ -597,7 +607,6 @@ function url_base() : string
 
   return $result;
 }
-
 
 
 function is_https() : bool
@@ -678,7 +687,7 @@ function rfc7231_date(int $timestamp) : string
  */
 function build_url(array $parts) : string
 {
-  // See https://www.php.net/manual/en/function.parse-url.php#106731
+  // See https://stackoverflow.com/questions/4354904/php-parse-url-reverse-parsed-url#answers
     return (isset($parts['scheme']) ? "{$parts['scheme']}:" : '') .
            ((isset($parts['user']) || isset($parts['host'])) ? '//' : '') .
            (isset($parts['user']) ? "{$parts['user']}" : '') .
