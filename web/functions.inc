@@ -687,7 +687,7 @@ function rfc7231_date(int $timestamp) : string
  */
 function build_url(array $parts) : string
 {
-  // See https://www.php.net/manual/en/function.parse-url.php#106731
+  // See https://stackoverflow.com/questions/4354904/php-parse-url-reverse-parsed-url#answers
     return (isset($parts['scheme']) ? "{$parts['scheme']}:" : '') .
            ((isset($parts['user']) || isset($parts['host'])) ? '//' : '') .
            (isset($parts['user']) ? "{$parts['user']}" : '') .
