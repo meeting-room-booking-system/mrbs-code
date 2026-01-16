@@ -105,6 +105,10 @@ class AuthCas extends Auth
       phpCAS::setLang($cas_lang_map[$locale['language']]);
     }
 
+    // Use our own Guzzle request implementation in case curl is not available.
+    $client = phpCAS::getCasClient();
+    $client->setRequestImplementation(__NAMESPACE__ . '\AuthCasGuzzleRequest');
+
     $init_complete = true;
   }
 
