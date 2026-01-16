@@ -573,7 +573,7 @@ function url_base() : string
   }
 
   // Otherwise construct it from the $_SERVER variables if we can.
-  if (!is_array($parsed_url) && isset($server['HTTP_HOST']))
+  if (empty($parsed_url) && isset($server['HTTP_HOST']))
   {
     $parsed_url = [
       'host' => $server['HTTP_HOST'],
@@ -582,7 +582,7 @@ function url_base() : string
   }
 
   // If we haven't got any URL parts, then return an empty string.
-  if (!is_array($parsed_url))
+  if (empty($parsed_url))
   {
     $result = '';
   }
