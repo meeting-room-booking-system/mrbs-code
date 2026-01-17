@@ -906,7 +906,7 @@ function notify_by_email(array $data, array $previous, bool $is_series, string $
       'reject' => 'mail_subject_rejected',
       'remind' => 'mail_subject_reminder'
     ];
-    $subject = get_mail_vocab($tags['action'], $mrbs_company);
+    $subject = get_mail_vocab($tags[$action], $mrbs_company);
   }
 
   // Create the text body
