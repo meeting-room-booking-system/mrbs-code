@@ -834,8 +834,6 @@ function create_addresses(array $data, string $action) : array
  */
 function notifyAdminOnBooking(array $data, array $mail_previous, bool $new_entry, bool $series, array $start_times, string $action='book', ?string $note=null) : void
 {
-  mail_debug('Preparing email for new or changed booking ...');
-
   // Add some values to the $data array before we go and create the addresses
   if (!$new_entry)
   {
@@ -846,8 +844,7 @@ function notifyAdminOnBooking(array $data, array $mail_previous, bool $new_entry
   notify_by_email($data, $mail_previous, $series, $action, $start_times, $note);
 }
 
-// }}}
-// {{{ notifyAdminOnDelete()
+
 
 /**
  * Send email to administrator to notify a new/changed entry.
@@ -860,8 +857,6 @@ function notifyAdminOnBooking(array $data, array $mail_previous, bool $new_entry
  */
 function notifyAdminOnDelete($data, $start_times, bool $series=false, string $action='delete', ?string $note=null)
 {
-  mail_debug('Preparing email for deleted booking');
-
   // As we are going to cancel this booking we need to increment the iCalendar
   // sequence number
   $data['ical_sequence']++;
@@ -879,6 +874,8 @@ function notify_by_email(array $data, array $previous, bool $is_series, string $
   {
     throw new \InvalidArgumentException("Invalid action: $action");
   }
+
+  mail_debug("Preparing email; action = '" . $action . "'");
 
   // Set up the addresses (from, to and cc)
   $addresses = create_addresses($data, $action);
