@@ -95,7 +95,7 @@ if ($info = get_booking_info($id, FALSE, TRUE))
         {
           $mail_previous['id'] = $mail_previous['repeat_id'];
         }
-        notifyAdminOnDelete($mail_previous, $start_times, $series, $action, $note);
+        notify_by_email($mail_previous, [], $series, $action, $start_times, $note);
       }
 
     }

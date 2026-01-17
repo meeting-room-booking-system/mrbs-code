@@ -838,22 +838,6 @@ function notifyAdminOnBooking(array $data, array $mail_previous, bool $new_entry
 }
 
 
-
-/**
- * Send email to administrator to notify a new/changed entry.
- *
- * @param   array   $data      contains deleted entry data for email body
- * @param   array   $start_times an array of start times that have been deleted
- * @param   bool    $series    whether this is a series or not
- * @param   string  $action    the booking action (eg 'delete', 'more_info', etc.)
- * @param   string  $note      a note that is used with 'reject'
- */
-function notifyAdminOnDelete($data, $start_times, bool $series=false, string $action='delete', ?string $note=null)
-{
-  notify_by_email($data, [], $series, $action, $start_times, $note);
-}
-
-
 /**
  * Generate an email notification.
  *
