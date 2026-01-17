@@ -322,12 +322,14 @@ function create_repeat_list(array $data, $action, bool $as_html, array $reps) : 
 
 // $start_times is an array of start_times that have been created/modified/deleted.
 // If not specified the function works them out for itself from the repeat data
-function create_body(array $data, ?array $mail_previous, bool $compare, bool $series, string $action, array $start_times, bool $as_html=false, ?string $note=null) : string
+function create_body(array $data, ?array $mail_previous, bool $series, string $action, array $start_times, bool $as_html=false, ?string $note=null) : string
 {
   global $mrbs_company;
   global $enable_periods, $approval_enabled, $confirmation_enabled;
   global $mail_settings, $standard_fields;
   global $select_options, $booking_types;
+
+  $compare = !empty($mail_previous);
 
   // If we haven't got a previous entry just give it one.   It won't get used,
   // but will prevent a series if undefined index notices.
@@ -910,12 +912,12 @@ function notify_by_email(array $data, array $previous, bool $is_series, string $
   }
 
   // Create the text body
-  $text_body = create_body($data, $previous, !empty($previous), $is_series, $action, $start_times, false, $note);
+  $text_body = create_body($data, $previous, $is_series, $action, $start_times, false, $note);
 
   // Create the HTML body
   if ($mail_settings['html'])
   {
-    $html_body = create_body($data, $previous, !empty($previous), $is_series, $action, $start_times, true, $note);
+    $html_body = create_body($data, $previous, $is_series, $action, $start_times, true, $note);
   }
 
   // Create the iCalendar if required
