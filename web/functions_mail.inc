@@ -818,26 +818,6 @@ function create_addresses(array $data, string $action) : array
 }
 
 
-// }}}
-// {{{ notifyAdminOnBooking()
-
-/**
- * Send email to administrator to notify a new/changed entry.
- *
- * @param array   $data          contains the data for this entry
- * @param array   $mail_previous contains the data for the previous entry, or is an empty array
- * @param bool    $new_entry     whether this is a new entry or not
- * @param bool    $series        whether this is a series or not
- * @param array   $start_times   an array of start times that have been made
- * @param string  $action        the booking action (eg "delete", "more_info", etc.)
- * @param string  $note          a note that is used with "more_info"
- */
-function notifyAdminOnBooking(array $data, array $mail_previous, bool $new_entry, bool $series, array $start_times, string $action='book', ?string $note=null) : void
-{
-  notify_by_email($data, $mail_previous, $series, $action, $start_times, $note);
-}
-
-
 /**
  * Generate an email notification.
  *
