@@ -834,13 +834,6 @@ function create_addresses(array $data, string $action) : array
  */
 function notifyAdminOnBooking(array $data, array $mail_previous, bool $new_entry, bool $series, array $start_times, string $action='book', ?string $note=null) : void
 {
-  // Add some values to the $data array before we go and create the addresses
-  if (!$new_entry)
-  {
-    $data['area_admin_email'] = (!empty($mail_previous['area_admin_email'])) ? $mail_previous['area_admin_email'] : NULL;
-    $data['room_admin_email'] = (!empty($mail_previous['room_admin_email'])) ? $mail_previous['room_admin_email'] : NULL;
-  }
-
   notify_by_email($data, $mail_previous, $series, $action, $start_times, $note);
 }
 
@@ -857,15 +850,13 @@ function notifyAdminOnBooking(array $data, array $mail_previous, bool $new_entry
  */
 function notifyAdminOnDelete($data, $start_times, bool $series=false, string $action='delete', ?string $note=null)
 {
-  // As we are going to cancel this booking we need to increment the iCalendar
-  // sequence number
-  $data['ical_sequence']++;
-
   notify_by_email($data, [], $series, $action, $start_times, $note);
 }
 
 
 /**
+ * Generate an email notification.
+ *
  * @param array $data The booking data
  * @param array $previous The previous booking data, or an empty array if none
  * @param bool $is_series Whether this is a series or not
@@ -884,6 +875,20 @@ function notify_by_email(array $data, array $previous, bool $is_series, string $
   }
 
   mail_debug("Preparing email; action = '" . $action . "'");
+
+  // Get some extra data
+  if (!empty($previous))
+  {
+    // TODO: we should really notify both the old and new admins.
+    $data['area_admin_email'] = (!empty($previous['area_admin_email'])) ? $previous['area_admin_email'] : null;
+    $data['room_admin_email'] = (!empty($previous['room_admin_email'])) ? $previous['room_admin_email'] : null;
+  }
+
+  if (in_array($action, ['delete', 'reject']))
+  {
+    // As we are going to cancel this booking, we need to increment the iCalendar sequence number
+    $data['ical_sequence']++;
+  }
 
   // Set up the addresses (from, to and cc)
   $addresses = create_addresses($data, $action);
