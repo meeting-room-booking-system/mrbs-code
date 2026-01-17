@@ -865,6 +865,14 @@ function notifyAdminOnDelete($data, $start_times, bool $series=false, string $ac
 }
 
 
+/**
+ * @param array $data The booking data
+ * @param array $previous The previous booking data, or an empty array if none
+ * @param bool $is_series Whether this is a series or not
+ * @param string $action The booking action (ie 'approve', 'book', 'delete', 'more_info', 'reject' or 'remind')
+ * @param int[] $start_times An array of start times that have been made or deleted
+ * @param string|null $note A note that is used with 'more_info' and 'reject'
+ */
 function notify_by_email(array $data, array $previous, bool $is_series, string $action, array $start_times, ?string $note=null) : void
 {
   global $mail_settings, $enable_periods, $mrbs_company;
