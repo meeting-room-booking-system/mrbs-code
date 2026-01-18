@@ -322,12 +322,14 @@ function create_repeat_list(array $data, $action, bool $as_html, array $reps) : 
 
 // $start_times is an array of start_times that have been created/modified/deleted.
 // If not specified the function works them out for itself from the repeat data
-function create_body(array $data, ?array $mail_previous, bool $compare, bool $series, string $action, array $start_times, bool $as_html=false, ?string $note=null) : string
+function create_body(array $data, ?array $mail_previous, bool $series, string $action, array $start_times, bool $as_html=false, ?string $note=null) : string
 {
   global $mrbs_company;
   global $enable_periods, $approval_enabled, $confirmation_enabled;
   global $mail_settings, $standard_fields;
   global $select_options, $booking_types;
+
+  $compare = !empty($mail_previous);
 
   // If we haven't got a previous entry just give it one.   It won't get used,
   // but will prevent a series if undefined index notices.
@@ -816,32 +818,40 @@ function create_addresses(array $data, string $action) : array
 }
 
 
-// }}}
-// {{{ notifyAdminOnBooking()
-
 /**
- * Send email to administrator to notify a new/changed entry.
+ * Generate an email notification.
  *
- * @param array   $data          contains the data for this entry
- * @param array   $mail_previous contains the data for the previous entry, or is an empty array
- * @param bool    $new_entry     whether this is a new entry or not
- * @param bool    $series        whether this is a series or not
- * @param array   $start_times   an array of start times that have been made
- * @param string  $action        the booking action (eg "delete", "more_info", etc.)
- * @param string  $note          a note that is used with "more_info"
+ * @param array $data The booking data
+ * @param array $previous The previous booking data, or an empty array if none
+ * @param bool $is_series Whether this is a series or not
+ * @param string $action The booking action (ie 'approve', 'book', 'delete', 'more_info', 'reject' or 'remind')
+ * @param int[] $start_times An array of start times that have been made or deleted
+ * @param string|null $note A note that is used with 'more_info' and 'reject'
  */
-function notifyAdminOnBooking(array $data, array $mail_previous, bool $new_entry, bool $series, array $start_times, string $action='book', ?string $note=null) : void
+function notify_by_email(array $data, array $previous, bool $is_series, string $action, array $start_times, ?string $note=null) : void
 {
-  global $mail_settings, $enable_periods;
-  global $mrbs_company, $timezone;
+  global $mail_settings, $enable_periods, $mrbs_company;
+  global $timezone;
 
-  mail_debug('Preparing email for new or changed booking ...');
-
-  // Add some values to the $data array before we go and create the addresses
-  if (!$new_entry)
+  if (!in_array($action, ['approve', 'book', 'delete', 'more_info', 'reject', 'remind']))
   {
-    $data['area_admin_email'] = (!empty($mail_previous['area_admin_email'])) ? $mail_previous['area_admin_email'] : NULL;
-    $data['room_admin_email'] = (!empty($mail_previous['room_admin_email'])) ? $mail_previous['room_admin_email'] : NULL;
+    throw new \InvalidArgumentException("Invalid action: $action");
+  }
+
+  mail_debug("Preparing email; action = '" . $action . "'");
+
+  // Get some extra data
+  if (!empty($previous))
+  {
+    // TODO: we should really notify both the old and new admins.
+    $data['area_admin_email'] = (!empty($previous['area_admin_email'])) ? $previous['area_admin_email'] : null;
+    $data['room_admin_email'] = (!empty($previous['room_admin_email'])) ? $previous['room_admin_email'] : null;
+  }
+
+  if (in_array($action, ['delete', 'reject']))
+  {
+    // As we are going to cancel this booking, we need to increment the iCalendar sequence number
+    $data['ical_sequence']++;
   }
 
   // Set up the addresses (from, to and cc)
@@ -856,47 +866,32 @@ function notifyAdminOnBooking(array $data, array $mail_previous, bool $new_entry
   //
   // If we're sending iCalendar notifications, then it seems that some calendar
   // applications use the email subject as the booking title instead of the iCal
-  // SUMMARY field.   As far as I can see this is wrong, but as a circumvention
-  // we'll put the booking title in the email subject line.   (See also
-  // SF Tracker id 3297799)
+  // SUMMARY field.  This seems to be wrong, but as a circumvention we'll put the
+  // booking title in the email subject line.  (See also SF Tracker id 3297799.)
   if ($mail_settings['icalendar'] && !$enable_periods)
   {
     $subject = $data['name'];
   }
   else
   {
-    switch ($action)
-    {
-      case "approve":
-        $subject = get_mail_vocab("mail_subject_approved", $mrbs_company);
-        break;
-      case "more_info":
-        $subject = get_mail_vocab("mail_subject_more_info", $mrbs_company);
-        break;
-      case "remind":
-        $subject = get_mail_vocab("mail_subject_reminder", $mrbs_company);
-        break;
-      default:
-        if ($new_entry)
-        {
-          $subject = get_mail_vocab("mail_subject_new_entry", $mrbs_company);
-        }
-        else
-        {
-          $subject = get_mail_vocab("mail_subject_changed_entry", $mrbs_company);
-        }
-        break;
-    }
+    $tags = [
+      'approve' => 'mail_subject_approved',
+      'book' => (empty($previous)) ? 'mail_subject_new_entry' : 'mail_subject_changed_entry',
+      'delete' => 'mail_subject_delete',
+      'more_info' => 'mail_subject_more_info',
+      'reject' => 'mail_subject_rejected',
+      'remind' => 'mail_subject_reminder'
+    ];
+    $subject = get_mail_vocab($tags[$action], $mrbs_company);
   }
 
   // Create the text body
-  $compare = !$new_entry;
-  $text_body = create_body($data, $mail_previous, $compare, $series, $action, $start_times, false, $note);
+  $text_body = create_body($data, $previous, $is_series, $action, $start_times, false, $note);
 
   // Create the HTML body
   if ($mail_settings['html'])
   {
-    $html_body = create_body($data, $mail_previous, $compare, $series, $action, $start_times, true, $note);
+    $html_body = create_body($data, $previous, $is_series, $action, $start_times, true, $note);
   }
 
   // Create the iCalendar if required
@@ -905,13 +900,13 @@ function notifyAdminOnBooking(array $data, array $mail_previous, bool $new_entry
   // Don't add an iCalendar if this is a reminder or a request for more info because then
   // the recipient probably won't be able to reply to the email: we just want an ordinary
   // email and not a calendar notification.
-  $attachment = array();
+  $attachment = [];
   if ($mail_settings['icalendar'] &&
       !$enable_periods &&
       !in_array($action, array('more_info', 'remind')))
   {
     // Create the iCalendar.
-    $attachment['method']   = "REQUEST";
+    $attachment['method'] = (in_array($action, ['delete', 'reject'])) ? 'CANCEL' : 'REQUEST';
     $calendar = new Calendar($attachment['method']);
     // Add in the VTIMEZONE component if we can.
     if (false !== ($vtimezone = Timezone::createFromTimezoneName($timezone)))
@@ -924,111 +919,19 @@ function notifyAdminOnBooking(array $data, array $mail_previous, bool $new_entry
     // TODO: the addresses have by this stage been MIME-encoded.  It would probably be better to
     // TODO: pass unencoded addresses to createFromData() so that we don't have to decode them,
     // TODO: as mb_decode_mimeheader() isn't guaranteed to exist.
-    $calendar->addComponent(Event::createFromData($attachment['method'], $data, $tzid ?? null, $addresses, $series));
-    $attachment['content']  = $calendar->toString();
-    $attachment['name']     = $mail_settings['ics_filename'] . ".ics";
+    $calendar->addComponent(Event::createFromData($attachment['method'], $data, $tzid ?? null, $addresses, $is_series));
+    $attachment['content'] = $calendar->toString();
+    $attachment['name'] = $mail_settings['ics_filename'] . ".ics";
   }
 
   MailQueue::add(
-      $addresses,
-      $subject,
-      $text_body,
-      $html_body ?? null,
-      $attachment,
-      Language::MAIL_CHARSET
-    );
-}
-
-// }}}
-// {{{ notifyAdminOnDelete()
-
-/**
- * Send email to administrator to notify a new/changed entry.
- *
- * @param   array   $data      contains deleted entry data for email body
- * @param   array   $start_times an array of start times that have been deleted
- * @param   bool    $series    whether this is a series or not
- * @param   string  $action    the booking action (eg 'delete', 'more_info', etc.)
- * @param   string  $note      a note that is used with 'reject'
- */
-function notifyAdminOnDelete($data, $start_times, bool $series=false, string $action='delete', ?string $note=null)
-{
-  global $mail_settings, $enable_periods;
-  global $mrbs_company, $timezone;
-
-  if ($mail_settings['debug'])
-  {
-    mail_debug('Preparing email for deleted booking');
-  }
-
-  // As we are going to cancel this booking we need to increment the iCalendar
-  // sequence number
-  $data['ical_sequence']++;
-
-  // Set up the addresses (from, to and cc)
-  $addresses = create_addresses($data, $action);
-  if (empty($addresses['to']) && empty($addresses['cc']))
-  {
-    mail_debug('Email abandoned: no addresses.');
-    return;
-  }
-
-  // Set the subject
-  //
-  // If we're sending iCalendar notifications, then it seems that some calendar
-  // applications use the email subject as the booking title instead of the iCal
-  // SUMMARY field.   As far as I can see this is wrong, but as a circumvention
-  // we'll put the booking title in the email subject line.   (See also
-  // SF Tracker id 3297799)
-  if ($mail_settings['icalendar'] && !$enable_periods)
-  {
-    $subject = $data['name'];
-  }
-  elseif ($action == "reject")
-  {
-    $subject = get_mail_vocab("mail_subject_rejected", $mrbs_company);
-  }
-  else
-  {
-    $subject = get_mail_vocab("mail_subject_delete", $mrbs_company);
-  }
-
-  // Create the text body
-  $text_body = create_body($data, null, false, $series, $action, $start_times, false, $note);
-
-  // Create the HTML body
-  if ($mail_settings['html'])
-  {
-    $html_body = create_body($data, null, false, $series, $action, $start_times, true, $note);
-  }
-
-  // Set up the attachment
-  $attachment = array();
-  if ($mail_settings['icalendar'] && !$enable_periods)
-  {
-    // Create the iCalendar.
-    $attachment['method']   = "CANCEL";
-    $calendar = new Calendar($attachment['method']);
-    // Add in the VTIMEZONE component if we can.
-    if (false !== ($vtimezone = Timezone::createFromTimezoneName($timezone)))
-    {
-      $tzid = $timezone;
-      $calendar->addComponent($vtimezone);
-    }
-    // Add in the VEVENT component.
-    $calendar->addComponent(Event::createFromData($attachment['method'], $data, $tzid ?? null, $addresses, $series));
-    $attachment['content']  = $calendar->toString();
-    $attachment['name']     = $mail_settings['ics_filename'] . ".ics";
-  }
-
-  MailQueue::add(
-      $addresses,
-      $subject,
-      $text_body,
-      $html_body ?? null,
-      $attachment,
-      Language::MAIL_CHARSET
-    );
+    $addresses,
+    $subject,
+    $text_body,
+    $html_body ?? null,
+    $attachment,
+    Language::MAIL_CHARSET
+  );
 }
 
 

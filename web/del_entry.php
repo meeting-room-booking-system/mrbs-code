@@ -19,7 +19,7 @@ require_once "functions_mail.inc";
 $id = get_form_var('id', 'int', null, INPUT_POST);
 $series = get_form_var('series', 'bool', null, INPUT_POST);
 $returl = get_form_var('returl', 'string', null, INPUT_POST);
-$action = get_form_var('action', 'string', null, INPUT_POST);
+$action = get_form_var('action', 'string', 'delete', INPUT_POST);
 $note = get_form_var('note', 'string', '', INPUT_POST);
 
 // Check the CSRF token
@@ -95,14 +95,7 @@ if ($info = get_booking_info($id, FALSE, TRUE))
         {
           $mail_previous['id'] = $mail_previous['repeat_id'];
         }
-        if (isset($action) && ($action == "reject"))
-        {
-          notifyAdminOnDelete($mail_previous, $start_times, $series, $action, $note);
-        }
-        else
-        {
-          notifyAdminOnDelete($mail_previous, $start_times, $series);
-        }
+        notify_by_email($mail_previous, [], $series, $action, $start_times, $note);
       }
 
     }

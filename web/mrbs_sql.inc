@@ -2518,7 +2518,7 @@ function mrbsMakeBookings(array $bookings, ?int $id=null, bool $just_check=false
         // TODO: only adds a message to a queue, and the actual sending of the email is performed on shutdown,
         // TODO: but can still be a problem if, for example, email addresses have to be looked up on a remote
         // TODO: server, eg an LDAP server, and the query takes a while.
-        notifyAdminOnBooking($booking, $mail_previous, !isset($id), $is_repeat_table, $result['start_times']);
+        notify_by_email($booking, $mail_previous, $is_repeat_table, 'book', $result['start_times']);
       }
     }
   } // end foreach $bookings
