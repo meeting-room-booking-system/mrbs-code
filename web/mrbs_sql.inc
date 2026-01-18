@@ -2863,10 +2863,10 @@ function mrbsMakeBookings(array $bookings, ?int $id=null, bool $just_check=false
         // TODO: that if one of the bookings fails for some reason the transaction will be rolled back, but
         // TODO: the email notifications will already have been sent.  The second is that they are inside a
         // TODO: lock and so if the email notifications take a while, it will keep the lock longer than
-        // TODO: necessary.  (This isn't as much of a problem as it used to be now that notifyAdminOnBooking()
+        // TODO: necessary.  (This isn't as much of a problem as it used to be now that notify_ny_email()
         // TODO: only adds a message to a queue, and the actual sending of the email is performed on shutdown,
         // TODO: but can still be a problem if, for example, email addresses have to be looked up on a remote
-        // TODO: server, eg an LDAP server, and the query takes a while.
+        // TODO: server, eg an LDAP server, and the query takes a while.)
         notify_by_email($booking, $mail_previous, $is_repeat_table, 'book', $result['start_times']);
       }
     }
