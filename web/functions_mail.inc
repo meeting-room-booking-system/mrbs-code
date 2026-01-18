@@ -699,7 +699,7 @@ function address_merge(array $addresses, string $address_string) : array
 //   $data     an array containing all the data concerning this booking
 //   $action   the action that has caused this email to be sent
 //
-function create_addresses(array $data, string $action) : array
+function create_addresses(array $data, array $previous, string $action) : array
 {
   global $approval_enabled, $mail_settings;
 
@@ -763,6 +763,8 @@ function create_addresses(array $data, string $action) : array
     // Look for list of area admins email addresses
     if (empty($data['area_admin_email']))
     {
+      // TODO: Why is this necessary? Isn't the area_admin_email already set in $data?
+      // TODO: And do we need to check for the previous value?
       $email = get_area_admin_email($data['id'], ($data['repeat_rule']->getType() != RepeatRule::NONE));
     }
     else
@@ -773,6 +775,10 @@ function create_addresses(array $data, string $action) : array
     {
       $to = address_merge($to, $email);
     }
+    if (isset($previous['area_admin_email']) && ($previous['area_admin_email'] !== ''))
+    {
+      $to = address_merge($to, $previous['area_admin_email']);
+    }
   }
 
   if ($mail_settings['room_admin_on_bookings'])
@@ -780,6 +786,8 @@ function create_addresses(array $data, string $action) : array
     // Look for list of room admins email addresses
     if (empty($data['room_admin_email']))
     {
+      // TODO: Why is this necessary? Isn't the room_admin_email already set in $data?
+      // TODO: And do we need to check for the previous value?
       $email = get_room_admin_email($data['id'], ($data['repeat_rule']->getType() != RepeatRule::NONE));
     }
     else
@@ -789,6 +797,10 @@ function create_addresses(array $data, string $action) : array
     if (!empty($email))
     {
       $to = address_merge($to, $email);
+    }
+    if (isset($previous['room_admin_email']) && ($previous['room_admin_email'] !== ''))
+    {
+      $to = address_merge($to, $previous['room_admin_email']);
     }
   }
 
@@ -840,14 +852,6 @@ function notify_by_email(array $data, array $previous, bool $is_series, string $
 
   mail_debug("Preparing email; action = '" . $action . "'");
 
-  // Get some extra data
-  if (!empty($previous))
-  {
-    // TODO: we should really notify both the old and new admins.
-    $data['area_admin_email'] = (!empty($previous['area_admin_email'])) ? $previous['area_admin_email'] : null;
-    $data['room_admin_email'] = (!empty($previous['room_admin_email'])) ? $previous['room_admin_email'] : null;
-  }
-
   if (in_array($action, ['delete', 'reject']))
   {
     // As we are going to cancel this booking, we need to increment the iCalendar sequence number
@@ -855,7 +859,7 @@ function notify_by_email(array $data, array $previous, bool $is_series, string $
   }
 
   // Set up the addresses (from, to and cc)
-  $addresses = create_addresses($data, $action);
+  $addresses = create_addresses($data, $previous, $action);
   if (empty($addresses['to']) && empty($addresses['cc']))
   {
     mail_debug('Email abandoned: no addresses.');
