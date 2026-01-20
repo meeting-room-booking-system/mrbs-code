@@ -217,7 +217,7 @@ function get_room_admin_email(array $data) : string
   }
 
   // Otherwise, get it from the database.
-  $id_table = ($data['repeat_rule']->getType() != RepeatRule::NONE) ? "rep" : "e";
+  $id_table = ($data['repeat_rule']->getType() === RepeatRule::NONE) ? "e" : "rep";
 
   $sql = "SELECT r.room_admin_email ";
   $sql .= "FROM " . _tbl('room') . " r, " . _tbl('entry') . " e ";
