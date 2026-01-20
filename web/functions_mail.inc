@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use InvalidArgumentException;
 use MRBS\ICalendar\Calendar;
 use MRBS\ICalendar\Event;
 use MRBS\ICalendar\Timezone;
@@ -832,7 +833,7 @@ function notify_by_email(array $data, array $previous, bool $is_series, string $
 
   if (!in_array($action, ['approve', 'book', 'delete', 'more_info', 'reject', 'remind']))
   {
-    throw new \InvalidArgumentException("Invalid action: $action");
+    throw new InvalidArgumentException("Invalid action: $action");
   }
 
   mail_debug("Preparing email; action = '" . $action . "'");
