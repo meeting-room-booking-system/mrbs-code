@@ -48,8 +48,6 @@ function get_mail_field_name(string $table, string $name) : string
   return get_mail_vocab(get_table_short_name($table) . ".$name");
 }
 
-// }}}
-// {{{ getMailPeriodDateString()
 
 /**
  * Format a timestamp in non-unicode output (for emails).
@@ -82,8 +80,6 @@ function getMailPeriodDateString(int $t, int $mod_time=0) : array
   return array($p_num, $mailperiod . ', ' . datetime_format($datetime_formats['date'], $t, Language::getInstance()->getMailLocale()));
 }
 
-// }}}
-// {{{ getMailTimeDateString()
 
 /**
  * Format a timestamp in non-unicode output (for emails).
