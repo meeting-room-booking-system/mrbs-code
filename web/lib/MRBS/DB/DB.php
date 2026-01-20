@@ -206,6 +206,7 @@ abstract class DB
    * other than a boolean (because the function returns FALSE if there is no value).
    *
    * @return mixed The value returned by the query, or FALSE if there is none.
+   * @throws DBException
    */
   public function query_scalar_non_bool(string $sql, array $params = [])
   {
@@ -222,16 +223,21 @@ abstract class DB
   }
 
 
-  // Run an SQL query that returns a simple one-dimensional array of results.
-  // The SQL query must select only one column.   Returns an empty array if
-  // no results; throws a DBException if there's an error
-  public function query_array(string $sql, array $params = array()): array
+  /**
+   * Run an SQL query that returns a simple one-dimensional array of results.
+   * The SQL query must select only one column.
+   *
+   * @return array The results, as an array of scalars, or an empty array if there are no results.
+   * @throws DBException
+   */
+  public function query_array(string $sql, array $params = []): array
   {
     $stmt = $this->query($sql, $params);
 
-    $result = array();
+    $result = [];
 
-    while (false !== ($row = $stmt->next_row())) {
+    while (false !== ($row = $stmt->next_row()))
+    {
       $result[] = $row[0];
     }
 
@@ -239,10 +245,12 @@ abstract class DB
   }
 
 
-  // Execute an SQL query. Returns a DBStatement object, a class with a number
-  // of methods like row() and row_keyed() to get the results.
-  // Throws a DBException on error
-  public function query(string $sql, array $params = array()): DBStatement
+  /**
+   * Execute an SQL query.
+   *
+   * @throws DBException
+   */
+  public function query(string $sql, array $params = []): DBStatement
   {
     try {
       $sth = $this->dbh->prepare($sql);
@@ -255,37 +263,49 @@ abstract class DB
   }
 
 
-  //
+  /**
+   * Begin a transaction.  If already inside a transaction, this is a no-op.
+   *
+   * @see PDO::beginTransaction()
+   */
   public function begin(): void
   {
     // Turn off ignore_user_abort until the transaction has been committed or rolled back.
     // See the warning at http://php.net/manual/en/features.persistent-connections.php
     // (Only applies to persistent connections, but we'll do it for all cases to keep
     // things simple)
-    mrbs_ignore_user_abort(TRUE);
+    mrbs_ignore_user_abort(true);
     if (!$this->dbh->inTransaction()) {
       $this->dbh->beginTransaction();
     }
   }
 
 
-  // Commit (end) a transaction. See begin().
+  /**
+   * Commit a transaction.  If not already inside a transaction, this is a no-op.
+   *
+   * @see PDO::commit()
+   */
   public function commit(): void
   {
     if ($this->dbh->inTransaction()) {
       $this->dbh->commit();
     }
-    mrbs_ignore_user_abort(FALSE);
+    mrbs_ignore_user_abort(false);
   }
 
 
-  // Roll back a transaction, aborting it. See begin().
+  /**
+   * Roll back a transaction.  If not already inside a transaction, this is a no-op.
+   *
+   * @see PDO::rollBack()
+   */
   public function rollback(): void
   {
     if ($this->dbh && $this->dbh->inTransaction()) {
       $this->dbh->rollBack();
     }
-    mrbs_ignore_user_abort(FALSE);
+    mrbs_ignore_user_abort(false);
   }
 
 
