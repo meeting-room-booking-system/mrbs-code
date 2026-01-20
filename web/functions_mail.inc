@@ -181,21 +181,17 @@ function get_area_admin_email(array $data) : string
   }
 
   // Otherwise, get it from the database.
-  $id_table = ($data['repeat_rule']->getType() === RepeatRule::NONE) ? "e" : "rep";
+  $id_table = ($data['repeat_rule']->getType() === RepeatRule::NONE) ? 'E' : 'T';
 
-  $sql = "SELECT a.area_admin_email ";
-  $sql .= "FROM " . _tbl('room') . " r, " . _tbl('area') . " a, " . _tbl('entry') . " e ";
-  // If this is a repeating entry...
-  if ($id_table == 'rep')
-  {
-    // ...use the repeat table
-    $sql .= ", " . _tbl('repeat') . " rep ";
-  }
-  $sql .= "WHERE {$id_table}.id=?
-             AND r.id={$id_table}.room_id
-             AND a.id=r.area_id
+  $sql = "SELECT A.area_admin_email
+            FROM " . _tbl('room') . " M, " . _tbl('area') . " A, ";
+
+  $sql .= ($id_table == 'E') ? _tbl('entry') . " E " : _tbl('repeat') . " T ";
+  $sql .= "WHERE {$id_table}.id=:id
+             AND M.id={$id_table}.room_id
+             AND A.id=M.area_id
            LIMIT 1";
-  $email = db()->query_scalar_non_bool($sql, array($data['id']));
+  $email = db()->query_scalar_non_bool($sql, [':id' => $data['id']]);
 
   return (!isset($email) || ($email === false)) ? '' : $email;
 }
@@ -217,20 +213,15 @@ function get_room_admin_email(array $data) : string
   }
 
   // Otherwise, get it from the database.
-  $id_table = ($data['repeat_rule']->getType() === RepeatRule::NONE) ? "e" : "rep";
+  $id_table = ($data['repeat_rule']->getType() === RepeatRule::NONE) ? "E" : "T";
 
-  $sql = "SELECT r.room_admin_email ";
-  $sql .= "FROM " . _tbl('room') . " r, " . _tbl('entry') . " e ";
-  // If this is a repeating entry...
-  if ($id_table == 'rep')
-  {
-    // ...use the repeat table
-    $sql .= ", " . _tbl('repeat') . " rep ";
-  }
-  $sql .= "WHERE {$id_table}.id=?
-             AND r.id={$id_table}.room_id
+  $sql = "SELECT M.room_admin_email
+            FROM " . _tbl('room') . " M, ";
+  $sql .= ($id_table == 'E') ? _tbl('entry') . " E " : _tbl('repeat') . " T ";
+  $sql .= "WHERE {$id_table}.id=:id
+             AND M.id={$id_table}.room_id
            LIMIT 1";
-  $email = db()->query_scalar_non_bool($sql, array($data['id']));
+  $email = db()->query_scalar_non_bool($sql, [':id' => $data['id']]);
 
   return (!isset($email) || ($email === false)) ? '' : $email;
 }
