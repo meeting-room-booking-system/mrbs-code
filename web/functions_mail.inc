@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use InvalidArgumentException;
 use MRBS\ICalendar\Calendar;
 use MRBS\ICalendar\Event;
 use MRBS\ICalendar\Timezone;
@@ -165,50 +166,63 @@ function get_approvers_email($room_id) : string
 }
 
 
-// Get the area_admin_email for an entry $id
-// If $series is set this is an entry in the repeat table, otherwise the entry table
-// Returns an empty string in the case of an error
-function get_area_admin_email($id, bool $series=false) : string
+/**
+ * Get the area admin email address(es) for the booking.
+ *
+ * @param array $data The data for the booking (could be an individual entry or a series)
+ *
+ * @return string The area admin email address for the booking, or an empty string if there is none.
+ */
+function get_area_admin_email(array $data) : string
 {
-  $id_table = ($series) ? "rep" : "e";
-
-  $sql = "SELECT a.area_admin_email ";
-  $sql .= "FROM " . _tbl('room') . " r, " . _tbl('area') . " a, " . _tbl('entry') . " e ";
-  // If this is a repeating entry...
-  if ($id_table == 'rep')
+  // Sometimes the data will already contain the area admin email address.
+  if (isset($data['area_admin_email']) && ($data['area_admin_email'] !== ''))
   {
-    // ...use the repeat table
-    $sql .= ", " . _tbl('repeat') . " rep ";
+    return $data['area_admin_email'];
   }
-  $sql .= "WHERE {$id_table}.id=?
-             AND r.id={$id_table}.room_id
-             AND a.id=r.area_id
+
+  // Otherwise, get it from the database.
+  $id_table = ($data['repeat_rule']->getType() === RepeatRule::NONE) ? 'E' : 'T';
+
+  $sql = "SELECT A.area_admin_email
+            FROM " . _tbl('room') . " M, " . _tbl('area') . " A, ";
+
+  $sql .= ($id_table == 'E') ? _tbl('entry') . " E " : _tbl('repeat') . " T ";
+  $sql .= "WHERE {$id_table}.id=:id
+             AND M.id={$id_table}.room_id
+             AND A.id=M.area_id
            LIMIT 1";
-  $email = db()->query_scalar_non_bool($sql, array($id));
+  $email = db()->query_scalar_non_bool($sql, [':id' => $data['id']]);
 
   return (!isset($email) || ($email === false)) ? '' : $email;
 }
 
 
-// Get the room_admin_email for an entry $id
-// If $series is set this is an entry in the repeat table, otherwise the entry table
-// Returns an empty string in the case of an error
-function get_room_admin_email($id, bool $series=false) : string
+/**
+ * Get the room admin email address(es) for the booking.
+ *
+ * @param array $data The data for the booking (could be an individual entry or a series)
+ *
+ * @return string The area admin email address for the booking, or an empty string if there is none.
+ */
+function get_room_admin_email(array $data) : string
 {
-  $id_table = ($series) ? "rep" : "e";
-
-  $sql = "SELECT r.room_admin_email ";
-  $sql .= "FROM " . _tbl('room') . " r, " . _tbl('entry') . " e ";
-  // If this is a repeating entry...
-  if ($id_table == 'rep')
+  // Sometimes the data will already contain the room admin email address.
+  if (isset($data['room_admin_email']) && ($data['room_admin_email'] !== ''))
   {
-    // ...use the repeat table
-    $sql .= ", " . _tbl('repeat') . " rep ";
+    return $data['room_admin_email'];
   }
-  $sql .= "WHERE {$id_table}.id=?
-             AND r.id={$id_table}.room_id
+
+  // Otherwise, get it from the database.
+  $id_table = ($data['repeat_rule']->getType() === RepeatRule::NONE) ? "E" : "T";
+
+  $sql = "SELECT M.room_admin_email
+            FROM " . _tbl('room') . " M, ";
+  $sql .= ($id_table == 'E') ? _tbl('entry') . " E " : _tbl('repeat') . " T ";
+  $sql .= "WHERE {$id_table}.id=:id
+             AND M.id={$id_table}.room_id
            LIMIT 1";
-  $email = db()->query_scalar_non_bool($sql, array($id));
+  $email = db()->query_scalar_non_bool($sql, [':id' => $data['id']]);
 
   return (!isset($email) || ($email === false)) ? '' : $email;
 }
@@ -699,7 +713,7 @@ function address_merge(array $addresses, string $address_string) : array
 //   $data     an array containing all the data concerning this booking
 //   $action   the action that has caused this email to be sent
 //
-function create_addresses(array $data, string $action) : array
+function create_addresses(array $data, array $previous, string $action) : array
 {
   global $approval_enabled, $mail_settings;
 
@@ -760,35 +774,19 @@ function create_addresses(array $data, string $action) : array
 
   if ($mail_settings['area_admin_on_bookings'])
   {
-    // Look for list of area admins email addresses
-    if (empty($data['area_admin_email']))
+    $to = address_merge($to, get_area_admin_email($data));
+    if (!empty($previous))
     {
-      $email = get_area_admin_email($data['id'], ($data['repeat_rule']->getType() != RepeatRule::NONE));
-    }
-    else
-    {
-      $email = $data['area_admin_email'];
-    }
-    if (!empty($email))
-    {
-      $to = address_merge($to, $email);
+      $to = address_merge($to, get_area_admin_email($previous));
     }
   }
 
   if ($mail_settings['room_admin_on_bookings'])
   {
-    // Look for list of room admins email addresses
-    if (empty($data['room_admin_email']))
+    $to = address_merge($to, get_room_admin_email($data));
+    if (!empty($previous))
     {
-      $email = get_room_admin_email($data['id'], ($data['repeat_rule']->getType() != RepeatRule::NONE));
-    }
-    else
-    {
-      $email = $data['room_admin_email'];
-    }
-    if (!empty($email))
-    {
-      $to = address_merge($to, $email);
+      $to = address_merge($to, get_room_admin_email($previous));
     }
   }
 
@@ -835,18 +833,10 @@ function notify_by_email(array $data, array $previous, bool $is_series, string $
 
   if (!in_array($action, ['approve', 'book', 'delete', 'more_info', 'reject', 'remind']))
   {
-    throw new \InvalidArgumentException("Invalid action: $action");
+    throw new InvalidArgumentException("Invalid action: $action");
   }
 
   mail_debug("Preparing email; action = '" . $action . "'");
-
-  // Get some extra data
-  if (!empty($previous))
-  {
-    // TODO: we should really notify both the old and new admins.
-    $data['area_admin_email'] = (!empty($previous['area_admin_email'])) ? $previous['area_admin_email'] : null;
-    $data['room_admin_email'] = (!empty($previous['room_admin_email'])) ? $previous['room_admin_email'] : null;
-  }
 
   if (in_array($action, ['delete', 'reject']))
   {
@@ -855,7 +845,7 @@ function notify_by_email(array $data, array $previous, bool $is_series, string $
   }
 
   // Set up the addresses (from, to and cc)
-  $addresses = create_addresses($data, $action);
+  $addresses = create_addresses($data, $previous, $action);
   if (empty($addresses['to']) && empty($addresses['cc']))
   {
     mail_debug('Email abandoned: no addresses.');

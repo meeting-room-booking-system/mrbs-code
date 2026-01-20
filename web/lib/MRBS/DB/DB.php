@@ -201,9 +201,13 @@ abstract class DB
   }
 
 
-  // Execute an SQL query which should return a single scalar value that can be anything
-  // other than a boolean (because the function returns FALSE if there is no value).
-  public function query_scalar_non_bool(string $sql, array $params = array())
+  /**
+   * Execute an SQL query which should return a single scalar value that can be anything
+   * other than a boolean (because the function returns FALSE if there is no value).
+   *
+   * @return mixed The value returned by the query, or FALSE if there is none.
+   */
+  public function query_scalar_non_bool(string $sql, array $params = [])
   {
     try
     {
@@ -218,7 +222,7 @@ abstract class DB
   }
 
 
-  // Run an SQL query that returns a simple one dimensional array of results.
+  // Run an SQL query that returns a simple one-dimensional array of results.
   // The SQL query must select only one column.   Returns an empty array if
   // no results; throws a DBException if there's an error
   public function query_array(string $sql, array $params = array()): array
