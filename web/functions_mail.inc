@@ -165,12 +165,23 @@ function get_approvers_email($room_id) : string
 }
 
 
-// Get the area_admin_email for an entry $id
-// If $series is set this is an entry in the repeat table, otherwise the entry table
-// Returns an empty string in the case of an error
-function get_area_admin_email($id, bool $series=false) : string
+/**
+ * Get the area admin email address(es) for the booking.
+ *
+ * @param array $data The data for the booking (could be an individual entry or a series)
+ *
+ * @return string The area admin email address for the booking, or an empty string if there is none.
+ */
+function get_area_admin_email(array $data) : string
 {
-  $id_table = ($series) ? "rep" : "e";
+  // Sometimes the data will already contain the area admin email address.
+  if (isset($data['area_admin_email']) && ($data['area_admin_email'] !== ''))
+  {
+    return $data['area_admin_email'];
+  }
+
+  // Otherwise, get it from the database.
+  $id_table = ($data['repeat_rule']->getType() === RepeatRule::NONE) ? "e" : "rep";
 
   $sql = "SELECT a.area_admin_email ";
   $sql .= "FROM " . _tbl('room') . " r, " . _tbl('area') . " a, " . _tbl('entry') . " e ";
@@ -184,18 +195,29 @@ function get_area_admin_email($id, bool $series=false) : string
              AND r.id={$id_table}.room_id
              AND a.id=r.area_id
            LIMIT 1";
-  $email = db()->query_scalar_non_bool($sql, array($id));
+  $email = db()->query_scalar_non_bool($sql, array($data['id']));
 
   return (!isset($email) || ($email === false)) ? '' : $email;
 }
 
 
-// Get the room_admin_email for an entry $id
-// If $series is set this is an entry in the repeat table, otherwise the entry table
-// Returns an empty string in the case of an error
-function get_room_admin_email($id, bool $series=false) : string
+/**
+ * Get the room admin email address(es) for the booking.
+ *
+ * @param array $data The data for the booking (could be an individual entry or a series)
+ *
+ * @return string The area admin email address for the booking, or an empty string if there is none.
+ */
+function get_room_admin_email(array $data) : string
 {
-  $id_table = ($series) ? "rep" : "e";
+  // Sometimes the data will already contain the room admin email address.
+  if (isset($data['room_admin_email']) && ($data['room_admin_email'] !== ''))
+  {
+    return $data['room_admin_email'];
+  }
+
+  // Otherwise, get it from the database.
+  $id_table = ($data['repeat_rule']->getType() != RepeatRule::NONE) ? "rep" : "e";
 
   $sql = "SELECT r.room_admin_email ";
   $sql .= "FROM " . _tbl('room') . " r, " . _tbl('entry') . " e ";
@@ -208,7 +230,7 @@ function get_room_admin_email($id, bool $series=false) : string
   $sql .= "WHERE {$id_table}.id=?
              AND r.id={$id_table}.room_id
            LIMIT 1";
-  $email = db()->query_scalar_non_bool($sql, array($id));
+  $email = db()->query_scalar_non_bool($sql, array($data['id']));
 
   return (!isset($email) || ($email === false)) ? '' : $email;
 }
@@ -760,47 +782,19 @@ function create_addresses(array $data, array $previous, string $action) : array
 
   if ($mail_settings['area_admin_on_bookings'])
   {
-    // Look for list of area admins email addresses
-    if (empty($data['area_admin_email']))
+    $to = address_merge($to, get_area_admin_email($data));
+    if (!empty($previous))
     {
-      // TODO: Why is this necessary? Isn't the area_admin_email already set in $data?
-      // TODO: And do we need to check for the previous value?
-      $email = get_area_admin_email($data['id'], ($data['repeat_rule']->getType() != RepeatRule::NONE));
-    }
-    else
-    {
-      $email = $data['area_admin_email'];
-    }
-    if (!empty($email))
-    {
-      $to = address_merge($to, $email);
-    }
-    if (isset($previous['area_admin_email']) && ($previous['area_admin_email'] !== ''))
-    {
-      $to = address_merge($to, $previous['area_admin_email']);
+      $to = address_merge($to, get_area_admin_email($previous));
     }
   }
 
   if ($mail_settings['room_admin_on_bookings'])
   {
-    // Look for list of room admins email addresses
-    if (empty($data['room_admin_email']))
+    $to = address_merge($to, get_room_admin_email($data));
+    if (!empty($previous))
     {
-      // TODO: Why is this necessary? Isn't the room_admin_email already set in $data?
-      // TODO: And do we need to check for the previous value?
-      $email = get_room_admin_email($data['id'], ($data['repeat_rule']->getType() != RepeatRule::NONE));
-    }
-    else
-    {
-      $email = $data['room_admin_email'];
-    }
-    if (!empty($email))
-    {
-      $to = address_merge($to, $email);
-    }
-    if (isset($previous['room_admin_email']) && ($previous['room_admin_email'] !== ''))
-    {
-      $to = address_merge($to, $previous['room_admin_email']);
+      $to = address_merge($to, get_room_admin_email($previous));
     }
   }
 
