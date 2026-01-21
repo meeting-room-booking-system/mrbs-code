@@ -549,9 +549,13 @@ function get_cookie_path()
 }
 
 
-// Gets the url path from either $_SERVER['PHP_SELF'] or $_SERVER['REQUEST_URI'], whichever
-// happens to be non-empty.  (Some systems will not have one or the other variable set).
-function url_path()
+/**
+ * Gets the url path from either `$_SERVER['PHP_SELF']` or `$_SERVER['REQUEST_URI']`, whichever
+ * happens to be non-empty.  (Some systems will not have one or the other variable set).
+ *
+ * @return string  The url path, or the empty string if none can be found.
+ */
+function url_path() : string
 {
   global $server;
 

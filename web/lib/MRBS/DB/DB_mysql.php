@@ -668,50 +668,37 @@ class DB_mysql extends DB
 
   // Syntax methods
 
-  // Generate non-standard SQL for LIMIT clauses:
   public function syntax_limit(int $count, int $offset) : string
   {
    return "LIMIT $offset,$count";
   }
 
 
-  // Generate non-standard SQL to output a TIMESTAMP as a Unix-time:
   public function syntax_timestamp_to_unix(string $fieldname) : string
   {
     return "UNIX_TIMESTAMP($fieldname)";
   }
 
 
-  // Returns the syntax for a case-sensitive string "equals" function
-  // (By default MySQL is case-insensitive, so we force a binary comparison)
-  //
-  // Also takes a required pass-by-reference parameter to modify the SQL
-  // parameters appropriately.
-  //
-  // NB:  This function is also assumed to do a strict comparison, ie
-  // take account of trailing spaces.  (The '=' comparison in MySQL allows
-  // trailing spaces, eg 'john' = 'john ').
   public function syntax_casesensitive_equals(string $fieldname, string $string, array &$params) : string
   {
     $params[] = $string;
 
-    // We cannot assume that the database column has utf8 collation.  We may for example be
+    // The '=' comparison in MySQL allows trailing spaces, eg 'john' = 'john ', so we cannot just use that.
+    // Also, by default MySQL is case-insensitive, so we force a binary comparison.
+
+    // We cannot assume that the database column has utf8 collation.  We may, for example, be
     // authenticating a user against an external database.  See the post at
     // https://stackoverflow.com/questions/5629111/how-can-i-make-sql-case-sensitive-string-comparison-on-mysql#answer-56283818
     // for an explanation of the query.
     return $this->quote($fieldname) . "=CONVERT(? using utf8mb4) COLLATE utf8mb4_bin";
   }
 
-  // Generate non-standard SQL to match a string anywhere in a field's value
-  // in a case-insensitive manner. $s is the un-escaped/un-slashed string.
-  //
-  // Also takes a required pass-by-reference parameter to modify the SQL
-  // parameters appropriately.
-  //
-  // In MySQL, REGEXP seems to be case-sensitive, so use LIKE instead. But this
-  // requires quoting of % and _ in addition to the usual.
+
   public function syntax_caseless_contains(string $fieldname, string $string, array &$params) : string
   {
+    // In MySQL, REGEXP seems to be case-sensitive, so use LIKE instead. But this
+    // requires quoting of % and _ in addition to the usual.
     $string = str_replace("\\", "\\\\", $string);
     $string = str_replace("%", "\\%", $string);
     $string = str_replace("_", "\\_", $string);
@@ -722,8 +709,6 @@ class DB_mysql extends DB
   }
 
 
-  // Generate non-standard SQL to add a table column after another specified
-  // column
   public function syntax_addcolumn_after(string $fieldname) : string
   {
     return "AFTER $fieldname";

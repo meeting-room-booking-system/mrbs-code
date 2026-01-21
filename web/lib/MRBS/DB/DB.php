@@ -430,29 +430,38 @@ abstract class DB
   //  used by MRBS
   abstract public function field_info(string $table): array;
 
-  // Generate non-standard SQL for LIMIT clauses:
+  // Syntax methods
+
+  /**
+   * Generate the SQL for LIMIT clauses.
+   */
   abstract public function syntax_limit(int $count, int $offset): string;
 
-  // Generate non-standard SQL to output a TIMESTAMP as a Unix-time:
+  /**
+   * Generate the SQL for converting a TIMESTAMP to a Unix timestamp.
+   */
   abstract public function syntax_timestamp_to_unix(string $fieldname): string;
 
-  // Returns the syntax for a case-sensitive string "equals" function
-  // Also takes a required pass-by-reference parameter to modify the SQL
-  // parameters appropriately.
-  //
-  // NB:  This function is also assumed to do a strict comparison, ie
-  // take account of trailing spaces.
+  /**
+   * Generate the SQL for a case-sensitive string "equals" function.
+   *
+   * NB: This method is assumed to do a strict comparison, eg take account of trailing spaces.
+   *
+   * @param array &$params The SQL parameters, which will be modified by this function.
+   */
   abstract public function syntax_casesensitive_equals(string $fieldname, string $string, array &$params): string;
 
-  // Generate non-standard SQL to match a string anywhere in a field's value
-  // in a case-insensitive manner. $s is the un-escaped/un-slashed string.
-  //
-  // Also takes a required pass-by-reference parameter to modify the SQL
-  // parameters appropriately.
+  /**
+   * Generate the SQL for a case-insensitive string "contains" function.
+   *
+   * @param string $string The (unescaped) string to search for.
+   * @param array &$params The SQL parameters, which will be modified by this function.
+   */
   abstract public function syntax_caseless_contains(string $fieldname, string $string, array &$params): string;
 
-  // Generate non-standard SQL to add a table column after another specified
-  // column
+  /**
+   * Generate the SQL to add a table column after another specified column.
+   */
   abstract public function syntax_addcolumn_after(string $fieldname): string;
 
   // Generate non-standard SQL to specify a column as an auto-incrementing
