@@ -3,9 +3,12 @@ declare(strict_types=1);
 namespace MRBS\ICalendar;
 
 use MRBS\Exception;
+use function MRBS\db;
 use function MRBS\get_mail_vocab;
+use function MRBS\get_period_data;
 use function MRBS\get_registrants;
 use function MRBS\get_type_vocab;
+use function MRBS\is_assoc;
 use function MRBS\parse_addresses;
 
 class Event extends Component
@@ -79,17 +82,55 @@ class Event extends Component
    * Create an array of Event components given the booking data.
    *
    * @param string $method Specifies the calendar method, such as 'CANCEL', which determines the event status.
-   * @param array $data The event data.
+   * @param array $data The event data, which must include keys for 'room_id', 'room_name' and 'area_name'.
    * @param string|null $tzid The timezone identifier.  If null, DATE-TIME values will be written in UTC format,
    *                         otherwise they will be written in the local timezone format.
    * @param array<string, string>|null $addresses An associative array of attendee addresses indexed by 'to' and 'cc'.
    * @param bool $series Indicates whether the event is part of a recurring series (true) or a standalone event (false).
    *
    * @return Event[]
+   * @throws CalendarException
    */
   public static function createFromData(string $method, array $data, ?string $tzid=null, ?array $addresses=null, bool $series=false) : array
   {
-    return [self::createSingleEventFromData($method, $data, $tzid, $addresses, $series)];
+    global $area_defaults;
+
+    // Get the period data for the room so that we know how to handle the start and end times
+    list('enable_periods' => $room_enable_periods, 'periods' => $room_periods) = get_period_data($data['room_id']);
+
+    // If it's in "times" mode then it's easy.
+    if (!$room_enable_periods)
+    {
+      return [self::createSingleEventFromData($method, $data, $tzid, $addresses, $series)];
+    }
+
+    // Otherwise we need to create a series of events, treating each period as a separate event unless
+    // they are consecutive, or we have been told to ignore gaps between periods.
+
+    // But we can't do this if we don't have a timezone identifier.
+    if (!isset($tzid))
+    {
+      throw new CalendarException("Cannot create events in periods mode without a timezone identifier");
+    }
+
+    // And we can't do it if the period times haven't been defined.
+    // (For the moment the period times can only be defined globally, not for each area.)
+    if (!is_assoc($area_defaults['periods']))
+    {
+      throw new CalendarException("Cannot create events in periods mode because the period times have not been defined");
+    }
+
+    // And we can't do it if the period names in the global definition don't match the period names for this room.
+    if (array_keys($area_defaults['periods']) !== array_values($room_periods))
+    {
+      throw new CalendarException("Cannot create events in periods mode because the period times have not been defined for the area");
+    }
+
+    // TODO: What happens when a new period is created from an associative array?  Does the area edit page work?
+    // TODO: Does the json_encoding and decoding work?
+    // TODO: Comment that the times can't be changed.
+    // TODO: Display the times, even though they can't be changed.'
+    exit;
   }
 
 

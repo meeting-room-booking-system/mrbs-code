@@ -2303,6 +2303,27 @@ function get_invisible_room_ids() : array
 }
 
 
+/**
+ * Get the period data for a room.
+ *
+ * @return array{enable_periods: bool, periods: string[]}
+ */
+function get_period_data(int $room_id) : array
+{
+  $sql = "SELECT enable_periods, periods
+            FROM " ._tbl('area') . " A, ". _tbl('room') . " M
+           WHERE A.id = M.area_id
+             AND M.id = :room_id
+           LIMIT 1";
+  $res = db()->query($sql, [':room_id' => $room_id]);
+  $row = $res->next_row_keyed();
+  $row['enable_periods'] = (bool) $row['enable_periods'];
+  $row['periods'] = json_decode($row['periods']);
+
+  return $row;
+}
+
+
 // Gets a two-dimensional array of period names indexed by area id.
 function get_period_names() : array
 {

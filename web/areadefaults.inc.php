@@ -120,9 +120,21 @@ $eveningends_minutes   = 30;   // must be integer in range 0-59
 unset($periods);    // Include this line when copying to config.inc.php
 $periods[] = "Period 1";
 $periods[] = "Period 2";
-// NOTE:  The maximum number of periods is 60.   Do not define more than this.
 
-// NOTE:  See INSTALL for information on how to add or remove periods in an
+// Periods can also be defined as an associative array with the key being the period name and
+// the value being the time range for that period in 'hh:mm-hh:mm' format.  For example:
+//
+// $periods = [
+//   'Period 1' => '09:15-09:50',
+//   'Period 2' => '09:55-10:35'
+// ];
+//
+// This can be useful when MRBS needs to know when in the day a period stats and ends, for example
+// when converting a booking into an iCalendar event.
+
+// NOTE: The maximum number of periods is 60.   Do not define more than this.
+
+// NOTE: See INSTALL for information on how to add or remove periods in an
 // existing database.
 
 
