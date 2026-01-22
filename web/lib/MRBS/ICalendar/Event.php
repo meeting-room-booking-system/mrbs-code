@@ -76,7 +76,25 @@ class Event extends Component
 
 
   /**
-   * Create an instance of an Event component given the booking data.
+   * Create an array of Event components given the booking data.
+   *
+   * @param string $method Specifies the calendar method, such as 'CANCEL', which determines the event status.
+   * @param array $data The event data.
+   * @param string|null $tzid The timezone identifier.  If null, DATE-TIME values will be written in UTC format,
+   *                         otherwise they will be written in the local timezone format.
+   * @param array<string, string>|null $addresses An associative array of attendee addresses indexed by 'to' and 'cc'.
+   * @param bool $series Indicates whether the event is part of a recurring series (true) or a standalone event (false).
+   *
+   * @return Event[]
+   */
+  public static function createFromData(string $method, array $data, ?string $tzid=null, ?array $addresses=null, bool $series=false) : array
+  {
+    return [self::createSingleEventFromData($method, $data, $tzid, $addresses, $series)];
+  }
+
+
+  /**
+   * Create a single instance of an Event component given the booking data.
    *
    * @param string $method Specifies the calendar method, such as 'CANCEL', which determines the event status.
    * @param array $data The event data.
@@ -85,7 +103,7 @@ class Event extends Component
    * @param array<string, string>|null $addresses An associative array of attendee addresses indexed by 'to' and 'cc'.
    * @param bool $series Indicates whether the event is part of a recurring series (true) or a standalone event (false).
    */
-  public static function createFromData(string $method, array $data, ?string $tzid=null, ?array $addresses=null, bool $series=false) : self
+  private static function createSingleEventFromData(string $method, array $data, ?string $tzid=null, ?array $addresses=null, bool $series=false) : self
   {
     global $mail_settings, $default_area_room_delimiter, $standard_fields;
     global $partstat_accepted;

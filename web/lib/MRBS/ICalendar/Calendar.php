@@ -224,7 +224,7 @@ class Calendar
       // If this is an individual entry, then construct an event
       if (!isset($row['rep_type']) || ($row['rep_type'] == RepeatRule::NONE))
       {
-        $events[] = Event::createFromData($method, $row, $tzid);
+        $events = array_merge($events, Event::createFromData($method, $row, $tzid));
       }
 
       // Otherwise it's a series

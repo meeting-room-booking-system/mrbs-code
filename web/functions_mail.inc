@@ -887,27 +887,32 @@ function notify_by_email(array $data, array $previous, bool $is_series, string $
   // the recipient probably won't be able to reply to the email: we just want an ordinary
   // email and not a calendar notification.
   $attachment = [];
-  if ($mail_settings['icalendar'] &&
-      !$enable_periods &&
-      !in_array($action, array('more_info', 'remind')))
+  if ($mail_settings['icalendar'] && !in_array($action, ['more_info', 'remind']))
   {
-    // Create the iCalendar.
-    $attachment['method'] = (in_array($action, ['delete', 'reject'])) ? 'CANCEL' : 'REQUEST';
-    $calendar = new Calendar($attachment['method']);
-    // Add in the VTIMEZONE component if we can.
-    if (false !== ($vtimezone = Timezone::createFromTimezoneName($timezone)))
+    try
     {
-      $tzid = $timezone;
-      $calendar->addComponent($vtimezone);
-    }
+      // Create the iCalendar.
+      $attachment['method'] = (in_array($action, ['delete', 'reject'])) ? 'CANCEL' : 'REQUEST';
+      $calendar = new Calendar($attachment['method']);
+      // Add in the VTIMEZONE component if we can.
+      if (false !== ($vtimezone = Timezone::createFromTimezoneName($timezone)))
+      {
+        $tzid = $timezone;
+        $calendar->addComponent($vtimezone);
+      }
 
-    // Add in the VEVENT component.
-    // TODO: the addresses have by this stage been MIME-encoded.  It would probably be better to
-    // TODO: pass unencoded addresses to createFromData() so that we don't have to decode them,
-    // TODO: as mb_decode_mimeheader() isn't guaranteed to exist.
-    $calendar->addComponent(Event::createFromData($attachment['method'], $data, $tzid ?? null, $addresses, $is_series));
-    $attachment['content'] = $calendar->toString();
-    $attachment['name'] = $mail_settings['ics_filename'] . ".ics";
+      // Add in the VEVENT component.
+      // TODO: the addresses have by this stage been MIME-encoded.  It would probably be better to
+      // TODO: pass unencoded addresses to createFromData() so that we don't have to decode them,
+      // TODO: as mb_decode_mimeheader() isn't guaranteed to exist.
+      $calendar->addComponents(Event::createFromData($attachment['method'], $data, $tzid ?? null, $addresses, $is_series));
+      $attachment['content'] = $calendar->toString();
+      $attachment['name'] = $mail_settings['ics_filename'] . ".ics";
+    }
+    catch (Exception $e)
+    {
+      die($e->getMessage());
+    }
   }
 
   MailQueue::add(
