@@ -464,14 +464,19 @@ abstract class DB
    */
   abstract public function syntax_addcolumn_after(string $fieldname): string;
 
-  // Generate non-standard SQL to specify a column as an auto-incrementing
-  // integer while doing a CREATE TABLE
+  /**
+   * Generate the SQL to specify a column as an auto-incrementing integer while doing a CREATE TABLE.
+   */
   abstract public function syntax_createtable_autoincrementcolumn(): string;
 
-  // Returns the syntax for a bitwise XOR operator
+  /**
+   * Generate the SQL for a bitwise XOR operator.
+   */
   abstract public function syntax_bitwise_xor(): string;
 
-  // Returns the syntax for a column being in a list of values
+  /**
+   * Generate the syntax for a column being in a list of values.
+   */
   public function syntax_in_list(string $column_name, array $list, array &$params) : string
   {
     // Empty lists aren't allowed.
@@ -485,13 +490,18 @@ abstract class DB
     return $this->quote($column_name) . " IN (" . implode(',', array_fill(0, count($list), '?')) . ")";
   }
 
-  // Returns the syntax for a simple split of a column's value into two
-  // parts, separated by a delimiter.  $part can be 1 or 2.
-  // Also takes a required pass-by-reference parameter to modify the SQL
-  // parameters appropriately.
+  /**
+   * Generate the SQL for a simple split of a column's value into two parts, separated by a delimiter.  Note: this
+   * function assumes there is only one occurrence of the delimiter in the column's value.
+   *
+   * @param int $part The part to return, either 1 for the text to the left of the delimiter, or 2 for the text to the right.
+   * @param array $params The SQL parameters, which will be modified by this function.
+   */
   abstract public function syntax_simple_split(string $fieldname, string $delimiter, int $part, array &$params): string;
 
-  // Returns the syntax for aggregating a number of rows as a delimited string
+  /**
+   * Generate the SQL for aggregating a number of rows as a delimited string.
+   */
   abstract public function syntax_group_array_as_string(string $fieldname, string $delimiter = ','): string;
 
   // Returns the syntax for an "upsert" query.  Unfortunately getting the id of the
