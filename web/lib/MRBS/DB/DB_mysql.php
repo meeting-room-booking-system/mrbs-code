@@ -715,24 +715,18 @@ class DB_mysql extends DB
   }
 
 
-  // Generate non-standard SQL to specify a column as an auto-incrementing
-  // integer while doing a CREATE TABLE
   public function syntax_createtable_autoincrementcolumn() : string
   {
     return "int NOT NULL auto_increment";
   }
 
 
-  // Returns the syntax for a bitwise XOR operator
   public function syntax_bitwise_xor() : string
   {
     return "^";
   }
 
-  // Returns the syntax for a simple split of a column's value into two
-  // parts, separated by a delimiter.  $part can be 1 or 2.
-  // Also takes a required pass-by-reference parameter to modify the SQL
-  // parameters appropriately.
+
   public function syntax_simple_split(string $fieldname, string $delimiter, int $part, array &$params) : string
   {
     switch ($part)
@@ -753,7 +747,6 @@ class DB_mysql extends DB
   }
 
 
-  // Returns the syntax for aggregating a number of rows as a delimited string
   public function syntax_group_array_as_string(string $fieldname, string $delimiter=',') : string
   {
     // Use DISTINCT to eliminate duplicates which can arise when the query
