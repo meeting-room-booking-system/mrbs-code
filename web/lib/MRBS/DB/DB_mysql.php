@@ -227,8 +227,6 @@ class DB_mysql extends DB
   }
 
 
-  // Determines whether the driver returns native types (eg a PHP int
-  // for an SQL INT).
   public function returnsNativeTypes() : bool
   {
     if (!isset($this->returns_native_types))
@@ -247,13 +245,10 @@ class DB_mysql extends DB
     return $this->returns_native_types;
   }
 
-  // Determines whether the database supports multiple locks.
-  // This method should not be called for the first time while
-  // locks are in place, because it will release them.
-  // WARNING! This method should not be used as RELEASE_ALL_LOCKS
-  //  is not supported by MariaDB Galera Cluster.
+
   public function supportsMultipleLocks() : bool
   {
+    // TODO: avoid the use of RELEASE_ALL_LOCKS  for MariaDB Galera Cluster (and possibly other cluster implementations?).
     if (!isset($this->supports_multiple_locks))
     {
       if (!empty($this->mutex_locks))
@@ -280,20 +275,18 @@ class DB_mysql extends DB
   }
 
 
-  // Since MySQL 5.7.5 lock names are restricted to 64 characters.
-  // Truncating them is probably sufficient to ensure uniqueness.
   private static function hash(string $name) : string
   {
+    // Since MySQL 5.7.5 lock names have been restricted to 64 characters.
+    // Truncating them is probably sufficient to ensure uniqueness.
     return substr($name, 0, 64);
   }
 
 
-  // Acquire a mutual-exclusion lock.
-  // Returns true if the lock is acquired successfully, otherwise false.
-  // WARNING! This method should not be used as GET_LOCK is not supported
-  // by MariaDB Galera Cluster.
   public function mutex_lock(string $name) : bool
   {
+    // TODO: avoid the use of GET_LOCK as it is not supported by MariaDB Galera Cluster (or else get rid of the need
+    // TODO: for this method).
     $timeout = 20;  // seconds
 
     if (!$this->supportsMultipleLocks() && !empty($this->mutex_locks))

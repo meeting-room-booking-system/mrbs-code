@@ -395,8 +395,14 @@ abstract class DB
   // Must be called right after an insert on that table!
   abstract public function insert_id(string $table, string $field) : int;
 
-  // Acquire a mutual-exclusion lock.
-  // Returns true if the lock is acquired successfully, otherwise false.
+  /**
+   * Acquire a mutual-exclusion lock.
+   *
+   * WARNING: The use of this method should be avoided as GET_LOCK (used in the MySQL implementation) is not supported
+   * by MariaDB Galera Cluster (and other cluster implementations?).
+   *
+   * @return bool Returns true if the lock is acquired successfully, otherwise false.
+   */
   abstract public function mutex_lock(string $name): bool;
 
   // Release a mutual-exclusion lock.
@@ -519,12 +525,17 @@ abstract class DB
     bool $has_id_column=false
   ) : string;
 
-
-  // Determines whether the driver returns native types (eg a PHP int
-  // for an SQL INT).
+  /**
+   * Determines whether the driver returns native types (eg a PHP int for an SQL INT).
+   */
   abstract public function returnsNativeTypes() : bool;
 
-  // Determines whether the database supports multiple locks
+  /**
+   * Determines whether the database supports multiple locks.  Note that:
+   * - Use of this method should be avoided as RELEASE_ALL_LOCKS (used in the MySQL implementation) is not supported
+   * by MariaDB Galera Cluster.
+   * - This method should not be called for the first time while locks are in place, because it will release them.
+   */
   abstract public function supportsMultipleLocks(): bool;
 
   /**
@@ -575,8 +586,10 @@ abstract class DB
   }
 
 
-  // Prepares $data for an SQL query. If $table is given then it will also sanitize values,
-  // eg by trimming and truncating strings and converting booleans into 0/1.
+  /**
+   * Prepare data for an SQL query. If `$table` is given, then it will also sanitize values, eg by trimming and
+   * truncating strings and converting booleans into 0/1.
+   */
   private function prepareData(array $data, ?string $table=null, array $ignore_columns=[]): array
   {
     $columns = array();
