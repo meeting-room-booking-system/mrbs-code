@@ -41,7 +41,9 @@ abstract class DB
   );
 
 
-  // Destructor cleans up the connection if there is one
+  /**
+   * Destructor. Cleans up the connection if there is one.
+   */
   public function __destruct()
   {
     try {
