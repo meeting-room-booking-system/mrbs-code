@@ -113,8 +113,6 @@ class AuthCas extends Auth
   }
 
 
-  /**
-   */
   public function validateUser(
     #[\SensitiveParameter]
     ?string $user,

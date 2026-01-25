@@ -23,8 +23,6 @@ namespace MRBS\Auth;
 
 class AuthCrypt extends Auth
 {
-  /**
-   */
   public function validateUser(
     #[\SensitiveParameter]
     ?string $user,

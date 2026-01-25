@@ -14,8 +14,6 @@ namespace MRBS\Auth;
  */
 class AuthImap extends Auth
 {
-  /**
-   */
   public function validateUser(
     #[\SensitiveParameter]
     ?string $user,

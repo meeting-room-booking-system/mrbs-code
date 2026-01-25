@@ -22,8 +22,6 @@ class AuthIdcheck extends AuthNone
   }
 
 
-  /**
-   */
   public function validateUser(
     #[\SensitiveParameter]
     ?string $user,

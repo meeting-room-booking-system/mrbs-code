@@ -49,8 +49,6 @@ class AuthImapPhp extends Auth
   }
 
 
-  /**
-   */
   public function validateUser(
     #[\SensitiveParameter]
     ?string $user,

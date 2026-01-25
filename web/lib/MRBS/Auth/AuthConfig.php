@@ -4,8 +4,6 @@ namespace MRBS\Auth;
 
 class AuthConfig extends Auth
 {
-  /**
-   */
   public function validateUser(
     #[\SensitiveParameter]
     ?string $user,
