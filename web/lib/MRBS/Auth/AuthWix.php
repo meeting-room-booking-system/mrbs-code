@@ -14,9 +14,6 @@ use MRBS\User;
  */
 class AuthWix extends Auth
 {
-
-  /**
-   */
   public function validateUser(
     #[\SensitiveParameter]
     ?string $user,

@@ -31,8 +31,6 @@ namespace MRBS\Auth;
 
 class AuthExt extends Auth
 {
-  /**
-   */
   public function validateUser(
     #[\SensitiveParameter]
     ?string $user,

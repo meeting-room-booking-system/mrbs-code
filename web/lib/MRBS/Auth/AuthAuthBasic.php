@@ -23,8 +23,6 @@ namespace MRBS\Auth;
 
 class AuthAuthBasic extends Auth
 {
-  /**
-   */
   public function validateUser(
     #[\SensitiveParameter]
     ?string $user,

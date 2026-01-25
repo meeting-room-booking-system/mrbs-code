@@ -55,8 +55,6 @@ class AuthPop3 extends Auth
   }
 
 
-  /**
-   */
   public function validateUser(
     #[\SensitiveParameter]
     ?string $user,

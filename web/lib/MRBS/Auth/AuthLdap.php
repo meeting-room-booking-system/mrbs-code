@@ -191,8 +191,6 @@ class AuthLdap extends Auth
   }
 
 
-  /**
-   */
   public function validateUser(
     #[\SensitiveParameter]
     ?string $user,
