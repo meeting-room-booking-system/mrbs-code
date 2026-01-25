@@ -4,7 +4,7 @@ namespace MRBS\DB;
 
 use PDOException;
 
-//
+
 class DB_pgsql extends DB
 {
   const DB_DEFAULT_PORT = 5432;
@@ -157,8 +157,6 @@ class DB_pgsql extends DB
   }
 
 
-  // Release a mutual-exclusion lock.
-  // Returns true if the lock is released successfully, otherwise false.
   public function mutex_unlock(string $name) : bool
   {
     $sql = "SELECT pg_advisory_unlock(" . self::hash($name) . ")";
@@ -184,7 +182,6 @@ class DB_pgsql extends DB
   }
 
 
-  // Release all mutual-exclusion locks.
   public function mutex_unlock_all() : void
   {
     $this->query("SELECT pg_advisory_unlock_all()");
@@ -202,7 +199,6 @@ class DB_pgsql extends DB
   }
 
 
-  // Return a string identifying the database version and type
   public function version() : string
   {
     return $this->versionString();
@@ -223,7 +219,6 @@ class DB_pgsql extends DB
   }
 
 
-  // Check if a table exists
   public function table_exists(string $table) : bool
   {
     // $table can be a qualified name.  We need to resolve it if necessary into its component
@@ -264,22 +259,6 @@ class DB_pgsql extends DB
   }
 
 
-  // Get information about the columns in a table
-  // Returns an array with the following indices for each column
-  //
-  //  'name'        the column name
-  //  'type'        the type as reported by PostgreSQL
-  //  'nature'      the type mapped onto one of a generic set of types
-  //                (boolean, integer, real, character, binary).   This enables
-  //                the nature to be used by MRBS code when deciding how to
-  //                display fields, without MRBS having to worry about the
-  //                differences between MySQL and PostgreSQL type names.
-  //  'length'      the maximum length of the field in bytes, octets or characters
-  //                (Note:  this could be null)
-  //  'is_nullable' whether the column can be set to NULL (boolean)
-  //
-  //  NOTE: the type mapping is incomplete and just covers the types commonly
-  //  used by MRBS
   public function field_info(string $table) : array
   {
     $fields = array();

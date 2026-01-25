@@ -9,7 +9,7 @@ use Pdo\Mysql;
 use PDOException;
 use function MRBS\get_vocab;
 
-//
+
 class DB_mysql extends DB
 {
   const DB_DEFAULT_PORT = 3306;
@@ -348,12 +348,10 @@ class DB_mysql extends DB
   }
 
 
-  // Release a mutual-exclusion lock.
-  // Returns true if the lock is released successfully, otherwise false.
-  // WARNING! This method should not be used as RELEASE_LOCK
-  // is not supported by MariaDB Galera Cluster.
   public function mutex_unlock(string $name) : bool
   {
+    // TODO: avoid the use of RELEASE_LOCK as it is not supported by MariaDB Galera Cluster (or else get rid of the need
+    // TODO: for this method).
     // First do some sanity checking before executing the SQL query
     if (!in_array($name, $this->mutex_locks))
     {
@@ -410,11 +408,10 @@ class DB_mysql extends DB
   }
 
 
-  // Release all mutual-exclusion locks.
-  // WARNING! This method should not be used as RELEASE_ALL_LOCKS
-  // is not supported by MariaDB Galera Cluster.
   public function mutex_unlock_all() : void
   {
+    // TODO: avoid the use of RELEASE_ALL_LOCKS as it is not supported by MariaDB Galera Cluster (or else get rid of the need
+    // TODO: for this method).
     if ($this->supportsMultipleLocks())
     {
       $this->query("SELECT RELEASE_ALL_LOCKS()");
@@ -522,14 +519,12 @@ class DB_mysql extends DB
   }
 
 
-  // Return a string identifying the database version and type
   public function version() : string
   {
     return $this->versionComment() . ' DB_mysql.php' . $this->versionString();
   }
 
 
-  // Check if a table exists
   public function table_exists(string $table) : bool
   {
     $res = $this->query("SHOW TABLES LIKE ?", array($table));
@@ -538,22 +533,6 @@ class DB_mysql extends DB
   }
 
 
-  // Get information about the columns in a table
-  // Returns an array with the following indices for each column
-  //
-  //  'name'        the column name
-  //  'type'        the type as reported by MySQL
-  //  'nature'      the type mapped onto one of a generic set of types
-  //                (boolean, integer, real, character, binary).   This enables
-  //                the nature to be used by MRBS code when deciding how to
-  //                display fields, without MRBS having to worry about the
-  //                differences between MySQL and PostgreSQL type names.
-  //  'length'      the maximum length of the field in bytes, octets or characters
-  //                (Note:  this could be NULL)
-  //  'is_nullable' whether the column can be set to NULL (boolean)
-  //
-  //  NOTE: the type mapping is incomplete and just covers the types commonly
-  //  used by MRBS
   public function field_info(string $table) : array
   {
     // Map MySQL types on to a set of generic types

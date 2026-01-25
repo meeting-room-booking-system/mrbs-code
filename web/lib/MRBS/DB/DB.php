@@ -405,35 +405,51 @@ abstract class DB
    */
   abstract public function mutex_lock(string $name): bool;
 
-  // Release a mutual-exclusion lock.
-  // Returns true if the lock is released successfully, otherwise false.
+  /**
+   * Release a mutual-exclusion lock.
+   *
+   * WARNING: The use of this method should be avoided as RELEASE_LOCK (used in the MySQL implementation) is not
+   * supported by MariaDB Galera Cluster (and other cluster implementations?).
+   *
+   * @return bool Returns true if the lock is released successfully, otherwise false.
+   */
   abstract public function mutex_unlock(string $name): bool;
 
-  // Release all mutual-exclusion locks.
+  /**
+   * Release all mutual-exclusion locks.
+   *
+   * WARNING: The use of this method should be avoided as RELEASE_ALL_LOCKS (used in the MySQL implementation) is not
+   * supported by MariaDB Galera Cluster (and other cluster implementations?).
+   */
   abstract public function mutex_unlock_all(): void;
 
-  // Return a string identifying the database version and type
+  /**
+   * Return a string identifying the database version and type.
+   */
   abstract public function version(): string;
 
-  // Check if a table exists
+  /**
+   * Check if a table exists.
+   */
   abstract public function table_exists(string $table): bool;
 
-  // Get information about the columns in a table
-  // Returns an array with the following indices for each column
-  //
-  //  'name'        the column name
-  //  'type'        the type as reported by MySQL
-  //  'nature'      the type mapped onto one of a generic set of types
-  //                (boolean, integer, real, character, binary).   This enables
-  //                the nature to be used by MRBS code when deciding how to
-  //                display fields, without MRBS having to worry about the
-  //                differences between MySQL and PostgreSQL type names.
-  //  'length'      the maximum length of the field in bytes, octets or characters
-  //                (Note:  this could be NULL)
-  //  'is_nullable' whether the column can be set to NULL (boolean)
-  //
-  //  NOTE: the type mapping is incomplete and just covers the types commonly
-  //  used by MRBS
+  /**
+   * Get information about the columns in a table.
+   *
+   * NOTE: the type mapping is incomplete and just covers the types commonly used by MRBS.
+   *
+   * @return array An array with the following keys for each column:
+   * - **name**         the column name
+   * - **type**         the type as reported by MySQL
+   * - **nature**       the type mapped onto one of a generic set of types
+   *                    (boolean, integer, real, character, binary).   This enables
+   *                    the nature to be used by MRBS code when deciding how to
+   *                    display fields, without MRBS having to worry about the
+   *                    differences between MySQL and PostgreSQL type names.
+   * - **length**       the maximum length of the field in bytes, octets or characters
+   *                    (Note: this could be NULL)
+   * - **is_nullable**  whether the column can be set to NULL (boolean)
+   */
   abstract public function field_info(string $table): array;
 
   // Syntax methods
