@@ -7,9 +7,9 @@ use MRBS\User;
 use function MRBS\auth;
 use function MRBS\get_cookie_path;
 
-
-// Manage sessions via cookies stored in the client browser
-
+/**
+ * Manage sessions via cookies stored in the client browser.
+ */
 class SessionCookie extends SessionWithLogin
 {
 
