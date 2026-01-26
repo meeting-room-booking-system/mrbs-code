@@ -5,9 +5,9 @@ namespace MRBS\Session;
 use MRBS\User;
 use function MRBS\auth;
 
-// Get user identity using the HTTP basic authentication
-
-
+/**
+ * Get user identity using the HTTP basic authentication.
+ */
 class SessionHttp extends SessionWithLogin
 {
 

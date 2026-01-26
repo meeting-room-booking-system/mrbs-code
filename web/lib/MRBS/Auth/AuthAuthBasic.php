@@ -1,26 +1,22 @@
 <?php
 namespace MRBS\Auth;
 
-/*
- * Authentication scheme that uses an Apache "auth basic" password file
- * for user authentication.
+/**
+ * Authentication scheme that uses an Apache "auth basic" password file for user authentication.
  *
- * To use this authentication scheme set the following
- * things in config.inc.php:
+ * To use this authentication scheme, set the following things in config.inc.php:
  *
- * $auth["type"]   = "auth_basic";
- * $auth["auth_basic"]["passwd_file] = "/etc/httpd/htpasswd"; // Example
- * $auth["auth_basic"]["mode"] = "des"; // The mode of encryption used in
- *                                      // the file. Must be one of:
- *                                      // 'des', 'sha' or 'md5'.
+ *     $auth["type"] = "auth_basic";
+ *     $auth["auth_basic"]["passwd_file] = "/etc/httpd/htpasswd"; // Example
+ *     $auth["auth_basic"]["mode"] = "des"; // The mode of encryption used in
+ *                                          // the file. Must be one of:
+ *                                          // 'des', 'sha' or 'md5'.
  *
  * Then, you may configure admin users:
  *
- * $auth["admin"][] = "username1";
- * $auth["admin"][] = "username2";
- *
+ *     $auth["admin"][] = "username1";
+ *     $auth["admin"][] = "username2";
  */
-
 class AuthAuthBasic extends Auth
 {
   public function validateUser(

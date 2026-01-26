@@ -9,8 +9,9 @@ use function MRBS\is_ajax;
 use function MRBS\str_ends_with_array;
 use function MRBS\url_base;
 
-// Uses PHP's built-in session handling
-
+/**
+ * Uses PHP's built-in session handling.
+ */
 class SessionPhp extends SessionWithLogin
 {
 

@@ -20,8 +20,9 @@ use function MRBS\print_footer;
 use function MRBS\print_header;
 use function MRBS\this_page;
 
-
-// An abstract class for those session schemes that implement a login form
+/**
+ * An abstract class for those session schemes that implement a login form.
+ */
 abstract class SessionWithLogin extends Session
 {
   protected $form = array();

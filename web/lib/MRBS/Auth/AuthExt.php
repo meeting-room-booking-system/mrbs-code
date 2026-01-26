@@ -1,34 +1,24 @@
 <?php
 namespace MRBS\Auth;
 
-/*
- * Authentication scheme that uses an external script as the source
- * for user authentication.
+/**
+ * Authentication scheme that uses an external script as the source for user authentication.
  *
- * To use this authentication scheme set the following
- * things in config.inc.php:
+ * To use this authentication scheme, set the following things in config.inc.php:
  *
- * $auth["realm"]  = "MRBS";    // Or any other string
- * $auth["type"]   = "ext";
- * $auth["prog"]   = "authenticationprogram"; // The full path to the external
- *                                            // script
- * $auth["params"] = "<...>"                  // Parameters to pass to
- *                                            // the script, #USERNAME#
- *                                            // and #PASSWORD#
- *                                            // will be expanded to
- *                                            // the values typed by
- *                                            // the user.
- *
- *                                            // e.g.
- *                                            // "/etc/htpasswd #USERNAME# #PASSWORD#"
+ *     $auth["realm"] = "MRBS"; // Or any other string
+ *     $auth["type"] = "ext";
+ *     $auth["prog"] = "authenticationprogram"; // The full path to the external script
+ *     $auth["params"] = "<...>"; // Parameters to pass to the script; #USERNAME# and #PASSWORD#
+ *                                // will be expanded to the values typed by the user, e.g.
+ *                                // "/etc/htpasswd #USERNAME# #PASSWORD#"
  *
  * Then, you may configure admin users:
  *
- * $auth["admin"][] = "username1";
- * $auth["admin"][] = "username2";
+ *     $auth["admin"][] = "username1";
+ *     $auth["admin"][] = "username2";
  *
  */
-
 class AuthExt extends Auth
 {
   public function validateUser(

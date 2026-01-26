@@ -17,15 +17,16 @@ use function MRBS\url_base;
  * authenticate using SAML Single Sign-on.
  *
  * In config.inc.php (assuming Active Directory attributes):
- * - $auth['type'] = 'saml';
- * - $auth['session'] = 'saml';
- * - $auth['saml']['ssp_path'] = '/opt/simplesamlphp';
- * - $auth['saml']['authsource'] = 'default-sp';
- * - $auth['saml']['attr']['username'] = 'sAMAccountName';
- * - $auth['saml']['attr']['mail'] = 'mail';
- * - $auth['saml']['attr']['givenName'] = 'givenname';
- * - $auth['saml']['attr']['surname'] = 'sn'
- * - $auth['saml']['admin']['memberOf'] = ['CN=Domain Admins,CN=Users,DC=example,DC=com'];
+ *
+ *     $auth['type'] = 'saml';
+ *     $auth['session'] = 'saml';
+ *     $auth['saml']['ssp_path'] = '/opt/simplesamlphp';
+ *     $auth['saml']['authsource'] = 'default-sp';
+ *     $auth['saml']['attr']['username'] = 'sAMAccountName';
+ *     $auth['saml']['attr']['mail'] = 'mail';
+ *     $auth['saml']['attr']['givenName'] = 'givenname';
+ *     $auth['saml']['attr']['surname'] = 'sn'
+ *     $auth['saml']['admin']['memberOf'] = ['CN=Domain Admins,CN=Users,DC=example,DC=com'];
  *
  * This scheme assumes that you've already configured SimpleSamlPhp,
  * and that you have set up aliases in your webserver so that SimpleSamlPhp
