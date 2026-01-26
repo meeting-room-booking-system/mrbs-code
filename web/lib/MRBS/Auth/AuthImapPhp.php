@@ -7,26 +7,29 @@ use Webklex\PHPIMAP\Exceptions\AuthFailedException;
 use Webklex\PHPIMAP\Exceptions\ImapServerErrorException;
 
 /**
- * Authentication scheme that uses IMAP as the source for user authentication. If the
- * PHP version is less than 8.0 it requires you to have the PHP 'imap' extension installed
- * and enabled.
+ * Authentication scheme that uses IMAP as the source for user authentication. If the PHP version is
+ * less than 8.0, it requires you to have the PHP 'imap' extension installed and enabled.
  *
- * To use this authentication scheme set the following things in config.inc.php:
- * - $auth["realm"] = "MRBS"; // Or any other string
- * - $auth["type"]  = "imap_php";
+ * To use this authentication scheme, set the following things in config.inc.php:
+ *
+ *     $auth["realm"] = "MRBS"; // Or any other string
+ *     $auth["type"] = "imap_php";
  *
  * You must also configure at least:
- * - $auth["imap_php"]["hostname"] = "mailserver.hostname";
+ *
+ *     $auth["imap_php"]["hostname"] = "mailserver.hostname";
  *
  * You can also specify any of the following options:
- * - $auth["imap_php"]["port"] = 993; // Specifies the port number to connect to
- * - $auth["imap_php"]["ssl"] = true; // Use SSL
- * - $auth["imap_php"]["tls"] = true; // Use TLS
- * - $auth["imap_php"]["novalidate-cert"] = TRUE; // Turn off SSL/TLS certificate validation
+ *
+ *     $auth["imap_php"]["port"] = 993; // Specifies the port number to connect to
+ *     $auth["imap_php"]["ssl"] = true; // Use SSL
+ *     $auth["imap_php"]["tls"] = true; // Use TLS
+ *     $auth["imap_php"]["novalidate-cert"] = true; // Turn off SSL/TLS certificate validation
  *
  * Then, you may configure admin users:
- * - $auth["admin"][] = "imapuser1";
- * - $auth["admin"][] = "imapuser2";
+ *
+ *     $auth["admin"][] = "imapuser1";
+ *     $auth["admin"][] = "imapuser2";
  */
 class AuthImapPhp extends Auth
 {
