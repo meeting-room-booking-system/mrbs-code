@@ -4,13 +4,15 @@ namespace MRBS\Auth;
 /**
  * Authentication scheme that uses IMAP as the source for user authentication.
  *
- * To use this authentication scheme set the following things in config.inc.php:
- * - $auth["realm"] = "MRBS"; // Or any other string
- * - $auth["type"]  = "imap";
+ * To use this authentication scheme, set the following things in config.inc.php:
+ *
+ *     $auth["realm"] = "MRBS"; // Or any other string
+ *     $auth["type"] = "imap";
  *
  * Then, you may configure admin users:
- * - $auth["admin"][] = "imapuser1";
- * - $auth["admin"][] = "imapuser2";
+ *
+ *     $auth["admin"][] = "imapuser1";
+ *     $auth["admin"][] = "imapuser2";
  */
 class AuthImap extends Auth
 {
