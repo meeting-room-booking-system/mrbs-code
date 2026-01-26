@@ -3,9 +3,11 @@ namespace MRBS\Auth;
 
 use MRBS\User;
 
-// For use with mod_idcheck (http://idcheck.sourceforge.net/)
-// Must have $auth['session'] set to 'remote_user'.
-
+/**
+ * For use with mod_idcheck (http://idcheck.sourceforge.net/).
+ *
+ * Must have `$auth['session']` set to 'remote_user'.
+ */
 class AuthIdcheck extends AuthNone
 {
 
