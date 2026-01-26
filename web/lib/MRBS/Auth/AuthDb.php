@@ -683,8 +683,6 @@ class AuthDb extends Auth
   }
 
 
-  /**
-   */
   public function getUsernameByEmail(string $email) : ?string
   {
     $sql = "SELECT name
