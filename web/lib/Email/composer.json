@@ -19,16 +19,16 @@
     }
   ],
   "require-dev": {
-    "friendsofphp/php-cs-fixer": "^3.65",
-    "phpunit/phpunit": "^9.6",
-    "symfony/yaml": "^7.2"
+    "phpunit/phpunit": ">=7",
+    "friendsofphp/php-cs-fixer": ">=2.0",
+    "symfony/yaml": ">=4"
   },
   "require": {
-    "php": "^8.2",
+    "php": ">=7.1",
+    "psr/log": ">=1.0",
+    "laminas/laminas-validator": "^2.13",
     "ext-mbstring": "*",
-    "laminas/laminas-validator": "^3.0",
-    "psr/log": "^3.0",
-    "symfony/polyfill-intl-idn": "^1.31"
+    "symfony/polyfill-intl-idn": "*"
   },
   "autoload": {
     "psr-4": {
