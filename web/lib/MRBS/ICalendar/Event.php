@@ -272,7 +272,8 @@ class Event extends Component
       // Registrants (but only for individual entries)
       if (!$series)
       {
-        $registrants = get_registrants($data['id'], false);
+        // Get the registrants if they're not already in the data.
+        $registrants = $data['registrants'] ?? get_registrants($data['id'], false);
         foreach ($registrants as $registrant)
         {
           // We can't use the ATTENDEE property because its value has to be a URI.
@@ -290,7 +291,8 @@ class Event extends Component
       'last_updated',
       'tentative',
       'area_name',
-      'room_name'
+      'room_name',
+      'registrants'
     ];
 
     // These fields are in the area table and can be ignored.
