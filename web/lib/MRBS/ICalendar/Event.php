@@ -272,6 +272,7 @@ class Event extends Component
       // Registrants (but only for individual entries)
       if (!$series)
       {
+        // Get the registrants if they're not already in the data.
         $registrants = $data['registrants'] ?? get_registrants($data['id'], false);
         foreach ($registrants as $registrant)
         {
