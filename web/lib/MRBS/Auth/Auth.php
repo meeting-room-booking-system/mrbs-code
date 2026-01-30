@@ -84,8 +84,8 @@ abstract class Auth
   /**
    * Returns a username given an email address.
    *
-   * Note that if two or more users share the same email address then the first
-   * one found will be returned.  If no user is found then NULL is returned.
+   * @return string|null The username (or the first found if two or more users share the same email address), or
+   *                     NULL if no user is found.
    */
   public function getUsernameByEmail(string $email) : ?string
   {

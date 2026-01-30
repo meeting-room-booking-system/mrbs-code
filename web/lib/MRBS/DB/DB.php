@@ -41,7 +41,9 @@ abstract class DB
   );
 
 
-  // Destructor cleans up the connection if there is one
+  /**
+   * Destructor. Cleans up the connection if there is one.
+   */
   public function __destruct()
   {
     try {
@@ -206,6 +208,7 @@ abstract class DB
    * other than a boolean (because the function returns FALSE if there is no value).
    *
    * @return mixed The value returned by the query, or FALSE if there is none.
+   * @throws DBException
    */
   public function query_scalar_non_bool(string $sql, array $params = [])
   {
@@ -222,16 +225,21 @@ abstract class DB
   }
 
 
-  // Run an SQL query that returns a simple one-dimensional array of results.
-  // The SQL query must select only one column.   Returns an empty array if
-  // no results; throws a DBException if there's an error
-  public function query_array(string $sql, array $params = array()): array
+  /**
+   * Run an SQL query that returns a simple one-dimensional array of results.
+   * The SQL query must select only one column.
+   *
+   * @return array The results, as an array of scalars, or an empty array if there are no results.
+   * @throws DBException
+   */
+  public function query_array(string $sql, array $params = []): array
   {
     $stmt = $this->query($sql, $params);
 
-    $result = array();
+    $result = [];
 
-    while (false !== ($row = $stmt->next_row())) {
+    while (false !== ($row = $stmt->next_row()))
+    {
       $result[] = $row[0];
     }
 
@@ -239,10 +247,12 @@ abstract class DB
   }
 
 
-  // Execute an SQL query. Returns a DBStatement object, a class with a number
-  // of methods like row() and row_keyed() to get the results.
-  // Throws a DBException on error
-  public function query(string $sql, array $params = array()): DBStatement
+  /**
+   * Execute an SQL query.
+   *
+   * @throws DBException
+   */
+  public function query(string $sql, array $params = []): DBStatement
   {
     try {
       $sth = $this->dbh->prepare($sql);
@@ -255,37 +265,49 @@ abstract class DB
   }
 
 
-  //
+  /**
+   * Begin a transaction.  If already inside a transaction, this is a no-op.
+   *
+   * @see PDO::beginTransaction()
+   */
   public function begin(): void
   {
     // Turn off ignore_user_abort until the transaction has been committed or rolled back.
     // See the warning at http://php.net/manual/en/features.persistent-connections.php
     // (Only applies to persistent connections, but we'll do it for all cases to keep
     // things simple)
-    mrbs_ignore_user_abort(TRUE);
+    mrbs_ignore_user_abort(true);
     if (!$this->dbh->inTransaction()) {
       $this->dbh->beginTransaction();
     }
   }
 
 
-  // Commit (end) a transaction. See begin().
+  /**
+   * Commit a transaction.  If not already inside a transaction, this is a no-op.
+   *
+   * @see PDO::commit()
+   */
   public function commit(): void
   {
     if ($this->dbh->inTransaction()) {
       $this->dbh->commit();
     }
-    mrbs_ignore_user_abort(FALSE);
+    mrbs_ignore_user_abort(false);
   }
 
 
-  // Roll back a transaction, aborting it. See begin().
+  /**
+   * Roll back a transaction.  If not already inside a transaction, this is a no-op.
+   *
+   * @see PDO::rollBack()
+   */
   public function rollback(): void
   {
     if ($this->dbh && $this->dbh->inTransaction()) {
       $this->dbh->rollBack();
     }
-    mrbs_ignore_user_abort(FALSE);
+    mrbs_ignore_user_abort(false);
   }
 
 
@@ -375,74 +397,110 @@ abstract class DB
   // Must be called right after an insert on that table!
   abstract public function insert_id(string $table, string $field) : int;
 
-  // Acquire a mutual-exclusion lock.
-  // Returns true if the lock is acquired successfully, otherwise false.
+  /**
+   * Acquire a mutual-exclusion lock.
+   *
+   * WARNING: The use of this method should be avoided as GET_LOCK (used in the MySQL implementation) is not supported
+   * by MariaDB Galera Cluster (and other cluster implementations?).
+   *
+   * @return bool Returns true if the lock is acquired successfully, otherwise false.
+   */
   abstract public function mutex_lock(string $name): bool;
 
-  // Release a mutual-exclusion lock.
-  // Returns true if the lock is released successfully, otherwise false.
+  /**
+   * Release a mutual-exclusion lock.
+   *
+   * WARNING: The use of this method should be avoided as RELEASE_LOCK (used in the MySQL implementation) is not
+   * supported by MariaDB Galera Cluster (and other cluster implementations?).
+   *
+   * @return bool Returns true if the lock is released successfully, otherwise false.
+   */
   abstract public function mutex_unlock(string $name): bool;
 
-  // Release all mutual-exclusion locks.
+  /**
+   * Release all mutual-exclusion locks.
+   *
+   * WARNING: The use of this method should be avoided as RELEASE_ALL_LOCKS (used in the MySQL implementation) is not
+   * supported by MariaDB Galera Cluster (and other cluster implementations?).
+   */
   abstract public function mutex_unlock_all(): void;
 
-  // Return a string identifying the database version and type
+  /**
+   * Return a string identifying the database version and type.
+   */
   abstract public function version(): string;
 
-  // Check if a table exists
+  /**
+   * Check if a table exists.
+   */
   abstract public function table_exists(string $table): bool;
 
-  // Get information about the columns in a table
-  // Returns an array with the following indices for each column
-  //
-  //  'name'        the column name
-  //  'type'        the type as reported by MySQL
-  //  'nature'      the type mapped onto one of a generic set of types
-  //                (boolean, integer, real, character, binary).   This enables
-  //                the nature to be used by MRBS code when deciding how to
-  //                display fields, without MRBS having to worry about the
-  //                differences between MySQL and PostgreSQL type names.
-  //  'length'      the maximum length of the field in bytes, octets or characters
-  //                (Note:  this could be NULL)
-  //  'is_nullable' whether the column can be set to NULL (boolean)
-  //
-  //  NOTE: the type mapping is incomplete and just covers the types commonly
-  //  used by MRBS
+  /**
+   * Get information about the columns in a table.
+   *
+   * NOTE: the type mapping is incomplete and just covers the types commonly used by MRBS.
+   *
+   * @return array An array with the following keys for each column:
+   * - **name**         the column name
+   * - **type**         the type as reported by MySQL
+   * - **nature**       the type mapped onto one of a generic set of types
+   *                    (boolean, integer, real, character, binary).   This enables
+   *                    the nature to be used by MRBS code when deciding how to
+   *                    display fields, without MRBS having to worry about the
+   *                    differences between MySQL and PostgreSQL type names.
+   * - **length**       the maximum length of the field in bytes, octets or characters
+   *                    (Note: this could be NULL)
+   * - **is_nullable**  whether the column can be set to NULL (boolean)
+   */
   abstract public function field_info(string $table): array;
 
-  // Generate non-standard SQL for LIMIT clauses:
+  // Syntax methods
+
+  /**
+   * Generate the SQL for LIMIT clauses.
+   */
   abstract public function syntax_limit(int $count, int $offset): string;
 
-  // Generate non-standard SQL to output a TIMESTAMP as a Unix-time:
+  /**
+   * Generate the SQL for converting a TIMESTAMP to a Unix timestamp.
+   */
   abstract public function syntax_timestamp_to_unix(string $fieldname): string;
 
-  // Returns the syntax for a case-sensitive string "equals" function
-  // Also takes a required pass-by-reference parameter to modify the SQL
-  // parameters appropriately.
-  //
-  // NB:  This function is also assumed to do a strict comparison, ie
-  // take account of trailing spaces.
+  /**
+   * Generate the SQL for a case-sensitive string "equals" function.
+   *
+   * NB: This method is assumed to do a strict comparison, eg take account of trailing spaces.
+   *
+   * @param array &$params The SQL parameters, which will be modified by this function.
+   */
   abstract public function syntax_casesensitive_equals(string $fieldname, string $string, array &$params): string;
 
-  // Generate non-standard SQL to match a string anywhere in a field's value
-  // in a case-insensitive manner. $s is the un-escaped/un-slashed string.
-  //
-  // Also takes a required pass-by-reference parameter to modify the SQL
-  // parameters appropriately.
+  /**
+   * Generate the SQL for a case-insensitive string "contains" function.
+   *
+   * @param string $string The (unescaped) string to search for.
+   * @param array &$params The SQL parameters, which will be modified by this function.
+   */
   abstract public function syntax_caseless_contains(string $fieldname, string $string, array &$params): string;
 
-  // Generate non-standard SQL to add a table column after another specified
-  // column
+  /**
+   * Generate the SQL to add a table column after another specified column.
+   */
   abstract public function syntax_addcolumn_after(string $fieldname): string;
 
-  // Generate non-standard SQL to specify a column as an auto-incrementing
-  // integer while doing a CREATE TABLE
+  /**
+   * Generate the SQL to specify a column as an auto-incrementing integer while doing a CREATE TABLE.
+   */
   abstract public function syntax_createtable_autoincrementcolumn(): string;
 
-  // Returns the syntax for a bitwise XOR operator
+  /**
+   * Generate the SQL for a bitwise XOR operator.
+   */
   abstract public function syntax_bitwise_xor(): string;
 
-  // Returns the syntax for a column being in a list of values
+  /**
+   * Generate the syntax for a column being in a list of values.
+   */
   public function syntax_in_list(string $column_name, array $list, array &$params) : string
   {
     // Empty lists aren't allowed.
@@ -456,13 +514,18 @@ abstract class DB
     return $this->quote($column_name) . " IN (" . implode(',', array_fill(0, count($list), '?')) . ")";
   }
 
-  // Returns the syntax for a simple split of a column's value into two
-  // parts, separated by a delimiter.  $part can be 1 or 2.
-  // Also takes a required pass-by-reference parameter to modify the SQL
-  // parameters appropriately.
+  /**
+   * Generate the SQL for a simple split of a column's value into two parts, separated by a delimiter.  Note: this
+   * function assumes there is only one occurrence of the delimiter in the column's value.
+   *
+   * @param int $part The part to return, either 1 for the text to the left of the delimiter, or 2 for the text to the right.
+   * @param array $params The SQL parameters, which will be modified by this function.
+   */
   abstract public function syntax_simple_split(string $fieldname, string $delimiter, int $part, array &$params): string;
 
-  // Returns the syntax for aggregating a number of rows as a delimited string
+  /**
+   * Generate the SQL for aggregating a number of rows as a delimited string.
+   */
   abstract public function syntax_group_array_as_string(string $fieldname, string $delimiter = ','): string;
 
   // Returns the syntax for an "upsert" query.  Unfortunately getting the id of the
@@ -480,12 +543,17 @@ abstract class DB
     bool $has_id_column=false
   ) : string;
 
-
-  // Determines whether the driver returns native types (eg a PHP int
-  // for an SQL INT).
+  /**
+   * Determines whether the driver returns native types (eg a PHP int for an SQL INT).
+   */
   abstract public function returnsNativeTypes() : bool;
 
-  // Determines whether the database supports multiple locks
+  /**
+   * Determines whether the database supports multiple locks.  Note that:
+   * - Use of this method should be avoided as RELEASE_ALL_LOCKS (used in the MySQL implementation) is not supported
+   * by MariaDB Galera Cluster.
+   * - This method should not be called for the first time while locks are in place, because it will release them.
+   */
   abstract public function supportsMultipleLocks(): bool;
 
   /**
@@ -536,8 +604,10 @@ abstract class DB
   }
 
 
-  // Prepares $data for an SQL query. If $table is given then it will also sanitize values,
-  // eg by trimming and truncating strings and converting booleans into 0/1.
+  /**
+   * Prepare data for an SQL query. If `$table` is given, then it will also sanitize values, eg by trimming and
+   * truncating strings and converting booleans into 0/1.
+   */
   private function prepareData(array $data, ?string $table=null, array $ignore_columns=[]): array
   {
     $columns = array();

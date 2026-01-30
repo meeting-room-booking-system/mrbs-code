@@ -426,7 +426,7 @@ if ($is_ajax && $commit)
         // In the calculation of $start_seconds and $end_seconds below we need to take
         // care of the case when 0000 on the day in question is across a DST boundary
         // from the current time, ie the days on which DST starts and ends.
-        case 'start_seconds';
+        case 'start_seconds':
           $date = getdate($old_booking['start_time']);
           $start_year = (int) $date['year'];
           $start_month = (int) $date['mon'];
@@ -436,7 +436,7 @@ if ($is_ajax && $commit)
           $start_seconds = $old_start - $start_daystart;
           $start_seconds -= cross_dst($start_daystart, $old_start);
           break;
-        case 'end_seconds';
+        case 'end_seconds':
           $date = getdate($old_booking['end_time']);
           $end_year = (int) $date['year'];
           $end_month = (int) $date['mon'];

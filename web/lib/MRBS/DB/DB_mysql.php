@@ -9,7 +9,7 @@ use Pdo\Mysql;
 use PDOException;
 use function MRBS\get_vocab;
 
-//
+
 class DB_mysql extends DB
 {
   const DB_DEFAULT_PORT = 3306;
@@ -227,8 +227,6 @@ class DB_mysql extends DB
   }
 
 
-  // Determines whether the driver returns native types (eg a PHP int
-  // for an SQL INT).
   public function returnsNativeTypes() : bool
   {
     if (!isset($this->returns_native_types))
@@ -247,13 +245,10 @@ class DB_mysql extends DB
     return $this->returns_native_types;
   }
 
-  // Determines whether the database supports multiple locks.
-  // This method should not be called for the first time while
-  // locks are in place, because it will release them.
-  // WARNING! This method should not be used as RELEASE_ALL_LOCKS
-  //  is not supported by MariaDB Galera Cluster.
+
   public function supportsMultipleLocks() : bool
   {
+    // TODO: avoid the use of RELEASE_ALL_LOCKS  for MariaDB Galera Cluster (and possibly other cluster implementations?).
     if (!isset($this->supports_multiple_locks))
     {
       if (!empty($this->mutex_locks))
@@ -280,20 +275,18 @@ class DB_mysql extends DB
   }
 
 
-  // Since MySQL 5.7.5 lock names are restricted to 64 characters.
-  // Truncating them is probably sufficient to ensure uniqueness.
   private static function hash(string $name) : string
   {
+    // Since MySQL 5.7.5 lock names have been restricted to 64 characters.
+    // Truncating them is probably sufficient to ensure uniqueness.
     return substr($name, 0, 64);
   }
 
 
-  // Acquire a mutual-exclusion lock.
-  // Returns true if the lock is acquired successfully, otherwise false.
-  // WARNING! This method should not be used as GET_LOCK is not supported
-  // by MariaDB Galera Cluster.
   public function mutex_lock(string $name) : bool
   {
+    // TODO: avoid the use of GET_LOCK as it is not supported by MariaDB Galera Cluster (or else get rid of the need
+    // TODO: for this method).
     $timeout = 20;  // seconds
 
     if (!$this->supportsMultipleLocks() && !empty($this->mutex_locks))
@@ -355,12 +348,10 @@ class DB_mysql extends DB
   }
 
 
-  // Release a mutual-exclusion lock.
-  // Returns true if the lock is released successfully, otherwise false.
-  // WARNING! This method should not be used as RELEASE_LOCK
-  // is not supported by MariaDB Galera Cluster.
   public function mutex_unlock(string $name) : bool
   {
+    // TODO: avoid the use of RELEASE_LOCK as it is not supported by MariaDB Galera Cluster (or else get rid of the need
+    // TODO: for this method).
     // First do some sanity checking before executing the SQL query
     if (!in_array($name, $this->mutex_locks))
     {
@@ -417,11 +408,10 @@ class DB_mysql extends DB
   }
 
 
-  // Release all mutual-exclusion locks.
-  // WARNING! This method should not be used as RELEASE_ALL_LOCKS
-  // is not supported by MariaDB Galera Cluster.
   public function mutex_unlock_all() : void
   {
+    // TODO: avoid the use of RELEASE_ALL_LOCKS as it is not supported by MariaDB Galera Cluster (or else get rid of the need
+    // TODO: for this method).
     if ($this->supportsMultipleLocks())
     {
       $this->query("SELECT RELEASE_ALL_LOCKS()");
@@ -529,14 +519,12 @@ class DB_mysql extends DB
   }
 
 
-  // Return a string identifying the database version and type
   public function version() : string
   {
     return $this->versionComment() . ' DB_mysql.php' . $this->versionString();
   }
 
 
-  // Check if a table exists
   public function table_exists(string $table) : bool
   {
     $res = $this->query("SHOW TABLES LIKE ?", array($table));
@@ -545,22 +533,6 @@ class DB_mysql extends DB
   }
 
 
-  // Get information about the columns in a table
-  // Returns an array with the following indices for each column
-  //
-  //  'name'        the column name
-  //  'type'        the type as reported by MySQL
-  //  'nature'      the type mapped onto one of a generic set of types
-  //                (boolean, integer, real, character, binary).   This enables
-  //                the nature to be used by MRBS code when deciding how to
-  //                display fields, without MRBS having to worry about the
-  //                differences between MySQL and PostgreSQL type names.
-  //  'length'      the maximum length of the field in bytes, octets or characters
-  //                (Note:  this could be NULL)
-  //  'is_nullable' whether the column can be set to NULL (boolean)
-  //
-  //  NOTE: the type mapping is incomplete and just covers the types commonly
-  //  used by MRBS
   public function field_info(string $table) : array
   {
     // Map MySQL types on to a set of generic types
@@ -668,50 +640,37 @@ class DB_mysql extends DB
 
   // Syntax methods
 
-  // Generate non-standard SQL for LIMIT clauses:
   public function syntax_limit(int $count, int $offset) : string
   {
    return "LIMIT $offset,$count";
   }
 
 
-  // Generate non-standard SQL to output a TIMESTAMP as a Unix-time:
   public function syntax_timestamp_to_unix(string $fieldname) : string
   {
     return "UNIX_TIMESTAMP($fieldname)";
   }
 
 
-  // Returns the syntax for a case-sensitive string "equals" function
-  // (By default MySQL is case-insensitive, so we force a binary comparison)
-  //
-  // Also takes a required pass-by-reference parameter to modify the SQL
-  // parameters appropriately.
-  //
-  // NB:  This function is also assumed to do a strict comparison, ie
-  // take account of trailing spaces.  (The '=' comparison in MySQL allows
-  // trailing spaces, eg 'john' = 'john ').
   public function syntax_casesensitive_equals(string $fieldname, string $string, array &$params) : string
   {
     $params[] = $string;
 
-    // We cannot assume that the database column has utf8 collation.  We may for example be
+    // The '=' comparison in MySQL allows trailing spaces, eg 'john' = 'john ', so we cannot just use that.
+    // Also, by default MySQL is case-insensitive, so we force a binary comparison.
+
+    // We cannot assume that the database column has utf8 collation.  We may, for example, be
     // authenticating a user against an external database.  See the post at
     // https://stackoverflow.com/questions/5629111/how-can-i-make-sql-case-sensitive-string-comparison-on-mysql#answer-56283818
     // for an explanation of the query.
     return $this->quote($fieldname) . "=CONVERT(? using utf8mb4) COLLATE utf8mb4_bin";
   }
 
-  // Generate non-standard SQL to match a string anywhere in a field's value
-  // in a case-insensitive manner. $s is the un-escaped/un-slashed string.
-  //
-  // Also takes a required pass-by-reference parameter to modify the SQL
-  // parameters appropriately.
-  //
-  // In MySQL, REGEXP seems to be case-sensitive, so use LIKE instead. But this
-  // requires quoting of % and _ in addition to the usual.
+
   public function syntax_caseless_contains(string $fieldname, string $string, array &$params) : string
   {
+    // In MySQL, REGEXP seems to be case-sensitive, so use LIKE instead. But this
+    // requires quoting of % and _ in addition to the usual.
     $string = str_replace("\\", "\\\\", $string);
     $string = str_replace("%", "\\%", $string);
     $string = str_replace("_", "\\_", $string);
@@ -722,32 +681,24 @@ class DB_mysql extends DB
   }
 
 
-  // Generate non-standard SQL to add a table column after another specified
-  // column
   public function syntax_addcolumn_after(string $fieldname) : string
   {
     return "AFTER $fieldname";
   }
 
 
-  // Generate non-standard SQL to specify a column as an auto-incrementing
-  // integer while doing a CREATE TABLE
   public function syntax_createtable_autoincrementcolumn() : string
   {
     return "int NOT NULL auto_increment";
   }
 
 
-  // Returns the syntax for a bitwise XOR operator
   public function syntax_bitwise_xor() : string
   {
     return "^";
   }
 
-  // Returns the syntax for a simple split of a column's value into two
-  // parts, separated by a delimiter.  $part can be 1 or 2.
-  // Also takes a required pass-by-reference parameter to modify the SQL
-  // parameters appropriately.
+
   public function syntax_simple_split(string $fieldname, string $delimiter, int $part, array &$params) : string
   {
     switch ($part)
@@ -768,7 +719,6 @@ class DB_mysql extends DB
   }
 
 
-  // Returns the syntax for aggregating a number of rows as a delimited string
   public function syntax_group_array_as_string(string $fieldname, string $delimiter=',') : string
   {
     // Use DISTINCT to eliminate duplicates which can arise when the query

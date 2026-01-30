@@ -520,9 +520,13 @@ function get_cookie_path()
 }
 
 
-// Gets the url path from either $_SERVER['PHP_SELF'] or $_SERVER['REQUEST_URI'], whichever
-// happens to be non-empty.  (Some systems will not have one or the other variable set).
-function url_path()
+/**
+ * Gets the url path from either `$_SERVER['PHP_SELF']` or `$_SERVER['REQUEST_URI']`, whichever
+ * happens to be non-empty.  (Some systems will not have one or the other variable set).
+ *
+ * @return string  The url path, or the empty string if none can be found.
+ */
+function url_path() : string
 {
   global $server;
 
@@ -676,7 +680,8 @@ function this_page(bool $with_query_string=false, string $suffix='') : string
  */
 function rfc7231_date(int $timestamp) : string
 {
-  return gmdate(DATE_RFC7231, $timestamp);
+  // We cannot use the DATE_RFC7231 constant because it is deprecated in PHP 8.5.
+  return gmdate("D, d M Y H:i:s \\G\\M\\T", $timestamp);
 }
 
 

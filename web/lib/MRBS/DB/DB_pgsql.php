@@ -4,7 +4,7 @@ namespace MRBS\DB;
 
 use PDOException;
 
-//
+
 class DB_pgsql extends DB
 {
   const DB_DEFAULT_PORT = 5432;
@@ -124,23 +124,18 @@ class DB_pgsql extends DB
   }
 
 
-  // Determines whether the driver returns native types (eg a PHP int
-  // for an SQL INT).
   public function returnsNativeTypes() : bool
   {
     return true;
   }
 
 
-  // Determines whether the database supports multiple locks
   public function supportsMultipleLocks(): bool
   {
     return true;
   }
 
 
-  // Acquire a mutual-exclusion lock.
-  // Returns true if the lock is acquired successfully, otherwise false.
   public function mutex_lock(string $name) : bool
   {
     // pg_advisory_lock() will block indefinitely by default until a lock
@@ -162,8 +157,6 @@ class DB_pgsql extends DB
   }
 
 
-  // Release a mutual-exclusion lock.
-  // Returns true if the lock is released successfully, otherwise false.
   public function mutex_unlock(string $name) : bool
   {
     $sql = "SELECT pg_advisory_unlock(" . self::hash($name) . ")";
@@ -189,7 +182,6 @@ class DB_pgsql extends DB
   }
 
 
-  // Release all mutual-exclusion locks.
   public function mutex_unlock_all() : void
   {
     $this->query("SELECT pg_advisory_unlock_all()");
@@ -207,7 +199,6 @@ class DB_pgsql extends DB
   }
 
 
-  // Return a string identifying the database version and type
   public function version() : string
   {
     return $this->versionString();
@@ -228,7 +219,6 @@ class DB_pgsql extends DB
   }
 
 
-  // Check if a table exists
   public function table_exists(string $table) : bool
   {
     // $table can be a qualified name.  We need to resolve it if necessary into its component
@@ -269,22 +259,6 @@ class DB_pgsql extends DB
   }
 
 
-  // Get information about the columns in a table
-  // Returns an array with the following indices for each column
-  //
-  //  'name'        the column name
-  //  'type'        the type as reported by PostgreSQL
-  //  'nature'      the type mapped onto one of a generic set of types
-  //                (boolean, integer, real, character, binary).   This enables
-  //                the nature to be used by MRBS code when deciding how to
-  //                display fields, without MRBS having to worry about the
-  //                differences between MySQL and PostgreSQL type names.
-  //  'length'      the maximum length of the field in bytes, octets or characters
-  //                (Note:  this could be null)
-  //  'is_nullable' whether the column can be set to NULL (boolean)
-  //
-  //  NOTE: the type mapping is incomplete and just covers the types commonly
-  //  used by MRBS
   public function field_info(string $table) : array
   {
     $fields = array();
@@ -382,14 +356,12 @@ class DB_pgsql extends DB
 
   // Syntax methods
 
-  // Generate non-standard SQL for LIMIT clauses:
   public function syntax_limit(int $count, int $offset) : string
   {
     return "LIMIT $count OFFSET $offset";
   }
 
 
-  // Generate non-standard SQL to output a TIMESTAMP as a Unix-time:
   public function syntax_timestamp_to_unix(string $fieldname) : string
   {
     // A PostgreSQL timestamp can be a float.  We need to round it
@@ -400,14 +372,6 @@ class DB_pgsql extends DB
   }
 
 
-  // Returns the syntax for a case-sensitive string "equals" function
-  //
-  // Also takes a required pass-by-reference parameter to modify the SQL
-  // parameters appropriately.
-  //
-  // NB:  This function is also assumed to do a strict comparison, ie
-  // take account of training spaces.  (The '=' comparison in MySQL allows
-  // trailing spaces, eg 'john' = 'john ').
   public function syntax_casesensitive_equals(string $fieldname, string $string, array &$params) : string
   {
     $params[] = $string;
@@ -416,24 +380,16 @@ class DB_pgsql extends DB
   }
 
 
-  // Generate non-standard SQL to match a string anywhere in a field's value
-  // in a case-insensitive manner. $s is the un-escaped/un-slashed string.
-  //
-  // Also takes a required pass-by-reference parameter to modify the SQL
-  // parameters appropriately.
-  //
-  // In PostgreSQL, we can do case-insensitive regexp with ~*, but not case-insensitive LIKE matching.
-  // Quotemeta escapes everything we need except for single quotes.
   public function syntax_caseless_contains(string $fieldname, string $string, array &$params) : string
   {
+    // In PostgreSQL, we can do case-insensitive regexp with ~*, but not case-insensitive LIKE matching.
+    // Quotemeta escapes everything we need except for single quotes.
     $params[] = quotemeta($string);
 
     return "$fieldname ~* ?";
   }
 
 
-  // Generate non-standard SQL to add a table column after another specified
-  // column
   public function syntax_addcolumn_after(string $fieldname) : string
   {
     // Can't be done in PostgreSQL without dropping and re-creating the table.
@@ -441,25 +397,18 @@ class DB_pgsql extends DB
   }
 
 
-  // Generate non-standard SQL to specify a column as an auto-incrementing
-  // integer while doing a CREATE TABLE
   public function syntax_createtable_autoincrementcolumn() : string
   {
     return "serial";
   }
 
 
-  // Returns the syntax for a bitwise XOR operator
   public function syntax_bitwise_xor() : string
   {
     return "#";
   }
 
 
-  // Returns the syntax for a simple split of a column's value into two
-  // parts, separated by a delimiter.  $part can be 1 or 2.
-  // Also takes a required pass-by-reference parameter to modify the SQL
-  // parameters appropriately.
   public function syntax_simple_split(string $fieldname, string $delimiter, int $part, array &$params) : string
   {
     switch ($part)
@@ -478,7 +427,6 @@ class DB_pgsql extends DB
   }
 
 
-  // Returns the syntax for aggregating a number of rows as a delimited string
   public function syntax_group_array_as_string(string $fieldname, string $delimiter=',') : string
   {
     // array_agg introduced in PostgreSQL version 8.4

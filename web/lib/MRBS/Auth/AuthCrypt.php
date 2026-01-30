@@ -1,30 +1,23 @@
 <?php
 namespace MRBS\Auth;
 
-/*
- * Authentication scheme that uses an password hash file as the source
- * for user authentication.
+/**
+ * Authentication scheme that uses a password hash file as the source for user authentication.
  *
- * This supports any password hash format that your installation of PHP
- * supports.
+ * This supports any password hash format that your installation of PHP supports.
  *
- * To use this authentication scheme set the following
- * things in config.inc.php:
+ * To use this authentication scheme, set the following things in config.inc.php:
  *
- * $auth["type"]   = "crypt";
- * $auth["crypt"]["passwd_file] = "/etc/httpd/mrbs_passwd";
+ *     $auth["type"] = "crypt";
+ *     $auth["crypt"]["passwd_file] = "/etc/httpd/mrbs_passwd";
  *
  * Then, you may configure admin users:
  *
- * $auth["admin"][] = "username1";
- * $auth["admin"][] = "username2";
- *
+ *     $auth["admin"][] = "username1";
+ *     $auth["admin"][] = "username2";
  */
-
 class AuthCrypt extends Auth
 {
-  /**
-   */
   public function validateUser(
     #[\SensitiveParameter]
     ?string $user,
