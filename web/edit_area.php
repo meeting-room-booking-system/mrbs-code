@@ -297,17 +297,22 @@ function get_fieldset_periods() : ElementFieldset
   foreach ($period_names as $period_name)
   {
     $field = new FieldInputText();
+    // The period start time
     $start = new ElementInputTime();
     $start->setAttributes(['name' => 'period_starts[]', 'required' => true]);
+    // A separator; CSS will fill its content.
     $separator = new ElementSpan();
     $separator->setAttribute('class', 'period_separator');
+    // The period end time
     $end = new ElementInputTime();
     $end->setAttributes(['name' => 'period_ends[]', 'required' => true]);
+    // Set the start and end time values.
     if (isset($periods[$period_name]))
     {
       $start->setAttribute('value', $periods[$period_name]['start']);
       $end->setAttribute('value', $periods[$period_name]['end']);
     }
+    // The delete button; CSS will fill its content.
     $span = new ElementSpan();
     $span->setAttribute('class', 'delete_period');
     $field->setAttribute('class', 'period_name')
