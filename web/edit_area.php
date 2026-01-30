@@ -296,6 +296,7 @@ function get_fieldset_periods() : ElementFieldset
 
   foreach ($period_names as $period_name)
   {
+    // The period name
     $field = new FieldInputText();
     // The period start time
     $start = new ElementInputTime();
