@@ -292,7 +292,7 @@ function get_fieldset_periods() : ElementFieldset
   // any periods defined, then force there to be one by creating a single period name
   // with an empty string.   Because the input is a required input, then it will have
   // to be saved with a period name.
-  $period_names = empty($periods) ? array('') : $periods;
+  $period_names = empty($periods) ? array('') : (is_assoc($periods) ? array_keys($periods) : $periods);
 
   foreach ($period_names as $period_name)
   {
@@ -303,6 +303,11 @@ function get_fieldset_periods() : ElementFieldset
     $separator->setAttribute('class', 'period_separator');
     $end = new ElementInputTime();
     $end->setAttributes(['name' => 'period_ends[]', 'required' => true]);
+    if (isset($periods[$period_name]))
+    {
+      $start->setAttribute('value', $periods[$period_name]['start']);
+      $end->setAttribute('value', $periods[$period_name]['end']);
+    }
     $span = new ElementSpan();
     $span->setAttribute('class', 'delete_period');
     $field->setAttribute('class', 'period_name')
