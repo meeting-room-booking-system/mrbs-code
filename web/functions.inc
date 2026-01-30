@@ -1053,7 +1053,7 @@ function get_period_interval(int $start_time, int $end_time, int $area_id) : int
     $area_details[$area_id] = get_area_details($area_id);
   }
 
-  $periods_per_day = count(json_decode($area_details[$area_id]['periods']));
+  $periods_per_day = count(json_decode($area_details[$area_id]['periods']), true);
   $date_time_zone = new DateTimeZone($area_details[$area_id]['timezone']);
 
   // Create start and end dates and set both dates to noon so that we can compare them
@@ -1676,7 +1676,7 @@ function get_area_settings(int $area) : void
     // Periods are stored as a JSON encoded string in the database
     if (isset($row['periods']))
     {
-      $row['periods'] = json_decode($row['periods']);
+      $row['periods'] = json_decode($row['periods'], true);
     }
 
     $row = clean_area_row($row);

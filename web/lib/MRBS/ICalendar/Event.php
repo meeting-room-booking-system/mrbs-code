@@ -93,8 +93,6 @@ class Event extends Component
    */
   public static function createFromData(string $method, array $data, ?string $tzid=null, ?array $addresses=null, bool $series=false) : array
   {
-    global $area_defaults;
-
     // Get the period data for the room so that we know how to handle the start and end times
     list('enable_periods' => $room_enable_periods, 'periods' => $room_periods) = get_period_data($data['room_id']);
 
@@ -114,16 +112,9 @@ class Event extends Component
     }
 
     // And we can't do it if the period times haven't been defined.
-    // (For the moment the period times can only be defined globally, not for each area.)
-    if (!is_assoc($area_defaults['periods']))
+    if (!is_assoc($room_periods))
     {
       throw new CalendarException("Cannot create events in periods mode because the period times have not been defined");
-    }
-
-    // And we can't do it if the period names in the global definition don't match the period names for this room.
-    if (array_keys($area_defaults['periods']) !== array_values($room_periods))
-    {
-      throw new CalendarException("Cannot create events in periods mode because the period times have not been defined for the area");
     }
 
     // TODO: What happens when a new period is created from an associative array?  Does the area edit page work?

@@ -1630,7 +1630,7 @@ while (false !== ($row = $res->next_row_keyed()))
   }
 
   // Periods are JSON encoded in the database
-  $row['periods'] = json_decode($row['periods']);
+  $row['periods'] = json_decode($row['periods'], true);
 
   // Make sure we've got the correct resolution when using periods (it's
   // probably OK anyway, but just in case)

@@ -2318,7 +2318,7 @@ function get_period_data(int $room_id) : array
   $res = db()->query($sql, [':room_id' => $room_id]);
   $row = $res->next_row_keyed();
   $row['enable_periods'] = (bool) $row['enable_periods'];
-  $row['periods'] = json_decode($row['periods']);
+  $row['periods'] = json_decode($row['periods'], true);
 
   return $row;
 }
@@ -2342,7 +2342,7 @@ function get_period_names() : array
 
   while (false !== ($row = $res->next_row_keyed()))
   {
-    $period_names[$row['id']] = json_decode($row['periods']);
+    $period_names[$row['id']] = json_decode($row['periods'], true);
   }
 
   return $period_names;

@@ -53,7 +53,9 @@ $form_vars = array(
   'area_confirmed_default'        => 'string',
   'area_default_type'             => 'string',
   'area_times_along_top'          => 'string',
-  'custom_html'                   => 'string'
+  'custom_html'                   => 'string',
+  'period_starts'                 => 'array',
+  'period_ends'                   => 'array'
 );
 
 foreach($form_vars as $var => $var_type)
@@ -188,7 +190,19 @@ else
   }
 
 
-  if (!$area_enable_periods)
+  if ($area_enable_periods)
+  {
+    if (isset($period_starts) && isset($period_ends))
+    {
+      $periods_tmp = [];
+      for ($i = 0; $i < count($area_periods); $i++)
+      {
+        $periods_tmp[$area_periods[$i]] = ['start' => $period_starts[$i], 'end' => $period_ends[$i]];
+      }
+      $area_periods = $periods_tmp;
+    }
+  }
+  else
   {
     // Avoid divide by zero errors
     if ($area_res_mins == 0)

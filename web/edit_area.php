@@ -8,6 +8,7 @@ use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputCheckbox;
 use MRBS\Form\ElementInputNumber;
 use MRBS\Form\ElementInputSubmit;
+use MRBS\Form\ElementInputTime;
 use MRBS\Form\ElementLegend;
 use MRBS\Form\ElementP;
 use MRBS\Form\ElementSelect;
@@ -296,6 +297,12 @@ function get_fieldset_periods() : ElementFieldset
   foreach ($period_names as $period_name)
   {
     $field = new FieldInputText();
+    $start = new ElementInputTime();
+    $start->setAttributes(['name' => 'period_starts[]', 'required' => true]);
+    $separator = new ElementSpan();
+    $separator->setAttribute('class', 'period_separator');
+    $end = new ElementInputTime();
+    $end->setAttributes(['name' => 'period_ends[]', 'required' => true]);
     $span = new ElementSpan();
     $span->setAttribute('class', 'delete_period');
     $field->setAttribute('class', 'period_name')
@@ -303,6 +310,9 @@ function get_fieldset_periods() : ElementFieldset
                                        'value'    => $period_name,
                                        'required' => true),
                                  false)
+          ->addElement($start)
+          ->addElement($separator)
+          ->addElement($end)
           ->addElement($span);
     $fieldset->addElement($field);
   }
