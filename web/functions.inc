@@ -680,7 +680,8 @@ function this_page(bool $with_query_string=false, string $suffix='') : string
  */
 function rfc7231_date(int $timestamp) : string
 {
-  return gmdate(DATE_RFC7231, $timestamp);
+  // We cannot use the DATE_RFC7231 constant because it is deprecated in PHP 8.5.
+  return gmdate("D, d M Y H:i:s \\G\\M\\T", $timestamp);
 }
 
 
