@@ -29,8 +29,11 @@ class DBStatement
   }
 
 
-  // Return a row from a statement as an associative array keyed by field name.
-  // Returns FALSE if there are no more rows.
+  /**
+   * Returns the next row from a statement as an associative array.
+   *
+   * @return array<string,mixed>|false The next row indexed by column name, or FALSE if there are no more rows.
+   */
   public function next_row_keyed()
   {
     return $this->statement->fetch(PDO::FETCH_ASSOC);
