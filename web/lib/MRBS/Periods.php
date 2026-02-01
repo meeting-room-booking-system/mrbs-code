@@ -12,7 +12,7 @@ class Periods implements Countable, Iterator
   private $data = [];
 
 
-  private function __construct(int $area_id)
+  public function __construct(int $area_id)
   {
     $this->area_id = $area_id;
   }
@@ -35,7 +35,7 @@ class Periods implements Countable, Iterator
       $periods = json_decode($row['periods'], true);
 
       // The periods are stored in the database as either:
-      //   (a) a simple array of period names (the old way of storing periods); or
+      //   (a) a simple array of period names (the old way of storing periods which we handle for backwards compatibility); or
       //   (b) an associative array of period names and start/end times.
       if (is_assoc($periods))
       {
@@ -62,7 +62,22 @@ class Periods implements Countable, Iterator
     return $result;
   }
 
-  private function add(Period $period) : void
+
+  /**
+   * Convert the object to an array suitable for storing in the database.
+   */
+  public function toDbArray() : array
+  {
+    $result = [];
+    foreach ($this->data as $period)
+    {
+      $result[$period->name] = ['start' => $period->start, 'end' => $period->end];
+    }
+    return $result;
+  }
+
+
+  public function add(Period $period) : void
   {
     $this->data[] = $period;
   }

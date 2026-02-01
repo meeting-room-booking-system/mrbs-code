@@ -192,15 +192,16 @@ else
 
   if ($area_enable_periods)
   {
-    if (isset($period_starts) && isset($period_ends))
+    $periods_tmp = new Periods($area);
+    for ($i = 0; $i < count($area_periods); $i++)
     {
-      $periods_tmp = [];
-      for ($i = 0; $i < count($area_periods); $i++)
-      {
-        $periods_tmp[$area_periods[$i]] = ['start' => $period_starts[$i], 'end' => $period_ends[$i]];
-      }
-      $area_periods = $periods_tmp;
+      $periods_tmp->add(new Period(
+        $area_periods[$i],
+        $period_starts[$i] ?? null,
+        $period_ends[$i] ?? null
+      ));
     }
+    $area_periods = $periods_tmp->toDbArray();
   }
   else
   {
