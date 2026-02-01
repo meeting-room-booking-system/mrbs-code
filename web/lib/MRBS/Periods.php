@@ -2,7 +2,10 @@
 declare(strict_types=1);
 namespace MRBS;
 
-class Periods implements \Countable, \Iterator
+use Countable;
+use Iterator;
+
+class Periods implements Countable, Iterator
 {
   private $area_id;
   private $index = 0;
