@@ -43,8 +43,8 @@ class Periods implements Countable, Iterator
         {
           $result->add(new Period(
             $period_name,
-            $times['start'],
-            $times['end']
+            $times[0],
+            $times[1]
           ));
         }
       }
@@ -71,7 +71,7 @@ class Periods implements Countable, Iterator
     $result = [];
     foreach ($this->data as $period)
     {
-      $result[$period->name] = ['start' => $period->start, 'end' => $period->end];
+      $result[$period->name] = [$period->start, $period->end];
     }
     return $result;
   }
