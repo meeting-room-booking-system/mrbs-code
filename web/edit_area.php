@@ -28,6 +28,7 @@ use MRBS\Form\FieldSpan;
 use MRBS\Form\FieldTextarea;
 use MRBS\Form\FieldTimeWithUnits;
 use MRBS\Form\Form;
+use stdClass;
 
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
@@ -274,7 +275,7 @@ function get_fieldset_times() : ElementFieldset
 
 function get_fieldset_periods() : ElementFieldset
 {
-  global $enable_periods, $periods;
+  global $enable_periods, $area;
 
   $fieldset = new ElementFieldset();
   $fieldset->setAttribute('id', 'period_settings');
@@ -287,38 +288,44 @@ function get_fieldset_periods() : ElementFieldset
   }
   $fieldset->addLegend(get_vocab('period_settings'));
 
+  $this_area_periods = Periods::getForArea($area);
   // For the JavaScript to work, and MRBS to make sense, there has to be at least
   // one period defined.  So if for some reason, which shouldn't happen, there aren't
   // any periods defined, then force there to be one by creating a single period name
   // with an empty string.   Because the input is a required input, then it will have
   // to be saved with a period name.
-  $period_names = empty($periods) ? array('') : (is_assoc($periods) ? array_keys($periods) : $periods);
+  if (empty($this_area_periods))
+  {
+    $this_area_periods = [new Period('')];
+  }
 
-  foreach ($period_names as $period_name)
+  foreach ($this_area_periods as $period)
   {
     // The period name
     $field = new FieldInputText();
     // The period start time
     $start = new ElementInputTime();
     $start->setAttributes(['name' => 'period_starts[]', 'required' => true]);
+    if (isset($period->start))
+    {
+      $start->setAttribute('value', $period->start);
+    }
     // A separator; CSS will fill its content.
     $separator = new ElementSpan();
     $separator->setAttribute('class', 'period_separator');
     // The period end time
     $end = new ElementInputTime();
     $end->setAttributes(['name' => 'period_ends[]', 'required' => true]);
-    // Set the start and end time values.
-    if (isset($periods[$period_name]))
+    if (isset($period->end))
     {
-      $start->setAttribute('value', $periods[$period_name]['start']);
-      $end->setAttribute('value', $periods[$period_name]['end']);
+      $end->setAttribute('value', $period->end);
     }
     // The delete button; CSS will fill its content.
     $span = new ElementSpan();
     $span->setAttribute('class', 'delete_period');
     $field->setAttribute('class', 'period_name')
           ->setControlAttributes(array('name'     => 'area_periods[]',
-                                       'value'    => $period_name,
+                                       'value'    => $period->name,
                                        'required' => true),
                                  false)
           ->addElement($start)
