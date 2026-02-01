@@ -77,6 +77,48 @@ class Periods implements Countable, Iterator
   }
 
 
+  /**
+   * Validate the periods, checking that the start and end times are valid and in ascending order.
+   *
+   * @return true|string
+   */
+  public function validate()
+  {
+    foreach ($this->data as $i => $period)
+    {
+      // If we're not using times, everything is OK.
+      if (($i === 0) && (!isset($period->start)))
+      {
+        return true;
+      }
+
+      // Otherwise check that the start and end times are valid and are in ascending order.
+      try
+      {
+        if (false === ($start = DateTime::createFromFormat('H:i', $period->start)))
+        {
+          return get_vocab('invalid_period_start_time', $period->start, $period->name);
+        }
+        if (false === ($end = DateTime::createFromFormat('H:i', $period->end)))
+        {
+          return get_vocab('invalid_period_end_time', $period->end, $period->name);
+        }
+        if ((isset($last_time) && ($start <= $last_time)) || ($end <= $start))
+        {
+          return get_vocab('period_times_not_ascending');
+        }
+        $last_time = $end;
+      }
+      catch (\Exception $e)
+      {
+        return get_vocab('invalid_period_time', $period->name);
+      }
+    }
+
+    return true;
+  }
+
+
   public function add(Period $period) : void
   {
     $this->data[] = $period;

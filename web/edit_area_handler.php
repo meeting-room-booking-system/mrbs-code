@@ -192,6 +192,7 @@ else
 
   if ($area_enable_periods)
   {
+    // Assemble the periods as an object.
     $periods_tmp = new Periods($area);
     for ($i = 0; $i < count($area_periods); $i++)
     {
@@ -201,7 +202,16 @@ else
         $period_ends[$i] ?? null
       ));
     }
-    $area_periods = $periods_tmp->toDbArray();
+    // Validate the periods.
+    if (true !== ($result = $periods_tmp->validate()))
+    {
+      $errors[] = $result;
+    }
+    // Convert the periods to an array suitable for the database.
+    else
+    {
+      $area_periods = $periods_tmp->toDbArray();
+    }
   }
   else
   {
