@@ -37,6 +37,10 @@ class Periods implements \Countable, \Iterator
       {
         $this_area_periods = [];
         $periods = json_decode($row['periods'], true);
+
+        // The periods are stored in the database as either:
+        //   (a) a simple array of period names (the old way of storing periods); or
+        //   (b) an associative array of period names and start/end times.
         if (is_assoc($periods))
         {
           foreach ($periods as $period_name => $times)
