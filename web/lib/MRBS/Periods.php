@@ -103,11 +103,15 @@ class Periods implements Countable, Iterator
         {
           return get_vocab('invalid_period_end_time', $period->end, $period->name);
         }
-        if ((isset($last_time) && ($start <= $last_time)) || ($end <= $start))
+        if (isset($last_end_time) && ($start < $last_end_time))
         {
-          return get_vocab('period_times_not_ascending');
+          return get_vocab('period_start_before_last_end', $period->name);
         }
-        $last_time = $end;
+        if ($start >= $end)
+        {
+          return get_vocab('period_must_have_positive_duration', $period->name);
+        }
+        $last_end_time = $end;
       }
       catch (\Exception $e)
       {
