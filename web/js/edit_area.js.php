@@ -258,27 +258,26 @@ $(document).on('page_ready', function() {
     let lastEndVal;
 
     $('div.period_name').each(function(index) {
+      <?php // Check that the start time isn't before the last end time ?>
       const start = $(this).find('input[name="period_starts[]"]').get(0);
       const startVal = start.value;
-      const end = $(this).find('input[name="period_ends[]"]').get(0);
-      const endVal = end.value;
-
-      <?php // Check that the start time isn't before the last end time ?>
       if ((index > 0) && (startVal < lastEndVal))
       {
         start.setCustomValidity('<?php echo get_js_vocab('period_start_before_previous_end') ?>');
         start.reportValidity();
         event.preventDefault(); <?php // Stop form submission ?>
       }
-      lastEndVal = endVal;
 
       <?php // Check that the end time is after the start time ?>
+      const end = $(this).find('input[name="period_ends[]"]').get(0);
+      const endVal = end.value;
       if (endVal <= startVal) {
         end.setCustomValidity('<?php echo get_js_vocab('period_end_must_be_after_start') ?>');
         end.reportValidity();
         event.preventDefault(); <?php // Stop form submission ?>
       }
 
+      lastEndVal = endVal;
     });
 
   });
