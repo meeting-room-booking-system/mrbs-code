@@ -251,6 +251,14 @@ $(document).on('page_ready', function() {
       $('.delete_period').show();
     });
 
+  <?php
+  // Show or hide the period times, depending on whether the use_period_times checkbox is checked,
+  // and also disable the inputs if not so that the values are not sent to the server.
+  ?>
+  $('#use_period_times').on('change', function() {
+    const checked = $(this).prop('checked');
+    $('.period_times').toggle(checked).find('input').prop('disabled', !checked);
+  }).trigger('change');
 
   <?php // Validate the period times. ?>
   $('form#edit_area').on('submit', function(event) {

@@ -297,12 +297,30 @@ function get_fieldset_periods() : ElementFieldset
   if (empty($this_area_periods))
   {
     $this_area_periods = [new Period('')];
+    $using_period_times = false;
   }
+  else
+  {
+    $using_period_times = isset($this_area_periods->current()->start);
+  }
+
+  // TODO: Store use_period_times in the database, so that the times are not lost.
+  // TODO: At the moment it's just used by the JavaScript to toggle the display.
+  $field = new FieldInputCheckbox();
+  $field->setLabel(get_vocab('use_period_times'))
+        ->setControlAttribute('name', 'use_period_times')
+        ->setControlChecked($using_period_times);
+  $fieldset->addElement($field);
 
   foreach ($this_area_periods as $period)
   {
     // The period name
     $field = new FieldInputText();
+
+    // The period times
+    $period_times = new ElementDiv();
+    $period_times->setAttribute('class', 'period_times');
+
     // The period start time
     $start = new ElementInputTime();
     $start->setAttributes(['name' => 'period_starts[]', 'required' => true]);
@@ -320,6 +338,11 @@ function get_fieldset_periods() : ElementFieldset
     {
       $end->setAttribute('value', $period->end);
     }
+
+    $period_times->addElement($start);
+    $period_times->addElement($separator);
+    $period_times->addElement($end);
+
     // The delete button; CSS will fill its content.
     $span = new ElementSpan();
     $span->setAttribute('class', 'delete_period');
@@ -328,9 +351,7 @@ function get_fieldset_periods() : ElementFieldset
                                        'value'    => $period->name,
                                        'required' => true),
                                  false)
-          ->addElement($start)
-          ->addElement($separator)
-          ->addElement($end)
+          ->addElement($period_times)
           ->addElement($span);
     $fieldset->addElement($field);
   }

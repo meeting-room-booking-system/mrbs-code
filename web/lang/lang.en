@@ -586,6 +586,7 @@ $vocab["book_ahead_note_periods"] = "When using periods, book ahead times are ro
 $vocab["invalid_types"]           = "Invalid types";
 $vocab["invalid_types_note"]      = "These are types that are not allowed to be used in this room.";
 $vocab["select_note"]             = "Use Control-Click to select/deselect an option";
+$vocab["use_period_times"]        = "Set period times";
 $vocab["invalid_period_start_time"]           = 'The start time \'%1$s\' for period \'%2$s\' is invalid.';
 $vocab["invalid_period_end_time"]             = 'The end time \'%1$s\' for period \'%2$s\' is invalid.';
 $vocab["invalid_period_time"]                 = "The period '%s' has an invalid start or end time.";
