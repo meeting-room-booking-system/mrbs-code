@@ -591,6 +591,7 @@ $vocab["invalid_period_end_time"]             = 'The end time \'%1$s\' for perio
 $vocab["invalid_period_time"]                 = "The period '%s' has an invalid start or end time.";
 $vocab["period_start_before_last_end"]        = "The start of period '%s' is before the end of the previous period.";
 $vocab["period_must_have_positive_duration"]  = "Period '%s' must have a positive duration.";
+$vocab["period_start_before_previous_end"]    = "The start time cannot be before the previous period's end time.";
 $vocab["period_end_must_be_after_start"]      = "The period end time must be after the start time.";
 
 // Used in edit_users.php

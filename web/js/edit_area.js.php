@@ -255,26 +255,37 @@ $(document).on('page_ready', function() {
   <?php // Validate the period times. ?>
   $('form#edit_area').on('submit', function(event) {
 
-    <?php // Check that the end times are after the start times ?>
-    $('input[name="period_ends[]"]').each(function(index) {
-      const input = $(this).get(0);
-      input.setCustomValidity('');
-      if (!input.validity.valid) {
-        return;
-      }
-      const start = $(this).parent().find('input[name="period_starts[]"]');
-      if ($(this).val() <= start.val()) {
-        input.setCustomValidity('<?php echo get_js_vocab('period_end_must_be_after_start') ?>');
-        input.reportValidity();
+    let lastEndVal;
+
+    $('div.period_name').each(function(index) {
+      const start = $(this).find('input[name="period_starts[]"]').get(0);
+      const startVal = start.value;
+      const end = $(this).find('input[name="period_ends[]"]').get(0);
+      const endVal = end.value;
+
+      <?php // Check that the start time isn't before the last end time ?>
+      if ((index > 0) && (startVal < lastEndVal))
+      {
+        start.setCustomValidity('<?php echo get_js_vocab('period_start_before_previous_end') ?>');
+        start.reportValidity();
         event.preventDefault(); <?php // Stop form submission ?>
       }
+      lastEndVal = endVal;
+
+      <?php // Check that the end time is after the start time ?>
+      if (endVal <= startVal) {
+        end.setCustomValidity('<?php echo get_js_vocab('period_end_must_be_after_start') ?>');
+        end.reportValidity();
+        event.preventDefault(); <?php // Stop form submission ?>
+      }
+
     });
 
   });
 
 
   <?php // Ensure the validity is cleared when the user changes the value. ?>
-  $('input[name="period_ends[]"]').on('input change', function(event) {
+  $('input[name="period_starts[]"], input[name="period_ends[]"]').on('input change', function(event) {
     event.target.setCustomValidity('');
   });
 
