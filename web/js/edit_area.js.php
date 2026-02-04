@@ -251,6 +251,33 @@ $(document).on('page_ready', function() {
       $('.delete_period').show();
     });
 
+
+  <?php // Validate the period times. ?>
+  $('form#edit_area').on('submit', function(event) {
+
+    <?php // Check that the end times are after the start times ?>
+    $('input[name="period_ends[]"]').each(function(index) {
+      const input = $(this).get(0);
+      input.setCustomValidity('');
+      if (!input.validity.valid) {
+        return;
+      }
+      const start = $(this).parent().find('input[name="period_starts[]"]');
+      if ($(this).val() <= start.val()) {
+        input.setCustomValidity('<?php echo get_js_vocab('period_end_must_be_after_start') ?>');
+        input.reportValidity();
+        event.preventDefault(); <?php // Stop form submission ?>
+      }
+    });
+
+  });
+
+
+  $('input[name="period_ends[]"]').on('input change', function(event) {
+    event.target.setCustomValidity('');
+  });
+
+
   <?php // Disable the default duration if "All day" is checked. ?>
   $('input[name="area_def_duration_all_day"]').on('change', function() {
       $('#area_def_duration_mins').prop('disabled', $(this).prop('checked'));
