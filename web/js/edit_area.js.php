@@ -273,6 +273,7 @@ $(document).on('page_ready', function() {
   });
 
 
+  <?php // Ensure the validity is cleared when the user changes the value. ?>
   $('input[name="period_ends[]"]').on('input change', function(event) {
     event.target.setCustomValidity('');
   });
