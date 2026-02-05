@@ -252,12 +252,24 @@ $(document).on('page_ready', function() {
     });
 
   <?php
-  // Show or hide the period times, depending on whether the use_period_times checkbox is checked,
-  // and also disable the inputs if not so that the values are not sent to the server.
+  // Show or hide the period times, depending on whether the use_period_times checkbox is checked.
+  // If use_period_times is unchecked, then disable the first input field so that the others are
+  // not lost, and disable any invalid fields so that they don't fail validation.
+  // If use_period_times is checked, then enable all the fields.
+  // TODO: Disabling just the first input is a temporary measure to avoid losing all the data until
+  // TODO: we start storing use_period_times in the database.
   ?>
   $('#use_period_times').on('change', function() {
     const checked = $(this).prop('checked');
-    $('.period_times').toggle(checked).find('input').prop('disabled', !checked);
+    $('.period_times').toggle(checked).find('input').each(function(index) {
+      const input = $(this).get(0);
+      if (checked) {
+        input.disabled = false;
+      }
+      else if ((index === 0) || !input.checkValidity()) {
+        input.disabled = true;
+      }
+    });
   }).trigger('change');
 
   <?php // Validate the period times. ?>
@@ -292,10 +304,9 @@ $(document).on('page_ready', function() {
 
 
   <?php // Ensure the validity is cleared when the user changes the value. ?>
-  $('input[name="period_starts[]"], input[name="period_ends[]"]').on('input change', function(event) {
+  $('.period_times input').on('input change', function(event) {
     event.target.setCustomValidity('');
   });
-
 
   <?php // Disable the default duration if "All day" is checked. ?>
   $('input[name="area_def_duration_all_day"]').on('change', function() {

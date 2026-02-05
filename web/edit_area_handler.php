@@ -192,6 +192,12 @@ else
 
   if ($area_enable_periods)
   {
+    // TODO: This is a kludge until we store use_period_times in the database.
+    // We need to make sure that the period start times correspond to the correct periods.
+    if (count($area_periods) == count($period_starts) + 1)
+    {
+      array_unshift($period_starts, null);
+    }
     // Assemble the periods as an object.
     $periods_tmp = new Periods($area);
     for ($i = 0; $i < count($area_periods); $i++)
@@ -202,8 +208,9 @@ else
         $period_ends[$i] ?? null
       ));
     }
-    // Validate the periods.
-    if (true !== ($result = $periods_tmp->validate()))
+
+    // Validate the periods, but only if we are using period times.
+    if (isset($period_starts[0]) && (true !== ($result = $periods_tmp->validate())))
     {
       $errors[] = $result;
     }
