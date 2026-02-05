@@ -3,9 +3,9 @@ declare(strict_types=1);
 namespace MRBS;
 
 use Countable;
-use Iterator;
+use SeekableIterator;
 
-class Periods implements Countable, Iterator
+class Periods implements Countable, SeekableIterator
 {
   private $area_id;
   private $index = 0;
@@ -158,4 +158,39 @@ class Periods implements Countable, Iterator
     return count($this->data);
   }
 
+  public function seek($offset) : void
+  {
+    if ($offset < 0 || $offset >= $this->count())
+    {
+      throw new \OutOfBoundsException("Invalid offset $offset");
+    }
+    $this->index = $offset;
+  }
+
+  public function offsetGet($offset) : Period
+  {
+    if ($offset < 0 || $offset >= $this->count())
+    {
+      throw new \OutOfBoundsException("Invalid offset $offset");
+    }
+    return $this->data[$offset];
+  }
+
+  /**
+   * Get a period by its nominal start time in seconds.
+   */
+  public function offsetGetByNominalSeconds(int $seconds) : Period
+  {
+    return $this->offsetGet(self::nominalSecondsToIndex($seconds));
+  }
+
+  /**
+   * Converts a period nominal start time in seconds to an index into the $period array.
+   */
+  private static function nominalSecondsToIndex(int $seconds) : int
+  {
+    // Periods are counted as minutes from noon, ie 1200 is $period[0],
+    // 1201 $period[1], etc.
+    return intval($seconds/60) - (12*60);
+  }
 }

@@ -3,6 +3,8 @@ declare(strict_types=1);
 namespace MRBS\Calendar;
 
 use MRBS\DateTime;
+use MRBS\Period;
+use MRBS\Periods;
 use function MRBS\escape_html;
 use function MRBS\get_vocab;
 use function MRBS\getWritable;
@@ -11,7 +13,6 @@ use function MRBS\hour_min;
 use function MRBS\is_book_admin;
 use function MRBS\multisite;
 use function MRBS\period_index_nominal;
-use function MRBS\period_name_nominal;
 use function MRBS\session;
 
 abstract class CalendarMultislot extends Calendar
@@ -236,7 +237,7 @@ abstract class CalendarMultislot extends Calendar
   //    $url               the url to form the basis of the link in the time cell
   function tbodyThTimeCellHTML(int $s, string $url) : string
   {
-    global $enable_periods, $resolution;
+    global $enable_periods, $resolution, $area;
 
     $html = '';
 
@@ -245,7 +246,8 @@ abstract class CalendarMultislot extends Calendar
 
     if ($enable_periods)
     {
-      $html .= escape_html(period_name_nominal($s));
+      $periods = Periods::getForArea($area);
+      $html .= escape_html($periods->offsetGetByNominalSeconds($s)->name);
     }
     else
     {
@@ -260,7 +262,7 @@ abstract class CalendarMultislot extends Calendar
 
   protected function theadThTimeCellsHTML(int $start, int $end, int $increment) : string
   {
-    global $enable_periods;
+    global $enable_periods, $area;
 
     $html = '';
 
@@ -274,7 +276,8 @@ abstract class CalendarMultislot extends Calendar
       $html .= "<span>";
       if ( $enable_periods )
       {
-        $html .= escape_html(period_name_nominal($s));
+        $periods = Periods::getForArea($area);
+        $html .= escape_html($periods->offsetGetByNominalSeconds($s)->name);
       }
       else
       {

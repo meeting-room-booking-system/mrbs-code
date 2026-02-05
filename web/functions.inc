@@ -2258,15 +2258,6 @@ function period_index_nominal(int $s) : int
 }
 
 
-// Returns the name of the period represented by nominal seconds $s
-function period_name_nominal(int $s) : string
-{
-  global $periods;
-
-  return $periods[period_index_nominal($s)];
-}
-
-
 // Returns the name of the period represented by the timestamp $timestamp
 function period_name_timestamp(int $timestamp) : string
 {
