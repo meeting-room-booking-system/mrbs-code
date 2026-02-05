@@ -122,11 +122,12 @@ $periods[] = "Period 1";
 $periods[] = "Period 2";
 
 // Periods can also be defined as an associative array with the key being the period name and
-// the value being the time range for that period in 'hh:mm-hh:mm' format.  For example:
+// the value being an array with two elements, the start and end times for that period in
+// 'hh:mm-hh:mm' format.  For example:
 //
 // $periods = [
-//   'Period 1' => '09:15-09:50',
-//   'Period 2' => '09:55-10:35'
+//   'Period 1' => ['09:15', '09:50'],
+//   'Period 2' => ['09:55', '10:35']
 // ];
 //
 // This can be useful when MRBS needs to know when in the day a period stats and ends, for example
