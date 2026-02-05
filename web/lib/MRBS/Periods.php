@@ -23,43 +23,48 @@ class Periods implements Countable, SeekableIterator
    */
   public static function getForArea(int $area_id) : self
   {
-    $result = new self($area_id);
+    static $result = null;  // Cache for performance
 
-    $sql = "SELECT id, periods
-              FROM " . _tbl('area') . "
-             WHERE id=:id";
-    $res = db()->query($sql, [':id' => $area_id]);
-
-    while (false !== ($row = $res->next_row_keyed()))
+    if (!isset($result))
     {
-      $periods = json_decode($row['periods'], true);
+      $result = new self($area_id);
 
-      // The periods are stored in the database as either:
-      //   (a) a simple array of period names (the old way of storing periods which we handle for backwards compatibility); or
-      //   (b) an associative array of period names and start/end times.
-      if (is_assoc($periods))
+      $sql = "SELECT id, periods
+                FROM " . _tbl('area') . "
+               WHERE id=:id";
+      $res = db()->query($sql, [':id' => $area_id]);
+
+      while (false !== ($row = $res->next_row_keyed()))
       {
-        foreach ($periods as $period_name => $times)
+        $periods = json_decode($row['periods'], true);
+
+        // The periods are stored in the database as either:
+        //   (a) a simple array of period names (the old way of storing periods which we handle for backwards compatibility); or
+        //   (b) an associative array of period names and start/end times.
+        if (is_assoc($periods))
         {
-          $result->add(new Period(
-            $period_name,
-            $times[0],
-            $times[1]
-          ));
+          foreach ($periods as $period_name => $times)
+          {
+            $result->add(new Period(
+              $period_name,
+              $times[0],
+              $times[1]
+            ));
+          }
         }
-      }
-      else
-      {
-        foreach ($periods as $period_name)
+        else
         {
-          $result->add(new Period(
-            $period_name
-          ));
+          foreach ($periods as $period_name)
+          {
+            $result->add(new Period(
+              $period_name
+            ));
+          }
         }
       }
     }
 
-    return $result;
+    return clone $result;
   }
 
 
