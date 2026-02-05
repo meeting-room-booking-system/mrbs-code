@@ -237,7 +237,7 @@ abstract class CalendarMultislot extends Calendar
   //    $url               the url to form the basis of the link in the time cell
   function tbodyThTimeCellHTML(int $s, string $url) : string
   {
-    global $enable_periods, $resolution, $area;
+    global $enable_periods, $resolution;
 
     $html = '';
 
@@ -246,7 +246,7 @@ abstract class CalendarMultislot extends Calendar
 
     if ($enable_periods)
     {
-      $periods = Periods::getForArea($area);
+      $periods = Periods::getForArea($this->area_id);
       $html .= escape_html($periods->offsetGetByNominalSeconds($s)->name);
     }
     else
@@ -262,7 +262,7 @@ abstract class CalendarMultislot extends Calendar
 
   protected function theadThTimeCellsHTML(int $start, int $end, int $increment) : string
   {
-    global $enable_periods, $area;
+    global $enable_periods;
 
     $html = '';
 
@@ -276,7 +276,7 @@ abstract class CalendarMultislot extends Calendar
       $html .= "<span>";
       if ( $enable_periods )
       {
-        $periods = Periods::getForArea($area);
+        $periods = Periods::getForArea($this->area_id);
         $html .= escape_html($periods->offsetGetByNominalSeconds($s)->name);
       }
       else
