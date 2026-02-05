@@ -41,11 +41,11 @@ else
 // Remember that some of the table initialisation operations, eg loading of the
 // language file, are asynchronous.
 ?>
-var initCompleteActions = function initCompleteActions(dataTable) {
+var initCompleteActions = function initCompleteActions(id, settings, json) {
   <?php // Make the table visible ?>
   $('.datatable_container').css('visibility', 'visible');
   <?php // Need to adjust column sizing after the table is made visible ?>
-  dataTable.columns.adjust();
+  $(id).DataTable().columns.adjust().draw();
 }
 
 <?php
@@ -358,12 +358,12 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   // Merge the initComplete properties, if any of them are set.  This has to be
   // done separately as they are functions.
   if (defaultOptions.initComplete || specificOptions.initComplete) {
-    mergedOptions.initComplete = function () {
+    mergedOptions.initComplete = function (settings, json) {
       if (defaultOptions.initComplete) {
-        defaultOptions.initComplete.call(this, dataTable);
+        defaultOptions.initComplete.call(this, id, settings, json);
       }
       if (specificOptions.initComplete) {
-        specificOptions.initComplete.call(this);
+        specificOptions.initComplete.call(this, id, settings, json);
       }
     };
   }
@@ -385,7 +385,6 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   {
     console.warn("MRBS: Intl.Collator in this browser does not support the '" + locales[0] + "' locale.");
   }
-
   dataTable = table.DataTable(mergedOptions);
 
   if (fixedColumnsOptions)
