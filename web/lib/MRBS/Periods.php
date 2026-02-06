@@ -3,11 +3,13 @@ declare(strict_types=1);
 namespace MRBS;
 
 use Countable;
+use DateTimeZone;
 use SeekableIterator;
 
 class Periods implements Countable, SeekableIterator
 {
   private $area_id;
+  private $tzid;
   private $index = 0;
   private $data = [];
 
@@ -15,6 +17,12 @@ class Periods implements Countable, SeekableIterator
   public function __construct(int $area_id)
   {
     $this->area_id = $area_id;
+    // Get the timezone id for this area
+    $sql = "SELECT timezone
+              FROM " . _tbl('area') . "
+             WHERE id=:id
+             LIMIT 1";
+    $this->tzid = db()->query_scalar_non_bool($sql, [':id' => $area_id]);
   }
 
 
@@ -199,8 +207,27 @@ class Periods implements Countable, SeekableIterator
     return $this->offsetGet(self::nominalSecondsToIndex($seconds));
   }
 
+
   /**
-   * Converts a period nominal start time in seconds to an index into the $period array.
+   * Get a period by its timestamp.  Note that the iterator key is unchanged.
+   *
+   * @param bool $previous If true, return the previous period, otherwise return this period.
+   */
+  public function offsetGetByTimestamp(int $timestamp, bool $previous=false) : Period
+  {
+    $index = $this->timestampToIndex($timestamp);
+    if ($previous)
+    {
+      $index--;
+    }
+    // Make sure we're within bounds
+    return $this->offsetGet(max(0, min($index, $this->count()-1)));
+  }
+
+
+  /**
+   * Convert a period nominal start time in seconds (ie nominal seconds since
+   * midnight, ignoring DST transitions) to an index into the periods array.
    */
   private static function nominalSecondsToIndex(int $seconds) : int
   {
@@ -208,4 +235,17 @@ class Periods implements Countable, SeekableIterator
     // 1201 $period[1], etc.
     return intval($seconds/60) - (12*60);
   }
+
+
+  /**
+   * Convert a timestamp to an index into the periods array.
+   */
+  private function timestampToIndex(int $timestamp) : int
+  {
+    $noon = new DateTime('now', new DateTimeZone($this->tzid));
+    $noon->setTimestamp($timestamp);
+    $noon->setTime(12, 0);
+    return intval(($timestamp - $noon->getTimestamp())/60);
+  }
+
 }

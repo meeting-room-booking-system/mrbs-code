@@ -2048,21 +2048,8 @@ function period_date_string(int $t, int $area_id, bool $previous_period=false) :
  */
 function period_time_string(int $t, int $area_id, bool $previous_period=false) : string
 {
-  $periods = get_period_names();
-
-  $n_periods = count($periods[$area_id]);
-  $time = getdate($t);
-  $p = $time['minutes'];
-  if ($previous_period)
-  {
-    $p--;
-  }
-
-  // Make sure the period is valid
-  $p = max($p, 0);
-  $p = min($p, $n_periods - 1);
-
-  return $periods[$area_id][$p];
+  $periods = Periods::getForArea($area_id);
+  return $periods->offsetGetByTimestamp($t, $previous_period)->name;
 }
 
 
