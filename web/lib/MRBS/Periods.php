@@ -29,12 +29,13 @@ class Periods implements Countable, SeekableIterator
     {
       $result[$area_id] = new self($area_id);
 
-      $sql = "SELECT id, periods
+      $sql = "SELECT periods
                 FROM " . _tbl('area') . "
-               WHERE id=:id";
+               WHERE id=:id
+               LIMIT 1";
       $res = db()->query($sql, [':id' => $area_id]);
 
-      while (false !== ($row = $res->next_row_keyed()))
+      if (false !== ($row = $res->next_row_keyed()))
       {
         $periods = json_decode($row['periods'], true);
 
