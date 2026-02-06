@@ -189,14 +189,7 @@ function get_slot_selector(array $area, string $id, string $name, int $current_s
 
   for ($s = $first; $s <= $last; $s += $area['resolution'])
   {
-    if ($area['enable_periods'])
-    {
-      $options[$s] = $area['periods']->offsetGetByNominalSeconds($s)->name;
-    }
-    else
-    {
-      $options[$s] = hour_min($s);
-    }
+    $options[$s] = ($area['enable_periods']) ? $area['periods']->offsetGetByNominalSeconds($s)->name : hour_min($s);
   }
 
   // Make sure that the selected option is within the range of available options.
