@@ -214,10 +214,10 @@ else
     {
       $errors[] = $result;
     }
-    // Convert the periods to an array suitable for the database.
+    // Convert the periods to a value suitable for the database.
     else
     {
-      $area_periods = $periods_tmp->toDbArray();
+      $area_periods = $periods_tmp->toDbValue();
     }
   }
   else
@@ -400,7 +400,7 @@ $sql_params[] = $area_reminders_enabled;
 $assign_array[] = "enable_periods=?";
 $sql_params[] = $area_enable_periods;
 $assign_array[] = "periods=?";
-$sql_params[] = json_encode($area_periods);
+$sql_params[] = $area_periods;
 $assign_array[] = "confirmation_enabled=?";
 $sql_params[] = $area_confirmation_enabled;
 $assign_array[] = "confirmed_default=?";

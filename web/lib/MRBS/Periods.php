@@ -35,8 +35,7 @@ class Periods implements Countable, SeekableIterator
 
       if (false !== ($row = $res->next_row_keyed()))
       {
-        $periods = json_decode($row['periods'], true);
-        $result[$area_id] = self::fromDbArray($area_id, $periods);
+        $result[$area_id] = self::fromDbValue($area_id, $row['periods']);
       }
     }
 
@@ -45,26 +44,27 @@ class Periods implements Countable, SeekableIterator
 
 
   /**
-   * Convert an array of periods as stored in the database (after it has been
-   * JSON encoded) to an instance of this class.
+   * Convert a periods value as stored in the database to an instance of this class.
    */
-  public static function fromDbArray(int $area_id, array $db_periods) : self
+  public static function fromDbValue(int $area_id, string $value) : self
   {
     $result = new self($area_id);
 
+    $array = json_decode($value, true);
     // The periods are stored in the database as either:
-    //   (a) a simple array of period names (the old way of storing periods which we handle for backwards compatibility); or
+    //   (a) a simple array of period names (the old way of storing periods
+    //       which we handle for backwards compatibility); or
     //   (b) an associative array of period names and start/end times.
-    if (is_assoc($db_periods))
+    if (is_assoc($array))
     {
-      foreach ($db_periods as $period_name => $times)
+      foreach ($array as $period_name => $times)
       {
         $result->add(new Period($period_name, $times[0], $times[1]));
       }
     }
     else
     {
-      foreach ($db_periods as $period_name)
+      foreach ($array as $period_name)
       {
         $result->add(new Period($period_name));
       }
@@ -75,17 +75,16 @@ class Periods implements Countable, SeekableIterator
 
 
   /**
-   * Convert the object to an array suitable for storing in the database (after
-   * it has been JSON encoded).
+   * Convert the object to a value suitable for storing in the database.
    */
-  public function toDbArray() : array
+  public function toDbValue() : string
   {
     $result = [];
     foreach ($this->data as $period)
     {
       $result[$period->name] = [$period->start, $period->end];
     }
-    return $result;
+    return json_encode($result);
   }
 
 
