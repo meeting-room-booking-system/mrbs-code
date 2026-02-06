@@ -171,11 +171,6 @@ function get_slot_selector(array $area, string $id, string $name, int $current_s
     throw new \Exception("Internal error - resolution is NULL or <= 0");
   }
 
-  if ($area['enable_periods'])
-  {
-    $base = 12*SECONDS_PER_HOUR;  // The start of the first period of the day
-  }
-
   // Build the options
   $options = array();
 
@@ -196,7 +191,7 @@ function get_slot_selector(array $area, string $id, string $name, int $current_s
   {
     if ($area['enable_periods'])
     {
-      $options[$s] = $area['periods'][intval(($s-$base)/60)];
+      $options[$s] = $area['periods']->offsetGetByNominalSeconds($s)->name;
     }
     else
     {
@@ -1630,7 +1625,7 @@ while (false !== ($row = $res->next_row_keyed()))
   }
 
   // Periods are JSON encoded in the database
-  $row['periods'] = json_decode($row['periods'], true);
+  $row['periods'] = Periods::fromDbValue($row['id'], $row['periods']);
 
   // Make sure we've got the correct resolution when using periods (it's
   // probably OK anyway, but just in case)
