@@ -27,8 +27,6 @@ class Periods implements Countable, SeekableIterator
 
     if (!isset($result[$area_id]))
     {
-      $result[$area_id] = new self($area_id);
-
       $sql = "SELECT periods
                 FROM " . _tbl('area') . "
                WHERE id=:id
@@ -38,30 +36,7 @@ class Periods implements Countable, SeekableIterator
       if (false !== ($row = $res->next_row_keyed()))
       {
         $periods = json_decode($row['periods'], true);
-
-        // The periods are stored in the database as either:
-        //   (a) a simple array of period names (the old way of storing periods which we handle for backwards compatibility); or
-        //   (b) an associative array of period names and start/end times.
-        if (is_assoc($periods))
-        {
-          foreach ($periods as $period_name => $times)
-          {
-            $result[$area_id]->add(new Period(
-              $period_name,
-              $times[0],
-              $times[1]
-            ));
-          }
-        }
-        else
-        {
-          foreach ($periods as $period_name)
-          {
-            $result[$area_id]->add(new Period(
-              $period_name
-            ));
-          }
-        }
+        $result[$area_id] = self::fromDbArray($area_id, $periods);
       }
     }
 
@@ -70,7 +45,38 @@ class Periods implements Countable, SeekableIterator
 
 
   /**
-   * Convert the object to an array suitable for storing in the database.
+   * Convert an array of periods as stored in the database (after it has been
+   * JSON encoded) to an instance of this class.
+   */
+  public static function fromDbArray(int $area_id, array $db_periods) : self
+  {
+    $result = new self($area_id);
+
+    // The periods are stored in the database as either:
+    //   (a) a simple array of period names (the old way of storing periods which we handle for backwards compatibility); or
+    //   (b) an associative array of period names and start/end times.
+    if (is_assoc($db_periods))
+    {
+      foreach ($db_periods as $period_name => $times)
+      {
+        $result->add(new Period($period_name, $times[0], $times[1]));
+      }
+    }
+    else
+    {
+      foreach ($db_periods as $period_name)
+      {
+        $result->add(new Period($period_name));
+      }
+    }
+
+    return $result;
+  }
+
+
+  /**
+   * Convert the object to an array suitable for storing in the database (after
+   * it has been JSON encoded).
    */
   public function toDbArray() : array
   {
