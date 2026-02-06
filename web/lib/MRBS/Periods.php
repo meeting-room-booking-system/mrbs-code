@@ -6,6 +6,11 @@ use Countable;
 use DateTimeZone;
 use SeekableIterator;
 
+/**
+ * A class for handling a list of periods for a given area.  It isolates from the rest of MRBS
+ * the knowledge of how periods are represented in start and end times and how they are stored
+ * in the database.
+ */
 class Periods implements Countable, SeekableIterator
 {
   private $area_id;
