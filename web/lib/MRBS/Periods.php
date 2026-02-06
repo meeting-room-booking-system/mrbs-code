@@ -23,11 +23,11 @@ class Periods implements Countable, SeekableIterator
    */
   public static function getForArea(int $area_id) : self
   {
-    static $result = null;  // Cache for performance
+    static $result = [];  // Cache for performance
 
-    if (!isset($result))
+    if (!isset($result[$area_id]))
     {
-      $result = new self($area_id);
+      $result[$area_id] = new self($area_id);
 
       $sql = "SELECT id, periods
                 FROM " . _tbl('area') . "
@@ -45,7 +45,7 @@ class Periods implements Countable, SeekableIterator
         {
           foreach ($periods as $period_name => $times)
           {
-            $result->add(new Period(
+            $result[$area_id]->add(new Period(
               $period_name,
               $times[0],
               $times[1]
@@ -56,7 +56,7 @@ class Periods implements Countable, SeekableIterator
         {
           foreach ($periods as $period_name)
           {
-            $result->add(new Period(
+            $result[$area_id]->add(new Period(
               $period_name
             ));
           }
@@ -64,7 +64,7 @@ class Periods implements Countable, SeekableIterator
       }
     }
 
-    return clone $result;
+    return clone $result[$area_id];
   }
 
 
