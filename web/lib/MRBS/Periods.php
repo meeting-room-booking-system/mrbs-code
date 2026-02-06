@@ -178,6 +178,9 @@ class Periods implements Countable, SeekableIterator
     $this->index = $offset;
   }
 
+  /**
+   * Get a period by its index. Note that the iterator key is unchanged.
+   */
   public function offsetGet($offset) : Period
   {
     if ($offset < 0 || $offset >= $this->count())
@@ -188,7 +191,8 @@ class Periods implements Countable, SeekableIterator
   }
 
   /**
-   * Get a period by its nominal start time in seconds.
+   * Get a period by its nominal start time in seconds. Note that the
+   * iterator key is unchanged.
    */
   public function offsetGetByNominalSeconds(int $seconds) : Period
   {
