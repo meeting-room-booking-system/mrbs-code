@@ -10,6 +10,10 @@ use SeekableIterator;
  * A class for handling a list of periods for a given area.  It isolates from the rest of MRBS
  * the knowledge of how periods are represented in start and end times and how they are stored
  * in the database.
+ *
+ * Periods are represented as minutes from noon, ie 1200 is $period[0], 1201 $period[1], etc.
+ *
+ * They are stored in the database as JSON encoded arrays of period names and start and end times.
  */
 class Periods implements Countable, SeekableIterator
 {
