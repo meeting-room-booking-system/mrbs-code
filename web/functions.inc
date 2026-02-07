@@ -1784,7 +1784,7 @@ function validate_iso_date(string $date) : bool
 }
 
 
-function datetime_format(array $format, ?int $timestamp=null, ?string $locale=null) : string
+function datetime_format(array $format, ?int $timestamp=null, ?string $locale=null, ?string $tzid=null) : string
 {
   global $icu_override, $timezone;
 
@@ -1796,6 +1796,11 @@ function datetime_format(array $format, ?int $timestamp=null, ?string $locale=nu
   if (!isset($locale))
   {
     $locale = Language::getInstance()->getWebLocale();
+  }
+
+  if (!isset($tzid))
+  {
+    $tzid = $timezone;
   }
 
   if (isset($format['skeleton']))
@@ -1813,7 +1818,7 @@ function datetime_format(array $format, ?int $timestamp=null, ?string $locale=nu
     $locale,
     $format['date_type'] ?? IntlDateFormatter::FULL,
     $format['time_type'] ?? IntlDateFormatter::FULL,
-    null, null, $pattern
+    $tzid, null, $pattern
   );
 
   // If we're overriding the ICU value(s) then use those, provided that we're able to make use
@@ -1821,7 +1826,7 @@ function datetime_format(array $format, ?int $timestamp=null, ?string $locale=nu
   // extension, rather than whether the class exists, which it always will) IntlDateFormatter classes.
   if (isset($icu_override[$locale]) && extension_loaded('intl') && class_exists('IntlCalendar'))
   {
-    $cal = \IntlCalendar::createInstance($timezone, $locale);
+    $cal = \IntlCalendar::createInstance($tzid, $locale);
     {
       if (isset($icu_override[$locale]['first_day_of_week']))
       {
@@ -1966,9 +1971,11 @@ function period_date_string(int $t, int $area_id, bool $previous_period=false) :
 {
   global $datetime_formats;
 
+  $tzid = get_area_timezone($area_id);
+
   // The separator is a ',' as a '-' leads to an ambiguous
   // display in report.php when showing end times.
-  return period_time_string($t, $area_id, $previous_period) . ', ' . datetime_format($datetime_formats['date'], $t);
+  return period_time_string($t, $area_id, $previous_period) . ', ' . datetime_format($datetime_formats['date'], $t, null, $tzid);
 }
 
 
