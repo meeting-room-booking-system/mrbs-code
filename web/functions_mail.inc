@@ -66,13 +66,19 @@ function getMailTimeDateString(int $t, bool $inc_time=true) : string
 }
 
 
-function getMailDateString(int $t) : string
+/**
+ * Get the date string for a timestamp, in the mail locale.
+ *
+ * @param bool $is_end_time Whether the timestamp is for an end time or not. This makes a difference for periods as
+ *                          the end time is then the name of the previous period.
+ */
+function getMailDateString(int $t, bool $is_end_time=false) : string
 {
   global $area, $enable_periods;
 
   if ($enable_periods)
   {
-    $entry_date = period_date_string($t, $area, false, Language::getInstance()->getMailLocale());
+    $entry_date = period_date_string($t, $area, $is_end_time, Language::getInstance()->getMailLocale());
   }
   else
   {
@@ -493,17 +499,9 @@ function create_body(array $data, ?array $mail_previous, bool $series, string $a
     // End time
     $this_endtime = $data['end_time'];
     $previous_endtime = ($compare) ? $mail_previous['end_time'] : 0;
-    if ($enable_periods)
-    {
-      // If we are using periods then the end_time is the end of the last
-      // period.   We therefore need to subtract 60 seconds from it so that
-      // we get the name of that period, rather than the name of the next one.
-      $this_endtime = $this_endtime - 60;
-      $previous_endtime = $previous_endtime - 60;
-    }
     $body .= create_body_table_row (get_mail_vocab("end_date"),
-                                    getMailDateString($this_endtime),
-                                    getMailDateString($previous_endtime),
+                                    getMailDateString($this_endtime, true),
+                                    getMailDateString($previous_endtime, true),
                                     $compare, $as_html);
 
     // Type of booking
