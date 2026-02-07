@@ -855,7 +855,6 @@ function notify_by_email(array $data, array $previous, bool $is_series, string $
   // Don't add an iCalendar if this is a reminder or a request for more info because then
   // the recipient probably won't be able to reply to the email: we just want an ordinary
   // email and not a calendar notification.
-  $attachment = [];
   if ($mail_settings['icalendar'] && !in_array($action, ['more_info', 'remind']))
   {
     try
@@ -875,9 +874,11 @@ function notify_by_email(array $data, array $previous, bool $is_series, string $
       // TODO: pass unencoded addresses to createFromData() so that we don't have to decode them,
       // TODO: as mb_decode_mimeheader() isn't guaranteed to exist.
       $calendar->addComponents(Event::createFromData($method, $data, $tzid ?? null, $addresses, $is_series));
-      $attachment['content'] = $calendar->toString();
-      $attachment['name'] = $mail_settings['ics_filename'] . ".ics";
-      $attachment['method'] = $method;
+      $attachment = [
+        'content' => $calendar->toString(),
+        'name' => $mail_settings['ics_filename'] . ".ics",
+        'method' => $method
+      ];
     }
     catch (CalendarException $e)
     {
