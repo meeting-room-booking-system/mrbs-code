@@ -112,7 +112,7 @@ class Event extends Component
     }
 
     // And we can't do it if the period times haven't been defined.
-    if (!is_assoc($room_periods))
+    if (!$room_periods->hasTimes())
     {
       throw new CalendarException("Cannot create events in periods mode because the period times have not been defined");
     }
@@ -121,7 +121,7 @@ class Event extends Component
     // TODO: Does the json_encoding and decoding work?
     // TODO: Comment that the times can't be changed.
     // TODO: Display the times, even though they can't be changed.'
-    exit;
+    throw new CalendarException("Periods mode not yet implemented");
   }
 
 

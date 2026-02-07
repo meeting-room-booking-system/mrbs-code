@@ -2031,13 +2031,12 @@ function hour_min(int $s) : string
  *
  * @param bool $previous_period Whether the date string for the previous period should be used (useful for the end of a period)
  */
-function period_date_string(int $t, int $area_id, bool $previous_period=false) : string
+function period_date_string(int $t, int $area_id, bool $previous_period=false, ?string $locale=null) : string
 {
   global $datetime_formats;
 
-  // The separator is a ',' as a '-' leads to an ambiguous
-  // display in report.php when showing end times.
-  return period_time_string($t, $area_id, $previous_period) . ', ' . datetime_format($datetime_formats['date'], $t);
+  // The separator is a ',' as a '-' leads to an ambiguous display in report.php when showing end times.
+  return period_time_string($t, $area_id, $previous_period) . ', ' . datetime_format($datetime_formats['date'], $t, $locale);
 }
 
 

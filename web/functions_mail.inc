@@ -4,6 +4,7 @@ namespace MRBS;
 
 use InvalidArgumentException;
 use MRBS\ICalendar\Calendar;
+use MRBS\ICalendar\CalendarException;
 use MRBS\ICalendar\Event;
 use MRBS\ICalendar\Timezone;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -52,38 +53,6 @@ function get_mail_field_name(string $table, string $name) : string
 /**
  * Format a timestamp in non-unicode output (for emails).
  *
- * @param   int         $t
- * @param   int         $mod_time
- * @return  array
- */
-function getMailPeriodDateString(int $t, int $mod_time=0) : array
-{
-  global $periods, $datetime_formats;
-
-  $time = getdate($t);
-  $p_num = $time['minutes'] + $mod_time;
-
-  // Make sure we have a valid period [should this be necessary??]
-  if ($p_num < 0)
-  {
-    $p_num = 0;
-  }
-
-  if ($p_num > count($periods) - 1)
-  {
-    $p_num = count($periods) - 1;
-  }
-
-  $mailperiod = $periods[$p_num];
-
-  // The separator is a ',' as a '-' leads to an ambiguous display in report.php when showing end times.
-  return array($p_num, $mailperiod . ', ' . datetime_format($datetime_formats['date'], $t, Language::getInstance()->getMailLocale()));
-}
-
-
-/**
- * Format a timestamp in non-unicode output (for emails).
- *
  * @param   int         $t         timestamp to format
  * @param   boolean     $inc_time  include time in return string
  * @return  string                 formatted string
@@ -97,17 +66,17 @@ function getMailTimeDateString(int $t, bool $inc_time=true) : string
 }
 
 
-function getMailDateString($time)
+function getMailDateString(int $t) : string
 {
-  global $enable_periods;
+  global $area, $enable_periods;
 
   if ($enable_periods)
   {
-    list($entry_period, $entry_date) = getMailPeriodDateString($time);
+    $entry_date = period_date_string($t, $area, false, Language::getInstance()->getMailLocale());
   }
   else
   {
-    $entry_date = getMailTimeDateString($time);
+    $entry_date = getMailTimeDateString($t);
   }
   return $entry_date;
 }
@@ -892,8 +861,8 @@ function notify_by_email(array $data, array $previous, bool $is_series, string $
     try
     {
       // Create the iCalendar.
-      $attachment['method'] = (in_array($action, ['delete', 'reject'])) ? 'CANCEL' : 'REQUEST';
-      $calendar = new Calendar($attachment['method']);
+      $method = (in_array($action, ['delete', 'reject'])) ? 'CANCEL' : 'REQUEST';
+      $calendar = new Calendar($method);
       // Add in the VTIMEZONE component if we can.
       if (false !== ($vtimezone = Timezone::createFromTimezoneName($timezone)))
       {
@@ -905,13 +874,14 @@ function notify_by_email(array $data, array $previous, bool $is_series, string $
       // TODO: the addresses have by this stage been MIME-encoded.  It would probably be better to
       // TODO: pass unencoded addresses to createFromData() so that we don't have to decode them,
       // TODO: as mb_decode_mimeheader() isn't guaranteed to exist.
-      $calendar->addComponents(Event::createFromData($attachment['method'], $data, $tzid ?? null, $addresses, $is_series));
+      $calendar->addComponents(Event::createFromData($method, $data, $tzid ?? null, $addresses, $is_series));
       $attachment['content'] = $calendar->toString();
       $attachment['name'] = $mail_settings['ics_filename'] . ".ics";
+      $attachment['method'] = $method;
     }
-    catch (Exception $e)
+    catch (CalendarException $e)
     {
-      die($e->getMessage());
+
     }
   }
 

@@ -196,6 +196,14 @@ class Periods implements Countable, SeekableIterator
   }
 
   /**
+   * Check whether the object has start and end times defined.
+   */
+  public function hasTimes() : bool
+  {
+    return ($this->count() > 0) && ($this->data[0]->start !== null);
+  }
+
+  /**
    * Get a period by its index. Note that the iterator key is unchanged.
    */
   public function offsetGet($offset) : Period
