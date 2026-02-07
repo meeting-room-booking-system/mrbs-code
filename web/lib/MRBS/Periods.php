@@ -26,12 +26,7 @@ class Periods implements Countable, SeekableIterator
   public function __construct(int $area_id)
   {
     $this->area_id = $area_id;
-    // Get the timezone id for this area
-    $sql = "SELECT timezone
-              FROM " . _tbl('area') . "
-             WHERE id=:id
-             LIMIT 1";
-    $this->tzid = db()->query_scalar_non_bool($sql, [':id' => $area_id]);
+    $this->tzid = get_area_timezone($area_id);
   }
 
 
