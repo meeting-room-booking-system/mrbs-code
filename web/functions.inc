@@ -1549,6 +1549,21 @@ function get_area(int $room) : int
 }
 
 
+/**
+ * Get the timezone for an area
+ *
+ * @return false|string The timezone string, or false if there isn't one.
+ */
+function get_area_timezone(int $area_id)
+{
+  $sql = "SELECT timezone
+            FROM " . _tbl('area') . "
+           WHERE id=:id
+           LIMIT 1";
+  return db()->query_scalar_non_bool($sql, [':id' => $area_id]);
+}
+
+
 // Clean up a row from the area table, making sure there are no nulls, casting
 // boolean fields into bools and doing some sanity checking
 function clean_area_row(array $row) : array
