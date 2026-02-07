@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use DateTimeZone;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\FieldInputDate;
@@ -80,12 +81,13 @@ function output_row($row, $returl)
   // created by
   $values[] = escape_html(get_compound_name($row['create_by']));
   // start time and link to day view
-  $date = getdate($row['start_time']);
+  $date = new DateTime('now', new DateTimeZone($row['timezone']));
+  $date->setTimestamp($row['start_time']);
 
   $vars = array('view'  => $view,
-                'year'  => $date['year'],
-                'month' => $date['mon'],
-                'day'   => $date['mday'],
+                'year'  => $date->getYear(),
+                'month' => $date->getMonth(),
+                'day'   => $date->getDay(),
                 'area'  => $row['area_id'],
                 'room'  => $row['room_id']);
 
