@@ -228,6 +228,9 @@ class DateTime extends \DateTime
   }
 
 
+  /**
+   * Get the day of the month without leading zeros
+   */
   public function getDay() : int
   {
     return intval($this->format('j'));
@@ -246,12 +249,18 @@ class DateTime extends \DateTime
   }
 
 
+  /**
+   * Get the numeric representation of a month, without leading zeros
+   */
   public function getMonth() : int
   {
     return intval($this->format('n'));
   }
 
 
+  /**
+   * Get the full numeric representation of a year, at least 4 digits, with - for years BCE.
+   */
   public function getYear() : int
   {
     return intval($this->format('Y'));
