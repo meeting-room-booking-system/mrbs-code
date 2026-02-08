@@ -1868,6 +1868,15 @@ function validate_iso_date(string $date) : bool
 }
 
 
+/**
+ * Format a timestamp.
+ *
+ * @param array<string, int|string> $format The format to use, specified by keys 'date_type', 'time_type',
+ *                                          'pattern' or 'skeleton'.
+ * @param int|null $timestamp The timestamp to format. If null, use the current time.
+ * @param string|null $locale The locale to use. If null, use the default web locale.
+ * @param string|null $tzid The timezone to use. If null, use the current default timezone.
+ */
 function datetime_format(array $format, ?int $timestamp=null, ?string $locale=null, ?string $tzid=null) : string
 {
   global $icu_override, $timezone;
