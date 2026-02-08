@@ -415,6 +415,8 @@ $prevent_booking_on_holidays = true;
 // Set this to true to prevent bookings being made on weekends (see $weekdays).
 $prevent_booking_on_weekends = false;
 
+// Set this to true to prevent admins from skipping booking policies.
+$prevent_admin_skip_policies = false;
 
 /******************
  * Display settings
