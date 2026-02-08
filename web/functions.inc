@@ -2009,11 +2009,11 @@ function period_time_string(int $t, int $area_id, bool $previous_period=false) :
 }
 
 
-function time_date_string(int $t) : string
+function time_date_string(int $t, ?string $locale=null, ?string $tzid=null) : string
 {
   global $datetime_formats;
 
-  return datetime_format($datetime_formats['date_and_time'], $t);
+  return datetime_format($datetime_formats['date_and_time'], $t, $locale, $tzid);
 }
 
 
@@ -2024,7 +2024,8 @@ function time_date_string(int $t) : string
  */
 function date_string(bool $use_periods, int $t, int $area_id, bool $previous_period=false) : string
 {
-  return ($use_periods) ? period_date_string($t, $area_id, $previous_period) : time_date_string($t);
+  $tzid = get_area_timezone($area_id);
+  return ($use_periods) ? period_date_string($t, $area_id, $previous_period) : time_date_string($t, null, $tzid);
 }
 
 
