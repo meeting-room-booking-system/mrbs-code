@@ -847,9 +847,7 @@ function notify_by_email(array $data, array $previous, bool $is_series, string $
     $html_body = create_body($data, $previous, $is_series, $action, $start_times, true, $note);
   }
 
-  // Create the iCalendar if required
-  // Don't add an iCalendar if we're using periods, because MRBS doesn't know when periods
-  // occur in the day, so can't construct a VEVENT.
+  // Create the iCalendar if required.
   // Don't add an iCalendar if this is a reminder or a request for more info because then
   // the recipient probably won't be able to reply to the email: we just want an ordinary
   // email and not a calendar notification.
@@ -880,7 +878,8 @@ function notify_by_email(array $data, array $previous, bool $is_series, string $
     }
     catch (CalendarException $e)
     {
-
+      // Don't do anything. We're not able to create an iCalendar, probably because we are using
+      // periods and the times for periods haven't been defined.
     }
   }
 
