@@ -1620,6 +1620,9 @@ $auth['users_can_delete_others_registrations'] = false;
 // on behalf of other users
 $auth['admin_can_only_book_for_self'] = false;
 
+// Set this to true to prevent admins from skipping booking policies.
+$auth['admin_must_obey_policies'] = false;
+
 // An array of booking types for admin use only
 $auth['admin_only_types'] = array();  // eg array('E');
 
