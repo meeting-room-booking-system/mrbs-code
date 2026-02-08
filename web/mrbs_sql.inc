@@ -476,7 +476,7 @@ function mrbsCheckPolicy(array $booking, ?int $ignore_entry_id=null, ?int $ignor
   global $prevent_simultaneous_bookings, $prevent_invalid_types, $invalid_types_days;
   global $prevent_booking_on_holidays, $prevent_booking_on_weekends;
   global $periods_booking_opens, $measure_max_to_start_time;
-  global $prevent_admin_skip_policies;
+  global $auth;
 
   $result = array('notices' => array(),
                   'errors'  => array());
@@ -485,7 +485,7 @@ function mrbsCheckPolicy(array $booking, ?int $ignore_entry_id=null, ?int $ignor
 
   // If the user is a booking admin for this room then we still check for policy
   // violations, but they are for information only and are classed as 'notices'
-  $violation_status = (is_book_admin($booking['room_id']) && !$prevent_admin_skip_policies) ? 'notices' : 'errors';
+  $violation_status = (is_book_admin($booking['room_id']) && !$auth['admin_must_obey_policies']) ? 'notices' : 'errors';
 
   $now = time();
   if ($enable_periods)
