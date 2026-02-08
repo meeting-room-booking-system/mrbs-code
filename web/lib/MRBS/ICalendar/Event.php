@@ -3,12 +3,10 @@ declare(strict_types=1);
 namespace MRBS\ICalendar;
 
 use MRBS\Exception;
-use function MRBS\db;
 use function MRBS\get_mail_vocab;
 use function MRBS\get_period_data;
 use function MRBS\get_registrants;
 use function MRBS\get_type_vocab;
-use function MRBS\is_assoc;
 use function MRBS\parse_addresses;
 
 class Event extends Component
