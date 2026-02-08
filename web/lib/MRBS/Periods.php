@@ -238,6 +238,54 @@ class Periods implements Countable, SeekableIterator
 
 
   /**
+   * Convert a period to a real end time.
+   *
+   * @param int $timestamp The timestamp of the period.
+   *
+   * @return false|int  False if the time is invalid, otherwise the real end time as a Unix timestamp.
+   */
+  public function timestampToRealEnd(int $timestamp) : int
+  {
+    return $this->getRealTime($timestamp, $this->offsetGetByTimestamp($timestamp)->end);
+  }
+
+
+  /**
+   * Convert a period to a real start time.
+   *
+   * @param int $timestamp The timestamp of the period.
+   *
+   * @return false|int  False if the time is invalid, otherwise the real start time as a Unix timestamp.
+ */
+  public function timestampToRealStart(int $timestamp) : int
+  {
+    return $this->getRealTime($timestamp, $this->offsetGetByTimestamp($timestamp)->start);
+  }
+
+
+  /**
+   * Convert a period start or end time to a real time.
+   *
+   * @param int $timestamp  The timestamp of the period
+   * @param string $hhmm  The time in the format HH:MM
+   *
+   * @return false|int  False if the time is invalid, otherwise the real time as a Unix timestamp.
+   */
+  private function getRealTime(int $timestamp, string $hhmm)
+  {
+    if (count($exploded = explode(':', $hhmm)) !== 2)
+    {
+      return false;
+    }
+    list($hour, $minute) = $exploded;
+    $date = new DateTime('now', new DateTimeZone($this->tzid));
+    $date->setTimestamp($timestamp);
+    $date->setTime(intval($hour), intval($minute));
+    return $date->getTimestamp();
+  }
+
+
+  /**
    * Convert a period nominal start time in seconds (ie nominal seconds since
    * midnight, ignoring DST transitions) to an index into the periods array.
    */

@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace MRBS\ICalendar;
 
+use DateTimeZone;
+use MRBS\DateTime;
 use MRBS\Exception;
 use function MRBS\get_mail_vocab;
 use function MRBS\get_period_data;
@@ -115,11 +117,17 @@ class Event extends Component
       throw new CalendarException("Cannot create events in periods mode because the period times have not been defined");
     }
 
-    // TODO: What happens when a new period is created from an associative array?  Does the area edit page work?
-    // TODO: Does the json_encoding and decoding work?
-    // TODO: Comment that the times can't be changed.
-    // TODO: Display the times, even though they can't be changed.'
-    throw new CalendarException("Periods mode not yet implemented");
+
+    $start_date = (new DateTime('now', new DateTimeZone($tzid)))->setTimestamp($data['start_time'])->setTime(0, 0);
+    $end_date = (new DateTime('now', new DateTimeZone($tzid)))->setTimestamp($data['end_time'])->setTime(0, 0);
+    $days_diff = $start_date->diff($end_date)->days;
+    var_dump($days_diff);
+    if (false === ($this_start = $room_periods->timestampToRealStart($data['start_time'])))
+    {
+      throw new CalendarException("Cannot convert start time for period '" . $room_periods->name . "' to a real start time");
+    }
+    //var_dump($t, $this_start);
+    exit;
   }
 
 
