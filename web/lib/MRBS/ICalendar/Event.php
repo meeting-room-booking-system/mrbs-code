@@ -145,7 +145,7 @@ class Event extends Component
         {
           throw new CalendarException("Cannot convert end time for period '" . $room_periods->name . "' to a real start time");
         }
-        // If we haven't got an event start time yet, then set it to this period's start time.
+        // If we haven't got an event start time, then set it to this period's start time.
         if (!isset($event_start))
         {
           $event_start = $this_start;
