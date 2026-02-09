@@ -94,6 +94,8 @@ class Event extends Component
    */
   public static function createFromData(string $method, array $data, ?string $tzid=null, ?array $addresses=null, bool $series=false) : array
   {
+    global $ignore_gaps_between_periods;
+
     // Get the period data for the room so that we know how to handle the start and end times
     list('enable_periods' => $room_enable_periods, 'periods' => $room_periods) = get_period_data($data['room_id']);
 
@@ -155,8 +157,9 @@ class Event extends Component
         // Otherwise check if this period is contiguous with the previous one or create a new sub-event if not.
         else
         {
-          // If they are contiguous periods, and we haven't reached the end, then extend the end time
-          if (($this_start == $sub_event_end) && ($timestamp < $data['end_time']))
+          // If they are contiguous periods, or we've been told to ignore gaps, and we haven't reached the end,
+          // then extend the end time.
+          if ((($this_start == $sub_event_end) || $ignore_gaps_between_periods) && ($timestamp < $data['end_time']))
           {
             $sub_event_end = $this_end;
           }
