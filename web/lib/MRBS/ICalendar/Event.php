@@ -103,7 +103,7 @@ class Event extends Component
       return [self::createSingleEventFromData($method, $data, $tzid, $addresses, $series)];
     }
 
-    // Otherwise we need to create a series of events, treating each period as a separate event unless
+    // Otherwise we need to create a series of sub-events, treating each period as a separate sub-event unless
     // they are consecutive, or we have been told to ignore gaps between periods.
 
     // But we can't do this if we don't have a timezone identifier.
@@ -118,7 +118,7 @@ class Event extends Component
       throw new CalendarException("Cannot create events in periods mode because the period times have not been defined");
     }
 
-    $events = [];
+    $sub_events = [];
     $start_date = (new DateTime('now', new DateTimeZone($tzid)))->setTimestamp($data['start_time'])->setTime(0, 0);
     $date = clone $start_date;
     $end_date = (new DateTime('now', new DateTimeZone($tzid)))->setTimestamp($data['end_time'])->setTime(0, 0);
@@ -146,58 +146,59 @@ class Event extends Component
         {
           throw new CalendarException("Cannot convert end time for period '" . $room_periods->name . "' to a real start time");
         }
-        // If we haven't got an event start time, then set it to this period's start time.
-        if (!isset($event_start))
+        // If we haven't got a sub-event start time, then set it to this period's start time.
+        if (!isset($sub_event_start))
         {
-          $event_start = $this_start;
-          $event_end = $this_end;
+          $sub_event_start = $this_start;
+          $sub_event_end = $this_end;
         }
-        // Otherwise check if this period is contiguous with the previous one or create a new event if not.
+        // Otherwise check if this period is contiguous with the previous one or create a new sub-event if not.
         else
         {
           // If they are contiguous periods, and we haven't reached the end, then extend the end time
-          if (($this_start == $event_end) && ($timestamp < $data['end_time']))
+          if (($this_start == $sub_event_end) && ($timestamp < $data['end_time']))
           {
-            $event_end = $this_end;
+            $sub_event_end = $this_end;
           }
-          // Otherwise store a new event
+          // Otherwise store a new sub-event
           {
-            $events[] = [$event_start, $event_end];
+            $sub_events[] = [$sub_event_start, $sub_event_end];
             // Finish if we've reached the end of the booking.
             if ($timestamp >= $data['end_time'])
             {
               break;
             }
-            // Start a new event
-            $event_start = $this_start;
-            $event_end = $this_end;
+            // Start a new sub-event
+            $sub_event_start = $this_start;
+            $sub_event_end = $this_end;
           }
         }
 
-        // We've reached the end of the day, so store a new event the periods so far, if any.
-        if (($i == $n_periods -1) && isset($event_start))
+        // We've reached the end of the day, so store a new sub-event for the periods so far, if any.
+        if (($i == $n_periods -1) && isset($sub_event_start))
         {
-          $events[] = [$event_start, $event_end];
+          $sub_events[] = [$sub_event_start, $sub_event_end];
         }
       }
 
       // Move to the next day
-      unset($event_start, $event_end);
+      unset($sub_event_start, $sub_event_end);
       $date->modify('+1 day');
     }
 
     // Now we've got an array of sub-events, each of which has a start and end time, turn each one into an Event component.
     $result = [];
-    // We need to give each event that we create a different UID so that calendar programs will treat them as separate events.
-    // But only do this if there is more than one event.  Most of the time people will just be booking for one period.
-    $uid_part = (count($events) > 1) ? 0 : null;
-    foreach ($events as $event)
+    // We need to give each sub-event that we create a different UID so that calendar programs will treat them as
+    // separate events. But only do this if there is more than one sub-event.  Most of the time people will just be
+    // booking for one period.
+    $uid_part = (count($sub_events) > 1) ? 0 : null;
+    foreach ($sub_events as $sub_event)
     {
       if (isset($uid_part))
       {
         $uid_part++;
       }
-      list($data['start_time'], $data['end_time']) = $event;
+      list($data['start_time'], $data['end_time']) = $sub_event;
       $result[] = self::createSingleEventFromData($method, $data, $tzid, $addresses, $series, $uid_part);
     }
 
