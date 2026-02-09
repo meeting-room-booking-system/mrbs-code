@@ -129,7 +129,8 @@ class Event extends Component
     for ($d = 0; $d <= $days_diff; $d++)
     {
       // Cycle through the periods in the day
-      for ($i = 0; $i < $room_periods->count(); $i++)
+      $n_periods = $room_periods->count();
+      for ($i = 0; $i < $n_periods; $i++)
       {
         $timestamp = $room_periods->getTimestamp($i, $date);
         // If this is the first day, then skip any periods that are before the start time.
@@ -175,14 +176,16 @@ class Event extends Component
             $event_end = $this_end;
           }
         }
+
+        // We've reached the end of the day, so create a new event the periods so far, if any.
+        if (($i == $n_periods -1) && isset($event_start))
+        {
+          $tmp_data['start_time'] = $event_start;
+          $tmp_data['end_time'] = $event_end;
+          $result[] = self::createSingleEventFromData($method, $tmp_data, $tzid, $addresses, $series);
+        }
       }
-      // We've reached the end of the day, so create a new event the periods so far, if any.
-      if (isset($event_start))
-      {
-        $tmp_data['start_time'] = $event_start;
-        $tmp_data['end_time'] = $event_end;
-        $result[] = self::createSingleEventFromData($method, $tmp_data, $tzid, $addresses, $series);
-      }
+
       // Move to the next day
       unset($event_start, $event_end);
       $date->modify('+1 day');
