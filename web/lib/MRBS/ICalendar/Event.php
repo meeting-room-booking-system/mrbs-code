@@ -124,6 +124,7 @@ class Event extends Component
     $date = clone $start_date;
     $end_date = (new DateTime('now', new DateTimeZone($tzid)))->setTimestamp($data['end_time'])->setTime(0, 0);
     $days_diff = $start_date->diff($end_date)->days;
+
     // Cycle through the days in the interval
     for ($d = 0; $d <= $days_diff; $d++)
     {
@@ -169,7 +170,9 @@ class Event extends Component
             {
               break;
             }
-            unset($event_start, $event_end);
+            // Start a new event
+            $event_start = $this_start;
+            $event_end = $this_end;
           }
         }
       }
