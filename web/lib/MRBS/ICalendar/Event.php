@@ -188,17 +188,14 @@ class Event extends Component
 
     // Now we've got an array of sub-events, each of which has a start and end time, turn each one into an Event component.
     $result = [];
-    // We need to give each sub-event that we create a different UID so that calendar programs will treat them as
-    // separate events. But only do this if there is more than one sub-event.  Most of the time people will just be
-    // booking for one period.
-    $uid_part = (count($sub_events) > 1) ? 0 : null;
-    foreach ($sub_events as $sub_event)
+    foreach ($sub_events as $i => $sub_event)
     {
-      if (isset($uid_part))
-      {
-        $uid_part++;
-      }
       list($data['start_time'], $data['end_time']) = $sub_event;
+      // We need to give each sub-event that we create a different UID so that calendar programs will treat them as
+      // separate events. But only do this if there is more than one sub-event, as this has the advantage of keeping,
+      // if possible, the UID in the iCalendar the same as the UID in the database.  Most of the time people will
+      // probably just be booking for one period.
+      $uid_part = (count($sub_events) > 1) ? $i : null;
       $result[] = self::createSingleEventFromData($method, $data, $tzid, $addresses, $series, $uid_part);
     }
 
