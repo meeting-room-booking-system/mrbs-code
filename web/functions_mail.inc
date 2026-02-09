@@ -864,17 +864,7 @@ function notify_by_email(array $data, array $previous, bool $is_series, string $
         $tzid = $timezone;
         $calendar->addComponent($vtimezone);
       }
-
-      // Add in the VEVENT component.
-      // TODO: the addresses have by this stage been MIME-encoded.  It would probably be better to
-      // TODO: pass unencoded addresses to createFromData() so that we don't have to decode them,
-      // TODO: as mb_decode_mimeheader() isn't guaranteed to exist.
-      $calendar->addComponents(Event::createFromData($method, $data, $tzid ?? null, $addresses, $is_series));
-      $attachment = [
-        'content' => $calendar->toString(),
-        'name' => $mail_settings['ics_filename'] . ".ics",
-        'method' => $method
-      ];
+      $events = Event::createFromData($method, $data, $tzid ?? null, $addresses, $is_series);
     }
     catch (CalendarException $e)
     {
@@ -883,14 +873,46 @@ function notify_by_email(array $data, array $previous, bool $is_series, string $
     }
   }
 
-  MailQueue::add(
-    $addresses,
-    $subject,
-    $text_body,
-    $html_body ?? null,
-    $attachment,
-    Language::MAIL_CHARSET
-  );
+  // If there is no iCalendar, then it's easy: we just add the email to the queue.
+  if (empty($events))
+  {
+    MailQueue::add(
+      $addresses,
+      $subject,
+      $text_body,
+      $html_body ?? null,
+      null,
+      Language::MAIL_CHARSET
+    );
+  }
+  // Otherwise we need to send separate emails for each event.  That's because most email clients
+  // will only automatically add to a calendar the first event in the iCalendar file.
+  else
+  {
+    foreach ($events as $event)
+    {
+      $this_calendar = clone $calendar;
+      // Add in the VEVENT component.
+      // TODO: the addresses have by this stage been MIME-encoded.  It would probably be better to
+      // TODO: pass unencoded addresses to createFromData() so that we don't have to decode them,
+      // TODO: as mb_decode_mimeheader() isn't guaranteed to exist.
+      $this_calendar->addComponent($event);
+      $attachment = [
+        'content' => $this_calendar->toString(),
+        'name' => $mail_settings['ics_filename'] . ".ics",
+        'method' => $method
+      ];
+      MailQueue::add(
+        $addresses,
+        $subject,
+        $text_body,
+        $html_body ?? null,
+        $attachment,
+        Language::MAIL_CHARSET
+      );
+      unset($this_calendar);
+    }
+  }
 }
 
 
