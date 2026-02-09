@@ -132,7 +132,7 @@ class Event extends Component
       {
         $timestamp = $room_periods->getTimestamp($i, $date);
         // If this is the first day, then skip any periods that are before the start time.
-        if (($i === 0) && ($timestamp < $data['start_time']))
+        if (($d === 0) && ($timestamp < $data['start_time']))
         {
           continue;
         }
