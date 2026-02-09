@@ -415,11 +415,13 @@ class Event extends Component
       'confirmation_enabled'
     ];
 
-    // These fields are in the entry table and can be ignored for the moment.  However we need to do something
+    // These are derived fields and can be ignored for the moment.  However we need to do something
     // in the future about 'awaiting_approval' and 'private'.
     // TODO
     $special_fields = [
       'awaiting_approval',
+      'duration',
+      'dur_units',
       'private',
       'repeat_rule',
       'skip_list'
