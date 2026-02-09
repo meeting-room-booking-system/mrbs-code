@@ -118,15 +118,11 @@ class Event extends Component
       throw new CalendarException("Cannot create events in periods mode because the period times have not been defined");
     }
 
-    $result = [];
-    $tmp_data = $data;
+    $events = [];
     $start_date = (new DateTime('now', new DateTimeZone($tzid)))->setTimestamp($data['start_time'])->setTime(0, 0);
     $date = clone $start_date;
     $end_date = (new DateTime('now', new DateTimeZone($tzid)))->setTimestamp($data['end_time'])->setTime(0, 0);
     $days_diff = $start_date->diff($end_date)->days;
-
-    // We need to give each event that we create a different UID so that calendar programs will treat them as separate events.
-    $uid_part = 0;
 
     // Cycle through the days in the interval
     for ($d = 0; $d <= $days_diff; $d++)
@@ -164,12 +160,9 @@ class Event extends Component
           {
             $event_end = $this_end;
           }
-          // Otherwise create a new event
+          // Otherwise store a new event
           {
-            $tmp_data['start_time'] = $event_start;
-            $tmp_data['end_time'] = $event_end;
-            $uid_part++;
-            $result[] = self::createSingleEventFromData($method, $tmp_data, $tzid, $addresses, $series, $uid_part);
+            $events[] = [$event_start, $event_end];
             // Finish if we've reached the end of the booking.
             if ($timestamp >= $data['end_time'])
             {
@@ -181,19 +174,31 @@ class Event extends Component
           }
         }
 
-        // We've reached the end of the day, so create a new event the periods so far, if any.
+        // We've reached the end of the day, so store a new event the periods so far, if any.
         if (($i == $n_periods -1) && isset($event_start))
         {
-          $tmp_data['start_time'] = $event_start;
-          $tmp_data['end_time'] = $event_end;
-          $uid_part++;
-          $result[] = self::createSingleEventFromData($method, $tmp_data, $tzid, $addresses, $series, $uid_part);
+          $events[] = [$event_start, $event_end];
         }
       }
 
       // Move to the next day
       unset($event_start, $event_end);
       $date->modify('+1 day');
+    }
+
+    // Now we've got an array of sub-events, each of which has a start and end time, turn each one into an Event component.
+    $result = [];
+    // We need to give each event that we create a different UID so that calendar programs will treat them as separate events.
+    // But only do this if there is more than one event.  Most of the time people will just be booking for one period.
+    $uid_part = (count($events) > 1) ? 0 : null;
+    foreach ($events as $event)
+    {
+      if (isset($uid_part))
+      {
+        $uid_part++;
+      }
+      list($data['start_time'], $data['end_time']) = $event;
+      $result[] = self::createSingleEventFromData($method, $data, $tzid, $addresses, $series, $uid_part);
     }
 
     return $result;
