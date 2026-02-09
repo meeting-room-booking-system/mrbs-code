@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS\ICalendar;
 
+use DateInterval;
 use DateTimeZone;
 use MRBS\DateTime;
 use MRBS\Exception;
@@ -117,17 +118,74 @@ class Event extends Component
       throw new CalendarException("Cannot create events in periods mode because the period times have not been defined");
     }
 
-
+    $result = [];
+    $tmp_data = $data;
     $start_date = (new DateTime('now', new DateTimeZone($tzid)))->setTimestamp($data['start_time'])->setTime(0, 0);
+    $date = clone $start_date;
     $end_date = (new DateTime('now', new DateTimeZone($tzid)))->setTimestamp($data['end_time'])->setTime(0, 0);
     $days_diff = $start_date->diff($end_date)->days;
-    var_dump($days_diff);
-    if (false === ($this_start = $room_periods->timestampToRealStart($data['start_time'])))
+    // Cycle through the days in the interval
+    for ($d = 0; $d <= $days_diff; $d++)
     {
-      throw new CalendarException("Cannot convert start time for period '" . $room_periods->name . "' to a real start time");
+      // Cycle through the periods in the day
+      for ($i = 0; $i < $room_periods->count(); $i++)
+      {
+        $timestamp = $room_periods->getTimestamp($i, $date);
+        // If this is the first day, then skip any periods that are before the start time.
+        if (($i === 0) && ($timestamp < $data['start_time']))
+        {
+          continue;
+        }
+        // Get the real start and end times for this period
+        if (false === ($this_start = $room_periods->timestampToRealStart($timestamp)))
+        {
+          throw new CalendarException("Cannot convert start time for period '" . $room_periods->name . "' to a real start time");
+        }
+        if (false === ($this_end = $room_periods->timestampToRealEnd($timestamp)))
+        {
+          throw new CalendarException("Cannot convert end time for period '" . $room_periods->name . "' to a real start time");
+        }
+        // If we haven't got an event start time yet, then set it to this period's start time.
+        if (!isset($event_start))
+        {
+          $event_start = $this_start;
+          $event_end = $this_end;
+        }
+        // Otherwise check if this period is contiguous with the previous one or create a new event if not.
+        else
+        {
+          // If they are contiguous periods, and we haven't reached the end, then extend the end time
+          if (($this_start == $event_end) && ($timestamp < $data['end_time']))
+          {
+            $event_end = $this_end;
+          }
+          // Otherwise create a new event
+          {
+            $tmp_data['start_time'] = $event_start;
+            $tmp_data['end_time'] = $event_end;
+            $result[] = self::createSingleEventFromData($method, $tmp_data, $tzid, $addresses, $series);
+            // Finish if we've reached the end of the booking.
+            if ($timestamp >= $data['end_time'])
+            {
+              break;
+            }
+            unset($event_start, $event_end);
+          }
+        }
+      }
+      // We've reached the end of the day, so create a new event the periods so far, if any.
+      if (isset($event_start))
+      {
+        $tmp_data['start_time'] = $event_start;
+        $tmp_data['end_time'] = $event_end;
+        $result[] = self::createSingleEventFromData($method, $tmp_data, $tzid, $addresses, $series);
+      }
+      // Move to the next day
+      unset($event_start, $event_end);
+      $date->modify('+1 day');
     }
-    //var_dump($t, $this_start);
-    exit;
+
+    return $result;
   }
 
 

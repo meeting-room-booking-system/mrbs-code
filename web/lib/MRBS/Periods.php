@@ -237,6 +237,12 @@ class Periods implements Countable, SeekableIterator
   }
 
 
+  public function getTimestamp(int $index, DateTime $date) : int
+  {
+    return $date->setTime(12, 0)->getTimestamp() + ($index * 60);
+  }
+
+
   /**
    * Convert a period to a real end time.
    *
