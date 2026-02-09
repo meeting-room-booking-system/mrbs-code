@@ -125,6 +125,9 @@ class Event extends Component
     $end_date = (new DateTime('now', new DateTimeZone($tzid)))->setTimestamp($data['end_time'])->setTime(0, 0);
     $days_diff = $start_date->diff($end_date)->days;
 
+    // We need to give each event that we create a different UID so that calendar programs will treat them as separate events.
+    $uid_part = 0;
+
     // Cycle through the days in the interval
     for ($d = 0; $d <= $days_diff; $d++)
     {
@@ -165,7 +168,8 @@ class Event extends Component
           {
             $tmp_data['start_time'] = $event_start;
             $tmp_data['end_time'] = $event_end;
-            $result[] = self::createSingleEventFromData($method, $tmp_data, $tzid, $addresses, $series);
+            $uid_part++;
+            $result[] = self::createSingleEventFromData($method, $tmp_data, $tzid, $addresses, $series, $uid_part);
             // Finish if we've reached the end of the booking.
             if ($timestamp >= $data['end_time'])
             {
@@ -182,7 +186,8 @@ class Event extends Component
         {
           $tmp_data['start_time'] = $event_start;
           $tmp_data['end_time'] = $event_end;
-          $result[] = self::createSingleEventFromData($method, $tmp_data, $tzid, $addresses, $series);
+          $uid_part++;
+          $result[] = self::createSingleEventFromData($method, $tmp_data, $tzid, $addresses, $series, $uid_part);
         }
       }
 
@@ -204,16 +209,30 @@ class Event extends Component
    *                         otherwise they will be written in the local timezone format.
    * @param array<string, string>|null $addresses An associative array of attendee addresses indexed by 'to' and 'cc'.
    * @param bool $series Indicates whether the event is part of a recurring series (true) or a standalone event (false).
+   * @param int|null $uid_part If set, append this value to the UID to create a unique UID for the event.
    */
-  private static function createSingleEventFromData(string $method, array $data, ?string $tzid=null, ?array $addresses=null, bool $series=false) : self
+  private static function createSingleEventFromData(string $method, array $data, ?string $tzid=null, ?array $addresses=null, bool $series=false, ?int $uid_part=null) : self
   {
     global $mail_settings, $default_area_room_delimiter, $standard_fields;
     global $partstat_accepted;
 
     $event = new Event();
     // REQUIRED properties, but MUST NOT occur more than once
-    $event->addProperty(new Property('UID', $data['ical_uid']));
+    // UID. Create a unique UID for the event by appending the uid_part to the original UID, if required.
+    $uid = $data['ical_uid'];
+    if (isset($uid_part))
+    {
+      $parts = explode('@', $uid, 2);
+      $uid = $parts[0] . '-' . $uid_part;
+      if (isset($parts[1]))
+      {
+        $uid .= '@' . $parts[1];
+      }
+    }
+    $event->addProperty(new Property('UID', $uid));
+    // DTSTAMP.
     $event->addProperty(Property::createFromTimestamps('DTSTAMP', time()));
+
     // Optional properties
     $last_modified = empty($data['last_updated']) ? time() : $data['last_updated'];
     $event->addProperty(Property::createFromTimestamps('LAST-MODIFIED', $last_modified));
