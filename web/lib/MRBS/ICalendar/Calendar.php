@@ -224,7 +224,15 @@ class Calendar
       // If this is an individual entry, then construct an event
       if (!isset($row['rep_type']) || ($row['rep_type'] == RepeatRule::NONE))
       {
-        $events = array_merge($events, Event::createFromData($method, $row, $tzid));
+        try
+        {
+          $events = array_merge($events, Event::createFromData($method, $row, $tzid));
+        }
+        catch (CalendarException $e)
+        {
+          // Don't do anything. We're not able to create Events, probably because we are using
+          // periods and the times for periods haven't been defined.
+        }
       }
 
       // Otherwise it's a series
