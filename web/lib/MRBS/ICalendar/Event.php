@@ -133,59 +133,53 @@ class Event extends Component
       $n_periods = $room_periods->count();
       for ($i = 0; $i < $n_periods; $i++)
       {
-        $timestamp = $room_periods->getTimestamp($i, $date);
-        // If this is the first day, then skip any periods that are before the start time.
-        if (($d === 0) && ($timestamp < $data['start_time']))
+        $start_timestamp = $room_periods->getStartTimestamp($i, $date);
+        // If this period starts before the start of the booking, then skip it.
+        if ($start_timestamp < $data['start_time'])
         {
           continue;
         }
         // Get the real start and end times for this period
-        if (false === ($this_start = $room_periods->timestampToRealStart($timestamp)))
+        if (false === ($this_start = $room_periods->timestampToRealStart($start_timestamp)))
         {
           throw new CalendarException("Cannot convert start time for period '" . $room_periods->name . "' to a real start time");
         }
-        if (false === ($this_end = $room_periods->timestampToRealEnd($timestamp)))
+        if (false === ($this_end = $room_periods->timestampToRealEnd($start_timestamp)))
         {
           throw new CalendarException("Cannot convert end time for period '" . $room_periods->name . "' to a real start time");
         }
-        // If we haven't got a sub-event start time, then set it to this period's start time.
-        if (!isset($sub_event_start))
+        // If we haven't started a sub-event yet, then start one.
+        if (!isset($sub_event))
         {
-          $sub_event_start = $this_start;
-          $sub_event_end = $this_end;
+          $sub_event = [$this_start, $this_end];
         }
-        // Otherwise check if this period is contiguous with the previous one or create a new sub-event if not.
+        // Otherwise check if we have reached the end of the booking, in which case store the sub-event and finish.
+        elseif ($start_timestamp >= $data['end_time'])
+        {
+          $sub_events[] = $sub_event;
+          break 2; // Exit both the period and day loops.
+        }
+        // Otherwise check if there's a gap between this period and the previous one, and we're not ignoring gaps.
+        // If so, then store the sub-event and start a new one.
+        elseif (($this_start > $sub_event[1]) && !$ignore_gaps_between_periods)
+        {
+          $sub_events[] = $sub_event;
+          $sub_event = [$this_start, $this_end];
+        }
+        // Otherwise extend the end time of the sub-event.
         else
         {
-          // If they are contiguous periods, or we've been told to ignore gaps, and we haven't reached the end,
-          // then extend the end time.
-          if ((($this_start == $sub_event_end) || $ignore_gaps_between_periods) && ($timestamp < $data['end_time']))
-          {
-            $sub_event_end = $this_end;
-          }
-          // Otherwise store a new sub-event
-          {
-            $sub_events[] = [$sub_event_start, $sub_event_end];
-            // Finish if we've reached the end of the booking.
-            if (($timestamp + 60) >= $data['end_time'])
-            {
-              break;
-            }
-            // Start a new sub-event
-            $sub_event_start = $this_start;
-            $sub_event_end = $this_end;
-          }
-        }
-
-        // We've reached the end of the day, so store a new sub-event for the periods so far, if any.
-        if (($i == $n_periods -1) && isset($sub_event_start))
-        {
-          $sub_events[] = [$sub_event_start, $sub_event_end];
+          $sub_event[1] = $this_end;
         }
       }
 
+      // We've reached the end of the day, so store a new sub-event for the periods so far, if any.
+      if (isset($sub_event))
+      {
+        $sub_events[] = $sub_event;
+        unset($sub_event);
+      }
       // Move to the next day
-      unset($sub_event_start, $sub_event_end);
       $date->modify('+1 day');
     }
 

@@ -2307,7 +2307,7 @@ function get_invisible_room_ids() : array
 /**
  * Get the period data for a room.
  *
- * @return array{enable_periods: bool, periods: string[]}
+ * @return array{enable_periods: bool, periods: Periods}
  */
 function get_period_data(int $room_id) : array
 {
