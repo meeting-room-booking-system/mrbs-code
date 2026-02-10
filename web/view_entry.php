@@ -549,7 +549,6 @@ function generate_export_buttons(int $id, ?int $repeat_id, bool $series, string 
 
   // The iCalendar information has the full booking details in it, so we will not allow
   // it to be exported if it is private and the user is not authorised to see it.
-  // iCalendar information doesn't work with periods at the moment (no periods to times mapping)
   echo "<div>\n";
 
   if (!$series)
@@ -813,6 +812,7 @@ $area = $row['area_id'];
 // Get the area settings for the entry's area.   In particular we want
 // to know how to display private/public bookings in this area.
 get_area_settings($row['area_id']);
+$area_periods = Periods::getForArea($area);
 
 // Work out whether the room or area is disabled
 $room_disabled = $row['room_disabled'] || $row['area_disabled'];
@@ -877,9 +877,9 @@ else
 
 if (isset($action) && ($action == "export"))
 {
-  if ($keep_private  || $enable_periods)
+  if ($keep_private  || ($enable_periods && !$area_periods->hasTimes()))
   {
-    // should never normally be able to get here, but if we have then
+    // Should never normally be able to get here, but if we have then
     // go somewhere safe.
     location_header('index.php');
   }
@@ -1076,7 +1076,7 @@ if (!$major_details_only)
   }
 
   // Export and Export Series
-  if (!$keep_private && !$enable_periods)
+  if (!$keep_private && (!$enable_periods || ($enable_periods && $area_periods->hasTimes())))
   {
     generate_export_buttons($id, $repeat_id, $series, $returl);
   }
