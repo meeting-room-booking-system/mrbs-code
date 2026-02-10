@@ -237,6 +237,18 @@ class Periods implements Countable, SeekableIterator
   }
 
 
+  public static function getHourByOffset(int $offset) : int
+  {
+    return 12 + intval($offset/60);
+  }
+
+
+  public static function getMinuteByOffset(int $offset) : int
+  {
+    return $offset % 60;
+  }
+
+
   /**
    * Get the timestamp, as held in the entry table, of the start of the period at the given index on the given date.
    */

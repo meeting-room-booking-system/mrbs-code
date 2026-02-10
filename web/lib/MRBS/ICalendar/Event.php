@@ -6,6 +6,7 @@ use DateInterval;
 use DateTimeZone;
 use MRBS\DateTime;
 use MRBS\Exception;
+use MRBS\Periods;
 use function MRBS\get_mail_vocab;
 use function MRBS\get_period_data;
 use function MRBS\get_registrants;
@@ -120,6 +121,7 @@ class Event extends Component
       throw new CalendarException("Cannot create events in periods mode because the period times have not been defined");
     }
 
+    // We can produce events from periods.
     $sub_events = [];
     $start_date = (new DateTime('now', new DateTimeZone($tzid)))->setTimestamp($data['start_time'])->setTime(0, 0);
     $date = clone $start_date;
@@ -150,7 +152,7 @@ class Event extends Component
         // If we haven't started a sub-event yet, then start one.
         if (!isset($sub_event))
         {
-          $sub_event = [$this_start, $this_end];
+          $sub_event = [$i, $this_start, $this_end];
         }
         // Otherwise check if we have reached the end of the booking, in which case store the sub-event and finish.
         elseif ($start_timestamp >= $data['end_time'])
@@ -163,12 +165,12 @@ class Event extends Component
         elseif (($this_start > $sub_event[1]) && !$ignore_gaps_between_periods)
         {
           $sub_events[] = $sub_event;
-          $sub_event = [$this_start, $this_end];
+          $sub_event = [$i, $this_start, $this_end];
         }
         // Otherwise extend the end time of the sub-event.
         else
         {
-          $sub_event[1] = $this_end;
+          $sub_event[2] = $this_end;
         }
       }
 
@@ -186,7 +188,22 @@ class Event extends Component
     $result = [];
     foreach ($sub_events as $i => $sub_event)
     {
-      list($data['start_time'], $data['end_time']) = $sub_event;
+      list($offset, $data['start_time'], $data['end_time']) = $sub_event;
+      // However, if it's a series, we first have to convert the repeat end date to a real end time, as
+      // well as adjusting the time to match the time of the starting period (because the original repeat
+      // rule would have had the start time of the first period of the booking, but now we potentially
+      // have multiple bookings).
+      if ($series)
+      {
+        $repeat_rule = $data['repeat_rule'];
+        $end_date = $repeat_rule->getEndDate();
+        // Get the starting hour and minute of the first period of this sub-event and make the end date match it.
+        $end_date->setTime(Periods::getHourByOffset($offset), Periods::getMinuteByOffset($offset));
+        // Then convert the end date to a real end time.
+        $end_date->setTimestamp($room_periods->timestampToRealStart($end_date->getTimestamp()));
+        $repeat_rule->setEndDate($end_date);
+        $data['repeat_rule'] = $repeat_rule;
+      }
       // We need to give each sub-event that we create a different UID so that calendar programs will treat them as
       // separate events. But only do this if there is more than one sub-event, as this has the advantage of keeping,
       // if possible, the UID in the iCalendar the same as the UID in the database.  Most of the time people will
