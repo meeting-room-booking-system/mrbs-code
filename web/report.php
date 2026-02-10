@@ -1677,11 +1677,6 @@ if ($phase == 2)
   $sql .= " WHERE E.start_time < ? AND E.end_time > ?";
   $sql_params[] = $report_end;
   $sql_params[] = $report_start;
-  if ($output_format == OUTPUT_ICAL)
-  {
-    // We can't export periods in an iCalendar yet
-    $sql .= " AND A.enable_periods=0";
-  }
 
   // Get the match conditions for the simple cases
   $match_columns = array('A.area_name'    => $areamatch,
