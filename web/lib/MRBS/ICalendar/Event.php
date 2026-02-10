@@ -130,8 +130,7 @@ class Event extends Component
     for ($d = 0; $d <= $days_diff; $d++)
     {
       // Cycle through the periods in the day
-      $n_periods = $room_periods->count();
-      for ($i = 0; $i < $n_periods; $i++)
+      for ($i = 0; $i < $room_periods->count(); $i++)
       {
         $start_timestamp = $room_periods->getStartTimestamp($i, $date);
         // If this period starts before the start of the booking, then skip it.
