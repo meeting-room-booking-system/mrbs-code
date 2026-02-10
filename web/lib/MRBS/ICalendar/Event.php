@@ -167,7 +167,7 @@ class Event extends Component
           {
             $sub_events[] = [$sub_event_start, $sub_event_end];
             // Finish if we've reached the end of the booking.
-            if ($timestamp >= $data['end_time'])
+            if (($timestamp + 60) >= $data['end_time'])
             {
               break;
             }
