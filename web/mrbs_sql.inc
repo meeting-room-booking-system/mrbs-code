@@ -2318,6 +2318,7 @@ function get_period_data(int $room_id) : array
            LIMIT 1";
   $res = db()->query($sql, [':room_id' => $room_id]);
   $row = $res->next_row_keyed();
+  row_cast_columns($row, 'room');
   $row['enable_periods'] = (bool) $row['enable_periods'];
   $row['periods'] = Periods::fromDbValue($row['area_id'], $row['periods']);
 
