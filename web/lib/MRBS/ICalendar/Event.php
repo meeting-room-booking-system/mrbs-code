@@ -162,7 +162,7 @@ class Event extends Component
         }
         // Otherwise check if there's a gap between this period and the previous one, and we're not ignoring gaps.
         // If so, then store the sub-event and start a new one.
-        elseif (($this_start > $sub_event[1]) && !$ignore_gaps_between_periods)
+        elseif (($this_start > $sub_event[2]) && !$ignore_gaps_between_periods)
         {
           $sub_events[] = $sub_event;
           $sub_event = [$i, $this_start, $this_end];
