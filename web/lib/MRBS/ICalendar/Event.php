@@ -97,11 +97,12 @@ class Event extends Component
   {
     global $ignore_gaps_between_periods;
 
-    // Get the period data for the room so that we know how to handle the start and end times
-    list('enable_periods' => $room_enable_periods, 'periods' => $room_periods) = get_period_data($data['room_id']);
+    // Get the period data for the room so that we know how to handle the start and end times. We also need it
+    // so that we can include it in the VEVENT.
+    list('enable_periods' => $data['enable_periods'], 'periods' => $data['periods']) = get_period_data($data['room_id']);
 
     // If it's in "times" mode then it's easy.
-    if (!$room_enable_periods)
+    if (!$data['enable_periods'])
     {
       return [self::createSingleEventFromData($method, $data, $tzid, $addresses, $series)];
     }
@@ -116,7 +117,7 @@ class Event extends Component
     }
 
     // And we can't do it if the period times haven't been defined.
-    if (!$room_periods->hasTimes())
+    if (!$data['periods']->hasTimes())
     {
       throw new CalendarException("Cannot create events in periods mode because the period times have not been defined");
     }
@@ -132,22 +133,22 @@ class Event extends Component
     for ($d = 0; $d <= $days_diff; $d++)
     {
       // Cycle through the periods in the day
-      for ($i = 0; $i < $room_periods->count(); $i++)
+      for ($i = 0; $i < $data['periods']->count(); $i++)
       {
-        $start_timestamp = $room_periods->getStartTimestamp($i, $date);
+        $start_timestamp = $data['periods']->getStartTimestamp($i, $date);
         // If this period starts before the start of the booking, then skip it.
         if ($start_timestamp < $data['start_time'])
         {
           continue;
         }
         // Get the real start and end times for this period
-        if (false === ($this_start = $room_periods->timestampToRealStart($start_timestamp)))
+        if (false === ($this_start = $data['periods']->timestampToRealStart($start_timestamp)))
         {
-          throw new CalendarException("Cannot convert start time for period '" . $room_periods->name . "' to a real start time");
+          throw new CalendarException("Cannot convert start time for period with offset $i to a real start time");
         }
-        if (false === ($this_end = $room_periods->timestampToRealEnd($start_timestamp)))
+        if (false === ($this_end = $data['periods']->timestampToRealEnd($start_timestamp)))
         {
-          throw new CalendarException("Cannot convert end time for period '" . $room_periods->name . "' to a real start time");
+          throw new CalendarException("Cannot convert end time for period with offset $i to a real end time");
         }
         // If we haven't started a sub-event yet, then start one.
         if (!isset($sub_event))
@@ -200,7 +201,7 @@ class Event extends Component
         // Get the starting hour and minute of the first period of this sub-event and make the end date match it.
         $end_date->setTime(Periods::getHourByOffset($offset), Periods::getMinuteByOffset($offset));
         // Then convert the end date to a real end time.
-        $end_date->setTimestamp($room_periods->timestampToRealStart($end_date->getTimestamp()));
+        $end_date->setTimestamp($data['periods']->timestampToRealStart($end_date->getTimestamp()));
         $repeat_rule->setEndDate($end_date);
         $data['repeat_rule'] = $repeat_rule;
       }
@@ -408,6 +409,12 @@ class Event extends Component
     // Type
     $event->addProperty(new Property('X-MRBS-TYPE', get_type_vocab($data['type'])));
 
+    // Periods
+    if ($data['enable_periods'])
+    {
+      $event->addProperty(new Property('X-MRBS-PERIODS', $data['periods']->toDbValue()));
+    }
+
     // Registration properties
     if (isset($data['allow_registration']))
     {
@@ -447,7 +454,9 @@ class Event extends Component
       'tentative',
       'area_name',
       'room_name',
-      'registrants'
+      'registrants',
+      'enable_periods',
+      'periods'
     ];
 
     // These fields are in the area table and can be ignored.
