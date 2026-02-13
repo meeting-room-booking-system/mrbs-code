@@ -35,9 +35,11 @@ child server to the database.
 Also many MRBS authentication schemes use basic HTTP authentication. These
 don't work if you run PHP as a CGI.
 
-If you are using PHP as an Apache module, you probably want to ensure that
-the Apache MaxRequestsPerChild is not set to 0, in case of undetected memory
-leaks in PHP or MRBS.
+If you are using PHP as an Apache module, you probably want to ensure that the
+Apache MaxConnectionsPerChild (aka. MaxRequestsPerChild in Apache pre-v2.3.9)
+is not set to 0, in case of undetected memory leaks in PHP or MRBS. In Ubuntu
+25.10 this can be found in the mpm_prefork.conf file, located in
+/etc/apache2/mods-available/.
 
 OVERVIEW
 ---------------------------------------------------------------------------
