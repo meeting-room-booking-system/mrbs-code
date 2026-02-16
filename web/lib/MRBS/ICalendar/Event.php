@@ -2,8 +2,13 @@
 declare(strict_types=1);
 namespace MRBS\ICalendar;
 
+use DateInterval;
+use DateTimeZone;
+use MRBS\DateTime;
 use MRBS\Exception;
+use MRBS\Periods;
 use function MRBS\get_mail_vocab;
+use function MRBS\get_period_data;
 use function MRBS\get_registrants;
 use function MRBS\get_type_vocab;
 use function MRBS\parse_addresses;
@@ -76,7 +81,144 @@ class Event extends Component
 
 
   /**
-   * Create an instance of an Event component given the booking data.
+   * Create an array of Event components given the booking data.
+   *
+   * @param string $method Specifies the calendar method, such as 'CANCEL', which determines the event status.
+   * @param array $data The event data, which must include keys for 'room_id', 'room_name' and 'area_name'.
+   * @param string|null $tzid The timezone identifier.  If null, DATE-TIME values will be written in UTC format,
+   *                         otherwise they will be written in the local timezone format.
+   * @param array<string, string>|null $addresses An associative array of attendee addresses indexed by 'to' and 'cc'.
+   * @param bool $series Indicates whether the event is part of a recurring series (true) or a standalone event (false).
+   *
+   * @return Event[]
+   * @throws CalendarException
+   */
+  public static function createFromData(string $method, array $data, ?string $tzid=null, ?array $addresses=null, bool $series=false) : array
+  {
+    global $ignore_gaps_between_periods;
+
+    // Get the period data for the room so that we know how to handle the start and end times. We also need it
+    // so that we can include it in the VEVENT.
+    list('enable_periods' => $data['enable_periods'], 'periods' => $data['periods']) = get_period_data($data['room_id']);
+
+    // If it's in "times" mode then it's easy.
+    if (!$data['enable_periods'])
+    {
+      return [self::createSingleEventFromData($method, $data, $tzid, $addresses, $series)];
+    }
+
+    // Otherwise we need to create a series of sub-events, treating each period as a separate sub-event unless
+    // they are consecutive, or we have been told to ignore gaps between periods.
+
+    // But we can't do this if we don't have a timezone identifier.
+    if (!isset($tzid))
+    {
+      throw new CalendarException("Cannot create events in periods mode without a timezone identifier");
+    }
+
+    // And we can't do it if the period times haven't been defined.
+    if (!$data['periods']->hasTimes())
+    {
+      throw new CalendarException("Cannot create events in periods mode because the period times have not been defined");
+    }
+
+    // We can produce events from periods.
+    $sub_events = [];
+    $start_date = (new DateTime('now', new DateTimeZone($tzid)))->setTimestamp($data['start_time'])->setTime(0, 0);
+    $date = clone $start_date;
+    $end_date = (new DateTime('now', new DateTimeZone($tzid)))->setTimestamp($data['end_time'])->setTime(0, 0);
+    $days_diff = $start_date->diff($end_date)->days;
+
+    // Cycle through the days in the interval
+    for ($d = 0; $d <= $days_diff; $d++)
+    {
+      // Cycle through the periods in the day
+      for ($i = 0; $i < $data['periods']->count(); $i++)
+      {
+        $start_timestamp = $data['periods']->getStartTimestamp($i, $date);
+        // If this period starts before the start of the booking, then skip it.
+        if ($start_timestamp < $data['start_time'])
+        {
+          continue;
+        }
+        // Get the real start and end times for this period
+        if (false === ($this_start = $data['periods']->timestampToRealStart($start_timestamp)))
+        {
+          throw new CalendarException("Cannot convert start time for period with offset $i to a real start time");
+        }
+        if (false === ($this_end = $data['periods']->timestampToRealEnd($start_timestamp)))
+        {
+          throw new CalendarException("Cannot convert end time for period with offset $i to a real end time");
+        }
+        // If we haven't started a sub-event yet, then start one.
+        if (!isset($sub_event))
+        {
+          $sub_event = [$i, $this_start, $this_end];
+        }
+        // Otherwise check if we have reached the end of the booking, in which case store the sub-event and finish.
+        elseif ($start_timestamp >= $data['end_time'])
+        {
+          $sub_events[] = $sub_event;
+          break 2; // Exit both the period and day loops.
+        }
+        // Otherwise check if there's a gap between this period and the previous one, and we're not ignoring gaps.
+        // If so, then store the sub-event and start a new one.
+        elseif (($this_start > $sub_event[2]) && !$ignore_gaps_between_periods)
+        {
+          $sub_events[] = $sub_event;
+          $sub_event = [$i, $this_start, $this_end];
+        }
+        // Otherwise extend the end time of the sub-event.
+        else
+        {
+          $sub_event[2] = $this_end;
+        }
+      }
+
+      // We've reached the end of the day, so store a new sub-event for the periods so far, if any.
+      if (isset($sub_event))
+      {
+        $sub_events[] = $sub_event;
+        unset($sub_event);
+      }
+      // Move to the next day
+      $date->modify('+1 day');
+    }
+
+    // Now we've got an array of sub-events, each of which has a start and end time, turn each one into an Event component.
+    $result = [];
+    foreach ($sub_events as $i => $sub_event)
+    {
+      list($offset, $data['start_time'], $data['end_time']) = $sub_event;
+      // However, if it's a series, we first have to convert the repeat end date to a real end time, as
+      // well as adjusting the time to match the time of the starting period (because the original repeat
+      // rule would have had the start time of the first period of the booking, but now we potentially
+      // have multiple bookings).
+      if ($series)
+      {
+        $repeat_rule = $data['repeat_rule'];
+        $end_date = $repeat_rule->getEndDate();
+        // Get the starting hour and minute of the first period of this sub-event and make the end date match it.
+        $end_date->setTime(Periods::getHourByOffset($offset), Periods::getMinuteByOffset($offset));
+        // Then convert the end date to a real end time.
+        $end_date->setTimestamp($data['periods']->timestampToRealStart($end_date->getTimestamp()));
+        $repeat_rule->setEndDate($end_date);
+        $data['repeat_rule'] = $repeat_rule;
+      }
+      // We need to give each sub-event that we create a different UID so that calendar programs will treat them as
+      // separate events. But only do this if there is more than one sub-event, as this has the advantage of keeping,
+      // if possible, the UID in the iCalendar the same as the UID in the database.  Most of the time people will
+      // probably just be booking for one period.
+      $uid_part = (count($sub_events) > 1) ? $i : null;
+      $result[] = self::createSingleEventFromData($method, $data, $tzid, $addresses, $series, $uid_part);
+    }
+
+    return $result;
+  }
+
+
+  /**
+   * Create a single instance of an Event component given the booking data.
    *
    * @param string $method Specifies the calendar method, such as 'CANCEL', which determines the event status.
    * @param array $data The event data.
@@ -84,16 +226,30 @@ class Event extends Component
    *                         otherwise they will be written in the local timezone format.
    * @param array<string, string>|null $addresses An associative array of attendee addresses indexed by 'to' and 'cc'.
    * @param bool $series Indicates whether the event is part of a recurring series (true) or a standalone event (false).
+   * @param int|null $uid_part If set, append this value to the UID to create a unique UID for the event.
    */
-  public static function createFromData(string $method, array $data, ?string $tzid=null, ?array $addresses=null, bool $series=false) : self
+  private static function createSingleEventFromData(string $method, array $data, ?string $tzid=null, ?array $addresses=null, bool $series=false, ?int $uid_part=null) : self
   {
     global $mail_settings, $default_area_room_delimiter, $standard_fields;
     global $partstat_accepted;
 
     $event = new Event();
     // REQUIRED properties, but MUST NOT occur more than once
-    $event->addProperty(new Property('UID', $data['ical_uid']));
+    // UID. Create a unique UID for the event by appending the uid_part to the original UID, if required.
+    $uid = $data['ical_uid'];
+    if (isset($uid_part))
+    {
+      $parts = explode('@', $uid, 2);
+      $uid = $parts[0] . '-' . $uid_part;
+      if (isset($parts[1]))
+      {
+        $uid .= '@' . $parts[1];
+      }
+    }
+    $event->addProperty(new Property('UID', $uid));
+    // DTSTAMP.
     $event->addProperty(Property::createFromTimestamps('DTSTAMP', time()));
+
     // Optional properties
     $last_modified = empty($data['last_updated']) ? time() : $data['last_updated'];
     $event->addProperty(Property::createFromTimestamps('LAST-MODIFIED', $last_modified));
@@ -253,6 +409,12 @@ class Event extends Component
     // Type
     $event->addProperty(new Property('X-MRBS-TYPE', get_type_vocab($data['type'])));
 
+    // Periods
+    if ($data['enable_periods'])
+    {
+      $event->addProperty(new Property('X-MRBS-PERIODS', $data['periods']->toDbValue()));
+    }
+
     // Registration properties
     if (isset($data['allow_registration']))
     {
@@ -292,7 +454,9 @@ class Event extends Component
       'tentative',
       'area_name',
       'room_name',
-      'registrants'
+      'registrants',
+      'enable_periods',
+      'periods'
     ];
 
     // These fields are in the area table and can be ignored.

@@ -171,11 +171,6 @@ function get_slot_selector(Area $area, string $id, string $name, int $current_s,
     throw new \Exception("Internal error - resolution is NULL or <= 0");
   }
 
-  if ($area->enable_periods)
-  {
-    $base = 12 * SECONDS_PER_HOUR;  // The start of the first period of the day
-  }
-
   // Build the options
   $options = array();
 
@@ -207,14 +202,7 @@ function get_slot_selector(Area $area, string $id, string $name, int $current_s,
 
   for ($s = $first; $s <= $last; $s += $area->resolution)
   {
-    if ($area->enable_periods)
-    {
-      $options[$s] = $area->periods[intval(($s-$base)/60)];
-    }
-    else
-    {
-      $options[$s] = hour_min($s);
-    }
+    $options[$s] = ($area->enable_periods) ? $area->periods->offsetGetByNominalSeconds($s)->name : hour_min($s);
   }
 
   // Make sure that the selected option is within the range of available options.

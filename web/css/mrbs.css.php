@@ -1615,6 +1615,12 @@ div#div_custom_html {
   opacity: 0.7;
 }
 
+.period_separator::after {
+  content: "-";
+  margin-left: -0.5em;
+  margin-right: 0.5em;
+}
+
 .delete_period::after {
   content: '\002718';  <?php // cross ?>
   color: red;

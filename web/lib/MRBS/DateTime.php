@@ -222,9 +222,21 @@ class DateTime extends \DateTime
   }
 
 
+  /**
+   * Get the hour in 24-hour format without leading zeros
+   */
   public function getHour() : int
   {
     return intval($this->format('G'));
+  }
+
+
+  /**
+   * Get the minute without leading zeros
+   */
+  public function getMinute() : int
+  {
+    return intval($this->format('i'));
   }
 
 

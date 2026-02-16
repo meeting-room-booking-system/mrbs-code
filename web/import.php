@@ -482,8 +482,18 @@ function process_event(Event $event) : bool
           $key = strtolower($key);
           // Convert hyphens back to underscores
           $key = str_replace('-', '_', $key);
+          // Periods
+          if ($key == 'periods')
+          {
+            // The VEVENT was created by exporting from an MRBS area that uses periods and the periods
+            // were converted into real times.  We can't import this back into MRBS, so we'll ignore it.
+            // TODO: Do something better.  One option would be to use the Periods data that is in this
+            // TODO: property to convert the times back into periods.  Another option would be to allow
+            // TODO: it to be imported into a Times mode area.
+            $problems[] = get_vocab('event_created_from_periods');
+          }
           // Type
-          if ($key == 'type')
+          elseif ($key == 'type')
           {
             if (!empty($booking_types))
             {

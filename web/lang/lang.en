@@ -472,7 +472,7 @@ $vocab["summary"]               = "Summary";
 $vocab["format"]                = "Format";
 $vocab["html"]                  = "HTML";
 $vocab["csv"]                   = "CSV";
-$vocab["ical"]                  = "iCalendar (.ics file) - excluding periods";
+$vocab["ical"]                  = "iCalendar (.ics file)";
 $vocab["combination_not_supported"] = "This output is not supported in this format";
 $vocab["summarize_by"]          = "Summarize by";
 $vocab["sum_by_descrip"]        = "Brief description";
@@ -625,6 +625,14 @@ $vocab["book_ahead_note_periods"] = "When using periods, book ahead times are ro
 $vocab["invalid_types"]           = "Invalid types";
 $vocab["invalid_types_note"]      = "These are types that are not allowed to be used in this room.";
 $vocab["select_note"]             = "Use Control-Click to select/deselect an option";
+$vocab["use_period_times"]        = "Set period times";
+$vocab["invalid_period_start_time"]           = 'The start time \'%1$s\' for period \'%2$s\' is invalid.';
+$vocab["invalid_period_end_time"]             = 'The end time \'%1$s\' for period \'%2$s\' is invalid.';
+$vocab["invalid_period_time"]                 = "The period '%s' has an invalid start or end time.";
+$vocab["period_start_before_last_end"]        = "The start of period '%s' is before the end of the previous period.";
+$vocab["period_must_have_positive_duration"]  = "Period '%s' must have a positive duration.";
+$vocab["period_start_before_previous_end"]    = "The start time cannot be before the previous period's end time.";
+$vocab["period_end_must_be_after_start"]      = "The period end time must be after the start time.";
 
 // Used in edit_user.php
 $vocab["name_empty"]              = "You must enter a name.";
@@ -722,6 +730,7 @@ $vocab["unsupported_FREQ"]            = "MRBS does not support FREQ=";
 $vocab["unsupported_COUNT"]           = "COUNT not yet supported by MRBS";
 $vocab["no_indefinite_repeats"]       = "Indefinite repeats not yet supported by MRBS";
 $vocab["bad_timezone"]                = "Unknown or bad timezone '%s'";
+$vocab["event_created_from_periods"]  = "The event was exported from an area that uses periods.";
 $vocab["events_imported"]             = "events imported";
 $vocab["events_not_imported"]         = "events not imported";
 

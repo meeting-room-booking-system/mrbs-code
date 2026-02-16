@@ -251,6 +251,63 @@ $(document).on('page_ready', function() {
       $('.delete_period').show();
     });
 
+  <?php
+  // Show or hide the period times, depending on whether the use_period_times checkbox is checked.
+  // If use_period_times is unchecked, then disable the first input field so that the others are
+  // not lost, and disable any invalid fields so that they don't fail validation.
+  // If use_period_times is checked, then enable all the fields.
+  // TODO: Disabling just the first input is a temporary measure to avoid losing all the data until
+  // TODO: we start storing use_period_times in the database.
+  ?>
+  $('#use_period_times').on('change', function() {
+    const checked = $(this).prop('checked');
+    $('.period_times').toggle(checked).find('input').each(function(index) {
+      const input = $(this).get(0);
+      if (checked) {
+        input.disabled = false;
+      }
+      else if ((index === 0) || !input.checkValidity()) {
+        input.disabled = true;
+      }
+    });
+  }).trigger('change');
+
+  <?php // Validate the period times. ?>
+  $('form#edit_area').on('submit', function(event) {
+
+    let lastEndVal;
+
+    $('div.period_name').each(function(index) {
+      <?php // Check that the start time isn't before the last end time ?>
+      const start = $(this).find('input[name="period_starts[]"]').get(0);
+      const startVal = start.value;
+      if ((index > 0) && (startVal < lastEndVal))
+      {
+        start.setCustomValidity('<?php echo get_js_vocab('period_start_before_previous_end') ?>');
+        start.reportValidity();
+        event.preventDefault(); <?php // Stop form submission ?>
+      }
+
+      <?php // Check that the end time is after the start time ?>
+      const end = $(this).find('input[name="period_ends[]"]').get(0);
+      const endVal = end.value;
+      if (endVal <= startVal) {
+        end.setCustomValidity('<?php echo get_js_vocab('period_end_must_be_after_start') ?>');
+        end.reportValidity();
+        event.preventDefault(); <?php // Stop form submission ?>
+      }
+
+      lastEndVal = endVal;
+    });
+
+  });
+
+
+  <?php // Ensure the validity is cleared when the user changes the value. ?>
+  $('.period_times input').on('input change', function(event) {
+    event.target.setCustomValidity('');
+  });
+
   <?php // Disable the default duration if "All day" is checked. ?>
   $('input[name="area_def_duration_all_day"]').on('change', function() {
       $('#area_def_duration_mins').prop('disabled', $(this).prop('checked'));

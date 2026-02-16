@@ -4,6 +4,7 @@ namespace MRBS;
 
 use InvalidArgumentException;
 use MRBS\ICalendar\Calendar;
+use MRBS\ICalendar\CalendarException;
 use MRBS\ICalendar\Event;
 use MRBS\ICalendar\Timezone;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -52,38 +53,6 @@ function get_mail_field_name(string $table, string $name) : string
 /**
  * Format a timestamp in non-unicode output (for emails).
  *
- * @param   int         $t
- * @param   int         $mod_time
- * @return  array
- */
-function getMailPeriodDateString(int $t, int $mod_time=0) : array
-{
-  global $periods, $datetime_formats;
-
-  $time = getdate($t);
-  $p_num = $time['minutes'] + $mod_time;
-
-  // Make sure we have a valid period [should this be necessary??]
-  if ($p_num < 0)
-  {
-    $p_num = 0;
-  }
-
-  if ($p_num > count($periods) - 1)
-  {
-    $p_num = count($periods) - 1;
-  }
-
-  $mailperiod = $periods[$p_num];
-
-  // The separator is a ',' as a '-' leads to an ambiguous display in report.php when showing end times.
-  return array($p_num, $mailperiod . ', ' . datetime_format($datetime_formats['date'], $t, Language::getInstance()->getMailLocale()));
-}
-
-
-/**
- * Format a timestamp in non-unicode output (for emails).
- *
  * @param   int         $t         timestamp to format
  * @param   boolean     $inc_time  include time in return string
  * @return  string                 formatted string
@@ -97,17 +66,23 @@ function getMailTimeDateString(int $t, bool $inc_time=true) : string
 }
 
 
-function getMailDateString($time)
+/**
+ * Get the date string for a timestamp, in the mail locale.
+ *
+ * @param bool $is_end_time Whether the timestamp is for an end time or not. This makes a difference for periods as
+ *                          the end time is then the name of the previous period.
+ */
+function getMailDateString(int $t, bool $is_end_time=false) : string
 {
-  global $enable_periods;
+  global $area, $enable_periods;
 
   if ($enable_periods)
   {
-    list($entry_period, $entry_date) = getMailPeriodDateString($time);
+    $entry_date = period_date_string($t, $area, $is_end_time, Language::getInstance()->getMailLocale());
   }
   else
   {
-    $entry_date = getMailTimeDateString($time);
+    $entry_date = getMailTimeDateString($t);
   }
   return $entry_date;
 }
@@ -524,17 +499,9 @@ function create_body(array $data, ?array $mail_previous, bool $series, string $a
     // End time
     $this_endtime = $data['end_time'];
     $previous_endtime = ($compare) ? $mail_previous['end_time'] : 0;
-    if ($enable_periods)
-    {
-      // If we are using periods then the end_time is the end of the last
-      // period.   We therefore need to subtract 60 seconds from it so that
-      // we get the name of that period, rather than the name of the next one.
-      $this_endtime = $this_endtime - 60;
-      $previous_endtime = $previous_endtime - 60;
-    }
     $body .= create_body_table_row (get_mail_vocab("end_date"),
-                                    getMailDateString($this_endtime),
-                                    getMailDateString($previous_endtime),
+                                    getMailDateString($this_endtime, true),
+                                    getMailDateString($previous_endtime, true),
                                     $compare, $as_html);
 
     // Type of booking
@@ -880,44 +847,72 @@ function notify_by_email(array $data, array $previous, bool $is_series, string $
     $html_body = create_body($data, $previous, $is_series, $action, $start_times, true, $note);
   }
 
-  // Create the iCalendar if required
-  // Don't add an iCalendar if we're using periods, because MRBS doesn't know when periods
-  // occur in the day, so can't construct a VEVENT.
+  // Create the iCalendar if required.
   // Don't add an iCalendar if this is a reminder or a request for more info because then
   // the recipient probably won't be able to reply to the email: we just want an ordinary
   // email and not a calendar notification.
-  $attachment = [];
-  if ($mail_settings['icalendar'] &&
-      !$enable_periods &&
-      !in_array($action, array('more_info', 'remind')))
+  if ($mail_settings['icalendar'] && !in_array($action, ['more_info', 'remind']))
   {
-    // Create the iCalendar.
-    $attachment['method'] = (in_array($action, ['delete', 'reject'])) ? 'CANCEL' : 'REQUEST';
-    $calendar = new Calendar($attachment['method']);
-    // Add in the VTIMEZONE component if we can.
-    if (false !== ($vtimezone = Timezone::createFromTimezoneName($timezone)))
+    try
     {
-      $tzid = $timezone;
-      $calendar->addComponent($vtimezone);
+      // Create the iCalendar.
+      $method = (in_array($action, ['delete', 'reject'])) ? 'CANCEL' : 'REQUEST';
+      $calendar = new Calendar($method);
+      // Add in the VTIMEZONE component if we can.
+      if (false !== ($vtimezone = Timezone::createFromTimezoneName($timezone)))
+      {
+        $tzid = $timezone;
+        $calendar->addComponent($vtimezone);
+      }
+      $events = Event::createFromData($method, $data, $tzid ?? null, $addresses, $is_series);
     }
-
-    // Add in the VEVENT component.
-    // TODO: the addresses have by this stage been MIME-encoded.  It would probably be better to
-    // TODO: pass unencoded addresses to createFromData() so that we don't have to decode them,
-    // TODO: as mb_decode_mimeheader() isn't guaranteed to exist.
-    $calendar->addComponent(Event::createFromData($attachment['method'], $data, $tzid ?? null, $addresses, $is_series));
-    $attachment['content'] = $calendar->toString();
-    $attachment['name'] = $mail_settings['ics_filename'] . ".ics";
+    catch (CalendarException $e)
+    {
+      // Don't do anything. We're not able to create an iCalendar, probably because we are using
+      // periods and the times for periods haven't been defined.
+    }
   }
 
-  MailQueue::add(
-    $addresses,
-    $subject,
-    $text_body,
-    $html_body ?? null,
-    $attachment,
-    Language::MAIL_CHARSET
-  );
+  // If there is no iCalendar, then it's easy: we just add the email to the queue.
+  if (empty($events))
+  {
+    MailQueue::add(
+      $addresses,
+      $subject,
+      $text_body,
+      $html_body ?? null,
+      null,
+      Language::MAIL_CHARSET
+    );
+  }
+  // Otherwise we need to send separate emails for each event.  That's because most email clients
+  // will only automatically add to a calendar the first event in the iCalendar file.
+  else
+  {
+    foreach ($events as $event)
+    {
+      $this_calendar = clone $calendar;
+      // Add in the VEVENT component.
+      // TODO: the addresses have by this stage been MIME-encoded.  It would probably be better to
+      // TODO: pass unencoded addresses to createFromData() so that we don't have to decode them,
+      // TODO: as mb_decode_mimeheader() isn't guaranteed to exist.
+      $this_calendar->addComponent($event);
+      $attachment = [
+        'content' => $this_calendar->toString(),
+        'name' => $mail_settings['ics_filename'] . ".ics",
+        'method' => $method
+      ];
+      MailQueue::add(
+        $addresses,
+        $subject,
+        $text_body,
+        $html_body ?? null,
+        $attachment,
+        Language::MAIL_CHARSET
+      );
+      unset($this_calendar);
+    }
+  }
 }
 
 

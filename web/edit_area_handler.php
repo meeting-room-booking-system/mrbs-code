@@ -52,7 +52,9 @@ function get_form_data(Area &$area)
     'area_default_type'             => 'string',
     'area_times_along_top'          => 'bool',
     'area_periods_booking_opens'    => 'string',
-    'custom_html'                   => 'string'
+    'custom_html'                   => 'string',
+    'period_starts'                 => 'array',
+    'period_ends'                   => 'array'
   );
 
   // Add in the max_per_interval form variables
@@ -218,21 +220,49 @@ function validate_form_data(Area &$area) : array
       }
     }
 
-    if (!$area->enable_periods)
-    {
-      // Avoid divide by zero errors
-      if ($area->res_mins == 0)
-      {
-        $errors[] = 'invalid_resolution';
-      }
-      else
-      {
-        // Get the resolution
-        $area->resolution = $area->res_mins * 60;
 
-        // Check morningstarts, eveningends, and resolution for consistency
-        $start_first_slot = ($area->morningstarts*60) + $area->morningstarts_minutes;   // minutes
-        $start_last_slot  = ($area->eveningends*60) + $area->eveningends_minutes;       // minutes
+  if ($area->enable_periods)
+  {
+    // TODO: This is a kludge until we store use_period_times in the database.
+    // We need to make sure that the period start times correspond to the correct periods.
+    if (count($area->periods) == count($period_starts) + 1)
+    {
+      array_unshift($period_starts, null);
+    }
+    // Assemble the periods as an object.
+    $periods_tmp = new Periods($area);
+    for ($i = 0; $i < count($area->periods); $i++)
+    {
+      $periods_tmp->add(new Period(
+        $area->periods[$i],
+        $period_starts[$i] ?? null,
+        $period_ends[$i] ?? null
+      ));
+    }
+
+    // Validate the periods, but only if we are using period times.
+    if (isset($period_starts[0]) && (true !== ($result = $periods_tmp->validate())))
+    {
+      $errors[] = $result;
+    }
+    // Convert the periods to a value suitable for the database.
+    else
+    {
+      $area_periods = $periods_tmp->toDbValue();
+    }
+  }
+  else
+  {
+    // Avoid divide by zero errors
+    if ($area_res_mins == 0)
+    {
+      $errors[] = 'invalid_resolution';
+    }
+    else
+    {
+      // Check morningstarts, eveningends, and resolution for consistency
+      $start_first_slot = ($area->morningstarts*60) + $area->morningstarts_minutes;   // minutes
+      $start_last_slot  = ($area->eveningends*60) + $area->eveningends_minutes;       // minutes
 
         // If eveningends is before morningstarts then it's really on the next day
         if (hm_before(array('hours' => $area->eveningends, 'minutes' => $area->eveningends_minutes),

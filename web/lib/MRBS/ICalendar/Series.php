@@ -103,14 +103,14 @@ class Series
     $events = array();
 
     $this->repeat['skip_list'] = array_diff($this->expected_start_times, $this->actual_start_times);
-    $events[] = Event::createFromData($method, $this->repeat, $this->tzid, null, true);
+    $events = array_merge($events, Event::createFromData($method, $this->repeat, $this->tzid, null, true));
 
     // Then iterate through the series looking for changed entries
     foreach($this->data as $entry)
     {
       if ($entry['entry_type'] == ENTRY_RPT_CHANGED)
       {
-        $events[] = Event::createFromData($method, $entry, $this->tzid);
+        $events = array_merge($events, Event::createFromData($method, $entry, $this->tzid));
       }
     }
 

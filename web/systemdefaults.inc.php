@@ -297,6 +297,14 @@ $theme = "default";
 // The "Periods" settings are used only in areas where the mode has
 // been set to "Periods".
 
+// It's possible to tell MRBS what times are associated with periods (see
+// areadefaults.inc.php for details).  When a booking spanning more than one period
+// is converted into an iCalendar the periods are normally treated as separate events
+// if there are gaps between them.  For example, if Period 1 lasts from 09:00-09:40 and
+// Period 2 lasts from 10:00-10:40, then a booking for Period 1 and 2 will be treated as
+// two separate events. But if the setting below is set to TRUE, then it will be treated
+// as one event starting at 09:00 and ending at 10:40.
+$ignore_gaps_between_periods = false;
 
 /******************
  * Booking policies

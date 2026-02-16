@@ -173,8 +173,8 @@ class Calendar
    * @param DBStatement $res The result set from an SQL query on the entry table, which
    *                         has been sorted by repeat_id, start_time (both ascending).
    *                         As well as all the fields in the entry table, the rows will
-   *                         also contain the area name, the room name, the timezone and
-   *                         the repeat details (rep_type, end_date, rep_opt, rep_interval).
+   *                         also contain the room_id, area name, room name, timezone and
+   *                         repeat details (rep_type, end_date, rep_opt, rep_interval).
    * @param bool $keep_private Whether to mark events as private.
    * @param int $export_end Optional parameter specifying the end timestamp for exporting events. Defaults to PHP_INT_MAX.
    *
@@ -224,7 +224,15 @@ class Calendar
       // If this is an individual entry, then construct an event
       if (!isset($row['rep_type']) || ($row['rep_type'] == RepeatRule::NONE))
       {
-        $events[] = Event::createFromData($method, $row, $tzid);
+        try
+        {
+          $events = array_merge($events, Event::createFromData($method, $row, $tzid));
+        }
+        catch (CalendarException $e)
+        {
+          // Don't do anything. We're not able to create Events, probably because we are using
+          // periods and the times for periods haven't been defined.
+        }
       }
 
       // Otherwise it's a series

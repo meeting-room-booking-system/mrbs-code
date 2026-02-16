@@ -1976,15 +1976,14 @@ function hour_min(int $s) : string
  *
  * @param bool $previous_period Whether the date string for the previous period should be used (useful for the end of a period)
  */
-function period_date_string(int $t, int $area_id, bool $previous_period=false) : string
+function period_date_string(int $t, int $area_id, bool $previous_period=false, ?string $locale=null) : string
 {
   global $datetime_formats;
 
   $tzid = get_area_timezone($area_id);
 
-  // The separator is a ',' as a '-' leads to an ambiguous
-  // display in report.php when showing end times.
-  return period_time_string($t, $area_id, $previous_period) . ', ' . datetime_format($datetime_formats['date'], $t, null, $tzid);
+  // The separator is a ',' as a '-' leads to an ambiguous display in report.php when showing end times.
+  return period_time_string($t, $area_id, $previous_period) . ', ' . datetime_format($datetime_formats['date'], $t, $locale, $tzid);
 }
 
 
@@ -1995,26 +1994,8 @@ function period_date_string(int $t, int $area_id, bool $previous_period=false) :
  */
 function period_time_string(int $t, int $area_id, bool $previous_period=false) : string
 {
-  static $periods = array();
-
-  if (!isset($periods[$area_id]))
-  {
-    $periods[$area_id] = Area::getById($area_id)->periods;
-  }
-
-  $n_periods = count($periods[$area_id]);
-  $time = getdate($t);
-  $p = $time['minutes'];
-  if ($previous_period)
-  {
-    $p--;
-  }
-
-  // Make sure the period is valid
-  $p = max($p, 0);
-  $p = min($p, $n_periods - 1);
-
-  return $periods[$area_id][$p];
+  $periods = Periods::getForArea($area_id);
+  return $periods->offsetGetByTimestamp($t, $previous_period)->name;
 }
 
 
@@ -2208,15 +2189,6 @@ function period_index_nominal(int $s) : int
   // Periods are counted as minutes from noon, ie 1200 is $period[0],
   // 1201 $period[1], etc.
   return intval($s/60) - (12*60);
-}
-
-
-// Returns the name of the period represented by nominal seconds $s
-function period_name_nominal(int $s) : string
-{
-  global $periods;
-
-  return $periods[period_index_nominal($s)];
 }
 
 

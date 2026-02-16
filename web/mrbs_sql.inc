@@ -2067,6 +2067,53 @@ function get_invisible_room_ids() : array
 }
 
 
+/**
+ * Get the period data for a room.
+ *
+ * @return array{enable_periods: bool, periods: Periods}
+ */
+function get_period_data(int $room_id) : array
+{
+  $sql = "SELECT M.area_id, enable_periods, periods
+            FROM " ._tbl('area') . " A, ". _tbl('room') . " M
+           WHERE A.id = M.area_id
+             AND M.id = :room_id
+           LIMIT 1";
+  $res = db()->query($sql, [':room_id' => $room_id]);
+  $row = $res->next_row_keyed();
+  row_cast_columns($row, 'room');
+  $row['enable_periods'] = (bool) $row['enable_periods'];
+  $row['periods'] = Periods::fromDbValue($row['area_id'], $row['periods']);
+
+  return $row;
+}
+
+
+// Gets a two-dimensional array of period names indexed by area id.
+function get_period_names() : array
+{
+  static $period_names = null;
+
+  if (isset($period_names))
+  {
+    return $period_names;
+  }
+
+  $period_names = array();
+
+  $sql = "SELECT id, periods FROM " . _tbl('area');
+
+  $res = db()->query($sql);
+
+  while (false !== ($row = $res->next_row_keyed()))
+  {
+    $period_names[$row['id']] = json_decode($row['periods'], true);
+  }
+
+  return $period_names;
+}
+
+
 function mrbsGetRoomArea(int $room_id) : int
 {
   $sql = "SELECT area_id

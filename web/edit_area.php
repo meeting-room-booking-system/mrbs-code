@@ -8,6 +8,7 @@ use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputCheckbox;
 use MRBS\Form\ElementInputNumber;
 use MRBS\Form\ElementInputSubmit;
+use MRBS\Form\ElementInputTime;
 use MRBS\Form\ElementLegend;
 use MRBS\Form\ElementP;
 use MRBS\Form\ElementSelect;
@@ -27,6 +28,7 @@ use MRBS\Form\FieldSpan;
 use MRBS\Form\FieldTextarea;
 use MRBS\Form\FieldTimeWithUnits;
 use MRBS\Form\Form;
+use stdClass;
 
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
@@ -273,7 +275,7 @@ function get_fieldset_times() : ElementFieldset
 
 function get_fieldset_periods() : ElementFieldset
 {
-  global $enable_periods, $periods;
+  global $enable_periods, $area;
 
   $fieldset = new ElementFieldset();
   $fieldset->setAttribute('id', 'period_settings');
@@ -286,23 +288,70 @@ function get_fieldset_periods() : ElementFieldset
   }
   $fieldset->addLegend(get_vocab('period_settings'));
 
+  $this_area_periods = Periods::getForArea($area);
   // For the JavaScript to work, and MRBS to make sense, there has to be at least
   // one period defined.  So if for some reason, which shouldn't happen, there aren't
   // any periods defined, then force there to be one by creating a single period name
   // with an empty string.   Because the input is a required input, then it will have
   // to be saved with a period name.
-  $period_names = empty($periods) ? array('') : $periods;
-
-  foreach ($period_names as $period_name)
+  if (empty($this_area_periods))
   {
+    $this_area_periods = [new Period('')];
+    $using_period_times = false;
+  }
+  else
+  {
+    $using_period_times = isset($this_area_periods->current()->start);
+  }
+
+  // TODO: Store use_period_times in the database, so that the times are not lost.
+  // TODO: At the moment it's just used by the JavaScript to toggle the display.
+  $field = new FieldInputCheckbox();
+  $field->setLabel(get_vocab('use_period_times'))
+        ->setControlAttribute('name', 'use_period_times')
+        ->setControlChecked($using_period_times);
+  $fieldset->addElement($field);
+
+  foreach ($this_area_periods as $period)
+  {
+    // The period name
     $field = new FieldInputText();
+
+    // The period times
+    $period_times = new ElementDiv();
+    $period_times->setAttribute('class', 'period_times');
+
+    // The period start time
+    $start = new ElementInputTime();
+    $start->setAttributes(['name' => 'period_starts[]', 'required' => true]);
+    if (isset($period->start))
+    {
+      $start->setAttribute('value', $period->start);
+    }
+    // A separator; CSS will fill its content.
+    $separator = new ElementSpan();
+    $separator->setAttribute('class', 'period_separator');
+    // The period end time
+    $end = new ElementInputTime();
+    $end->setAttributes(['name' => 'period_ends[]', 'required' => true]);
+    if (isset($period->end))
+    {
+      $end->setAttribute('value', $period->end);
+    }
+
+    $period_times->addElement($start);
+    $period_times->addElement($separator);
+    $period_times->addElement($end);
+
+    // The delete button; CSS will fill its content.
     $span = new ElementSpan();
     $span->setAttribute('class', 'delete_period');
     $field->setAttribute('class', 'period_name')
           ->setControlAttributes(array('name'     => 'area_periods[]',
-                                       'value'    => $period_name,
+                                       'value'    => $period->name,
                                        'required' => true),
                                  false)
+          ->addElement($period_times)
           ->addElement($span);
     $fieldset->addElement($field);
   }
