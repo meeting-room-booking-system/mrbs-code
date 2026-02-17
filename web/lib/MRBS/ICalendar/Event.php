@@ -462,7 +462,10 @@ class Event extends Component
     // These fields are in the area table and can be ignored.
     $area_table_fields = [
       'approval_enabled',
-      'confirmation_enabled'
+      'confirmation_enabled',
+      'area_id',
+      'area_sort_key',
+      'timezone'
     ];
 
     // These are derived fields and can be ignored for the moment.  However we need to do something
@@ -474,7 +477,8 @@ class Event extends Component
       'dur_units',
       'private',
       'repeat_rule',
-      'skip_list'
+      'skip_list',
+      'room_sort_key'
     ];
 
     $ignore_fields = array_merge($standard_fields['entry'], $already_handled, $area_table_fields, $special_fields);
