@@ -7,6 +7,9 @@ require "defaultincludes.inc";
 use MRBS\Form\Form;
 
 
+/**
+ * Get the form data from the request variables and store it in the Area object.
+ */
 function get_form_data(Area &$area) : void
 {
   global $interval_types;
@@ -105,16 +108,50 @@ function get_form_data(Area &$area) : void
 
     $area->$property = $value;
   }
+
+  if ($area->enable_periods)
+  {
+    // TODO: This is a kludge until we store use_period_times in the database.
+    // We need to make sure that the period start times correspond to the correct periods.
+    if (count($area->periods) == count($area->period_starts) + 1)
+    {
+      // Need to operate on a copy of the array to avoid the error "Indirect modification of overloaded property
+      // MRBS\Area::$period_starts has no effect".
+      // See https://stackoverflow.com/questions/10454779/php-indirect-modification-of-overloaded-property
+      $period_starts = $area->period_starts;
+      array_unshift($period_starts, null);
+      $area->period_starts = $period_starts;
+    }
+
+    // Assemble the periods as an object.
+    $periods_tmp = new Periods($area->id);
+    for ($i = 0; $i < count($area->periods); $i++)
+    {
+      $periods_tmp->add(new Period(
+        $area->periods[$i],
+        $area->period_starts[$i] ?? null,
+        $area->period_ends[$i] ?? null
+      ));
+    }
+    $area->periods = $periods_tmp;
+  }
+  // We don't need these properties any more as they are now stored in the periods property.
+  unset($area->periods_starts);
+  unset($area->periods_ends);
 }
 
 
-// Tidies up and validates the form data
+/**
+ * Tidy up and validate the form data
+ *
+ * @return array  An array of error messages, or an empty array if there are no errors.
+ */
 function validate_form_data(Area &$area) : array
 {
   global $interval_types;
 
   // Initialise the error array
-  $errors = array();
+  $errors = [];
 
   // Check the name hasn't been used in another area
   $tmp_area = Area::getByName($area->area_name);
@@ -135,7 +172,6 @@ function validate_form_data(Area &$area) : array
   // Check that the time formats are correct (hh:mm).  They should be, because
   // the HTML5 element or polyfill will force them to be, but just in case ...
   // (for example if we are relying on a polyfill and JavaScript is disabled)
-
   if (!preg_match(REGEX_HHMM, $area->start_first_slot) ||
       !preg_match(REGEX_HHMM, $area->start_last_slot))
   {
@@ -187,7 +223,7 @@ function validate_form_data(Area &$area) : array
     }
 
     // Now do the max_secs variables (limits on the total length of bookings)
-    foreach($interval_types as $interval_type)
+    foreach ($interval_types as $interval_type)
     {
       $units_property = "max_secs_per_{$interval_type}_units";
       if (isset($area->$units_property))
@@ -200,10 +236,14 @@ function validate_form_data(Area &$area) : array
       }
     }
 
-    // If we are using periods, round these down to the nearest whole day
-    // (anything less than a day is meaningless when using periods)
+    // Periods mode validation
     if ($area->enable_periods)
     {
+      // Validate the periods, but only if we are using period times.
+      if (isset($area->period_starts[0]) && (true !== ($result = $area->periods->validate())))
+      {
+        $errors[] = $result;
+      }
       $properties = array(
         'min_create_ahead_secs',
         'max_create_ahead_secs',
@@ -211,6 +251,7 @@ function validate_form_data(Area &$area) : array
         'max_delete_ahead_secs'
       );
 
+      // Round these down to the nearest whole day (anything less than a day is meaningless when using periods)
       foreach ($properties as $property)
       {
         if (isset($area->$property))
@@ -220,49 +261,22 @@ function validate_form_data(Area &$area) : array
       }
     }
 
-
-  if ($area->enable_periods)
-  {
-    // TODO: This is a kludge until we store use_period_times in the database.
-    // We need to make sure that the period start times correspond to the correct periods.
-    if (count($area->periods) == count($period_starts) + 1)
-    {
-      array_unshift($period_starts, null);
-    }
-    // Assemble the periods as an object.
-    $periods_tmp = new Periods($area);
-    for ($i = 0; $i < count($area->periods); $i++)
-    {
-      $periods_tmp->add(new Period(
-        $area->periods[$i],
-        $period_starts[$i] ?? null,
-        $period_ends[$i] ?? null
-      ));
-    }
-
-    // Validate the periods, but only if we are using period times.
-    if (isset($period_starts[0]) && (true !== ($result = $periods_tmp->validate())))
-    {
-      $errors[] = $result;
-    }
-    // Convert the periods to a value suitable for the database.
+    // Times mode validation
     else
     {
-      $area_periods = $periods_tmp->toDbValue();
-    }
-  }
-  else
-  {
-    // Avoid divide by zero errors
-    if ($area_res_mins == 0)
-    {
-      $errors[] = 'invalid_resolution';
-    }
-    else
-    {
-      // Check morningstarts, eveningends, and resolution for consistency
-      $start_first_slot = ($area->morningstarts*60) + $area->morningstarts_minutes;   // minutes
-      $start_last_slot  = ($area->eveningends*60) + $area->eveningends_minutes;       // minutes
+      // Avoid divide by zero errors
+      if ($area->res_mins == 0)
+      {
+        $errors[] = 'invalid_resolution';
+      }
+      else
+      {
+        // Get the resolution
+        $area->resolution = $area->res_mins * 60;
+
+        // Check morningstarts, eveningends, and resolution for consistency
+        $start_first_slot = ($area->morningstarts*60) + $area->morningstarts_minutes;   // minutes
+        $start_last_slot  = ($area->eveningends*60) + $area->eveningends_minutes;       // minutes
 
         // If eveningends is before morningstarts then it's really on the next day
         if (hm_before(array('hours' => $area->eveningends, 'minutes' => $area->eveningends_minutes),

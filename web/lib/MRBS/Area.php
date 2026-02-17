@@ -133,7 +133,7 @@ class Area extends Location
     // Decode the periods
     if (isset($row['periods']))
     {
-      $row['periods'] = json_decode($row['periods']);
+      $row['periods'] = Periods::fromDbValue($row['id'], $row['periods']);
     }
 
     // TODO: Should this be necessary?  Shouldn't we just make sure the table
@@ -171,7 +171,7 @@ class Area extends Location
     // Encode the periods
     if (isset($row['periods']))
     {
-      $row['periods'] = json_encode($row['periods']);
+      $row['periods'] = $row['periods']->toDbValue();
     }
 
     return $row;
