@@ -7,7 +7,7 @@ require "defaultincludes.inc";
 use MRBS\Form\Form;
 
 
-function get_form_data(Area &$area)
+function get_form_data(Area &$area) : void
 {
   global $interval_types;
 
