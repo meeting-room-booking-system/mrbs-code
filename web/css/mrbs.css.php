@@ -2704,41 +2704,41 @@ span.ColVis_title {
 }
 
 table.dataTable.display tbody tr.odd {
-  background-color: #E2E4FF;
+  background-color: <?php echo $zebra_odd_color ?>;
 }
 
 table.dataTable.display tbody tr.even {
-  background-color: white;
+  background-color: <?php echo $zebra_even_color ?>;
 }
 
 table.dataTable.display tbody tr.odd > .sorting_1,
 table.dataTable.order-column.stripe tbody tr.odd > .sorting_1 {
-  background-color: #D3D6FF;
+  background-color: <?php echo $zebra_odd_color ?>;
 }
 
 table.dataTable.display tbody tr.odd > .sorting_2,
 table.dataTable.order-column.stripe tbody tr.odd > .sorting_2 {
-  background-color: #DADCFF;
+  background-color: <?php echo $zebra_odd_color ?>;
 }
 
 table.dataTable.display tbody tr.odd > .sorting_3,
 table.dataTable.order-column.stripe tbody tr.odd > .sorting_3 {
-  background-color: #E0E2FF;
+  background-color: <?php echo $zebra_odd_color ?>;
 }
 
 table.dataTable.display tbody tr.even > .sorting_1,
 table.dataTable.order-column.stripe tbody tr.even > .sorting_1  {
-  background-color: #EAEBFF;
+  background-color: <?php echo $zebra_even_color ?>;
 }
 
 table.dataTable.display tbody tr.even > .sorting_2,
 table.dataTable.order-column.stripe tbody tr.even > .sorting_2 {
-  background-color: #F2F3FF;
+  background-color: <?php echo $zebra_even_color ?>;
 }
 
 table.dataTable.display tbody tr.even > .sorting_3,
 table.dataTable.order-column.stripe tbody tr.even > .sorting_3 {
-  background-color: #F9F9FF;
+  background-color: <?php echo $zebra_even_color ?>;
 }
 
 .dataTables_wrapper.no-footer .dataTables_scrollBody {

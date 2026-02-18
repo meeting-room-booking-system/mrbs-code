@@ -249,6 +249,7 @@ $mrbs_company = "Your Company";   // This line must always be uncommented ($mrbs
 // Available options are:
 
 // "default"        Default MRBS theme
+// "blue"           Blue MRBS theme
 // "classic126"     Same colour scheme as MRBS 1.2.6
 
 $theme = "default";
