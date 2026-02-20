@@ -97,16 +97,16 @@ $button_inset_color = 'darkblue';
 // These are the colours used for distinguishing between the different types of bookings in the main
 // displays in the day, week and month views
 $color_types = array(
-    'A' => "#ffff99",
-    'B' => "#99cccc",
-    'C' => "#ffffcd",
-    'D' => "#cde6e6",
-    'E' => "#33b679",
-    'F' => "#82adad",
-    'G' => "#ccffcc",
-    'H' => "#d9d982",
-    'I' => "#039be5",
-    'J' => "#e6ffe6");
+    'A' => "#3f51b5",  // Blueberry
+    'B' => "#7986cb",  // Lavender
+    'C' => "#f4511e",  // Tangerine
+    'D' => "#e67c73",  // Flamingo
+    'E' => "#33b679",  // Sage
+    'F' => "#f6bf26",  // Banana
+    'G' => "#0b8043",  // Basil
+    'H' => "#d50000",  // Tomato
+    'I' => "#039be5",  // Peacock
+    'J' => "#8e24aa"); // Grape
 
 // colours used for pending.php and bookings awaiting approval
 $outstanding_color         = "#FFF36C";     // font colour for the outstanding reservations message in the header

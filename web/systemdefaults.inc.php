@@ -255,7 +255,7 @@ $mrbs_company = "Your Company";   // This line must always be uncommented ($mrbs
 $theme = "default";
 
 // Use the $custom_css_url to override the standard MRBS CSS.
-//$custom_css_url = 'css/custom.css';
+$custom_css_url = 'Themes/'.$theme.'/custom.css';
 
 // Use the $custom_js_url to add your own JavaScript.
 //$custom_js_url = 'js/custom.js';
