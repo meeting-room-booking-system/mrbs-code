@@ -144,6 +144,7 @@ class AuthDb extends Auth
                    AS display_name
               FROM " . _tbl(User::TABLE_NAME) . "
              WHERE auth_type='db'
+               AND name IS NOT NULL
           ORDER BY display_name";
 
     $res = db()->query($sql);

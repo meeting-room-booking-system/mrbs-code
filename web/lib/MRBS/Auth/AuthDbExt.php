@@ -199,9 +199,17 @@ class AuthDbExt extends Auth
       $display_name_column = $this->column_name_username;
     }
 
-    $sql = "SELECT " . $this->connection()->quote($this->column_name_username) . " AS username, ".
-                       $this->connection()->quote($display_name_column) . " AS display_name
-              FROM " . $this->connection()->quote($this->db_table) . " ORDER BY display_name";
+    $quoted_column_name_display_name = $this->connection()->quote($display_name_column);
+    $quoted_column_name_username = $this->connection()->quote($this->column_name_username);
+
+    $sql = "SELECT $quoted_column_name_username AS username,
+                   CASE
+                       WHEN $quoted_column_name_display_name IS NOT NULL AND $quoted_column_name_display_name!='' THEN $quoted_column_name_display_name
+                       ELSE $quoted_column_name_username
+                   END AS display_name
+              FROM " . $this->connection()->quote($this->db_table) . "
+             WHERE $quoted_column_name_username IS NOT NULL
+          ORDER BY display_name";
 
     $res = $this->connection()->query($sql);
 
