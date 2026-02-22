@@ -180,6 +180,7 @@ class AuthDb extends Auth
                    END
                    AS display_name
               FROM " . _tbl('users') . "
+             WHERE name IS NOT NULL
           ORDER BY display_name";
 
     $res = db()->query($sql);
