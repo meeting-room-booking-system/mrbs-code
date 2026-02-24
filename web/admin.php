@@ -72,10 +72,25 @@ function generate_area_change_form(array $enabled_areas, array $disabled_areas) 
   {
     $options = array(get_vocab("enabled") => $enabled_areas,
                      get_vocab("disabled") => $disabled_areas);
+    if (empty($area))
+    {
+      foreach ($options as $current_areas)
+      {
+        if (!empty($current_areas))
+        {
+          $area = array_key_first($current_areas);
+          break;
+        }
+      }
+    }
   }
   else
   {
     $options = $enabled_areas;
+    if (empty($area) && !empty($options))
+    {
+      $area = array_key_first($options);
+    }
   }
 
   $field = new FieldSelect();
