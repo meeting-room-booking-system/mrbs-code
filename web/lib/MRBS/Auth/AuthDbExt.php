@@ -2,17 +2,15 @@
 declare(strict_types=1);
 namespace MRBS\Auth;
 
+use MRBS\DB\DB;
 use MRBS\DB\DBExternalException;
 use MRBS\DB\DBFactory;
 use MRBS\User;
 use ValueError;
 
-class AuthDbExt extends Auth
+class AuthDbExt extends AuthDbAbstract
 {
-  protected $db_table;
   protected $password_format;
-  protected $column_name_username;
-  protected $column_name_display_name;
   protected $column_name_password;
   protected $column_name_email;
   protected $column_name_level;
@@ -187,45 +185,7 @@ class AuthDbExt extends Auth
   }
 
 
-  // Return an array of users, indexed by 'username' and 'display_name'
-  public function getUsernames() : array
-  {
-    if (isset($this->column_name_display_name) && ($this->column_name_display_name !== ''))
-    {
-      $display_name_column = $this->column_name_display_name;
-    }
-    else
-    {
-      $display_name_column = $this->column_name_username;
-    }
-
-    $quoted_column_name_display_name = $this->connection()->quote($display_name_column);
-    $quoted_column_name_username = $this->connection()->quote($this->column_name_username);
-
-    $sql = "SELECT $quoted_column_name_username AS username,
-                   CASE
-                       WHEN $quoted_column_name_display_name IS NOT NULL AND $quoted_column_name_display_name!='' THEN $quoted_column_name_display_name
-                       ELSE $quoted_column_name_username
-                   END AS display_name
-              FROM " . $this->connection()->quote($this->db_table) . "
-             WHERE $quoted_column_name_username IS NOT NULL
-          ORDER BY display_name";
-
-    $res = $this->connection()->query($sql);
-
-    $users =  $res->all_rows_keyed();
-    self::sortUsers($users);
-
-    return $users;
-  }
-
-
-  // Returns a database connection
-  // The connection isn't established in the constructor, but here only when it's really
-  // needed as it can be expensive establishing a remote connection.  For example
-  // method_exists(auth(), 'method') will end up calling the constructor, but a connection
-  // isn't needed just for method_exists().
-  protected function connection()
+  protected function connection(): ?DB
   {
     global $auth;
 

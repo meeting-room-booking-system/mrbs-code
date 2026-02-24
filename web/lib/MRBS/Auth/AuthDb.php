@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS\Auth;
 
+use MRBS\DB\DB;
 use MRBS\Language;
 use MRBS\MailQueue;
 use MRBS\User;
@@ -18,8 +19,16 @@ use function MRBS\row_cast_columns;
 use function MRBS\toTimeString;
 use function MRBS\url_base;
 
-class AuthDb extends Auth
+class AuthDb extends AuthDbAbstract
 {
+  public function __construct()
+  {
+    $this->db_table = _tbl('users');
+    $this->column_name_username = 'name';
+    $this->column_name_display_name = 'display_name';
+  }
+
+
   /**
    * @param string|null $user a username or email address
    */
@@ -53,13 +62,19 @@ class AuthDb extends Auth
                  SET last_login=?, timestamp=timestamp
                WHERE name=?";
       $sql_params = array($now, $result);
-      db()->command($sql, $sql_params);
+      $this->connection()->command($sql, $sql_params);
       return $result;
     }
     else
     {
       return false;
     }
+  }
+
+
+  protected function connection() : ?DB
+  {
+    return db();
   }
 
 
@@ -90,10 +105,10 @@ class AuthDb extends Auth
     // Usernames are unique in the users table, so we only look for one.
     $sql = "SELECT password_hash, name
             FROM " . _tbl('users') . "
-           WHERE " . db()->syntax_casesensitive_equals('name', mb_strtolower($user), $sql_params) . "
+           WHERE " . $this->connection()->syntax_casesensitive_equals('name', mb_strtolower($user), $sql_params) . "
            LIMIT 1";
 
-    $res = db()->query($sql, $sql_params);
+    $res = $this->connection()->query($sql, $sql_params);
 
     $row = $res->next_row_keyed();
 
@@ -170,42 +185,17 @@ class AuthDb extends Auth
   }
 
 
-  // Return an array of users, indexed by 'username' and 'display_name'
-  public function getUsernames() : array
-  {
-    $sql = "SELECT name AS username,
-                   CASE
-                       WHEN display_name IS NOT NULL AND display_name!='' THEN display_name
-                       ELSE name
-                   END
-                   AS display_name
-              FROM " . _tbl('users') . "
-             WHERE name IS NOT NULL
-          ORDER BY display_name";
-
-    $res = db()->query($sql);
-
-    $users =  $res->all_rows_keyed();
-
-    // Although the users are probably already sorted, we sort them again because MRBS
-    // offers an option for sorting by first or last name.
-    self::sortUsers($users);
-
-    return $users;
-  }
-
-
   // Return an array of all users
   public function getUsers() : array
   {
     // Add in an extra column, last_updated, which is the SQL timestamp converted to a UNIX
     // timestamp.  We do the conversion in the SQL query so that it is converted using the
     // same timezone that it was stored with.
-    $sql = "SELECT *, ". db()->syntax_timestamp_to_unix("timestamp") . " AS last_updated
+    $sql = "SELECT *, ". $this->connection()->syntax_timestamp_to_unix("timestamp") . " AS last_updated
               FROM " . _tbl('users') . "
              ORDER BY name";
 
-    $res = db()->query($sql);
+    $res = $this->connection()->query($sql);
 
     $result = $res->all_rows_keyed();
 
@@ -335,7 +325,7 @@ class AuthDb extends Auth
         ':name' => $username
       );
 
-    db()->command($sql, $sql_params);
+    $this->connection()->command($sql, $sql_params);
 
     return true;
   }
@@ -354,7 +344,7 @@ class AuthDb extends Auth
              LIMIT 1";
 
     $sql_params = array(':name' => $user);
-    $res = db()->query($sql,$sql_params);
+    $res = $this->connection()->query($sql,$sql_params);
 
     // Check we've found a row
     if ($res->count() == 0)
@@ -399,7 +389,7 @@ class AuthDb extends Auth
                AND U.display_name IS NOT NULL AND U.display_name!=''";
 
     $result = array();
-    $res = db()->query($sql, array(':entry_id' => $id));
+    $res = $this->connection()->query($sql, array(':entry_id' => $id));
 
     while (false !== ($row = $res->next_row_keyed()))
     {
@@ -479,7 +469,7 @@ class AuthDb extends Auth
 
     $result = array();
 
-    $res =  db()->query($sql, array(':entry_id' => $id));
+    $res =  $this->connection()->query($sql, array(':entry_id' => $id));
 
     while (false !== ($row = $res->next_row_keyed()))
     {
@@ -626,7 +616,7 @@ class AuthDb extends Auth
         ':reset_key_expiry' => time() + $auth['db']['reset_key_expiry']
       );
 
-    db()->command($sql, $sql_params);
+    $this->connection()->command($sql, $sql_params);
 
     return true;
   }
@@ -639,7 +629,7 @@ class AuthDb extends Auth
              WHERE name=:name
              LIMIT 1";
 
-    $result = db()->query($sql, array(':name' => $username));
+    $result = $this->connection()->query($sql, array(':name' => $username));
 
     // The username doesn't exist - return NULL
     if ($result->count() === 0)
@@ -658,7 +648,7 @@ class AuthDb extends Auth
              WHERE id=:id
              LIMIT 1";
 
-    $result = db()->query($sql, array(':id' => $id));
+    $result = $this->connection()->query($sql, array(':id' => $id));
 
     // The username doesn't exist - return NULL
     if ($result->count() === 0)
@@ -690,7 +680,7 @@ class AuthDb extends Auth
               FROM " . _tbl('users') . "
              WHERE email=?";
 
-    $res = db()->query($sql, array($email));
+    $res = $this->connection()->query($sql, array($email));
 
     if ($res->count() == 0)
     {
@@ -728,7 +718,7 @@ class AuthDb extends Auth
       {
         // We're just checking the local-part of the email address
         $sql_params = array($email);
-        $condition = "LOWER(?)=LOWER(" . db()->syntax_simple_split('email', '@', 1, $sql_params) .")";
+        $condition = "LOWER(?)=LOWER(" . $this->connection()->syntax_simple_split('email', '@', 1, $sql_params) .")";
       }
       else
       {
@@ -764,7 +754,7 @@ class AuthDb extends Auth
               FROM " . _tbl('users') . "
              WHERE $condition";
 
-    $res = db()->query($sql, $sql_params);
+    $res = $this->connection()->query($sql, $sql_params);
 
     while (false !== ($row = $res->next_row_keyed()))
     {
@@ -786,7 +776,7 @@ class AuthDb extends Auth
     switch ($column_name)
     {
       case 'name':
-        $condition = db()->syntax_casesensitive_equals($column_name, mb_strtolower($column_value), $sql_params);
+        $condition = $this->connection()->syntax_casesensitive_equals($column_name, mb_strtolower($column_value), $sql_params);
         break;
       case 'email':
         // For the moment we will assume that email addresses are case insensitive.   Whilst it is true
@@ -807,7 +797,7 @@ class AuthDb extends Auth
                SET password_hash=?
              WHERE $condition";
 
-    db()->command($sql, $sql_params);
+    $this->connection()->command($sql, $sql_params);
   }
 
 
