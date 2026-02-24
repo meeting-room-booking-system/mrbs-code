@@ -30,7 +30,7 @@ if (empty($room))
 
 // No point in showing all the rooms if there's only one of them.  Show
 // the normal view (with time slots) instead
-if (($view != 'day') && !$always_offer_view_all & count(get_rooms($area)) == 1)
+if (($view != 'day') && !$always_offer_view_all && count(get_rooms($area)) == 1)
 {
   $view_all = 0;
 }
