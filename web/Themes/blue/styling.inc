@@ -2,7 +2,9 @@
 declare(strict_types=1);
 namespace MRBS;
 
-// DEFAULT THEME
+// BLUE THEME
+
+$custom_css_url = 'Themes/'.$theme.'/custom.css';
 
 // ***** COLOURS ************************
 // Colours used in MRBS.    All the colours are defined here as PHP variables
@@ -41,7 +43,7 @@ $main_table_month_invalid_color = "#d1d9de";    // background colour for invalid
 $main_table_slot_invalid_color  = "#d1d9de";    // background colour for invalid slots in the day and week views
 $main_table_slot_private_type_color = "#d1d9de";          // background colour when the type has to kept private
 $main_table_labels_back_color   = $header_back_color;     // background colour for the row labels column
-$timeline_color                 = $header_back_color;
+$timeline_color                 = "#db372d";
 
 // border colours for the main table when it is printed.     These are used by mrbs-print.css.php
 $main_table_border_color_print        = "#dddddd";    // border colour for the main table (print view)
