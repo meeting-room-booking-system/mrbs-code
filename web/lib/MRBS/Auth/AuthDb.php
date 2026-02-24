@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS\Auth;
 
+use MRBS\DB\DB;
 use MRBS\Language;
 use MRBS\MailQueue;
 use MRBS\User;
@@ -16,9 +17,16 @@ use function MRBS\parse_email;
 use function MRBS\to_time_string;
 use function MRBS\url_base;
 
-
-class AuthDb extends Auth
+class AuthDb extends AuthDbAbstract
 {
+  public function __construct()
+  {
+    $this->db_table = _tbl('users');
+    $this->column_name_username = 'name';
+    $this->column_name_display_name = 'display_name';
+  }
+
+
   /**
    * @param string|null $user a username or email address
    */
@@ -44,6 +52,12 @@ class AuthDb extends Auth
     $valid_usernames = array_unique($valid_usernames);
 
     return (count($valid_usernames) == 1) ? $valid_usernames[0] : false;
+  }
+
+
+  protected function connection() : ?DB
+  {
+    return db();
   }
 
 
@@ -78,7 +92,7 @@ class AuthDb extends Auth
              AND auth_type='db'
            LIMIT 1";
 
-    $res = db()->query($sql, $sql_params);
+    $res = $this->connection()->query($sql, $sql_params);
 
     $row = $res->next_row_keyed();
 
@@ -275,7 +289,7 @@ class AuthDb extends Auth
         ':name' => $username
       );
 
-    db()->command($sql, $sql_params);
+    $this->connection()->command($sql, $sql_params);
 
     return true;
   }
@@ -295,7 +309,7 @@ class AuthDb extends Auth
              LIMIT 1";
 
     $sql_params = array(':name' => $user);
-    $res = db()->query($sql,$sql_params);
+    $res = $this->connection()->query($sql,$sql_params);
 
     // Check we've found a row
     if ($res->count() == 0)
@@ -340,7 +354,7 @@ class AuthDb extends Auth
                AND U.display_name IS NOT NULL AND U.display_name!=''";
 
     $result = array();
-    $res = db()->query($sql, array(':entry_id' => $id));
+    $res = $this->connection()->query($sql, array(':entry_id' => $id));
 
     while (false !== ($row = $res->next_row_keyed()))
     {
@@ -420,7 +434,7 @@ class AuthDb extends Auth
 
     $result = array();
 
-    $res =  db()->query($sql, array(':entry_id' => $id));
+    $res =  $this->connection()->query($sql, array(':entry_id' => $id));
 
     while (false !== ($row = $res->next_row_keyed()))
     {
@@ -568,7 +582,7 @@ class AuthDb extends Auth
         ':reset_key_expiry' => time() + $auth['db']['reset_key_expiry']
       );
 
-    db()->command($sql, $sql_params);
+    $this->connection()->command($sql, $sql_params);
 
     return true;
   }
@@ -581,7 +595,7 @@ class AuthDb extends Auth
              WHERE name=:name
              LIMIT 1";
 
-    $result = db()->query($sql, array(':name' => $username));
+    $result = $this->connection()->query($sql, array(':name' => $username));
 
     // The username doesn't exist - return NULL
     if ($result->count() === 0)
@@ -600,7 +614,7 @@ class AuthDb extends Auth
              WHERE id=:id
              LIMIT 1";
 
-    $result = db()->query($sql, array(':id' => $id));
+    $result = $this->connection()->query($sql, array(':id' => $id));
 
     // The username doesn't exist - return NULL
     if ($result->count() === 0)
@@ -632,7 +646,7 @@ class AuthDb extends Auth
               FROM " . _tbl(User::TABLE_NAME) . "
              WHERE email=?";
 
-    $res = db()->query($sql, array($email));
+    $res = $this->connection()->query($sql, array($email));
 
     if ($res->count() == 0)
     {
@@ -670,7 +684,7 @@ class AuthDb extends Auth
       {
         // We're just checking the local-part of the email address
         $sql_params = array($email);
-        $condition = "LOWER(?)=LOWER(" . db()->syntax_simple_split('email', '@', 1, $sql_params) .")";
+        $condition = "LOWER(?)=LOWER(" . $this->connection()->syntax_simple_split('email', '@', 1, $sql_params) .")";
       }
       else
       {
@@ -707,7 +721,7 @@ class AuthDb extends Auth
              WHERE ($condition)
                AND auth_type='db'";
 
-    $res = db()->query($sql, $sql_params);
+    $res = $this->connection()->query($sql, $sql_params);
 
     while (false !== ($row = $res->next_row_keyed()))
     {
@@ -732,7 +746,7 @@ class AuthDb extends Auth
     switch ($column_name)
     {
       case 'name':
-        $condition = db()->syntax_casesensitive_equals($column_name, mb_strtolower($column_value), $sql_params);
+        $condition = $this->connection()->syntax_casesensitive_equals($column_name, mb_strtolower($column_value), $sql_params);
         break;
       case 'email':
         // For the moment we will assume that email addresses are case insensitive.   Whilst it is true
@@ -754,7 +768,7 @@ class AuthDb extends Auth
              WHERE $condition
                AND auth_type='db'";
 
-    db()->command($sql, $sql_params);
+    $this->connection()->command($sql, $sql_params);
   }
 
 
