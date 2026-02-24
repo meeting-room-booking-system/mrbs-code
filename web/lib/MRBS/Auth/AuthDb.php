@@ -21,7 +21,7 @@ class AuthDb extends AuthDbAbstract
 {
   public function __construct()
   {
-    $this->db_table = _tbl('users');
+    $this->db_table = _tbl(User::TABLE_NAME);
     $this->column_name_username = 'name';
     $this->column_name_display_name = 'display_name';
   }
@@ -88,7 +88,7 @@ class AuthDb extends AuthDbAbstract
     // Usernames are unique in the user table, so we only look for one.
     $sql = "SELECT password_hash, name
             FROM " . _tbl(User::TABLE_NAME) . "
-           WHERE " . db()->syntax_casesensitive_equals('name', mb_strtolower($user), $sql_params) . "
+           WHERE " . $this->connection()->syntax_casesensitive_equals('name', mb_strtolower($user), $sql_params) . "
              AND auth_type='db'
            LIMIT 1";
 
@@ -144,32 +144,6 @@ class AuthDb extends AuthDbAbstract
   protected function getUserFresh(string $username) : ?User
   {
     return User::getByName($username, 'db');
-  }
-
-
-  // Return an array of users, indexed by 'username' and 'display_name'
-  public function getUsernames() : array
-  {
-    $sql = "SELECT name AS username,
-                   CASE
-                       WHEN display_name IS NOT NULL AND display_name!='' THEN display_name
-                       ELSE name
-                   END
-                   AS display_name
-              FROM " . _tbl(User::TABLE_NAME) . "
-             WHERE auth_type='db'
-               AND name IS NOT NULL
-          ORDER BY display_name";
-
-    $res = db()->query($sql);
-
-    $users =  $res->all_rows_keyed();
-
-    // Although the users are probably already sorted, we sort them again because MRBS
-    // offers an option for sorting by first or last name.
-    self::sortUsers($users);
-
-    return $users;
   }
 
 
@@ -660,6 +634,42 @@ class AuthDb extends AuthDbAbstract
     }
     $row = $res->next_row_keyed();
     return $row['name'];
+  }
+
+
+  public function getUsernames() : array
+  {
+    // TODO: eliminate duplicate code with parent method
+    if (isset($this->column_name_display_name) && ($this->column_name_display_name !== ''))
+    {
+      $display_name_column = $this->column_name_display_name;
+    }
+    else
+    {
+      $display_name_column = $this->column_name_username;
+    }
+
+    $quoted_column_name_display_name = $this->connection()->quote($display_name_column);
+    $quoted_column_name_username = $this->connection()->quote($this->column_name_username);
+
+    $sql = "SELECT $quoted_column_name_username AS username,
+                   CASE
+                       WHEN $quoted_column_name_display_name IS NOT NULL AND $quoted_column_name_display_name!='' THEN $quoted_column_name_display_name
+                       ELSE $quoted_column_name_username
+                   END AS display_name
+              FROM " . $this->connection()->quote($this->db_table) . "
+             WHERE $quoted_column_name_username IS NOT NULL
+               AND auth_type='db'
+          ORDER BY display_name";
+
+    $res = $this->connection()->query($sql);
+
+    $users =  $res->all_rows_keyed();
+    // Although the users may already be sorted, we sort them again because MRBS
+    // offers an option for sorting by first or last name.
+    self::sortUsers($users);
+
+    return $users;
   }
 
 
