@@ -23,10 +23,17 @@ class Periods implements Countable, SeekableIterator
   private $data = [];
 
 
-  public function __construct(int $area_id)
+  /**
+   * @param int|null $area_id The area ID, or null if not yet known.  Creating an instance of this class without
+   * an area can be useful when creating a new area.
+   */
+  public function __construct(?int $area_id = null)
   {
     $this->area_id = $area_id;
-    $this->tzid = get_area_timezone($area_id);
+    if (isset($area_id))
+    {
+      $this->tzid = get_area_timezone($area_id);
+    }
   }
 
 
@@ -302,10 +309,16 @@ class Periods implements Countable, SeekableIterator
    */
   private function getRealTime(int $timestamp, string $hhmm)
   {
+    if (!isset($this->tzid))
+    {
+      throw new \Exception('No timezone set');
+    }
+
     if (count($exploded = explode(':', $hhmm)) !== 2)
     {
       return false;
     }
+
     list($hour, $minute) = $exploded;
     $date = new DateTime('now', new DateTimeZone($this->tzid));
     $date->setTimestamp($timestamp);
@@ -331,6 +344,11 @@ class Periods implements Countable, SeekableIterator
    */
   private function timestampToIndex(int $timestamp) : int
   {
+    if (!isset($this->tzid))
+    {
+      throw new \Exception('No timezone set');
+    }
+
     $noon = new DateTime('now', new DateTimeZone($this->tzid));
     $noon->setTimestamp($timestamp);
     $noon->setTime(12, 0);
