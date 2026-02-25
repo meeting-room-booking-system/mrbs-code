@@ -339,6 +339,9 @@ while (false !== ($row = $res->next_row_keyed()))
   {
     $enabled_areas[$row['id']] = $row['area_name'];
   }
+  if (empty($area)) {
+    $area = $row['id'];
+  }
 }
 
 $areas_defined = !empty($enabled_areas) || !empty($disabled_areas);
