@@ -109,32 +109,30 @@ function get_form_data(Area &$area) : void
     $area->$property = $value;
   }
 
-  if ($area->enable_periods)
+  // TODO: This is a kludge until we store use_period_times in the database.
+  // We need to make sure that the period start times correspond to the correct periods.
+  if (count($area->periods) == count($area->period_starts) + 1)
   {
-    // TODO: This is a kludge until we store use_period_times in the database.
-    // We need to make sure that the period start times correspond to the correct periods.
-    if (count($area->periods) == count($area->period_starts) + 1)
-    {
-      // Need to operate on a copy of the array to avoid the error "Indirect modification of overloaded property
-      // MRBS\Area::$period_starts has no effect".
-      // See https://stackoverflow.com/questions/10454779/php-indirect-modification-of-overloaded-property
-      $period_starts = $area->period_starts;
-      array_unshift($period_starts, null);
-      $area->period_starts = $period_starts;
-    }
-
-    // Assemble the periods as an object.
-    $periods_tmp = new Periods($area->id);
-    for ($i = 0; $i < count($area->periods); $i++)
-    {
-      $periods_tmp->add(new Period(
-        $area->periods[$i],
-        $area->period_starts[$i] ?? null,
-        $area->period_ends[$i] ?? null
-      ));
-    }
-    $area->periods = $periods_tmp;
+    // Need to operate on a copy of the array to avoid the error "Indirect modification of overloaded property
+    // MRBS\Area::$period_starts has no effect".
+    // See https://stackoverflow.com/questions/10454779/php-indirect-modification-of-overloaded-property
+    $period_starts = $area->period_starts;
+    array_unshift($period_starts, null);
+    $area->period_starts = $period_starts;
   }
+
+  // Assemble the periods as an object.
+  $periods_tmp = new Periods($area->id);
+  for ($i = 0; $i < count($area->periods); $i++)
+  {
+    $periods_tmp->add(new Period(
+      $area->periods[$i],
+      $area->period_starts[$i] ?? null,
+      $area->period_ends[$i] ?? null
+    ));
+  }
+  $area->periods = $periods_tmp;
+
   // We don't need these properties any more as they are now stored in the periods property.
   unset($area->periods_starts);
   unset($area->periods_ends);
