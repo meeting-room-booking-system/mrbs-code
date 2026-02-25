@@ -25,7 +25,7 @@ function link_html(string $href, bool $add_version=false, ?string $media=null) :
 }
 
 
-global $custom_css_url;
+global $custom_css_url, $theme;
 global $debug;
 
 echo link_html(($debug) ? 'jquery/ui/css/jquery-ui.structure.css' : 'jquery/ui/css/jquery-ui.structure.min.css', true);
@@ -51,6 +51,14 @@ if ($using_rtl_lang)
 }
 echo "<![endif]-->\n";
 
+// Load the theme CSS, if any
+$theme_css = "Themes/$theme/theme.css";
+if (is_readable($theme_css))
+{
+  echo link_html($theme_css, true);
+}
+
+// Load the custom CSS, if any
 if (isset($custom_css_url))
 {
   echo link_html($custom_css_url, true);

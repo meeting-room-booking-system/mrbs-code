@@ -275,6 +275,11 @@ $(document).on('page_ready', function() {
   <?php // Validate the period times. ?>
   $('form#edit_area').on('submit', function(event) {
 
+    if (($('[name=area_enable_periods]:checked').val() !== '1') || !$('#use_period_times').prop('checked'))
+    {
+      return;
+    }
+
     let lastEndVal;
 
     $('div.period_name').each(function(index) {
