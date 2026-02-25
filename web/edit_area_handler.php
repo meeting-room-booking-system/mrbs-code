@@ -189,38 +189,34 @@ else
     $$var = (!empty($$var)) ? 1 : 0;
   }
 
-
-  if ($area_enable_periods)
+  // TODO: This is a kludge until we store use_period_times in the database.
+  // We need to make sure that the period start times correspond to the correct periods.
+  if (count($area_periods) == count($period_starts) + 1)
   {
-    // TODO: This is a kludge until we store use_period_times in the database.
-    // We need to make sure that the period start times correspond to the correct periods.
-    if (count($area_periods) == count($period_starts) + 1)
-    {
-      array_unshift($period_starts, null);
-    }
-    // Assemble the periods as an object.
-    $periods_tmp = new Periods($area);
-    for ($i = 0; $i < count($area_periods); $i++)
-    {
-      $periods_tmp->add(new Period(
-        $area_periods[$i],
-        $period_starts[$i] ?? null,
-        $period_ends[$i] ?? null
-      ));
-    }
-
-    // Validate the periods, but only if we are using period times.
-    if (isset($period_starts[0]) && (true !== ($result = $periods_tmp->validate())))
-    {
-      $errors[] = $result;
-    }
-    // Convert the periods to a value suitable for the database.
-    else
-    {
-      $area_periods = $periods_tmp->toDbValue();
-    }
+    array_unshift($period_starts, null);
   }
-  else
+  // Assemble the periods as an object.
+  $periods_tmp = new Periods($area);
+  for ($i = 0; $i < count($area_periods); $i++)
+  {
+    $periods_tmp->add(new Period(
+      $area_periods[$i],
+      $period_starts[$i] ?? null,
+      $period_ends[$i] ?? null
+    ));
+  }
+
+  // Validate the periods, but only if we are using periods with period times.
+  if ($area_enable_periods && isset($period_starts[0]) && (true !== ($result = $periods_tmp->validate())))
+  {
+    $errors[] = $result;
+  }
+
+  // Convert the periods to a value suitable for the database.
+  $area_periods = $periods_tmp->toDbValue();
+
+  // Validate times mode settings
+  if (!$area_enable_periods)
   {
     // Avoid divide by zero errors
     if ($area_res_mins == 0)
