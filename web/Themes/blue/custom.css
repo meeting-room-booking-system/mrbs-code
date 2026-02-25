@@ -1,0 +1,50 @@
+
+nav.view a.selected {
+  background: #c2e7ff;
+  color: #000000;
+}
+
+nav.view a:hover {
+  background: #e4e7ec;
+  color: #000000;
+}
+
+div.A, div.A a,
+div.B, div.B a,
+div.C, div.C a,
+div.D, div.D a,
+div.E, div.E a,
+div.F, div.F a,
+div.G, div.G a,
+div.H, div.H a,
+div.I, div.I a,
+div.J, div.J a,
+.color_key > div {
+  color: #ffffff;
+}
+
+.banner {
+  background-color: #f8fafd;
+  border-color: #f8fafd;
+}
+
+table.dataTable.display tbody tr.odd,
+table.dataTable.display tbody tr.odd > .sorting_1,
+table.dataTable.display tbody tr.odd > .sorting_2,
+table.dataTable.display tbody tr.odd > .sorting_3,
+table.dataTable.order-column.stripe tbody tr.odd > .sorting_1,
+table.dataTable.order-column.stripe tbody tr.odd > .sorting_2,
+table.dataTable.order-column.stripe tbody tr.odd > .sorting_3 {
+  background-color: #f8fafd;
+}
+
+table.dataTable.display tbody tr.even,
+table.dataTable.display tbody tr.even > .sorting_1,
+table.dataTable.display tbody tr.even > .sorting_2,
+table.dataTable.display tbody tr.even > .sorting_3,
+table.dataTable.order-column.stripe tbody tr.even > .sorting_1,
+table.dataTable.order-column.stripe tbody tr.even > .sorting_2,
+table.dataTable.order-column.stripe tbody tr.even > .sorting_3 {
+  background-color: #ffffff;
+}
+
