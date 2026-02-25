@@ -21,6 +21,27 @@ class Area extends Location
     // TODO: Handle defaults differently: get rid of $area_defaults
     foreach ($area_defaults as $key => $value)
     {
+      // Need to create a Periods object for the periods column
+      if ($key == 'periods')
+      {
+        $periods = new Periods();
+        foreach ($value as $k => $v)
+        {
+          // There are two different formats for the periods defaults.
+          if (is_int($k))
+          {
+            // Simple array of period names
+            $periods->add(new Period($v));
+          }
+          else
+          {
+            // Associative array of period names and times
+            $periods->add(new Period($k, $v[0], $v[1]));
+          }
+        }
+        $value = $periods;
+      }
+
       $this->$key = $value;
     }
   }
