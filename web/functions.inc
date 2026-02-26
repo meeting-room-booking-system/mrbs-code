@@ -1482,9 +1482,10 @@ function escape_js(string $str) : string
 }
 
 
-// Return a default area id; used if no area is already known. This returns the
-// area that contains the default room (if it is set, valid and enabled) otherwise the
-// first area in alphabetical order in the database (no guarantee there is an area 1).
+// Return a default area id; used if no area is already known. Preference order:
+// - the area that contains the default room (if it is set, valid, and enabled)
+// - the first enabled area that contains an enabled, visible room
+// - the first enabled area (if enabled areas exist)
 // The area must be enabled for it to be considered.
 // This could be changed to implement something like per-user defaults.
 function get_default_area() : int
@@ -1517,18 +1518,14 @@ function get_default_area() : int
     }
   }
 
-  // If there are enabled areas, return the first enabled area
-  $sql = "SELECT id FROM " . _tbl('area');
-  if ($disabled_field_exists)
+  // Otherwise return the first enabled area, regardless of the state of its rooms.
+  $areas = new Areas();
+  foreach ($areas as $area)
   {
-    $sql .= " WHERE disabled = 0";
-  }
-  $sql .= " ORDER BY $order_by_column LIMIT 1";
-  $area = db()->query1($sql);
-
-  if ($area > 0)
-  {
-    return $area;
+    if (isset($area) && !$area->isDisabled())
+    {
+      return $area->id;
+    }
   }
 
   return 0;
