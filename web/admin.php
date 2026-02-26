@@ -428,11 +428,19 @@ Form::checkToken(true);
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
-
-
 // Get non-standard form variables
 $error = get_form_var('error', 'string');
 
+// If we haven't got an area id (because the default area normally has to be enabled), then just get the first
+// area of any kind at all.
+if (empty($area))
+{
+  $area_ids = array_keys(get_area_names(true));
+  if (count($area_ids) > 0)
+  {
+    $area = $area_ids[0];
+  }
+}
 
 $context = array(
     'view'      => $view,
