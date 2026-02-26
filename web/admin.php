@@ -435,10 +435,11 @@ $error = get_form_var('error', 'string');
 // area of any kind at all.
 if (empty($area))
 {
-  $area_ids = array_keys(get_area_names(true));
-  if (count($area_ids) > 0)
+  $areas = new Areas();
+  foreach ($areas as $a)
   {
-    $area = $area_ids[0];
+    $area = $a->id;
+    break;
   }
 }
 
