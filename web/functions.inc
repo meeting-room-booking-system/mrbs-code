@@ -1517,6 +1517,20 @@ function get_default_area() : int
     }
   }
 
+  // If there are enabled areas, return the first enabled area
+  $sql = "SELECT id FROM " . _tbl('area');
+  if ($disabled_field_exists)
+  {
+    $sql .= " WHERE disabled = 0";
+  }
+  $sql .= " ORDER BY $order_by_column LIMIT 1";
+  $area = db()->query1($sql);
+
+  if ($area > 0)
+  {
+    return $area;
+  }
+
   return 0;
 }
 
