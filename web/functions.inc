@@ -1482,14 +1482,17 @@ function escape_js(string $str) : string
 }
 
 
-// Return a default area id; used if no area is already known. Preference order:
-// - the area that contains the default room (if it is set, valid, and enabled)
-// - the first enabled area that contains an enabled, visible room
-// - the first enabled area (if enabled areas exist)
-// The area must be enabled for it to be considered.
-// This could be changed to implement something like per-user defaults.
+/**
+ * Get the default area id. The following order of preference is used to find an area:
+ * - the area that contains the default room (if it is set, visible, and enabled)
+ * - the first enabled area that contains an enabled, visible room
+ * - the first enabled area, regardless of the state of its rooms
+ *
+ * The area must be enabled for it to be considered.
+ */
 function get_default_area() : int
 {
+  // This function could be changed to implement something like per-user defaults.
   global $default_room;
 
   // If the $default_room is set and exists and is enabled and is visible to
