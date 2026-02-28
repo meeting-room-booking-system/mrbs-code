@@ -479,6 +479,7 @@ function mrbsCheckPolicy(array $booking, ?int $ignore_entry_id=null, ?int $ignor
   global $prevent_simultaneous_bookings, $prevent_invalid_types, $invalid_types_days;
   global $prevent_booking_on_holidays, $prevent_booking_on_weekends;
   global $periods_booking_opens, $measure_max_to_start_time;
+  global $exempt_types;
   global $auth;
 
   $result = array('notices' => array(),
@@ -593,15 +594,22 @@ function mrbsCheckPolicy(array $booking, ?int $ignore_entry_id=null, ?int $ignor
       }
     }
 
-    if ($max_create_ahead_enabled)
+    if ($max_create_ahead_enabled && !(isset($exempt_types['max_create_ahead']) && in_array($booking['type'], $exempt_types['max_create_ahead'])))
     {
       $max_create_ahead_secs = adjust_ahead_seconds($max_create_ahead_secs);
       $edge = ($measure_max_to_start_time) ? $booking['start_time'] : $booking['end_time'];
       if ($edge - $now > $max_create_ahead_secs + cross_dst($now, $edge))
       {
         $max_create_ahead = to_time_string($max_create_ahead_secs);
-        $tag = ($measure_max_to_start_time) ? 'max_create_time_before_start' : 'max_create_time_before';
-        $violations[] = get_vocab($tag, $max_create_ahead['value'], $max_create_ahead['units']);
+        if (empty($exempt_types['max_create_ahead']))
+        {
+          $tag = ($measure_max_to_start_time) ? 'max_create_time_before_start' : 'max_create_time_before';
+        }
+        else
+        {
+          $tag = ($measure_max_to_start_time) ? 'max_create_time_before_start_type' : 'max_create_time_before_type';
+        }
+        $violations[] = get_vocab($tag, $max_create_ahead['value'], $max_create_ahead['units'], get_type_vocab($booking['type']));
       }
     }
   }

@@ -416,6 +416,8 @@ $prevent_booking_on_holidays = true;
 // Set this to true to prevent bookings being made on weekends (see $weekdays).
 $prevent_booking_on_weekends = false;
 
+// It is possible to exclude some booking types from certain booking policies.
+$exempt_types['max_create_ahead'] = [];
 
 /******************
  * Display settings
