@@ -385,6 +385,7 @@ function get_fieldset_create_ahead() : ElementFieldset
   $fieldset->addElement($field);
 
   // Maximum create ahead
+  // TODO: add some kind of note about exempt types
   $param_names = array(
       'enabler'  => 'area_max_create_ahead_enabled',
       'quantity' => 'area_max_create_ahead_value',
