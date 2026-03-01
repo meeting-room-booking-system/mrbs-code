@@ -259,6 +259,24 @@ function check_interval(string $interval_type, array $booking, ?int $ignore_entr
 {
   global $max_per_interval_global, $max_per_interval_area;
   global $max_secs_per_interval_global, $max_secs_per_interval_area;
+  global $exempt_types;
+
+  // No need to check anything if we're checking the total length of bookings and this booking type is exempt.
+  if ($check_seconds)
+  {
+    if (!empty($exempt_types['max_length']) && in_array($booking['type'], $exempt_types['max_length']))
+    {
+      return null;
+    }
+  }
+  // Or if we're checking the total number of bookings and this booking type is exempt.
+  else
+  {
+    if (!empty($exempt_types['max_number']) && in_array($booking['type'], $exempt_types['max_number']))
+    {
+      return null;
+    }
+  }
 
   // Get the area id.   We only need to do this once as all bookings will be
   // in the same area.
@@ -338,6 +356,15 @@ function check_interval(string $interval_type, array $booking, ?int $ignore_entr
       $existing[$location][$check_type][$interval_type][$interval_start] = 0;
       $proposed[$location][$check_type][$interval_type][$interval_start] = 0;
 
+      if ($check_seconds)
+      {
+        $ignore_types = $exempt_types['max_length'] ?? [];
+      }
+      else
+      {
+        $ignore_types = $exempt_types['max_number'] ?? [];
+      }
+
       $rows = get_entry_times_by_user(
           $booking['create_by'],
           $interval_start,
@@ -345,7 +372,8 @@ function check_interval(string $interval_type, array $booking, ?int $ignore_entr
           ($only_area) ? $area_id : null,
           $check_seconds,
           $ignore_entry_id,
-          $ignore_repeat_id
+          $ignore_repeat_id,
+          $ignore_types
         );
 
       foreach ($rows as $row)
@@ -981,6 +1009,21 @@ function get_entries_by_room(int $room_id, ?DateTime $start_date, ?DateTime $end
 }
 
 
+/**
+ * Get the start and end times of all a user's entries.  Entries in disabled roms and areas are ignored.
+ *
+ * @param string $create_by The username of the user whose entries are to be returned.
+ * @param int $interval_start The start of the interval to return entries for.
+ * @param int|null $interval_end The end of the interval to return entries for; if NULL, then all subsequent entries.
+ * @param int|null $area_id The area for which entries are to be returned.  If NULL, then all areas.
+ * @param bool $exclude_periods Whether to exclude areas where periods are enabled.
+ * @param int|null $ignore_entry_id If set, then only entries that don't have this id are returned.
+ * @param int|null $ignore_repeat_id If set, then only entries that don't have this repeat id are returned.
+ * @param array $ignore_types Exclude entries of these types.
+ *
+ * @return array{array{start_time: int, end_time: int}} An array of arrays, each of which contains the start and end
+ * times of an entry.
+ */
 function get_entry_times_by_user(
   string $create_by,
   int $interval_start,
@@ -988,7 +1031,9 @@ function get_entry_times_by_user(
   ?int $area_id=null,
   bool $exclude_periods=false,
   ?int $ignore_entry_id=null,
-  ?int $ignore_repeat_id=null) : array
+  ?int $ignore_repeat_id=null,
+  array $ignore_types = []
+) : array
 {
   $sql = "SELECT E.start_time, E.end_time
                 FROM " . _tbl('entry') . " E, " . _tbl('room') . " R, " . _tbl('area') . " A
@@ -1029,6 +1074,10 @@ function get_entry_times_by_user(
   {
     $sql .= " AND (E.repeat_id IS NULL OR E.repeat_id <> :ignore_repeat_id)";
     $sql_params[':ignore_repeat_id'] = $ignore_repeat_id;
+  }
+  if (!empty($ignore_types))
+  {
+    $sql .= " AND E.type NOT IN ('" . implode("', '", $ignore_types) . "')";
   }
 
   $res = db()->query($sql, $sql_params);
