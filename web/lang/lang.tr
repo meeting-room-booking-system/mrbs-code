@@ -175,7 +175,7 @@ $vocab["reason"]                  = "Sebep";
 $vocab["info_requested"]          = "Bilgi istendi";
 $vocab["min_time_before"]         = "Şimdi ve yer ayırtma başlangıcı arasındaki minimum süre";
 $vocab["max_time_before"]         = "Şimdi ve yer ayırtma başlangıcı arasındaki maksimum süre";
-$vocab["max_booking_duration"]    = "Bir yer ayırtmanın maksimum süresi";
+$vocab["max_booking_duration"]    = 'Bir yer ayırtmanın maksimum süresi %1$d %2$s';
 
 // Used in pending.php
 $vocab["pending"]            = "Onay bekleyen kayıtlar";

@@ -181,7 +181,7 @@ $vocab["reason"]                  = "Ok";
 $vocab["info_requested"]          = "Információ szükséges";
 $vocab["min_time_before"]         = "Az aktuális dátum és a foglalás kezdete közötti legkisebb megengedett időintervallum:";
 $vocab["max_time_before"]         = "Az aktuális dátum és a foglalás kezdete közötti legnagyobb megengedett időintervallum:";
-$vocab["max_booking_duration"]    = "A foglalások legnagyobb megengedett időtartama:";
+$vocab["max_booking_duration"]    = 'A foglalások legnagyobb megengedett időtartama: %1$d %2$s';
 $vocab["skip_and_book"]           = "Tovább és foglalás";
 $vocab["skip_and_book_note"]      = "A foglalás folytatása az ütközések mellőzésével";
 

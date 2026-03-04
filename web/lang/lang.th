@@ -175,7 +175,7 @@ $vocab["reason"]                  = "เหตุผล";
 $vocab["info_requested"]          = "ร้องขอข้อมูล";
 $vocab["min_time_before"]         = "ช่วงเวลาขั้นต่ำในขณะนี้และระหว่างการเริ่มต้นของการจองเป็น";
 $vocab["max_time_before"]         = "ช่วงเวลาสูงสุดในขณะนี้และระหว่างการเริ่มต้นของการจองเป็น";
-$vocab["max_booking_duration"]    = "ช่วงเวลาสูงสุดของการจองคือ";
+$vocab["max_booking_duration"]    = 'ช่วงเวลาสูงสุดของการจองคือ %1$d %2$s';
 
 // Used in pending.php
 $vocab["skip_and_book"]           = "ข้ามและจอง";
