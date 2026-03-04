@@ -682,31 +682,37 @@ function mrbsCheckPolicy(array $booking, ?int $ignore_entry_id=null, ?int $ignor
   {
     if ($enable_periods)
     {
-      // Instead of calculating the difference between the start and end times and
-      // comparing that with the maximum duration, we add the maximum duration to the
-      // start time and compare that with the actual end time
-      $start = getdate($booking['start_time']);
-      $start['minutes'] += $max_duration_periods;
-      $n_periods = count($periods);
-      // If we've gone over into another day, adjust the minutes and days accordingly
-      while ($start['minutes'] >= $n_periods)
+      if (empty($exempt_types['max_duration_periods']) || !in_array($booking['type'], $exempt_types['max_duration_periods']))
       {
-        $start['minutes'] -= $n_periods;
-        $start['mday']++;
-      }
-      $max_endtime = mktime($start['hours'], $start['minutes'], $start['seconds'],
-                            $start['mon'], $start['mday'], $start['year']);
-      if ($booking['end_time'] > $max_endtime)
-      {
-        $violations[] = get_vocab("max_booking_duration") . " $max_duration_periods " .
-                    (($max_duration_periods > 1) ? get_vocab("periods") : get_vocab("period_lc"));
+        // Instead of calculating the difference between the start and end times and
+        // comparing that with the maximum duration, we add the maximum duration to the
+        // start time and compare that with the actual end time
+        $start = getdate($booking['start_time']);
+        $start['minutes'] += $max_duration_periods;
+        $n_periods = count($periods);
+        // If we've gone over into another day, adjust the minutes and days accordingly
+        while ($start['minutes'] >= $n_periods)
+        {
+          $start['minutes'] -= $n_periods;
+          $start['mday']++;
+        }
+        $max_endtime = mktime($start['hours'], $start['minutes'], $start['seconds'],
+                              $start['mon'], $start['mday'], $start['year']);
+        if ($booking['end_time'] > $max_endtime)
+        {
+          $tag = (empty($exempt_types['max_duration_periods'])) ? 'max_booking_duration' : 'max_booking_duration_type';
+          $units = ($max_duration_periods > 1) ? get_vocab("periods") : get_vocab("period_lc");
+          $violations[] = get_vocab($tag, $max_duration_periods, $units, get_type_vocab($booking['type']));
+        }
       }
     }
-    elseif ($booking['end_time'] - $booking['start_time'] > $max_duration_secs)
+    elseif ((empty($exempt_types['max_duration_secs']) || !in_array($booking['type'], $exempt_types['max_duration_secs'])) &&
+            ($booking['end_time'] - $booking['start_time'] > $max_duration_secs))
     {
+      $tag = (empty($exempt_types['max_duration_secs'])) ? 'max_booking_duration' : 'max_booking_duration_type';
       $max_duration = $max_duration_secs;
       toTimeString($max_duration, $units);
-      $violations[] = get_vocab("max_booking_duration") . " $max_duration $units";
+      $violations[] = get_vocab($tag, $max_duration, $units, get_type_vocab($booking['type']));
     }
   }
 

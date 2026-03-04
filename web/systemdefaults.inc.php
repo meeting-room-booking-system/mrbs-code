@@ -425,8 +425,10 @@ $prevent_booking_on_weekends = false;
 
 // It is possible to exclude some booking types from certain booking policies.
 $exempt_types['max_create_ahead'] = []; // Exempt from checks on the maximum time ahead for creating bookings
-$exempt_types['max_number'] = []; // Exempt from checks on the total number of bookings
+$exempt_types['max_duration_periods'] = []; // Exempt from checks on the maximum duration in periods mode
+$exempt_types['max_duration_secs'] = []; // Exempt from checks on the maximum duration in times mode
 $exempt_types['max_length'] = []; // Exempt from checks on the total length of bookings
+$exempt_types['max_number'] = []; // Exempt from checks on the total number of bookings
 
 /******************
  * Display settings
