@@ -506,7 +506,7 @@ function mrbsCheckPolicy(array $booking, ?int $ignore_entry_id=null, ?int $ignor
   global $approved_bookings_cannot_be_changed, $approval_enabled;
   global $prevent_simultaneous_bookings, $prevent_invalid_types, $invalid_types_days;
   global $prevent_booking_on_holidays, $prevent_booking_on_weekends;
-  global $periods_booking_opens, $measure_max_to_start_time;
+  global $periods_booking_opens, $times_booking_opens, $measure_max_to_start_time, $timezone;
   global $exempt_types;
   global $auth;
 
@@ -626,6 +626,24 @@ function mrbsCheckPolicy(array $booking, ?int $ignore_entry_id=null, ?int $ignor
     {
       $max_create_ahead_secs = adjust_ahead_seconds($max_create_ahead_secs);
       $edge = ($measure_max_to_start_time) ? $booking['start_time'] : $booking['end_time'];
+      // Adjust the edge if we're opening booking at a fixed time and the book ahead maximum is a whole number of days
+      if (!$enable_periods && isset($times_booking_opens) && ($max_create_ahead_secs % SECONDS_PER_DAY === 0))
+      {
+        if (count($exploded = explode(':', $times_booking_opens)) !== 2)
+        {
+          trigger_error('Invalid $times_booking_opens setting: ' . $times_booking_opens, E_USER_WARNING);
+        }
+        else
+        {
+          $date = new DateTime('now', new DateTimeZone($timezone));
+          $date->setTimestamp($edge);
+          list($hour, $minute) = $exploded;
+          $date->setTime(intval($hour), intval($minute));
+          $edge = $date->getTimestamp();
+          $booking_opens_message = get_vocab('booking_opens_at', datetime_format($datetime_formats['time'], $edge));
+        }
+      }
+      // Test whether the booking is being made too early, compensating for DST transitions.
       if ($edge - $now > $max_create_ahead_secs + cross_dst($now, $edge))
       {
         $max_create_ahead = to_time_string($max_create_ahead_secs);
@@ -637,7 +655,12 @@ function mrbsCheckPolicy(array $booking, ?int $ignore_entry_id=null, ?int $ignor
         {
           $tag = ($measure_max_to_start_time) ? 'max_create_time_before_start_type' : 'max_create_time_before_type';
         }
-        $violations[] = get_vocab($tag, $max_create_ahead['value'], $max_create_ahead['units'], get_type_vocab($booking['type']));
+        $message = get_vocab($tag, $max_create_ahead['value'], $max_create_ahead['units'], get_type_vocab($booking['type']));
+        if (isset($booking_opens_message))
+        {
+          $message .= '. ' . $booking_opens_message . '.';
+        }
+        $violations[] = $message;
       }
     }
   }

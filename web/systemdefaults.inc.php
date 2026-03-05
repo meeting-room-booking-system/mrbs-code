@@ -402,6 +402,12 @@ $prevent_invalid_types = true;
 // $invalid_types_days['I'] = [1, 3] means that bookings of type 'I' cannot be made on Mondays or Wednesdays.
 $invalid_types_days = array();
 
+// When setting book ahead policies in times mode, and the interval is a whole number of days, it is possible to
+// specify that bookings should open at a fixed time of day, rather than so many hours before the start or end of
+// the booking.
+// This should be a string in the format hh:mm using the 24-hour clock.
+//$times_booking_opens = '07:00';
+
 // When setting max_create_ahead and max_delete_ahead policies, the time interval is normally
 // measured to the end time of the booking.  This is to prevent users cheating the system by
 // booking a very long slot with the start time just inside the limit and then either not using

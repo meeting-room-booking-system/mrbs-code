@@ -271,6 +271,7 @@ $vocab["max_delete_time_before"]  = 'You cannot edit or delete a booking which e
 $vocab["max_delete_time_before_start"]  = 'You cannot edit or delete a booking which starts in more than %1$d %2$s';
 $vocab["earliest_booking_date"]   = "The earliest booking date is %s";
 $vocab["latest_booking_date"]     = "The latest booking date is %s";
+$vocab["booking_opens_at"]        = "Bookings open at %s each day";
 $vocab["max_booking_duration"]    = 'The maximum duration of a booking is %1$d %2$s';
 $vocab["max_booking_duration_type"]  = 'The maximum duration of a booking of type %3$s is %1$d %2$s';
 $vocab["max_per_day_global"]      = "The maximum number of bookings per day per user across the whole system is";
