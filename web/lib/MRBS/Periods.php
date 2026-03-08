@@ -304,26 +304,15 @@ class Periods implements Countable, SeekableIterator
    *
    * @param int $timestamp  The timestamp of the period
    * @param string $hhmm  The time in the format HH:MM
-   *
-   * @return false|int  False if the time is invalid, otherwise the real time as a Unix timestamp.
    */
-  private function getRealTime(int $timestamp, string $hhmm)
+  private function getRealTime(int $timestamp, string $hhmm) : int
   {
     if (!isset($this->tzid))
     {
       throw new \Exception('No timezone set');
     }
 
-    if (count($exploded = explode(':', $hhmm)) !== 2)
-    {
-      return false;
-    }
-
-    list($hour, $minute) = $exploded;
-    $date = new DateTime('now', new DateTimeZone($this->tzid));
-    $date->setTimestamp($timestamp);
-    $date->setTime(intval($hour), intval($minute));
-    return $date->getTimestamp();
+    return timestamp_set_time($timestamp, $hhmm, $this->tzid);
   }
 
 

@@ -1356,16 +1356,18 @@ function is_in_booking_day(int $t) : bool
 }
 
 
-// Takes a Unix timestamp and sets the time, while keeping the day the same.
-// $time is a string in hh:mm format (24 hour clock)
-function timestamp_set_time(int $timestamp, string $time) : int
+/**
+ * Takes a Unix timestamp and sets the time, while keeping the day the same.
+ *
+ * @param int $timestamp
+ * @param string $hhmm The time in the format HH:MM (24-hour format is used)
+ * @param string|null $tzid The timezone identifier. If NULL, the current timezone is used.
+ */
+function timestamp_set_time(int $timestamp, string $hhmm, ?string $tzid=null) : int
 {
-  list($hour, $minute) = explode(':', $time);
-  $hour = intval($hour);
-  $minute = intval($minute);
-  $date = new DateTime();
+  $date = new DateTime('now', (isset($tzid)) ? new DateTimeZone($tzid) : null);
   $date->setTimestamp($timestamp);
-  $date->setTime($hour, $minute);
+  $date->setHourMinute($hhmm);
   return $date->getTimestamp();
 }
 
