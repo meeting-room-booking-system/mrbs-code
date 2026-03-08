@@ -626,19 +626,8 @@ function mrbsCheckPolicy(array $booking, ?int $ignore_entry_id=null, ?int $ignor
       // Adjust the edge if we're opening booking at a fixed time and the book ahead maximum is a whole number of days
       if (!$enable_periods && isset($times_booking_opens) && ($max_create_ahead % SECONDS_PER_DAY === 0))
       {
-        if (count($exploded = explode(':', $times_booking_opens)) !== 2)
-        {
-          trigger_error('Invalid $times_booking_opens setting: ' . $times_booking_opens, E_USER_WARNING);
-        }
-        else
-        {
-          $date = new DateTime('now', new DateTimeZone($timezone));
-          $date->setTimestamp($edge);
-          list($hour, $minute) = $exploded;
-          $date->setTime(intval($hour), intval($minute));
-          $edge = $date->getTimestamp();
-          $booking_opens_message = get_vocab('booking_opens_at', datetime_format($datetime_formats['time'], $edge));
-        }
+        $edge = timestamp_set_time($edge, $times_booking_opens, $timezone);
+        $booking_opens_message = get_vocab('booking_opens_at', datetime_format($datetime_formats['time'], $edge));
       }
       // Test whether the booking is being made too early, compensating for DST transitions.
       if ($edge - $now > $max_create_ahead + cross_dst($now, $edge))

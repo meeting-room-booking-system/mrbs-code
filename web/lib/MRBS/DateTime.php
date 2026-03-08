@@ -190,6 +190,25 @@ class DateTime extends \DateTime
   }
 
 
+  /**
+   * Set the time, given as HH:MM.
+   *
+   * @param string $hhmm The time in the format HH:MM (24-hour format is used)
+   */
+  public function setHourMinute(string $hhmm) : self
+  {
+    if (count($exploded = explode(':', $hhmm)) !== 2)
+    {
+      throw new \InvalidArgumentException("Invalid time '$hhmm'");
+    }
+
+    list($hour, $minute) = $exploded;
+    $this->setTime(intval($hour), intval($minute));
+
+    return $this;
+  }
+
+
   // Adds $n (which can be negative) months to this date, without overflowing
   // into the next month.  For example modifying 2023-01-31 by +1 month gives
   // 2023-02-28 rather than 2023-03-03.
