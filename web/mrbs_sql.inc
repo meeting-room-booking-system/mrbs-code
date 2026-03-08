@@ -811,20 +811,33 @@ function get_entry_by_id(int $id) : ?array
 }
 
 
-// Returns the timestamp for a registration opening/closing boundary.
-// Takes account of periods, when registration closes at $periods_booking_opens
-// on the day of the booking, because we don't know when in the day periods occur.
-// This function compensates for DST changes, so that, for example, 1 week before
-// occurs at the same time of day as the start time, even if there's a DST
-// transition in between.
+/**
+ * Calculate the timestamp for a registration opening/closing boundary.
+ *
+ * In periods mode the timestamp will be at `$periods_booking_opens`, because we don't know when in the day periods
+ * occur.  In times mode the timestamp will be at `$times_booking_opens`, if it is set and the advance time is a whole
+ * number of days.
+ *
+ * This function compensates for DST changes, so that, for example, 1 week before occurs at the same time of day as the
+ * start time, even if there's a DST transition in between.
+ *
+ * @param int $start_time The start time of the event (a Unix timestamp)
+ * @param int $in_advance The number of seconds in advance of the start time that the boundary is to be set to.
+ */
 function registration_boundary_timestamp(int $start_time, int $in_advance) : int
 {
-  global $enable_periods, $periods_booking_opens;
+  global $enable_periods, $periods_booking_opens, $times_booking_opens;
 
-  // If we're using periods set the time back to midnight
+  // If we're using periods set the time back to the booking opening time
   if ($enable_periods)
   {
     $start_time = timestamp_set_time($start_time, $periods_booking_opens);
+  }
+  // And if we're using times, and the booking opening time is set and the advance time is a whole number of days,
+  // then adjust the time accordingly.
+  elseif (isset($times_booking_opens) && ($in_advance % SECONDS_PER_DAY === 0))
+  {
+    $start_time = timestamp_set_time($start_time, $times_booking_opens);
   }
 
   $boundary_time = $start_time - $in_advance;
