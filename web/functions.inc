@@ -1030,28 +1030,30 @@ function fromTimeString(&$units, $dur_units)
   switch($dur_units)
   {
     /** @noinspection PhpMissingBreakStatementInspection */
-    case "years":
+    case 'years':
       $units *= 52;
       // Fall through
     /** @noinspection PhpMissingBreakStatementInspection */
-    case "weeks":
+    case 'weeks':
       $units *= DAYS_PER_WEEK;
       // Fall through
     /** @noinspection PhpMissingBreakStatementInspection */
-    case "days":
+    case 'days':
       $units *= 24;
       // Fall through
     /** @noinspection PhpMissingBreakStatementInspection */
-    case "hours":
+    case 'hours':
       $units *= 60;
       // Fall through
-    case "periods":
+    case 'periods':
     /** @noinspection PhpMissingBreakStatementInspection */
-    case "minutes":
+    case 'minutes':
       $units *= 60;
       // Fall through
-    case "seconds":
+    case 'seconds':
       break;
+    default:
+      throw new \Exception("Unexpected value '$dur_units'");
   }
   $units = (int) $units;
 }
