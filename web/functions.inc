@@ -1086,7 +1086,7 @@ function from_time_string(array $duration)
     case 'seconds':
       break;
     default:
-      throw new \Exception("Invalid value '" . $duration['units'] . "'");
+      throw new \Exception("Unexpected value '" . $duration['units'] . "'");
   }
 
   return $result;
