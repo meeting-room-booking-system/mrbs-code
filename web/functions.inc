@@ -1062,19 +1062,31 @@ function from_time_string(array $duration)
 
   switch($duration['units'])
   {
-    case "years":
+    /** @noinspection PhpMissingBreakStatementInspection */
+    case 'years':
       $result *= 52;
-    case "weeks":
+      // Fall through
+    /** @noinspection PhpMissingBreakStatementInspection */
+    case 'weeks':
       $result *= DAYS_PER_WEEK;
-    case "days":
+      // Fall through
+    /** @noinspection PhpMissingBreakStatementInspection */
+    case 'days':
       $result *= 24;
-    case "hours":
+      // Fall through
+    /** @noinspection PhpMissingBreakStatementInspection */
+    case 'hours':
       $result *= 60;
-    case "periods":
-    case "minutes":
+      // Fall through
+    case 'periods':
+      /** @noinspection PhpMissingBreakStatementInspection */
+    case 'minutes':
       $result *= 60;
-    case "seconds":
+      // Fall through
+    case 'seconds':
       break;
+    default:
+      throw new \Exception("Invalid value '" . $duration['units'] . "'");
   }
 
   return $result;
