@@ -7,7 +7,6 @@ use DateTimeZone;
 use MRBS\DB\DBException;
 use MRBS\Errors\Errors;
 use MRBS\ICalendar\Property;
-use MRBS\ICalendar\RFC5545;
 
 define('INTERVAL_DAY', 0);
 
