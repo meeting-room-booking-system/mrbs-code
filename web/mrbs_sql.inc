@@ -1474,17 +1474,13 @@ function mrbsCreateSingleEntry(array $data) : int
   }
 }
 
-/** mrbsCreateRepeatEntry()
+
+/**
+ * Insert an entry into the repeat table.
  *
- * Creates a repeat entry in the data base
- *
- * $data      - An array containing the entry details
- *
- * Returns:
- *   0        - An error occurred while inserting the entry
- *   non-zero - The entry's ID
+ * @return int The id of the newly created entry, or 0 on error.
  */
-function mrbsCreateRepeatEntry(array $data)
+function mrbsCreateRepeatEntry(array $data) : int
 {
   return mrbsCreateEntry(_tbl('repeat'), $data);
 }
