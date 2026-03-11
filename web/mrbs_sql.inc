@@ -473,18 +473,18 @@ function adjust_ahead_seconds(int $seconds) : int
 }
 
 
-/** mrbsCheckPolicy()
+/**
+ * Check to see if a proposed booking conforms to the booking policies in force.  Can be used for both creating and
+ * deleting an entry.
  *
- * Check to see if a proposed booking conforms to any booking policies in force.
- * Can be used for both creating and deleting an entry.
+ * @param array $booking The booking in question; an associative array
+ * @param int|null $ignore_entry_id If set, then ignore the entry with this ID.
+ * @param int|null $ignore_repeat_id If set, then ignore entries with this repeat ID.
+ * @param bool $delete If TRUE, then we're checking whether a proposed booking can be deleted, otherwise whether it can
+ * be created.
  *
- * $booking   - The booking in question - an associative array
- * $delete    - TRUE: We're intending to delete an entry
- *            - FALSE:  We're intending to create an entry (the default)
- *
- * Returns:
- *            - An array of human-readable errors, index by 'notices' or 'errors'.
- *              If there are no policy violations the array has length 0.
+ * @return array{notices: array<string>, errors: array<string>} An array of human-readable errors, indexed by 'notices'
+ * or 'errors'.  If there are no policy violations the elements of the arrays will be empty.
  */
 function mrbsCheckPolicy(array $booking, ?int $ignore_entry_id=null, ?int $ignore_repeat_id=null, bool $delete=false) : array
 {
