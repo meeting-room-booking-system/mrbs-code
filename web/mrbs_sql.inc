@@ -83,21 +83,18 @@ function unpack_status(array &$data)
 }
 
 
-/** mrbsCheckFree()
+/**
+ * Check whether the proposed booking would conflict with any existing bookings.
  *
- * Check to see if the time period specified is free
+ * @param array $booking The booking in question; an associative array.
+ * @param int|null $ignore_entry_id If set, ignore this entry ID.
+ * @param int|null $ignore_repeat_id If set, ignore all entries with this repeat ID.
  *
- * $booking           - The booking in question, an associative array
- * $ignore_entry_id   - An entry ID to ignore, null to ignore no entries
- * $ignore_repeat_id  - A repeat ID to ignore everything in the series, null to ignore no series
- *
- * Returns:
- *   an array of conflicts, empty if there are none
+ * @return string[] An array of conflicts, empty if there are none.
  */
 function mrbsCheckFree(array $booking, ?int $ignore_entry_id=null, ?int $ignore_repeat_id=null) : array
 {
-  global $enable_periods, $periods;
-  global $datetime_formats, $is_private_field;
+  global $enable_periods, $is_private_field;
 
   $room_id = $booking['room_id'];
 
