@@ -10,9 +10,11 @@ use MRBS\ICalendar\Property;
 
 define('INTERVAL_DAY', 0);
 
-
-// Some database drivers (eg MySQL in certain cases) return strings for ints and floats.
-// This function casts them to their intended types if necessary.
+/**
+ * Cast the columns in a row returned by a database query to the appropriate types.
+ *
+ * Some database drivers (eg MySQL in certain cases) return strings for ints and floats.
+ */
 function row_cast_columns(array &$row, string $table_short_name) : void
 {
   if (db()->returnsNativeTypes())
