@@ -845,21 +845,27 @@ function registration_boundary_timestamp(int $start_time, int $in_advance) : int
 }
 
 
-// Returns the Unix timestamp for registration opening.
+/**
+ * Returns the Unix timestamp for registration opening.
+ */
 function registration_opens_timestamp(array $entry) : int
 {
   return registration_boundary_timestamp($entry['start_time'], $entry['registration_opens']);
 }
 
 
-// Returns the Unix timestamp for registration closing.
+/**
+ * Returns the Unix timestamp for registration closing.
+ */
 function registration_closes_timestamp(array $entry) : int
 {
   return registration_boundary_timestamp($entry['start_time'], $entry['registration_closes']);
 }
 
 
-// Checks whether an entry is open for registration
+/**
+ * Checks whether an entry is open for registration
+ */
 function entry_registration_is_open(array $entry) : bool
 {
   return (!$entry['registration_opens_enabled'] || (time() >= registration_opens_timestamp($entry))) &&
@@ -867,9 +873,10 @@ function entry_registration_is_open(array $entry) : bool
 }
 
 
-// Checks whether it is too late to cancel a registration, which is
-// after the closing time for registration, if there is one, or else
-// after the entry start time.
+/**
+ * Checks whether it is too late to cancel a registration, which is after the closing
+ * time for registration, if there is one, or else after the entry start time.
+ */
 function entry_registration_cancellation_has_closed(array $entry) : bool
 {
   global $enable_periods;
@@ -896,16 +903,24 @@ function entry_registration_cancellation_has_closed(array $entry) : bool
 }
 
 
-// Add the registrant (indexed by 'username', 'create_by' and 'registered') to
-// the entry with id $entry_id
+/**
+ * Add a registrant to an entry.
+ *
+ * @param array{username: string, create_by: string, registered: int} $registrant The registrant details, with keys
+ * 'username', 'create_by' and 'registered'
+ */
 function add_registrant(int $entry_id, array $registrant) : void
 {
   add_registrants($entry_id, [$registrant]);
 }
 
 
-// Add the registrants (indexed by 'username', 'create_by' and 'registered') to
-// the entry with id $entry_id
+/**
+ * Add an array of registrants to an entry.
+ *
+ * @param array{array{username: string, create_by: string, registered: int}} $registrant An array of registrant details,
+ * each one with keys 'username', 'create_by' and 'registered'
+ */
 function add_registrants(int $entry_id, array $registrants) : void
 {
   if (empty($registrants))
