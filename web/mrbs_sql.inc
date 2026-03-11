@@ -94,8 +94,7 @@ function unpack_status(array &$data)
  */
 function mrbsCheckFree(array $booking, ?int $ignore_entry_id=null, ?int $ignore_repeat_id=null) : array
 {
-  global $enable_periods, $periods;
-  global $datetime_formats, $is_private_field;
+  global $enable_periods, $is_private_field;
 
   $room_id = $booking['room_id'];
 
