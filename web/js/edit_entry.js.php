@@ -663,6 +663,16 @@ function checkConflicts(optional)
       params.site = args.site;
     }
 
+    // Some browsers, eg Firefox, allow a select element to have nothing selected, even though
+    // it has the required attribute. This won't happen when the form is submitted, but can
+    // happen when the user is selecting options. If this happens when there is no rooms[]
+    // option selected, then don't bother checking for conflicts because the data are obviously
+    // meaningless.
+    if (params['rooms[]'] === undefined)
+    {
+      return;
+    }
+
     checkConflicts.nOutstanding++;
     $.post('edit_entry_handler.php', params)
       .fail(function() {
