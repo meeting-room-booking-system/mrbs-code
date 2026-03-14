@@ -628,6 +628,24 @@ function checkConflicts(optional)
       return;
     }
 
+    // Some browsers, eg Firefox, allow a 'multiple' select element  to have nothing selected,
+    // even though it has the required attribute. This won't happen when the form is submitted,
+    // but can happen when the user is selecting options. If this happens when there is no option
+    // selected, then don't bother checking for conflicts because the data are obviously
+    // meaningless.  An example is the rooms[] field.
+    let requiredSelectsComplete = true;
+    form.find('select:required').not(':disabled').each(function() {
+      if ($(this).prop('multiple') && ($(this).val().length === 0))
+      {
+        requiredSelectsComplete = false;
+        return false; // break out of the .each loop
+      }
+    });
+    if (!requiredSelectsComplete)
+    {
+      return;
+    }
+
     <?php
     // Load the params object with the values of all the form fields that are not
     // disabled and are not submit buttons of one kind or another
