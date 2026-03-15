@@ -29,6 +29,8 @@ class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTime
   // returned internally to PHP for processing.
   public function open($path, $name): bool
   {
+    // Nothing to do here
+    return true;
   }
 
 
@@ -36,6 +38,8 @@ class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTime
   // returned internally to PHP for processing.
   public function close(): bool
   {
+    // Nothing to do here
+    return true;
   }
 
 
@@ -65,6 +69,8 @@ class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTime
   // returned internally to PHP for processing.
   public function gc($max_lifetime)
   {
+    // Garbage collection is not required
+    return true;
   }
 
 
