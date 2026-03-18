@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace MRBS;
+namespace MRBS\SessionHandler;
 
 use Defuse\Crypto\Crypto;
 use Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException;
@@ -9,6 +9,8 @@ use MRBS\DB\DBException;
 use PDOException;
 use SessionHandlerInterface;
 use SessionUpdateTimestampHandlerInterface;
+use function MRBS\_tbl;
+use function MRBS\db;
 
 // Suppress deprecation notices until we get to requiring at least PHP 8
 // because union types, needed for the return types of read() and gc(), are

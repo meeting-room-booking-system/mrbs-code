@@ -2,8 +2,8 @@
 declare(strict_types=1);
 namespace MRBS\Session;
 
-use MRBS\SessionHandlerDb;
-use MRBS\SessionHandlerDbException;
+use MRBS\SessionHandler\SessionHandlerDb;
+use MRBS\SessionHandler\SessionHandlerDbException;
 use MRBS\User;
 use SessionHandler;
 use function MRBS\db;

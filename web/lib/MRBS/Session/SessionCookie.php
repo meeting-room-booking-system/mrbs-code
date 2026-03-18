@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace MRBS\Session;
 
-use MRBS\SessionHandlerCookie;
+use MRBS\SessionHandler\SessionHandlerCookie;
 use SessionHandler;
 use function MRBS\get_cookie_path;
 
