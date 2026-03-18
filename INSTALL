@@ -251,6 +251,15 @@ would define the 'conference_facilities' custom field to be mandatory.
 In the case of a select field, this adds an empty value to the dropdown
 list.
 
+If you want the field to be mandatory only for specific areas, you can instead
+set the value to an array of area IDs. For example:
+
+$is_mandatory_field['entry.conference_facilities'] = [1, 3];
+
+would define the 'conference_facilities' custom field to be mandatory only
+for the areas with ID 1 and 3. For other areas the field will exist but not
+be mandatory.
+
 Making a checkbox field mandatory is possible and requires the
 checkbox to be ticked before the form can be submitted.   This can be
 useful for example for requiring users to accept terms of service or
