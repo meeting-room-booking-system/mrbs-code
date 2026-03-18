@@ -2,15 +2,14 @@
 declare(strict_types=1);
 namespace MRBS\Session;
 
-use MRBS\Errors\Errors;
-use MRBS\User;
-use function MRBS\auth;
+use MRBS\SessionHandler\SessionHandlerCookie;
+use SessionHandler;
 use function MRBS\get_cookie_path;
 
 /**
  * Manage sessions via cookies stored in the client browser.
  */
-class SessionCookie extends SessionWithLogin
+class SessionCookie extends SessionPhp
 {
 
   private static $cookie_path;
@@ -18,9 +17,9 @@ class SessionCookie extends SessionWithLogin
 
   public function __construct()
   {
-    parent::__construct();
-
     self::$cookie_path = get_cookie_path();
+
+    parent::__construct();
 
     // Delete old-style cookies
     if (!empty($_COOKIE) && isset($_COOKIE["UserName"]))
@@ -32,168 +31,38 @@ class SessionCookie extends SessionWithLogin
 
   public function init(int $lifetime) : void
   {
-    // The cookie session scheme doesn't use PHP sessions
-  }
-
-
-  public function getCurrentUser() : ?User
-  {
     global $auth;
 
-    static $cached_user = null;
-    static $have_checked_cookie = false;
-
-    if (!$have_checked_cookie)
+    if (session_status() === PHP_SESSION_ACTIVE)
     {
-      $data = self::getCookie('SessionToken',
-                              $auth['session_cookie']['hash_algorithm'],
-                              $auth['session_cookie']['secret']);
-
-      $cached_user = (isset($data['user'])) ? $data['user'] : parent::getCurrentUser();
-      $have_checked_cookie = true;
+      // We've already started sessions
+      return;
     }
 
-    return $cached_user;
-  }
+    // We have to use output buffering to ensure that the cookie is set before any other output is sent.
+    ob_start();
 
+    $handler = new SessionHandlerCookie(
+      $auth['session_cookie']['secret'],
+      $auth['session_cookie']['hash_algorithm'],
+      $auth['session_cookie']['session_expire_time'],
+      self::$cookie_path,
+      $auth['session_cookie']['include_ip']
+    );
+    session_set_save_handler($handler, true);
 
-  protected function logonUser(string $username) : void
-  {
-    global $auth;
-
-    if ($auth['session_cookie']['session_expire_time'] == 0)
+    if (false === session_start())
     {
-      $expiry_time = 0;
-    }
-    else
-    {
-      $expiry_time = time() + $auth['session_cookie']['session_expire_time'];
-    }
-
-    $user = auth()->getUser($username);
-
-    self::setCookie('SessionToken',
-                    $auth['session_cookie']['hash_algorithm'],
-                    $auth['session_cookie']['secret'],
-                    array('user'     => $user,
-                          'username' => $username),
-                    $expiry_time);
-  }
-
-
-  public function logoffUser() : void
-  {
-    // Delete cookie
-    setcookie('SessionToken', '', time()-42000, self::$cookie_path);
-  }
-
-
-  // Wrapper for setting cookies
-  public static function setCookie(string $name, string $hash_algorithm, string $secret, array $data, int $expiry=0) : void
-  {
-    global $auth, $server;
-
-    assert(!isset($data['expiry']), "'expiry' is a reserved data key");
-    assert(!isset($data['ip']), "'ip' is a reserved data key");
-
-    $data['expiry'] = $expiry;
-
-    if ($auth['session_cookie']['include_ip'])
-    {
-      $data['ip'] = $server['REMOTE_ADDR'] ?? null;
-    }
-
-    $json_data = json_encode($data);
-
-    $hash = self::getHash($hash_algorithm, $json_data, $secret);
-
-    setcookie($name,
-              "{$hash}_" . base64_encode($json_data),
-              $expiry,
-              self::$cookie_path);
-  }
-
-
-  public static function getCookie(string $name, string $hash_algorithm, string $secret) : array
-  {
-    global $auth, $server;
-
-    if (empty($_COOKIE) || !isset($_COOKIE[$name]))
-    {
-      return array();
-    }
-
-    $token = $_COOKIE[$name];
-
-    if (!isset($token) || ($token === ''))
-    {
-      throw new \Exception('Token is invalid');
-    }
-
-    list($hash, $base64_data) = explode('_', $token);
-    $json_data = base64_decode($base64_data);
-
-    if (self::getHash($hash_algorithm, $json_data, $secret) != $hash)
-    {
-      throw new \Exception('Cookie has been tampered with or secret may have changed');
-    }
-
-    $data = json_decode($json_data, true);
-
-    // Check expiry time
-    if (!isset($data['expiry']))
-    {
-      throw new \Exception('Cookie expiry time not set');
-    }
-    if (($data['expiry'] !== 0) && ($data['expiry'] <= time()))
-    {
-      // Cookie has expired
-      return array();
-    }
-
-    // Check IP address
-    if ($auth['session_cookie']['include_ip'])
-    {
-      if ((!isset($data['ip']) && !isset($server['REMOTE_ADDR'])) ||
-           ($data['ip'] !== $server['REMOTE_ADDR']))
+      $message = "Could not start DB sessions, trying ordinary PHP sessions.";
+      trigger_error($message, E_USER_WARNING);
+      // Restore the default PHP session handler and try again.
+      $handler = new SessionHandler();
+      session_set_save_handler($handler, true);
+      if (false === session_start())
       {
-        $message = 'IP address should be ' . $data['ip'] . ', but REMOTE_ADDR is ' .
-                   $server['REMOTE_ADDR'];
-        trigger_error($message);
-        // The IP has address has changed.  It could be legitimate but it could also be due to
-        // tampering.
-        return array();
+        throw new \Exception("Could not start sessions");
       }
     }
-
-    // Everything looks OK.  Clear the internal data keys, fix up objects and return the data.
-    unset($data['ip']);
-    unset($data['expiry']);
-
-    // Special treatment for the 'user' key.   When we store the user object in a cookie json_encode
-    // converts it into an array of property data.  That's fine as it's dangerous to store an object
-    // in a cookie.  But it means we have to convert the array back into a User object when we read
-    // the cookie.
-    if (isset($data['user']))
-    {
-      $tmp = $data['user'];
-      $data['user'] = new User();
-      $data['user']->load($tmp);
-    }
-
-    return $data;
   }
 
-
-  private static function getHash(string $algo, string $data, string $key) : string
-  {
-    if (!function_exists('hash_hmac'))
-    {
-      Errors::fatalError("It appears that your PHP has the hash functions " .
-                         "disabled, which are required for the 'cookie' " .
-                         "session scheme.");
-    }
-
-    return hash_hmac($algo, $data, $key);
-  }
 }

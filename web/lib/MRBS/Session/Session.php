@@ -2,8 +2,8 @@
 declare(strict_types=1);
 namespace MRBS\Session;
 
-use MRBS\SessionHandlerDb;
-use MRBS\SessionHandlerDbException;
+use MRBS\SessionHandler\SessionHandlerDb;
+use MRBS\SessionHandler\SessionHandlerDbException;
 use MRBS\User;
 use SessionHandler;
 use function MRBS\db;
@@ -96,6 +96,11 @@ abstract class Session
       {
         $handler = new SessionHandlerDb();
         session_set_save_handler($handler, true);
+      }
+      else
+      {
+        $message = "The database server does not support multiple locks, so the database session handler cannot be used.";
+        trigger_error($message);
       }
       $session_started = session_start();
     }

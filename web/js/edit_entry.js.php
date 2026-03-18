@@ -628,7 +628,7 @@ function checkConflicts(optional)
       return;
     }
 
-    // Some browsers, eg Firefox, allow a 'multiple' select element  to have nothing selected,
+    // Some browsers, eg Firefox, allow a 'multiple' select element to have nothing selected,
     // even though it has the required attribute. This won't happen when the form is submitted,
     // but can happen when the user is selecting options. If this happens when there is no option
     // selected, then don't bother checking for conflicts because the data are obviously
