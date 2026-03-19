@@ -1123,8 +1123,6 @@ $auth["session_cookie"]["include_ip"] = true;
 // see http://php.net/manual/en/function.hash-algos.php
 $auth["session_cookie"]["hash_algorithm"] = 'sha512';
 
-$csrf_cookie["hash_algorithm"] = 'sha512';
-$csrf_cookie["secret"] = "This still isn't a very good secret!";
 
 // Configuration parameters for 'php' session scheme
 
