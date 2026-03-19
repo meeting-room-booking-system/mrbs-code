@@ -1443,6 +1443,30 @@ $(document).on('page_ready', function() {
           <?php // Switch end time select ?>
           reloadSlotSelector($('#end_seconds'), newArea);
 
+          <?php
+          // For each field which is only mandatory for some areas (i.e. the $is_mandatory_field entry for the field is an array)
+          // check whether the new area is in the array, and if so add the required attribute, otherwise remove it.
+          foreach ($is_mandatory_field as $key => $value)
+          {
+            list($table, $fieldname) = explode('.', $key, 2);
+            if ($table === 'entry') {
+              if (is_array($value))
+              {
+                ?>
+                var input_field = $('#f_<?php echo $fieldname ?>');
+                if ($.inArray(parseInt(newArea), <?php echo json_encode($value) ?>) >= 0) {
+                  input_field.prop('required', true);
+                } else {
+                  input_field.prop('required', false);
+                  input_field[0].setCustomValidity('');
+                }
+                input_field[0].checkValidity();
+                <?php
+              }
+            }
+          }
+          ?>
+
           adjustSlotSelectors();
         });
 
