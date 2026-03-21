@@ -69,4 +69,14 @@ class SessionCookie extends SessionPhp
     }
   }
 
+
+  public function logoffUser() : void
+  {
+    unset($_SESSION['user']);
+    session_regenerate_id(true);
+    // Problems have been reported on Windows IIS with session data not being
+    // written out without a call to session_write_close()
+    session_write_close();
+  }
+
 }
