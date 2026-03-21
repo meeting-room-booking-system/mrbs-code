@@ -19,6 +19,9 @@ class SessionCookie extends SessionPhp
   {
     global $auth;
 
+    // We have to use output buffering to ensure that the cookies are set before any other output is sent.
+    ob_start();
+
     self::$cookie_path = get_cookie_path();
 
     // Delete old-style cookies
@@ -42,9 +45,6 @@ class SessionCookie extends SessionPhp
       // We've already started sessions
       return;
     }
-
-    // We have to use output buffering to ensure that the cookie is set before any other output is sent.
-    ob_start();
 
     $handler = new SessionHandlerCookie(
       $auth['session_cookie']['secret'],
