@@ -17,15 +17,19 @@ class SessionCookie extends SessionPhp
 
   public function __construct()
   {
-    self::$cookie_path = get_cookie_path();
+    global $auth;
 
-    parent::__construct();
+    self::$cookie_path = get_cookie_path();
 
     // Delete old-style cookies
     if (!empty($_COOKIE) && isset($_COOKIE["UserName"]))
     {
       setcookie('UserName', '', time()-42000, self::$cookie_path);
     }
+
+    $this->lifetime = $auth['session_cookie']['session_expire_time'] ?? 0;
+
+    parent::__construct();
   }
 
 
@@ -45,7 +49,7 @@ class SessionCookie extends SessionPhp
     $handler = new SessionHandlerCookie(
       $auth['session_cookie']['secret'],
       $auth['session_cookie']['hash_algorithm'],
-      $auth['session_cookie']['session_expire_time'],
+      $lifetime,
       self::$cookie_path,
       $auth['session_cookie']['include_ip']
     );
