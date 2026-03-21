@@ -26,6 +26,8 @@ else
  */
 class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTimestampHandlerInterface
 {
+  private const DEFAULT_HASH_ALGO = 'sha512';
+
   private $algo;
   private $include_ip;
   private $lifetime;
@@ -35,17 +37,26 @@ class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTime
 
   public function __construct(
     string $secret,
-    string $algo = 'sha512',
+    string $algo = self::DEFAULT_HASH_ALGO,
     int $lifetime = 0,
     string $path = '/',
     bool $include_ip = false
   )
   {
-    $this->algo = $algo;
     $this->include_ip = $include_ip;
     $this->lifetime = $lifetime;
     $this->path = $path;
     $this->secret = $secret;
+    if (in_array($algo, hash_hmac_algos()))
+    {
+      $this->algo = $algo;
+    }
+    else
+    {
+      $this->algo = self::DEFAULT_HASH_ALGO;
+      $message = "Invalid hash algorithm '$algo' specified, using '" . self::DEFAULT_HASH_ALGO . "'sha512' instead";
+      trigger_error($message, E_USER_WARNING);
+    }
   }
 
 

@@ -17,6 +17,7 @@ abstract class Session
   protected const SAMESITE_LAX = 'Lax';
   protected const SAMESITE_STRICT = 'Strict';
 
+  protected $lifetime;
   protected $samesite = null;
 
   public function __construct()
@@ -32,8 +33,12 @@ abstract class Session
     // Start up sessions
     // Default to the behaviour of previous versions of MRBS, use only
     // session cookies - no persistent cookie.
-    $lifetime = $auth['session_php']['session_expire_time'] ?? 0;
-    $this->init($lifetime);
+    if (!isset($this->lifetime))
+    {
+      $this->lifetime = $auth['session_php']['session_expire_time'] ?? 0;
+    }
+
+    $this->init($this->lifetime);
   }
 
 
