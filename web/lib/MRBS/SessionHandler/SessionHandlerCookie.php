@@ -26,7 +26,6 @@ else
  */
 class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTimestampHandlerInterface
 {
-  use Cookie;
 
   private const DEFAULT_HASH_ALGO = 'sha512';
 
@@ -155,7 +154,7 @@ class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTime
     $data = session_encode();
 
     $hash = self::getHash($this->algo, $data, $this->secret);
-    return $this->cookieSet($id, $hash . '_' . base64_encode($data), $expiry);
+    return Cookie::cookieSet($id, $hash . '_' . base64_encode($data), $expiry);
   }
 
 
@@ -165,12 +164,12 @@ class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTime
    */
   public function destroy($id): bool
   {
-    return $this->cookieSet($id, '', time() - 42000);
+    return Cookie::cookieSet($id, '', time() - 42000);
   }
 
 
   /**
-   * @return The return value (usually TRUE on success, FALSE on failure). Note this value is
+   * @return bool The return value (usually TRUE on success, FALSE on failure). Note this value is
    * returned internally to PHP for processing.
    */
   public function gc($max_lifetime)

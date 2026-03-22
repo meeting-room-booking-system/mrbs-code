@@ -2,14 +2,14 @@
 declare(strict_types=1);
 namespace MRBS\SessionHandler;
 
-trait Cookie
+class Cookie
 {
 
   /**
    * A wrapper for `setcookie()` that uses the same values for `$path`, `$domain`, `$secure`, `$httponly` and, if
    * applicable, `$samesite` as for the session cookie.
    */
-  public function cookieSet(string $name, string $value, int $expires) : bool
+  public static function cookieSet(string $name, string $value, int $expires) : bool
   {
     // Use the same cookie params as for the session cookie.
     $cookie_params = session_get_cookie_params();
