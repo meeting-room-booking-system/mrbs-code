@@ -121,7 +121,7 @@ abstract class Session
     // Set the session handler and start up sessions
     try
     {
-      session_set_save_handler($this->getSessionHandler($lifetime), true);
+      session_set_save_handler($this->getSessionHandler(), true);
       if (false === session_start())
       {
         throw new \Exception("session_start() failed");
