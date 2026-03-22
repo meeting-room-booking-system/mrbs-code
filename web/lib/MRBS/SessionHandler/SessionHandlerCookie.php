@@ -32,7 +32,6 @@ class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTime
   private $algo;
   private $include_ip;
   private $lifetime;
-  private $path;
   private $secret;
 
 
@@ -41,13 +40,11 @@ class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTime
     string $secret,
     string $algo = self::DEFAULT_HASH_ALGO,
     int $lifetime = 0,
-    string $path = '/',
     bool $include_ip = false
   )
   {
     $this->include_ip = $include_ip;
     $this->lifetime = $lifetime;
-    $this->path = $path;
     $this->secret = $secret;
     if (in_array($algo, hash_hmac_algos()))
     {

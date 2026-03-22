@@ -12,9 +12,6 @@ use function MRBS\get_cookie_path;
 class SessionCookie extends SessionPhp
 {
 
-  private static $cookie_path;
-
-
   public function __construct()
   {
     global $auth;
@@ -22,12 +19,10 @@ class SessionCookie extends SessionPhp
     // We have to use output buffering to ensure that the cookies are set before any other output is sent.
     ob_start();
 
-    self::$cookie_path = get_cookie_path();
-
     // Delete old-style cookies
     if (!empty($_COOKIE) && isset($_COOKIE["UserName"]))
     {
-      setcookie('UserName', '', time()-42000, self::$cookie_path);
+      setcookie('UserName', '', time()-42000, get_cookie_path());
     }
 
     // Set the session lifetime
@@ -46,7 +41,6 @@ class SessionCookie extends SessionPhp
       $auth['session_cookie']['secret'],
       $auth['session_cookie']['hash_algorithm'],
       $lifetime,
-      self::$cookie_path,
       $auth['session_cookie']['include_ip']
     );
   }
