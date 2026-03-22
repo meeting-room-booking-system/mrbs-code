@@ -31,7 +31,6 @@ class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTime
 
   private $algo;
   private $include_ip;
-  private $lifetime;
   private $secret;
 
 
@@ -39,12 +38,10 @@ class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTime
     #[\SensitiveParameter]
     string $secret,
     string $algo = self::DEFAULT_HASH_ALGO,
-    int $lifetime = 0,
     bool $include_ip = false
   )
   {
     $this->include_ip = $include_ip;
-    $this->lifetime = $lifetime;
     $this->secret = $secret;
     if (in_array($algo, hash_hmac_algos()))
     {
@@ -142,7 +139,9 @@ class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTime
     session_decode($data);
     assert(!isset($_SESSION['_expiry']), "'_expiry' is a reserved data key");
     assert(!isset($_SESSION['_ip']), "'_ip' is a reserved data key");
-    $expiry = ($this->lifetime === 0) ? 0 : time() + $this->lifetime;
+    // Set the expiry to be the same as the session cookie expiry, or else 0 for browser close
+    $lifetime = session_get_cookie_params()['lifetime'];
+    $expiry = ($lifetime > 0) ? time() + $lifetime : 0;
     $_SESSION['_expiry'] = $expiry;
     if ($this->include_ip)
     {
@@ -151,6 +150,7 @@ class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTime
     $data = session_encode();
 
     $hash = self::getHash($this->algo, $data, $this->secret);
+
     return Cookie::cookieSet($id, $hash . '_' . base64_encode($data), $expiry);
   }
 

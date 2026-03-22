@@ -49,7 +49,7 @@ abstract class Session
    *
    * @return SessionHandlerDb|SessionHandler
    */
-  protected function getSessionHandler(int $lifetime)
+  protected function getSessionHandler()
   {
     // The sessions table was only created in Upgrade 56. We test for the schema version rather than the existence of
     // the table, because the table is renamed in later upgrades.
