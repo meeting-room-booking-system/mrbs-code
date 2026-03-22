@@ -49,7 +49,7 @@ abstract class Session
    *
    * @return SessionHandlerDb|SessionHandler
    */
-  protected function getSessionHandler()
+  protected function getSessionHandler(int $lifetime)
   {
     // The sessions table was only created in Upgrade 56. We test for the schema version rather than the existence of
     // the table, because the table is renamed in later upgrades.
@@ -121,7 +121,7 @@ abstract class Session
     // Set the session handler and start up sessions
     try
     {
-      session_set_save_handler($this->getSessionHandler(), true);
+      session_set_save_handler($this->getSessionHandler($lifetime), true);
       if (false === session_start())
       {
         throw new \Exception("session_start() failed");

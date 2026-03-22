@@ -36,6 +36,7 @@ class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTime
 
 
   public function __construct(
+    #[\SensitiveParameter]
     string $secret,
     string $algo = self::DEFAULT_HASH_ALGO,
     int $lifetime = 0,
@@ -195,7 +196,12 @@ class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTime
   }
 
 
-  private static function getHash(string $algo, string $data, string $key) : string
+  private static function getHash(
+    string $algo,
+    string $data,
+    #[\SensitiveParameter]
+    string $key
+  ) : string
   {
     if (!function_exists('hash_hmac'))
     {

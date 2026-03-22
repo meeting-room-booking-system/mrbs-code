@@ -37,7 +37,7 @@ class SessionCookie extends SessionPhp
   }
 
 
-  protected function getSessionHandler() : SessionHandlerCookie
+  protected function getSessionHandler(int $lifetime) : SessionHandlerCookie
   {
     global $auth;
 
@@ -45,7 +45,7 @@ class SessionCookie extends SessionPhp
     return new SessionHandlerCookie(
       $auth['session_cookie']['secret'],
       $auth['session_cookie']['hash_algorithm'],
-      $this->lifetime,
+      $lifetime,
       self::$cookie_path,
       $auth['session_cookie']['include_ip']
     );
