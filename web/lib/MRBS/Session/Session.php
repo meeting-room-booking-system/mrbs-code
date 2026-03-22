@@ -20,6 +20,7 @@ abstract class Session
   protected $lifetime;
   protected $samesite = null;
 
+
   public function __construct()
   {
     global $auth, $cookie_samesite_lax;
@@ -30,21 +31,52 @@ abstract class Session
       $this->samesite = ($cookie_samesite_lax) ? self::SAMESITE_LAX : self::SAMESITE_STRICT;
     }
 
-    // Start up sessions
-    // Default to the behaviour of previous versions of MRBS, use only
-    // session cookies - no persistent cookie.
+    // Set the session lifetime
     if (!isset($this->lifetime))
     {
       $this->lifetime = $auth['session_php']['session_expire_time'] ?? 0;
     }
 
+    // Start up sessions
     $this->init($this->lifetime);
   }
 
 
+  /**
+   * Get the session handler to use.
+   *
+   * If the database session handler is not available, use the ordinary PHP session handler.
+   *
+   * @return SessionHandlerDb|SessionHandler
+   */
+  protected function getSessionHandler()
+  {
+    // The sessions table was only created in Upgrade 56. We test for the schema version rather than the existence of
+    // the table, because the table is renamed in later upgrades.
+    if (db_schema_version(db()) < 56)
+    {
+      return new SessionHandler();
+    }
+
+    // The DB session handler uses locks, and because we use locks elsewhere, this means we need support for multiple
+    // locks.  We need to test now, rather than catching an exception later, because resetting the session handler
+    // will reset the session id causing us to lose session data.
+    if (!db()->supportsMultipleLocks())
+    {
+      $message = "The database server does not support multiple locks, so the database session handler " .
+        "cannot be used.  Using ordinary PHP sessions instead.";
+      trigger_error($message);
+      return new SessionHandler();
+    }
+
+    // Otherwise use the DB session handler.
+    return new SessionHandlerDb();
+  }
+
+
   // Normally there's no need to call init() from outside the Session classes.
-  // It only needs to be called to restart sessions, after for example a user
-  // has been logged off and you need to use session variables.
+  // It only needs to be called to restart sessions, after, for example, a user
+  // has been logged off, and you need to use session variables.
   public function init(int $lifetime) : void
   {
     global $auth;
@@ -86,46 +118,21 @@ abstract class Session
     }
     session_set_cookie_params($lifetime, $cookie_path);
 
-    $current_db_schema_version = db_schema_version(db());
-    // The session table was created in Upgrade 56.   Before that we will ignore any errors
-    // to do with DB sessions.
-    $session_table_should_exist = ($current_db_schema_version >= 56);
-
+    // Set the session handler and start up sessions
     try
     {
-      // The DB session handler uses locks and because we use locks elsewhere
-      // this means we need support for multiple locks.  We need to test now,
-      // rather than catching an exception, because resetting the session
-      // handler will reset the session id causing us to lose session data.
-      if (db()->supportsMultipleLocks())
+      session_set_save_handler($this->getSessionHandler(), true);
+      if (false === session_start())
       {
-        $handler = new SessionHandlerDb();
-        session_set_save_handler($handler, true);
+        throw new \Exception("session_start() failed");
       }
-      else
-      {
-        $message = "The database server does not support multiple locks, so the database session handler cannot be used.";
-        trigger_error($message);
-      }
-      $session_started = session_start();
     }
-    catch(SessionHandlerDbException $e)
+    catch (\Exception $e)
     {
-      if ($session_table_should_exist &&
-        ($e->getCode() === SessionHandlerDbException::TABLE_NOT_EXISTS))
-      {
-        trigger_error($e->getMessage(), E_USER_WARNING);
-        $message = "Could not start DB sessions, trying ordinary PHP sessions.";
-        trigger_error($message, E_USER_WARNING);
-      }
-      $session_started = false;
-    }
-
-    if ($session_started === false)
-    {
-      $handler = new SessionHandler();
-      session_set_save_handler($handler, true);
-
+      $message = "Could not start sessions ('" . $e->getMessage() . "').";
+      $message .= " Trying ordinary PHP sessions.";
+      trigger_error($message, E_USER_WARNING);
+      session_set_save_handler(new SessionHandler(), true);
       if (false === session_start())
       {
         throw new \Exception("MRBS: could not start sessions");

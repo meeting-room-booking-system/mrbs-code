@@ -30,43 +30,25 @@ class SessionCookie extends SessionPhp
       setcookie('UserName', '', time()-42000, self::$cookie_path);
     }
 
+    // Set the session lifetime
     $this->lifetime = $auth['session_cookie']['session_expire_time'] ?? 0;
 
     parent::__construct();
   }
 
 
-  public function init(int $lifetime) : void
+  protected function getSessionHandler() : SessionHandlerCookie
   {
     global $auth;
 
-    if (session_status() === PHP_SESSION_ACTIVE)
-    {
-      // We've already started sessions
-      return;
-    }
-
-    $handler = new SessionHandlerCookie(
+    // Set the session handler
+    return new SessionHandlerCookie(
       $auth['session_cookie']['secret'],
       $auth['session_cookie']['hash_algorithm'],
-      $lifetime,
+      $this->lifetime,
       self::$cookie_path,
       $auth['session_cookie']['include_ip']
     );
-    session_set_save_handler($handler, true);
-
-    if (false === session_start())
-    {
-      $message = "Could not start DB sessions, trying ordinary PHP sessions.";
-      trigger_error($message, E_USER_WARNING);
-      // Restore the default PHP session handler and try again.
-      $handler = new SessionHandler();
-      session_set_save_handler($handler, true);
-      if (false === session_start())
-      {
-        throw new \Exception("Could not start sessions");
-      }
-    }
   }
 
 
