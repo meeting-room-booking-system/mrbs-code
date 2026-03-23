@@ -49,9 +49,7 @@ class SessionCookie extends SessionPhp
   {
     unset($_SESSION['user']);
     session_regenerate_id(true);
-    // Problems have been reported on Windows IIS with session data not being
-    // written out without a call to session_write_close()
-    session_write_close();
+    // Don't call session_write_close() as it seems to leave an extra cookie in the browser.  Not sure why.
   }
 
 }
