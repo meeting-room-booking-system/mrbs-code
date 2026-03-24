@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS\Session;
 
+use MRBS\SessionHandler\Cookie;
 use MRBS\SessionHandler\SessionHandlerCookie;
 use SessionHandler;
 use function MRBS\get_cookie_path;
@@ -45,11 +46,24 @@ class SessionCookie extends SessionPhp
   }
 
 
+  public function init(int $lifetime) : void
+  {
+    $old_session_id = session_id();
+    parent::init($lifetime);
+    $new_session_id = session_id();
+    // Not entirely sure why this is necessary, but the old session data cookie is sometimes not deleted.
+    if (($old_session_id !== '') && ($old_session_id !== $new_session_id))
+    {
+      Cookie::cookieSet($old_session_id, '', time() - 4200);
+    }
+  }
+
+
   public function logoffUser() : void
   {
     unset($_SESSION['user']);
     session_regenerate_id(true);
-    // Don't call session_write_close() as it seems to leave an extra cookie in the browser.  Not sure why.
+    session_write_close();
   }
 
 }
