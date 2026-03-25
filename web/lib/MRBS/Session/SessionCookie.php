@@ -54,7 +54,7 @@ class SessionCookie extends SessionPhp
     // Not entirely sure why this is necessary, but the old session data cookie is sometimes not deleted.
     if (($old_session_id !== '') && ($old_session_id !== $new_session_id))
     {
-      Cookie::cookieSet($old_session_id, '', time() - 4200);
+      Cookie::delete($old_session_id);
     }
   }
 

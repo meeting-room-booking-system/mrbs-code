@@ -337,7 +337,7 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
     {
       $name = self::KEY_COOKIE_PREFIX . $name;
       unset($_COOKIE[$name]);
-      Cookie::cookieSet($name, '', time() - 42000);
+      Cookie::delete($name);
     }
   }
 
@@ -359,7 +359,7 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
     }
 
     // But otherwise, set the key cookie lifetime to be the same as the session cookie's.
-    Cookie::cookieSet($name, $_COOKIE[$name], time() + $session_lifetime);
+    Cookie::set($name, $_COOKIE[$name], time() + $session_lifetime);
   }
 
 
@@ -373,7 +373,7 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
       $ascii_key = $key->saveToAsciiSafeString();
       $session_lifetime = session_get_cookie_params()['lifetime'];
       // Set the expiry to be the same as the session cookie expiry, or else 0 for browser close
-      Cookie::cookieSet($name, $ascii_key, ($session_lifetime > 0) ? time() + $session_lifetime : 0);
+      Cookie::set($name, $ascii_key, ($session_lifetime > 0) ? time() + $session_lifetime : 0);
       $_COOKIE[$name] = $ascii_key;
     }
     else

@@ -151,7 +151,7 @@ class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTime
 
     $hash = self::getHash($this->algo, $data, $this->secret);
 
-    return Cookie::cookieSet($id, $hash . '_' . base64_encode($data), $expiry);
+    return Cookie::set($id, $hash . '_' . base64_encode($data), $expiry);
   }
 
 
@@ -161,7 +161,7 @@ class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTime
    */
   public function destroy($id): bool
   {
-    return Cookie::cookieSet($id, '', time() - 42000);
+    return Cookie::delete($id);
   }
 
 
