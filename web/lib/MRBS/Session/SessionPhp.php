@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS\Session;
 
+use MRBS\SessionHandler\Cookie;
 use MRBS\User;
 use function MRBS\auth;
 use function MRBS\get_form_var;
@@ -131,8 +132,7 @@ class SessionPhp extends SessionWithLogin
     if (ini_get("session.use_cookies"))
     {
       // Delete the session cookie
-      $params = session_get_cookie_params();
-      setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], isset($params['httponly']));
+      Cookie::delete(session_name());
 
       // Delete any cookies which may have previously been set, incorrectly, before the fixes to get_cookie_path (see
       // https://github.com/meeting-room-booking-system/mrbs-code/commit/90ceeb8a0bc5f4850065695a3e085114c5ecae8e and
@@ -141,6 +141,7 @@ class SessionPhp extends SessionWithLogin
       // In time, once all the incorrect cookies have expired naturally, this block can be deleted.
       if (!isset($cookie_path_override))
       {
+        $params = session_get_cookie_params();
         $suffixes = array('ajax/', 'js/');
         // If the path ends with one of the suffixes we'll already have deleted it above
         if (!str_ends_with_array($params['path'], $suffixes))

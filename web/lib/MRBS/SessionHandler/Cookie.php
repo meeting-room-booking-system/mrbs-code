@@ -42,7 +42,7 @@ class Cookie
 
   public static function delete(string $name) : bool
   {
-    return self::set($name, '', time() - 4200);
+    return self::set($name, '', time() - 42000);
   }
 
 }
