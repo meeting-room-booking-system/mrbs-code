@@ -38,6 +38,11 @@ else
 class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestampHandlerInterface
 {
 
+  /**
+   * A random default key to be used if `$auth["session_php"]["store_key_in_cookie"]` is false.
+   * Not very secure, but it's better than storing session data in plain text.
+   */
+  private const DEFAULT_ASCII_KEY = 'def000005a41b5af1df304e485dee0d01d34eb4b5463333d5ecbe19020220c357745d1864efd58714e4d5d91591df76f228e1268e47f5f07be9336a244fd2fd561dc798a';
   private const KEY_COOKIE_PREFIX = 'KEY_';
 
   private $key;
@@ -365,6 +370,13 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
 
   private function getKey(string $name) : Key
   {
+    global $auth;
+
+    if (!$auth["session_php"]["store_key_in_cookie"])
+    {
+      return Key::loadFromAsciiSafeString(self::DEFAULT_ASCII_KEY);
+    }
+
     // Get the key from the cookie, or if there isn't one create a random key and
     // store it in the cookie.
     if (empty($_COOKIE[$name]))

@@ -1148,6 +1148,13 @@ $auth["session_php"]["session_expire_time"] = (60*60*24*30); // 30 days
 // be the case if you have JavaScript disabled on the client.
 $auth["session_php"]["inactivity_expire_time"] = 0; // seconds
 
+// By default, MRBS encrypts the session data with a random key which is stored in a
+// cookie.  If PHP does not have access to $_COOKIE, then set this to false and
+// MRBS will use a default key.  This is not as secure as using a random key, but
+// at least sensitive user data in the session data is not visible to the casual
+// browser of the sessions table.
+$auth["session_php"]["store_key_in_cookie"] = true;
+
 // Normally, provided the server is running PHP 7.3 or above,  the session cookies
 // are issued with SameSite attribute of "Strict", unless the session type requires
 // "Lax", eg for CAS and Saml. However, this can be inconvenient for users who might
