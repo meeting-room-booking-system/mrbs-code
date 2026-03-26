@@ -5,6 +5,8 @@ namespace MRBS\SessionHandler;
 use MRBS\Errors\Errors;
 use SessionHandlerInterface;
 use SessionUpdateTimestampHandlerInterface;
+use function MRBS\_tbl;
+use function MRBS\db;
 
 // Suppress deprecation notices until we get to requiring at least PHP 8
 // because union types, needed for the return types of read() and gc(), are
@@ -207,6 +209,52 @@ class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTime
     }
 
     return hash_hmac($algo, $data, $key);
+  }
+
+
+  public static function updateExpiry(string $id, int $expiry) : void
+  {
+    $old_id = self::getId();
+    $old_expiry = self::getExpiry();
+    if ($old_id === false)
+    {
+      self::setId($id);
+    }
+  }
+
+
+  /**
+   * Gets the session expiry time from the database.
+   *
+   * @return false|int Returns the session expiry time in seconds, or FALSE if the session expiry time is not set.
+   */
+  private static function getExpiry()
+  {
+    $sql = "SELECT variable_content
+              FROM " . _tbl('variables') . "
+             WHERE variable_name='session_expiry'
+             LIMIT 1";
+    $result = db()->query_scalar_non_bool($sql);
+    return ($result === false) ? false : intval($result);
+  }
+
+
+  private static function getID()
+  {
+    $sql = "SELECT variable_content
+              FROM " . _tbl('variables') . "
+             WHERE variable_name='session_id'
+             LIMIT 1";
+    return db()->query_scalar_non_bool($sql);
+  }
+
+
+  private static function setId(string $id)
+  {
+    $sql_params = [];
+    $data = ['variable_name' => 'session_id', 'variable_content' => $id];
+    $sql = db()->syntax_upsert($data, _tbl('variables'), $sql_params, 'variable_name', ['id'], true);
+    db()->command($sql, $sql_params);
   }
 
 

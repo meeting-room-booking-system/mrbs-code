@@ -51,6 +51,7 @@ class SessionCookie extends SessionPhp
     $old_session_id = session_id();
     parent::init($lifetime);
     $new_session_id = session_id();
+    SessionHandlerCookie::updateExpiry($new_session_id, ($lifetime === 0) ? 0 : time() + $lifetime);
     // Not entirely sure why this is necessary, but the old session data cookie is sometimes not deleted.
     if (($old_session_id !== '') && ($old_session_id !== $new_session_id))
     {
