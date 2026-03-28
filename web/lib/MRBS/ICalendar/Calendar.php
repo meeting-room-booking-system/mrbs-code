@@ -254,7 +254,15 @@ class Calendar
         // rows, then process the series
         if (($row['repeat_id'] != $series->repeat_id) || ($i == $n_rows - 1))
         {
-          $events = array_merge($events, $series->toEvents($method));
+          try
+          {
+            $events = array_merge($events, $series->toEvents($method));
+          }
+          catch (CalendarException $e)
+          {
+            // Don't do anything. We're not able to create Events, probably because we are using
+            // periods and the times for periods haven't been defined.
+          }
           // If we're at the start of a new series then create a new series
           if ($row['repeat_id'] != $series->repeat_id)
           {
@@ -263,7 +271,15 @@ class Calendar
             // then process the new series
             if ($i == $n_rows - 1)
             {
-              $events = array_merge($events, $series->toEvents($method));
+              try
+              {
+                $events = array_merge($events, $series->toEvents($method));
+              }
+              catch (CalendarException $e)
+              {
+                // Don't do anything. We're not able to create Events, probably because we are using
+                // periods and the times for periods haven't been defined.
+              }
             }
           }
         }
