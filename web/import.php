@@ -1029,6 +1029,18 @@ function get_fieldset_other_settings() : ElementFieldset
 
   $fieldset->addLegend(get_vocab('other_settings'));
 
+  // Creator
+  $options = [
+    '0' => get_vocab('organizer_email_address'),
+    '1' => get_vocab('organizer_mrbs_username'),
+  ];
+  $value = '0';
+  $field = new FieldInputRadioGroup();
+  $field->setControlAttribute('id', 'import_creator')
+        ->setLabel(get_vocab('derive_creator_from'))
+        ->addRadioOptions($options, 'import_creator', $value, true);
+  $fieldset->addElement($field);
+
   // Default type
   $field = new FieldSelect();
   $options = get_type_options(true);

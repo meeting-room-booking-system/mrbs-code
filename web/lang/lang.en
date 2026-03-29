@@ -672,6 +672,9 @@ $vocab["area_room_delimiter_note"]    = "The string separating the area and room
                                         "If no delimiter is found MRBS will look for a unique room with the same " .
                                         "name as the LOCATION";
 $vocab["area_room_create"]            = "Create rooms if necessary";
+$vocab["derive_creator_from"]         = "Derive creator from";
+$vocab["organizer_email_address"]     = "ORGANIZER email address";
+$vocab["organizer_mrbs_username"]     = "ORGANIZER MRBS username";
 $vocab["import_past"]                 = "Import past bookings";
 $vocab["default_type"]                = "Default type";
 $vocab["room_does_not_exist_no_area"] = "room does not exist and cannot be added - no area given";
