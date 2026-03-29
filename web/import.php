@@ -60,24 +60,38 @@ function get_compression_wrappers() : array
   return $result;
 }
 
-// Gets a username given an ORGANIZER property.   Returns NULL if none found
-function get_create_by(Property $organizer, string $import_create_by) : ?string
+
+/**
+ * Get a username from the ORGANIZER property.
+ *
+ * @param string $import_creator If set to IMPORT_CREATOR_USERNAME, then the X-MRBS-USERNAME is used.  If that
+ * parameter doesn't exist, or if set to IMPORT_CREATOR_EMAIL, then MRBS will try to get the username from the
+ * email address.  If that fails, then the email address is returned..
+ */
+function get_create_by(Property $organizer, string $import_creator) : string
 {
-  switch ($import_create_by)
+  switch ($import_creator)
   {
+    /** @noinspection PhpMissingBreakStatementInspection */
+    case IMPORT_CREATOR_USERNAME:
+      $usernames = $organizer->getParamValues('X-MRBS-USERNAME');
+      if (count($usernames) > 0)
+      {
+        return $usernames[0];
+      }
+      // If there's no username parameter, then try to get the username from the email address.
+      // Fall through
+
     case IMPORT_CREATOR_EMAIL:
       // Get the email address.   Stripping off the 'mailto' is a very simplistic
       // method.  It will work in the majority of cases, but this needs to be improved
       $email = preg_replace('/^mailto:/', '', $organizer->getValues()[0]);
-      return auth()->getUsernameByEmail($email);
-      break;
-
-    case IMPORT_CREATOR_USERNAME:
-      return $organizer->getParamValues('X-MRBS-USERNAME')[0];
+      $result = auth()->getUsernameByEmail($email);
+      return $result ?? $email;
       break;
 
     default:
-      throw new \InvalidArgumentException("Unknown value for import_creator: $import_create_by");
+      throw new \InvalidArgumentException("Unknown value for import_creator: $import_creator");
       break;
   }
 }
