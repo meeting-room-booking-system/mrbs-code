@@ -1,11 +1,11 @@
-version: "3.1"
 services:
     www:
         build:
             context: ..
             dockerfile: docker_app/php/Dockerfile
-        ports: 
+        ports:
             - "8080:80"
+        command: apache2ctl -D FOREGROUND
         volumes:
             - ../web:/var/www/html/
             - ./php/config.inc.php:/var/www/html/config.inc.php
@@ -15,11 +15,11 @@ services:
             - default
     db:
         image: mysql:8.0
-        ports: 
+        ports:
             - "3306:3306"
         command: --default-authentication-plugin=mysql_native_password
         environment:
-            MYSQL_DATABASE: mrbs 
+            MYSQL_DATABASE: mrbs
             MYSQL_USER: mrbs
             MYSQL_PASSWORD: mrbs
             MYSQL_ROOT_PASSWORD: mrbs
@@ -30,7 +30,7 @@ services:
             - default
     phpmyadmin:
         image: phpmyadmin
-        links: 
+        links:
             - db:db
         ports:
             - 8888:80
