@@ -27,6 +27,9 @@ use ZipArchive;
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
+define('IMPORT_CREATOR_EMAIL', '0');
+define('IMPORT_CREATOR_USERNAME', '1');
+
 $wrapper_mime_types = array('file'            => 'text/calendar',
                             'zip'             => 'application/zip',
                             'compress.zlib'   => 'application/x-gzip',
@@ -57,14 +60,26 @@ function get_compression_wrappers() : array
   return $result;
 }
 
-// Gets a username given an ORGANIZER value.   Returns NULL if none found
-function get_create_by(string $organizer) : ?string
+// Gets a username given an ORGANIZER property.   Returns NULL if none found
+function get_create_by(Property $organizer, string $import_create_by) : ?string
 {
-  // Get the email address.   Stripping off the 'mailto' is a very simplistic
-  // method.  It will work in the majority of cases, but this needs to be improved
-  $email = preg_replace('/^mailto:/', '', $organizer);
+  switch ($import_create_by)
+  {
+    case IMPORT_CREATOR_EMAIL:
+      // Get the email address.   Stripping off the 'mailto' is a very simplistic
+      // method.  It will work in the majority of cases, but this needs to be improved
+      $email = preg_replace('/^mailto:/', '', $organizer->getValues()[0]);
+      return auth()->getUsernameByEmail($email);
+      break;
 
-  return auth()->getUsernameByEmail($email);
+    case IMPORT_CREATOR_USERNAME:
+      return $organizer->getParamValues('X-MRBS-USERNAME')[0];
+      break;
+
+    default:
+      throw new \InvalidArgumentException("Unknown value for import_creator: $import_create_by");
+      break;
+  }
 }
 
 
@@ -331,7 +346,7 @@ function get_room_id($location, &$error)
  */
 function process_event(Event $event) : bool
 {
-  global $import_default_room, $import_default_type, $import_past, $skip;
+  global $import_default_room, $import_creator, $import_default_type, $import_past, $skip;
   global $morningstarts, $morningstarts_minutes, $resolution;
   global $booking_types;
   global $ignore_location, $add_location;
@@ -382,7 +397,7 @@ function process_event(Event $event) : bool
     switch ($name)
     {
       case 'ORGANIZER':
-        $booking['create_by'] = get_create_by($values[0]);
+        $booking['create_by'] = get_create_by($property, $import_creator);
         $booking['modified_by'] = '';
         break;
 
@@ -1031,10 +1046,10 @@ function get_fieldset_other_settings() : ElementFieldset
 
   // Creator
   $options = [
-    '0' => get_vocab('organizer_email_address'),
-    '1' => get_vocab('organizer_mrbs_username'),
+    IMPORT_CREATOR_EMAIL => get_vocab('organizer_email_address'),
+    IMPORT_CREATOR_USERNAME => get_vocab('organizer_mrbs_username'),
   ];
-  $value = '0';
+  $value = IMPORT_CREATOR_EMAIL;
   $field = new FieldInputRadioGroup();
   $field->setControlAttribute('id', 'import_creator')
         ->setLabel(get_vocab('derive_creator_from'))
@@ -1110,6 +1125,7 @@ $add_location = get_form_var('add_location', 'array');
 $area_room_order = get_form_var('area_room_order', 'string', 'area_room');
 $area_room_delimiter = get_form_var('area_room_delimiter', 'string', $default_area_room_delimiter);
 $area_room_create = get_form_var('area_room_create', 'string', '0');
+$import_creator = get_form_var('import_creator', 'string', IMPORT_CREATOR_EMAIL);
 $import_default_type = get_form_var('import_default_type', 'string', $default_type);
 $import_past = get_form_var('import_past', 'string', ((empty($default_import_past)) ? '0' : '1'));
 $skip = get_form_var('skip', 'bool', empty($skip_default));
