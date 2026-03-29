@@ -367,13 +367,16 @@ class Event extends Component
     }
 
     $property = new Property('ORGANIZER', 'mailto:' . $organizer->email);
-    if (isset($organizer->username) && ($organizer->username !== ''))
+    $parameters = [
+      'CN' => 'display_name',
+      'X-MRBS-USERNAME' => 'username'
+    ];
+    foreach ($parameters as $name => $property_name)
     {
-      $property->addParameter('X-MRBS-USERNAME', $organizer->username);
-    }
-    if (isset($organizer->display_name) && ($organizer->display_name !== ''))
-    {
-      $property->addParameter('CN', $organizer->display_name);
+      if (isset($organizer->$property_name) && ($organizer->$property_name !== ''))
+      {
+        $property->addParameter($name, $organizer->$property_name);
+      }
     }
     $event->addProperty($property);
 
