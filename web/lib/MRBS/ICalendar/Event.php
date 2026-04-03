@@ -7,6 +7,8 @@ use DateTimeZone;
 use MRBS\DateTime;
 use MRBS\Exception;
 use MRBS\Periods;
+use MRBS\User;
+use function MRBS\auth;
 use function MRBS\get_mail_vocab;
 use function MRBS\get_period_data;
 use function MRBS\get_registrants;
@@ -93,7 +95,7 @@ class Event extends Component
    * @return Event[]
    * @throws CalendarException
    */
-  public static function createFromData(string $method, array $data, ?string $tzid=null, ?array $addresses=null, bool $series=false) : array
+  public static function createFromData(string $method, array $data, ?string $tzid=null, ?array $addresses=null, bool $series=false, bool $for_mail=false) : array
   {
     global $ignore_gaps_between_periods;
 
@@ -104,7 +106,7 @@ class Event extends Component
     // If it's in "times" mode then it's easy.
     if (!$data['enable_periods'])
     {
-      return [self::createSingleEventFromData($method, $data, $tzid, $addresses, $series)];
+      return [self::createSingleEventFromData($method, $data, $tzid, $addresses, $series, null, $for_mail)];
     }
 
     // Otherwise we need to create a series of sub-events, treating each period as a separate sub-event unless
@@ -210,7 +212,7 @@ class Event extends Component
       // if possible, the UID in the iCalendar the same as the UID in the database.  Most of the time people will
       // probably just be booking for one period.
       $uid_part = (count($sub_events) > 1) ? $i : null;
-      $result[] = self::createSingleEventFromData($method, $data, $tzid, $addresses, $series, $uid_part);
+      $result[] = self::createSingleEventFromData($method, $data, $tzid, $addresses, $series, $uid_part, $for_mail);
     }
 
     return $result;
@@ -228,7 +230,15 @@ class Event extends Component
    * @param bool $series Indicates whether the event is part of a recurring series (true) or a standalone event (false).
    * @param int|null $uid_part If set, append this value to the UID to create a unique UID for the event.
    */
-  private static function createSingleEventFromData(string $method, array $data, ?string $tzid=null, ?array $addresses=null, bool $series=false, ?int $uid_part=null) : self
+  private static function createSingleEventFromData(
+    string $method,
+    array $data,
+    ?string $tzid=null,
+    ?array $addresses=null,
+    bool $series=false,
+    ?int $uid_part=null,
+    bool $for_mail = false
+  ) : self
   {
     global $mail_settings, $default_area_room_delimiter, $standard_fields;
     global $partstat_accepted;
@@ -318,42 +328,57 @@ class Event extends Component
     */
 
     // ORGANIZER
-    // The organizer is MRBS.  We don't make the create_by user the organizer because there
-    // are some mail systems such as IBM Domino that silently discard the email notification
-    // if the organizer's email address is the same as the recipient's - presumably because
-    // they assume that the recipient already knows about the event.
 
-    $organizer_addresses = parse_addresses($mail_settings['organizer']);
-    if (empty($organizer_addresses))
+    // TODO: Review whether the ORGANIZER property is required.
+    // RFC 5545 states:
+    // "This property MUST be specified in an iCalendar object
+    // that specifies a group-scheduled calendar entity.  This property
+    // MUST be specified in an iCalendar object that specifies the
+    // publication of a calendar user's busy time.  This property MUST
+    // NOT be specified in an iCalendar object that specifies only a time
+    // zone definition or that defines calendar components that are not
+    // group-scheduled components, but are components only on a single
+    // user's calendar."
+    // Does MRBS count as a user? If so, does this mean that as long as
+    // there is at least one ATTENDEE the property MUST be specified?
+
+    if ($for_mail)
     {
-      // TODO: Review whether the ORGANIZER property is required.
-      // RFC 5545 states:
-      // "This property MUST be specified in an iCalendar object
-      // that specifies a group-scheduled calendar entity.  This property
-      // MUST be specified in an iCalendar object that specifies the
-      // publication of a calendar user's busy time.  This property MUST
-      // NOT be specified in an iCalendar object that specifies only a time
-      // zone definition or that defines calendar components that are not
-      // group-scheduled components, but are components only on a single
-      // user's calendar."
-      // Does MRBS count as a user? If so, does this mean that as long as
-      // there is at least one ATTENDEE the property MUST be specified?
-      $message = "The value '" . $mail_settings['organizer'] . "' supplied for " . '$mail_settings["organizer"]' .
-        " is not a valid RFC822-style email address.  Please check your MRBS config file.";
-      throw new Exception($message);
+      // The organizer is MRBS.  We don't make the create_by user the organizer because there
+      // are some mail systems such as IBM Domino that silently discard the email notification
+      // if the organizer's email address is the same as the recipient's - presumably because
+      // they assume that the recipient already knows about the event.
+      $organizer = self::getMrbsOrganizer();
     }
-
-    $organizer = $organizer_addresses[0];
-    if (isset($organizer['address']) && ($organizer['address'] !== ''))
+    else
     {
-      if (!isset($organizer['name']) || ($organizer['name'] === ''))
+      // The file is not being used for email notifications, so we need to make the booking
+      // creator the organizer.
+      $organizer = auth()->getUser($data['create_by']);
+      // The ORGANIZER property has to have a cal-address, so if the user doesn't have an email address,
+      // then use the MRBS organizer's.  This is not strictly correct, but allows us to generate an
+      // event for export that can be re-imported into MRBS, when the important value is the username,
+      // not the email address.
+      if (!isset($organizer->email) || ($organizer->email === ''))
       {
-        $organizer['name'] = get_mail_vocab('mrbs');
+        $mrbs_organizer = self::getMrbsOrganizer();
+        $organizer->email = $mrbs_organizer->email;
       }
-      $property = new Property('ORGANIZER', 'mailto:' . $organizer['address']);
-      $property->addParameter('CN', $organizer['name']);
-      $event->addProperty($property);
     }
+
+    $property = new Property('ORGANIZER', 'mailto:' . $organizer->email);
+    $parameters = [
+      'CN' => 'display_name',
+      'X-MRBS-USERNAME' => 'username'
+    ];
+    foreach ($parameters as $name => $property_name)
+    {
+      if (isset($organizer->$property_name) && ($organizer->$property_name !== ''))
+      {
+        $property->addParameter($name, $organizer->$property_name);
+      }
+    }
+    $event->addProperty($property);
 
     // Put the people on the "to" list as required participants and those on the cc
     // list as non-participants.  In theory the email client can then decide whether
@@ -543,6 +568,35 @@ class Event extends Component
     {
       trigger_error("Property '$name' is recommended to be set only once", E_USER_WARNING);
     }
+  }
+
+
+  private static function getMrbsOrganizer() : User
+  {
+    global $mail_settings;
+
+    $organizer_addresses = parse_addresses($mail_settings['organizer']);
+    if (empty($organizer_addresses))
+    {
+      $message = "The value '" . $mail_settings['organizer'] . "' supplied for " . '$mail_settings["organizer"]' .
+        " is not a valid RFC822-style email address.  Please check your MRBS config file.";
+      throw new Exception($message);
+    }
+
+    $organizer = $organizer_addresses[0];
+
+    $result = new User();
+    $result->email = $organizer['address'];
+    if (isset($organizer['name']) && ($organizer['name'] !== ''))
+    {
+      $result->display_name = $organizer['name'];
+    }
+    else
+    {
+      $result->display_name = get_mail_vocab('mrbs');
+    }
+
+    return $result;
   }
 
 }

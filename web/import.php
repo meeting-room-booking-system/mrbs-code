@@ -2,7 +2,6 @@
 declare(strict_types=1);
 namespace MRBS;
 
-use DateTimeZone;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputHidden;
 use MRBS\Form\FieldInputCheckbox;
@@ -14,11 +13,9 @@ use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldInputUrl;
 use MRBS\Form\FieldSelect;
 use MRBS\Form\Form;
-use MRBS\ICalendar\Calendar;
 use MRBS\ICalendar\ComponentFactory;
 use MRBS\ICalendar\Event;
 use MRBS\ICalendar\Property;
-use MRBS\ICalendar\RFC5545;
 use MRBS\ICalendar\RFC5545Exception;
 use ReflectionClass;
 use ZipArchive;
@@ -26,6 +23,9 @@ use ZipArchive;
 
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
+
+define('IMPORT_CREATOR_EMAIL', '0');
+define('IMPORT_CREATOR_USERNAME', '1');
 
 $wrapper_mime_types = array('file'            => 'text/calendar',
                             'zip'             => 'application/zip',
@@ -57,14 +57,48 @@ function get_compression_wrappers() : array
   return $result;
 }
 
-// Gets a username given an ORGANIZER value.   Returns NULL if none found
-function get_create_by(string $organizer) : ?string
-{
-  // Get the email address.   Stripping off the 'mailto' is a very simplistic
-  // method.  It will work in the majority of cases, but this needs to be improved
-  $email = preg_replace('/^mailto:/', '', $organizer);
 
-  return auth()->getUsernameByEmail($email);
+/**
+ * Get a username from the ORGANIZER property.
+ *
+ * @param string $import_creator If set to IMPORT_CREATOR_USERNAME, then the X-MRBS-USERNAME is used.  If that
+ * parameter doesn't exist, or if `$import_creator` is set to IMPORT_CREATOR_EMAIL, then MRBS will try to get the
+ * username from the email address.  If that fails, then the current user's username is used, and failing that the
+ * email address in the property.
+ */
+function get_create_by(Property $organizer, string $import_creator) : string
+{
+  switch ($import_creator)
+  {
+    /** @noinspection PhpMissingBreakStatementInspection */
+    case IMPORT_CREATOR_USERNAME:
+      $usernames = $organizer->getParamValues('X-MRBS-USERNAME');
+      if (count($usernames) > 0)
+      {
+        return $usernames[0];
+      }
+      // If there's no username parameter, then try to get the username from the email address.
+      // Fall through
+
+    case IMPORT_CREATOR_EMAIL:
+      // Get the email address.   Stripping off the 'mailto' is a very simplistic
+      // method.  It will work in the majority of cases, but this needs to be improved
+      $email = preg_replace('/^mailto:/', '', $organizer->getValues()[0]);
+      if (null === ($result = auth()->getUsernameByEmail($email)))
+      {
+        // If we didn't manage to work out a username, then just put the booking under the name of the current user.
+        // And if we haven't got a current user, then just use the email address.
+        // TODO: offer an option of choosing a default user?
+        $mrbs_user = session()->getCurrentUser();
+        $result = (isset($mrbs_user)) ? $mrbs_user->username : $email;
+      }
+      return $result;
+      break;
+
+    default:
+      throw new \InvalidArgumentException("Unknown value for import_creator: $import_creator");
+      break;
+  }
 }
 
 
@@ -329,7 +363,7 @@ function get_room_id($location, &$error)
  */
 function process_event(Event $event) : bool
 {
-  global $import_default_room, $import_default_type, $import_past, $skip;
+  global $import_default_room, $import_creator, $import_default_type, $import_past, $skip;
   global $morningstarts, $morningstarts_minutes, $resolution;
   global $booking_types;
   global $ignore_location, $add_location;
@@ -380,7 +414,7 @@ function process_event(Event $event) : bool
     switch ($name)
     {
       case 'ORGANIZER':
-        $booking['create_by'] = get_create_by($values[0]);
+        $booking['create_by'] = get_create_by($property, $import_creator);
         $booking['modified_by'] = '';
         break;
 
@@ -536,17 +570,7 @@ function process_event(Event $event) : bool
     return false;
   }
 
-  // If we didn't manage to work out a username, then just put the booking
-  // under the name of the current user
-  if (!isset($booking['create_by']))
-  {
-    $mrbs_user = session()->getCurrentUser();
-    $mrbs_username = (isset($mrbs_user)) ? $mrbs_user->username : null;
-    $booking['create_by'] = $mrbs_username;
-  }
-
-  // On the other hand, a UID is mandatory in RFC 5545.   We'll be lenient and
-  // provide one if it is missing
+  // A UID is mandatory in RFC 5545.   We'll be lenient and provide one if it is missing
   if (!isset($booking['ical_uid']))
   {
     $booking['ical_uid'] = generate_global_uid($booking['name']);
@@ -1002,12 +1026,31 @@ function get_fieldset_location_settings() : ElementFieldset
 
 function get_fieldset_other_settings() : ElementFieldset
 {
-  global $booking_types;
+  // TODO: If the auth type is 'db', then we could offer to create users if necessary.  Maybe only if the
+  // TODO: X-MRBS-USERNAME parameter is present?  And should the user details be updated if the display name
+  // TODO: and email address for an existing username have changed?  Or maybe just issue a list of differences?
+
   global $import_default_type, $import_past, $skip;
 
   $fieldset = new ElementFieldset();
 
   $fieldset->addLegend(get_vocab('other_settings'));
+
+  // Creator
+  // The default is to derive the creator from the organizer's MRBS username, because if that isn't present it
+  // will be derived automatically from the organizer's email address.  It's useful to have the option of using
+  // the email address because there may be occasions when the iCalendar file is being imported into a system that
+  // has a different set of usernames to the one that it was exported from.
+  $options = [
+    IMPORT_CREATOR_USERNAME => get_vocab('organizer_mrbs_username'),
+    IMPORT_CREATOR_EMAIL => get_vocab('organizer_email_address')
+  ];
+  $value = IMPORT_CREATOR_USERNAME;
+  $field = new FieldInputRadioGroup();
+  $field->setControlAttribute('id', 'import_creator')
+        ->setLabel(get_vocab('derive_creator_from'))
+        ->addRadioOptions($options, 'import_creator', $value, true);
+  $fieldset->addElement($field);
 
   // Default type
   $field = new FieldSelect();
@@ -1078,6 +1121,7 @@ $add_location = get_form_var('add_location', 'array');
 $area_room_order = get_form_var('area_room_order', 'string', 'area_room');
 $area_room_delimiter = get_form_var('area_room_delimiter', 'string', $default_area_room_delimiter);
 $area_room_create = get_form_var('area_room_create', 'string', '0');
+$import_creator = get_form_var('import_creator', 'string', IMPORT_CREATOR_USERNAME);
 $import_default_type = get_form_var('import_default_type', 'string', $default_type);
 $import_past = get_form_var('import_past', 'string', ((empty($default_import_past)) ? '0' : '1'));
 $skip = get_form_var('skip', 'bool', empty($skip_default));

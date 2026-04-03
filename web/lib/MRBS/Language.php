@@ -176,8 +176,11 @@ class Language
       $this->debug("Best[$key]: '" . $this->best_web_locales[$key] . "'");
     }
 
-    // Set the locale
-    self::setLocale(LC_ALL, $this->best_web_locales['locale']);
+    // If the 'intl' extension isn't installed and enabled, then we need to set the locale.
+    if (!class_exists('\\ResourceBundle'))
+    {
+      self::setLocale(LC_ALL, $this->best_web_locales['locale']);
+    }
 
     // GET THE BEST SET OF LOCALES FOR MAIL
     $this->debug("Getting mail locales.");

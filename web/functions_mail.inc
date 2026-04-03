@@ -864,7 +864,7 @@ function notify_by_email(array $data, array $previous, bool $is_series, string $
         $tzid = $timezone;
         $calendar->addComponent($vtimezone);
       }
-      $events = Event::createFromData($method, $data, $tzid ?? null, $addresses, $is_series);
+      $events = Event::createFromData($method, $data, $tzid ?? null, $addresses, $is_series, true);
     }
     catch (CalendarException $e)
     {
