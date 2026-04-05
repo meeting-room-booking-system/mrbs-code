@@ -35,6 +35,12 @@ else
 
 class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestampHandlerInterface
 {
+
+  /**
+   * A random default key to be used if `$auth["session_php"]["store_key_in_cookie"]` is false.
+   * Not very secure, but it's better than storing session data in plain text.
+   */
+  private const DEFAULT_ASCII_KEY = 'def000005a41b5af1df304e485dee0d01d34eb4b5463333d5ecbe19020220c357745d1864efd58714e4d5d91591df76f228e1268e47f5f07be9336a244fd2fd561dc798a';
   private const KEY_COOKIE_PREFIX = 'KEY_';
 
   private $key;
@@ -174,6 +180,14 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
         // of these should normally happen.  If the cipher text has been truncated, because it was too
         // long for the database column, then we should have seen an SQL error when the session data
         // was written.
+        //
+        // Sometimes the integrity check fails because the wrong key is being used.  This can happen on
+        // some servers where access to $_COOKIE has been restricted somehow (though not because 'C' has
+        // been removed from variables_order in php.ini because then the session cookie doesn't work either).
+        // If $_COOKIE is not working, then MRBS will generate a new key, which will be different from the
+        // one used to encrypt the session data.  If this is happening then set
+        // $auth["session_php"]["store_key_in_cookie"] = false;
+        // See https://github.com/meeting-room-booking-system/mrbs-code/issues/3983
         trigger_error(get_class($e) . ': ' . $message, E_USER_WARNING);
         $result = '';
       }
@@ -318,7 +332,7 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
     {
       $name = self::KEY_COOKIE_PREFIX . $name;
       unset($_COOKIE[$name]);
-      self::setKeyCookie($name, '', time() - 42000);
+      Cookie::delete($name);
     }
   }
 
@@ -340,45 +354,19 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
     }
 
     // But otherwise, set the key cookie lifetime to be the same as the session cookie's.
-    self::setKeyCookie($name, $_COOKIE[$name], time() + $session_lifetime);
-  }
-
-
-  private static function setKeyCookie(string $name, string $value, int $expires) : void
-  {
-    // Use the same cookie params as for the session cookie.
-    $cookie_params = session_get_cookie_params();
-    assert(version_compare(MRBS_MIN_PHP_VERSION, '7.3.0', '<'), "The else block can be removed.");
-    if (version_compare(PHP_VERSION, '7.3.0', '>='))
-    {
-      // The new way, allowing 'samesite' to be set
-      setcookie($name, $value, [
-        'expires' => $expires,
-        'path' => $cookie_params['path'],
-        'domain' => $cookie_params['domain'],
-        'secure' => $cookie_params['secure'],
-        'httponly' => $cookie_params['httponly'],
-        'samesite' => $cookie_params['samesite']
-      ]);
-    }
-    else
-    {
-      // The old way.  'samesite' wasn't available until PHP 7.3.0.
-      setcookie(
-        $name,
-        $value,
-        $expires,
-        $cookie_params['path'],
-        $cookie_params['domain'],
-        $cookie_params['secure'],
-        $cookie_params['httponly']
-      );
-    }
+    Cookie::set($name, $_COOKIE[$name], time() + $session_lifetime);
   }
 
 
   private function getKey(string $name) : Key
   {
+    global $auth;
+
+    if (!$auth["session_php"]["store_key_in_cookie"])
+    {
+      return Key::loadFromAsciiSafeString(self::DEFAULT_ASCII_KEY);
+    }
+
     // Get the key from the cookie, or if there isn't one create a random key and
     // store it in the cookie.
     if (empty($_COOKIE[$name]))
@@ -387,7 +375,7 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
       $ascii_key = $key->saveToAsciiSafeString();
       $session_lifetime = session_get_cookie_params()['lifetime'];
       // Set the expiry to be the same as the session cookie expiry, or else 0 for browser close
-      self::setKeyCookie($name, $ascii_key, ($session_lifetime > 0) ? time() + $session_lifetime : 0);
+      Cookie::set($name, $ascii_key, ($session_lifetime > 0) ? time() + $session_lifetime : 0);
       $_COOKIE[$name] = $ascii_key;
     }
     else

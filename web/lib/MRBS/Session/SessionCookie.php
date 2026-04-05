@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS\Session;
 
+use MRBS\SessionHandler\Cookie;
 use MRBS\SessionHandler\SessionHandlerCookie;
 use SessionHandler;
 use function MRBS\get_cookie_path;
@@ -12,9 +13,6 @@ use function MRBS\get_cookie_path;
 class SessionCookie extends SessionPhp
 {
 
-  private static $cookie_path;
-
-
   public function __construct()
   {
     global $auth;
@@ -22,50 +20,42 @@ class SessionCookie extends SessionPhp
     // We have to use output buffering to ensure that the cookies are set before any other output is sent.
     ob_start();
 
-    self::$cookie_path = get_cookie_path();
-
     // Delete old-style cookies
     if (!empty($_COOKIE) && isset($_COOKIE["UserName"]))
     {
-      setcookie('UserName', '', time()-42000, self::$cookie_path);
+      setcookie('UserName', '', time()-42000, get_cookie_path());
     }
 
+    // Set the session lifetime
     $this->lifetime = $auth['session_cookie']['session_expire_time'] ?? 0;
 
     parent::__construct();
   }
 
 
-  public function init(int $lifetime) : void
+  protected function getSessionHandler() : SessionHandlerCookie
   {
     global $auth;
 
-    if (session_status() === PHP_SESSION_ACTIVE)
-    {
-      // We've already started sessions
-      return;
-    }
-
-    $handler = new SessionHandlerCookie(
+    // Set the session handler
+    return new SessionHandlerCookie(
       $auth['session_cookie']['secret'],
       $auth['session_cookie']['hash_algorithm'],
-      $lifetime,
-      self::$cookie_path,
       $auth['session_cookie']['include_ip']
     );
-    session_set_save_handler($handler, true);
+  }
 
-    if (false === session_start())
+
+  public function init(int $lifetime) : void
+  {
+    $old_session_id = session_id();
+    parent::init($lifetime);
+    $new_session_id = session_id();
+    SessionHandlerCookie::updateExpiry($new_session_id, ($lifetime === 0) ? 0 : time() + $lifetime);
+    // Not entirely sure why this is necessary, but the old session data cookie is sometimes not deleted.
+    if (($old_session_id !== '') && ($old_session_id !== $new_session_id))
     {
-      $message = "Could not start DB sessions, trying ordinary PHP sessions.";
-      trigger_error($message, E_USER_WARNING);
-      // Restore the default PHP session handler and try again.
-      $handler = new SessionHandler();
-      session_set_save_handler($handler, true);
-      if (false === session_start())
-      {
-        throw new \Exception("Could not start sessions");
-      }
+      Cookie::delete($old_session_id);
     }
   }
 
@@ -74,8 +64,6 @@ class SessionCookie extends SessionPhp
   {
     unset($_SESSION['user']);
     session_regenerate_id(true);
-    // Problems have been reported on Windows IIS with session data not being
-    // written out without a call to session_write_close()
     session_write_close();
   }
 
