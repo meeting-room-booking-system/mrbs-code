@@ -13,6 +13,39 @@ http_headers(array("Content-type: application/x-javascript"),
 var isBookAdmin;
 
 <?php
+// Create a JavaScript version of the PHP $is_mandatory_fields variable
+echo "const mandatoryFields = {";
+if (!empty($is_mandatory_field))
+{
+  $lines = [];
+  foreach ($is_mandatory_field as $key => $value)
+  {
+    list($table, $field_name) = explode('.', $key, 2);
+    if (($table === 'entry') && !empty($value))
+    {
+      // Prefix custom field names
+      if (!in_array($field_name, $standard_fields['entry']))
+      {
+        $field_name = VAR_PREFIX . $field_name;
+      }
+      $line = "  $field_name: ";
+      if (is_bool($value))
+      {
+        $line .= ($value) ? 'true' : 'false';
+      }
+      else
+      {
+        $line .= '[' . implode(', ', $value) . ']';
+      }
+      $lines[] = $line;
+    }
+  }
+  echo "\n" . implode(",\n", $lines) . "\n";
+}
+echo "};\n";
+?>
+
+<?php
 // Set (if set is true) or clear (if set is false) a timer
 // to check for conflicts periodically in case someone else
 // books the slot you are looking at.  If setting the timer
@@ -277,36 +310,29 @@ function onAllDayClick()
 }
 
 <?php
-// Set the error messages to be used for the various fields.     We do this twice:
+// Set the error messages to be used for the various fields.  We do this twice:
 // once to redefine the HTML5 error message and once for JavaScript alerts, for those
 // browsers not supporting HTML5 field validation.
 ?>
-function validationMessages()
+function validationMessages(areaId)
 {
   var field, label;
   <?php
-  // First of all create a property in the vocab object for each of the mandatory
-  // fields.    The name and rooms field are implicitly mandatory.
+  // First, create a property in the vocab object for each of the mandatory fields.  The name and rooms field are
+  // implicitly mandatory.
   ?>
   validationMessages.vocab = {};
   validationMessages.vocab['name'] = '';
   validationMessages.vocab['rooms'] = '';
-  <?php
-  foreach ($is_mandatory_field as $key => $value)
+  for (const [fieldName, value] of Object.entries(mandatoryFields))
   {
-    if ($value)
+    if ((value === true) || (Array.isArray(value) && value.includes(parseInt(areaId))))
     {
-      list($table, $fieldname) = explode('.', $key, 2);
-      if ($table == 'entry')
-      {
-        $prefix = (in_array($fieldname, $standard_fields['entry'])) ? '' : VAR_PREFIX;
-        ?>
-        validationMessages.vocab['<?php echo escape_js($prefix . $fieldname) ?>'] = '';
-        <?php
-      }
+      validationMessages.vocab[fieldName] = '';
     }
   }
 
+  <?php
   // Then (a) fill each of those properties with an error message and (b) redefine
   // the HTML5 error message
   ?>
@@ -1444,29 +1470,29 @@ $(document).on('page_ready', function() {
           reloadSlotSelector($('#end_seconds'), newArea);
 
           <?php
-          // For each field which is only mandatory for some areas (i.e. the $is_mandatory_field entry for the field is an array)
+          // For each field which is only mandatory for some areas (i.e. the $is_mandatory_field value is an array),
           // check whether the new area is in the array, and if so add the required attribute, otherwise remove it.
-          foreach ($is_mandatory_field as $key => $value)
+          ?>
+          for (const [fieldName, value] of Object.entries(mandatoryFields))
           {
-            list($table, $fieldname) = explode('.', $key, 2);
-            if ($table === 'entry') {
-              if (is_array($value))
+            if (Array.isArray(value))
+            {
+              const field = $('[name="' + fieldName + '"]');
+              if (value.includes(parseInt(newArea)))
               {
-                ?>
-                var input_field = $('#f_<?php echo $fieldname ?>');
-                if ($.inArray(parseInt(newArea), <?php echo json_encode($value) ?>) >= 0) {
-                  input_field.prop('required', true);
-                } else {
-                  input_field.prop('required', false);
-                  input_field[0].setCustomValidity('');
-                }
-                input_field[0].checkValidity();
-                <?php
+                field.prop('required', true);
+              }
+              else
+              {
+                field.prop('required', false);
+                <?php // Clear any existing error messages ?>
+                field[0].setCustomValidity('');
               }
             }
           }
-          ?>
 
+          <?php // Reset the validation messages ?>
+          validationMessages(newArea);
           adjustSlotSelectors();
         });
 
@@ -1521,7 +1547,7 @@ $(document).on('page_ready', function() {
   ?>
   if (typeof validationMessages === 'function')
   {
-    validationMessages();
+    validationMessages(args.area);
   }
 
   <?php
