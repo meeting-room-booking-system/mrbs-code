@@ -255,7 +255,7 @@ class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTime
 
 
   /**
-   * Get a variable from the variables table.
+   * Get a variable from the variable table.
    *
    * @return false|string Returns the variable value, or FALSE if the variable is not set.
    */
@@ -263,7 +263,7 @@ class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTime
   {
     $sql_params = [':variable_name' => $name];
     $sql = "SELECT variable_content
-              FROM " . _tbl('variables') . "
+              FROM " . _tbl('variable') . "
              WHERE variable_name=:variable_name
              LIMIT 1";
     return db()->query_scalar_non_bool($sql, $sql_params);
@@ -286,7 +286,7 @@ class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTime
   {
     $sql_params = [];
     $data = ['variable_name' => $name, 'variable_content' => $value];
-    $sql = db()->syntax_upsert($data, _tbl('variables'), $sql_params, 'variable_name', ['id'], true);
+    $sql = db()->syntax_upsert($data, _tbl('variable'), $sql_params, 'variable_name', ['id'], true);
     db()->command($sql, $sql_params);
   }
 
