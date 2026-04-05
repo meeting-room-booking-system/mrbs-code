@@ -313,6 +313,21 @@ if (empty($rooms))
   exit;
 }
 
+// Make sure the area corresponds to the room that is being booked
+$area = Room::getAreaId($rooms[0]);
+if (!isset($area))
+{
+  $area = get_default_area();
+}
+// Update the area settings
+get_area_settings($area);
+
+// Make sure that $room is in $area
+if (Room::getAreaId($room) != $area)
+{
+  $room = get_default_room($area);
+}
+
 // Don't bother with these checks if this is an Ajax request.
 if (!$is_ajax)
 {
@@ -326,18 +341,19 @@ if (!$is_ajax)
     invalid_booking(get_vocab('invalid_rep_interval'));
   }
 
-  if (count($is_mandatory_field))
+  // Check that we've got the mandatory fields
+  if (!empty($is_mandatory_field))
   {
-    foreach ($is_mandatory_field as $field => $value)
+    foreach ($is_mandatory_field as $full_field => $value)
     {
-      $field = preg_replace('/^entry\./', '', $field);
-      if ($value)
+      if (is_mandatory_field($full_field, $area))
       {
+        $field = preg_replace('/^entry\./', '', $full_field);
         if ((in_array($field, $standard_fields['entry']) && ($$field === '')) ||
             (array_key_exists($field, $custom_fields) && ($custom_fields[$field] === '')))
         {
           invalid_booking(get_vocab('missing_mandatory_field') . ' "' .
-                          get_loc_field_name(_tbl('entry'), $field) . '"');
+            get_loc_field_name(_tbl('entry'), $field) . '"');
         }
       }
     }
@@ -376,16 +392,11 @@ else
 }
 
 // Make sure the area corresponds to the room that is being booked
-$area = Room::getAreaId($rooms[0]);
-if (!isset($area))
-{
-  $area = get_default_area();
-}
-// Update the area settings
-get_area_settings($area);
+$area = get_area($rooms[0]);
+get_area_settings($area);  // Update the area settings
 
-// Make sure that $room is in $area
-if (Room::getAreaId($room) != $area)
+// and that $room is in $area
+if (get_area($room) != $area)
 {
   $room = get_default_room($area);
 }

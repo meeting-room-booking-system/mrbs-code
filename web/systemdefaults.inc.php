@@ -1009,6 +1009,11 @@ $is_mandatory_field = array();
 // $is_mandatory_field['entry.type'] = true;
 // $is_mandatory_field['entry.terms_and_conditions'] = true;
 
+// For the entry table only, you can also specify that a field is mandatory only for
+// certain areas by setting the value to be an array of area IDs. For example:
+
+// $is_mandatory_field['entry.terms_and_conditions'] = [1, 3]; // Only mandatory for areas 1 and 3.
+
 $is_mandatory_field['user.display_name'] = true;
 
 // You can also enter regular expressions for validating text field input using

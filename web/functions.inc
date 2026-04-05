@@ -2524,6 +2524,29 @@ function is_private_event(bool $privacy_status) : bool
   return $privacy_status;
 }
 
+
+/**
+ * Check whether a field is mandatory for a given area.
+ */
+function is_mandatory_field(string $field, int $area_id) : bool
+{
+  global $is_mandatory_field;
+
+  if (!isset($is_mandatory_field[$field]))
+  {
+    return false;
+  }
+
+  // $is_mandatory_field can either be a boolean or an array of area ids.
+  if (is_bool($is_mandatory_field[$field]))
+  {
+    return $is_mandatory_field[$field];
+  }
+
+  return in_array($area_id, $is_mandatory_field[$field]);
+}
+
+
 // Generate a globally unique id
 //
 // We will generate a uid of the form "MRBS-uniqid-MD5hash@domain_name"
