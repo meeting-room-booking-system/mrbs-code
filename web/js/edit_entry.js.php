@@ -40,7 +40,10 @@ if (!empty($is_mandatory_field))
       $lines[] = $line;
     }
   }
-  echo "\n" . implode(",\n", $lines) . "\n";
+  if (!empty($lines))
+  {
+    echo "\n" . implode(",\n", $lines) . "\n";
+  }
 }
 echo "};\n";
 ?>
