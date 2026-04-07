@@ -1,4 +1,4 @@
-# Dev environment 
+# Dev environment
 
 This docker setup is supposed to get a running system for local development.
 
@@ -6,8 +6,8 @@ This docker setup is supposed to get a running system for local development.
 
 * Compose Docker containers:
   ~~~
-  cd docker_app 
-  docker-compose up -d
+  cd docker_app
+  docker compose up -d
   ~~~
   (Linux users may need `sudo` or `docker login`)
 
@@ -29,11 +29,11 @@ docker-compose db mysql -u mrbs -pmrbs mrbs
 
 View apache webserver logs:
 ~~~
-docker-compose logs www
+docker compose logs www
 ~~~
 View database logs:
 ~~~
-docker-compose logs db
+docker compose logs db
 ~~~
 
 
@@ -46,7 +46,7 @@ However, when configuration of php and database is change, you have to reset the
 
 * Stop Docker containers:
   ~~~
-  docker-compose down
+  docker compose down
   ~~~
 * Delete persisted volumes:
   ~~~
@@ -54,6 +54,6 @@ However, when configuration of php and database is change, you have to reset the
   ~~~
 * Rebuild container images:
   ~~~
-  docker-compose build
+  docker compose build
   ~~~
 
