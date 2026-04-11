@@ -418,7 +418,7 @@ function maxlength(string $column) : ?int
 // rather than silent truncation of the string.
 //
 // We truncate to a maximum number of UTF8 characters rather than bytes.
-// This is OK in current versions of MySQL and PostgreSQL, though in earler
+// This is OK in current versions of MySQL and PostgreSQL, though in earlier
 // versions of MySQL (I haven't checked PostgreSQL) this could cause problems
 // as a VARCHAR(n) was n bytes long rather than n characters.
 function truncate(string $value, string $column) : string
