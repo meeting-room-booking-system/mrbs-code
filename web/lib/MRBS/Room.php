@@ -90,7 +90,11 @@ class Room extends Location
   }
 
 
-  // Gets the area_id for a room with id $id
+  /**
+   * Get the area id for a given room id
+   *
+   * @return int The area_id, or NULL if the room doesn't exist.
+   */
   public static function getAreaId($id) : ?int
   {
     $sql = "SELECT area_id
