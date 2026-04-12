@@ -392,11 +392,16 @@ else
 }
 
 // Make sure the area corresponds to the room that is being booked
-$area = get_area($rooms[0]);
-get_area_settings($area);  // Update the area settings
+$area = Room::getAreaId($rooms[0]);
+if (!isset($area))
+{
+  $area = get_default_area();
+}
+// Update the area settings
+get_area_settings($area);
 
-// and that $room is in $area
-if (get_area($room) != $area)
+// Make sure that $room is in $area
+if (Room::getAreaId($room) != $area)
 {
   $room = get_default_room($area);
 }
@@ -730,6 +735,7 @@ if (empty($area))
   // This shouldn't happen.
   // TODO: Get rid of the area parameter from the query string, and just use the room parameter, as given the room
   // TODO: the area is redundant.
+  $area = 0;  // better than NULL
   trigger_error("Room with id $room doesn't exist.", E_USER_WARNING);
 }
 
