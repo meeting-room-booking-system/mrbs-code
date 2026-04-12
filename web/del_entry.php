@@ -56,7 +56,7 @@ if ($info = get_booking_info($id, FALSE, TRUE))
     $day   = (int) date('d', $info['start_time']);
     $month = (int) date('m', $info['start_time']);
     $year  = (int) date('Y', $info['start_time']);
-    $area  = get_area($info["room_id"]);
+    $area  = Room::getAreaId($info["room_id"]);
     if (empty($area))
     {
       throw new \Exception("Room " . $info[room_id] . " does not exist");
