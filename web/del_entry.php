@@ -59,7 +59,7 @@ if ($info = get_booking_info($id, FALSE, TRUE))
     $area  = Room::getAreaId($info["room_id"]);
     if (empty($area))
     {
-      throw new \Exception("Room " . $info[room_id] . " does not exist");
+      throw new \Exception("Room " . $info['room_id'] . " does not exist");
     }
     // Get the settings for this area (they will be needed for policy checking)
     get_area_settings($area);
