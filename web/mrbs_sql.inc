@@ -2193,19 +2193,6 @@ function get_period_data(int $room_id) : array
 }
 
 
-function mrbsGetRoomArea(int $room_id) : int
-{
-  $sql = "SELECT area_id
-            FROM " . _tbl('room') . "
-           WHERE id=?
-           LIMIT 1";
-
-  $area_id = db()->query1($sql, array($room_id));
-
-  return ($area_id <= 0) ? 0 : $area_id;
-}
-
-
 // Adds a room, returning the new id, or FALSE on failure with the
 // error in $error
 function mrbsAddRoom($name, $area_id, &$error, $description='', $capacity='', $room_admin_email='')
