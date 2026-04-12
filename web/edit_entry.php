@@ -1350,7 +1350,7 @@ if (isset($id))
     }
   }
 
-  $area_id = get_area($room_id);
+  $area_id = Room::getAreaId($room_id);
 
   if(($entry_type == ENTRY_RPT_ORIGINAL) || ($entry_type == ENTRY_RPT_CHANGED))
   {
@@ -1431,7 +1431,7 @@ else
   $create_by     = $mrbs_username;
   $description   = $default_description;
   $room_id       = $room;
-  $area_id = get_area($room_id);
+  $area_id = Room::getAreaId($room_id);
   $type          = (is_mandatory_field('entry.type', $area_id)) ? '' : $default_type;
   $private       = $private_default;
   $tentative     = !$confirmed_default;
