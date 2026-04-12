@@ -729,7 +729,7 @@ if (!in_array($room, $rooms))
   $room = $rooms[0];
 }
 // Find the corresponding area
-$area = get_area($room);
+$area = Room::getAreaId($room);
 if (empty($area))
 {
   // This shouldn't happen.
