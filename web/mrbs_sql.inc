@@ -97,8 +97,15 @@ function mrbsCheckFree(array $booking, ?int $ignore_entry_id=null, ?int $ignore_
   global $enable_periods, $is_private_field;
 
   $room_id = $booking['room_id'];
-
-  get_area_settings(Room::getAreaId($room_id));
+  $area_id = Room::getAreaId($room_id);
+  if (empty($area_id))
+  {
+    // This shouldn't happen.  If it does, then issue a warning, but return an empty array as there can
+    // be no conflicts.
+    trigger_error("The room with id '$room_id' does not exist.", E_USER_WARNING);
+    return [];
+  }
+  get_area_settings($area_id);
 
   // Select any meetings which overlap for this room:
   $sql = "SELECT E.id, name, start_time, end_time, create_by, status, room_name
@@ -130,8 +137,6 @@ function mrbsCheckFree(array $booking, ?int $ignore_entry_id=null, ?int $ignore_
   {
     return array();
   }
-  // Get the room's area ID for linking to day, week, and month views:
-  $area = mrbsGetRoomArea($room_id);
 
   // Build a listing all the conflicts:
   $err = array();
@@ -155,9 +160,11 @@ function mrbsCheckFree(array $booking, ?int $ignore_entry_id=null, ?int $ignore_
     }
 
     // enclose the viewday etc. links in a span to make it easier for JavaScript to strip them out
-    $vars = array('page_date' => $existing_start_date->getISODate(),
-                  'area'  => $area,
-                  'room'  => $room_id);
+    $vars = [
+      'page_date' => $existing_start_date->getISODate(),
+      'area'  => $area_id,
+      'room'  => $room_id
+    ];
 
     $query = http_build_query($vars, '', '&');
 
