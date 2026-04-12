@@ -1350,7 +1350,7 @@ if (isset($id))
     }
   }
 
-  $area_id = mrbsGetRoomArea($room_id);
+  $area_id = get_area($room_id);
 
   if(($entry_type == ENTRY_RPT_ORIGINAL) || ($entry_type == ENTRY_RPT_CHANGED))
   {
@@ -1431,7 +1431,7 @@ else
   $create_by     = $mrbs_username;
   $description   = $default_description;
   $room_id       = $room;
-  $area_id = mrbsGetRoomArea($room_id);
+  $area_id = get_area($room_id);
   $type          = (is_mandatory_field('entry.type', $area_id)) ? '' : $default_type;
   $private       = $private_default;
   $tentative     = !$confirmed_default;
@@ -1643,8 +1643,8 @@ foreach ($areas as $a)
 }
 
 // Check that the area for this room actually exists.  This will happen if the room id in the query
-// string is invalid, usually as a result of using an out of date bookmark.
-if (!isset($area_details[$area_id]))
+// string is invalid, usually as a result of using an out-of-date bookmark.
+if (empty($area_id) || !isset($area_details[$area_id]))
 {
   echo "<h1>" . get_vocab('error') . "</h1>\n";
   echo "<p>" . get_vocab('edit_entry_nonexistent_room') . "</p>\n";
