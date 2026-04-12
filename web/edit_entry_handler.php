@@ -724,16 +724,25 @@ if (!in_array($room, $rooms))
   $room = $rooms[0];
 }
 // Find the corresponding area
-$area = mrbsGetRoomArea($room);
+$area = get_area($room);
+if (empty($area))
+{
+  // This shouldn't happen.
+  // TODO: Get rid of the area parameter from the query string, and just use the room parameter, as given the room
+  // TODO: the area is redundant.
+  trigger_error("Room with id $room doesn't exist.", E_USER_WARNING);
+}
 
 // Now construct the new query string
-$vars = array('view'      => $view ?? $default_view,
-              'view_all'  => $view_all ?? $default_view_all,
-              'year'      => $year,
-              'month'     => $month,
-              'day'       => $day,
-              'area'      => $area,
-              'room'      => $room);
+$vars = [
+  'view'      => $view ?? $default_view,
+  'view_all'  => $view_all ?? $default_view_all,
+  'year'      => $year,
+  'month'     => $month,
+  'day'       => $day,
+  'area'      => $area,
+  'room'      => $room
+];
 
 // If we're going back to the index page then add any scroll positions to the
 // query string so that the JavaScript can scroll back to the same position.
