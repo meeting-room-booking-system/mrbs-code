@@ -182,21 +182,29 @@ function mrbsCheckFree(array $booking, ?int $ignore_entry_id=null, ?int $ignore_
 }
 
 
-// Checks whether the user will have more than the maximum number of rooms booked simultaneously
-// Returns NULL if OK, otherwise an error string.
-// TODO: Maybe we should ignore bookings in rooms where the user is a booking admin??
+/**
+ * Check whether the proposed booking $booking would exceed the maximum number of simultaneous bookings
+ * for the user.
+ *
+ * @param array $booking
+ * @param int|null $ignore_entry_id If set then ignore the entry with this ID.
+ * @param int|null $ignore_repeat_id If set then ignore entries with this repeat ID.
+ * @return string|null An error message, or NULL if the proposed booking is OK.
+ */
 function check_simultaneous(array $booking, ?int $ignore_entry_id, ?int $ignore_repeat_id) : ?string
 {
+  // TODO: Maybe we should ignore bookings in rooms where the user is a booking admin??
   global $max_simultaneous_bookings, $simultaneous_ignore_other_areas;
 
-  static $existing = array();
-  static $proposed = array();
+  static $existing = [];
+  static $proposed = [];
   static $area_id = null;
   static $check_complete = false;
 
   // Check to see whether we are searching globally across a mixture of times and periods.
-  // This will lead to false clashes because (a) MRBS stores periods as one minute bookings
+  // This will lead to false clashes because (a) MRBS stores periods as one-minute bookings
   // starting at 12:00 and (b) MRBS does not know what times periods correspond to.
+  // TODO: Take account of the fact that it is now possible to assign times to periods.
   if (!$simultaneous_ignore_other_areas && !$check_complete)
   {
     if (periods_somewhere(true)  && times_somewhere(true))
@@ -226,13 +234,15 @@ function check_simultaneous(array $booking, ?int $ignore_entry_id, ?int $ignore_
   {
     // If $simultaneous_ignore_other_areas is false then $area_id will be null, which is
     // what we want.
-    $existing[$booking['start_time']] = count(get_entry_times_by_user($booking['create_by'],
-                                                                      $booking['start_time'],
-                                                                      $booking['end_time'],
-                                                                      $area_id,
-                                                                      false,
-                                                                      $ignore_entry_id,
-                                                                      $ignore_repeat_id));
+    $existing[$booking['start_time']] = count(get_entry_times_by_user(
+      $booking['create_by'],
+      $booking['start_time'],
+      $booking['end_time'],
+      $area_id,
+      false,
+      $ignore_entry_id,
+      $ignore_repeat_id)
+    );
   }
 
   // Increment the proposed bookings
