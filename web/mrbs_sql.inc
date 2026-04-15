@@ -185,7 +185,7 @@ function mrbsCheckFree(array $booking, ?int $ignore_entry_id=null, ?int $ignore_
 // Checks whether the user will have more than the maximum number of rooms booked simultaneously
 // Returns NULL if OK, otherwise an error string.
 // TODO: Maybe we should ignore bookings in rooms where the user is a booking admin??
-function check_simultaneous(array $booking, ?int $ignore_entry_id) : ?string
+function check_simultaneous(array $booking, ?int $ignore_entry_id, ?int $ignore_repeat_id) : ?string
 {
   global $max_simultaneous_bookings, $simultaneous_ignore_other_areas;
 
@@ -231,7 +231,8 @@ function check_simultaneous(array $booking, ?int $ignore_entry_id) : ?string
                                                                       $booking['end_time'],
                                                                       $area_id,
                                                                       false,
-                                                                      $ignore_entry_id));
+                                                                      $ignore_entry_id,
+                                                                      $ignore_repeat_id));
   }
 
   // Increment the proposed bookings
@@ -587,7 +588,7 @@ function mrbsCheckPolicy(array $booking, ?int $ignore_entry_id=null, ?int $ignor
     // Check whether the user is trying to book multiple rooms simultaneously
     if ($prevent_simultaneous_bookings)
     {
-      $tmp = check_simultaneous($booking, $ignore_entry_id);
+      $tmp = check_simultaneous($booking, $ignore_entry_id, $ignore_repeat_id);
       if (isset($tmp))
       {
         $violations[] = $tmp;
