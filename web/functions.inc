@@ -2369,21 +2369,28 @@ function is_invalid_datetime(int $hour, int $minute, int $second, int $month, in
 }
 
 
-// Returns the modification (in seconds) necessary on account of any DST
-// transitions when going from $start to $end
+/**
+ * Calculate the modification (in seconds) necessary on account of any DST
+ * transitions when going from `$start` to `$end`.
+ *
+ * For example, if the timezone is Europe/London and `$start` is in February
+ * and `$end` is in April, then the modification is -3600 seconds.
+ *
+ * @param int $start A Unix timestamp
+ * @param int $end A Unix timestamp
+ * @return int The modification in seconds.
+ */
 function cross_dst(int $start, int $end) : int
 {
   global $timezone;
 
   // Calculate the modification using the DateTimeZone information rather than date('I', $time),
   // because not all DST transitions are 1 hour.  For example, Lord Howe Island in Australia
-  // has a 30 minute transition.
+  // has a 30-minute transition.
   $thisDateTimeZone = new DateTimeZone($timezone);
-  $startDateTime = new DateTime(date('c', $start), $thisDateTimeZone);
-  $endDateTime = new DateTime(date('c', $end), $thisDateTimeZone);
-  $modification = $startDateTime->getOffset() - $endDateTime->getOffset();
-
-  return $modification;
+  $startDateTime = (new DateTime('now', $thisDateTimeZone))->setTimestamp($start);
+  $endDateTime = (new DateTime('now', $thisDateTimeZone))->setTimestamp($end);
+  return $startDateTime->getOffset() - $endDateTime->getOffset();
 }
 
 
