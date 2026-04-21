@@ -106,7 +106,7 @@ class SessionPhp extends SessionWithLogin
       $result = null;
     }
 
-    return $_SESSION['user'] ?? parent::getCurrentUser();
+    return $result ?? parent::getCurrentUser();
   }
 
 
