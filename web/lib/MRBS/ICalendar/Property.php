@@ -155,7 +155,8 @@ class Property
     // If the value type has been set explicitly using a VALUE parameter then update the value type.
     if ($uc_name == 'VALUE')
     {
-      $this->value_type = mb_strtoupper($values);
+      // The VALUE parameter can only have one value.
+      $this->value_type = mb_strtoupper($values[0]);
     }
   }
 
