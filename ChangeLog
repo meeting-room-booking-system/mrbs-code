@@ -1,4 +1,14 @@
-commit bcd1e7b29 (HEAD -> main)
+commit 20686b394 (HEAD -> main)
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Thu May 7 19:42:34 2026 +0100
+
+    Update ChangeLog and NEWS for release of 1.12.2
+
+ ChangeLog | 6514 ++++++++++++++++++++++++++++++++++++++++++++++++++-
+ NEWS      |  101 +
+ 2 files changed, 6577 insertions(+), 38 deletions(-)
+
+commit 1b855c52d
 Author: John Beranek <jberanek@users.sourceforge.net>
 Date:   Thu May 7 19:42:00 2026 +0100
 
@@ -7,7 +17,16 @@ Date:   Thu May 7 19:42:00 2026 +0100
  web/version_num.inc | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit 3e8c9c3f8 (origin/main, origin/HEAD)
+commit 1d49072de (origin/main, origin/HEAD)
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu May 7 17:29:44 2026 +0100
+
+    Remove code accidentally left in.
+
+ web/import.php | 10 ----------
+ 1 file changed, 10 deletions(-)
+
+commit 3e8c9c3f8
 Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
 Date:   Thu May 7 09:56:46 2026 +0100
 
