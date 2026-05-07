@@ -4,7 +4,7 @@ namespace MRBS;
 
 use MRBS\Form\Form;
 
-// Deletes an entry, or a series.    The $id is always the id of
+// Deletes an entry, or a series.  The $id is always the id of
 // an individual entry.   If $series is set then the entire series
 // of which $id is a member should be deleted. [Note - this use of
 // $series is inconsistent with use in the rest of MRBS where it
