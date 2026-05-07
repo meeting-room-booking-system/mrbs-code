@@ -2962,3 +2962,35 @@ function get_user_field(array $params, bool $datalist=false) : Field
 
   return $field;
 }
+
+
+/**
+ * Check if an IP address belongs to a specified CIDR range.
+ *
+ * Only works for IPv4 addresses.
+ */
+function ip_cidr_check (string $ip, string $cidr) : bool
+{
+  // Based on code by lukav at lukav dot com from https://www.php.net/manual/en/ref.network.php
+
+  // Validate the arguments
+  if (!str_contains($cidr, '/'))
+  {
+    throw new \InvalidArgumentException("Invalid CIDR range '$cidr'");
+  }
+  if (false === ($ip_ip = ip2long ($ip)))
+  {
+    throw new \InvalidArgumentException("Invalid IP address '$ip'");
+  }
+
+  list($net, $mask) = explode('/', $cidr);
+
+  if (false === ($ip_net = ip2long ($net)))
+  {
+    throw new \InvalidArgumentException("Invalid CIDR range '$cidr'");
+  }
+
+  $ip_mask = ~((1 << (32 - $mask)) - 1);
+
+  return (($ip_ip & $ip_mask) == ($ip_net & $ip_mask));
+}
