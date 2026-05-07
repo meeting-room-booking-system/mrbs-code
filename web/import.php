@@ -1220,16 +1220,6 @@ if (!empty($import))
       echo get_vocab("invalid_url");
       echo "</p>\n";
     }
-    if (!isset($url) || !filter_var($url, FILTER_VALIDATE_URL))
-    {
-      echo "<p>\n";
-      echo get_vocab("invalid_url");
-      echo "</p>\n";
-    }
-    else
-    {
-      $details = get_details($url);
-    }
   }
   else
   {
