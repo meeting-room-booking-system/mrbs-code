@@ -193,7 +193,7 @@ if (!empty(get_form_var('back_button')))
   }
   else
   {
-    $return_url = url_validate_local(get_form_var('return_url'));
+    $return_url = get_form_var('return_url', 'url_local');
   }
   location_header((!empty($return_url)) ? $return_url : multisite("index.php"));
   // location_header() includes an exit
