@@ -164,10 +164,12 @@ function print_exit_form() : void
   $fieldset->addElement(get_field_password(false));
   $form->addElement($fieldset);
 
-  // Use an empty string for returl to ensure that the Back button is displayed. As we're in kiosk mode,
-  // for security reasons we don't want to use a form variable to pass the return URL; however, we can
-  // get the return URL from the session variable.
-  $form->addElement(get_fieldset_buttons('', 'exit_button', get_vocab('exit')));
+  $return_url = session()->isset('kiosk_url') ? session()->get('kiosk_url') : null;
+  $form->addElement(get_fieldset_buttons($return_url, 'exit_button', get_vocab('exit')));
+  if (isset($return_url))
+  {
+    $form->addHiddenInput('return_url', $return_url);
+  }
 
   $form->render();
 }
@@ -186,15 +188,7 @@ $context = array(
 
 if (!empty(get_form_var('back_button')))
 {
-  // For security reasons, we don't put the return_url in a form variable when we're in kiosk mode.
-  if (is_kiosk_mode())
-  {
-    $return_url = session()->isset('kiosk_url') ? session()->get('kiosk_url') : null;
-  }
-  else
-  {
-    $return_url = get_form_var('return_url');
-  }
+  $return_url = get_form_var('return_url');
   location_header((!empty($return_url)) ? $return_url : multisite("index.php"));
   // location_header() includes an exit
 }
