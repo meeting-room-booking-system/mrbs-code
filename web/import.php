@@ -1175,50 +1175,15 @@ if (!empty($import))
 {
   if ($source_type == 'url')
   {
-    try {
-      // Check we've got a URL
-      if (!isset($url)) {
-        throw new Exception("URL not set");
-      }
-      // Check the URL is valid
-      if (false === ($url = filter_var($url, FILTER_VALIDATE_URL))) {
-        throw new Exception("Invalid URL");
-      }
-      // Check that we can parse the URL
-      if (false === ($url_components = parse_url($url))) {
-        throw new Exception("Invalid URL");
-      }
-      // Disallow some schemes for security reasons (possible SSRF attack)
-      if (isset($url_components['scheme']) && in_arrayi($url_components['scheme'], ['file'])) {
-        throw new Exception("The '" . $url_components['scheme'] . "' scheme is not allowed");
-      }
-      // Check the hostname is well-formed
-      if (false === ($hostname = filter_var($url_components['host'], FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME))) {
-        throw new Exception("Invalid hostname '" . $url_components['host'] . "'");
-      }
-      // Check the hostname is not 'localhost' (possible SSRF attack)
-      if (mb_strtolower($hostname) == 'localhost') {
-        throw new Exception("The hostname '" . $hostname . "' is not allowed");
-      }
-      // If the hostname is an IP address, check that it is not a local one (possible SSRF attack)
-      if (ip2long($hostname) !== false) {
-        foreach (['127.0.0.0/8', '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16', '169.254.0.0/16'] as $cidr)
-        {
-          // This won't work with IPv6 addresses, but IPv6 addresses will have been disallowed by the filter_var() call
-          if (!ip_cidr_check($hostname, $cidr))
-          {
-            throw new Exception("The hostname '" . $hostname . "' is not allowed");
-          }
-        }
-      }
-      // Everything looks OK.
-      $details = get_details($url);
-    }
-    catch (Exception $e)
+    if (!isset($url) || (false === (url_validate_not_local($url))))
     {
       echo "<p>\n";
       echo get_vocab("invalid_url");
       echo "</p>\n";
+    }
+    else
+    {
+      $details = get_details($url);
     }
   }
   else
