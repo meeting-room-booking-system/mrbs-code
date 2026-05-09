@@ -613,6 +613,40 @@ function url_base() : string
 }
 
 
+/**
+ * Check that the URL is only a local URL.  This is used to prevent open redirects.
+ *
+ * @return false|string The URL if it is a local URL, or false if it is not.
+ */
+function url_validate_local(string $url)
+{
+  // Check that it's a well-formed URL
+  if (false === ($parsed_url = parse_url($url)))
+  {
+    trigger_error('Cannot parse URL "' . $url . '"', E_USER_WARNING);
+    return false;
+  }
+
+  $base_url = url_base();
+  if (false === ($parsed_base = parse_url($base_url)))
+  {
+    trigger_error('Cannot parse $base_url of "' . $base_url . '"', E_USER_WARNING);
+    return false;
+  }
+
+  // If one of the components before the path is set and doesn't match the base URL's component, then this is not a local URL.
+  foreach (['scheme', 'user', 'pass', 'host', 'port'] as $component)
+  {
+    if (isset($parsed_url[$component]) && ($parsed_url[$component] !== '') && ($parsed_url[$component] !== $parsed_base[$component]))
+    {
+      return false;
+    }
+  }
+
+  return $url;
+}
+
+
 function is_https() : bool
 {
   global $server;
