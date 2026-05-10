@@ -744,6 +744,7 @@ function build_url(array $parts) : string
  * A wrapper for sending a Location header.  This function will urlencode and add
  * the site parameter as necessary.
  *
+ * @param string $location  The URL to redirect to.  This must be a local URL.
  * @return never
  */
 function location_header(string $location) : void
@@ -753,6 +754,15 @@ function location_header(string $location) : void
   if ($debug && (version_compare(MRBS_MIN_PHP_VERSION, '8.1') >= 0))
   {
     trigger_error("The return type can be changed to 'never'.", E_USER_NOTICE);
+  }
+
+  // Check that the URL is a local URL.  If it isn't, then we don't want to redirect to it.
+  {
+    if (false === ($location = url_validate_local($location)))
+    {
+      trigger_error("Cannot redirect to URL '$location' because it is not a local URL", E_USER_WARNING);
+      $location = 'index.php';
+    }
   }
 
   // Add the site parameter if necessary
