@@ -109,7 +109,7 @@ checkAuthorised(this_page());
 // Get the form vars
 $action = get_form_var('action', 'string');
 $event_id = get_form_var('event_id', 'int');
-$returl = get_form_var('returl', 'string');
+$returl = get_form_var('returl', 'url_local', 'index.php');
 
 // Take the appropriate action.  The individual functions check that the user
 // is authorised to take the action.

@@ -22,7 +22,7 @@ if (!is_book_admin())
 $message_text = get_form_var('message_text', 'string', '');
 $message_from = get_form_var('message_from', 'string', '');
 $message_until = get_form_var('message_until', 'string', '');
-$returl = get_form_var('returl', 'string', 'admin.php');
+$returl = get_form_var('returl', 'url_local', 'admin.php');
 $save_button = get_form_var('save_button', 'string');
 
 if (!empty($save_button))

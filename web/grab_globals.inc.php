@@ -19,13 +19,25 @@ namespace MRBS;
 // +---------------------------------------------------------------------------+
 
 
-// Gets a form variable.
-//    $var        The variable name
-//    $var_type   The type of the variable ('bool', 'decimal', 'float', 'int', 'string').  Arrays of these
-//                types are also supported by enclosing the types in square brackets, eg '[int]'.
-//                For backwards compatibility 'array' is also supported and is equivalent to '[string]'.
-//    $default    The default value for the variable
-//    $source     If set, then restrict the search to this source.  Can be INPUT_GET or INPUT_POST.
+/**
+ * Get a form variable.
+ *
+ * @param string $var The variable name.
+ * @param string $var_type The variable type. Can be
+ * - 'bool'
+ * - 'decimal'
+ * - 'float'
+ * - 'int'
+ * - 'string'
+ * - 'url_local' The value must be a valid URL, and must be local to the server.  If it's not, then NULL is returned.
+ * Useful for preventing open redirects.
+ *
+ * Arrays of these types are also supported by enclosing the types in square brackets, eg '[int]'.  For backwards
+ * compatibility 'array' is also supported and is equivalent to '[string]'.
+ * @param $default The default value for the variable.
+ * @param int|null $source If set, then restrict the search to this source.  Can be INPUT_GET or INPUT_POST.
+ * @return array|bool|float|int|mixed|string|null
+ */
 function get_form_var(string $var, string $var_type='string', $default=null, ?int $source=null)
 {
   // We use some functions from here
@@ -41,16 +53,6 @@ function get_form_var(string $var, string $var_type='string', $default=null, ?in
 
   // Parse $var_type
   list('element_type' => $element_type, 'is_array' => $is_array) = parse_var_type($var_type);
-
-  // Set the default value, and make sure it's the right type
-  if ($is_array)
-  {
-    $result = isset($default) ? (array) $default : [];
-  }
-  else
-  {
-    $result = $default;
-  }
 
   // Get the command line arguments if any (and we're allowed to),
   // otherwise get the POST variables
@@ -83,9 +85,23 @@ function get_form_var(string $var, string $var_type='string', $default=null, ?in
       }
     }
   }
-  else
+  elseif (isset($result))
   {
     $result = clean_value($result, $element_type);
+  }
+
+  // Set the default value if the result is null.  Do this after cleaning up the result, because that may
+  // result in a null value.
+  if (!isset($result))
+  {
+    if ($is_array)
+    {
+      $result = isset($default) ? (array)$default : [];
+    }
+    else
+    {
+      $result = $default;
+    }
   }
 
   return $result;
