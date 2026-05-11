@@ -88,19 +88,25 @@ class MailQueue
   }
 
 
+  /**
+   * Get the number of recipients in the addresses array.
+   */
   protected static function getNRecipients(array $addresses) : int
   {
-    if (empty($addresses))
+    $result = 0;
+
+    if (!empty($addresses))
     {
-      return 0;
+      foreach (['to', 'cc', 'bcc'] as $key)
+      {
+        if (!empty($addresses[$key]))
+        {
+          $result += count(parse_addresses($addresses[$key]));
+        }
+      }
     }
 
-    $recipients = (!empty($addresses['to'])) ? $addresses['to'] : '';
-    $recipients .= (!empty($addresses['cc'])) ? ',' . $addresses['cc'] : '';
-    $recipients .= (!empty($addresses['bcc'])) ? ',' . $addresses['bcc'] : '';
-    $parsed_addresses = parse_addresses($recipients);
-
-    return count($parsed_addresses);
+    return $result;
   }
 
 
