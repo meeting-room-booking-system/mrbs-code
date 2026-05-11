@@ -7,6 +7,107 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.12.2 (Wed 6th May 2026):
+
+[-] Fixed unauthenticated open redirect in kiosk mode.
+
+[-] Fixed potential Server Side Request Forgery in import functionality.
+
+[*] Add recommendation for 'intl' and 'mbstring' extensions.
+
+[*] Improve testing of locale availability on Windows when the 'intl' extension is installed.
+
+[*] Add Danish translations.  See GitHub Issue #3932.
+
+[*] Various improvements for localisation, implementation of a new Language class.
+
+[*] Enable/disable the running of assertions depending on the setting of $debug.
+
+[*] Upgrade to PHPMailer Version 7.0.1.
+
+[*] Add no-no as an alias for nb-no.
+
+[-] Fix bug when using the 'nb' locale without the 'intl' extension.
+
+[*] Delete lang.nn and lang.no leaving just lang.nb.  See GitHub Issue #3922.
+
+[-] Fix bug when entering kiosk mode.  See GitHub Issue #3944.
+
+[-] Fix bug in kiosk mode when in multisite mode.  See GitHub Issue #3944.
+
+[*] Populate custom fields for new entries with default values based on the database defaults.
+
+[*] Make sorting of usernames case-insensitive
+
+[*] Make sorting of display names case-insensitive
+
+[+] Added new ICalendar components.
+
+[+] Added export and import of custom fields.
+
+[*] Update Spanish language file.  Thanks to Andrés Sierra.
+
+[-] Fix TypeError when using an authentication scheme, eg SAML, that pulls in a later
+ version of Psr\Log\LoggerInterface.  See GitHub Issue #3956.
+
+[*] Prevent drag-select of slots if booking is not allowed.  See GitHub Issue #3958.
+
+[-] Fix problem with the not-allowed cursor appearing on Firefox.  See GitHub Issue #3958.
+
+[-] Fix TypeError when $url_base starts with '//'.  See GitHub Issue #3959.
+
+[*] Update tzurl files.  See GitHub Issue #3960.
+
+[*] Upgrade to PHPMailer 7.0.2.
+
+[-] Fix bug that resulted in the area and room admins not being notified when a booking
+ is moved into their area/room.
+
+[*] Code comments converted to DocBlocks.
+
+[*] Fix PHP 8.5 deprecation message ("Case statements followed by a semicolon (;) are
+ deprecated, use a colon (:) instead")
+
+[*] Fix deprecated in PHP 8.5 use of DATE_RFC7231 constant.
+
+[+] Feature: Prevent admin from skipping booking policies
+    * Add new option: prevent_admin_skip_policies
+      Default value is false, current behaviour remains unchanged
+
+[*] Update instructions for using PHP as an Apache module.  See GitHub Issue #3963.
+
+[+] Add the ability for themes to override the standard CSS, yet still keep the ability
+ to have custom CSS.  See GitHub PR #3964.
+
+[-] Don't validate period times in Times mode.  See GitHub Issue #3972.
+
+[-] Fix bug preventing the add room form being shown when there are no enabled rooms
+ or areas.  See GitHub PR #3969 and GitHub PR #3973.
+
+[+] Add support for exempt types.
+
+[*] Add an error notice if the database server does not support multiple locks.  See
+ GitHub Issue #3983.
+
+[+] Add option to define fields as mandatory for specific areas.
+
+[*] Implement custom session handler using cookies.
+
+[-] Fix problem with Kiosk mode when using 'cookie' session scheme.  See GitHub Issue #3985.
+
+[-] Fix broken php with French localization.
+
+[+] Add a config variable, $auth["session_php"]["store_key_in_cookie"], that allows a
+ default key to be used for encrypting session data, instead of a random key stored in a
+ cookie.  Useful if for some reason PHP does not have access to $_COOKIE.  See GitHub Issue
+ #3983.
+
+[*] fix docker dev environment (#3987) (docker_app)
+
+[-] Fix bug causing editing series to fail when using prevent_simultaneous_bookings.
+ See GitHub Issue #3965.
+
+-------------------------------------------------------------------------------
 Version 1.12.1 (Fri 14th November 2025):
 
 [-] Fix TypeError causing "DataTables warning: table id=pending_table - Incorrect column count"
