@@ -51,6 +51,12 @@ function get_form_var(string $var, string $var_type='string', $default=null, ?in
     $var_type = '[string]';
   }
 
+  // Checkboxes return null if not set, so we want them to be converted to false below
+  if (($var_type == 'bool'))
+  {
+    $default = (bool) $default;
+  }
+
   // Parse $var_type
   list('element_type' => $element_type, 'is_array' => $is_array) = parse_var_type($var_type);
 
