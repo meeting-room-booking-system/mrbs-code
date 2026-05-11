@@ -538,11 +538,14 @@ function create_body(array $data, ?array $mail_previous, bool $series, string $a
         }
         // For any associative arrays we want the value rather than the key
         if (isset($select_options["entry.$key"]) &&
-            is_assoc($select_options["entry.$key"]) &&
-            array_key_exists($value, $select_options["entry.$key"]))
+            is_assoc($select_options["entry.$key"]))
         {
-          $value = $select_options["entry.$key"][$value];
+          if (isset($value) && array_key_exists($value, $select_options["entry.$key"]))
+          {
+            $value = $select_options["entry.$key"][$value];
+          }
           if ($compare &&
+              isset($mail_previous[$key]) &&
               array_key_exists($mail_previous[$key], $select_options["entry.$key"]))
           {
             $mail_previous[$key] = $select_options["entry.$key"][$mail_previous[$key]];
