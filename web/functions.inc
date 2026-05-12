@@ -758,7 +758,7 @@ function location_header(string $location) : void
 
   // Check that the URL is a local URL.  If it isn't, then we don't want to redirect to it.
   {
-    if (false === ($location = url_validate_local($location)))
+    if (null === ($location = url_validate_local($location)))
     {
       trigger_error("Cannot redirect to URL '$location' because it is not a local URL", E_USER_WARNING);
       $location = 'index.php';
