@@ -581,39 +581,6 @@ class AuthDb extends AuthDbAbstract
   }
 
 
-  public function getUserByUserId(int $id) : ?User
-  {
-    $sql = "SELECT *
-              FROM " . _tbl(User::TABLE_NAME) . "
-             WHERE id=:id
-             LIMIT 1";
-
-    $result = $this->connection()->query($sql, array(':id' => $id));
-
-    // The username doesn't exist - return NULL
-    if ($result->count() === 0)
-    {
-      return null;
-    }
-
-    // The username does exist - return a User object
-    $user = new User();
-    $row = $result->next_row_keyed();
-
-    // $user->level and $user->display_name will be set as part of this
-    foreach ($row as $key => $value)
-    {
-      if ($key == 'name')
-      {
-        $user->username = $value;
-      }
-      $user->$key = $value;
-    }
-
-    return $user;
-  }
-
-
   public function getUsernameByEmail(string $email) : ?string
   {
     $sql = "SELECT name

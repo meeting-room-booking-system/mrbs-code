@@ -560,7 +560,7 @@ function get_fieldset_submit_buttons(?int $user_id, bool $delete=false, bool $di
   // Check whether the user can be deleted and if so what message to use
   if ($delete && isset($user_id))
   {
-    $user = auth()->getUserByUserId($user_id);
+    $user = User::getById($user_id);
     // If the user has bookings of some form in the system, then either
     // disallow the deletion, depending on the config setting, or provide
     // a different warning message.
