@@ -72,14 +72,14 @@ class DBFactory
     {
       if (!defined($constant_name))
       {
-        throw new Exception("Undefined constant $constant_name.");
+        throw new DBException("Undefined constant $constant_name.");
       }
     }
     catch (Throwable $e)
     {
       $message = "Undefined constant $constant_name.  Check that the $extension extension is enabled " .
         "in your php.ini file.";
-      throw new Exception($message);
+      throw new DBException($message);
     }
 
   }
@@ -98,7 +98,7 @@ class DBFactory
         break;
 
       default:
-        throw new Exception("Unsupported database driver '$db_system'");
+        throw new DBException("Unsupported database driver '$db_system'");
         break;
     }
 
