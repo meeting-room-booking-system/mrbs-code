@@ -145,6 +145,12 @@ class User
         $domain = ltrim($mail_settings['domain'], '@');
         $this->email .= '@' . $domain;
       }
+
+      // Validate the resulting email address
+      if (!validate_email($this->email))
+      {
+        $this->email = null;
+      }
     }
   }
 
