@@ -1,4 +1,159 @@
-commit 20686b394 (HEAD -> main)
+commit 4f1126dc7 (HEAD -> main, origin/main, origin/HEAD)
+Merge: f3b534ec1 3edba0dc5
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Tue May 26 18:20:38 2026 +0100
+
+    Merge pull request #4009 from meeting-room-booking-system/ghsa-gh77-mpcm-f8r3
+    
+    Merges private fork ghsa-gh77-mpcm-f8r3
+
+commit f3b534ec1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue May 26 17:07:56 2026 +0100
+
+    Check that the default email address is valid.
+
+ web/lib/MRBS/User.php | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit 083a8a3e9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue May 26 17:06:50 2026 +0100
+
+    Fix uncaught exception when exporting an entry created by a user that no longer exists.
+
+ web/lib/MRBS/ICalendar/Event.php | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+commit 0eda56c30
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu May 21 13:59:47 2026 +0100
+
+    Fix uncaught exception when the locale is 'ca'.  See GitHub Issue #4008.
+
+ web/lang/lang.ca | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 38d08836c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue May 19 18:05:42 2026 +0100
+
+    Fix incorrect error when the required PDO driver is not installed.
+
+ web/lib/MRBS/DB/DBFactory.php | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 3edba0dc5 (origin/ghsa-grcg-5px7-rxqq)
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue May 12 17:09:21 2026 +0100
+
+    Fix bug resulting in TypeError.
+
+ web/functions.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 383bec33d
+Merge: 76b10c4d5 6cfddae38
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon May 11 18:14:41 2026 +0100
+
+    Merge remote-tracking branch 'origin/main'
+
+commit 76b10c4d5
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon May 11 17:18:14 2026 +0100
+
+    Fix bug when getting a bool value from a form.
+
+ web/grab_globals.inc.php | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit c1c37bfaf
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon May 11 16:45:55 2026 +0100
+
+    Fix bug when there are recipients on the 'Cc' or 'Bcc' lines, but not the 'To' line.
+
+ web/lib/MRBS/MailQueue.php | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
+
+commit 9ff7149fa
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon May 11 16:15:59 2026 +0100
+
+    Fix PHP 8.5 deprecation error ("Using null as the key parameter for array_key_exists() is deprecated, use an empty string instead").
+
+ web/functions_mail.inc | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+commit dbf64faed
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun May 10 11:59:17 2026 +0100
+
+    Prevent open redirects from location_header function
+
+ web/functions.inc | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+commit 4a166c921
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun May 10 11:43:18 2026 +0100
+
+    Fix potential open redirects in the rest of MRBS.
+
+ web/approve_entry_handler.php             |  2 +-
+ web/del_entry.php                         |  2 +-
+ web/edit_entry.php                        |  2 +-
+ web/edit_entry_handler.php                |  2 +-
+ web/edit_message_handler.php              |  2 +-
+ web/grab_globals.inc.php                  | 52 ++++++++++++++-------
+ web/lib/MRBS/Session/SessionWithLogin.php | 15 ++++--
+ web/registration_handler.php              |  2 +-
+ web/view_entry.php                        |  4 +-
+ 9 files changed, 53 insertions(+), 30 deletions(-)
+
+commit 8f266d1ac
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat May 9 17:51:58 2026 +0100
+
+    Restructure
+
+ web/functions.inc        | 10 +++++-----
+ web/grab_globals.inc.php |  5 ++++-
+ web/kiosk.php            |  2 +-
+ 3 files changed, 10 insertions(+), 7 deletions(-)
+
+commit 0fbafe653
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat May 9 16:51:19 2026 +0100
+
+    Fix open redirect for kiosk.php.
+
+ web/functions.inc | 34 ++++++++++++++++++++++++++++++++++
+ web/kiosk.php     | 20 +++++++++++++-------
+ 2 files changed, 47 insertions(+), 7 deletions(-)
+
+commit c29fa2863
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat May 9 16:47:41 2026 +0100
+
+    Revert changes now that there are two branches.
+
+ web/functions.inc | 32 --------------------------------
+ web/import.php    | 45 +++++----------------------------------------
+ web/kiosk.php     | 20 +++++++-------------
+ 3 files changed, 12 insertions(+), 85 deletions(-)
+
+commit 6cfddae38
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Thu May 7 19:43:51 2026 +0100
+
+    Update ChangeLog for release of 1.12.2
+
+ ChangeLog | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
+
+commit 20686b394
 Author: John Beranek <jberanek@users.sourceforge.net>
 Date:   Thu May 7 19:42:34 2026 +0100
 
@@ -17,7 +172,7 @@ Date:   Thu May 7 19:42:00 2026 +0100
  web/version_num.inc | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit 1d49072de (origin/main, origin/HEAD)
+commit 1d49072de
 Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
 Date:   Thu May 7 17:29:44 2026 +0100
 
@@ -13596,7 +13751,7 @@ Date:   Mon Nov 11 18:49:41 2024 +0000
  web/edit_entry.php | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-commit b46b0f100
+commit b46b0f100 (origin/3742-any-way-to-automate-the-ics-export)
 Merge: 70197bc4f ab0d8fdad
 Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
 Date:   Fri Nov 8 18:51:44 2024 +0000
@@ -14552,7 +14707,7 @@ Date:   Tue Sep 24 17:04:54 2024 +0100
  web/lib/MRBS/Auth/AuthImapPhp.php | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit 4641ca2f2
+commit 4641ca2f2 (origin/php8.4_imap)
 Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
 Date:   Tue Sep 24 17:00:45 2024 +0100
 
@@ -23592,7 +23747,7 @@ Date:   Sun May 21 15:49:43 2023 +0100
     
     Support for date formatting with Intl
 
-commit d31149fa8
+commit d31149fa8 (origin/intl_date)
 Merge: 3b0e7909c d6b11c454
 Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
 Date:   Sat May 20 18:19:39 2023 +0100
@@ -25177,7 +25332,7 @@ Date:   Tue Mar 28 08:15:54 2023 +0100
  web/lang/lang.ko | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-commit 1c04913e2
+commit 1c04913e2 (upstream/main)
 Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
 Date:   Wed Mar 22 10:47:02 2023 +0000
 
@@ -35562,7 +35717,7 @@ Date:   Fri Aug 20 14:05:15 2021 +0100
     
     Edit entry handler back button
 
-commit 8b6260ea5
+commit 8b6260ea5 (origin/edit_entry_handler_back_button)
 Merge: dd6f1de91 45b110998
 Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
 Date:   Fri Aug 20 13:04:43 2021 +0100
@@ -45343,7 +45498,7 @@ Date:   Fri Apr 17 09:48:13 2020 +0100
 
     Merge with multisite
 
-commit 748250f1f
+commit 748250f1f (origin/multisite)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Fri Apr 17 09:47:41 2020 +0100
 
@@ -46225,7 +46380,7 @@ Date:   Fri Mar 27 14:28:20 2020 +0000
 
     Merge with week_view_all_rooms
 
-commit 7436c734a
+commit 7436c734a (origin/week_view_all_rooms)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Fri Mar 27 14:25:27 2020 +0000
 
@@ -48527,7 +48682,7 @@ Date:   Fri Nov 8 16:24:39 2019 +0000
 
     Merge with timeline
 
-commit c4256182e
+commit c4256182e (origin/timeline)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Fri Nov 8 16:24:11 2019 +0000
 
@@ -54657,7 +54812,7 @@ Date:   Thu Dec 20 09:53:53 2018 +0000
 
     Merged nav_improvements branch back into the default branch
 
-commit e1fbccd99
+commit e1fbccd99 (origin/nav_improvements)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Thu Dec 20 09:52:53 2018 +0000
 
@@ -57606,7 +57761,7 @@ Date:   Wed Jul 4 11:26:59 2018 +0100
 
     Merge with db_sessions
 
-commit c9d182474
+commit c9d182474 (origin/db_sessions)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Wed Jul 4 11:26:17 2018 +0100
 
@@ -58009,7 +58164,7 @@ Date:   Sat Jun 23 14:03:13 2018 +0100
 
     Merge with CAS_authentication
 
-commit 24b976934
+commit 24b976934 (origin/CAS_authentication)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Sat Jun 23 14:02:36 2018 +0100
 
@@ -67011,7 +67166,7 @@ Date:   Fri Oct 6 14:35:41 2017 +0100
 
     Merge with jquery_update
 
-commit 67c58cc23
+commit 67c58cc23 (origin/jquery_update)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Fri Oct 6 14:34:27 2017 +0100
 
@@ -67381,7 +67536,7 @@ Date:   Mon May 15 17:35:25 2017 +0100
 
     Merging periods_per_area branch back into the default branch
 
-commit 57d89de87
+commit 57d89de87 (origin/periods_per_area)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Mon May 15 17:33:39 2017 +0100
 
@@ -68694,7 +68849,7 @@ Date:   Fri Mar 3 14:32:25 2017 +0000
     local-part of the email address - but this feature has to be enabled by a config
     variable setting.
 
-commit 9424ecd2b
+commit 9424ecd2b (origin/login_with_email_address)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Fri Mar 3 14:28:26 2017 +0000
 
@@ -72079,7 +72234,7 @@ Date:   Wed Sep 14 20:22:52 2016 +0100
 
     Merge with namespace
 
-commit 1d72ff5e0
+commit 1d72ff5e0 (origin/namespace)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Wed Sep 14 20:18:17 2016 +0100
 
@@ -74682,7 +74837,7 @@ Date:   Sat Oct 17 23:20:39 2015 +0100
     the session cookie to use authenticated data, instead of
     Blowfish encrypted data.
 
-commit 24f6a1a96
+commit 24f6a1a96 (origin/session_cookie_improvements)
 Author: John Beranek <jberanek@users.sourceforge.net>
 Date:   Sat Oct 17 23:18:49 2015 +0100
 
@@ -74942,7 +75097,7 @@ Date:   Fri Oct 2 18:03:32 2015 +0100
 
     Merge with datatables_update
 
-commit 503b22cee
+commit 503b22cee (origin/datatables_update)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Fri Oct 2 18:02:37 2015 +0100
 
@@ -78477,7 +78632,7 @@ Date:   Tue Nov 25 16:39:17 2014 +0000
 
     Re-integrated the create_policy branch back into the trunk.   The book_ahead capabilities have been split into create_ahead and delete_ahead capabilities, allowing finer control of policies.  It is now possible to distinguish between creating new bookings and editing or deleting existing bookings.   (An edit requires a new booking to be created and the old one to be deleted).
 
-commit bc4a3b4bf
+commit bc4a3b4bf (origin/create_policy)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Tue Nov 25 16:20:10 2014 +0000
 
@@ -82271,7 +82426,7 @@ Date:   Fri Oct 19 15:17:37 2012 +0000
 
     Reintegrated the improved_repeat_interface back into the trunk.  MRBS now has a simplified interface for making repeat bookings and the range of monthly repeats has been expanded.   It is now possible to have monthly repeats on the last, second last, third last and fourth last weekdays of the month.  (Last was possible before, but only if the first member of the series happened to be on the fifth weekday of a month).
 
-commit 785110d9d
+commit 785110d9d (origin/improved_repeat_interface)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Fri Oct 19 15:02:09 2012 +0000
 
@@ -82851,7 +83006,7 @@ Date:   Wed Oct 3 20:03:53 2012 +0000
  web/version.inc | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit c617517ec
+commit c617517ec (origin/flexible_day_end)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Wed Oct 3 19:43:09 2012 +0000
 
@@ -84918,7 +85073,7 @@ Date:   Fri Jan 27 18:27:26 2012 +0000
 
     Reintegrated ics_import branch.   import.php is a utility (not linked to from the rest of MRBS) that can be used to import .ics files into MRBS.   Still some tidying up to be done.
 
-commit 0a33ce2c1
+commit 0a33ce2c1 (origin/ics_import)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Fri Jan 27 18:15:54 2012 +0000
 
@@ -86129,7 +86284,7 @@ Date:   Sun Oct 23 18:47:56 2011 +0000
 
     Reintegrated the draggable bookings branch.   MRBS now supports (except for IE8 and below) (a) the selection of new bookings by dragging over empty cells on the day and week views and (b) the adjustment of existing bookings by dragging their sides or corners.
 
-commit 85ca4de54
+commit 85ca4de54 (origin/draggable_bookings)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Sun Oct 23 17:24:18 2011 +0000
 
@@ -86898,7 +87053,7 @@ Date:   Mon Oct 3 13:01:55 2011 +0000
 
     Reintegrated the datatables branch back into the trunk.   The report results, search results, users list, rooms list and pending list are now sortable, searchable tables.  In addition admins can do bulk deletes of the entries returned in a report.
 
-commit ec3f96cd8
+commit ec3f96cd8 (origin/datatables)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Mon Oct 3 10:57:10 2011 +0000
 
@@ -92689,7 +92844,7 @@ Date:   Wed Jan 26 11:27:39 2011 +0000
      To come is an improved convert_db_to_utf8.php script that I have been
      working on.
 
-commit c591213b3
+commit c591213b3 (origin/only_unicode)
 Author: John Beranek <jberanek@users.sourceforge.net>
 Date:   Tue Jan 25 15:00:15 2011 +0000
 
@@ -92803,7 +92958,7 @@ Date:   Fri Jan 7 17:00:33 2011 +0000
     - emails containing iCalendar details that can be imported automatically into calendar apps (eg Outlook, iCal, Thunderbird/Lightning, Google Calendar)
     - export of bookings as iCalendar files (.ics) from view_entry.php and report.php
 
-commit 943f06a8b
+commit 943f06a8b (origin/ics_attachments)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Fri Jan 7 09:16:55 2011 +0000
 
@@ -93913,7 +94068,7 @@ Date:   Mon Nov 22 14:39:15 2010 +0000
  web/jquery/ui/jquery-ui-datepicker-en-US.js | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-commit 3babfd12b
+commit 3babfd12b (origin/disabled_rooms)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Mon Nov 22 11:12:47 2010 +0000
 
@@ -94334,7 +94489,7 @@ Date:   Fri Nov 5 11:49:58 2010 +0000
  web/systemdefaults.inc.php |  4 +++-
  3 files changed, 30 insertions(+), 2 deletions(-)
 
-commit d41880df9
+commit d41880df9 (origin/from_to_bookings)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Fri Nov 5 11:22:33 2010 +0000
 
@@ -94523,7 +94678,7 @@ Date:   Tue Nov 2 15:10:18 2010 +0000
 
     Merged the provisional_bookings_new_style branch back into the trunk.   MRBS now has the ability to make "tentative" bookings, ie bookings which are not 100% certain to happen, but where the user wants to reserve the slot in the meantime.
 
-commit a96e93fb3
+commit a96e93fb3 (origin/provisional_bookings_new_style)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Tue Nov 2 14:51:00 2010 +0000
 
@@ -96271,7 +96426,7 @@ Date:   Thu Aug 19 17:01:17 2010 +0000
 
     Merged datepicker branch (pop-up calendars) back into the trunk.
 
-commit c73e6cad9
+commit c73e6cad9 (origin/datepicker)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Tue Aug 17 16:55:42 2010 +0000
 
@@ -96477,7 +96632,7 @@ Date:   Tue Jul 27 11:27:51 2010 +0000
 
     Merged the custom_entry_fields branch back into the trunk.   MRBS now recognises custom fields added to the entry and repeat tables.  As well as the edit_entry and view_entry pages, the Report and Search pages and email notifications now support custom fields.
 
-commit 6b69a3dec
+commit 6b69a3dec (origin/custom_entry_fields)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Tue Jul 27 10:37:43 2010 +0000
 
@@ -97709,7 +97864,7 @@ Date:   Wed Dec 9 22:37:17 2009 +0000
     * Performed --reintegrate branch merge of 'provisional_bookings' branch,
      r1242-1280.
 
-commit 47fd8233e
+commit 47fd8233e (origin/provisional_bookings)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Wed Dec 9 21:02:28 2009 +0000
 
@@ -101799,7 +101954,7 @@ Date:   Tue Sep 2 18:54:04 2008 +0000
 
     Merged into the trunk revisions 804-872 from the improve_css_2008_06
 
-commit 1ef2feeb8
+commit 1ef2feeb8 (origin/improve_css_2008_06)
 Author: John Beranek <jberanek@users.sourceforge.net>
 Date:   Tue Sep 2 12:38:39 2008 +0000
 
@@ -102891,7 +103046,7 @@ Date:   Sat Apr 12 21:05:36 2008 +0000
      branches/abandoned-mrbs-1_3-development/ to abandon the trunk development
      that was working towards MRBS 1.3.
 
-commit 146066da8
+commit 146066da8 (origin/mrbs-1_2-branch)
 Author: John Beranek <jberanek@users.sourceforge.net>
 Date:   Sat Apr 12 20:03:49 2008 +0000
 
@@ -102921,7 +103076,7 @@ Date:   Thu Apr 3 18:59:27 2008 +0000
      HTML 4.01 Transitional HTML. Majority of changes thanks to
      Claudio Strizzolo.
 
-commit 53ad5e352 (tag: mrbs12_better_html_mp1)
+commit 53ad5e352 (tag: mrbs12_better_html_mp1, origin/mrbs12_better_html)
 Author: John Beranek <jberanek@users.sourceforge.net>
 Date:   Thu Apr 3 18:51:15 2008 +0000
 
@@ -108173,7 +108328,7 @@ Date:   Sun Feb 25 01:34:20 2001 +0000
 
     Merge branch mrbs-0-9-1xp into trunk
 
-commit 8dff23dbe
+commit 8dff23dbe (origin/mrbs-0-9-1xp)
 Author: Daniel <nambit@users.sourceforge.net>
 Date:   Thu Feb 22 20:11:10 2001 +0000
 
@@ -110664,7 +110819,7 @@ Date:   Wed May 3 22:41:26 2000 +0000
 
     Standard project directories initialized by cvs2svn.
 
-commit 50650434f (tag: start)
+commit 50650434f (tag: start, origin/vendor)
 Author: Daniel <nambit@users.sourceforge.net>
 Date:   Wed May 3 22:41:26 2000 +0000
 

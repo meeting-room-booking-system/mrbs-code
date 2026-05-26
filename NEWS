@@ -7,11 +7,28 @@
 [============================]
 
 -------------------------------------------------------------------------------
-Version 1.12.2 (Wed 6th May 2026):
+Version 1.12.2 (Tue 26th May 2026):
 
-[-] Fixed unauthenticated open redirect in kiosk mode.
+[*] Check that the default email address is valid.
 
-[-] Fixed potential Server Side Request Forgery in import functionality.
+[-] Fix uncaught exception when exporting an entry created by a user that no longer exists.
+
+[-] Fix uncaught exception when the locale is 'ca'.  See GitHub Issue #4008.
+
+[-] Fix incorrect error when the required PDO driver is not installed.
+
+[-] Fix bug when there are recipients on the 'Cc' or 'Bcc' lines, but not the 'To' line.
+
+[-] Fix PHP 8.5 deprecation error ("Using null as the key parameter for array_key_exists() is
+ deprecated, use an empty string instead").
+
+[-] Prevent open redirects from location_header function.
+
+[-] Fix potential open redirects in the rest of MRBS.
+
+[-] Fixed unauthenticated open redirect in kiosk mode. (CVE-2026-46688)
+
+[-] Fixed potential Server Side Request Forgery in import functionality. (CVE-2026-46382)
 
 [*] Add recommendation for 'intl' and 'mbstring' extensions.
 
