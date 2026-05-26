@@ -185,6 +185,12 @@ class User extends Table
       {
         return $this->getRules($location,true);
       }
+
+      // Validate the resulting email address
+      if (!validate_email($this->email))
+      {
+        $this->email = null;
+      }
     }
 
     // Now we've got the roles, get the rules that apply.
