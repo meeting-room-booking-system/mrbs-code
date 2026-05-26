@@ -1111,7 +1111,7 @@ $period = get_form_var('period', 'int');
 $id = get_form_var('id', 'int');
 $copy = get_form_var('copy', 'bool');
 $edit_series = get_form_var('edit_series', 'bool');
-$returl = get_form_var('returl', 'string');
+$returl = get_form_var('returl', 'url_local');
 // The following variables are used when coming via a JavaScript drag select
 $drag = get_form_var('drag', 'int');
 $start_seconds = get_form_var('start_seconds', 'int');
