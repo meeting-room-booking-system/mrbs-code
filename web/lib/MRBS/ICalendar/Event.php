@@ -355,6 +355,11 @@ class Event extends Component
       // The file is not being used for email notifications, so we need to make the booking
       // creator the organizer.
       $organizer = auth()->getUser($data['create_by']);
+      // If the user doesn't exist, probably because they've been deleted, then create one.
+      if (!isset($organizer))
+      {
+        $organizer = new User($data['create_by']);
+      }
       // The ORGANIZER property has to have a cal-address, so if the user doesn't have an email address,
       // then use the MRBS organizer's.  This is not strictly correct, but allows us to generate an
       // event for export that can be re-imported into MRBS, when the important value is the username,
