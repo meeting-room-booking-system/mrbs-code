@@ -1114,7 +1114,7 @@ function get_fieldset_submit_button() : ElementFieldset
 
 $import = get_form_var('import', 'string');
 $source_type = get_form_var('source_type', 'string', $default_import_source);
-$url = get_form_var('url', 'string');
+$url = get_form_var('url', 'url_remote');
 $import_default_room = get_form_var('import_default_room', 'int');
 $ignore_location = get_form_var('ignore_location', 'string', '0');
 $add_location = get_form_var('add_location', 'array');
@@ -1155,7 +1155,7 @@ if (!empty($import))
 {
   if ($source_type == 'url')
   {
-    if (!isset($url) || (false === (url_validate_remote($url))))
+    if (!isset($url))
     {
       echo "<p>\n";
       echo get_vocab("invalid_url");
