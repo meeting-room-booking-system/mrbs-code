@@ -14,7 +14,7 @@ require_once "functions_mail.inc";
 $action = get_form_var('action', 'string');
 $id = get_form_var('id', 'int');
 $series = get_form_var('series', 'bool');
-$returl = get_form_var('returl', 'string');
+$returl = get_form_var('returl', 'url_local', 'index.php');
 $note = get_form_var('note', 'string');
 
 // Check the CSRF token

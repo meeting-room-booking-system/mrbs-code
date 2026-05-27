@@ -741,9 +741,9 @@ function generateTextArea(string $form_action, int $id, bool $series, string $ac
 $id = get_form_var('id', 'int');
 $series = get_form_var('series', 'bool', false);
 $action = get_form_var('action', 'string');
-$returl = get_form_var('returl', 'string');
+$returl = get_form_var('returl', 'url_local');
 $error = get_form_var('error', 'string');
-$previous_page = get_form_var('previous_page', 'string');
+$previous_page = get_form_var('previous_page', 'url_local');
 
 $referrer = session()->getReferrer();
 

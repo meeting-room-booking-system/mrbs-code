@@ -642,6 +642,40 @@ function url_base() : string
 }
 
 
+/**
+ * Check that the URL is only a local URL.  This is used to prevent open redirects.
+ *
+ * @return string|null  The URL if it is a local URL, otherwise null.
+ */
+function url_validate_local(string $url) : ?string
+{
+  // Check that it's a well-formed URL
+  if (false === ($parsed_url = parse_url($url)))
+  {
+    trigger_error('Cannot parse URL "' . $url . '"', E_USER_WARNING);
+    return null;
+  }
+
+  $base_url = url_base();
+  if (false === ($parsed_base = parse_url($base_url)))
+  {
+    trigger_error('Cannot parse $base_url of "' . $base_url . '"', E_USER_WARNING);
+    return null;
+  }
+
+  // If one of the components before the path is set and doesn't match the base URL's component, then this is not a local URL.
+  foreach (['scheme', 'user', 'pass', 'host', 'port'] as $component)
+  {
+    if (isset($parsed_url[$component]) && ($parsed_url[$component] !== '') && ($parsed_url[$component] !== $parsed_base[$component]))
+    {
+      return null;
+    }
+  }
+
+  return $url;
+}
+
+
 function is_https() : bool
 {
   global $server;
@@ -739,6 +773,7 @@ function build_url(array $parts) : string
  * A wrapper for sending a Location header.  This function will urlencode and add
  * the site parameter as necessary.
  *
+ * @param string $location  The URL to redirect to.  This must be a local URL.
  * @return never
  */
 function location_header(string $location) : void
@@ -748,6 +783,15 @@ function location_header(string $location) : void
   if ($debug && (version_compare(MRBS_MIN_PHP_VERSION, '8.1') >= 0))
   {
     trigger_error("The return type can be changed to 'never'.", E_USER_NOTICE);
+  }
+
+  // Check that the URL is a local URL.  If it isn't, then we don't want to redirect to it.
+  {
+    if (null === ($location = url_validate_local($location)))
+    {
+      trigger_error("Cannot redirect to URL '$location' because it is not a local URL", E_USER_WARNING);
+      $location = 'index.php';
+    }
   }
 
   // Add the site parameter if necessary
@@ -2869,4 +2913,77 @@ function get_user_field(array $params, bool $datalist=false) : Field
   }
 
   return $field;
+}
+
+
+/**
+ * Check if an IP address belongs to a specified CIDR range.
+ *
+ * Only works for IPv4 addresses.
+ */
+function ip_cidr_check (string $ip, string $cidr) : bool
+{
+  // Based on code by lukav at lukav dot com from https://www.php.net/manual/en/ref.network.php
+
+  // Validate the arguments
+  if (!str_contains($cidr, '/'))
+  {
+    throw new \InvalidArgumentException("Invalid CIDR range '$cidr'");
+  }
+  if (false === ($ip_ip = ip2long ($ip)))
+  {
+    throw new \InvalidArgumentException("Invalid IP address '$ip'");
+  }
+
+  list($net, $mask) = explode('/', $cidr);
+
+  if (false === ($ip_net = ip2long ($net)))
+  {
+    throw new \InvalidArgumentException("Invalid CIDR range '$cidr'");
+  }
+
+  $ip_mask = ~((1 << (32 - $mask)) - 1);
+
+  return (($ip_ip & $ip_mask) == ($ip_net & $ip_mask));
+}
+
+
+/**
+ * Validate that a given URL is *not* a local URL.  Useful for preventing Server Side Request Forgery attacks.
+ *
+ * @return false|string FALSE if the URL is local, otherwise the URL
+ */
+function url_validate_remote(string $url)
+{
+  // Check the URL is valid
+  if (false === ($url = filter_var($url, FILTER_VALIDATE_URL))) {
+    return false;
+  }
+  // Check that we can parse the URL
+  if (false === ($url_components = parse_url($url))) {
+    return false;
+  }
+  // Disallow some schemes for security reasons (possible SSRF attack)
+  if (isset($url_components['scheme']) && in_arrayi($url_components['scheme'], ['file'])) {
+    return false;
+  }
+  // Check the hostname is well-formed
+  if (false === ($hostname = filter_var($url_components['host'], FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME))) {
+    return false;
+  }
+  // Check the hostname is not 'localhost' (possible SSRF attack)
+  if (mb_strtolower($hostname) == 'localhost') {
+    return false;
+  }
+  // If the hostname is an IP address, check that it is not a local one (possible SSRF attack)
+  if (ip2long($hostname) !== false) {
+    foreach (['127.0.0.0/8', '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16', '169.254.0.0/16'] as $cidr) {
+      // This won't work with IPv6 addresses, but IPv6 addresses will have been disallowed by the filter_var() call above
+      if (!ip_cidr_check($hostname, $cidr)) {
+        return false;
+      }
+    }
+  }
+
+  return $url;
 }

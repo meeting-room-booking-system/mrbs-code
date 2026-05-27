@@ -32,15 +32,22 @@ abstract class SessionWithLogin extends Session
   {
     parent::__construct();
 
-    // Get non-standard form variables
-    foreach (array('action', 'username', 'password', 'returl') as $var)
+    // Get the non-standard form variables
+    $vars = [
+      'action' => 'string',
+      'username' => 'string',
+      'password' => 'string',
+      'returl' => 'url_local'
+    ];
+
+    foreach ($vars as $var => $type)
     {
-      $this->form[$var] = get_form_var($var, 'string', null, INPUT_POST);
+      $this->form[$var] = get_form_var($var, $type, null, INPUT_POST);
     }
 
     // Allow the target_url to be a GET or POST value to help password managers (the target_url can
     // be stored as a query string parameter in the password manager).
-    $this->form['target_url'] = get_form_var('target_url');
+    $this->form['target_url'] = get_form_var('target_url', 'url_local');
 
     if (isset($this->form['username']))
     {

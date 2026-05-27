@@ -445,7 +445,7 @@ class DB_pgsql extends DB
   // Returns the syntax for an "upsert" query.  Unfortunately getting the id of the
   // last row differs between MySQL and PostgreSQL.   In PostgreSQL the query will
   // return a row with the id in the 'id' column.  However there isn't a corresponding
-  // way of doing this in MySQL, but db()->insert_id() will work, regardless of whether
+  // way of doing this in MySQL, but $this->insert_id() will work, regardless of whether
   // an insert or update was performed.  In PostgreSQL insert_id() returns the sequence
   // number and not the id of the row.  Because the sequence number is updated on every
   // INSERT in Postgres, regardless of whether a row was actually inserted, the value
