@@ -31,6 +31,9 @@ namespace MRBS;
  * - 'string'
  * - 'url_local' The value must be a valid URL, and must be local to the server.  If it's not, then NULL is returned.
  * Useful for preventing open redirects.
+ * - 'url_remote' The value must be a valid URL, and must *not* be local to the server.  If it's not, then NULL is
+ * returned.  Useful for preventing server
+ * side request forgery (SSRF) attacks.
  *
  * Arrays of these types are also supported by enclosing the types in square brackets, eg '[int]'.  For backwards
  * compatibility 'array' is also supported and is equivalent to '[string]'.
@@ -180,6 +183,9 @@ function clean_value($value, string $element_type)
     case 'url_local':
       $value = url_validate_local($value);
       break;
+    case 'url_remote':
+      $value = url_validate_remote($value);
+      break;
     default:
       break;
   }
@@ -199,7 +205,7 @@ function parse_var_type(string $var_type) : array
   $element_type = $matches[1] ?? $var_type;
 
   // Validate
-  if (!in_array($element_type, ['bool', 'decimal', 'float', 'int', 'string', 'url_local']))
+  if (!in_array($element_type, ['bool', 'decimal', 'float', 'int', 'string', 'url_local', 'url_remote']))
   {
     throw new \InvalidArgumentException("Invalid argument '$var_type'");
   }

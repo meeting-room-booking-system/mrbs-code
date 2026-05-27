@@ -651,36 +651,36 @@ function url_validate_local(string $url) : ?string
 /**
  * Validate that a given URL is *not* a local URL.  Useful for preventing Server Side Request Forgery attacks.
  *
- * @return false|string FALSE if the URL is local, otherwise the URL
+ * @return string|null The URL if it is a remote URL, otherwise null.
  */
 function url_validate_remote(string $url)
 {
   // Check the URL is valid
   if (false === ($url = filter_var($url, FILTER_VALIDATE_URL))) {
-    return false;
+    return null;
   }
   // Check that we can parse the URL
   if (false === ($url_components = parse_url($url))) {
-    return false;
+    return null;
   }
   // Disallow some schemes for security reasons (possible SSRF attack)
   if (isset($url_components['scheme']) && in_arrayi($url_components['scheme'], ['file'])) {
-    return false;
+    return null;
   }
   // Check the hostname is well-formed
   if (false === ($hostname = filter_var($url_components['host'], FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME))) {
-    return false;
+    return null;
   }
   // Check the hostname is not 'localhost' (possible SSRF attack)
   if (mb_strtolower($hostname) == 'localhost') {
-    return false;
+    return null;
   }
   // If the hostname is an IP address, check that it is not a local one (possible SSRF attack)
   if (ip2long($hostname) !== false) {
     foreach (['127.0.0.0/8', '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16', '169.254.0.0/16'] as $cidr) {
       // This won't work with IPv6 addresses, but IPv6 addresses will have been disallowed by the filter_var() call above
       if (!ip_cidr_check($hostname, $cidr)) {
-        return false;
+        return null;
       }
     }
   }
