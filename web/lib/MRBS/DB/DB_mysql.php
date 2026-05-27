@@ -732,7 +732,7 @@ class DB_mysql extends DB
   // Returns the syntax for an "upsert" query.  Unfortunately getting the id of the
   // last row differs between MySQL and PostgreSQL.   In PostgreSQL the query will
   // return a row with the id in the 'id' column.  However there isn't a corresponding
-  // way of doing this in MySQL, but db()->insert_id() will work, regardless of whether
+  // way of doing this in MySQL, but $this->insert_id() will work, regardless of whether
   // an insert or update was performed.
   //
   //  $conflict_keys     the key(s) which is/are unique; can be a scalar or an array
