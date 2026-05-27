@@ -3045,7 +3045,7 @@ function ip_cidr_check (string $ip, string $cidr) : bool
  *
  * @return false|string FALSE if the URL is local, otherwise the URL
  */
-function url_validate_not_local(string $url)
+function url_validate_remote(string $url)
 {
   // Check the URL is valid
   if (false === ($url = filter_var($url, FILTER_VALIDATE_URL))) {

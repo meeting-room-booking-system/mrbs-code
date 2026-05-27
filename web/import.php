@@ -1175,7 +1175,7 @@ if (!empty($import))
 {
   if ($source_type == 'url')
   {
-    if (!isset($url) || (false === (url_validate_not_local($url))))
+    if (!isset($url) || (false === (url_validate_remote($url))))
     {
       echo "<p>\n";
       echo get_vocab("invalid_url");
