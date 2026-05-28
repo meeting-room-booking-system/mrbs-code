@@ -64,6 +64,8 @@ class DB_mysql extends DB
   {
     global $db_retries, $db_delay;
 
+    parent::__construct($db_host, $db_username, $db_password, $db_name, $persist, $db_port, $db_options);
+
     $driver_options =  self::siteOptions() + self::OPTIONS;
 
     // We allow retries if the connection fails due to a resource constraint, possibly because

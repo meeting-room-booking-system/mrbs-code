@@ -33,6 +33,8 @@ class DB_pgsql extends DB
     ?int $db_port=null,
     array $db_options=[])
   {
+    parent::__construct($db_host, $db_username, $db_password, $db_name, $persist, $db_port, $db_options);
+
     $driver_options = self::OPTIONS;
 
     // If user-defined driver options exist add them in to the standard driver options, having
