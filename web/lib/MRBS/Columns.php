@@ -4,6 +4,7 @@ namespace MRBS;
 
 use Countable;
 use Iterator;
+use MRBS\DB\DB;
 
 // Holds information about table columns
 // Implemented as a singleton class for performance reasons: it is
@@ -14,15 +15,17 @@ class Columns implements Countable, Iterator
   private static $instances = array();
   private $data;
   private $index = 0;
+  private $connection;
   private $table_name;
 
 
-  private function __construct($table_name)
+  private function __construct($table_name, DB $connection)
   {
     assert(version_compare(MRBS_MIN_PHP_VERSION, '7.4.0', '<'), "The __wakeup() method is now redundant.");
     $this->table_name = $table_name;
+    $this->connection = $connection;
     // Get the column info
-    $this->data = db()->field_info($table_name);
+    $this->data = $this->connection->field_info($table_name);
   }
 
 
@@ -49,14 +52,24 @@ class Columns implements Countable, Iterator
   }
 
 
-  public static function getInstance(string $table_name) : Columns
+  /**
+   * Get the singleton instance for the specified table and database connection.
+   *
+   * @param DB|null $connection  If null, the default database connection is used.
+   */
+  public static function getInstance(string $table_name, ?DB $connection=null) : Columns
   {
-    if (!isset(self::$instances[$table_name]))
+    if (!isset($connection))
     {
-      self::$instances[$table_name] = new self($table_name);
+      $connection = db();
     }
 
-    return self::$instances[$table_name];
+    if (!isset(self::$instances[$connection->dsn][$table_name]))
+    {
+      self::$instances[$connection->dsn][$table_name] = new self($table_name, $connection);
+    }
+
+    return self::$instances[$connection->dsn][$table_name];
   }
 
 

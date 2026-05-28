@@ -20,6 +20,8 @@ abstract class DB
   const DB_DBO_DRIVER = null;
   const DB_CHARSET = 'UTF8';
 
+  public $dsn;  // As of PHP 8.1.0 this can be made readonly
+
   protected $dbh = null;
   protected $mutex_locks = array();
   protected $version_string = null;
@@ -27,7 +29,7 @@ abstract class DB
 
   // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
   // The attribute is only recognised by PHP 8.2 and later.
-  abstract public function __construct(
+  public function __construct(
     string $db_host,
     #[\SensitiveParameter]
     string $db_username,
@@ -38,7 +40,11 @@ abstract class DB
     bool   $persist = false,
     ?int   $db_port = null,
     array  $db_options = []
-  );
+  )
+  {
+    assert(version_compare(MRBS_MIN_PHP_VERSION, '8.1.0', '<'), "The dsn property can be made readonly.");
+    $this->dsn = static::dsn($db_host, $db_name, $db_port);
+  }
 
 
   /**
@@ -125,7 +131,7 @@ abstract class DB
     $options = (empty($driver_options)) ? $default_options : $driver_options + $default_options;
 
     $this->dbh = new PDO(
-      static::dsn($db_host, $db_name, $db_port),
+      $this->dsn,
       $db_username,
       $db_password,
       $options
@@ -614,7 +620,7 @@ abstract class DB
     $values = array();
     $sql_params = array();
 
-    $cols = (isset($table)) ? Columns::getInstance($table) : array_keys($data);
+    $cols = (isset($table)) ? Columns::getInstance($table, $this) : array_keys($data);
 
     $i = 0;
     foreach ($cols as $col)
