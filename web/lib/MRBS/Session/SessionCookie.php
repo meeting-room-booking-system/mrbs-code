@@ -59,12 +59,4 @@ class SessionCookie extends SessionPhp
     }
   }
 
-
-  public function logoffUser() : void
-  {
-    unset($_SESSION['user']);
-    session_regenerate_id(true);
-    session_write_close();
-  }
-
 }

@@ -184,11 +184,6 @@ abstract class SessionWithLogin extends Session
   }
 
 
-  public function logoffUser() : void
-  {
-  }
-
-
   // Displays the login form.
   // Will eventually return to $target_url with query string returl=$returl
   // If $error is set then an $error is printed.

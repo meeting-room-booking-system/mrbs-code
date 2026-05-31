@@ -241,18 +241,15 @@ if (!empty(get_form_var('enter_button')))
   Form::checkToken();
   $mode = get_form_var('mode');
 
-  if (method_exists(session(), 'logoffUser'))
-  {
-    session()->logoffUser();
-  }
   session()->init(0); // We only want the session to expire when the browser is closed
 
   $kiosk_url = multisite(url_base() . "index.php?kiosk=$mode&area=$area&room=$room");
   session()->set('kiosk_password_hash', password_hash($kiosk_password, PASSWORD_DEFAULT));
   session()->set('kiosk_url', $kiosk_url);
 
-  location_header($kiosk_url);
-  // location_header() includes an exit
+  // Log off the user and redirect to the kiosk URL
+  session()->logoffUser($kiosk_url);
+  // logOffUser() includes an exit
 }
 
 // Phase 1
