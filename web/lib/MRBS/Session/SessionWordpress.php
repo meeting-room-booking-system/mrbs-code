@@ -69,6 +69,7 @@ class SessionWordpress extends SessionWithLogin
   public function logoffUser(?string $redirect_url = null) : void
   {
     wp_logout();
+    parent::logoffUser($redirect_url);
   }
 
 }

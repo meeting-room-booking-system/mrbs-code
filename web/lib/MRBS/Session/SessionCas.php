@@ -86,6 +86,7 @@ class SessionCas extends SessionWithLogin
   public function logoffUser(?string $redirect_url = null) : void
   {
     phpCAS::logout();
+    parent::logoffUser($redirect_url);
   }
 
 }

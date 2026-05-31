@@ -10,6 +10,7 @@ use function MRBS\db;
 use function MRBS\db_schema_version;
 use function MRBS\get_cookie_path;
 use function MRBS\is_https;
+use function MRBS\location_header;
 
 abstract class Session
 {
@@ -224,6 +225,20 @@ abstract class Session
 
     // Use an empty string for anonymous bookings
     return new User('');
+  }
+
+
+  /**
+   * Log off the current user and optionally redirect to a different page.
+   *
+   * @return void|never
+   */
+  public function logoffUser(?string $redirect_url=null) : void
+  {
+    if (isset($redirect_url))
+    {
+      location_header($redirect_url);
+    }
   }
 
 

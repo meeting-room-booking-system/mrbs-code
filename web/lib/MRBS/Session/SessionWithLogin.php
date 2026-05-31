@@ -177,15 +177,6 @@ abstract class SessionWithLogin extends Session
   }
 
 
-  /**
-   * Log off the current user and optionally redirect to a different page.  (Some session schemes,
-   * eg OAuth2, will require a redirect URL.)
-   */
-  public function logoffUser(?string $redirect_url=null) : void
-  {
-  }
-
-
   // Displays the login form.
   // Will eventually return to $target_url with query string returl=$returl
   // If $error is set then an $error is printed.

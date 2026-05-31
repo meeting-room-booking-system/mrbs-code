@@ -152,5 +152,6 @@ class SessionPhp extends SessionWithLogin
         }
       }
     }
+    parent::logoffUser($redirect_url);
   }
 }

@@ -125,5 +125,6 @@ class SessionJoomla extends SessionWithLogin
   public function logoffUser(?string $redirect_url = null) : void
   {
     $this->app->logout();
+    parent::logoffUser($redirect_url);
   }
 }

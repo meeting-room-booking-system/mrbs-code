@@ -247,14 +247,8 @@ if (!empty(get_form_var('enter_button')))
   session()->set('kiosk_url', $kiosk_url);
 
   // Log off the user and redirect to the kiosk URL
-  if (method_exists(session(), 'logoffUser'))
-  {
-    session()->logoffUser($kiosk_url);
-  }
-
-  // Redirect to the kiosk URL.  Necessary for those session schemes that do not redirect after a logoff.
-  location_header($kiosk_url);
-  // location_header() includes an exit
+  session()->logoffUser($kiosk_url);
+  // logOffUser() includes an exit
 }
 
 // Phase 1
