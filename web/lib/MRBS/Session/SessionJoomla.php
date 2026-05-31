@@ -122,7 +122,7 @@ class SessionJoomla extends SessionWithLogin
   }
 
 
-  public function logoffUser() : void
+  public function logoffUser(?string $redirect_url = null) : void
   {
     $this->app->logout();
   }

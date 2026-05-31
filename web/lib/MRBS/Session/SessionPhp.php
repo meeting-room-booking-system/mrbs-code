@@ -125,35 +125,32 @@ class SessionPhp extends SessionWithLogin
   }
 
 
-  public function logoffUser() : void
+  public function logoffUser(?string $redirect_url = null) : void
   {
     global $cookie_path_override;
 
-    if (ini_get("session.use_cookies"))
-    {
-      // Delete the session cookie
-      Cookie::delete(session_name());
+    // Just unset the user variable.  We may need to keep other variables, eg the kiosk variables.
+    unset($_SESSION['user']);
+    session_regenerate_id(true);
+    session_write_close();
 
+    if (ini_get("session.use_cookies") && !isset($cookie_path_override))
+    {
       // Delete any cookies which may have previously been set, incorrectly, before the fixes to get_cookie_path (see
       // https://github.com/meeting-room-booking-system/mrbs-code/commit/90ceeb8a0bc5f4850065695a3e085114c5ecae8e and
       // https://github.com/meeting-room-booking-system/mrbs-code/commit/cb74320048149c4199281b88d50fb69988a41312).
       // Note that the problem didn't occur if $cookie_path_override was set.
       // In time, once all the incorrect cookies have expired naturally, this block can be deleted.
-      if (!isset($cookie_path_override))
+      $params = session_get_cookie_params();
+      $suffixes = array('ajax/', 'js/');
+      // If the path ends with one of the suffixes we'll already have deleted it above
+      if (!str_ends_with_array($params['path'], $suffixes))
       {
-        $params = session_get_cookie_params();
-        $suffixes = array('ajax/', 'js/');
-        // If the path ends with one of the suffixes we'll already have deleted it above
-        if (!str_ends_with_array($params['path'], $suffixes))
+        foreach ($suffixes as $suffix)
         {
-          foreach ($suffixes as $suffix)
-          {
-            setcookie(session_name(), '', time() - 42000, $params['path'] . $suffix, $params['domain'], $params['secure'], isset($params['httponly']));
-          }
+          setcookie(session_name(), '', time() - 42000, $params['path'] . $suffix, $params['domain'], $params['secure'], isset($params['httponly']));
         }
       }
     }
-
-    $this->destroy();
   }
 }
