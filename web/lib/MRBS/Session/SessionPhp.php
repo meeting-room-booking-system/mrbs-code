@@ -133,7 +133,7 @@ class SessionPhp extends SessionWithLogin
 
     // Just unset the user variable.  We may need to keep other variables, eg the kiosk variables.
     unset($_SESSION['user']);
-    session_regenerate_id(true);
+    $this->regenerate();
     session_write_close();
 
     if (ini_get("session.use_cookies") && !isset($cookie_path_override))
