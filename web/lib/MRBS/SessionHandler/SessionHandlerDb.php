@@ -355,7 +355,9 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
   }
 
 
-  // Regenerate the key cookie, setting its expiry to be the same as the session cookie's.
+  /**
+   * Regenerate the key cookie, if there is one, setting its expiry to be the same as the session cookie's.
+   */
   public static function regenerateKeyCookie() : void
   {
     // No need to do anything if we can't get a session name, or if the expiry is zero (browser close).
