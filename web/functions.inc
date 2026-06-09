@@ -1674,7 +1674,7 @@ function get_area(int $room) : int
 /**
  * Get the timezone for an area
  *
- * @return false|string The timezone string, or false if there isn't one.
+ * @return false|string The timezone string, or the default timezone if there isn't one.
  */
 function get_area_timezone(int $area_id)
 {
