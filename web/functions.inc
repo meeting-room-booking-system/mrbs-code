@@ -1676,15 +1676,17 @@ function get_default_room(int $area_id) : int
 /**
  * Get the timezone for an area
  *
- * @return false|string The timezone string, or false if there isn't one.
+ * @return false|string The timezone string, or the default timezone if there isn't one.
  */
 function get_area_timezone(int $area_id)
 {
+  global $timezone;
+
   $sql = "SELECT timezone
             FROM " . _tbl('area') . "
            WHERE id=:id
            LIMIT 1";
-  return db()->query_scalar_non_bool($sql, [':id' => $area_id]);
+  return db()->query_scalar_non_bool($sql, [':id' => $area_id]) ?? $timezone;
 }
 
 
