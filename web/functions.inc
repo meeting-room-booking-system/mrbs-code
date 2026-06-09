@@ -1678,11 +1678,13 @@ function get_area(int $room) : int
  */
 function get_area_timezone(int $area_id)
 {
+  global $timezone;
+
   $sql = "SELECT timezone
             FROM " . _tbl('area') . "
            WHERE id=:id
            LIMIT 1";
-  return db()->query_scalar_non_bool($sql, [':id' => $area_id]);
+  return db()->query_scalar_non_bool($sql, [':id' => $area_id]) ?? $timezone;
 }
 
 
