@@ -183,22 +183,19 @@ var Table = {
           {
             for (i = data.length - 1; i >= 0; i--)
             {
-              if ((data[i].coord + tolerance) < cell[axis].start)
+              if ((data[i].coord - tolerance) < cell[axis].start)
               {
                 <?php
                 // 'seconds' behaves slightly differently to the other parameters:
-                // we need to know the end time for the new slot.    Also it's possible
-                // for us to have a zero element, eg when selecting a new booking, and if
-                // so we need to make sure there's something returned
+                // we need to know the end time for the new slot.
                 ?>
-                if ((Table.grid[axis].key === 'seconds') ||
-                    (params[Table.grid[axis].key].length === 0))
+                if ((Table.grid[axis].key === 'seconds'))
                 {
                   params[Table.grid[axis].key].push(data[i].value);
                 }
                 break;
               }
-              if ((data[i].coord + tolerance) < cell[axis].end)
+              if ((data[i-1] !== undefined) && (data[i-1].coord - tolerance) < cell[axis].end)
               {
                 params[Table.grid[axis].key].push(data[i].value);
               }
@@ -478,7 +475,7 @@ var Table = {
       <?php
       // Get the width of the top and left borders of the first proper slot cell
       // in the main table (ie ignore the row labels cell).  This won't be the
-      // same as the value in the CSS if the browsers zoom level is not 100%.
+      // same as the value in the CSS if the browser's zoom level is not 100%.
       ?>
       var table = $(Table.selector);
       var td = table.find('tbody tr:first-child td:first-of-type');
@@ -488,16 +485,16 @@ var Table = {
       <?php
       // Build an object holding all the data we need about the table, which is
       // the coordinates of the cell boundaries and the names and values of the
-      // data attributes.    The object has two properties, x and y, which in turn
+      // data attributes.  The object has two properties, x and y, which in turn
       // are objects containing the data for the x and y axes.  Each of these
-      // objects has a key property which holds the name of the data attribute and a
+      // objects has a key property, which holds the name of the data attribute, and a
       // data object, which is an array of objects holding the coordinate and data
       // value at each cell boundary.
       //
-      // Note that jQuery.offset() measures to the top left hand corner of the content
-      // and does not take into account padding.   So we need to make sure that the padding-top
-      // and padding-left is the same for all elements that we are going to measure so
-      // that we can compare them properly.   It is simplest to use zero and put any
+      // Note that jQuery.offset() measures to the top left-hand corner of the content
+      // and does not take into account padding.  So we need to make sure that the padding-top
+      // and padding-left are the same for all elements that we are going to measure so
+      // that we can compare them properly.  It is simplest to use zero and put any
       // padding required on the contained element.
       ?>
       var rtl = ((table.css('direction') !== undefined) &&
@@ -511,50 +508,51 @@ var Table = {
       var columns = table.find('thead tr:first-child th:visible').not('.first_last');
 
       <?php
-      // If the table has direction rtl, as it may do if you're using a RTL language
-      // such as Hebrew, then the columns will have been presented in the order right
-      // to left and we'll need to reverse the columns.
+      // Note that if the table has direction rtl, as it may do if you're using an RTL language such as Hebrew,
+      // then the columns will have been presented in the order right to left.  The .each() iteration will
+      // therefore be in reverse order.  We reverse the order of the data array later.
       ?>
-      if (rtl)
-      {
-        columns.reverse();
-      }
       columns.each(function() {
           if (Table.grid.x.key === undefined)
           {
             Table.grid.x.key = getDataName($(this));
           }
-          Table.grid.x.data.push({coord: $(this).offset().left,
-                                  value: $(this).data(Table.grid.x.key)});
+          // We want the first grid line we meet, which is the left-hand edge if the direction is ltr and the
+          // right-hand edge if the direction is rtl.
+          let edge = $(this).offset().left;
+          if (rtl)
+          {
+            edge += $(this).outerWidth();
+          }
+          Table.grid.x.data.push({coord: edge, value: $(this).data(Table.grid.x.key)});
         });
       <?php
-      // and also get the right hand edge (and also the left hand edge if the
-      // direction is RTL, as in Hebrew).  If we're dealing with seconds
-      // we need to know what the end time of the slot would be
+      // And also get the far edge of the last column.  If we're dealing with seconds, then
+      // we need to know what the end time of the slot would be.
       ?>
-      if (rtl)
-      {
-        columns.filter(':first').each(function() {
-            var value = null;
-            if (Table.grid.x.key === 'seconds')
-            {
-              value = Table.grid.x.data[0].value + resolution;
-            }
-            var edge = $(this).offset().left;
-            Table.grid.x.data.unshift({coord: edge, value: value});
-          });
-      }
-
       columns.filter(':last').each(function() {
           var value = null;
           if (Table.grid.x.key === 'seconds')
           {
             value = Table.grid.x.data[Table.grid.x.data.length - 1].value + resolution;
           }
-          var edge = $(this).offset().left + $(this).outerWidth();
+          <?php
+          // The far edge is the left-hand edge if the direction is rtl, otherwise the right-hand edge.
+          // (Remember that the columns are in reverse order if the table is rtl).
+          ?>
+          let edge = $(this).offset().left;
+          if (!rtl)
+          {
+            edge += $(this).outerWidth();
+          }
           Table.grid.x.data.push({coord: edge, value: value});
         });
 
+      <?php // Now reverse the direction of the data if the table is rtl, so that the data runs from left to right. ?>
+      if (rtl)
+      {
+        Table.grid.x.data.reverse();
+      }
 
       Table.grid.y = {};
       Table.grid.y.data = [];
