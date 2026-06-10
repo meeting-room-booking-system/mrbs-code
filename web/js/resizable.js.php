@@ -212,18 +212,15 @@ var Table = {
               {
                 <?php
                 // 'seconds' behaves slightly differently to the other parameters:
-                // we need to know the end time for the new slot.    Also it's possible
-                // for us to have a zero element, eg when selecting a new booking, and if
-                // so we need to make sure there's something returned
+                // we need to know the end time for the new slot.
                 ?>
-                if ((Table.grid[axis].key === 'seconds') ||
-                    (params[Table.grid[axis].key].length === 0))
+                if ((Table.grid[axis].key === 'seconds'))
                 {
                   params[Table.grid[axis].key].push(data[i].value);
                 }
                 break;
               }
-              if ((data[i].coord + tolerance) > cell[axis].start)
+              if ((data[i+1] !== undefined) && (data[i+1].coord + tolerance) > cell[axis].start)
               {
                 params[Table.grid[axis].key].push(data[i].value);
               }
