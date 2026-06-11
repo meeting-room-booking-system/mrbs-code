@@ -179,6 +179,13 @@ var Table = {
           {
             params[Table.grid[axis].key] = [];
           }
+          <?php
+          // If we're on the x-axis and the direction is right to left, then iterate through the table grid in
+          // reverse; otherwise iterate through normally.  If the grid line is past the right-hand edge of the
+          // booking (left-hand edge when rtl) then we have finished.  In the case when the axis represents
+          // seconds, we also store that grid line's value as we need to know the end time of the slot.  If the
+          // grid line is past the left-hand edge (right-hand edge when rtl) then store that grid line's value.
+          ?>
           if (rtl && (axis==='x'))
           {
             for (i = data.length - 1; i >= 0; i--)
@@ -221,7 +228,7 @@ var Table = {
               {
                 params[Table.grid[axis].key].push(data[i].value);
               }
-            } <?php // for ?>
+            }
           }
         }
       } <?php // for (axis in cell) ?>
