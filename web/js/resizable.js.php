@@ -158,12 +158,11 @@ var Table = {
   // the values for that booking (for example an array of room ids)
   ?>
   getBookingParams: function(el) {
-      var rtl = ($(Table.selector).css('direction').toLowerCase() === 'rtl'),
-          params = {},
+      const rtl = ($(Table.selector).css('direction').toLowerCase() === 'rtl'),
+            tolerance = 2; <?php //px ?>
+      let params = {},
           data,
-          tolerance = 2, <?php //px ?>
           cell = {x: {}, y: {}},
-          i,
           axis;
 
       cell.x.start = el.offset().left;
@@ -179,23 +178,26 @@ var Table = {
           {
             params[Table.grid[axis].key] = [];
           }
+          <?php
+          // If we're on the x-axis and the direction is right to left, then iterate through the table grid in
+          // reverse; otherwise iterate through normally.  If the grid line is past the right-hand edge of the
+          // booking (left-hand edge when rtl) then we have finished.  In the case when the axis represents
+          // seconds, we also store that grid line's value as we need to know the end time of the slot.  If the
+          // grid line is past the left-hand edge (right-hand edge when rtl) then store that grid line's value.
+          ?>
           if (rtl && (axis==='x'))
           {
-            for (i = data.length - 1; i >= 0; i--)
+            for (let i = data.length - 1; i >= 0; i--)
             {
-              if ((data[i].coord - tolerance) < cell[axis].start)
+              if ((data[i].coord - cell[axis].start) < tolerance)
               {
-                <?php
-                // 'seconds' behaves slightly differently to the other parameters:
-                // we need to know the end time for the new slot.
-                ?>
                 if ((Table.grid[axis].key === 'seconds'))
                 {
                   params[Table.grid[axis].key].push(data[i].value);
                 }
                 break;
               }
-              if ((data[i-1] !== undefined) && (data[i-1].coord - tolerance) < cell[axis].end)
+              if ((data[i-1] !== undefined) && ((cell[axis].end - data[i-1].coord) > tolerance))
               {
                 params[Table.grid[axis].key].push(data[i].value);
               }
@@ -203,25 +205,21 @@ var Table = {
           }
           else
           {
-            for (i=0; i<data.length; i++)
+            for (let i=0; i<data.length; i++)
             {
-              if ((data[i].coord + tolerance) > cell[axis].end)
+              if ((cell[axis].end - data[i].coord) < tolerance)
               {
-                <?php
-                // 'seconds' behaves slightly differently to the other parameters:
-                // we need to know the end time for the new slot.
-                ?>
                 if ((Table.grid[axis].key === 'seconds'))
                 {
                   params[Table.grid[axis].key].push(data[i].value);
                 }
                 break;
               }
-              if ((data[i+1] !== undefined) && (data[i+1].coord + tolerance) > cell[axis].start)
+              if ((data[i+1] !== undefined) && ((data[i+1].coord - cell[axis].start) > tolerance))
               {
                 params[Table.grid[axis].key].push(data[i].value);
               }
-            } <?php // for ?>
+            }
           }
         }
       } <?php // for (axis in cell) ?>
