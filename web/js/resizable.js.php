@@ -158,12 +158,11 @@ var Table = {
   // the values for that booking (for example an array of room ids)
   ?>
   getBookingParams: function(el) {
-      var rtl = ($(Table.selector).css('direction').toLowerCase() === 'rtl'),
-          params = {},
+      const rtl = ($(Table.selector).css('direction').toLowerCase() === 'rtl'),
+            tolerance = 2; <?php //px ?>
+      let params = {},
           data,
-          tolerance = 2, <?php //px ?>
           cell = {x: {}, y: {}},
-          i,
           axis;
 
       cell.x.start = el.offset().left;
@@ -188,7 +187,7 @@ var Table = {
           ?>
           if (rtl && (axis==='x'))
           {
-            for (i = data.length - 1; i >= 0; i--)
+            for (let i = data.length - 1; i >= 0; i--)
             {
               if ((data[i].coord - tolerance) < cell[axis].start)
               {
@@ -206,7 +205,7 @@ var Table = {
           }
           else
           {
-            for (i=0; i<data.length; i++)
+            for (let i=0; i<data.length; i++)
             {
               if ((data[i].coord + tolerance) > cell[axis].end)
               {
