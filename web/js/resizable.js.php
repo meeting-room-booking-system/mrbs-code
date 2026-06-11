@@ -189,7 +189,7 @@ var Table = {
           {
             for (let i = data.length - 1; i >= 0; i--)
             {
-              if ((data[i].coord - tolerance) < cell[axis].start)
+              if ((data[i].coord - cell[axis].start) < tolerance)
               {
                 if ((Table.grid[axis].key === 'seconds'))
                 {
@@ -197,7 +197,7 @@ var Table = {
                 }
                 break;
               }
-              if ((data[i-1] !== undefined) && (data[i-1].coord - tolerance) < cell[axis].end)
+              if ((data[i-1] !== undefined) && ((cell[axis].end - data[i-1].coord) > tolerance))
               {
                 params[Table.grid[axis].key].push(data[i].value);
               }
@@ -207,7 +207,7 @@ var Table = {
           {
             for (let i=0; i<data.length; i++)
             {
-              if ((data[i].coord + tolerance) > cell[axis].end)
+              if ((cell[axis].end - data[i].coord) < tolerance)
               {
                 if ((Table.grid[axis].key === 'seconds'))
                 {
@@ -215,7 +215,7 @@ var Table = {
                 }
                 break;
               }
-              if ((data[i+1] !== undefined) && (data[i+1].coord + tolerance) > cell[axis].start)
+              if ((data[i+1] !== undefined) && ((data[i+1].coord - cell[axis].start) > tolerance))
               {
                 params[Table.grid[axis].key].push(data[i].value);
               }
