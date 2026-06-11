@@ -192,10 +192,6 @@ var Table = {
             {
               if ((data[i].coord - tolerance) < cell[axis].start)
               {
-                <?php
-                // 'seconds' behaves slightly differently to the other parameters:
-                // we need to know the end time for the new slot.
-                ?>
                 if ((Table.grid[axis].key === 'seconds'))
                 {
                   params[Table.grid[axis].key].push(data[i].value);
@@ -214,10 +210,6 @@ var Table = {
             {
               if ((data[i].coord + tolerance) > cell[axis].end)
               {
-                <?php
-                // 'seconds' behaves slightly differently to the other parameters:
-                // we need to know the end time for the new slot.
-                ?>
                 if ((Table.grid[axis].key === 'seconds'))
                 {
                   params[Table.grid[axis].key].push(data[i].value);
