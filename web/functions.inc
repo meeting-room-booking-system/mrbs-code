@@ -1642,7 +1642,7 @@ function get_default_room(int $area) : int
 
     if (($room >= 0) && is_visible($room))
     {
-      return (int) $room;
+      return $room;
     }
   }
 
