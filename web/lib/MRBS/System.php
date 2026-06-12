@@ -871,7 +871,7 @@ class System
    *
    * @return string 'Windows'|'BSD'|'Darwin'|'Solaris'|'Linux'|'Aix'|'Unknown'
    */
-  public static function getServerOS() : string
+  public static function getServerOSFamily() : string
   {
     static $server_os = null;
 
@@ -976,7 +976,7 @@ class System
   // Add a codeset suffix to $locale
   private static function addCodeset(string $locale) : string
   {
-    $server_os = self::getServerOS();
+    $server_os = self::getServerOSFamily();
 
     switch ($server_os)
     {
@@ -1043,7 +1043,7 @@ class System
     }
 
     // Convert an old-style Windows locale, eg 'eng' to a BCP 47 one, eg 'en-gb'
-    if ((self::getServerOS() == 'windows') && in_array($result, self::$lang_map_windows))
+    if ((self::getServerOSFamily() == 'windows') && in_array($result, self::$lang_map_windows))
     {
       $result = array_search($result, self::$lang_map_windows);
     }
@@ -1062,7 +1062,7 @@ class System
 
   public static function utf8ConvertFromLocale(string $string, ?string $locale=null) : string
   {
-    $server_os = self::getServerOS();
+    $server_os = self::getServerOSFamily();
 
     if ($server_os == 'windows')
     {
@@ -1118,7 +1118,7 @@ class System
         $locales[] = $locale;
       }
 
-      if (self::getServerOS() == 'windows')
+      if (self::getServerOSFamily() == 'windows')
       {
         // Add in the three-letter code if any as a last resort
         if (isset(self::$lang_map_windows[mb_strtolower($langtag)]))

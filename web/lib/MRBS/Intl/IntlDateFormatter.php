@@ -201,7 +201,7 @@ class IntlDateFormatter
 //  %E  Day of year, with no leading zeroes
   private function strftimePlus(string $format, int $timestamp): string
   {
-    $server_os = System::getServerOS();
+    $server_os = System::getServerOSFamily();
 
     // Set the temporary locale.  Note that $this->locale could be an array of locales,
     // so we need to find out which locale actually worked.
