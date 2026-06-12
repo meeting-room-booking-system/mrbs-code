@@ -12,7 +12,9 @@ use OpenPsa\Ranger\Ranger;
 
 require "defaultincludes.inc";
 
-// Display the entry-type color key.
+/**
+ * Generate the HTML for the booking type colour key.
+ */
 function get_color_key() : string
 {
   global $booking_types;
@@ -37,8 +39,9 @@ function get_color_key() : string
 }
 
 
-// generates some html that can be used to select which area should be
-// displayed.
+/**
+ * Generate the HTML that can be used to select which area should be displayed.
+ */
 function make_area_select_html(string $view, int $year, int $month, int $day, int $current) : string
 {
   global $multisite, $site;
@@ -89,6 +92,9 @@ function make_area_select_html(string $view, int $year, int $month, int $day, in
 } // end make_area_select_html
 
 
+/**
+ * Generate the HTML that can be used to select which room should be displayed.
+ */
 function make_room_select_html (string $view, int $view_all, int $year, int $month, int $day, int $area, int $current) : string
 {
   global $multisite, $site, $always_offer_view_all;
@@ -142,7 +148,7 @@ function make_room_select_html (string $view, int $view_all, int $year, int $mon
            ->addSelectOptions($options, $current, true);
     $form->addElement($select);
 
-    // Note:  the submit button will not be displayed if JavaScript is enabled
+    // Note: the Submit button will not be displayed if JavaScript is enabled
     $submit = new ElementInputSubmit();
     $submit->setAttributes(array('class' => 'js_none',
                                  'value' => get_vocab('change')));
@@ -155,8 +161,9 @@ function make_room_select_html (string $view, int $view_all, int $year, int $mon
 } // end make_room_select_html
 
 
-
-// Gets the link to the next/previous day/week/month
+/**
+ * Get the link to the next/previous day/week/month/year
+ */
 function get_adjacent_link(string $view, int $view_all, int $year, int $month, int $day, int $area, int $room, int $increment) : string
 {
   $date = new DateTime();
@@ -200,7 +207,9 @@ function get_adjacent_link(string $view, int $view_all, int $year, int $month, i
 }
 
 
-// Gets the link for today
+/**
+ * Get the link for today
+ */
 function get_today_link(string $view, int $view_all, int $area, int $room) : string
 {
   // Don't include a date in order to make sure that the link will result in the current
@@ -215,6 +224,9 @@ function get_today_link(string $view, int $view_all, int $area, int $room) : str
 }
 
 
+/**
+ * Generate the HTML for the location navigation element.
+ */
 function get_location_nav(string $view, int $view_all, int $year, int $month, int $day, int $area, int $room) : string
 {
   $html = '';
@@ -233,6 +245,9 @@ function get_location_nav(string $view, int $view_all, int $year, int $month, in
 }
 
 
+/**
+ * Generate the HTML for the view navigation element.
+ */
 function get_view_nav(string $current_view, int $view_all, int $year, int $month, int $day, int $area, int $room) : string
 {
   global $max_slots_for_year_view;
@@ -281,6 +296,9 @@ function get_view_nav(string $current_view, int $view_all, int $year, int $month
 }
 
 
+/**
+ * Generate the HTML for the arrow navigation element.
+ */
 function get_arrow_nav(string $view, int $view_all, int $year, int $month, int $day, int $area, int $room) : string
 {
   $html = '';
@@ -343,6 +361,9 @@ function get_arrow_nav(string $view, int $view_all, int $year, int $month, int $
 }
 
 
+/**
+ * Generate the HTML for the calendar navigation element.
+ */
 function get_calendar_nav(string $view, int $view_all, int $year, int $month, int $day, int $area, int $room, bool $hidden=false) : string
 {
   $html = '';
@@ -361,6 +382,9 @@ function get_calendar_nav(string $view, int $view_all, int $year, int $month, in
 }
 
 
+/**
+ * Generate the HTML for the date heading.
+ */
 function get_date_heading(string $view, int $year, int $month, int $day) : string
 {
   global $datetime_formats, $display_timezone, $timezone,
@@ -434,6 +458,9 @@ function get_date_heading(string $view, int $year, int $month, int $day) : strin
 }
 
 
+/**
+ * Generate the HTML for the message.
+ */
 function message_html() : string
 {
   $message = Message::getInstance();

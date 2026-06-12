@@ -849,7 +849,11 @@ class System
     );
 
 
-  // Works out whether the machine architecture is little-endian or big-endian
+  /**
+   * Determine whether the machine architecture is little-endian or big-endian.
+   *
+   * @return int  self::LITTLE_ENDIAN or self::BIG_ENDIAN
+   */
   public static function getEndianness() : int
   {
     static $result;
@@ -919,7 +923,9 @@ class System
   }
 
 
-  // Returns information about the operating system PHP is running on
+  /**
+   * Return information about the operating system PHP is running on.
+   */
   public static function info() : string
   {
     // On some systems php_uname() is disabled for security reasons
@@ -981,7 +987,9 @@ class System
   }
 
 
-  // Add a codeset suffix to $locale
+  /**
+   * Add a codeset suffix to a locale, depending on the operating system.
+   */
   private static function addCodeset(string $locale) : string
   {
     $server_os = self::getServerOSFamily();
