@@ -923,7 +923,9 @@ class System
   }
 
 
-  // Returns information about the operating system PHP is running on
+  /**
+   * Return information about the operating system PHP is running on.
+   */
   public static function info() : string
   {
     // On some systems php_uname() is disabled for security reasons
