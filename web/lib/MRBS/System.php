@@ -1043,7 +1043,7 @@ class System
     }
 
     // Convert an old-style Windows locale, eg 'eng' to a BCP 47 one, eg 'en-gb'
-    if ((self::getServerOSFamily() == 'windows') && in_array($result, self::$lang_map_windows))
+    if ((self::getServerOSFamily() == 'Windows') && in_array($result, self::$lang_map_windows))
     {
       $result = array_search($result, self::$lang_map_windows);
     }
@@ -1064,7 +1064,7 @@ class System
   {
     $server_os = self::getServerOSFamily();
 
-    if ($server_os == 'windows')
+    if ($server_os == 'Windows')
     {
       if (!isset($locale))
       {
@@ -1118,7 +1118,7 @@ class System
         $locales[] = $locale;
       }
 
-      if (self::getServerOSFamily() == 'windows')
+      if (self::getServerOSFamily() == 'Windows')
       {
         // Add in the three-letter code if any as a last resort
         if (isset(self::$lang_map_windows[mb_strtolower($langtag)]))
