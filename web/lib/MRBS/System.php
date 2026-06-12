@@ -864,6 +864,13 @@ class System
     return $result;
   }
 
+
+  /**
+   * Gets the operating system family.  It returns the same string values as the PHP_OS_FAMILY constant,
+   * with the addition of 'Aix' for IBM AIX, supported historically by MRBS.
+   *
+   * @return string 'Windows'|'BSD'|'Darwin'|'Solaris'|'Linux'|'Aix'|'Unknown'
+   */
   public static function getServerOS() : string
   {
     static $server_os = null;
@@ -872,31 +879,31 @@ class System
     {
       if (stristr(PHP_OS,'Darwin'))
       {
-        $server_os = 'macosx';
+        $server_os = 'Darwin';
       }
       elseif (stristr(PHP_OS, 'WIN'))
       {
-        $server_os = 'windows';
+        $server_os = 'Windows';
       }
       elseif (stristr(PHP_OS, 'Linux'))
       {
-        $server_os = 'linux';
+        $server_os = 'Linux';
       }
       elseif (stristr(PHP_OS, 'BSD'))
       {
-        $server_os = 'bsd';
+        $server_os = 'BSD';
       }
       elseif (stristr(PHP_OS, 'SunOS'))
       {
-        $server_os = 'sunos';
+        $server_os = 'Solaris';
       }
       elseif (stristr(PHP_OS, 'AIX'))
       {
-        $server_os = 'aix';
+        $server_os = 'Aix';
       }
       else
       {
-        $server_os = 'unsupported';
+        $server_os = 'Unknown';
       }
     }
 
@@ -973,14 +980,14 @@ class System
 
     switch ($server_os)
     {
-      case 'sunos':
-      case 'linux':
-      case 'bsd':
+      case 'Solaris':
+      case 'Linux':
+      case 'BSD':
         $codeset = '.UTF-8';
         break;
 
-      case 'macosx':
-      case 'windows':
+      case 'Darwin':
+      case 'Windows':
         $codeset = '.utf-8';
         break;
 
@@ -1079,7 +1086,7 @@ class System
         }
       }
     }
-    else if ($server_os == 'aix')
+    else if ($server_os == 'Aix')
     {
       $string = self::utf8ConvertAix($string, $locale);
     }
