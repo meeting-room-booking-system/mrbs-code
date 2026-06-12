@@ -201,7 +201,7 @@ class IntlDateFormatter
 //  %E  Day of year, with no leading zeroes
   private function strftimePlus(string $format, int $timestamp): string
   {
-    $server_os = System::getServerOS();
+    $server_os = System::getServerOSFamily();
 
     // Set the temporary locale.  Note that $this->locale could be an array of locales,
     // so we need to find out which locale actually worked.
@@ -215,8 +215,8 @@ class IntlDateFormatter
         trigger_error($message, E_USER_WARNING);
       }
     }
-    elseif ($server_os == "windows") {
-      // If we are running Windows we have to set the locale again in case another script
+    elseif ($server_os == 'Windows') {
+      // If we are running Windows we have to set the locale again, in case another script
       // running in the same process has changed the locale since we first set it.  See the
       // warning on the PHP manual page for setlocale():
       //

@@ -864,39 +864,54 @@ class System
     return $result;
   }
 
-  public static function getServerOS() : string
+
+  /**
+   * Gets the operating system family.  It returns the same string values as the PHP_OS_FAMILY constant,
+   * with the addition of 'Aix' for IBM AIX, supported historically by MRBS.
+   *
+   * @return string 'Windows'|'BSD'|'Darwin'|'Solaris'|'Linux'|'Aix'|'Unknown'
+   */
+  public static function getServerOSFamily() : string
   {
     static $server_os = null;
 
     if (!isset($server_os))
     {
-      if (stristr(PHP_OS,'Darwin'))
+      // Use the PHP_OS_FAMILY constant if it's got a known family
+      if (PHP_OS_FAMILY != 'Unknown')
       {
-        $server_os = 'macosx';
+        $server_os = PHP_OS_FAMILY;
+      }
+      // Otherwise try to work out the OS family from the PHP_OS constant.  This is probably
+      // not necessary (except possibly for Aix?), but is retained for backwards compatibility.
+      elseif (stristr(PHP_OS,'Darwin'))
+      {
+        $server_os = 'Darwin';
       }
       elseif (stristr(PHP_OS, 'WIN'))
       {
-        $server_os = 'windows';
+        $server_os = 'Windows';
       }
       elseif (stristr(PHP_OS, 'Linux'))
       {
-        $server_os = 'linux';
+        $server_os = 'Linux';
       }
       elseif (stristr(PHP_OS, 'BSD'))
       {
-        $server_os = 'bsd';
+        $server_os = 'BSD';
       }
       elseif (stristr(PHP_OS, 'SunOS'))
       {
-        $server_os = 'sunos';
+        $server_os = 'Solaris';
       }
+      // Not sure what PHP_OS_FAMILY gives for AIX systems.
       elseif (stristr(PHP_OS, 'AIX'))
       {
-        $server_os = 'aix';
+        $server_os = 'Aix';
       }
       else
       {
-        $server_os = 'unsupported';
+        $server_os = 'Unknown';
       }
     }
 
@@ -969,18 +984,18 @@ class System
   // Add a codeset suffix to $locale
   private static function addCodeset(string $locale) : string
   {
-    $server_os = self::getServerOS();
+    $server_os = self::getServerOSFamily();
 
     switch ($server_os)
     {
-      case 'sunos':
-      case 'linux':
-      case 'bsd':
+      case 'Solaris':
+      case 'Linux':
+      case 'BSD':
         $codeset = '.UTF-8';
         break;
 
-      case 'macosx':
-      case 'windows':
+      case 'Darwin':
+      case 'Windows':
         $codeset = '.utf-8';
         break;
 
@@ -1036,7 +1051,7 @@ class System
     }
 
     // Convert an old-style Windows locale, eg 'eng' to a BCP 47 one, eg 'en-gb'
-    if ((self::getServerOS() == 'windows') && in_array($result, self::$lang_map_windows))
+    if ((self::getServerOSFamily() == 'Windows') && in_array($result, self::$lang_map_windows))
     {
       $result = array_search($result, self::$lang_map_windows);
     }
@@ -1055,9 +1070,9 @@ class System
 
   public static function utf8ConvertFromLocale(string $string, ?string $locale=null) : string
   {
-    $server_os = self::getServerOS();
+    $server_os = self::getServerOSFamily();
 
-    if ($server_os == 'windows')
+    if ($server_os == 'Windows')
     {
       if (!isset($locale))
       {
@@ -1079,7 +1094,7 @@ class System
         }
       }
     }
-    else if ($server_os == 'aix')
+    else if ($server_os == 'Aix')
     {
       $string = self::utf8ConvertAix($string, $locale);
     }
@@ -1111,7 +1126,7 @@ class System
         $locales[] = $locale;
       }
 
-      if (self::getServerOS() == 'windows')
+      if (self::getServerOSFamily() == 'Windows')
       {
         // Add in the three-letter code if any as a last resort
         if (isset(self::$lang_map_windows[mb_strtolower($langtag)]))
