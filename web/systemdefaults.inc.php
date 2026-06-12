@@ -1153,6 +1153,12 @@ $auth["session_php"]["session_expire_time"] = (60*60*24*30); // 30 days
 // be the case if you have JavaScript disabled on the client.
 $auth["session_php"]["inactivity_expire_time"] = 0; // seconds
 
+// Set this to the time after which the session data for a user will be refreshed.
+// This is useful to ensure that changes to a user's details, eg email address or
+// authorisation level, are reflected in the session.  If you set this to 0, then
+// the session will not be refreshed.
+$auth["session_php"]["user_refresh_interval"] = 24*3600;  // seconds
+
 // By default, MRBS encrypts the session data with a random key which is stored in a
 // cookie.  If PHP does not have access to $_COOKIE, then set this to false and
 // MRBS will use a default key.  This is not as secure as using a random key, but

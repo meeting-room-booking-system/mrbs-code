@@ -28,7 +28,7 @@ abstract class Auth
     ?string $pass);
 
 
-  protected function getUserFresh(string $username) : ?User
+  public function getUserFresh(string $username) : ?User
   {
     $user = new User($username);
     $user->display_name = $username;
@@ -68,8 +68,7 @@ abstract class Auth
       {
         $user = $this->getUserFresh($username);
         // Make sure we've got a sensible display name
-        if (isset($user) &&
-            (!isset($user->display_name) || ($user->display_name === '')))
+        if (isset($user) && (!isset($user->display_name) || ($user->display_name === '')))
         {
           $user->display_name = $user->username;
         }

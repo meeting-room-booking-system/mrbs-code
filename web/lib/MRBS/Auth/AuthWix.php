@@ -58,7 +58,7 @@ class AuthWix extends Auth
   }
 
 
-  protected function getUserFresh(string $username) : ?User
+  public function getUserFresh(string $username) : ?User
   {
     global $auth;
 

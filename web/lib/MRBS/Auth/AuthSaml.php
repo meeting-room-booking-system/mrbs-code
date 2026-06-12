@@ -39,7 +39,7 @@ class AuthSaml extends Auth
   }
 
 
-  protected function getUserFresh(string $username) : ?User
+  public function getUserFresh(string $username) : ?User
   {
     $user = new User($username);
     $user->level = $this->getLevel($username);

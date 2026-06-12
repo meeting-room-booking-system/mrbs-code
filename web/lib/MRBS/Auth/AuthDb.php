@@ -157,7 +157,7 @@ class AuthDb extends AuthDbAbstract
   }
 
 
-  protected function getUserFresh(string $username) : ?User
+  public function getUserFresh(string $username) : ?User
   {
     $row = $this->getUserByUsername($username);
 

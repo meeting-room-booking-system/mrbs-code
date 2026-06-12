@@ -95,7 +95,7 @@ class AuthDbExt extends AuthDbAbstract
   }
 
 
-  protected function getUserFresh(string $username) : ?User
+  public function getUserFresh(string $username) : ?User
   {
     $sql_params = array();
 

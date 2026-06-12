@@ -49,6 +49,26 @@ class SessionPhp extends SessionWithLogin
     {
       $this->updatePage($server['REQUEST_URI'] ?? $server['PHP_SELF'] ?? null);
     }
+
+    // Check whether we need to refresh the user data, in case some of the user's properties have changed, e.g. email
+    // address or authorisation level.
+    if (isset($_SESSION['user']))
+    {
+      $user = $_SESSION['user'];
+      if (isset($user->username) && isset($_SESSION['user_refreshed']) &&
+          !empty($auth['session_php']['user_refresh_interval']) &&
+          ((time() - $_SESSION['user_refreshed']) > $auth['session_php']['user_refresh_interval']))
+      {
+        $user = auth()->getUserFresh($user->username);
+        // Make sure we've got a sensible display name
+        if (isset($user) && (!isset($user->display_name) || ($user->display_name === '')))
+        {
+          $user->display_name = $user->username;
+        }
+        $_SESSION['user'] = $user;
+        $_SESSION['user_refreshed'] = time();
+      }
+    }
   }
 
 
@@ -118,6 +138,11 @@ class SessionPhp extends SessionWithLogin
     // the session id and delete the old session.
     $this->regenerate();
     $_SESSION['user'] = $user;
+
+    // Record the time at which the user data was refreshed.  This is used so that we can
+    // determine whether it's necessary to refresh the user data, in case some of the user's
+    // properties have changed, e.g. email address or authorisation level.
+    $_SESSION['user_refreshed'] = time();
 
     // Problems have been reported on Windows IIS with session data not being
     // written out without a call to session_write_close()
