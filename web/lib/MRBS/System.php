@@ -987,7 +987,9 @@ class System
   }
 
 
-  // Add a codeset suffix to $locale
+  /**
+   * Add a codeset suffix to a locale, depending on the operating system.
+   */
   private static function addCodeset(string $locale) : string
   {
     $server_os = self::getServerOSFamily();
