@@ -336,7 +336,7 @@ class AuthLdap extends Auth
 
 
   // TODO: think about other auth types
-  protected function getUserFresh(string $username) : ?User
+  public function getUserFresh(string $username) : ?User
   {
     if (!isset($username) || ($username === ''))
     {
