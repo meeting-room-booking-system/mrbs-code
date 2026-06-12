@@ -2,7 +2,6 @@
 declare(strict_types=1);
 namespace MRBS\Calendar;
 
-// A class for building a map of bookings which can be used for constructing the calendar display
 use MRBS\DateTime;
 use MRBS\Exception;
 use function MRBS\auth;
@@ -16,6 +15,9 @@ use function MRBS\round_t_down;
 use function MRBS\round_t_up;
 use function MRBS\session;
 
+/**
+ * A class for building a map of bookings which can be used for constructing the calendar display.
+ */
 class Map
 {
   private $start_date;
@@ -52,6 +54,9 @@ class Map
   }
 
 
+  /**
+   * Add an array of entries to the map.
+   */
   public function addEntries(array $entries) : void
   {
     $date = clone $this->start_date;

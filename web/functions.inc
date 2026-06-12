@@ -682,7 +682,7 @@ function url_validate_local(string $url) : ?string
  *
  * @return string|null The URL if it is a remote URL, otherwise null.
  */
-function url_validate_remote(string $url)
+function url_validate_remote(string $url): ?string
 {
   // Check the URL is valid
   if (false === ($url = filter_var($url, FILTER_VALIDATE_URL))) {

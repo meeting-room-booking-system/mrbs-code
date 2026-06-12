@@ -79,7 +79,7 @@ function make_area_select_html(string $view, int $year, int $month, int $day, in
            ->addSelectOptions($options, $current, true);
     $form->addElement($select);
 
-    // Note:  the submit button will not be displayed if JavaScript is enabled
+    // Note: the Submit button will not be displayed if JavaScript is enabled
     $submit = new ElementInputSubmit();
     $submit->setAttributes(array('class' => 'js_none',
                                  'value' => get_vocab('change')));

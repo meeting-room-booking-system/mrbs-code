@@ -181,12 +181,14 @@ abstract class DB
   }
 
 
-  // Execute an SQL query which should return a single non-negative integer value.
-  // This is a lightweight alternative to query(), good for use with count(*)
-  // and similar queries.
-  // It returns -1 if the query returns no result, or a single NULL value, such as from
-  // a MIN or MAX aggregate function applied over no rows.
-  // Throws a DBException on error.
+  /**
+   * Execute an SQL query which should return a single non-negative integer value. This is a lightweight
+   * alternative to query(), useful for COUNT(*) and similar queries.
+   *
+   * @return int The value returned by the query, or -1 if there is no result or a single NULL value,
+   * eg from a MIN or MAX aggregate function applied over no rows.
+   * @throws DBException
+   */
   public function query1(string $sql, array $params = array()) : int
   {
     $result = $this->query_scalar_non_bool($sql, $params);
@@ -197,7 +199,7 @@ abstract class DB
     }
 
     // Check that the result looks like an integer, even though it may be a string, and then cast
-    // it to an integer.  For example "2" is OK, but "2.0" is not.
+    // it to an integer.  For example, "2" is OK, but "2.0" is not.
     $result = filter_var($result, FILTER_VALIDATE_INT);
 
     if ($result === false)

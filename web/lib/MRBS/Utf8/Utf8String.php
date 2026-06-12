@@ -10,10 +10,9 @@ use RuntimeException;
 /**
  * A class that allows iteration over the characters in a UTF-8 string.
  * It also has the methods:
- * * toArray()  converts the string into an array of UTF-8 characters
- * * toUtf16()  converts the string to UTF-16
+ * * `toArray()` converts the string into an array of UTF-8 characters
+ * * `toUtf16()` converts the string to UTF-16
  */
-
 class Utf8String implements Iterator
 {
   private $byte_index;
