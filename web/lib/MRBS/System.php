@@ -849,7 +849,11 @@ class System
     );
 
 
-  // Works out whether the machine architecture is little-endian or big-endian
+  /**
+   * Determine whether the machine architecture is little-endian or big-endian.
+   *
+   * @return int  self::LITTLE_ENDIAN or self::BIG_ENDIAN
+   */
   public static function getEndianness() : int
   {
     static $result;
