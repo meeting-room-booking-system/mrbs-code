@@ -877,7 +877,14 @@ class System
 
     if (!isset($server_os))
     {
-      if (stristr(PHP_OS,'Darwin'))
+      // Use the PHP_OS_FAMILY constant if it's got a known family
+      if (PHP_OS_FAMILY != 'Unknown')
+      {
+        $server_os = PHP_OS_FAMILY;
+      }
+      // Otherwise try to work out the OS family from the PHP_OS constant.  This is probably
+      // not necessary (except possibly for Aix?), but is retained for backwards compatibility.
+      elseif (stristr(PHP_OS,'Darwin'))
       {
         $server_os = 'Darwin';
       }
@@ -897,6 +904,7 @@ class System
       {
         $server_os = 'Solaris';
       }
+      // Not sure what PHP_OS_FAMILY gives for AIX systems.
       elseif (stristr(PHP_OS, 'AIX'))
       {
         $server_os = 'Aix';
