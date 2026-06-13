@@ -22,7 +22,7 @@ class SessionPhp extends SessionWithLogin
 
     parent::__construct();
 
-    // Check to see if we've been inactive for longer than allowed and if so log out the user.
+    // Check to see if we've been inactive for longer than allowed and, if so, log out the user.
     // Don't log out the user if we're in kiosk mode because the kiosk will normally be inactive.
     // Note that we cannot use is_kiosk_mode() here as that will create an infinite loop calling session().
     if (!empty($auth['session_php']['inactivity_expire_time']) && !isset($_SESSION['kiosk_password_hash']))
@@ -135,6 +135,8 @@ class SessionPhp extends SessionWithLogin
 
   protected function logonUser(string $username) : void
   {
+    global $auth;
+
     $user = auth()->getUser($username);
 
     // As a defence against session fixation, regenerate
@@ -142,10 +144,13 @@ class SessionPhp extends SessionWithLogin
     $this->regenerate();
     $_SESSION['user'] = $user;
 
-    // Record the time at which the user data was refreshed.  This is used so that we can
-    // determine whether it's necessary to refresh the user data, in case some of the user's
-    // properties have changed, e.g. email address or authorisation level.
-    $_SESSION['user_refreshed'] = time();
+    if (!empty($auth['session_php']['user_refresh_interval']))
+    {
+      // Record the time at which the user data was refreshed.  This is used so that we can
+      // determine whether it's necessary to refresh the user data, in case some of the user's
+      // properties have changed, e.g. email address or authorisation level.
+      $_SESSION['user_refreshed'] = time();
+    }
 
     // Problems have been reported on Windows IIS with session data not being
     // written out without a call to session_write_close()
