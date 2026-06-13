@@ -76,7 +76,7 @@ class SessionPhp extends SessionWithLogin
   }
 
 
-  // If the server has a Referrer-Policy of strict-origin then HTTP_REFERER will be unreliable
+  // If the server has a Referrer-Policy of 'strict-origin', then HTTP_REFERER will be unreliable
   // and it is better to use the last page that we have stored in the $_SESSION variable.
   public function getReferrer(): ?string
   {
@@ -163,8 +163,10 @@ class SessionPhp extends SessionWithLogin
   {
     global $cookie_path_override;
 
-    // Just unset the user variable.  We may need to keep other variables, eg the kiosk variables.
+    // Just unset the 'user' and 'user_refreshed' variables.  We may need to keep other variables, eg the kiosk
+    // variables.  (Unsetting the 'user_refreshed' variable is not strictly necessary, but it tidies things up.)
     unset($_SESSION['user']);
+    unset($_SESSION['user_refreshed']);
     $this->regenerate();
     session_write_close();
 
