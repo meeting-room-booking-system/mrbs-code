@@ -22,7 +22,7 @@ class SessionPhp extends SessionWithLogin
 
     parent::__construct();
 
-    // Check to see if we've been inactive for longer than allowed and if so log out the user.
+    // Check to see if we've been inactive for longer than allowed and, if so, log out the user.
     // Don't log out the user if we're in kiosk mode because the kiosk will normally be inactive.
     // Note that we cannot use is_kiosk_mode() here as that will create an infinite loop calling session().
     if (!empty($auth['session_php']['inactivity_expire_time']) && !isset($_SESSION['kiosk_password_hash']))
@@ -51,13 +51,17 @@ class SessionPhp extends SessionWithLogin
     }
 
     // Check whether we need to refresh the user data, in case some of the user's properties have changed, e.g. email
-    // address or authorisation level.
+    // address or authorisation level. Refresh the user data if (a) the 'user' session variable is set, and (b) the
+    // refresh interval is non-zero, and (c) the user data hasn't been refreshed in the last 'user_refresh_interval'
+    // seconds or the refresh time hasn't yet been set in the session data.  (The refresh time might not be set for
+    // two reasons: (i) the value of the 'user_refresh_interval' was previously zero, or (ii) the user was logged in
+    // before the site's version of MRBS was updated to include refresh time checking.)
     if (isset($_SESSION['user']))
     {
       $user = $_SESSION['user'];
-      if (isset($user->username) && isset($_SESSION['user_refreshed']) &&
-          !empty($auth['session_php']['user_refresh_interval']) &&
-          ((time() - $_SESSION['user_refreshed']) > $auth['session_php']['user_refresh_interval']))
+      if (isset($user->username) && !empty($auth['session_php']['user_refresh_interval']) &&
+          (!isset($_SESSION['user_refreshed']) ||
+           ((time() - $_SESSION['user_refreshed']) > $auth['session_php']['user_refresh_interval'])))
       {
         $user = auth()->getUserFresh($user->username);
         // Make sure we've got a sensible display name
@@ -72,7 +76,7 @@ class SessionPhp extends SessionWithLogin
   }
 
 
-  // If the server has a Referrer-Policy of strict-origin then HTTP_REFERER will be unreliable
+  // If the server has a Referrer-Policy of 'strict-origin', then HTTP_REFERER will be unreliable
   // and it is better to use the last page that we have stored in the $_SESSION variable.
   public function getReferrer(): ?string
   {
@@ -132,6 +136,8 @@ class SessionPhp extends SessionWithLogin
 
   protected function logonUser(string $username) : void
   {
+    global $auth;
+
     $user = auth()->getUser($username);
 
     $user->updateLastLogin();
@@ -141,10 +147,13 @@ class SessionPhp extends SessionWithLogin
     $this->regenerate();
     $_SESSION['user'] = $user;
 
-    // Record the time at which the user data was refreshed.  This is used so that we can
-    // determine whether it's necessary to refresh the user data, in case some of the user's
-    // properties have changed, e.g. email address or authorisation level.
-    $_SESSION['user_refreshed'] = time();
+    if (!empty($auth['session_php']['user_refresh_interval']))
+    {
+      // Record the time at which the user data was refreshed.  This is used so that we can
+      // determine whether it's necessary to refresh the user data, in case some of the user's
+      // properties have changed, e.g. email address or authorisation level.
+      $_SESSION['user_refreshed'] = time();
+    }
 
     // Problems have been reported on Windows IIS with session data not being
     // written out without a call to session_write_close()
@@ -156,8 +165,10 @@ class SessionPhp extends SessionWithLogin
   {
     global $cookie_path_override;
 
-    // Just unset the user variable.  We may need to keep other variables, eg the kiosk variables.
+    // Just unset the 'user' and 'user_refreshed' variables.  We may need to keep other variables, eg the kiosk
+    // variables.  (Unsetting the 'user_refreshed' variable is not strictly necessary, but it tidies things up.)
     unset($_SESSION['user']);
+    unset($_SESSION['user_refreshed']);
     $this->regenerate();
     session_write_close();
 
