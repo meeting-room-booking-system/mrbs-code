@@ -53,8 +53,9 @@ class SessionPhp extends SessionWithLogin
     // Check whether we need to refresh the user data, in case some of the user's properties have changed, e.g. email
     // address or authorisation level. Refresh the user data if (a) the 'user' session variable is set, and (b) the
     // refresh interval is non-zero, and (c) the user data hasn't been refreshed in the last 'user_refresh_interval'
-    // seconds or the refresh time hasn't yet been set in the session data (probably because the user logged in before
-    // the refresh time started being recorded).
+    // seconds or the refresh time hasn't yet been set in the session data.  (The refresh time might not be set for
+    // two reasons: (i) the value of the 'user_refresh_interval' was previously zero, or (ii) the user was logged in
+    // before the site's version of MRBS was updated to include refresh time checking.)
     if (isset($_SESSION['user']))
     {
       $user = $_SESSION['user'];
