@@ -51,13 +51,16 @@ class SessionPhp extends SessionWithLogin
     }
 
     // Check whether we need to refresh the user data, in case some of the user's properties have changed, e.g. email
-    // address or authorisation level.
+    // address or authorisation level. Refresh the user data if (a) the 'user' session variable is set, and (b) the
+    // refresh interval is non-zero, and (c) the user data hasn't been refreshed in the last 'user_refresh_interval'
+    // seconds or the refresh time hasn't yet been set in the session data (probably because the user logged in before
+    // the refresh time started being recorded).
     if (isset($_SESSION['user']))
     {
       $user = $_SESSION['user'];
-      if (isset($user->username) && isset($_SESSION['user_refreshed']) &&
-          !empty($auth['session_php']['user_refresh_interval']) &&
-          ((time() - $_SESSION['user_refreshed']) > $auth['session_php']['user_refresh_interval']))
+      if (isset($user->username) && !empty($auth['session_php']['user_refresh_interval']) &&
+          (!isset($_SESSION['user_refreshed']) ||
+           ((time() - $_SESSION['user_refreshed']) > $auth['session_php']['user_refresh_interval'])))
       {
         $user = auth()->getUserFresh($user->username);
         // Make sure we've got a sensible display name
