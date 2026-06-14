@@ -604,7 +604,7 @@ function checkConflicts(optional)
           if ((formInput.filter(':checkbox').length === 0) || $(this).is(':checked'))
           {
             var thisValue = $(this).val();
-            if ($.isArray(thisValue))
+            if (Array.isArray(thisValue))
             {
               $.merge(value, thisValue);
             }
