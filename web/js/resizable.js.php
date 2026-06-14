@@ -1175,7 +1175,6 @@ $(document).on('page_ready', function() {
           // If the user has hardly moved the mouse, then just treat this as a
           // traditional click and follow the original link.   This will mean
           // that things such as the default duration are used.
-
           ?>
           else if ((Math.abs(e.pageX - downHandler.firstPosition.x) <= tolerance) &&
                    (Math.abs(e.pageY - downHandler.firstPosition.y) <= tolerance))
