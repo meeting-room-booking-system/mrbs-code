@@ -59,18 +59,30 @@ class SessionPhp extends SessionWithLogin
     if (isset($_SESSION['user']))
     {
       $user = $_SESSION['user'];
+      $old_level = $user->level;
       if (isset($user->username) && !empty($auth['session_php']['user_refresh_interval']) &&
           (!isset($_SESSION['user_refreshed']) ||
            ((time() - $_SESSION['user_refreshed']) > $auth['session_php']['user_refresh_interval'])))
       {
-        $user = auth()->getUserFresh($user->username);
-        // Make sure we've got a sensible display name
-        if (isset($user) && (!isset($user->display_name) || ($user->display_name === '')))
+        if (null === ($user = auth()->getUserFresh($user->username)))
         {
-          $user->display_name = $user->username;
+          unset($_SESSION['user_refreshed']);
+        }
+        else
+        {
+          // Make sure we've got a sensible display name
+          if (!isset($user->display_name) || ($user->display_name === ''))
+          {
+            $user->display_name = $user->username;
+          }
+          $_SESSION['user_refreshed'] = time();
         }
         $_SESSION['user'] = $user;
-        $_SESSION['user_refreshed'] = time();
+        // Regenerate the session id if the user's level has changed.
+        if (!isset($user) || ($user->level !== $old_level))
+        {
+          $this->regenerate();
+        }
       }
     }
   }
