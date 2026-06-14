@@ -1160,6 +1160,8 @@ $(document).on('page_ready', function() {
           var params = Table.getBookingParams(box);
           $(document).off('mousemove',moveHandler);
           $(document).off('mouseup', upHandler);
+          box.remove();
+          $(Table.selector).removeClass('resizing');
 
           <?php
           // If the user has released the button while outside the table it means
@@ -1167,15 +1169,12 @@ $(document).on('page_ready', function() {
           ?>
           if (Table.outside({x: e.pageX, y: e.pageY}))
           {
-            box.remove();
-            $(Table.selector).removeClass('resizing');
             return;
           }
           <?php
-          // If the user has hardly moved the mouse then just treat this as a
+          // If the user has hardly moved the mouse, then just treat this as a
           // traditional click and follow the original link.   This will mean
           // that things such as the default duration are used.
-
           ?>
           else if ((Math.abs(e.pageX - downHandler.firstPosition.x) <= tolerance) &&
                    (Math.abs(e.pageY - downHandler.firstPosition.y) <= tolerance))
@@ -1183,11 +1182,6 @@ $(document).on('page_ready', function() {
             if (downHandler.originalLink !== undefined)
             {
               window.location = addScrollPosition(downHandler.originalLink, tableContainer, downHandler.originalScroll);
-            }
-            else
-            {
-              box.remove();
-              $(Table.selector).removeClass('resizing');
             }
             return;
           }

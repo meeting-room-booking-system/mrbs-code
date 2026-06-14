@@ -181,9 +181,13 @@ var refreshVisChanged = function refreshVisChanged() {
       ?>
       if (!pageHidden)
       {
-        refreshPage().done(function() {
-          prefetch();
-        });
+        const refreshedPage = refreshPage();
+        if (undefined !== refreshedPage)
+        {
+          refreshedPage.done(function() {
+            prefetch();
+          });
+        }
       }
     }
   };
