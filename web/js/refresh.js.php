@@ -142,7 +142,6 @@ var refreshPage = function refreshPage() {
                    intervalId = undefined;
                    table.trigger('tableload');
                  }
-
                }
              },
            'json'
