@@ -601,39 +601,39 @@ $(document).on('page_ready', function() {
     }).trigger('tableload');
 
   <?php
-  // If we've been given scroll positions in the URL query string, scroll to them so that we
-  // go back to the scroll position the user started with.  Otherwise, scroll so that the
-  // current timeslot is visible.
+  // If the table exists and we've been given scroll positions in the URL query string, scroll to them so that we go
+  // back to the scroll position the user started with.  Otherwise, scroll so that the current timeslot is visible.
   //
-  // Do this on page_ready, rather than tableload, so that the scrolling doesn't happen after
-  // every automatic refresh.  That would be a problem if the user has deliberately scrolled
-  // somewhere else after the automatic scroll.
+  // Do this on page_ready, rather than tableload, so that the scrolling doesn't happen after every automatic refresh.
+  // That would be a problem if the user has deliberately scrolled somewhere else after the automatic scroll.
   //
-  // TODO: Make sure that the booking that has just been made is visible in the table and
-  // TODO: scroll as necessary if not.
+  // TODO: Make sure that the booking that has just been made is visible in the table and scroll as necessary if not.
   ?>
-  const searchParams = new URLSearchParams(window.location.search);
-  const top = searchParams.get('top');
-  const left = searchParams.get('left');
+  if (table.length)
+  {
+    const searchParams = new URLSearchParams(window.location.search);
+    const top = searchParams.get('top');
+    const left = searchParams.get('left');
 
-  if ((top == null) && (left === null))
-  {
-    const autoscroll = <?php echo $autoscroll ? 'true' : 'false'; ?>;
-    if (autoscroll)
+    if ((top == null) && (left === null))
     {
-      scrollToCurrentSlot();
+      const autoscroll = <?php echo $autoscroll ? 'true' : 'false'; ?>;
+      if (autoscroll)
+      {
+        scrollToCurrentSlot();
+      }
     }
-  }
-  else
-  {
-    let tableContainer = table.parent();
-    if (top !== null)
+    else
     {
-      tableContainer.scrollTop(top);
-    }
-    if (left !== null)
-    {
-      tableContainer.scrollLeft(left);
+      let tableContainer = table.parent();
+      if (top !== null)
+      {
+        tableContainer.scrollTop(top);
+      }
+      if (left !== null)
+      {
+        tableContainer.scrollLeft(left);
+      }
     }
   }
 
