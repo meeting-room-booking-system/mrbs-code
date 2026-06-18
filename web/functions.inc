@@ -812,13 +812,16 @@ function build_url(array $parts) : string
 
 
 /**
- * A wrapper for sending a Location header.  This function will urlencode and add
- * the site parameter as necessary.
+ * A wrapper for sending a Location header.  This function will URL encode the query string parameter values
+ * and add the site parameter as necessary.
  *
- * @param string $location  The URL to redirect to.  This must be a local URL.
+ * @param string $location  The URL to redirect to.  This must be a local URL and the query string parameter
+ * values are assumed to have already been URL encoded.
+ * @param array $data  An array of additional query string parameters to add to the URL.  The
+ * values are assumed *not* to be URL encoded.  This is useful for passing values such as "%3F".
  * @return never
  */
-function location_header(string $location) : void
+function location_header(string $location, array $data=[]) : void
 {
   global $debug;
 
@@ -839,13 +842,25 @@ function location_header(string $location) : void
   // Add the site parameter if necessary
   $location = multisite($location);
 
-  // Encode the query string if there is one
+  // Get the query string if there is one
   $parts = parse_url($location);
 
+  $query_string_parts = [];
+  // First from the query string in the URL
   if (isset($parts['query']))
   {
-    parse_str($parts['query'], $result);
-    $parts['query'] = http_build_query($result, '', '&');
+    parse_str($parts['query'], $query_string_parts);
+  }
+  // Then add in any additional query string parameters from $data
+  if (!empty($data))
+  {
+    $query_string_parts = array_merge($query_string_parts, $data);
+  }
+
+  // Rebuild the query string
+  if (!empty($query_string_parts))
+  {
+    $parts['query'] = http_build_query($query_string_parts, '', '&');
   }
 
   header('Location: ' . build_url($parts));
