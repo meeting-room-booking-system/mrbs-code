@@ -198,6 +198,12 @@ PHP authentication modules
 |         |the same server         |  - Hooks into     |    recommended         |
 |         |                        |    SAML infra     |                        |
 +---------+------------------------+-------------------+------------------------+
+|paia     |Users are validated     |  - If available   |                        |
+|         |against Patrons Account |    in library,    |                        |
+|         |Information API (PAIA). |    setup is       |                        |
+|         |                        |    simple with    |                        |
+|         |                        |    php sessions   |                        |
++---------+------------------------+-------------------+------------------------+
 |idcheck  |For use with mod_idcheck|                   |                        |
 |         |idcheck.sourceforge.net |                   |                        |
 |         |Must be used together   |                   |                        |
@@ -878,22 +884,43 @@ $auth['saml']['authsource'] = 'default-sp';
 $auth['saml']['attr']['username'] = 'sAMAccountName';
 $auth['saml']['attr']['mail'] = 'mail';
 $auth['saml']['admin']['memberOf'] = ['CN=Domain Admins,CN=Users,DC=example,DC=com'];
-// Optional access control filter
-$auth['saml']['user']['memberOf'] = ['CN=Calendar Users,CN=Users,DC=example,DC=com'];
 
-This scheme assumes that you've already configured SimpleSamlPhp, that
-you have configured oid2name mapping, and that you have set up aliases
-in your webserver so that SimpleSamlPhp can handle incoming assertions.
-Refer to the SimpleSamlPhp documentation for more information on how to
-do that.
+This scheme assumes that you've already configured SimpleSamlPhp,
+and that you have set up aliases in your webserver so that SimpleSamlPhp
+can handle incoming assertions.  Refer to the SimpleSamlPhp documentation
+for more information on how to do that.
 
 https://simplesamlphp.org/docs/stable/simplesamlphp-install
 https://simplesamlphp.org/docs/stable/simplesamlphp-sp
 
 
+PAIA Authentication
+--------------------
+
+Patrons Account Information API (PAIA; https://gbv.github.io/paia/paia.html) 
+only  requires these settings in the config 
+
+$auth["type"]           = "paia";
+
+// Set your server without trailing slash
+$auth["paia"]["host"]   = "https://paia.gbv.de/DE-830"; 
+
+// Set any format for the display Name with #NAME and #BARCODE; falls back to 
+// Barcode if empty. 
+// DO NOT CHANGE when productive with reservations (login and entries are 
+// connected by this!)
+$auth["paia"]["format"] = "#NAME (#BARCODE)"; 
+
+// (Deny user groups access; for example allow reservation only for faculty members and deny it for external users)
+$auth["paia"]["restrict"]= array(29, 30, 31, 32, 33, 39, 40, 42, 43, 44, 48, 49, 60, 80); 
+
+// As the entered login name
+$auth["admin"][]        = "08300173390"; 
+(only works with default session type ($auth["session"] = "php"))
+
+
 Wix Authentication
 -------------------
-
 See wix/README
 
 
