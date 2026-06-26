@@ -187,7 +187,7 @@ class User extends Table
       }
 
       // Validate the resulting email address
-      if (!validate_email($this->email))
+      if (isset($this->email) && !validate_email($this->email))
       {
         $this->email = null;
       }
