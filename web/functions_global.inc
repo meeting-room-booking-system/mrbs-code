@@ -177,7 +177,7 @@ if (!function_exists('mb_substr'))
 
 
 // Emulates the PHP 8 function str_contains()
-if (!function_exists('str_contains'))
+if (!function_exists('str_contains'))  // Introduced in PHP 8.0
 {
   function str_contains(string $haystack, string $needle) : bool
   {
@@ -197,7 +197,7 @@ if (!function_exists('str_contains'))
 
 
 // Emulates the PHP 8 function str_starts_with()
-if (!function_exists('str_starts_with'))
+if (!function_exists('str_starts_with'))  // Introduced in PHP 8.0
 {
   function str_starts_with(string $haystack, string $needle) : bool
   {
@@ -217,7 +217,7 @@ if (!function_exists('str_starts_with'))
 
 
 // Emulates the PHP 8 function str_ends_with()
-if (!function_exists('str_ends_with'))
+if (!function_exists('str_ends_with'))  // Introduced in PHP 8.0
 {
   function str_ends_with(string $haystack, string $needle) : bool
   {
