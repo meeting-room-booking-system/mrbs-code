@@ -132,7 +132,7 @@ function constrain_int(int $n, int $bytes, bool $unsigned=false) : int
     throw new InvalidArgumentException("Other combinations not yet supported");
   }
 
-  return max(min($n, $max_limit), $min_limit);
+  return clamp($n, $min_limit, $max_limit);
 }
 
 

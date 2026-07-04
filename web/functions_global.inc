@@ -8,7 +8,53 @@ use MRBS\Mbstring\Mbstring;
 // that only exist in later versions of PHP, or else emulations of the
 // mb_ string functions that aren't always present.
 
-if (!function_exists('json_validate'))
+if (!function_exists('clamp')) // Introduced in PHP 8.6
+{
+  /**
+   * Return the given value if in range, otherwise return the nearest bound.
+   *
+   * @param mixed $value
+   * @param mixed $min
+   * @param mixed $max
+   * @return mixed
+   */
+  function clamp($value, $min, $max)
+  {
+    assert(version_compare(MRBS_MIN_PHP_VERSION, '8.0.0', '<'), "No need to test for PHP version in clamp()");
+
+    if (is_float($min) && is_nan($min)) {
+      $message = 'clamp(): Argument #2 ($min) must not be NAN';
+    }
+    elseif (is_float($max) && is_nan($max)) {
+      $message = 'clamp(): Argument #3 ($max) must not be NAN';
+    }
+    elseif ($max < $min) {
+      $message = 'clamp(): Argument #2 ($min) must be smaller than or equal to argument #3 ($max)';
+    }
+
+    if (isset($message)) {
+      if (version_compare(PHP_VERSION, '8.0', '>=')) {
+        throw new ValueError($message);
+      }
+      else {
+        throw new UnexpectedValueException($message);
+      }
+    }
+
+    if ($value > $max) {
+      return $max;
+    }
+
+    if ($value < $min) {
+      return $min;
+    }
+
+    return $value;
+  }
+}
+
+
+if (!function_exists('json_validate'))  // Introduced in PHP 8.3
 {
   function json_validate(string $json, int $depth = 512, int $flags = 0): bool
   {
@@ -131,7 +177,7 @@ if (!function_exists('mb_substr'))
 
 
 // Emulates the PHP 8 function str_contains()
-if (!function_exists('str_contains'))
+if (!function_exists('str_contains'))  // Introduced in PHP 8.0
 {
   function str_contains(string $haystack, string $needle) : bool
   {
@@ -151,7 +197,7 @@ if (!function_exists('str_contains'))
 
 
 // Emulates the PHP 8 function str_starts_with()
-if (!function_exists('str_starts_with'))
+if (!function_exists('str_starts_with'))  // Introduced in PHP 8.0
 {
   function str_starts_with(string $haystack, string $needle) : bool
   {
@@ -171,7 +217,7 @@ if (!function_exists('str_starts_with'))
 
 
 // Emulates the PHP 8 function str_ends_with()
-if (!function_exists('str_ends_with'))
+if (!function_exists('str_ends_with'))  // Introduced in PHP 8.0
 {
   function str_ends_with(string $haystack, string $needle) : bool
   {

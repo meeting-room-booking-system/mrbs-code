@@ -240,7 +240,7 @@ class Periods implements Countable, SeekableIterator
       $index--;
     }
     // Make sure we're within bounds
-    return $this->offsetGet(max(0, min($index, $this->count()-1)));
+    return $this->offsetGet(clamp($index, 0, $this->count()-1));
   }
 
 
