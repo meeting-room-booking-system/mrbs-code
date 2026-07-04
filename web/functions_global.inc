@@ -54,7 +54,7 @@ if (!function_exists('clamp')) // Introduced in PHP 8.6
 }
 
 
-if (!function_exists('json_validate'))
+if (!function_exists('json_validate'))  // Introduced in PHP 8.3
 {
   function json_validate(string $json, int $depth = 512, int $flags = 0): bool
   {
