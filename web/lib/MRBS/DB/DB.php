@@ -68,11 +68,13 @@ abstract class DB
   }
 
 
-  // Build a DSN.
-  // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
-  // The attribute is only recognised by PHP 8.2 and later.
+  /**
+   * Build a DSN
+   */
   public static function dsn(
     string $db_host,
+    // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
+    // The attribute is only recognised by PHP 8.2 and later.
     #[\SensitiveParameter]
     string $db_name,
     ?int   $db_port = null
