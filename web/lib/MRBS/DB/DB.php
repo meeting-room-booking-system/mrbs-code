@@ -379,7 +379,9 @@ abstract class DB
   }
 
 
-  // Return a boolean depending on whether $field exists in $table
+  /**
+   * Check whether a field exists in a table.
+   */
   public function field_exists(string $table, string $field): bool
   {
     $rows = $this->field_info($table);
