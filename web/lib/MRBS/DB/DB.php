@@ -107,12 +107,15 @@ abstract class DB
   }
 
 
-  // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
-  // The attribute is only recognised by PHP 8.2 and later.
-  // $driver_options is an optional array of options that supplements/overrides the
-  // default options.
+  /**
+   * Connect to the database
+   *
+   * @param array|null $driver_options An optional array of options that supplements/overrides the default options.
+   */
   protected function connect(
     string $db_host,
+    // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
+    // The attribute is only recognised by PHP 8.2 and later.
     #[\SensitiveParameter]
     string $db_username,
     #[\SensitiveParameter]
