@@ -388,6 +388,7 @@ $vocab["delete_user"]           = "Delete this user";
 $vocab["user.email"]            = "Email address";
 $vocab["password_twice"]        = "If you wish to change the password, please type the new password twice";
 $vocab["passwords_not_eq"]      = "The passwords did not match!";
+$vocab["password_not_unique"]   = "Another user with the same email address is already using that password.";
 $vocab["password_invalid"]      = "The password does not conform to the policy.  It must contain at least:";
 $vocab["policy_length"]         = "%d character(s)";
 $vocab["policy_alpha"]          = "%d letter(s)";
