@@ -738,9 +738,10 @@ class AuthDb extends AuthDbAbstract
       elseif (in_array(mb_strtolower($address['domain']), array('gmail.com', 'googlemail.com')))
       {
         $sql_params = array(str_replace('.', '', $address['local']));
-        $sql_params[] = $sql_params[0];
-        $condition = "(LOWER(?) = REPLACE(TRIM(TRAILING '@gmail.com' FROM LOWER(email)), '.', '')) OR " .
-                     "(LOWER(?) = REPLACE(TRIM(TRAILING '@googlemail.com' FROM LOWER(email)), '.', ''))";
+        $local_part = $this->connection()->syntax_simple_split('email', '@', 1, $sql_params);
+        $domain = $this->connection()->syntax_simple_split('email', '@', 2, $sql_params);
+        $condition = "(LOWER(?) = REPLACE(LOWER($local_part), '.', '')) AND " .
+                     "(LOWER($domain) IN ('gmail.com', 'googlemail.com'))";
       }
       // Everything else: check the complete email address
       else
