@@ -117,6 +117,14 @@ function validate_form_data(User &$user) : array
   {
     $errors['pwd_not_match'] = 1;
   }
+  // Check that the password hasn't already been used by another user with the
+  // same email address, because, if it has, we won't be able to distinguish
+  // between them when they log in using an email address.
+  elseif (isset($user->email) && ($user->email !== '') &&
+          !empty(array_diff(auth()->validateEmail($user->email, $user->password0), [$user->name])))
+  {
+    $errors['pwd_not_unique'] = 1;
+  }
   // Check that the password conforms to the password policy
   // if it's a new user, or else if it's an existing user
   // trying to change their password

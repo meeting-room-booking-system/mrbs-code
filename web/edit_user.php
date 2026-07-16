@@ -54,6 +54,7 @@ $name_empty = get_form_var('name_empty', 'int');
 $name_not_unique = get_form_var('name_not_unique', 'int');
 $taken_name = get_form_var('taken_name', 'string');
 $pwd_not_match = get_form_var('pwd_not_match', 'string');
+$pwd_not_unique = get_form_var('pwd_not_unique', 'int');
 $pwd_invalid = get_form_var('pwd_invalid', 'string');
 $invalid_dates = get_form_var('invalid_dates', 'array');
 $datatable = get_form_var('datatable', 'int');  // Will only be set if we're using DataTables
@@ -797,6 +798,10 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
   if (!empty($pwd_not_match))
   {
     echo "<p class=\"error\">" . get_vocab("passwords_not_eq") . "</p>\n";
+  }
+  if (!empty($pwd_not_unique))
+  {
+    echo "<p class=\"error\">" . get_vocab("password_not_unique") . "</p>\n";
   }
   if (!empty($pwd_invalid))
   {
