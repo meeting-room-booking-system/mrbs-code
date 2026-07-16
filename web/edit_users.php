@@ -61,6 +61,7 @@ $name_empty = get_form_var('name_empty', 'int');
 $name_not_unique = get_form_var('name_not_unique', 'int');
 $taken_name = get_form_var('taken_name', 'string');
 $pwd_not_match = get_form_var('pwd_not_match', 'string');
+$pwd_not_unique = get_form_var('pwd_not_unique', 'int');
 $pwd_invalid = get_form_var('pwd_invalid', 'string');
 $invalid_dates = get_form_var('invalid_dates', 'array');
 $datatable = get_form_var('datatable', 'int');  // Will only be set if we're using DataTables
@@ -773,6 +774,10 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
   {
     echo "<p class=\"error\">" . get_vocab("passwords_not_eq") . "</p>\n";
   }
+  if (!empty($pwd_not_unique))
+  {
+    echo "<p class=\"error\">" . get_vocab("password_not_unique") . "</p>\n";
+  }
   if (!empty($pwd_invalid))
   {
     echo "<p class=\"error\">" . get_vocab("password_invalid") . "</p>\n";
@@ -1080,6 +1085,15 @@ if (isset($action) && ($action == "update"))
             $valid_data = false;
             $q_string .= "&pwd_invalid=1";
           }
+        }
+        // Check that the password hasn't already been used by another user with the
+        // same email address, because, if it has, we won't be able to distinguish
+        // between them when they log in using an email address.
+        if (isset($values['email']) && ($values['email'] !== '') &&
+            (!empty(array_diff(auth()->validateEmail($values['email'], $password0), [$values['name']]))))
+        {
+          $valid_data = false;
+          $q_string .= "&pwd_not_unique=1";
         }
         break;
       case 'email':

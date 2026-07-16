@@ -122,23 +122,18 @@ class AuthDb extends AuthDbAbstract
   }
 
 
-  /* authValidateEmail($email, $pass)
+  /**
+   * Check if the specified email/password pair are valid
    *
-   * Checks if the specified email/password pair are valid
-   *
-   * $email - The email address
-   * $pass  - The password
-   *
-   * Returns:
-   *   array    - An array of valid usernames, empty if none found
+   * @return array An array of valid usernames, empty if none found
    */
-  private function validateEmail(
+  public function validateEmail(
     #[\SensitiveParameter]
     string $email,
     #[\SensitiveParameter]
     string $pass) : array
   {
-    $valid_usernames = array();
+    $valid_usernames = [];
 
     // Email addresses are not unique in the users table, so we need to find all of them.
     $users = self::getUsersByEmail($email);
