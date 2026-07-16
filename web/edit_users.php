@@ -1090,7 +1090,7 @@ if (isset($action) && ($action == "update"))
         // same email address, because, if it has, we won't be able to distinguish
         // between them when they log in using an email address.
         if (isset($values['email']) && ($values['email'] !== '') &&
-            (!empty(array_diff(auth()->validateEmail($values['email'], $password0), [$values['name']]))))
+            !empty(array_diff(auth()->validateEmail($values['email'], $password0), [$values['name']])))
         {
           $valid_data = false;
           $q_string .= "&pwd_not_unique=1";
