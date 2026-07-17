@@ -112,6 +112,16 @@ function validate_form_data(User &$user) : array
   }
 
   // PASSWORD
+  // If it's a new user, or else if it's an existing user trying to change their password then
+  // validate the passwords.
+  if (!isset($user->id) || (isset($user->password0) && ($user->password0 !== '')))
+  {
+    if (true !== ($error = auth()->validatePasswords([$user->password0, $user->password1], $user->name, $user->email)))
+    {
+      $errors[$error] = 1;
+    }
+  }
+  /*
   // Check that the two passwords match
   if ($user->password0 !== $user->password1)
   {
@@ -140,7 +150,7 @@ function validate_form_data(User &$user) : array
       $user->password_hash = password_hash($user->password0, PASSWORD_DEFAULT);
     }
   }
-
+  */
   // AUTHORISATION CHECKS
   if (!isset($user->level))
   {
