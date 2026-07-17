@@ -732,10 +732,14 @@ class AuthDb extends AuthDbAbstract
   }
 
 
-  // Returns an array of rows for all users with the email address $email.
-  // Assumes that email addresses are case insensitive.
-  // Allows equivalent Gmail addresses, ie ignores dots in the local part and
-  // treats gmail.com and googlemail.com as equivalent domains.
+  /**
+   * Find all users by email address.
+   *
+   * Assumes that email addresses are case-insensitive.  Allows equivalent Gmail addresses, ie ignores
+   * dots in the local part and treats gmail.com and googlemail.com as equivalent domains.
+   *
+   * @return array An array of rows for all users with the email address `$email`.
+   */
   private function getUsersByEmail(string $email) : array
   {
     global $auth;
