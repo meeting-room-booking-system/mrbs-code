@@ -1080,7 +1080,7 @@ if (isset($action) && ($action == "update"))
         // trying to change their password
         if (!isset($id) || (isset($password0) && ($password0 !== '')))
         {
-          if (!auth()->validatePassword($password0))
+          if (!auth()->checkPasswordConformsToPolicy($password0))
           {
             $valid_data = false;
             $q_string .= "&pwd_invalid=1";

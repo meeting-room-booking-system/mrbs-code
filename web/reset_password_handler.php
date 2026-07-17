@@ -50,7 +50,7 @@ if (isset($action) && isset($username))
         {
           $error = 'pwd_not_match';
         }
-        elseif (!auth()->validatePassword($password0))
+        elseif (!auth()->checkPasswordConformsToPolicy($password0))
         {
           $error = 'pwd_invalid';
         }

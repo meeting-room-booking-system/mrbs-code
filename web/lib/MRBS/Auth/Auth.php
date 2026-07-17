@@ -214,14 +214,14 @@ abstract class Auth
 
 
   /**
-   * Validates that the password conforms to the password policy.
+   * Checks that the password conforms to the password policy.
    *
    * Ideally this function should also be matched by client-side
    * validation, but unfortunately JavaScript's native support for Unicode
    * pattern matching is very limited.   Would need to be implemented using
    * an add-in library.
    */
-  public function validatePassword(
+  public function checkPasswordConformsToPolicy(
     #[\SensitiveParameter]
     string $password) : bool
   {
