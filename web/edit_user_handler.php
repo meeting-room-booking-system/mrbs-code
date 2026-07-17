@@ -131,7 +131,7 @@ function validate_form_data(User &$user) : array
   elseif (!isset($user->id) ||
           (isset($user->password0) && ($user->password0 !== '')))
   {
-    if (!auth()->validatePassword($user->password0))
+    if (!auth()->checkPasswordConformsToPolicy($user->password0))
     {
       $errors['pwd_invalid'] = 1;
     }
