@@ -42,7 +42,7 @@ class AuthDb extends AuthDbAbstract
    * @param string|null $email
    * @return string|true
    */
-  public function validatePasswords(array $passwords, string $username, ?string $email=null)
+  public function validatePasswords(array $passwords, string $username, ?string $email)
   {
     // Check that the two passwords match.
     if ($passwords[0] !== $passwords[1])
