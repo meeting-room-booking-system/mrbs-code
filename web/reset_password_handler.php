@@ -46,24 +46,11 @@ if (isset($action) && isset($username))
         $key = get_form_var('key', 'string');
         $password0 = get_form_var('password0', 'string');
         $password1 = get_form_var('password1', 'string');
-        if ($password0 !== $password1)
+        $user = auth()->getUser($username);
+        if (true === ($error = auth()->validatePasswords([$password0, $password1], $user->username, $user->email)))
         {
-          $error = 'pwd_not_match';
-        }
-        elseif (!auth()->checkPasswordConformsToPolicy($password0))
-        {
-          $error = 'pwd_invalid';
-        }
-        else
-        {
-          if (auth()->resetPassword($username, $key, $password0))
-          {
-            $result = 'pwd_reset';
-          }
-          else
-          {
-            $result = 'reset_failed';
-          }
+          unset($error);
+          $result = ((auth()->resetPassword($username, $key, $password0))) ? 'pwd_reset' : 'reset_failed';
         }
         break;
       default:
