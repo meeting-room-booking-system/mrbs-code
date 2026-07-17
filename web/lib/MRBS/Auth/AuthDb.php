@@ -702,7 +702,7 @@ class AuthDb extends AuthDbAbstract
     }
 
     // Only one user: if it's this one, then it's unique.
-    return ($users[0]['id'] == $ignore_id);
+    return ($users[0]->id == $ignore_id);
   }
 
 

@@ -50,6 +50,7 @@ require "defaultincludes.inc";
 $action = get_form_var('action', 'string');
 $id = get_form_var('id', 'int');
 $invalid_email = get_form_var('invalid_email', 'int');
+$email_not_unique = get_form_var('email_not_unique', 'int');
 $name_empty = get_form_var('name_empty', 'int');
 $name_not_unique = get_form_var('name_not_unique', 'int');
 $taken_name = get_form_var('taken_name', 'string');
@@ -777,6 +778,10 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
   if (!empty($invalid_email))
   {
     echo "<p class=\"error\">" . get_vocab('invalid_email') . "</p>\n";
+  }
+  if (!empty($email_not_unique))
+  {
+    echo "<p class=\"error\">" . get_vocab('email_not_unique') . "</p>\n";
   }
   if (!empty($name_not_unique))
   {

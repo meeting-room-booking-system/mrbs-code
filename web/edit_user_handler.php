@@ -103,12 +103,18 @@ function validate_form_data(User &$user) : array
   // Remove any extra whitespace that may have accidentally been inserted in the display name
   $user->display_name = remove_extra_whitespace($user->display_name);
 
-  // Check that the email address is valid
-  if (isset($user->email) &&
-      ($user->email !== '') &&
-      !validate_email_list($user->email))
+  if (isset($user->email) && ($user->email !== ''))
   {
-    $errors['invalid_email'] = 1;
+    // Check that the email address is valid
+    if (!validate_email_list($user->email))
+    {
+      $errors['invalid_email'] = 1;
+    }
+    // .. and, if required, unique
+    if (!empty($auth['db']['unique_email']) && !auth()->isUniqueEmail($user->email, $user->id ?? null))
+    {
+      $errors['email_not_unique'] = 1;
+    }
   }
 
   // PASSWORD
