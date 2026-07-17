@@ -57,6 +57,7 @@ $id = get_form_var('id', 'int');
 $password0 = get_form_var('password0', 'string', null, INPUT_POST);
 $password1 = get_form_var('password1', 'string', null, INPUT_POST);
 $invalid_email = get_form_var('invalid_email', 'int');
+$email_not_unique = get_form_var('email_not_unique', 'int');
 $name_empty = get_form_var('name_empty', 'int');
 $name_not_unique = get_form_var('name_not_unique', 'int');
 $taken_name = get_form_var('taken_name', 'string');
@@ -753,6 +754,10 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
   {
     echo "<p class=\"error\">" . get_vocab('invalid_email') . "</p>\n";
   }
+  if (!empty($email_not_unique))
+  {
+    echo "<p class=\"error\">" . get_vocab('email_not_unique') . "</p>\n";
+  }
   if (!empty($name_not_unique))
   {
     echo "<p class=\"error\">'" . escape_html($taken_name) . "' " . get_vocab('name_not_unique') . "<p>\n";
@@ -1076,11 +1081,20 @@ if (isset($action) && ($action == "update"))
         }
         break;
       case 'email':
-        // check that the email address is valid
-        if (isset($value) && ($value !== '') && !validate_email_list($value))
+        if (isset($value) && ($value !== ''))
         {
-          $valid_data = false;
-          $q_string .= "&invalid_email=1";
+          // Check that the email address is valid
+          if (!validate_email_list($value))
+          {
+            $valid_data = false;
+            $q_string .= "&invalid_email=1";
+          }
+          // .. and, if required, unique
+          if (!empty($auth['db']['unique_email']) && !auth()->isUniqueEmail($value, $id ?? null))
+          {
+            $valid_data = false;
+            $q_string .= "&email_not_unique=1";
+          }
         }
         break;
     }

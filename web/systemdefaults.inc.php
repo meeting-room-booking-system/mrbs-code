@@ -1283,6 +1283,8 @@ $auth['db']['reset_key_expiry'] = 60*60*24; // seconds
 // This will stop their associated information such as display name and email
 // address from being lost.
 $auth['db']['prevent_deletion_of_users_in_bookings'] = false;
+// Set this to TRUE to force email addresses to be unique.
+$auth['db']['unique_email'] = false;
 
 
 // 'auth_db_ext' configuration settings
