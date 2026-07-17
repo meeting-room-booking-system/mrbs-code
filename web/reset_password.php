@@ -113,15 +113,15 @@ function generate_reset_form(array $usernames, ?string $key, ?string $error=null
   $fieldset->addLegend(get_vocab('password_reset'));
 
   $field = new FieldDiv();
-  if (isset($error) && ($error !== 'pwd_invalid'))
+  if (isset($error) && ($error !== auth()::PWD_INVALID))
   {
     $p = new ElementP();
     switch ($error)
     {
-      case 'pwd_not_match':
+      case auth()::PWD_NOT_MATCH:
         $text = get_vocab('passwords_not_eq');
         break;
-      case 'pwd_not_unique':
+      case auth()::PWD_NOT_UNIQUE:
         $text = get_vocab('password_not_unique');
         break;
       default:
