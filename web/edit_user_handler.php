@@ -121,36 +121,7 @@ function validate_form_data(User &$user) : array
       $errors[$error] = 1;
     }
   }
-  /*
-  // Check that the two passwords match
-  if ($user->password0 !== $user->password1)
-  {
-    $errors['pwd_not_match'] = 1;
-  }
-  // Check that the password hasn't already been used by another user with the
-  // same email address, because, if it has, we won't be able to distinguish
-  // between them when they log in using an email address.
-  elseif (isset($user->email) && ($user->email !== '') &&
-          !empty(array_diff(auth()->validateEmail($user->email, $user->password0), [$user->name])))
-  {
-    $errors['pwd_not_unique'] = 1;
-  }
-  // Check that the password conforms to the password policy
-  // if it's a new user, or else if it's an existing user
-  // trying to change their password
-  elseif (!isset($user->id) ||
-          (isset($user->password0) && ($user->password0 !== '')))
-  {
-    if (!auth()->checkPasswordConformsToPolicy($user->password0))
-    {
-      $errors['pwd_invalid'] = 1;
-    }
-    else
-    {
-      $user->password_hash = password_hash($user->password0, PASSWORD_DEFAULT);
-    }
-  }
-  */
+
   // AUTHORISATION CHECKS
   if (!isset($user->level))
   {
