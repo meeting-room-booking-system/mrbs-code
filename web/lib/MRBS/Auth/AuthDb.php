@@ -21,11 +21,51 @@ use function MRBS\url_base;
 
 class AuthDb extends AuthDbAbstract
 {
+  public const PWD_INVALID = 'pwd_invalid';
+  public const PWD_NOT_MATCH = 'pwd_not_match';
+  public const PWD_NOT_UNIQUE = 'pwd_not_unique';
+
+
   public function __construct()
   {
     $this->db_table = _tbl('users');
     $this->column_name_username = 'name';
     $this->column_name_display_name = 'display_name';
+  }
+
+
+  /**
+   * Validate the passwords entered by the user on a form.
+   *
+   * @param array $passwords An array of two passwords, which should be the same.
+   * @param string $username
+   * @param string|null $email
+   * @return string|true
+   */
+  public function validatePasswords(array $passwords, string $username, ?string $email=null)
+  {
+    // Check that the two passwords match.
+    if ($passwords[0] !== $passwords[1])
+    {
+      return self::PWD_NOT_MATCH;
+    }
+
+    // Check that the password conforms to the password policy.
+    if (!$this->checkPasswordConformsToPolicy($passwords[0]))
+    {
+      return self::PWD_INVALID;
+    }
+
+    // Check that the password hasn't already been used by another user with the
+    // same email address, because, if it has, we won't be able to distinguish
+    // between them when they log in using an email address.
+    if (isset($email) && ($email !== '') &&
+        !empty(array_diff($this->validateEmail($email, $passwords[0]), [$username])))
+    {
+      return self::PWD_NOT_UNIQUE;
+    }
+
+    return true;
   }
 
 

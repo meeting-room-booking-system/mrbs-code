@@ -993,14 +993,13 @@ if (isset($action) && ($action == "update"))
         $values[$fieldname] = mb_strtolower($values[$fieldname]);
         break;
       case 'password_hash':
-        // password: if the password field is blank it means
-        // that the user doesn't want to change the password
-        // so don't do anything; otherwise calculate the hash.
-        // Note: we don't put the password in the query string
-        // for security reasons.
-        if ($password0 !== '')
+        // Password: if it's an existing user and the password field is blank, it means
+        // that the user doesn't want to change the password so don't do anything; otherwise
+        // calculate the hash.
+        // Note: we don't put the password in the query string for security reasons.
+        if (!isset($id) || (isset($password0) && ($password0 !== '')))
         {
-          $values[$fieldname] = password_hash($password0, PASSWORD_DEFAULT);
+          $values[$fieldname] = password_hash($password0 ?? '', PASSWORD_DEFAULT);
         }
         break;
       case 'level':
@@ -1069,31 +1068,11 @@ if (isset($action) && ($action == "update"))
         }
         break;
       case 'password_hash':
-        // check that the two passwords match
-        if ($password0 != $password1)
+        // Note: there will only be a password_hash field if it's a new user, or the password0 field is not empty.
+        if (true !== ($error = auth()->validatePasswords([$password0, $password1], $values['name'], $values['email'])))
         {
           $valid_data = false;
-          $q_string .= "&pwd_not_match=1";
-        }
-        // check that the password conforms to the password policy
-        // if it's a new user, or else if it's an existing user
-        // trying to change their password
-        if (!isset($id) || (isset($password0) && ($password0 !== '')))
-        {
-          if (!auth()->checkPasswordConformsToPolicy($password0))
-          {
-            $valid_data = false;
-            $q_string .= "&pwd_invalid=1";
-          }
-        }
-        // Check that the password hasn't already been used by another user with the
-        // same email address, because, if it has, we won't be able to distinguish
-        // between them when they log in using an email address.
-        if (isset($values['email']) && ($values['email'] !== '') &&
-            !empty(array_diff(auth()->validateEmail($values['email'], $password0), [$values['name']])))
-        {
-          $valid_data = false;
-          $q_string .= "&pwd_not_unique=1";
+          $q_string .= "&$error=1";
         }
         break;
       case 'email':
