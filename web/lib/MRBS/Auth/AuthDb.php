@@ -676,6 +676,37 @@ class AuthDb extends AuthDbAbstract
 
 
   /**
+   * Check whether an email address is unique.
+   *
+   * Assumes that email addresses are case-insensitive.  Allows equivalent Gmail addresses, ie ignores
+   * dots in the local part and treats gmail.com and googlemail.com as equivalent domains.
+   *
+   * @param string|null $ignore_id If this is set then ignore users with this id
+   * @return bool
+   */
+  public function isUniqueEmail(string $email, ?int $ignore_id) : bool
+  {
+    $users = $this->getUsersByEmail($email);
+
+    // No users with this email address: must be unique
+    if (0 === ($n_users = count($users)))
+    {
+      return true;
+    }
+
+    // More than one user with this email address, or only one and we are
+    // not ignoring any ids: can't be unique
+    if (($n_users > 1) || !isset($ignore_id))
+    {
+      return false;
+    }
+
+    // Only one user: if it's this one, then it's unique.
+    return ($users[0]['id'] == $ignore_id);
+  }
+
+
+  /**
    * Find all users by email address.
    *
    * Assumes that email addresses are case-insensitive.  Allows equivalent Gmail addresses, ie ignores

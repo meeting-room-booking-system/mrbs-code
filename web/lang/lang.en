@@ -640,10 +640,11 @@ $vocab["period_start_before_previous_end"]    = "The start time cannot be before
 $vocab["period_end_must_be_after_start"]      = "The period end time must be after the start time.";
 
 // Used in edit_user.php
-$vocab["name_empty"]              = "You must enter a name.";
-$vocab["name_not_unique"]         = "already exists.   Please choose another name.";
-$vocab["invalid_date"]            = "The field '%s' must contain a valid date in the format YYYY-MM-DD.";
-$vocab["confirm_delete_user"]     = "Are you sure you want to delete this user?";
+$vocab["name_empty"]          = "You must enter a name.";
+$vocab["name_not_unique"]     = "already exists.   Please choose another name.";
+$vocab["email_not_unique"]    = "Another user with this email address already exists.";
+$vocab["invalid_date"]        = "The field '%s' must contain a valid date in the format YYYY-MM-DD.";
+$vocab["confirm_delete_user"] = "Are you sure you want to delete this user?";
 $vocab["confirm_delete_user_plus"]  = "Are you sure you want to delete this user? They are involved in " .
                                       "bookings as a creator, modifier or registrant and deleting the user " .
                                       "will lose information such as their display name and email address.";
