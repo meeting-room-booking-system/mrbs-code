@@ -381,7 +381,7 @@ class AuthLdap extends Auth
     $res = @ldap_read(
         $ldap,
         $dn,
-        "(objectclass=*)",
+        "($user_search)",
         array_values($attributes),
         0,
         1
@@ -761,7 +761,7 @@ class AuthLdap extends Auth
               {
                 $entries = ldap_get_entries($ldap, $res);
                 $dn = $entries[0]["dn"];
-                $user_search = "distinguishedName=" . $dn;
+                $user_search = self::$all_ldap_opts['ldap_user_attrib'][$idx] . "=" . $username;
                 self::debug("found one entry dn '$dn'");
               }
               else
