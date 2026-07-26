@@ -17,10 +17,30 @@ env:
   IMAGE_NAME: mrbs
 
 jobs:
+  # Build and smoke-test the image for PRs (safe for forked PRs)
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Build image (test)
+        run: docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
+
+      - name: Smoke test
+        run: |
+          # Verify image runs a simple shell command (no secrets used)
+          docker run --rm $IMAGE_NAME sh -c 'echo ok'
+
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
   push:
     runs-on: ubuntu-latest
+    # Only run this job on pushes or on PRs from the same repository
+    # (skip PRs opened from forks which don't have access to repository secrets)
+    if: ${{ github.event.pull_request == null || github.event.pull_request.head.repo.full_name == github.repository }}
     permissions:
       packages: write
       contents: read
