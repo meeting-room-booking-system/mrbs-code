@@ -3,8 +3,8 @@
 
 /**
  * File::Passwd
- * 
- * PHP versions 4 and 5
+ *
+ * PHP versions 8
  *
  * LICENSE: This source file is subject to version 3.0 of the PHP license
  * that is available through the world-wide-web at the following URI:
@@ -97,17 +97,17 @@ $GLOBALS['_FILE_PASSWD_64'] =
     './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
 /**
-* The package File_Passwd provides classes and methods 
+* The package File_Passwd provides classes and methods
 * to handle many different kinds of passwd files.
-* 
-* The File_Passwd class in certain is a factory container for its special 
+*
+* The File_Passwd class in certain is a factory container for its special
 * purpose extension classes, each handling a specific passwd file format.
 * It also provides a static method for reasonable fast user authentication.
 * Beside that it offers some encryption methods used by the extensions.
 *
 * @author       Michael Wallner <mike@php.net>
 * @version      $Revision$
-* 
+*
 * Usage Example:
 * <code>
 *  $passwd = &File_Passwd::factory('Unix');
@@ -157,7 +157,7 @@ class File_Passwd
     {
         return $plain;
     }
-    
+
     /**
     * DES encryption
     *
@@ -172,7 +172,7 @@ class File_Passwd
         (is_null($salt) || strlen($salt) < 2) && $salt = File_Passwd::salt(2);
         return crypt($plain, $salt);
     }
-    
+
     /**
     * MD5 encryption
     *
@@ -180,26 +180,26 @@ class File_Passwd
     * @access   public
     * @return   string  crypted text
     * @param    string  $plain  plaintext to encrypt
-    * @param    string  $salt   the salt to use for encryption 
+    * @param    string  $salt   the salt to use for encryption
     *                           (>2 chars starting with $1$)
     */
     function crypt_md5($plain, $salt = null)
     {
         if (
-            is_null($salt) || 
-            strlen($salt) < 3 || 
+            is_null($salt) ||
+            strlen($salt) < 3 ||
             !preg_match('/^\$1\$/', $salt))
         {
             $salt = '$1$' . File_Passwd::salt(8);
         }
         return crypt($plain, $salt);
     }
-    
+
     /**
     * SHA1 encryption
     *
     * Returns a PEAR_Error if sha1() is not available (PHP<4.3).
-    * 
+    *
     * @static
     * @throws   PEAR_Error
     * @access   public
@@ -218,7 +218,7 @@ class File_Passwd
         return '{SHA}' . base64_encode($hash);
 
     }
-        
+
     /**
     * APR compatible MD5 encryption
     *
@@ -236,25 +236,25 @@ class File_Passwd
         } else {
             $salt = substr($salt, 0,8);
         }
-        
+
         $length  = strlen($plain);
         $context = $plain . '$apr1$' . $salt;
-        
+
         if (PEAR_ZE2) {
             $binary = md5($plain . $salt . $plain, true);
         } else {
             $binary = pack('H32', md5($plain . $salt . $plain));
         }
-        
+
         for ($i = $length; $i > 0; $i -= 16) {
             $context .= substr($binary, 0, min(16 , $i));
         }
         for ( $i = $length; $i > 0; $i >>= 1) {
             $context .= ($i & 1) ? chr(0) : $plain[0];
         }
-        
+
         $binary = PEAR_ZE2 ? md5($context, true) : pack('H32', md5($context));
-        
+
         for ($i = 0; $i < 1000; $i++) {
             $new = ($i & 1) ? $plain : $binary;
             if ($i % 3) {
@@ -266,7 +266,7 @@ class File_Passwd
             $new .= ($i & 1) ? $binary : $plain;
             $binary = PEAR_ZE2 ? md5($new, true) : pack('H32', md5($new));
         }
-        
+
         $p = array();
         for ($i = 0; $i < 5; $i++) {
             $k = $i + 6;
@@ -281,9 +281,9 @@ class File_Passwd
                 5
             );
         }
-        
-        return 
-            '$apr1$' . $salt . '$' . implode($p) . 
+
+        return
+            '$apr1$' . $salt . '$' . implode($p) .
             File_Passwd::_64(ord($binary[11]), 3);
     }
 
@@ -300,11 +300,11 @@ class File_Passwd
         $rs = '';
         $ln = strlen($hex);
         for($i = 0; $i < $ln; $i += 2) {
-            $rs .= chr(hexdec($hex{$i} . $hex{$i+1}));
+            $rs .= chr(hexdec($hex[$i] . $hex[$i+1]));
         }
         return $rs;
     }
-    
+
     /**
     * Convert to allowed 64 characters for encryption
     *
@@ -326,18 +326,18 @@ class File_Passwd
 
     /**
     * Factory for new extensions
-    * 
+    *
     * o Unix        for standard Unix passwd files
     * o CVS         for CVS pserver passwd files
     * o SMB         for SMB server passwd files
     * o Authbasic   for AuthUserFiles
     * o Authdigest  for AuthDigestFiles
     * o Custom      for custom formatted passwd files
-    * 
+    *
     * Returns a PEAR_Error if the desired class/file couldn't be loaded.
-    * 
+    *
     * @static   use &File_Passwd::factory() for instantiating your passwd object
-    * 
+    *
     * @throws   PEAR_Error
     * @access   public
     * @return   object    File_Passwd_$class - desired Passwd object
@@ -355,15 +355,15 @@ class File_Passwd
         }
         return new $class();
     }
-    
+
     /**
     * Fast authentication of a certain user
-    * 
+    *
     * Though this approach should be reasonable fast, it is NOT
     * with APR compatible MD5 encryption used for htpasswd style
     * password files encrypted in MD5. Generating one MD5 password
     * takes about 0.3 seconds!
-    * 
+    *
     * Returns a PEAR_Error if:
     *   o file doesn't exist
     *   o file couldn't be opened in read mode
@@ -372,7 +372,7 @@ class File_Passwd
     *   o file couldn't be closed (only if auth fails)
     *   o invalid <var>$type</var> was provided
     *   o invalid <var>$opt</var> was provided
-    * 
+    *
     * Depending on <var>$type</var>, <var>$opt</var> should be:
     *   o Smb:          encryption method (NT or LM)
     *   o Unix:         encryption method (des or md5)
@@ -380,14 +380,14 @@ class File_Passwd
     *   o Authdigest:   the realm the user is in
     *   o Cvs:          n/a (empty)
     *   o Custom:       array of 2 elements: encryption function and delimiter
-    * 
+    *
     * @static   call this method statically for a reasonable fast authentication
-    * 
+    *
     * @throws   PEAR_Error
     * @access   public
-    * @return   return      mixed   true if authenticated, 
+    * @return   return      mixed   true if authenticated,
     *                               false if not or PEAR_error
-    * 
+    *
     * @param    string      $type   Unix, Cvs, Smb, Authbasic or Authdigest
     * @param    string      $file   path to passwd file
     * @param    string      $user   the user to authenticate
