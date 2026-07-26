@@ -24,27 +24,26 @@ jobs:
       contents: read
     services:
       db:
-        image: postgres:15
+        image: mysql:8.0
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: mrbs
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: mrbs
+          MYSQL_USER: mrbs
+          MYSQL_PASSWORD: mrbs
         ports:
-          - 5432:5432
+          - 3306:3306
 
     steps:
       - uses: actions/checkout@v6
 
       - name: Wait for DB
         run: |
-          sudo apt-get update && sudo apt-get install -y postgresql-client
-          until pg_isready -h localhost -p 5432 -U postgres; do sleep 1; done
+          sudo apt-get update && sudo apt-get install -y default-mysql-client
+          until mysqladmin ping -h 127.0.0.1 -uroot -proot --silent; do sleep 1; done
 
-      - name: Load Postgres schema
-        env:
-          PGPASSWORD: postgres
+      - name: Load MySQL schema
         run: |
-          psql -h localhost -U postgres -d mrbs -f tables.pg.sql
+          mysql -h 127.0.0.1 -uroot -proot mrbs < tables.my.sql
 
       - name: Build image (test)
         run: docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
@@ -54,11 +53,11 @@ jobs:
           # Run container and make host.docker.internal available inside it so it can reach the Actions service
           docker run --rm -d \
             --add-host=host.docker.internal:host-gateway \
-            -e MRBS_DB_SYSTEM=pgsql \
+            -e MRBS_DB_SYSTEM=mysql \
             -e MRBS_DB_HOST=host.docker.internal \
             -e MRBS_DB_DATABASE=mrbs \
-            -e MRBS_DB_USER=postgres \
-            -e MRBS_DB_PASSWORD=postgres \
+            -e MRBS_DB_USER=mrbs \
+            -e MRBS_DB_PASSWORD=mrbs \
             -p 8080:80 \
             --name mrbs-test $IMAGE_NAME
 
