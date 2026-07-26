@@ -3,8 +3,8 @@
 
 /**
  * File::Passwd::Custom
- *
- * PHP versions 8
+ * 
+ * PHP versions 7.2 and later
  *
  * LICENSE: This source file is subject to version 3.0 of the PHP license
  * that is available through the world-wide-web at the following URI:
@@ -26,7 +26,7 @@
 */
 require_once 'File/Passwd/Common.php';
 
-/**
+/** 
 * Manipulate custom formatted passwd files
 *
 * Usage Example:
@@ -38,7 +38,7 @@ require_once 'File/Passwd/Common.php';
 * $cust->addUser('mike', 'pass');
 * $cust->save();
 * </code>
-*
+* 
 * @author   Michael Wallner <mike@php.net>
 * @version  $Revision$
 * @access   public
@@ -52,7 +52,7 @@ class File_Passwd_Custom extends File_Passwd_Common
     * @var      string
     */
     var $_delim = ':';
-
+    
     /**
     * Encryption function
     *
@@ -60,7 +60,7 @@ class File_Passwd_Custom extends File_Passwd_Common
     * @var      string
     */
     var $_enc = array('File_Passwd', 'crypt_md5');
-
+    
     /**
     * 'name map'
     *
@@ -68,7 +68,7 @@ class File_Passwd_Custom extends File_Passwd_Common
     * @var      array
     */
     var $_map = array();
-
+    
     /**
     * Whether to use the 'name map' or not
     *
@@ -90,7 +90,7 @@ class File_Passwd_Custom extends File_Passwd_Common
 
     /**
     * Fast authentication of a certain user
-    *
+    * 
     * Returns a PEAR_Error if:
     *   o file doesn't exist
     *   o file couldn't be opened in read mode
@@ -108,7 +108,7 @@ class File_Passwd_Custom extends File_Passwd_Common
     *                       FILE_PASSWD_E_INVALID_ENC_MODE
     * @static   call this method statically for a reasonable fast authentication
     * @access   public
-    * @return   mixed   Returns &true; if authenticated, &false; if not or
+    * @return   mixed   Returns &true; if authenticated, &false; if not or 
     *                   <classname>PEAR_Error</classname> on failure.
     * @param    string  $file   path to passwd file
     * @param    string  $user   user to authenticate
@@ -122,22 +122,22 @@ class File_Passwd_Custom extends File_Passwd_Common
         if (count($opts) != 2 || empty($opts[1])) {
             throw new File_Passwd_Exception('Insufficient options.', 0);
         }
-
+        
         $line = File_Passwd_Common::_auth($file, $user, $opts[1]);
-
+        
         if (!$line) {
             return $line;
         }
-
+        
         list(,$real)= explode($opts[1], $line);
         $crypted    = File_Passwd_Custom::_genPass($pass, $real, $opts[0]);
-
+        
         return ($crypted === $real);
     }
 
     /**
     * Set delimiter
-    *
+    * 
     * You can set a custom char to delimit the columns of a data set.
     * Defaults to a colon (':'). Be aware that this char mustn't be
     * in the values of your data sets.
@@ -155,7 +155,7 @@ class File_Passwd_Custom extends File_Passwd_Common
             $this->_delim = $delim[0];
         }
     }
-
+    
     /**
     * Get custom delimiter
     *
@@ -166,19 +166,19 @@ class File_Passwd_Custom extends File_Passwd_Common
     {
         return $this->_delim;
     }
-
+    
     /**
     * Set encryption function
     *
     * You can set a custom encryption function to use.
-    * The supplied function will be called by php's call_user_function(),
-    * so you can supply an array with a method of a class/object, too
+    * The supplied function will be called by php's call_user_function(), 
+    * so you can supply an array with a method of a class/object, too 
     * (i.e. array('File_Passwd', 'crypt_apr_md5').
-    *
-    *
+    * 
+    * 
     * @throws   PEAR_Error          FILE_PASSWD_E_INVALID_ENC_MODE
     * @access   public
-    * @return   mixed   Returns &true; on success or
+    * @return   mixed   Returns &true; on success or 
     *                   <classname>PEAR_Error</classname> on failure.
     * @param    mixed   $function    callable encryption function
     */
@@ -193,18 +193,18 @@ class File_Passwd_Custom extends File_Passwd_Common
                 FILE_PASSWD_E_INVALID_ENC_MODE
             );
         }
-
+        
         $this->_enc = $function;
         return true;
     }
-
+    
     /**
     * Get current custom encryption method
     *
     * Possible return values (examples):
     *   o 'md5'
     *   o 'File_Passwd::crypt_md5'
-    *
+    * 
     * @access   public
     * @return   string
     */
@@ -215,18 +215,18 @@ class File_Passwd_Custom extends File_Passwd_Common
         }
         return $this->_enc;
     }
-
+    
     /**
     * Whether to use the 'name map' of the extra properties or not
-    *
+    * 
     * @see      File_Passwd_Custom::useMap()
     * @see      setMap()
     * @see      getMap()
-    *
+    * 
     * @access   public
     * @return   boolean always true if you set a value (true/false) OR
     *                   the actual value if called without param
-    *
+    * 
     * @param    boolean $bool   whether to use the 'name map' or not
     */
     function useMap($bool = null)
@@ -237,17 +237,17 @@ class File_Passwd_Custom extends File_Passwd_Common
         $this->_usemap = (bool) $bool;
         return true;
     }
-
+    
     /**
     * Set the 'name map' to use with the extra properties of the user
-    *
+    * 
     * This map is used for naming the associative array of the extra properties.
     *
     * Returns a PEAR_Error if <var>$map</var> was not of type array.
-    *
+    * 
     * @see      getMap()
     * @see      useMap()
-    *
+    * 
     * @throws   PEAR_Error  FILE_PASSWD_E_PARAM_MUST_BE_ARRAY
     * @access   public
     * @return   mixed       true on success or PEAR_Error
@@ -263,13 +263,13 @@ class File_Passwd_Custom extends File_Passwd_Common
         $this->_map = $map;
         return true;
     }
-
+    
     /**
     * Get the 'name map' which is used for the extra properties of the user
     *
     * @see      setMap()
     * @see      useMap()
-    *
+    * 
     * @access   public
     * @return   array
     */
@@ -287,13 +287,13 @@ class File_Passwd_Custom extends File_Passwd_Common
     *   o file couldn't be locked exclusively
     *   o file couldn't be unlocked
     *   o file couldn't be closed
-    *
+    * 
     * @throws   PEAR_Error  FILE_PASSWD_E_FILE_NOT_OPENED |
     *                       FILE_PASSWD_E_FILE_NOT_LOCKED |
     *                       FILE_PASSWD_E_FILE_NOT_UNLOCKED |
     *                       FILE_PASSWD_E_FILE_NOT_CLOSED
     * @access   public
-    * @return   mixed   Returns &true; on success or
+    * @return   mixed   Returns &true; on success or 
     *                   <classname>PEAR_Error</classname> on failure.
     */
     function save()
@@ -315,7 +315,7 @@ class File_Passwd_Custom extends File_Passwd_Common
     * Parse the Custom password file
     *
     * Returns a PEAR_Error if passwd file has invalid format.
-    *
+    * 
     * @throws   PEAR_Error  FILE_PASSWD_E_INVALID_FORMAT
     * @access   public
     * @return   mixed   Returns &true; on success or
@@ -348,7 +348,7 @@ class File_Passwd_Custom extends File_Passwd_Common
                 $values = array_merge(array($pass), $parts);
             }
             $this->_users[$user] = $values;
-
+            
         }
         $this->_contents = array();
         return true;
@@ -359,25 +359,25 @@ class File_Passwd_Custom extends File_Passwd_Common
     *
     * The username must start with an alphabetical character and must NOT
     * contain any other characters than alphanumerics, the underline and dash.
-    *
+    * 
     * If you use the 'name map' you should also use these naming in
     * the supplied extra array, because your values would get mixed up
     * if they are in the wrong order, which is always true if you
     * DON'T use the 'name map'!
-    *
+    * 
     * So be warned and USE the 'name map'!
-    *
+    * 
     * Returns a PEAR_Error if:
     *   o user already exists
     *   o user contains illegal characters
     *   o encryption mode is not supported
     *   o any element of the <var>$extra</var> array contains the delimiter char
-    *
+    * 
     * @throws   PEAR_Error  FILE_PASSWD_E_EXISTS_ALREADY |
     *                       FILE_PASSWD_E_INVALID_ENC_MODE |
     *                       FILE_PASSWD_E_INVALID_CHARS
     * @access   public
-    * @return   mixed   Returns &true; on success or
+    * @return   mixed   Returns &true; on success or 
     *                   <classname>PEAR_Error</classname> on failure.
     * @param    string  $user   the name of the user to add
     * @param    string  $pass   the password of the user to add
@@ -408,9 +408,9 @@ class File_Passwd_Custom extends File_Passwd_Common
                 );
             }
         }
-
+        
         $pass = $this->_genPass($pass);
-
+        
         /**
         * If you don't use the 'name map' the user array will be numeric.
         */
@@ -425,7 +425,7 @@ class File_Passwd_Custom extends File_Passwd_Common
                 $this->_users[$user][$key] = @$extra[$key];
             }
         }
-
+        
         return true;
     }
 
@@ -433,21 +433,21 @@ class File_Passwd_Custom extends File_Passwd_Common
     * Modify properties of a certain user
     *
     * # DON'T MODIFY THE PASSWORD WITH THIS METHOD!
-    *
+    * 
     * You should use this method only if the 'name map' is used, too.
-    *
+    * 
     * Returns a PEAR_Error if:
     *   o user doesn't exist
     *   o any property contains the custom delimiter character
-    *
+    * 
     * @see      changePasswd()
-    *
-    * @throws   PEAR_Error  FILE_PASSWD_E_EXISTS_NOT |
+    * 
+    * @throws   PEAR_Error  FILE_PASSWD_E_EXISTS_NOT | 
     *                       FILE_PASSWD_E_INVALID_CHARS
     * @access   public
     * @return   mixed       true on success or PEAR_Error
     * @param    string      $user           the user to modify
-    * @param    array       $properties     an associative array of
+    * @param    array       $properties     an associative array of 
     *                                       properties to modify
     */
     function modUser($user, $properties = array())
@@ -458,11 +458,11 @@ class File_Passwd_Custom extends File_Passwd_Common
                 FILE_PASSWD_E_EXISTS_NOT
             );
         }
-
+        
         if (!is_array($properties)) {
             setType($properties, 'array');
         }
-
+        
         foreach ($properties as $key => $value){
             if (strstr($value, $this->_delim)) {
                 throw new File_Passwd_Exception(
@@ -472,7 +472,7 @@ class File_Passwd_Custom extends File_Passwd_Common
             }
             $this->_users[$user][$key] = $value;
         }
-
+        
         return true;
     }
 
@@ -482,11 +482,11 @@ class File_Passwd_Custom extends File_Passwd_Common
     * Returns a PEAR_Error if:
     *   o user doesn't exists
     *   o encryption mode is not supported
-    *
+    * 
     * @throws   PEAR_Error  FILE_PASSWD_E_EXISTS_NOT |
     *                       FILE_PASSWD_E_INVALID_ENC_MODE
     * @access   public
-    * @return   mixed   Returns &true; on success or
+    * @return   mixed   Returns &true; on success or 
     *                   <classname>PEAR_Error</classname> on failure.
     * @param    string  $user   the user whose password should be changed
     * @param    string  $pass   the new plaintext password
@@ -499,21 +499,21 @@ class File_Passwd_Custom extends File_Passwd_Common
                 FILE_PASSWD_E_EXISTS_NOT
             );
         }
-
+        
         $pass = $this->_genPass($pass);
-
+        
         if ($this->_usemap) {
             $this->_users[$user]['pass'] = $pass;
         } else {
             $this->_users[$user][0] = $pass;
         }
-
+        
         return true;
     }
 
     /**
     * Verify the password of a certain user
-    *
+    * 
     * Returns a PEAR_Error if:
     *   o user doesn't exist
     *   o encryption mode is not supported
@@ -521,7 +521,7 @@ class File_Passwd_Custom extends File_Passwd_Common
     * @throws   PEAR_Error  FILE_PASSWD_E_EXISTS_NOT |
     *                       FILE_PASSWD_E_INVALID_ENC_MODE
     * @access   public
-    * @return   mixed   Returns &true; if passwors equal, &false; if they don't
+    * @return   mixed   Returns &true; if passwors equal, &false; if they don't 
     *                   or <classname>PEAR_Error</classname> on fialure.
     * @param    string  $user   the user whose password should be verified
     * @param    string  $pass   the password to verify
@@ -534,22 +534,22 @@ class File_Passwd_Custom extends File_Passwd_Common
                 FILE_PASSWD_E_EXISTS_NOT
             );
         }
-        $real =
-            $this->_usemap ?
-            $this->_users[$user]['pass'] :
+        $real = 
+            $this->_usemap ? 
+            $this->_users[$user]['pass'] : 
             $this->_users[$user][0]
         ;
         return ($real === $this->_genPass($pass, $real));
     }
-
+    
     /**
     * Generate crypted password from the plaintext password
     *
     * Returns a PEAR_Error if actual encryption mode is not supported.
-    *
+    * 
     * @throws   PEAR_Error  FILE_PASSWD_E_INVALID_ENC_MODE
     * @access   private
-    * @return   mixed   Returns the crypted password or
+    * @return   mixed   Returns the crypted password or 
     *                   <classname>PEAR_Error</classname>
     * @param    string  $pass   the plaintext password
     * @param    string  $salt   the crypted password from which to gain the salt
@@ -560,7 +560,7 @@ class File_Passwd_Custom extends File_Passwd_Common
         if (is_null($func)) {
             $func = $this->_enc;
         }
-
+        
         if (!is_callable($func)) {
             if (is_array($func)) {
                 $func = implode('::', $func);
@@ -576,11 +576,11 @@ class File_Passwd_Custom extends File_Passwd_Common
         }
 
         $return = @call_user_func($func, $pass, $salt);
-
+        
         if (is_null($return) || $return === false) {
             $return = @call_user_func($func, $pass);
         }
-
+        
         return $return;
     }
 }
