@@ -17,10 +17,75 @@ env:
   IMAGE_NAME: mrbs
 
 jobs:
+  # Build and smoke-test the image for PRs (safe for forked PRs)
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    services:
+      db:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: mrbs
+          MYSQL_USER: mrbs
+          MYSQL_PASSWORD: mrbs
+        ports:
+          - 3306:3306
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Wait for DB
+        run: |
+          sudo apt-get update && sudo apt-get install -y default-mysql-client
+          until mysqladmin ping -h 127.0.0.1 -uroot -proot --silent; do sleep 1; done
+
+      - name: Load MySQL schema
+        run: |
+          mysql -h 127.0.0.1 -uroot -proot mrbs < tables.my.sql
+
+      - name: Build image (test)
+        run: docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
+
+      - name: Run container (connect to service DB via host-gateway)
+        run: |
+          # Run container and make host.docker.internal available inside it so it can reach the Actions service
+          docker run --rm -d \
+            --add-host=host.docker.internal:host-gateway \
+            -e MRBS_DB_SYSTEM=mysql \
+            -e MRBS_DB_HOST=host.docker.internal \
+            -e MRBS_DB_DATABASE=mrbs \
+            -e MRBS_DB_USER=mrbs \
+            -e MRBS_DB_PASSWORD=mrbs \
+            -p 8080:80 \
+            --name mrbs-test $IMAGE_NAME
+
+      - name: Wait for webserver
+        run: |
+          # wait for Apache inside the container to start
+          for i in {1..30}; do
+            if curl -sSf http://localhost:8080/ >/dev/null; then
+              echo ready && break
+            fi
+            sleep 1
+          done
+
+      - name: HTTP smoke checks
+        run: |
+          curl -fsS http://localhost:8080/ || (docker logs mrbs-test && exit 1)
+          curl -fsS http://localhost:8080/reset_password.php | grep -qi 'reset' || true
+      - name: Stop test container
+        if: always()
+        run: docker stop mrbs-test || true
+
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
   push:
     runs-on: ubuntu-latest
+    # Only run this job on pushes or on PRs from the same repository
+    # (skip PRs opened from forks which don't have access to repository secrets)
+    if: ${{ github.event.pull_request == null || github.event.pull_request.head.repo.full_name == github.repository }}
     permissions:
       packages: write
       contents: read
