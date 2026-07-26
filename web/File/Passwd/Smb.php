@@ -3,8 +3,8 @@
 
 /**
  * File::Passwd::Smb
- * 
- * PHP version 5
+ *
+ * PHP version 8
  *
  * LICENSE: This source file is subject to version 3.0 of the PHP license
  * that is available through the world-wide-web at the following URI:
@@ -48,7 +48,7 @@ require_once 'Crypt/CHAP.php';
 * }
 * $f->save();
 * </code>
-* 
+*
 * # Usage Example 2 (creating a new file):
 * <code>
 * $f = &File_Passwd::factory('SMB');
@@ -57,7 +57,7 @@ require_once 'Crypt/CHAP.php';
 * $f->addUser('sepp3', 'MyPw', array('userid' => 1000));
 * $f->save();
 * </code>
-* 
+*
 * # Usage Example 3 (authentication):
 * <code>
 * $f = &File_Passwd::factory('SMB');
@@ -69,7 +69,7 @@ require_once 'Crypt/CHAP.php';
 *     echo "User invalid or disabled";
 * }
 * </code>
-* 
+*
 * @author   Michael Bretterklieber <michael@bretterklieber.com>
 * @author   Michael Wallner <mike@php.net>
 * @package  File_Passwd
@@ -80,15 +80,15 @@ class File_Passwd_Smb extends File_Passwd_Common
 {
     /**
     * Object which generates the NT-Hash and LAN-Manager-Hash passwds
-    * 
+    *
     * @access protected
     * @var object
     */
     var $msc;
-    
+
     /**
     * Constructor (ZE2)
-    * 
+    *
     * Rewritten because we want to init our crypt engine.
     *
     * @access public
@@ -98,11 +98,11 @@ class File_Passwd_Smb extends File_Passwd_Common
     {
         $this->setFile($file);
         $this->msc = new Crypt_CHAP_MSv1;
-    }     
-    
+    }
+
     /**
     * Fast authentication of a certain user
-    * 
+    *
     * Returns a PEAR_Error if:
     *   o file doesn't exist
     *   o file couldn't be opened in read mode
@@ -127,15 +127,15 @@ class File_Passwd_Smb extends File_Passwd_Common
         }
         @list(,,$lm,$nt) = explode(':', $line);
         $chap            = new Crypt_CHAP_MSv1;
-        
+
         switch(strToLower($nt_or_lm)){
-        	case FILE_PASSWD_NT: 
-                $real       = $nt; 
-                $crypted    = $chap->ntPasswordHash($pass); 
+        	case FILE_PASSWD_NT:
+                $real       = $nt;
+                $crypted    = $chap->ntPasswordHash($pass);
                 break;
-        	case FILE_PASSWD_LM: 
+        	case FILE_PASSWD_LM:
                 $real       = $lm;
-                $crypted    = $chap->lmPasswordHash($pass); 
+                $crypted    = $chap->lmPasswordHash($pass);
                 break;
         	default:
                 throw new File_Passwd_Exception(
@@ -145,15 +145,15 @@ class File_Passwd_Smb extends File_Passwd_Common
         }
         return (strToUpper(bin2hex($crypted)) === $real);
     }
-    
+
     /**
     * Parse smbpasswd file
     *
     * Returns a PEAR_Error if passwd file has invalid format.
-    * 
+    *
     * @access public
     * @return mixed   true on success or PEAR_Error
-    */    
+    */
     function parse()
     {
         foreach ($this->_contents as $line){
@@ -178,9 +178,9 @@ class File_Passwd_Smb extends File_Passwd_Common
             }
         }
         $this->_contents = array();
-        return true; 
+        return true;
     }
-    
+
     /**
     * Add a user
     *
@@ -229,14 +229,14 @@ class File_Passwd_Smb extends File_Passwd_Common
 
     /**
     * Modify a certain user
-    * 
-    * <b>You should not modify the password with this method 
+    *
+    * <b>You should not modify the password with this method
     * unless it is already encrypted as nthash and lmhash!</b>
     *
     * Returns a PEAR_Error if:
     *   o user doesn't exist
     *   o an invalid property was supplied
-    * 
+    *
     * @throws PEAR_Error
     * @access public
     * @return mixed true on success or PEAR_Error
@@ -275,7 +275,7 @@ class File_Passwd_Smb extends File_Passwd_Common
     * Change the passwd of a certain user
     *
     * Returns a PEAR_Error if <var>$user</var> doesn't exist.
-    * 
+    *
     * @throws PEAR_Error
     * @access public
     * @return mixed true on success or PEAR_Error
@@ -300,10 +300,10 @@ class File_Passwd_Smb extends File_Passwd_Common
         $this->_users[$user]['lmhash'] = $lmhash;
         return true;
     }
-    
+
     /**
     * Verifies a user's password
-    * 
+    *
     * Prefer NT-Hash instead of weak LAN-Manager-Hash
     *
     * Returns a PEAR_Error if:
@@ -311,7 +311,7 @@ class File_Passwd_Smb extends File_Passwd_Common
     *   o user is disabled
     *
     * @return mixed true if passwds equal, false if they don't or PEAR_Error
-    * @access public		
+    * @access public
     * @param string $user       username
     * @param string $nthash     NT-Hash in hex
     * @param string $lmhash     LAN-Manager-Hash in hex
@@ -345,7 +345,7 @@ class File_Passwd_Smb extends File_Passwd_Common
     *
     * @throws PEAR_Error
     * @return mixed     true if passwds equal, false if they don't or PEAR_Error
-    * @access public		
+    * @access public
     * @param  string    $user username
     * @param  string    $pass the plaintext password
     */
@@ -365,7 +365,7 @@ class File_Passwd_Smb extends File_Passwd_Common
     *   o file couldn't be locked exclusively
     *   o file couldn't be unlocked
     *   o file couldn't be closed
-    * 
+    *
     * @throws PEAR_Error
     * @access public
     * @return mixed true on success or PEAR_Error
@@ -384,7 +384,7 @@ class File_Passwd_Smb extends File_Passwd_Common
         }
         return $this->_save($content);
     }
-    
+
     /**
     * Generate Password
     *
@@ -396,13 +396,13 @@ class File_Passwd_Smb extends File_Passwd_Common
     */
     function generatePasswd($pass, $mode = 'nt')
     {
-        $chap = &new Crypt_CHAP_MSv1;
-        $hash = strToLower($mode) == 'nt' ? 
+        $chap = new Crypt_CHAP_MSv1;
+        $hash = strToLower($mode) == 'nt' ?
             $chap->ntPasswordHash($pass) :
             $chap->lmPasswordHash($pass);
         return strToUpper(bin2hex($hash));
     }
-    
+
     /**
      * @ignore
      * @deprecated
