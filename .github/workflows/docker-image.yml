@@ -22,17 +22,63 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    services:
+      db:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: mrbs
+        ports:
+          - 5432:5432
 
     steps:
       - uses: actions/checkout@v6
 
+      - name: Wait for DB
+        run: |
+          sudo apt-get update && sudo apt-get install -y postgresql-client
+          until pg_isready -h localhost -p 5432 -U postgres; do sleep 1; done
+
+      - name: Load Postgres schema
+        env:
+          PGPASSWORD: postgres
+        run: |
+          psql -h localhost -U postgres -d mrbs -f tables.pg.sql
+
       - name: Build image (test)
         run: docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
 
-      - name: Smoke test
+      - name: Run container (connect to service DB via host-gateway)
         run: |
-          # Verify image runs a simple shell command (no secrets used)
-          docker run --rm $IMAGE_NAME sh -c 'echo ok'
+          # Run container and make host.docker.internal available inside it so it can reach the Actions service
+          docker run --rm -d \
+            --add-host=host.docker.internal:host-gateway \
+            -e MRBS_DB_SYSTEM=pgsql \
+            -e MRBS_DB_HOST=host.docker.internal \
+            -e MRBS_DB_DATABASE=mrbs \
+            -e MRBS_DB_USER=postgres \
+            -e MRBS_DB_PASSWORD=postgres \
+            -p 8080:80 \
+            --name mrbs-test $IMAGE_NAME
+
+      - name: Wait for webserver
+        run: |
+          # wait for Apache inside the container to start
+          for i in {1..30}; do
+            if curl -sSf http://localhost:8080/ >/dev/null; then
+              echo ready && break
+            fi
+            sleep 1
+          done
+
+      - name: HTTP smoke checks
+        run: |
+          curl -fsS http://localhost:8080/ || (docker logs mrbs-test && exit 1)
+          curl -fsS http://localhost:8080/reset_password.php | grep -qi 'reset' || true
+      - name: Stop test container
+        if: always()
+        run: docker stop mrbs-test || true
 
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
