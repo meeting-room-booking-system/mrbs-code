@@ -19,6 +19,7 @@ global $area;
 global $multisite, $site;
 global $debug;
 global $custom_js_url;
+global $theme;
 
 $page = this_page(false, '.php');
 
@@ -36,6 +37,15 @@ if ($multisite && isset($site) && ($site !== ''))
 // Load the init file now so that it gets executed as soon as possible.  The init
 // file can't use jQuery.
 echo script_html('js/init.js.php', true);
+
+// Load theme-specific JavaScript as early as possible.  This is used, for
+// example, by the Ambience theme to apply the preferred colour scheme before
+// the body is rendered.
+$theme_js = "Themes/$theme/theme.js";
+if (is_readable($theme_js))
+{
+  echo script_html($theme_js, true);
+}
 
 echo script_html(($debug) ? 'jquery/jquery-4.0.0.js' : 'jquery/jquery-4.0.0.min.js');
 

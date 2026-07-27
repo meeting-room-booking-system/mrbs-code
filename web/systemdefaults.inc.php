@@ -231,7 +231,7 @@ $mrbs_company = "Your Company";   // This line must always be uncommented ($mrbs
  * Themes
  *******************/
 
-// Choose a theme for the MRBS.   The theme controls two aspects of the look and feel:
+// Choose a theme for the MRBS.   The theme controls three aspects of the look and feel:
 //   (a) the styling:  the most commonly changed colours, dimensions and fonts have been
 //       extracted from the main CSS file and put into the styling.inc file in the appropriate
 //       directory in the Themes directory.   If you want to change the colour scheme, you should
@@ -241,14 +241,16 @@ $mrbs_company = "Your Company";   // This line must always be uncommented ($mrbs
 //       This enables organisations to plug in their own header functions quite easily, in cases where
 //       the desired corporate look and feel cannot be changed using the CSS alone and the mark-up
 //       itself needs to be changed.
+//   (c) optional behaviour: a theme.js file can add theme-specific client-side behaviour.
 //
 //  MRBS will look for the files "styling.inc" and "header.inc" in the directory Themes/$theme and
-//  if it can't find them will use the files in Themes/default.    A theme directory can contain
-//  a replacement styling.inc file or a replacement header.inc file or both.
+//  if it can't find them will use the files in Themes/default.  A theme directory can also contain
+//  theme.css and theme.js files for additional styling and behaviour.
 
 // Available options are:
 
 // "default"        Default MRBS theme
+// "ambience"       Modern theme with light, automatic and dark colour schemes
 // "classic126"     Same colour scheme as MRBS 1.2.6
 
 $theme = "default";

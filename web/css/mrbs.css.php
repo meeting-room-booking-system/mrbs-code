@@ -11,6 +11,141 @@ require_once "../theme.inc";
 http_headers(array("Content-type: text/css"),
              60*30);  // 30 minute cache expiry
 
+$color_scheme_colors = array();
+
+// DataTables shades are used as switchable custom properties by the Ambience
+// theme.
+$datatable_sorting_1_color = '#D3D6FF';
+$datatable_sorting_2_color = '#DADCFF';
+$datatable_sorting_3_color = '#E0E2FF';
+$datatable_even_sorting_1_color = '#EAEBFF';
+$datatable_even_sorting_2_color = '#F2F3FF';
+$datatable_even_sorting_3_color = '#F9F9FF';
+
+// Keep the existing PHP colour variables as the light palette, but expose them
+// as CSS custom properties for the Ambience theme.  This lets the colour scheme
+// change immediately in the browser without another request to this stylesheet.
+if ($theme === 'ambience')
+{
+  $color_scheme_colors = array(
+    'body_background_color'          => array($body_background_color, '#0f172a'),
+    'standard_font_color'            => array($standard_font_color, '#e2e8f0'),
+    'header_font_color'              => array($header_font_color, '#ffffff'),
+    'highlight_font_color'           => array($highlight_font_color, '#ff6b9f'),
+    'color_key_font_color'           => array($color_key_font_color, '#e2e8f0'),
+    'banner_back_color'              => array($banner_back_color, '#123a63'),
+    'banner_border_color'            => array($banner_border_color, '#0f172a'),
+    'banner_font_color'              => array($banner_font_color, '#ffffff'),
+    'banner_nav_hover_color'         => array($banner_nav_hover_color, '#0a2742'),
+    'minical_view_color'             => array($minical_view_color, '#2563eb'),
+    'minical_today_color'            => array($minical_today_color, '#334155'),
+    'header_back_color'              => array($header_back_color, '#1d4ed8'),
+    'flatpickr_highlight_color'      => array($flatpickr_highlight_color, '#3b82f6'),
+    'admin_table_header_back_color'  => array($admin_table_header_back_color, '#1e3a5f'),
+    'admin_table_header_sep_color'   => array($admin_table_header_sep_color, '#0f172a'),
+    'admin_table_header_font_color'  => array($admin_table_header_font_color, '#f8fafc'),
+    'admin_table_border_color'       => array($admin_table_border_color, '#475569'),
+    'main_table_border_color'        => array($main_table_border_color, '#475569'),
+    'main_table_header_border_color' => array($main_table_header_border_color, '#475569'),
+    'main_table_body_h_border_color' => array($main_table_body_h_border_color, '#334155'),
+    'main_table_body_v_border_color' => array($main_table_body_v_border_color, '#334155'),
+    'main_table_month_color'         => array($main_table_month_color, '#162033'),
+    'main_table_month_weekend_color' => array($main_table_month_weekend_color, '#1b293d'),
+    'main_table_month_holiday_color' => array($main_table_month_holiday_color, '#233149'),
+    'main_table_month_weekend_holiday_color' =>
+      array($main_table_month_weekend_holiday_color, '#293850'),
+    'main_table_month_invalid_color' => array($main_table_month_invalid_color, '#111827'),
+    'main_table_slot_invalid_color'  => array($main_table_slot_invalid_color, '#111827'),
+    'main_table_slot_private_type_color' =>
+      array($main_table_slot_private_type_color, '#334155'),
+    'main_table_labels_back_color'   => array($main_table_labels_back_color, '#1e3a5f'),
+    'timeline_color'                 => array($timeline_color, '#60a5fa'),
+    'report_table_border_color'      => array($report_table_border_color, '#64748b'),
+    'report_h2_border_color'         => array($report_h2_border_color, '#3b82f6'),
+    'report_h3_border_color'         => array($report_h3_border_color, '#64748b'),
+    'search_table_border_color'      => array($search_table_border_color, '#64748b'),
+    'site_faq_entry_border_color'    => array($site_faq_entry_border_color, '#475569'),
+    'anchor_link_color'              => array($anchor_link_color, '#93c5fd'),
+    'anchor_visited_color'           => array($anchor_visited_color, '#c4b5fd'),
+    'anchor_hover_color'             => array($anchor_hover_color, '#bfdbfe'),
+    'anchor_link_color_banner'       => array($anchor_link_color_banner, '#ffffff'),
+    'anchor_visited_color_banner'    => array($anchor_visited_color_banner, '#e0f2fe'),
+    'anchor_hover_color_banner'      => array($anchor_hover_color_banner, '#ffffff'),
+    'anchor_link_color_header'       => array($anchor_link_color_header, '#e2e8f0'),
+    'anchor_visited_color_header'    => array($anchor_visited_color_header, '#ddd6fe'),
+    'anchor_hover_color_header'      => array($anchor_hover_color_header, '#ffffff'),
+    'column_hidden_color'            => array($column_hidden_color, '#111827'),
+    'calendar_hidden_color'          => array($calendar_hidden_color, '#334155'),
+    'row_highlight_color'            => array($row_highlight_color, '#1d4ed8'),
+    'row_even_color'                 => array($row_even_color, '#162033'),
+    'row_odd_color'                  => array($row_odd_color, '#1b2639'),
+    'row_even_color_weekend'         => array($row_even_color_weekend, '#1b293d'),
+    'row_odd_color_weekend'          => array($row_odd_color_weekend, '#202e43'),
+    'row_even_color_holiday'         => array($row_even_color_holiday, '#233149'),
+    'row_odd_color_holiday'          => array($row_odd_color_holiday, '#28374e'),
+    'row_even_color_weekend_holiday' => array($row_even_color_weekend_holiday, '#293850'),
+    'row_odd_color_weekend_holiday'  => array($row_odd_color_weekend_holiday, '#2e3e57'),
+    'zebra_even_color'               => array($zebra_even_color, '#162033'),
+    'zebra_odd_color'                => array($zebra_odd_color, '#1b2639'),
+    'help_highlight_color'           => array($help_highlight_color, '#4c1d37'),
+    'button_color_stop_start'        => array($button_color_stops[0], '#334155'),
+    'button_color_stop_end'          => array($button_color_stops[1], '#1e293b'),
+    'button_inset_color'             => array($button_inset_color, '#0f172a'),
+    'outstanding_color'              => array($outstanding_color, '#fde68a'),
+    'pending_header_back_color'      => array($pending_header_back_color, '#1e3a5f'),
+    'series_entry_back_color'        => array($series_entry_back_color, '#3f3618'),
+    'pending_control_color'          => array($pending_control_color, '#5b4d13'),
+    'attention_color'                => array($attention_color, '#b45309'),
+    // Extra semantic colours used by the Ambience theme's static overrides.
+    'surface_elevated_color'         => array('#ffffff', '#1e293b'),
+    'surface_muted_color'            => array('#eef3f7', '#253247'),
+    'input_background_color'         => array('#ffffff', '#111827'),
+    'muted_font_color'               => array('#526578', '#94a3b8'),
+    'focus_ring_color'               => array('#0b63ce', '#60a5fa'),
+    'shadow_color'                   => array('rgba(11, 38, 59, 0.18)', 'rgba(0, 0, 0, 0.55)'),
+    'datatable_sorting_1_color'      => array($datatable_sorting_1_color, '#273753'),
+    'datatable_sorting_2_color'      => array($datatable_sorting_2_color, '#23314a'),
+    'datatable_sorting_3_color'      => array($datatable_sorting_3_color, '#1f2d43'),
+    'datatable_even_sorting_1_color' => array($datatable_even_sorting_1_color, '#223047'),
+    'datatable_even_sorting_2_color' => array($datatable_even_sorting_2_color, '#1d2a3e'),
+    'datatable_even_sorting_3_color' => array($datatable_even_sorting_3_color, '#192538')
+  );
+
+  $dark_type_colors = array(
+    'A' => '#6f6418',
+    'B' => '#17636d',
+    'C' => '#655d1e',
+    'D' => '#315d65',
+    'E' => '#0f7165',
+    'F' => '#315f65',
+    'G' => '#236b42',
+    'H' => '#625f26',
+    'I' => '#426f27',
+    'J' => '#21633a'
+  );
+
+  foreach ($color_types as $type => $color)
+  {
+    $color_scheme_colors['booking_type_' . strtolower($type)] =
+      array($color, $dark_type_colors[$type]);
+  }
+
+  // Replace the PHP variables used below with references to the custom
+  // properties.  Variables which only support the static overrides are harmless
+  // locals and are deliberately included in the same property map.
+  foreach ($color_scheme_colors as $name => $colors)
+  {
+    $$name = 'var(--mrbs-' . str_replace('_', '-', $name) . ')';
+  }
+
+  $button_color_stops = array($button_color_stop_start, $button_color_stop_end);
+  foreach ($color_types as $type => $color)
+  {
+    $variable = 'booking_type_' . strtolower($type);
+    $color_types[$type] = $$variable;
+  }
+}
+
 // IMPORTANT *************************************************************************************************
 // In order to avoid problems in locales where the decimal point is represented as a comma, it is important to
 //   (1) specify all PHP length variables as strings, eg $border_width = '1.5'; and not $border_width = 1.5;
@@ -19,6 +154,60 @@ http_headers(array("Content-type: text/css"),
 
 ?>
 
+<?php
+if (!empty($color_scheme_colors))
+{
+  ?>
+  :root {
+    color-scheme: light dark;
+  <?php
+  foreach ($color_scheme_colors as $name => $colors)
+  {
+    echo '  --mrbs-' . str_replace('_', '-', $name) . ': ' . $colors[0] . ";\n";
+  }
+  ?>
+  }
+
+  html[data-color-scheme="light"] {
+    color-scheme: light;
+  }
+
+  html[data-color-scheme="dark"] {
+    color-scheme: dark;
+  <?php
+  foreach ($color_scheme_colors as $name => $colors)
+  {
+    echo '  --mrbs-' . str_replace('_', '-', $name) . ': ' . $colors[1] . ";\n";
+  }
+  ?>
+  }
+
+  @media (prefers-color-scheme: dark) {
+    html:not([data-color-scheme]),
+    html[data-color-scheme="auto"] {
+  <?php
+  foreach ($color_scheme_colors as $name => $colors)
+  {
+    echo '    --mrbs-' . str_replace('_', '-', $name) . ': ' . $colors[1] . ";\n";
+  }
+  ?>
+    }
+  }
+
+  @media print {
+    :root {
+      color-scheme: light;
+  <?php
+  foreach ($color_scheme_colors as $name => $colors)
+  {
+    echo '    --mrbs-' . str_replace('_', '-', $name) . ': ' . $colors[0] . ";\n";
+  }
+  ?>
+    }
+  }
+  <?php
+}
+?>
 
 /* ------------ GENERAL -----------------------------*/
 
@@ -2875,6 +3064,3 @@ nav.qr {
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }
-
-
-
