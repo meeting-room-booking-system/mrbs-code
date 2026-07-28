@@ -470,10 +470,6 @@ function print_banner(?array $context, $simple=false, $omit_login=false) : void
     echo "<nav>\n";
     print_goto_date($context);
     print_search($context);
-    if (function_exists(__NAMESPACE__ . '\print_theme_header_controls'))
-    {
-      print_theme_header_controls();
-    }
     echo "</nav>\n";
 
     echo "</nav>\n";
@@ -692,3 +688,4 @@ function print_theme_header(?array $context=null, bool $simple=false, bool $omit
 
 
 } // end of print_theme_header()
+

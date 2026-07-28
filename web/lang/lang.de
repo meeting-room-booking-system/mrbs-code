@@ -18,10 +18,6 @@ $vocab["admin"]              = "Administrator";
 $vocab["help"]               = "Hilfe";
 $vocab["search"]             = "Suche";
 $vocab["outstanding"]        = "%d ausstehende Einträge";
-$vocab["color_scheme"]       = "Farbschema";
-$vocab["color_scheme_light"] = "Hell";
-$vocab["color_scheme_auto"]  = "Auto";
-$vocab["color_scheme_dark"]  = "Dunkel";
 
 // Used in index.php
 $vocab["bookingsfor"]        = "Einträge für";
@@ -670,3 +666,4 @@ $vocab["session_expired"]    = "Ihre Sitzung ist abgelaufen.";
 $vocab["browser_not_supported"] = "Leider wird Ihr Browser nicht von %s unterstützt. Sie benötigen eine " .
                                   "aktuellere Version oder einen anderen Browser.";
 $vocab["back"]               = "Zurück";
+
