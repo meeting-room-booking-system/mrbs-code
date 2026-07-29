@@ -1,6 +1,8 @@
 <?php
 namespace MRBS\Auth;
 
+use Exception;
+
 /**
  * Authentication scheme that uses an Apache "auth basic" password file for user authentication.
  *
@@ -22,15 +24,15 @@ class AuthAuthBasic extends Auth
   public function __construct()
   {
     global $auth;
-    
+
     if (!isset($auth['auth_basic']['passwd_file']))
     {
-      throw new \Exception("auth_basic: passwd file not specified");
+      throw new Exception("auth_basic: passwd file not specified");
     }
 
     if (!isset($auth['auth_basic']['mode']))
     {
-      throw new \Exception("auth_basic: mode not specified");
+      throw new Exception("auth_basic: mode not specified");
     }
   }
 
