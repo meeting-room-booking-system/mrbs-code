@@ -16,12 +16,15 @@ function get_mrbs_version() : string
 
   if (function_exists('exec') && !function_disabled('exec'))
   {
+    $git_executable = escapeshellarg($git_command);
+    $git_work_tree = escapeshellarg(MRBS_ROOT);
+
     // Suppress any errors because we are only interested in success
-    $git_out = @exec("$git_command git rev-parse --abbrev-ref HEAD", $output, $retval);
+    $git_out = @exec("$git_executable -C $git_work_tree rev-parse --abbrev-ref HEAD", $output, $retval);
 
     if (($retval == 0) && (strlen($git_out)))
     {
-      $git_out2 = @exec("$git_command git rev-parse --short HEAD", $output, $retval);
+      $git_out2 = @exec("$git_executable -C $git_work_tree rev-parse --short HEAD", $output, $retval);
 
       if (($retval == 0) && (strlen($git_out2)))
       {
