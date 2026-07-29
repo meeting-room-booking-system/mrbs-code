@@ -7,7 +7,7 @@ namespace MRBS\Auth;
  * To use this authentication scheme, set the following things in config.inc.php:
  *
  *     $auth["type"] = "auth_basic";
- *     $auth["auth_basic"]["passwd_file] = "/etc/httpd/htpasswd"; // Example
+ *     $auth["auth_basic"]["passwd_file"] = "/etc/httpd/htpasswd"; // Example
  *     $auth["auth_basic"]["mode"] = "des"; // The mode of encryption used in
  *                                          // the file. Must be one of:
  *                                          // 'des', 'sha' or 'md5'.
