@@ -19,6 +19,22 @@ namespace MRBS\Auth;
  */
 class AuthAuthBasic extends Auth
 {
+  public function __construct()
+  {
+    global $auth;
+    
+    if (!isset($auth['auth_basic']['passwd_file']))
+    {
+      throw new \Exception("auth_basic: passwd file not specified");
+    }
+
+    if (!isset($auth['auth_basic']['mode']))
+    {
+      throw new \Exception("auth_basic: mode not specified");
+    }
+  }
+
+
   public function validateUser(
     #[\SensitiveParameter]
     ?string $user,
@@ -30,18 +46,6 @@ class AuthAuthBasic extends Auth
     // Check if we do not have a username/password
     if(!isset($user) || !isset($pass))
     {
-      return false;
-    }
-
-    if (!isset($auth["auth_basic"]["passwd_file"]))
-    {
-      error_log("auth_basic: passwd file not specified");
-      return false;
-    }
-
-    if (!isset($auth["auth_basic"]["mode"]))
-    {
-      error_log("auth_basic: mode not specified");
       return false;
     }
 
