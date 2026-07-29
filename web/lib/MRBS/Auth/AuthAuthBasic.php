@@ -21,6 +21,9 @@ use Exception;
  */
 class AuthAuthBasic extends Auth
 {
+  private $passwd_file;
+  private $mode;
+
   public function __construct()
   {
     global $auth;
@@ -29,11 +32,13 @@ class AuthAuthBasic extends Auth
     {
       throw new Exception("auth_basic: passwd file not specified");
     }
+    $this->passwd_file = $auth['auth_basic']['passwd_file'];
 
     if (!isset($auth['auth_basic']['mode']))
     {
       throw new Exception("auth_basic: mode not specified");
     }
+    $this->mode = $auth['auth_basic']['mode'];
   }
 
 
@@ -43,8 +48,6 @@ class AuthAuthBasic extends Auth
     #[\SensitiveParameter]
     ?string $pass)
   {
-    global $auth;
-
     // Check if we do not have a username/password
     if(!isset($user) || !isset($pass))
     {
@@ -54,8 +57,8 @@ class AuthAuthBasic extends Auth
     require_once "File/Passwd/Authbasic.php";
 
     $f = &File_Passwd::factory('Authbasic');
-    $f->setFile($auth["auth_basic"]["passwd_file"]);
-    $f->setMode($auth["auth_basic"]["mode"]);
+    $f->setFile($this->passwd_file);
+    $f->setMode($this->mode);
     $f->load();
 
     if ($f->verifyPasswd($user, $pass) === true)
