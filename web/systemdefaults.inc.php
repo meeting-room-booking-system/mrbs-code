@@ -1210,6 +1210,9 @@ $auth["realm"]  = "mrbs";
 //$auth['remote_user']['login_link'] = '/login/link.html';
 //$auth['remote_user']['logout_link'] = '/logout/link.html';
 
+// 'auth_auth_basic' configuration settings
+$auth["auth_basic"]["passwd_file"] = "/etc/httpd/htpasswd"; // Location of the password file
+
 // 'auth_ext' configuration settings
 $auth["prog"]   = "";
 $auth["params"] = "";
