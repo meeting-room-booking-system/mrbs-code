@@ -64,6 +64,16 @@ if (!function_exists('json_validate'))  // Introduced in PHP 8.3
 }
 
 
+// Emulation of mb_check_encoding()
+if (!function_exists('mb_check_encoding'))
+{
+  function mb_check_encoding($value = null, ?string $encoding = null): bool
+  {
+    return Mbstring::mb_check_encoding($value, $encoding);
+  }
+}
+
+
 // Emulation of mb_ord()
 if (!function_exists('mb_ord'))
 {
