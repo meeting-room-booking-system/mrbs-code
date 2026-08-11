@@ -218,6 +218,54 @@ class Mbstring
 
 
   /**
+   * Emulates mb_str_split()
+   *
+   * @param string|null $encoding Only UTF-8 is supported.
+   */
+  public static function mb_str_split(string $string, int $length = 1, ?string $encoding = null): array
+  {
+    if (isset($encoding) && (strtoupper($encoding) !== 'UTF-8'))
+    {
+      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
+      throw new InvalidArgumentException($message);
+    }
+
+    $utf8_string = new Utf8String($string);
+    $array = $utf8_string->toArray();
+
+    // If we just want chunks of length 1, then it's easy: we've already got them.
+    if ($length === 1)
+    {
+      return $array;
+    }
+
+    // Otherwise we have to iterate through the array
+    $result = [];
+    $i = 0;
+    $chunk = '';
+    while (null !== ($char = array_shift($array)))
+    {
+      $chunk .= $char;
+      $i++;
+      if ($i >= $length)
+      {
+        $result[] = $chunk;
+        $i = 0;
+        $chunk = '';
+      }
+    }
+
+    // Add the last chunk if it's not empty.
+    if ($chunk !== '')
+    {
+    $result[] = $chunk;
+    }
+
+    return $result;
+  }
+
+
+  /**
    * Emulates mb_stripos().  Only UTF-8 is supported.
    *
    * @return false|int

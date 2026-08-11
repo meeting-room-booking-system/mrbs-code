@@ -99,6 +99,30 @@ if (!function_exists('mb_split'))
 }
 
 
+// Emulation of mb_str_split()
+// Only introduced in PHP 7.4, so if the PHP version is less than 7.4, don't offer it, so that the emulation of
+// mb_string functions is true to PHP.
+if (!function_exists('mb_str_split') && version_compare(PHP_VERSION, '7.4.0', '>='))
+{
+  function mb_str_split(string $string, int $length = 1, ?string $encoding = null)
+  {
+    if ($length < 1)
+    {
+      if (version_compare(PHP_VERSION, '8.0', '>='))
+      {
+        throw new ValueError('Argument #2 ($length) must be greater than 0');
+      }
+      else
+      {
+        trigger_error('mb_str_split(): The length of each segment must be greater than zero', E_USER_WARNING);
+        return false;
+      }
+    }
+    return Mbstring::mb_str_split($string, $length, $encoding);
+  }
+}
+
+
 // Emulation of mb_stripos()
 if (!function_exists('mb_stripos'))
 {

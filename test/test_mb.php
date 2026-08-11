@@ -187,6 +187,24 @@ function test(string $function, $args) : void
 }
 
 
+function test_str_split() : void
+{
+  echo "<table>\n";
+  echo thead_html(['string', 'length']);
+  echo "<tbody>\n";
+
+  $string = '會議室預約系統';
+
+  for ($length = 1; $length <= mb_strlen($string) + 1; $length++)
+  {
+    test('mb_str_split', [$string, $length]);
+  }
+
+  echo "</tbody>\n";
+  echo "</table>\n";
+}
+
+
 function test_strlen() : void
 {
   echo "<table>\n";
@@ -487,6 +505,9 @@ test_chr();
 
 echo "<h2>mb_ord()</h2>\n";
 test_ord();
+
+echo "<h2>mb_str_split()</h2>\n";
+test_str_split();
 
 echo "<h2>mb_strlen()</h2>\n";
 test_strlen();
