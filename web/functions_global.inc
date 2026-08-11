@@ -79,6 +79,11 @@ if (!function_exists('mb_regex_encoding'))
 {
   function mb_regex_encoding(?string $encoding=null)
   {
+    if (version_compare(PHP_VERSION, '8.6', '>='))
+    {
+      $message = 'Function mb_regex_encoding() is deprecated since 8.6, because the underlying library is no longer maintained';
+      trigger_error($message, E_USER_DEPRECATED);
+    }
     return Mbstring::mb_regex_encoding($encoding);
   }
 }
