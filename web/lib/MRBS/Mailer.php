@@ -2,7 +2,6 @@
 declare(strict_types=1);
 namespace MRBS;
 
-use Email\Parse;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 

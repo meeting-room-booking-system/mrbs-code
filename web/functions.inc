@@ -4,7 +4,6 @@ namespace MRBS;
 
 use DateInterval;
 use DateTimeZone;
-use Email\Parse;
 use InvalidArgumentException;
 use MRBS\Form\Field;
 use MRBS\Form\FieldSelect;

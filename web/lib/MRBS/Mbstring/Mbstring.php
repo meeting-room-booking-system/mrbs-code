@@ -87,6 +87,55 @@ class Mbstring
   ];
 
 
+  public static function mb_check_encoding($value=null, ?string $encoding=null) : bool
+  {
+    if (isset($encoding) && (strtoupper($encoding) !== 'UTF-8'))
+    {
+      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
+      throw new InvalidArgumentException($message);
+    }
+
+    if (is_null($value))
+    {
+      if (version_compare(PHP_VERSION, '8.1.0', '>'))
+      {
+        $message = "mb_check_encoding(): Calling mb_check_encoding() without argument is deprecated";
+      }
+      return true;
+    }
+
+    // If value is of type array, all keys and values are validated recursively
+    if (is_array($value))
+    {
+      foreach($value as $key => $val)
+      {
+        if (!self::mb_check_encoding($key, $encoding) || !self::mb_check_encoding($val, $encoding))
+        {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    if (!is_string($value))
+    {
+      // This seems to be the way PHP works
+      if (version_compare(PHP_VERSION, '8.0.0', '>='))
+      {
+        $message = "mb_check_encoding(): Argument #1 ($value) must be of type array|string|null, " . gettype($value) . " given";
+        throw new \TypeError($message);
+      }
+      else
+      {
+        $value = strval($value);
+      }
+    }
+
+    $utf8_string = new Utf8String($value);
+    return $utf8_string->isUtf8();
+  }
+
+
   /**
    * Emulates mb_chr().  Only UTF-8 is supported.
    *
@@ -214,6 +263,54 @@ class Mbstring
   public static function mb_split(string $pattern, string $string, int $limit = -1)
   {
     return preg_split('/' . $pattern . '/u', $string, $limit);
+  }
+
+
+  /**
+   * Emulates mb_str_split()
+   *
+   * @param string|null $encoding Only UTF-8 is supported.
+   */
+  public static function mb_str_split(string $string, int $length = 1, ?string $encoding = null): array
+  {
+    if (isset($encoding) && (strtoupper($encoding) !== 'UTF-8'))
+    {
+      $message = "This emulation of " . __FUNCTION__ . "() only supports the UTF-8 encoding.";
+      throw new InvalidArgumentException($message);
+    }
+
+    $utf8_string = new Utf8String($string);
+    $array = $utf8_string->toArray();
+
+    // If we just want chunks of length 1, then it's easy: we've already got them.
+    if ($length === 1)
+    {
+      return $array;
+    }
+
+    // Otherwise we have to iterate through the array
+    $result = [];
+    $i = 0;
+    $chunk = '';
+    while (null !== ($char = array_shift($array)))
+    {
+      $chunk .= $char;
+      $i++;
+      if ($i >= $length)
+      {
+        $result[] = $chunk;
+        $i = 0;
+        $chunk = '';
+      }
+    }
+
+    // Add the last chunk if it's not empty.
+    if ($chunk !== '')
+    {
+    $result[] = $chunk;
+    }
+
+    return $result;
   }
 
 
