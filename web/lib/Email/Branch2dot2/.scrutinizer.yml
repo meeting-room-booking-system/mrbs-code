@@ -14,11 +14,6 @@ checks:
 
 build:
     image: default-jammy
-    environment:
-        php: 8.2
-    dependencies:
-        override:
-            - composer install --no-interaction --no-scripts --ignore-platform-reqs
     nodes:
         analysis:
             tests:

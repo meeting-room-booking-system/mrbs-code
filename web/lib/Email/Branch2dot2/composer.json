@@ -1,0 +1,61 @@
+{
+  "name": "mmucklo/email-parse",
+  "type": "library",
+  "description": "email-parse a (reasonably) RFC822 / RF2822-compliant library for batch parsing multiple (and single) email addresses",
+  "license": "MIT",
+  "keywords": [
+    "email",
+    "parse",
+    "RFC822",
+    "RFC2822",
+    "email-parse",
+    "multiple-email",
+    "batch-email"
+  ],
+  "authors": [
+    {
+      "name": "Matthew J. Mucklo",
+      "email": "mmucklo@gmail.com"
+    }
+  ],
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.65",
+    "phpstan/phpstan": "^2.0",
+    "phpunit/phpunit": "^7.5|^8.0|^9.0",
+    "symfony/yaml": "^3.4|^4.0|^5.0|^6.0|^7.0"
+  },
+  "require": {
+    "php": "^7.1|^8.0",
+    "ext-mbstring": "*",
+    "psr/log": "^1.0|^2.0|^3.0",
+    "symfony/polyfill-intl-idn": "^1.10"
+  },
+  "autoload": {
+    "psr-4": {
+      "Email\\": "src/"
+    },
+    "files": [
+      "src/polyfills.php"
+    ]
+  },
+  "config": {
+    "bin-dir": "bin"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Email\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": "phpunit",
+    "test:coverage": "phpunit --coverage-html coverage",
+    "cs:check": "php-cs-fixer fix --dry-run --diff",
+    "cs:fix": "php-cs-fixer fix",
+    "stan": "phpstan analyse",
+    "ci": [
+      "@cs:check",
+      "@stan",
+      "@test"
+    ]
+  }
+}
