@@ -2,20 +2,22 @@
 
 ## Supported Versions
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+Security updates are provided for the current MRBS release line.
+Please check the latest release and upgrade notes before reporting an issue:
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+- [Latest MRBS releases](https://github.com/meeting-room-booking-system/mrbs-code/releases)
+- [Upgrade instructions](UPGRADE)
 
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
+If you believe you have found a security vulnerability in MRBS, please report it privately instead of opening a public issue.
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+When reporting a vulnerability, include as much detail as possible, such as:
+
+- The affected MRBS version or commit
+- Steps to reproduce the issue
+- Any relevant configuration details
+- The potential impact
+- Suggested fixes or mitigations, if known
+
+Please avoid disclosing the vulnerability publicly until the maintainers have had a reasonable opportunity to investigate and release a fix.
