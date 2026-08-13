@@ -177,12 +177,18 @@ class SessionPhp extends SessionWithLogin
   {
     global $cookie_path_override;
 
-    // Just unset the 'user' and 'user_refreshed' variables.  We may need to keep other variables, eg the kiosk
-    // variables.  (Unsetting the 'user_refreshed' variable is not strictly necessary, but it tidies things up.)
-    unset($_SESSION['user']);
-    unset($_SESSION['user_refreshed']);
-    $this->regenerate();
-    session_write_close();
+    // Only unset the session variable if the user is logged in, in order to avoid regenerating the session id
+    // if there's no active session.  This can only happen if the user has already been logged off, eg due
+    // to inactivity.
+    if (isset($_SESSION['user']))
+    {
+      // Just unset the 'user' and 'user_refreshed' variables.  We may need to keep other variables, eg the kiosk
+      // variables.  (Unsetting the 'user_refreshed' variable is not strictly necessary, but it tidies things up.)
+      unset($_SESSION['user']);
+      unset($_SESSION['user_refreshed']);
+      $this->regenerate();
+      session_write_close();
+    }
 
     if (ini_get("session.use_cookies") && !isset($cookie_path_override))
     {
@@ -202,6 +208,7 @@ class SessionPhp extends SessionWithLogin
         }
       }
     }
+
     parent::logoffUser($redirect_url);
   }
 }
