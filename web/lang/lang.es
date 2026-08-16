@@ -649,7 +649,7 @@ $vocab["creating_new_room"]           = "Creando nueva sala:";
 $vocab["could_not_create_area"]       = "No se pudo crear el área";
 $vocab["could_not_create_room"]       = "No se pudo crear la sala";
 $vocab["could_not_find_room"]         = "No se pudo encontrar la sala";
-$vocab["could_not_import"]            = "No se pudo importar '%1$s' (UID: %2$s)";
+$vocab["could_not_import"]            = 'No se pudo importar \'%1$s\' (UID: %2$s)';
 $vocab["no_LOCATION"]                 = "El VEVENT no incluyó la propiedad LOCATION";
 $vocab["invalid_RRULE"]               = "RRULE no válida: no incluye FREQ";
 $vocab["more_than_one_BYDAY"]         = "MRBS no admite más de un valor BYDAY cuando FREQ=";
