@@ -44,6 +44,9 @@ enum ParseErrorCode: string
     /** End of input reached without a closing ')' for a comment. */
     case UnterminatedComment = 'unterminated_comment';
 
+    /** Control character in comment content — ctext excludes controls (RFC 5322 §3.2.2). */
+    case ControlCharInComment = 'control_char_in_comment';
+
     /** End of input reached without a closing ']' for a domain-literal. */
     case UnterminatedSquareBracket = 'unterminated_square_bracket';
 
@@ -140,6 +143,10 @@ enum ParseErrorCode: string
      *  separating dot — a quoted-string is a whole word (RFC 5322 §3.2.4). */
     case AtextAfterQuotedString = 'atext_after_quoted_string';
 
+    /** atext resumes an unquoted local-part atom after a comment, splitting one atom
+     *  with CFWS (RFC 5322 §3.2.3). */
+    case AtextAfterComment = 'atext_after_comment';
+
     // --- Domain errors ---
 
     /** Empty domain after '@'. */
@@ -162,6 +169,9 @@ enum ParseErrorCode: string
 
     /** Domain invalid for an unknown reason (fallback). */
     case DomainInvalid = 'domain_invalid';
+
+    /** Trailing root-label dot present with rejectTrailingDot enabled (RFC 5321 §2.3.5). */
+    case TrailingDotNotAllowed = 'trailing_dot_not_allowed';
 
     /** Fully-qualified domain name required (RFC 5321 §2.3.5) but only one label found. */
     case FqdnRequired = 'fqdn_required';

@@ -46,6 +46,7 @@ final class ParsedEmailAddress implements \Stringable
         public readonly ?ParseErrorCode $invalidReasonCode,
         public readonly array $comments,
         public readonly ?string $obsRoute = null,
+        public readonly bool $domainIsSuspicious = false,
     ) {
     }
 
@@ -73,6 +74,7 @@ final class ParsedEmailAddress implements \Stringable
             invalidReasonCode: $arr['invalid_reason_code'],
             comments:          $arr['comments'],
             obsRoute:          $arr['obs_route'] ?? null,
+            domainIsSuspicious: $arr['domain_is_suspicious'] ?? false,
         );
     }
 
@@ -122,6 +124,7 @@ final class ParsedEmailAddress implements \Stringable
             'invalid_reason_code' => $this->invalidReasonCode,
             'comments' => $this->comments,
             'obs_route' => $this->obsRoute,
+            'domain_is_suspicious' => $this->domainIsSuspicious,
         ];
     }
 
@@ -161,9 +164,15 @@ final class ParsedEmailAddress implements \Stringable
             return '';
         }
 
-        $local = self::isAtextDotAtom($this->localPartParsed) || $this->localPartParsed === ''
-            ? $this->localPartParsed
-            : '"' . addcslashes($this->localPartParsed, '"\\') . '"';
+        // An empty local part is only valid as an empty quoted-string (`""@domain`);
+        // rendering it bare would produce `@domain`, which is invalid.
+        if ($this->localPartParsed === '') {
+            $local = '""';
+        } elseif (self::isAtextDotAtom($this->localPartParsed)) {
+            $local = $this->localPartParsed;
+        } else {
+            $local = '"' . addcslashes($this->localPartParsed, '"\\') . '"';
+        }
 
         $addrSpec = $local . '@' . $this->domainPart;
 
