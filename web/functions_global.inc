@@ -110,9 +110,9 @@ if (!function_exists('mb_split'))
 
 
 // Emulation of mb_str_split()
-// Only introduced in PHP 7.4, so if the PHP version is less than 7.4, don't offer it, so that the emulation of
-// mb_string functions is true to PHP.
-if (!function_exists('mb_str_split') && version_compare(PHP_VERSION, '7.4.0', '>='))
+// Note that it was only introduced in PHP 7.4, but we offer it anyway even if the PHP version is less than 7.4, as
+// some code may rely on it.
+if (!function_exists('mb_str_split'))
 {
   function mb_str_split(string $string, int $length = 1, ?string $encoding = null)
   {

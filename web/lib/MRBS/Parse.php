@@ -8,10 +8,7 @@ use Psr\Log\LoggerInterface;
 /**
  * A wrapper class for https://github.com/mmucklo/email-parse
  *
- * The main branch only works on PHP >= 8.1. There is a branch (2.2) which works on PHP >= 7.1, but
- * is (a) not as thorough at parsing (though probably good enough for most purposes) and (b) generates
- * deprecation errors on PHP 8.6 and above.  So we use the main branch if possible, and fall back to
- * the 2.2 branch if necessary.
+ * The main version only works on PHP >= 8.1. There is a version which works on PHP >= 7.1 and PHP < 8.1.
  */
 class Parse
 {
@@ -27,13 +24,13 @@ class Parse
     }
     else
     {
-      $this->instance = new \Email\Branch2dot2\Parse($logger);
+      $this->instance = new \Email\PHP71\Parse($logger);
     }
   }
 
 
   /**
-   * @see \Email\Branch2dot2\Parse::parse()
+   * @see \Email\PHP71\Parse::parse()
    */
   public function parse(string $emails, bool $multiple = true): array
   {

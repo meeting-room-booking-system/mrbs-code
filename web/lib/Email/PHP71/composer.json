@@ -1,16 +1,20 @@
 {
   "name": "mmucklo/email-parse",
   "type": "library",
-  "description": "email-parse a (reasonably) RFC822 / RF2822-compliant library for batch parsing multiple (and single) email addresses",
+  "description": "RFC 5322 / RFC 6531-compliant library for batch parsing multiple (and single) email addresses (PHP 7.1 build of the 3.x line)",
   "license": "MIT",
   "keywords": [
     "email",
     "parse",
+    "RFC5322",
+    "RFC6531",
     "RFC822",
     "RFC2822",
     "email-parse",
     "multiple-email",
-    "batch-email"
+    "batch-email",
+    "internationalized-email",
+    "UTF-8"
   ],
   "authors": [
     {
@@ -19,24 +23,24 @@
     }
   ],
   "require-dev": {
+    "phpunit/phpunit": "^7.5|^8.0|^9.0",
+    "symfony/yaml": "^3.4|^4.0|^5.0|^6.0|^7.0",
     "friendsofphp/php-cs-fixer": "^3.65",
     "phpstan/phpstan": "^2.0",
-    "phpunit/phpunit": "^7.5|^8.0|^9.0",
-    "symfony/yaml": "^3.4|^4.0|^5.0|^6.0|^7.0"
+    "rector/rector": "^2.3"
   },
   "require": {
-    "php": "^7.1|^8.0",
+    "php": "^7.1|~8.0.0",
     "ext-mbstring": "*",
     "psr/log": "^1.0|^2.0|^3.0",
-    "symfony/polyfill-intl-idn": "^1.10"
+    "symfony/polyfill-intl-idn": "^1.10",
+    "symfony/polyfill-mbstring": "^1.10",
+    "symfony/polyfill-php80": "^1.16"
   },
   "autoload": {
     "psr-4": {
       "Email\\": "src/"
-    },
-    "files": [
-      "src/polyfills.php"
-    ]
+    }
   },
   "config": {
     "bin-dir": "bin"
@@ -51,7 +55,8 @@
     "test:coverage": "phpunit --coverage-html coverage",
     "cs:check": "php-cs-fixer fix --dry-run --diff",
     "cs:fix": "php-cs-fixer fix",
-    "stan": "phpstan analyse",
+    "stan": "phpstan analyse --memory-limit=512M",
+    "downgrade": "rector process",
     "ci": [
       "@cs:check",
       "@stan",
