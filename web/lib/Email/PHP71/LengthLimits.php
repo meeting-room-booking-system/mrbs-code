@@ -1,6 +1,6 @@
 <?php
 
-namespace Email\PHP71; // Changed for MRBS
+namespace Email;
 
 /**
  * Email address length limits configuration.

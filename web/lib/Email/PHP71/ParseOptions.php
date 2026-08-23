@@ -1,6 +1,6 @@
 <?php
 
-namespace Email\PHP71; // Changed for MRBS
+namespace Email;
 
 class ParseOptions
 {
@@ -271,8 +271,7 @@ class ParseOptions
      */
     public static function rfc5321(): self
     {
-        return new self([], [','], true, null, [' ', '	', '
-', '
+        return new self([], [','], true, null, [' ', '	', '', '
 '], false, false, true, true, true, false, true, true, true, true, false, false, true, false);
     }
 
@@ -285,8 +284,7 @@ class ParseOptions
      */
     public static function rfc6531(): self
     {
-        return new self([], [','], true, null, [' ', '	', '
-', '
+        return new self([], [','], true, null, [' ', '	', '', '
 '], true, false, true, true, true, true, true, true, true, true, true, true, true, true, false, true);
     }
 
@@ -302,8 +300,7 @@ class ParseOptions
      */
     public static function rfc5322(): self
     {
-        return new self([], [','], true, null, [' ', '	', '
-', '
+        return new self([], [','], true, null, [' ', '	', '', '
 '], false, false, true, false, false, false, true, false, true, true, false, false, true, false, false, false, true);
     }
 
@@ -316,8 +313,7 @@ class ParseOptions
      */
     public static function rfc2822(): self
     {
-        return new self([], [','], true, null, [' ', '	', '
-', '
+        return new self([], [','], true, null, [' ', '	', '', '
 '], false, true, true, false, false, false, true, false, true, false, false, false, true, false, false, false, true);
     }
 
