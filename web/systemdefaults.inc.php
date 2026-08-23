@@ -27,6 +27,12 @@ require_once 'lib/autoload.inc';
 // information (eg database usernames and passwords).
 $debug = false;
 
+// Setting this to true will cause the opcode cache to be reset when in debug mode
+// and scripts to be reloaded and reparsed the next time they are hit.  This will
+// make compile-time errors more obvious, but can cause problems on some systems (see,
+// for example, https://github.com/meeting-room-booking-system/mrbs-code/issues/4037).
+$debug_opcache_reset = false;
+
 
 /*********
  * Logging

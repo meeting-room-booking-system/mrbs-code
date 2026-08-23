@@ -72,7 +72,7 @@ class Errors // (Don't call the class Error, to avoid confusion with the PHP cla
    */
   public static function init(): void
   {
-    global $debug;
+    global $debug, $debug_opcache_reset;
 
     // Enable/disable asertions, depending on whether we are in debug mode.
     // Note that if 'zend.assertions' is set to -1 in the php.ini file, we can't
@@ -84,9 +84,9 @@ class Errors // (Don't call the class Error, to avoid confusion with the PHP cla
       ini_set('zend.assertions', ($debug) ? '1' : '0');
     }
 
-    if ($debug && function_exists('opcache_reset'))
+    if ($debug && $debug_opcache_reset && function_exists('opcache_reset'))
     {
-      // Useful for making compile-time errors more obvious
+      // Useful for making compile-time errors more obvious.
       opcache_reset();
     }
 
