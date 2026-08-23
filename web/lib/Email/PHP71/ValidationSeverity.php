@@ -1,6 +1,6 @@
 <?php
 
-namespace Email\PHP71; // Changed for MRBS
+namespace Email;
 
 /**
  * Severity levels attached to parse failures (PHP 7.1 emulation of the 3.x

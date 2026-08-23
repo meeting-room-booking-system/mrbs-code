@@ -1,8 +1,8 @@
 <?php
 
-namespace Email\PHP71; // Changed for MRBS
+namespace Email;
 
-use Email\PHP71\ParseErrorCode as Err; // Changed for MRBS
+use Email\ParseErrorCode as Err;
 use Psr\Log\LoggerInterface;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Email\PHP71; // Changed for MRBS
+namespace Email;
 
 /**
  * PHP 7.1-compatible emulation of a backed (string) enum, for the php7.1 build
