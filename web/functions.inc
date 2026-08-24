@@ -2213,6 +2213,11 @@ function parse_email(string $email)
 }
 
 
+/**
+ * Parse a string of email addresses
+ *
+ * @return array{array{name: string, address: string}} An array of arrays keyed by 'name' and 'address'
+ */
 function parse_addresses(string $address_string) : array
 {
   $result = [];
