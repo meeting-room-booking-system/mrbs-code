@@ -842,7 +842,7 @@ $datetime_formats['week_number'] = array(
 // Sometimes if the server's ICU library is out of date and cannot easily be updated
 // it can be better to use the IntlDateFormatter emulation and strftime(), even if the
 // 'intl' extension is installed.  To do this set the variable below to true.
-$force_srtftime = false;
+$force_strftime = false;
 
 
 /***************
