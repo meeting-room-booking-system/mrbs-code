@@ -1177,6 +1177,7 @@ function get_entries_n_outstanding(User $user) : int
   // for which this user is a booking admin.
   while (false !== ($row = $res->next_row_keyed()))
   {
+    row_cast_columns($row, 'entry');
     if ((compare_usernames($row['create_by'], $user->username) === 0) || is_book_admin($row['room_id']))
     {
       $result++;
