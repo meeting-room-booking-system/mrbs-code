@@ -829,7 +829,14 @@ function get_file_details_zip(array $file) : array
 }
 
 
-function get_details($file) : array
+/**
+ * Get some details about a file.
+ *
+ * @param string|array $file The file to get details for.  If a string, it should be in the format `wrapper://filename`
+ * @return false|array{wrapper: string, files: array{name: string, tmp_name: string, size: int|null}} False if the file
+ * type is not supported, otherwise an array with the wrapper name for use with `fopen()` and an array of file details.
+ */
+function get_details($file)
 {
   $result = array();
 
