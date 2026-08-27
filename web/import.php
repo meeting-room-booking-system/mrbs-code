@@ -847,7 +847,7 @@ function get_details($file)
   }
   else
   {
-    switch ($file['type'])
+    switch ($mime_type = mime_content_type($file['tmp_name']))
     {
       case 'text/calendar':
       case 'text/html':
@@ -871,7 +871,7 @@ function get_details($file)
         break;
       default:
         $result = false;
-        trigger_error("Unknown file type '" . $file['type'] . "'", E_USER_NOTICE);
+        trigger_error("Unknown file type '$mime_type'", E_USER_NOTICE);
         break;
     }
   }
