@@ -572,6 +572,12 @@ function process_event(Event $event) : bool
     return false;
   }
 
+  // If we haven't got an ORGANIZER then use the current user
+  if (!isset($booking['create_by']))
+  {
+    $booking['create_by'] = session()->getCurrentUser()->username;
+  }
+
   // A UID is mandatory in RFC 5545.   We'll be lenient and provide one if it is missing
   if (!isset($booking['ical_uid']))
   {
