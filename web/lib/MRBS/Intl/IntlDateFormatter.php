@@ -257,7 +257,7 @@ class IntlDateFormatter
     $error_level = error_reporting();
     if (version_compare(PHP_VERSION, '8.1', '>='))
     {
-      // Temporarily suppress deprecation errors for strftime()so that we are not flooded with them.
+      // Temporarily suppress deprecation errors for strftime() so that we are not flooded with them.
       // We have a single message in init.inc.
       error_reporting($error_level & ~E_DEPRECATED);
     }
