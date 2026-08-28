@@ -74,15 +74,24 @@ Language::getInstance()->init();
 // Flush the mail queue on shutdown
 register_shutdown_function(__NAMESPACE__ . "\\MailQueue::flush");
 
-// Check extensions
-if ((version_compare(PHP_VERSION, '8.1.0') >= 0) && !extension_loaded('intl'))
+// Check whether the 'intl' extension is loaded, and if not, warn the user.
+if (!extension_loaded('intl'))
 {
-  // We suppress deprecation messages each time we use strftime() in MRBS's emulation of the IntlDateFormatter
-  // class and just have a single message here, in order to avoid flooding the log with messages.
-  $message = "MRBS has detected that you do not have the PHP 'intl' extension loaded on your server and " .
-             "so it is using the deprecated strftime() function instead.  You are recommended to enable " .
-             "the 'intl' extension.";
-  trigger_error($message, E_USER_DEPRECATED);
+  if (version_compare(PHP_VERSION, '8.1') >= 0)
+  {
+    // We suppress deprecation messages each time we use strftime() in MRBS's emulation of the IntlDateFormatter
+    // class and just have a single message here, in order to avoid flooding the log with messages.
+    $deprecated_items = "strftime() function";
+    if (version_compare(PHP_VERSION, '8.6') >= 0)
+    {
+      // Ditto for the SORT_LOCALE_STRING constant in MRBS's emulation of the Collator class.
+      $deprecated_items .= " and SORT_LOCALE_STRING constant";
+    }
+    $message = "MRBS has detected that you do not have the PHP 'intl' extension loaded on your server and " .
+      "so it is using the deprecated $deprecated_items instead.  You are recommended to enable " .
+      "the 'intl' extension.";
+    trigger_error($message, E_USER_DEPRECATED);
+  }
 }
 
 if (method_exists(session(), 'processForm'))

@@ -270,10 +270,19 @@ class Collator
     $locale_switcher = new LocaleSwitcher(LC_COLLATE, $this->locale);
     $locale_switcher->switch();
 
-    // Convert the flags to the equivalent value for the ordinary functions sort()/asort().
-    // Note that the sort()/asort() flags can be just one of SORT_REGULAR, SORT_NUMERIC, SORT_STRING, SORT_LOCALE_STRING or SORT_NATURAL.
-    // Then SORT_FLAG_CASE can be combined with SORT_STRING or SORT_NATURAL.
-    // This means that the ordinary PHP sort() functions do not support locale-aware natural or case-insensitive sorting.
+    $error_level = error_reporting();
+
+    if (version_compare(PHP_VERSION, '8.6', '>='))
+    {
+      // SORT_LOCALE_STRING was deprecated in PHP 8.6. Temporarily suppress deprecation errors so that we are not
+      // flooded with them. We have a single message in init.inc.
+      error_reporting($error_level & ~E_DEPRECATED);
+    }
+
+    // Convert the flags to the equivalent value for the ordinary functions sort()/asort(). Note that the
+    // sort()/asort() flags can be just one of SORT_REGULAR, SORT_NUMERIC, SORT_STRING, SORT_LOCALE_STRING or
+    // SORT_NATURAL. Then SORT_FLAG_CASE can be combined with SORT_STRING or SORT_NATURAL. This means that the ordinary
+    // PHP sort() functions do not support locale-aware natural or case-insensitive sorting.
     switch ($flags)
     {
       case self::SORT_STRING:
@@ -304,6 +313,8 @@ class Collator
     {
       sort($array, $ordinary_flags);
     }
+
+    error_reporting($error_level);
 
     $locale_switcher->restore();
     return true;

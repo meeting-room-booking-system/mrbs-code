@@ -570,6 +570,12 @@ function process_event(Event $event) : bool
     return false;
   }
 
+  // If we haven't got an ORGANIZER then use the current user
+  if (!isset($booking['create_by']))
+  {
+    $booking['create_by'] = session()->getCurrentUser()->username;
+  }
+
   // A UID is mandatory in RFC 5545.   We'll be lenient and provide one if it is missing
   if (!isset($booking['ical_uid']))
   {
@@ -827,7 +833,14 @@ function get_file_details_zip(array $file) : array
 }
 
 
-function get_details($file) : array
+/**
+ * Get some details about a file.
+ *
+ * @param string|array $file The file to get details for.  If a string, it should be in the format `wrapper://filename`
+ * @return false|array{wrapper: string, files: array{name: string, tmp_name: string, size: int|null}} False if the file
+ * type is not supported, otherwise an array with the wrapper name for use with `fopen()` and an array of file details.
+ */
+function get_details($file)
 {
   $result = array();
 
@@ -838,7 +851,7 @@ function get_details($file) : array
   }
   else
   {
-    switch ($file['type'])
+    switch ($mime_type = mime_content_type($file['tmp_name']))
     {
       case 'text/calendar':
       case 'text/html':
@@ -862,7 +875,7 @@ function get_details($file) : array
         break;
       default:
         $result = false;
-        trigger_error("Unknown file type '" . $file['type'] . "'", E_USER_NOTICE);
+        trigger_error("Unknown file type '$mime_type'", E_USER_NOTICE);
         break;
     }
   }
