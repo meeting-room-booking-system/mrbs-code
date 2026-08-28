@@ -2291,16 +2291,16 @@ function validate_email_list(string $list) : bool
 function parse_email(string $email)
 {
   $parser = new Parse(new Logger());
-  $parsed_address = $parser->parse($email, false);
+  $parsed_address = $parser->parseSingle($email);
 
-  if ($parsed_address['invalid'])
+  if ($parsed_address->invalid)
   {
     return false;
   }
 
   return [
-    'local' => $parsed_address['local_part_parsed'],
-    'domain' => $parsed_address['domain_part']
+    'local' => $parsed_address->localPartParsed,
+    'domain' => $parsed_address->domainPart
   ];
 }
 
@@ -2315,15 +2315,15 @@ function parse_addresses(string $address_string) : array
   $result = [];
 
   $parser = new Parse(new Logger());
-  $parsed_addresses = $parser->parse($address_string);
+  $parsed_addresses = $parser->parseMultiple($address_string);
 
-  foreach ($parsed_addresses['email_addresses'] as $parsed_address)
+  foreach ($parsed_addresses->emailAddresses as $parsed_address)
   {
-    if (!$parsed_address['invalid'])
+    if (!$parsed_address->invalid)
     {
       $result[] = [
-        'name' => $parsed_address['name_parsed'],
-        'address' => $parsed_address['local_part_parsed'] . '@' . $parsed_address['domain_part']
+        'name' => $parsed_address->nameParsed,
+        'address' => $parsed_address->localPartParsed . '@' . $parsed_address->domainPart
       ];
     }
   }

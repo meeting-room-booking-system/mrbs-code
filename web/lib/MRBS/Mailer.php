@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace MRBS;
 
 use Email\Parse;
+use Email\ParsedEmailAddress;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -89,9 +90,9 @@ class Mailer extends PHPMailer
   public function addAddressesRFC822(string $address_string) : bool
   {
     $parser = new Parse(new Logger());
-    $parsed_addresses = $parser->parse($address_string);
+    $parsed_addresses = $parser->parseMultiple($address_string);
 
-    foreach ($parsed_addresses['email_addresses'] as $parsed_address)
+    foreach ($parsed_addresses->emailAddresses as $parsed_address)
     {
       if (false === ($name_and_address = $this->getNameAndAddress($parsed_address)))
       {
@@ -116,7 +117,7 @@ class Mailer extends PHPMailer
   public function setFromRFC822(string $address, bool $auto=true) : bool
   {
     $parser = new Parse(new Logger());
-    $parsed_address = $parser->parse($address, false);
+    $parsed_address = $parser->parseSingle($address);
 
     if (false === ($name_and_address = $this->getNameAndAddress($parsed_address)))
     {
@@ -130,15 +131,14 @@ class Mailer extends PHPMailer
   /**
    * Form a name and address from the output of the address parser
    *
-   * @param array $parsed_address the output of MRBS\Email\Parse->parse()
    * @return array|false
    * @throws Exception
    */
-  private function getNameAndAddress(array $parsed_address)
+  private function getNameAndAddress(ParsedEmailAddress $parsed_address)
   {
-    if ($parsed_address['invalid'])
+    if ($parsed_address->invalid)
     {
-      $error_message = "Invalid email address '" . $parsed_address['original_address'] . "': " . $parsed_address['invalid_reason'];
+      $error_message = "Invalid email address '" . $parsed_address->originalAddress . "': " . $parsed_address->invalidReason;
       $this->setError($error_message);
       $this->edebug($error_message);
       if ($this->exceptions) {
@@ -148,8 +148,8 @@ class Mailer extends PHPMailer
     }
 
     return [
-      'name' => $parsed_address['name_parsed'],
-      'address' => $parsed_address['local_part_parsed'] . '@' . $parsed_address['domain_part']
+      'name' => $parsed_address->nameParsed,
+      'address' => $parsed_address->localPartParsed . '@' . $parsed_address->domainPart
     ];
   }
 
