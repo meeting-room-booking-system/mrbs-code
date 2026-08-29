@@ -32,12 +32,10 @@ $(document).on('page_ready', function() {
                              // that we can use them in an Ajax post; add in the datatable
                              // flag and also the CSRF token
                              ?>
-                             return {
-                               search_str: table.data('search_str'),
-                               from_date: table.data('from_date'),
-                               datatable: '1',
-                               csrf_token: getCSRFToken()
-                             };
+                             let data = Object.assign({}, table.data());
+                             data.datatable = '1';
+                             data.csrf_token = getCSRFToken();
+                             return data;
                            }}};
 
     <?php // Get the types and feed those into dataTables ?>
