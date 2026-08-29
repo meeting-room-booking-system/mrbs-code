@@ -377,7 +377,7 @@ if (!$ajax_capable || $is_ajax || $ics)
   $num_records = $result->count();
 }
 
-if (!($ajax_capable || $ics))
+if (!($ajax_capable || $is_ajax || $ics))
 {
   echo generate_search_nav_html($search_pos, $total, $num_records, $search_str);
 }

@@ -15,7 +15,7 @@ Email\Parse is a batch email address parser with configurable RFC compliance lev
 
 It parses a list of 1 to n email addresses separated by comma and whitespace by default, with configurable separators (e.g. semicolon).
 
-**Other docs:** [CHANGELOG](CHANGELOG.md) · [UPGRADE guide (v2.x → v3.0)](UPGRADE.md) · [DESIGN / RFC reference](DESIGN.md) · [ROADMAP](ROADMAP.md)
+**Other docs:** [Cookbook (recipes)](docs/cookbook.md) · [CHANGELOG](CHANGELOG.md) · [UPGRADE guide (v2.x → v3.0)](UPGRADE.md) · [DESIGN / RFC reference](DESIGN.md) · [ARCHITECTURE](ARCHITECTURE.md) · [ROADMAP](ROADMAP.md)
 
 Installation:
 -------------

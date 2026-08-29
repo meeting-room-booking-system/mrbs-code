@@ -27,16 +27,16 @@ $(document).on('page_ready', function() {
     tableOptions = {ajax: {url: 'search.php' + ((args.site) ? '?site=' + args.site : ''),
                            method: 'POST',
                            data: function() {
-                               <?php
-                               // Get the search parameters, which are all in data- attributes, so
-                               // that we can use them in an Ajax post; add in the datatable
-                               // flag and also the CSRF token
-                               ?>
-                               var data = table.data();
-                               data.datatable = '1';
-                               data.csrf_token = getCSRFToken();
-                               return data;
-                             }}};
+                             <?php
+                             // Get the search parameters, which are all in data- attributes, so
+                             // that we can use them in an Ajax post; add in the datatable
+                             // flag and also the CSRF token
+                             ?>
+                             let data = Object.assign({}, table.data());
+                             data.datatable = '1';
+                             data.csrf_token = getCSRFToken();
+                             return data;
+                           }}};
 
     <?php // Get the types and feed those into dataTables ?>
     tableOptions.columnDefs = getTypes(table);
