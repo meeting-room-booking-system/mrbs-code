@@ -19,10 +19,6 @@ use function MRBS\url_base;
 
 class AuthDb extends AuthDbAbstract
 {
-  public const PWD_INVALID = 'pwd_invalid';
-  public const PWD_NOT_MATCH = 'pwd_not_match';
-  public const PWD_NOT_UNIQUE = 'pwd_not_unique';
-
 
   public function __construct()
   {

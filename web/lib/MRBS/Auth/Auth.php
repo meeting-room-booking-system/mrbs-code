@@ -14,6 +14,10 @@ use function MRBS\session;
 
 abstract class Auth
 {
+  public const PWD_INVALID = 'pwd_invalid';
+  public const PWD_NOT_MATCH = 'pwd_not_match';
+  public const PWD_NOT_UNIQUE = 'pwd_not_unique';
+
   protected $getDisplayNamesAtOnce = true;
 
   /**
