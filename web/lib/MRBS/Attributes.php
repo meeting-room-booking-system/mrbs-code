@@ -35,7 +35,9 @@ abstract class Attributes extends TableIterator
       }
     }
 
-    asort($result, SORT_LOCALE_STRING | SORT_FLAG_CASE);
+    $collator = new \Collator(Language::getInstance()->getWebLocale());
+    $collator->setStrength(\Collator::SECONDARY);  // Case-insensitive, but accent-sensitive
+    $collator->asort($result);
 
     return $result;
   }
