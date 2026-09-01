@@ -112,6 +112,12 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
   // returned internally to PHP for processing.
   public function close(): bool
   {
+    if (false !== ($id = session_id()))
+    {
+      // Release the mutex lock
+      db()->mutex_unlock($id);
+    }
+
     return true;
   }
 
@@ -285,13 +291,6 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
   // See https://github.com/php/php-src/issues/9668
   public function validateId($id) : bool
   {
-    // Acquire a lock
-    if (!db()->mutex_lock($id))
-    {
-      trigger_error("Failed to acquire a lock", E_USER_WARNING);
-      return false;
-    }
-
     $sql = "SELECT COUNT(*)
               FROM " . self::$table . "
              WHERE id=:id
@@ -305,13 +304,6 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
   // which we are implementing in order to provide validateId().
   public function updateTimestamp($id, $data) : bool
   {
-    // Acquire a lock
-    if (!db()->mutex_lock($id))
-    {
-      trigger_error("Failed to acquire a lock", E_USER_WARNING);
-      return false;
-    }
-
     try
     {
       $sql = "UPDATE " . self::$table . "
@@ -330,9 +322,6 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
       trigger_error($e->getMessage(), E_USER_WARNING);
       $result = false;
     }
-
-    // Release the mutex lock
-    db()->mutex_unlock($id);
 
     return $result;
   }
