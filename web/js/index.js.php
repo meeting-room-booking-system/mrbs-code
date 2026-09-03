@@ -221,20 +221,23 @@ var prefetch = function() {
   var hrefs = [];
 
   $('a.prefetch').each(function() {
-      var a = $(this);
-      <?php
-      // Don't waste time prefetching data for links that aren't visible, which
-      // they won't be if we are in kiosk mode.
-      ?>
-      if (a.is(':visible'))
+    const a = $(this);
+    <?php
+    // Don't waste time prefetching data for links that aren't visible, which
+    // they won't be if we are in kiosk mode.
+    // TODO: Review the use of :visible.  This doesn't mean visible on the screen
+    // TODO: which is probably what we want.
+    ?>
+    if (a.is(':visible'))
+    {
+      const href = a.attr('href');
+      <?php // Don't include hrefs twice. ?>
+      if ((typeof href !== 'undefined') && !hrefs.includes(href))
       {
-        var href = a.attr('href');
-        if (typeof href !== 'undefined')
-        {
-          hrefs.push(href);
-        }
+        hrefs.push(href);
       }
-    });
+    }
+  });
 
   <?php // Clear any existing pre-fetched data and any timeout ?>
   updateBody.prefetched = {};
