@@ -7,6 +7,7 @@ use Defuse\Crypto\Key;
 use MRBS\DB\DBException;
 use PDOException;
 use SessionHandlerInterface;
+use SessionIdInterface;
 use SessionUpdateTimestampHandlerInterface;
 use function MRBS\_tbl;
 use function MRBS\db;
@@ -33,7 +34,7 @@ else
 // The class also encrypts the session data, using a random key which is stored in a cookie (based on
 // https://github.com/ezimuel/PHP-Secure-Session).
 
-class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestampHandlerInterface
+class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestampHandlerInterface, SessionIdInterface
 {
 
   /**
@@ -260,6 +261,19 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
     $sql = "DELETE FROM " . self::$table . " WHERE access<:old";
     db()->command($sql, array(':old' => time() - $max_lifetime));
     return true;  // An exception will be thrown on error
+  }
+
+
+  /**
+   * @see https://www.php.net/manual/en/sessionidinterface.create-sid.php
+   */
+  public function create_sid(): string
+  {
+    // This method will be required in PHP 9.0 and is deprecated in PHP 8.6. We don't need
+    // to do anything special though; just call the standard PHP function session_create_id().
+    $id = session_create_id();
+    // If this session id is already in use, try another one.
+    return ($this->validateId($id)) ? $this->create_sid() : $id;
   }
 
 
