@@ -295,9 +295,23 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
   {
     // This method will be required in PHP 9.0 and is deprecated in PHP 8.6. We don't need
     // to do anything special though; just call the standard PHP function session_create_id().
-    $id = session_create_id();
-    // If this session id is already in use, try another one.
-    return ($this->validateId($id)) ? $this->create_sid() : $id;
+    $attempts = 0;
+    $max_attempts = 5;
+    while ($attempts < $max_attempts)
+    {
+      $id = session_create_id();
+      // If this session id is not already in use (ie not valid) then return it.
+      if (!$this->validateId($id))
+      {
+        return $id;
+      }
+      // Otherwise keep on trying.
+      $attempts++;
+    }
+
+    // It's extremely unlikely that even two attempts will be necessary, but, just in case, we guard
+    // against a possible infinite loop.
+    throw new \Exception("Could not create a unique session id after $max_attempts attempts.");
   }
 
 
