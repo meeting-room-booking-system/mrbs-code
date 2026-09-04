@@ -142,30 +142,14 @@ class SessionHandlerDb extends SessionHandlerAbstract
   }
 
 
-  // The return value (usually TRUE on success, FALSE on failure). Note this value is
-  // returned internally to PHP for processing.
-  public function close(): bool
-  {
-    if (false !== ($id = session_id()))
-    {
-      // Release the mutex lock
-      db()->mutex_unlock($id);
-    }
-
-    return true;
-  }
-
-
-  // Returns an encoded string of the read data. If nothing was read, it must
-  // return an empty string. Note this value is returned internally to PHP for
-  // processing.  Note that the data is base64_encoded in the database (otherwise
-  // there were problems with PostgreSQL in storing some objects - needs further
-  // investigation).
-  // TODO  Objects with private or protected properties contain NULL bytes when encoded
-  // TODO  by PHP and can't be written to a PostgreSQL text data type.  The column needs
-  // TODO  to be converted to bytea.
   public function read($id)
   {
+    // Note that the data is base64_encoded in the database (otherwise there were problems
+    // with PostgreSQL in storing some objects - needs further investigation).
+    // TODO  Objects with private or protected properties contain NULL bytes when encoded
+    // TODO  by PHP and can't be written to a PostgreSQL text data type.  The column needs
+    // TODO  to be converted to bytea.
+
     // Acquire mutex to lock the session id.  When using the default file session handler
     // locks are obtained using flock().  We need to do something similar in order to prevent
     // problems with multiple Ajax requests writing to the S_SESSION variable while
@@ -244,11 +228,9 @@ class SessionHandlerDb extends SessionHandlerAbstract
   }
 
 
-  // The return value (usually TRUE on success, FALSE on failure). Note this value is
-  // returned internally to PHP for processing.  Note that the data is base64_encoded
-  // in the database (see read() above).
   public function write($id, $data): bool
   {
+    // Note that the data is base64_encoded in the database (see read() above).
     try {
       $data = Crypto::encrypt($data, $this->key);
     }
