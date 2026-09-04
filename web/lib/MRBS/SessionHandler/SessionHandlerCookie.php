@@ -3,8 +3,6 @@ declare(strict_types=1);
 namespace MRBS\SessionHandler;
 
 use MRBS\Errors\Errors;
-use SessionHandlerInterface;
-use SessionUpdateTimestampHandlerInterface;
 use function MRBS\_tbl;
 use function MRBS\db;
 
@@ -32,7 +30,7 @@ else
  * session data could be too large for a cookie.  The cookie-based session handler is therefore not really
  * recommended.
  */
-class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTimestampHandlerInterface
+class SessionHandlerCookie extends SessionHandlerAbstract
 {
   private const DEFAULT_HASH_ALGO = 'sha512';
 
@@ -63,21 +61,6 @@ class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTime
   }
 
 
-  /**
-   * @return bool The return value (usually TRUE on success, FALSE on failure). Note this value is
-   * returned internally to PHP for processing.
-   */
-  public function open($path, $name): bool
-  {
-    // Nothing to do here
-    return true;
-  }
-
-
-  /**
-   * @return bool The return value (usually TRUE on success, FALSE on failure). Note this value is
-   * returned internally to PHP for processing.
-   */
   public function close(): bool
   {
     // Nothing to do here
@@ -85,10 +68,26 @@ class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTime
   }
 
 
-  /**
-   * @return string Returns an encoded string of the read data. If nothing was read, it must
-   * return an empty string. Note this value is returned internally to PHP for processing.
-   */
+  public function destroy($id): bool
+  {
+    return Cookie::delete($id);
+  }
+
+
+  public function gc($max_lifetime)
+  {
+    // Garbage collection is not required
+    return true;
+  }
+
+
+  public function open($path, $name): bool
+  {
+    // Nothing to do here
+    return true;
+  }
+
+
   public function read($id)
   {
     if (!$this->validateId($id))
@@ -136,10 +135,6 @@ class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTime
   }
 
 
-  /**
-   * @return bool The return value (usually TRUE on success, FALSE on failure). Note this value is
-   * returned internally to PHP for processing.
-   */
   public function write($id, $data): bool
   {
     // Decode the data so that we can set the expiry time and IP address and then encode it again.
@@ -165,24 +160,9 @@ class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTime
   }
 
 
-  /**
-   * @return bool The return value (usually TRUE on success, FALSE on failure). Note this value is
-   * returned internally to PHP for processing.
-   */
-  public function destroy($id): bool
+  public function updateTimestamp($id, $data) : bool
   {
-    return Cookie::delete($id);
-  }
-
-
-  /**
-   * @return bool The return value (usually TRUE on success, FALSE on failure). Note this value is
-   * returned internally to PHP for processing.
-   */
-  public function gc($max_lifetime)
-  {
-    // Garbage collection is not required
-    return true;
+    return $this->write($id, $data);
   }
 
 
@@ -191,14 +171,6 @@ class SessionHandlerCookie implements SessionHandlerInterface, SessionUpdateTime
     // Need to provide this method to circumvent a bug in some versions of PHP.
     // See https://github.com/php/php-src/issues/9668
     return isset($_COOKIE[$id]);
-  }
-
-
-  public function updateTimestamp($id, $data) : bool
-  {
-    // We only need to provide this method because it's part of SessionUpdateTimestampHandlerInterface
-    // which we are implementing in order to provide validateId().
-    return $this->write($id, $data);
   }
 
 

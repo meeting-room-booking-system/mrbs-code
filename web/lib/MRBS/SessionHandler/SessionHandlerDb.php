@@ -7,9 +7,6 @@ use Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException;
 use Defuse\Crypto\Key;
 use MRBS\DB\DBException;
 use PDOException;
-use SessionHandlerInterface;
-use SessionIdInterface;
-use SessionUpdateTimestampHandlerInterface;
 use function MRBS\_tbl;
 use function MRBS\db;
 
@@ -27,16 +24,17 @@ else
   trigger_error("This code can now be removed", E_USER_NOTICE);
 }
 
-// Use our own PHP session handling by storing sessions in the database.   This has three advantages:
-//    (a) it's more secure, especially on shared servers
-//    (b) it avoids problems with ordinary sessions not working because the PHP session save
-//        directory is not writable
-//    (c) it's more resilient in clustered environments
-//
-// The class also encrypts the session data, using a random key which is stored in a cookie (based on
-// https://github.com/ezimuel/PHP-Secure-Session).
-
-class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestampHandlerInterface, SessionIdInterface
+/**
+ * A custom PHP session handler that stores sessions in the database.  This has three advantages:
+ *
+ * 1. It's more secure, especially on shared servers;
+ * 2. It avoids problems with ordinary sessions not working because the PHP session save directory is not writable;
+ * 3. It's more resilient in clustered environments.
+ *
+ * The class also encrypts the session data, using a random key which is stored in a cookie (based on
+ * https://github.com/ezimuel/PHP-Secure-Session).
+ */
+class SessionHandlerDb extends SessionHandlerAbstract
 {
 
   /**
@@ -80,8 +78,42 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
     }
   }
 
-  // The return value (usually TRUE on success, FALSE on failure). Note this value is
-  // returned internally to PHP for processing.
+
+  public function close(): bool
+  {
+    if (false !== ($id = session_id()))
+    {
+      // Release the mutex lock
+      db()->mutex_unlock($id);
+    }
+
+    return true;
+  }
+
+
+  public function destroy($id): bool
+  {
+    try
+    {
+      $sql = "DELETE FROM " . self::$table . " WHERE id=:id";
+      db()->command($sql, array(':id' => $id));
+      return true;
+    }
+    catch (\Exception $e)
+    {
+      return false;
+    }
+  }
+
+
+  public function gc($max_lifetime)
+  {
+    $sql = "DELETE FROM " . self::$table . " WHERE access<:old";
+    db()->command($sql, array(':old' => time() - $max_lifetime));
+    return true;  // An exception will be thrown on error
+  }
+
+
   public function open($path, $name): bool
   {
     try {
@@ -109,23 +141,6 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
   }
 
 
-  // The return value (usually TRUE on success, FALSE on failure). Note this value is
-  // returned internally to PHP for processing.
-  public function close(): bool
-  {
-    if (false !== ($id = session_id()))
-    {
-      // Release the mutex lock
-      db()->mutex_unlock($id);
-    }
-
-    return true;
-  }
-
-
-  // Returns an encoded string of the read data. If nothing was read, it must
-  // return an empty string. Note this value is returned internally to PHP for
-  // processing.
   public function read($id)
   {
     global $dbsys;
@@ -223,8 +238,6 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
   }
 
 
-  // The return value (usually TRUE on success, FALSE on failure). Note this value is
-  // returned internally to PHP for processing.
   public function write($id, $data): bool
   {
     global $dbsys;
@@ -261,57 +274,28 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
   }
 
 
-  // The return value (usually TRUE on success, FALSE on failure). Note this value is
-  // returned internally to PHP for processing.
-  public function destroy($id): bool
+  public function updateTimestamp($id, $data) : bool
   {
     try
     {
-      $sql = "DELETE FROM " . self::$table . " WHERE id=:id";
-      db()->command($sql, array(':id' => $id));
-      return true;
+      $sql = "UPDATE " . self::$table . "
+                 SET access=:access
+               WHERE id=:id";
+
+      $sql_params = array(
+        ':id' => $id,
+        ':access' => time()
+      );
+
+      $result = (1 === db()->command($sql, $sql_params));
     }
-    catch (\Exception $e)
+    catch(PDOException $e)
     {
-      return false;
-    }
-  }
-
-
-  // The return value (usually TRUE on success, FALSE on failure). Note this value is
-  // returned internally to PHP for processing.
-  public function gc($max_lifetime)
-  {
-    $sql = "DELETE FROM " . self::$table . " WHERE access<:old";
-    db()->command($sql, array(':old' => time() - $max_lifetime));
-    return true;  // An exception will be thrown on error
-  }
-
-
-  /**
-   * @see https://www.php.net/manual/en/sessionidinterface.create-sid.php
-   */
-  public function create_sid(): string
-  {
-    // This method will be required in PHP 9.0 and is deprecated in PHP 8.6. We don't need
-    // to do anything special though; just call the standard PHP function session_create_id().
-    $attempts = 0;
-    $max_attempts = 5;
-    while ($attempts < $max_attempts)
-    {
-      $id = session_create_id();
-      // If this session id is not already in use (ie not valid) then return it.
-      if (!$this->validateId($id))
-      {
-        return $id;
-      }
-      // Otherwise keep on trying.
-      $attempts++;
+      trigger_error($e->getMessage(), E_USER_WARNING);
+      $result = false;
     }
 
-    // It's extremely unlikely that even two attempts will be necessary, but, just in case, we guard
-    // against a possible infinite loop.
-    throw new \Exception("Could not create a unique session id after $max_attempts attempts.");
+    return $result;
   }
 
 
@@ -328,34 +312,9 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
   }
 
 
-  // We only need to provide this method because it's part of SessionUpdateTimestampHandlerInterface
-  // which we are implementing in order to provide validateId().
-  public function updateTimestamp($id, $data) : bool
-  {
-    try
-    {
-      $sql = "UPDATE " . self::$table . "
-                 SET access=:access
-               WHERE id=:id";
-
-      $sql_params = array(
-          ':id' => $id,
-          ':access' => time()
-        );
-
-      $result = (1 === db()->command($sql, $sql_params));
-    }
-    catch(PDOException $e)
-    {
-      trigger_error($e->getMessage(), E_USER_WARNING);
-      $result = false;
-    }
-
-    return $result;
-  }
-
-
-  // Delete the key cookie, but only if the expiry is not zero.
+  /**
+   * Delete the key cookie, but only if the expiry is not zero.
+   */
   public static function deleteKeyCookie() : void
   {
     if (false === ($name = session_name()))
