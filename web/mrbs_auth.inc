@@ -209,19 +209,32 @@ function checkAuthorised($page, $just_check=false)
 
   if ($just_check)
   {
-    if ($required_level == 0)
-    {
-      return true;
+    if ($required_level == 0) {
+      $result = true;
     }
-
-    $mrbs_user = session()->getCurrentUser();
-    return (isset($mrbs_user) && ($mrbs_user->level >= $required_level));
+    else
+    {
+      $mrbs_user = session()->getCurrentUser();
+      $result = (isset($mrbs_user) && ($mrbs_user->level >= $required_level));
+    }
   }
 
   // Check that the user has this level
-  if (getAuthorised($required_level, $returl))
+  elseif (getAuthorised($required_level, $returl))
   {
-    return true;
+    $result = true;
+  }
+
+  // We don't need to change the session data after this point, so close the session so
+  // that the lock is released.  We will still be able to read the session data.
+  if (session_status() === PHP_SESSION_ACTIVE)
+  {
+    session_write_close();
+  }
+
+  if (isset($result))
+  {
+    return $result;
   }
 
   // If we don't know the right date then use today's
