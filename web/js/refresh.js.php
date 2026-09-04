@@ -15,8 +15,6 @@ http_headers(array("Content-type: application/x-javascript"),
 
 var refreshListenerAdded = false;
 
-var intervalId;
-
 <?php
 // If the table container is scrollable, then scroll so that the current time is visible.
 ?>
@@ -68,6 +66,12 @@ var sizeColumns = function() {
 
 
 var refreshPage = function refreshPage() {
+
+    if (refreshPage.inProgress)
+    {
+      return;
+    }
+
     var table = $('table.dwm_main');
     <?php
     // Allow refreshing if we're on a metered connection and in kiosk
@@ -119,17 +123,17 @@ var refreshPage = function refreshPage() {
         url += '?kiosk=' + args.kiosk;
       }
 
+      refreshPage.inProgress = true;
       return $.post(
            url,
            data,
            function(result){
                <?php
-               // (1) Empty the existing table in order to get rid of events
-               // and data and prevent memory leaks, (2) insert the updated
-               // table HTML, (3) clear the existing interval timer and then
-               // (4) trigger a load event so that the resizable bookings are
-               // re-created and a new timer started.
+               // (1) Empty the existing table in order to get rid of events and data and prevent
+               // memory leaks; (2) insert the updated table HTML; and then (3) trigger a tableload
+               // event so that the resizable bookings are re-created and a new timeout started.
                ?>
+               refreshPage.inProgress = false;
                if (result && !isHidden() && !refreshPage.disabled)
                {
                  var table = $('table.dwm_main');
@@ -138,8 +142,6 @@ var refreshPage = function refreshPage() {
                    var dateHeading = $('.date_heading');
                    dateHeading.empty().html(result.date_heading);
                    table.empty().html(result.inner_html);
-                   window.clearInterval(intervalId);
-                   intervalId = undefined;
                    table.trigger('tableload');
                  }
                }
@@ -157,26 +159,12 @@ var refreshVisChanged = function refreshVisChanged() {
 
     if (pageHidden !== null)
     {
-       <?php
-      // Stop the interval timer.  If the page is now visible then refresh
-      // the page, which will also start a new timer.   We clear the interval
-      // and refresh the page rather than just disabling/enabling the page
-      // refresh because we want the latest data to be displayed immediately the
-      // page becomes visible again.  (It might have been hidden for a while
-      // with lots of changes in the meantime).
-      ?>
-      if (typeof intervalId !== 'undefined')
-      {
-        window.clearInterval(intervalId);
-        intervalId = undefined;
-      }
       <?php
-      // If the page is now visible then refresh the page and, once that has been
-      // done, refresh the prefetched pages.  Don't initiate the prefetch refresh
-      // until after the main refresh is complete because simultaneous Ajax requests
-      // will cause problems if the inactivity timeout has been exceeded and the
-      // user is logged off as a result: the server code will try and log the user
-      // off each time resulting in session_destroy() throwing an error.
+      // If the page is now visible then refresh the page to get the latest data and, once that has been
+      // done, refresh the prefetched pages.  Don't initiate the prefetch refresh until after the main
+      // refresh is complete because simultaneous Ajax requests will cause problems if the inactivity
+      // timeout has been exceeded and the user is logged off as a result: the server code will try and
+      // log the user off each time resulting in session_destroy() throwing an error.
       ?>
       if (!pageHidden)
       {
@@ -530,14 +518,11 @@ $(document).on('page_ready', function() {
 
       if (refreshRate !== 0)
       {
-
         <?php
-        // Set an interval timer to refresh the page, unless there's already one in place
+        // Set a timeout to refresh the page.  When the refresh completes another tableload,
+        // and hence another timeout, will be triggered.
         ?>
-        if (typeof intervalId === 'undefined')
-        {
-          intervalId = setInterval(refreshPage, refreshRate * 1000);
-        }
+        setTimeout(refreshPage, refreshRate * 1000);
       }
 
       <?php
