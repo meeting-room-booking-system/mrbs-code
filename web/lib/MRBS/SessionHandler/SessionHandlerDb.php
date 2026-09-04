@@ -142,6 +142,9 @@ class SessionHandlerDb extends SessionHandlerAbstract
   }
 
 
+  // TODO: Note that this method actually returns an empty string if nothing was read, rather than false.
+  // TODO: More work is needed to determine when sn empty string should be returned and when FALSE.
+  // TODO: See https://stackoverflow.com/questions/68025570/return-value-of-sessionhandlerinterface-methods-in-php
   public function read($id)
   {
     // Note that the data is base64_encoded in the database (otherwise there were problems
