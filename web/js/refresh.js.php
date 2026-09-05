@@ -125,28 +125,26 @@ var refreshPage = function refreshPage() {
 
   refreshPage.inProgress = true;
   return $.post(
-       url,
-       data,
-       function(result){
-           <?php
-           // (1) Empty the existing table in order to get rid of events and data and prevent
-           // memory leaks; (2) insert the updated table HTML; and then (3) trigger a tableload
-           // event so that the resizable bookings are re-created and a new timeout started.
-           ?>
-           refreshPage.inProgress = false;
-           if (result && !isHidden() && !refreshPage.disabled)
-           {
-             if (!table.hasClass('resizing') && table.hasClass('refreshable'))
-             {
-               var dateHeading = $('.date_heading');
-               dateHeading.empty().html(result.date_heading);
-               table.empty().html(result.inner_html);
-               table.trigger('tableload');
-             }
-           }
-         },
-       'json'
-    );
+     url,
+     data,
+     function(result){
+       <?php
+       // (1) Empty the existing table in order to get rid of events and data and prevent
+       // memory leaks; (2) insert the updated table HTML; and then (3) trigger a tableload
+       // event so that the resizable bookings are re-created and a new timeout started.
+       ?>
+       refreshPage.inProgress = false;
+       if (result && !isHidden() && !refreshPage.disabled)
+       {
+         if (!table.hasClass('resizing') && table.hasClass('refreshable'))
+         {
+           $('.date_heading').empty().html(result.date_heading);
+           table.empty().html(result.inner_html).trigger('tableload');
+         }
+       }
+     },
+     'json'
+  );
 };
 
 
