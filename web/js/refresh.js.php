@@ -19,17 +19,16 @@ var refreshListenerAdded = false;
 // If the table container is scrollable, then scroll so that the current time is visible.
 ?>
 function scrollToCurrentSlot() {
-  var table = $('.dwm_main');
-  var timelineVertical = table.find('thead').data('timeline-vertical');
-  var container = table.parent();
-  var scrollTo, scrollable;
-
-  scrollable = (timelineVertical) ? container.isHScrollable() : container.isVScrollable();
+  const table = $('.dwm_main');
+  const timelineVertical = table.find('thead').data('timeline-vertical');
+  const container = table.parent();
+  const scrollable = (timelineVertical) ? container.isHScrollable() : container.isVScrollable();
 
   if (scrollable)
   {
-    var slots = table.find('thead').data('slots');
-    var nowSlotIndices = Timeline.search(slots);
+    let scrollTo;
+    const slots = table.find('thead').data('slots');
+    const nowSlotIndices = Timeline.search(slots);
     if (nowSlotIndices.length > 1)
     {
       <?php // Show the row/column just before the current slot ?>
@@ -39,13 +38,13 @@ function scrollToCurrentSlot() {
     {
       if (timelineVertical)
       {
-        var cols = table.find('thead th:not(.first_last)');
+        const cols = table.find('thead th:not(.first_last)');
         scrollTo = cols.eq(index).offset().left - cols.eq(0).offset().left;
         container.scrollLeft(scrollTo);
       }
       else
       {
-        var rows = table.find('tbody tr');
+        const rows = table.find('tbody tr');
         scrollTo = rows.eq(index).offset().top - rows.eq(0).offset().top;
         container.scrollTop(scrollTo);
       }
