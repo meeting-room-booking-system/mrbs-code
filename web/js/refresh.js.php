@@ -27,12 +27,13 @@ function scrollToCurrentSlot() {
   if (scrollable)
   {
     let scrollTo;
+    let index = 0;
     const slots = table.find('thead').data('slots');
     const nowSlotIndices = Timeline.search(slots);
     if (nowSlotIndices.length > 1)
     {
       <?php // Show the row/column just before the current slot ?>
-      var index = Math.max(0, nowSlotIndices[0] - 1);
+      index = Math.max(0, nowSlotIndices[0] - 1);
     }
     if (index > 0) <?php // No point in scrolling to where we already are ?>
     {
