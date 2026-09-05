@@ -136,7 +136,6 @@ var refreshPage = function refreshPage() {
            refreshPage.inProgress = false;
            if (result && !isHidden() && !refreshPage.disabled)
            {
-             var table = $('table.dwm_main');
              if (!table.hasClass('resizing') && table.hasClass('refreshable'))
              {
                var dateHeading = $('.date_heading');
