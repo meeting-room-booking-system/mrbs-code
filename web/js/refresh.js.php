@@ -67,91 +67,88 @@ var sizeColumns = function() {
 
 var refreshPage = function refreshPage() {
 
-    if (refreshPage.inProgress)
+  const table = $('table.dwm_main');
+
+  <?php
+    // Some reasons we may not want to refresh.  Note that we allow refreshing if we're on a
+    // metered connection and in kiosk mode, because kiosk mode relies on regular refreshing.
+    ?>
+    if (refreshPage.inProgress ||
+        isHidden() ||
+        table.hasClass('resizing') ||
+        (!args.kiosk && isMeteredConnection()) ||
+        refreshPage.disabled)
     {
       return;
     }
 
-    var table = $('table.dwm_main');
-    <?php
-    // Allow refreshing if we're on a metered connection and in kiosk
-    // mode, because kiosk mode relies on regular refreshing.
-    ?>
-    if (!isHidden() &&
-        !table.hasClass('resizing') &&
-        (args.kiosk || !isMeteredConnection()) &&
-        !refreshPage.disabled)
+    var url = 'index.php';
+
+    var data = {
+      refresh: 1,
+      view: args.view,
+      view_all: args.view_all,
+      page_date: args.pageDate,
+      area: args.area,
+      room: args.room
+    };
+
+    if (args.timetohighlight !== undefined)
     {
-      var url = 'index.php';
+      data.timetohighlight = args.timetohighlight;
+    }
 
-      var data = {
-        refresh: 1,
-        view: args.view,
-        view_all: args.view_all,
-        page_date: args.pageDate,
-        area: args.area,
-        room: args.room
-      };
+    <?php
+    // Add a class of 'refreshable' to the table so that we know when the response comes
+    // back whether we can use it to refresh the table.   The problem is that it is
+    // possible - especially on slow connections - that in between the Ajax request being
+    // made and the response being returned, the user could have moved to a different day,
+    // which is just done by replacing the page body element.  In that case the refresh would
+    // come back and refresh the table with the wrong day's data.  By adding the 'refreshable'
+    // class to the table we ensure that this can't happen, because if the user moves to a
+    // different day the new HTML won't have the class.
+    ?>
+    table.addClass('refreshable');
 
-      if (args.timetohighlight !== undefined)
-      {
-        data.timetohighlight = args.timetohighlight;
-      }
+    if(args.site)
+    {
+      data.site = args.site;
+    }
 
-      <?php
-      // Add a class of 'refreshable' to the table so that we know when the response comes
-      // back whether we can use it to refresh the table.   The problem is that it is
-      // possible - especially on slow connections - that in between the Ajax request being
-      // made and the response being returned, the user could have moved to a different day,
-      // which is just done by replacing the page body element.  In that case the refresh would
-      // come back and refresh the table with the wrong day's data.  By adding the 'refreshable'
-      // class to the table we ensure that this can't happen, because if the user moves to a
-      // different day the new HTML won't have the class.
-      ?>
-      table.addClass('refreshable');
+    // If we're in kiosk mode add the kiosk parameter in the query string rather than as a POST
+    // parameter to avoid an unnecessary redirection by the server (the server checks for a kiosk
+    // in the query string and, if not found, will redirect to the kiosk URL).
+    if (args.kiosk !== undefined)
+    {
+      url += '?kiosk=' + args.kiosk;
+    }
 
-      if(args.site)
-      {
-        data.site = args.site;
-      }
-
-      // If we're in kiosk mode add the kiosk parameter in the query string rather than as a POST
-      // parameter to avoid an unnecessary redirection by the server (the server checks for a kiosk
-      // in the query string and, if not found, will redirect to the kiosk URL).
-      if (args.kiosk !== undefined)
-      {
-        url += '?kiosk=' + args.kiosk;
-      }
-
-      refreshPage.inProgress = true;
-      return $.post(
-           url,
-           data,
-           function(result){
-               <?php
-               // (1) Empty the existing table in order to get rid of events and data and prevent
-               // memory leaks; (2) insert the updated table HTML; and then (3) trigger a tableload
-               // event so that the resizable bookings are re-created and a new timeout started.
-               ?>
-               refreshPage.inProgress = false;
-               if (result && !isHidden() && !refreshPage.disabled)
+    refreshPage.inProgress = true;
+    return $.post(
+         url,
+         data,
+         function(result){
+             <?php
+             // (1) Empty the existing table in order to get rid of events and data and prevent
+             // memory leaks; (2) insert the updated table HTML; and then (3) trigger a tableload
+             // event so that the resizable bookings are re-created and a new timeout started.
+             ?>
+             refreshPage.inProgress = false;
+             if (result && !isHidden() && !refreshPage.disabled)
+             {
+               var table = $('table.dwm_main');
+               if (!table.hasClass('resizing') && table.hasClass('refreshable'))
                {
-                 var table = $('table.dwm_main');
-                 if (!table.hasClass('resizing') && table.hasClass('refreshable'))
-                 {
-                   var dateHeading = $('.date_heading');
-                   dateHeading.empty().html(result.date_heading);
-                   table.empty().html(result.inner_html);
-                   table.trigger('tableload');
-                 }
+                 var dateHeading = $('.date_heading');
+                 dateHeading.empty().html(result.date_heading);
+                 table.empty().html(result.inner_html);
+                 table.trigger('tableload');
                }
-             },
-           'json'
-        );
-    }  <?php // if (!isHidden() etc.?>
+             }
+           },
+         'json'
+      );
   };
-
-
 
 
 var refreshVisChanged = function refreshVisChanged() {
