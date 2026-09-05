@@ -19,33 +19,33 @@ var refreshListenerAdded = false;
 // If the table container is scrollable, then scroll so that the current time is visible.
 ?>
 function scrollToCurrentSlot() {
-  var table = $('.dwm_main');
-  var timelineVertical = table.find('thead').data('timeline-vertical');
-  var container = table.parent();
-  var scrollTo, scrollable;
-
-  scrollable = (timelineVertical) ? container.isHScrollable() : container.isVScrollable();
+  const table = $('.dwm_main');
+  const timelineVertical = table.find('thead').data('timeline-vertical');
+  const container = table.parent();
+  const scrollable = (timelineVertical) ? container.isHScrollable() : container.isVScrollable();
 
   if (scrollable)
   {
-    var slots = table.find('thead').data('slots');
-    var nowSlotIndices = Timeline.search(slots);
+    let scrollTo;
+    let index = 0;
+    const slots = table.find('thead').data('slots');
+    const nowSlotIndices = Timeline.search(slots);
     if (nowSlotIndices.length > 1)
     {
       <?php // Show the row/column just before the current slot ?>
-      var index = Math.max(0, nowSlotIndices[0] - 1);
+      index = Math.max(0, nowSlotIndices[0] - 1);
     }
     if (index > 0) <?php // No point in scrolling to where we already are ?>
     {
       if (timelineVertical)
       {
-        var cols = table.find('thead th:not(.first_last)');
+        const cols = table.find('thead th:not(.first_last)');
         scrollTo = cols.eq(index).offset().left - cols.eq(0).offset().left;
         container.scrollLeft(scrollTo);
       }
       else
       {
-        var rows = table.find('tbody tr');
+        const rows = table.find('tbody tr');
         scrollTo = rows.eq(index).offset().top - rows.eq(0).offset().top;
         container.scrollTop(scrollTo);
       }
@@ -59,13 +59,13 @@ function scrollToCurrentSlot() {
 // "default-src 'self'" or "script-src 'self'".  And we can't use a CSS file because we don't
 // know how many columns there are.  So we have to use JavaScript.
 ?>
-var sizeColumns = function() {
-    var mainCols = $('.dwm_main thead tr:first-child th:visible').not('th.first_last, th.hidden_day');
-    mainCols.css('width', 100/mainCols.length + '%');
-  };
+const sizeColumns = function () {
+  const mainCols = $('.dwm_main thead tr:first-child th:visible').not('th.first_last, th.hidden_day');
+  mainCols.css('width', 100 / mainCols.length + '%');
+};
 
 
-var refreshPage = function refreshPage() {
+const refreshPage = function refreshPage() {
 
   const table = $('table.dwm_main');
 
@@ -110,7 +110,7 @@ var refreshPage = function refreshPage() {
   ?>
   table.addClass('refreshable');
 
-  if(args.site)
+  if (args.site)
   {
     data.site = args.site;
   }
@@ -125,25 +125,25 @@ var refreshPage = function refreshPage() {
 
   refreshPage.inProgress = true;
   return $.post(
-     url,
-     data,
-     function(result){
-       <?php
-       // (1) Empty the existing table in order to get rid of events and data and prevent
-       // memory leaks; (2) insert the updated table HTML; and then (3) trigger a tableload
-       // event so that the resizable bookings are re-created and a new timeout started.
-       ?>
-       refreshPage.inProgress = false;
-       if (result && !isHidden() && !refreshPage.disabled)
-       {
-         if (!table.hasClass('resizing') && table.hasClass('refreshable'))
-         {
-           $('.date_heading').empty().html(result.date_heading);
-           table.empty().html(result.inner_html).trigger('tableload');
-         }
-       }
-     },
-     'json'
+    url,
+    data,
+    function (result) {
+      <?php
+      // (1) Empty the existing table in order to get rid of events and data and prevent
+      // memory leaks; (2) insert the updated table HTML; and then (3) trigger a tableload
+      // event so that the resizable bookings are re-created and a new timeout started.
+      ?>
+      refreshPage.inProgress = false;
+      if (result && !isHidden() && !refreshPage.disabled)
+      {
+        if (!table.hasClass('resizing') && table.hasClass('refreshable'))
+        {
+          $('.date_heading').empty().html(result.date_heading);
+          table.empty().html(result.inner_html).trigger('tableload');
+        }
+      }
+    },
+    'json'
   );
 };
 
