@@ -72,7 +72,7 @@ abstract class SessionHandlerAbstract implements SessionHandlerInterface, Sessio
    */
   public function create_sid(): string
   {
-    // This method will be required in PHP 9.0 and is deprecated in PHP 8.6. We don't need
+    // This method will be required in PHP 9.0 and its absence triggers a warning in PHP 8.6. We don't need
     // to do anything special though; just call the standard PHP function session_create_id().
     $attempts = 0;
     $max_attempts = 5;
