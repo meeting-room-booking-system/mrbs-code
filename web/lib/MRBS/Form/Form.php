@@ -237,7 +237,10 @@ class Form extends Element
   }
 
 
-  // Get a CSRF token
+  /**
+   * Get a CSRF token.  If there's already a token associated with the session then use that, otherise generate and
+   * save a new one.
+   */
   public static function getToken() : string
   {
     $token_length = 32;
