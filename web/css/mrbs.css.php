@@ -2042,6 +2042,7 @@ form#add_new_user {
   align-items: stretch;
   justify-content: flex-end;
   padding: 0.3em 0;
+  min-width: 0;
 }
 
 .banner nav.container > nav > nav {
@@ -2113,6 +2114,7 @@ nav.logon input:hover {
 #form_nav {
   padding-right: 1rem;
   margin-right: 1rem;
+  min-width: 0;
 }
 
 input.link[type="submit"] {
