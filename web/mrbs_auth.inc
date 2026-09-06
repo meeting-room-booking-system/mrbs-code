@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace MRBS;
 
 use MRBS\Auth\AuthFactory;
+use MRBS\Form\Form;
 use MRBS\Session\Session;
 use MRBS\Session\SessionFactory;
 
@@ -220,10 +221,13 @@ function checkAuthorised($page, $just_check=false)
     $result = true;
   }
 
-  // We don't need to change the session data after this point, so close the session so
-  // that the lock is released.  We will still be able to read the session data.
+  // We don't need to change the session data after this point, apart from needing to get a CSRF token if we haven't
+  // already got one (this will be the case if we are using a session scheme that doesn't require a login form).
+  // Therefore get a CSRF token and close the session so that the lock is released.  We will still be able to read the
+  // session data.
   if (session_status() === PHP_SESSION_ACTIVE)
   {
+    Form::getToken();
     session_write_close();
   }
 
