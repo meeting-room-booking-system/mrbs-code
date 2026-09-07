@@ -148,33 +148,32 @@ const refreshPage = function refreshPage() {
 };
 
 
-var refreshVisChanged = function refreshVisChanged() {
-    var pageHidden = isHidden();
+const refreshVisChanged = function refreshVisChanged() {
+  const pageHidden = isHidden();
 
-    if (pageHidden !== null)
-    {
-      <?php
-      // If the page is now visible then refresh the page to get the latest data and, once that has been
-      // done, refresh the prefetched pages.  Don't initiate the prefetch refresh until after the main
-      // refresh is complete because simultaneous Ajax requests will cause problems if the inactivity
-      // timeout has been exceeded and the user is logged off as a result: the server code will try and
-      // log the user off each time resulting in session_destroy() throwing an error.
-      ?>
-      if (!pageHidden)
+  if (pageHidden !== null)
+  {
+    <?php
+    // If the page is now visible then refresh the page to get the latest data and, once that has been
+    // done, refresh the prefetched pages.  Don't initiate the prefetch refresh until after the main
+    // refresh is complete because simultaneous Ajax requests will cause problems if the inactivity
+    // timeout has been exceeded and the user is logged off as a result: the server code will try and
+    // log the user off each time resulting in session_destroy() throwing an error.
+    ?>
+    if (!pageHidden) {
+      const refreshedPage = refreshPage();
+      if (undefined !== refreshedPage)
       {
-        const refreshedPage = refreshPage();
-        if (undefined !== refreshedPage)
-        {
-          refreshedPage.done(function() {
-            prefetch();
-          });
-        }
+        refreshedPage.done(function () {
+          prefetch();
+        });
       }
     }
-  };
+  }
+};
 
 
-var Timeline = {
+const Timeline = {
   timerRunning: null,
 
   <?php // Clear the timeline and any associated timers ?>
@@ -194,33 +193,33 @@ var Timeline = {
   // better to get the size of the slot that contains the timeline.
   ?>
   getFirstNonZeroSlotSize: function() {
-    var slotSize;
-    var table = $('#day_main');
+    let slotSize;
+    const table = $('#day_main');
 
     <?php
     if ($times_along_top)
     {
       ?>
       table.find('thead th').not('.first_last').each(function () {
-          slotSize = $(this).outerWidth();
-          if (slotSize)
-          {
-            return false;
-          }
-        });
-    <?php
+        slotSize = $(this).outerWidth();
+        if (slotSize)
+        {
+          return false;
+        }
+      });
+      <?php
     }
     else
     {
       ?>
       table.find('tbody tr').each(function () {
-          slotSize = $(this).outerHeight();
-          if (slotSize)
-          {
-            return false;
-          }
-        });
-    <?php
+        slotSize = $(this).outerHeight();
+        if (slotSize)
+        {
+          return false;
+        }
+      });
+      <?php
     }
     ?>
     return slotSize;
@@ -233,6 +232,8 @@ var Timeline = {
   // time defaults to the current time.
   ?>
   search: function(slots, time) {
+    let result = [];
+
     <?php
     // Tests whether the time is definitely with the interval defined by the beginning of the first slot
     // and the end of the last slot.
@@ -271,8 +272,8 @@ var Timeline = {
     // interval but not within any individual element, because time is outside the booking day.
     ?>
     function getIndices(slots, time) {
-      var element;
-      for (var i=slots.length - 1; i>=0; i--) {
+      let element;
+      for (let i=slots.length - 1; i>=0; i--) {
         element = slots[i];
         if (within(element, time))
         {
@@ -285,8 +286,6 @@ var Timeline = {
         }
       }
     }
-
-    var result = [];
 
     if ((typeof time === 'undefined'))
     {
@@ -312,24 +311,24 @@ var Timeline = {
     <?php // Remove any existing timeline ?>
     $('.timeline').remove();
 
-    var now = Math.floor(Date.now() / 1000);
-    var table = $('.dwm_main');
-    var container = table.parent();
-    var thead = table.find('thead');
-    var slots = thead.data('slots');
-    var timelineVertical = thead.data('timeline-vertical');
-    var timelineFull = thead.data('timeline-full');
-    var nowSlotIndices, slot, fraction, row, element;
-    var slotSize, delay, timeline;
-    var top, left, borderLeftWidth, borderRightWidth, width, height;
-    var headers, headersFirstLast, headersNormal, headerFirstSize, headerLastSize;
+    const now = Math.floor(Date.now() / 1000);
+    const table = $('.dwm_main');
+    const container = table.parent();
+    const thead = table.find('thead');
+    const slots = thead.data('slots');
+    const timelineVertical = thead.data('timeline-vertical');
+    const timelineFull = thead.data('timeline-full');
+    let nowSlotIndices, slot, fraction, row, element;
+    let slotSize, delay, timeline;
+    let top, left, borderLeftWidth, borderRightWidth, width, height;
+    let headers, headersFirstLast, headersNormal, headerFirstSize, headerLastSize;
 
     nowSlotIndices = Timeline.search(slots);
 
     if (nowSlotIndices.length > 1)
     {
       slot = slots;
-      for (var i=nowSlotIndices.length - 1; i>=0; i--)
+      for (let i=nowSlotIndices.length - 1; i>=0; i--)
       {
         slot = slot[nowSlotIndices[i]];
       }
@@ -367,7 +366,7 @@ var Timeline = {
 
         if (timelineFull)
         {
-          var tbody = table.find('tbody');
+          const tbody = table.find('tbody');
           top = tbody.offset().top - container.offset().top;
           height = tbody.height();
         }
