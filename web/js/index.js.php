@@ -14,35 +14,35 @@ http_headers(array("Content-type: application/x-javascript"),
 // Check whether the calendar navigation bar has wrapped, and if so add a class of
 // 'wrapped' so that CSS can be used to change its styling.
 ?>
-var checkNavWrapping = function() {
-    var navMainCalendar = $('nav.main_calendar');
-    var wrapped = false;
-    var lastTop;
+const checkNavWrapping = function() {
+  const navMainCalendar = $('nav.main_calendar');
+  let wrapped = false;
+  let lastTop;
+  <?php
+  // Remove the wrapped class before we start, because the wrapped class gives the
+  // element a flex-basis of 100%, which would force wrapping anyway.  (We need the
+  // flex-basis of 100% to ensure that it takes up the whole line when wrapped and we
+  // don't get the next element on the same line.)
+  ?>
+  navMainCalendar.removeClass('wrapped');
+  navMainCalendar.first().children().each(function() {
+    const thisTop = $(this).offset().top;
     <?php
-    // Remove the wrapped class before we start, because the wrapped class gives the
-    // element a flex-basis of 100%, which would force wrapping anyway.  (We need the
-    // flex-basis of 100% to ensure that it takes up the whole line when wrapped and we
-    // don't get the next element on the same line.)
+    // Allow 5px of tolerance on the calculation of the top to allow for padding, border
+    // and margin.
     ?>
-    navMainCalendar.removeClass('wrapped');
-    navMainCalendar.first().children().each(function() {
-        var thisTop = $(this).offset().top;
-        <?php
-        // Allow 5px of tolerance on the calculation of the top to allow for padding, border
-        // and margin.
-        ?>
-        if ((typeof lastTop !== 'undefined') && (Math.abs(thisTop - lastTop) > 5))
-        {
-          wrapped = true;
-          return false;
-        }
-        lastTop = thisTop;
-      });
-    if (wrapped)
+    if ((typeof lastTop !== 'undefined') && (Math.abs(thisTop - lastTop) > 5))
     {
-      navMainCalendar.addClass('wrapped');
+      wrapped = true;
+      return false;
     }
-  };
+    lastTop = thisTop;
+  });
+  if (wrapped)
+  {
+    navMainCalendar.addClass('wrapped');
+  }
+};
 
 <?php
 // Only show the bottom nav bar if no part of the top one is visible.
