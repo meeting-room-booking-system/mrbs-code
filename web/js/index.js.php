@@ -193,24 +193,18 @@ const updateBody = function(event) {
 // the two most likely pages to be required.
 ?>
 let prefetch = function() {
+  const prefetchRefreshRate = <?php echo $prefetch_refresh_rate ?? 0?>;
+
   <?php
-  // Don't pre-fetch if it's been disabled in the config
-  if (empty($prefetch_refresh_rate))
-  {
-    ?>
-    return;
-    <?php
-  }
-  // Don't pre-fetch if we're in the process of moving to a different date (no point)
-  // or if we're on a metered connection (would waste bandwidth).
-  ?>
-  if (updateBody.lastRequest || isMeteredConnection())
+  // Don't pre-fetch if it's been disabled in the config, or if we're in the process of moving to a different date
+  // (no point), or if we're on a metered connection (would waste bandwidth). ?>
+  if ((prefetchRefreshRate === 0) || updateBody.lastRequest || isMeteredConnection())
   {
     return;
   }
 
   var activeConnections = 0;
-  var delay = <?php echo $prefetch_refresh_rate?> * 1000;
+  var delay = prefetchRefreshRate * 1000;
   var hrefs = [];
 
   $('a.prefetch').each(function() {
