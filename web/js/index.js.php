@@ -193,7 +193,7 @@ const updateBody = function(event) {
 // the two most likely pages to be required.
 ?>
 let prefetch = function() {
-  const prefetchRefreshRate = <?php echo $prefetch_refresh_rate ?? 0?>;
+  const prefetchRefreshRate = <?php echo $prefetch_refresh_rate ?? 0 ?>;
 
   <?php
   // Don't pre-fetch if it's been disabled in the config, or if we're in the process of moving to a different date
@@ -203,9 +203,9 @@ let prefetch = function() {
     return;
   }
 
-  var activeConnections = 0;
-  var delay = prefetchRefreshRate * 1000;
-  var hrefs = [];
+  let activeConnections = 0;
+  const delay = prefetchRefreshRate * 1000;
+  const hrefs = [];
 
   $('a.prefetch').each(function() {
     const a = $(this);
