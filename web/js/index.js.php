@@ -141,51 +141,51 @@ const replaceBody = function(response, href) {
 // 'event' can either be an event object if the function is called from an 'on'
 // handler, or else it as an href string (eg when called from flatpickr).
 ?>
-var updateBody = function(event) {
-    var href;
+const updateBody = function(event) {
+  let href;
 
-    if (typeof event === 'object')
-    {
-      href = $(this).attr('href');
-      event.preventDefault();
-    }
-    else
-    {
-      href = event;
-    }
+  if (typeof event === 'object')
+  {
+    href = $(this).attr('href');
+    event.preventDefault();
+  }
+  else
+  {
+    href = event;
+  }
 
-    <?php // Add a "Loading ..." message ?>
-    $('h2.date').text('<?php echo get_js_vocab('loading')?>')
-                .addClass('loading');
+  <?php // Add a "Loading ..." message ?>
+  $('h2.date').text('<?php echo get_js_vocab('loading')?>')
+              .addClass('loading');
 
-    if (updateBody.prefetched && updateBody.prefetched[href])
-    {
-      replaceBody(updateBody.prefetched[href], href);
-    }
-    else
-    {
-      <?php
-      // Keep track of the last Ajax request, because it's only that one that we're
-      // interested in: if the server is slow and the user clicks on a succession
-      // of dates, we only want to show the data for the last date.
-      ?>
-      updateBody.lastRequest = href;
-      <?php
-      // We don't want a refresh to happen while we're waiting for the next date.
-      ?>
-      refreshPage.disabled = true;
-      $.get({url: href, dataType: 'html'})
-        .done(function(response) {
-            <?php // Only process this response if it corresponds to the last request ?>
-            if (href === updateBody.lastRequest)
-            {
-              updateBody.lastRequest = null;
-              refreshPage.disabled = false;
-              replaceBody(response, href);
-            }
-          });
-    }
-  };
+  if (updateBody.prefetched && updateBody.prefetched[href])
+  {
+    replaceBody(updateBody.prefetched[href], href);
+  }
+  else
+  {
+    <?php
+    // Keep track of the last Ajax request, because it's only that one that we're
+    // interested in: if the server is slow and the user clicks on a succession
+    // of dates, we only want to show the data for the last date.
+    ?>
+    updateBody.lastRequest = href;
+    <?php
+    // We don't want a refresh to happen while we're waiting for the next date.
+    ?>
+    refreshPage.disabled = true;
+    $.get({url: href, dataType: 'html'})
+      .done(function(response) {
+        <?php // Only process this response if it corresponds to the last request ?>
+        if (href === updateBody.lastRequest)
+        {
+          updateBody.lastRequest = null;
+          refreshPage.disabled = false;
+          replaceBody(response, href);
+        }
+      });
+  }
+};
 
 
 <?php
