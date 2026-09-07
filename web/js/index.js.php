@@ -56,82 +56,82 @@ const checkNav = function () {
 <?php
 // Replace the body element with the body in response, for the page href.
 ?>
-var replaceBody = function(response, href) {
-    <?php
-    // We get the entire page HTML returned, but we are only interested in the <body> element.
-    // That's because if we replace the whole HTML the browser will re-load the JavaScript and
-    // CSS files which is unnecessary and will also cause problems if the CSS is not loaded in
-    // time.
-    //
-    // Unfortunately, we can't use jQuery.replaceWith() on the body object as that doesn't work
-    // properly.  So we have to replace the body HTML and then update the attributes for the body
-    // tag afterwards.
-    ?>
-    var matches = response.match(/(<body[^>]*>)([^<]*(?:(?!<\/?body)<[^<]*)*)<\/body\s*>/i);
-    var body = $('body');
-    body.html(matches[2]);
-    $('<div' + matches[1].substring(5) + '</div>').each(function() {
-        $.each(this.attributes, function() {
-            <?php
-            // this.attributes is not a plain object, but an array
-            // of attribute nodes, which contain both the name and value
-            ?>
-            if(this.specified)
-            {
-              if (this.name.substring(0, 5).toLowerCase() === 'data-')
-              {
-                <?php
-                // Data attributes have to be updated differently from other attributes because
-                // they are cached by jQuery.
-                ?>
-                var value = this.value;
-                <?php // If the attribute looks like a JSON array, then turn it back into an array. ?>
-                if (value.charAt(0) === '[')
-                {
-                  try {
-                    value = JSON.parse(value);
-                  }
-                  catch (e) {
-                    value = this.value;
-                  }
-                }
-                <?php // If it looks like it should be a boolean then turn it back into one.  ?>
-                else if (value === 'true')
-                {
-                  value = true;
-                }
-                else if (value === 'false')
-                {
-                  value = false;
-                }
-                body.data(this.name.substring(5), value);
-              }
-              else
-              {
-                body.attr(this.name, this.value);
-              }
+const replaceBody = function(response, href) {
+  <?php
+  // We get the entire page HTML returned, but we are only interested in the <body> element.
+  // That's because if we replace the whole HTML the browser will re-load the JavaScript and
+  // CSS files which is unnecessary and will also cause problems if the CSS is not loaded in
+  // time.
+  //
+  // Unfortunately, we can't use jQuery.replaceWith() on the body object as that doesn't work
+  // properly.  So we have to replace the body HTML and then update the attributes for the body
+  // tag afterwards.
+  ?>
+  const matches = response.match(/(<body[^>]*>)([^<]*(?:(?!<\/?body)<[^<]*)*)<\/body\s*>/i);
+  const body = $('body');
+  body.html(matches[2]);
+  $('<div' + matches[1].substring(5) + '</div>').each(function() {
+    $.each(this.attributes, function() {
+      <?php
+      // this.attributes is not a plain object, but an array
+      // of attribute nodes, which contain both the name and value
+      ?>
+      if(this.specified)
+      {
+        if (this.name.substring(0, 5).toLowerCase() === 'data-')
+        {
+          <?php
+          // Data attributes have to be updated differently from other attributes because
+          // they are cached by jQuery.
+          ?>
+          let value = this.value;
+          <?php // If the attribute looks like a JSON array, then turn it back into an array. ?>
+          if (value.charAt(0) === '[')
+          {
+            try {
+              value = JSON.parse(value);
             }
-          });
-      });
+            catch (e) {
+              value = this.value;
+            }
+          }
+          <?php // If it looks like it should be a boolean then turn it back into one.  ?>
+          else if (value === 'true')
+          {
+            value = true;
+          }
+          else if (value === 'false')
+          {
+            value = false;
+          }
+          body.data(this.name.substring(5), value);
+        }
+        else
+        {
+          body.attr(this.name, this.value);
+        }
+      }
+    });
+  });
 
-    <?php
-    // Trigger a page_ready event, because the normal document ready event
-    // won't be triggered when we are just replacing the html.
-    ?>
-    $(document).trigger('page_ready');
+  <?php
+  // Trigger a page_ready event, because the normal document ready event
+  // won't be triggered when we are just replacing the html.
+  ?>
+  $(document).trigger('page_ready');
 
-    <?php // and tell the server we've moved to a new page, so that it can update its records ?>
-    var data = {csrf_token: getCSRFToken(), page: href};
-    if(args.site)
-    {
-      data.site = args.site;
-    }
-    $.post('ajax/update_page.php', data);
+  <?php // and tell the server we've moved to a new page, so that it can update its records ?>
+  const data = {csrf_token: getCSRFToken(), page: href};
+  if(args.site)
+  {
+    data.site = args.site;
+  }
+  $.post('ajax/update_page.php', data);
 
-    <?php // change the URL in the address bar ?>
-    history.pushState(null, '', href);
+  <?php // change the URL in the address bar ?>
+  history.pushState(null, '', href);
 
-  };
+};
 
 
 <?php
