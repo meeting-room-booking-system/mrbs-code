@@ -192,7 +192,7 @@ const updateBody = function(event) {
 // Pre-fetch the prev and next pages to improve performance.  They are probably
 // the two most likely pages to be required.
 ?>
-var prefetch = function() {
+let prefetch = function() {
   <?php
   // Don't pre-fetch if it's been disabled in the config
   if (empty($prefetch_refresh_rate))
