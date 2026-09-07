@@ -14,131 +14,124 @@ http_headers(array("Content-type: application/x-javascript"),
 // Check whether the calendar navigation bar has wrapped, and if so add a class of
 // 'wrapped' so that CSS can be used to change its styling.
 ?>
-var checkNavWrapping = function() {
-    var navMainCalendar = $('nav.main_calendar');
-    var wrapped = false;
-    var lastTop;
+const checkNavWrapping = function() {
+  const navMainCalendar = $('nav.main_calendar');
+  let wrapped = false;
+  let lastTop;
+  <?php
+  // Remove the wrapped class before we start, because the wrapped class gives the
+  // element a flex-basis of 100%, which would force wrapping anyway.  (We need the
+  // flex-basis of 100% to ensure that it takes up the whole line when wrapped and we
+  // don't get the next element on the same line.)
+  ?>
+  navMainCalendar.removeClass('wrapped');
+  navMainCalendar.first().children().each(function() {
+    const thisTop = $(this).offset().top;
     <?php
-    // Remove the wrapped class before we start, because the wrapped class gives the
-    // element a flex-basis of 100%, which would force wrapping anyway.  (We need the
-    // flex-basis of 100% to ensure that it takes up the whole line when wrapped and we
-    // don't get the next element on the same line.)
+    // Allow 5px of tolerance on the calculation of the top to allow for padding, border
+    // and margin.
     ?>
-    navMainCalendar.removeClass('wrapped');
-    navMainCalendar.first().children().each(function() {
-        var thisTop = $(this).offset().top;
-        <?php
-        // Allow 5px of tolerance on the calculation of the top to allow for padding, border
-        // and margin.
-        ?>
-        if ((typeof lastTop !== 'undefined') && (Math.abs(thisTop - lastTop) > 5))
-        {
-          wrapped = true;
-          return false;
-        }
-        lastTop = thisTop;
-      });
-    if (wrapped)
+    if ((typeof lastTop !== 'undefined') && (Math.abs(thisTop - lastTop) > 5))
     {
-      navMainCalendar.addClass('wrapped');
+      wrapped = true;
+      return false;
     }
-  };
+    lastTop = thisTop;
+  });
+  if (wrapped)
+  {
+    navMainCalendar.addClass('wrapped');
+  }
+};
 
 <?php
 // Only show the bottom nav bar if no part of the top one is visible.
 ?>
-var checkNav = function() {
-    var nav = $('nav.main_calendar');
-    if (nav.eq(0).visible(true))
-    {
-      nav.eq(1).hide();
-    }
-    else
-    {
-      nav.eq(1).show();
-    }
-  };
+const checkNav = function () {
+  const nav = $('nav.main_calendar');
+  nav.eq(1).toggle(!nav.eq(0).visible(true));
+};
 
 
 <?php
 // Replace the body element with the body in response, for the page href.
 ?>
-var replaceBody = function(response, href) {
-    <?php
-    // We get the entire page HTML returned, but we are only interested in the <body> element.
-    // That's because if we replace the whole HTML the browser will re-load the JavaScript and
-    // CSS files which is unnecessary and will also cause problems if the CSS is not loaded in
-    // time.
-    //
-    // Unfortunately, we can't use jQuery.replaceWith() on the body object as that doesn't work
-    // properly.  So we have to replace the body HTML and then update the attributes for the body
-    // tag afterwards.
-    ?>
-    var matches = response.match(/(<body[^>]*>)([^<]*(?:(?!<\/?body)<[^<]*)*)<\/body\s*>/i);
-    var body = $('body');
-    body.html(matches[2]);
-    $('<div' + matches[1].substring(5) + '</div>').each(function() {
-        $.each(this.attributes, function() {
-            <?php
-            // this.attributes is not a plain object, but an array
-            // of attribute nodes, which contain both the name and value
-            ?>
-            if(this.specified)
-            {
-              if (this.name.substring(0, 5).toLowerCase() === 'data-')
-              {
-                <?php
-                // Data attributes have to be updated differently from other attributes because
-                // they are cached by jQuery.
-                ?>
-                var value = this.value;
-                <?php // If the attribute looks like a JSON array, then turn it back into an array. ?>
-                if (value.charAt(0) === '[')
-                {
-                  try {
-                    value = JSON.parse(value);
-                  }
-                  catch (e) {
-                    value = this.value;
-                  }
-                }
-                <?php // If it looks like it should be a boolean then turn it back into one.  ?>
-                else if (value === 'true')
-                {
-                  value = true;
-                }
-                else if (value === 'false')
-                {
-                  value = false;
-                }
-                body.data(this.name.substring(5), value);
-              }
-              else
-              {
-                body.attr(this.name, this.value);
-              }
+const replaceBody = function(response, href) {
+  <?php
+  // We get the entire page HTML returned, but we are only interested in the <body> element.
+  // That's because if we replace the whole HTML the browser will re-load the JavaScript and
+  // CSS files which is unnecessary and will also cause problems if the CSS is not loaded in
+  // time.
+  //
+  // Unfortunately, we can't use jQuery.replaceWith() on the body object as that doesn't work
+  // properly.  So we have to replace the body HTML and then update the attributes for the body
+  // tag afterwards.
+  ?>
+  const matches = response.match(/(<body[^>]*>)([^<]*(?:(?!<\/?body)<[^<]*)*)<\/body\s*>/i);
+  const body = $('body');
+  body.html(matches[2]);
+  $('<div' + matches[1].substring(5) + '</div>').each(function() {
+    $.each(this.attributes, function() {
+      <?php
+      // this.attributes is not a plain object, but an array
+      // of attribute nodes, which contain both the name and value
+      ?>
+      if(this.specified)
+      {
+        if (this.name.substring(0, 5).toLowerCase() === 'data-')
+        {
+          <?php
+          // Data attributes have to be updated differently from other attributes because
+          // they are cached by jQuery.
+          ?>
+          let value = this.value;
+          <?php // If the attribute looks like a JSON array, then turn it back into an array. ?>
+          if (value.charAt(0) === '[')
+          {
+            try {
+              value = JSON.parse(value);
             }
-          });
-      });
+            catch (e) {
+              value = this.value;
+            }
+          }
+          <?php // If it looks like it should be a boolean then turn it back into one.  ?>
+          else if (value === 'true')
+          {
+            value = true;
+          }
+          else if (value === 'false')
+          {
+            value = false;
+          }
+          body.data(this.name.substring(5), value);
+        }
+        else
+        {
+          body.attr(this.name, this.value);
+        }
+      }
+    });
+  });
 
-    <?php
-    // Trigger a page_ready event, because the normal document ready event
-    // won't be triggered when we are just replacing the html.
-    ?>
-    $(document).trigger('page_ready');
+  <?php
+  // Trigger a page_ready event, because the normal document ready event
+  // won't be triggered when we are just replacing the html.
+  ?>
+  $(document).trigger('page_ready');
 
-    <?php // and tell the server we've moved to a new page, so that it can update its records ?>
-    var data = {csrf_token: getCSRFToken(), page: href};
-    if(args.site)
-    {
-      data.site = args.site;
-    }
-    $.post('ajax/update_page.php', data);
+  <?php // and tell the server we've moved to a new page, so that it can update its records ?>
+  const data = {csrf_token: getCSRFToken(), page: href};
+  if(args.site)
+  {
+    data.site = args.site;
+  }
+  $.post('ajax/update_page.php', data);
 
-    <?php // change the URL in the address bar ?>
-    history.pushState(null, '', href);
+  <?php // change the URL in the address bar ?>
+  history.pushState(null, '', href);
 
-  };
+};
 
 
 <?php
@@ -148,77 +141,71 @@ var replaceBody = function(response, href) {
 // 'event' can either be an event object if the function is called from an 'on'
 // handler, or else it as an href string (eg when called from flatpickr).
 ?>
-var updateBody = function(event) {
-    var href;
+const updateBody = function(event) {
+  let href;
 
-    if (typeof event === 'object')
-    {
-      href = $(this).attr('href');
-      event.preventDefault();
-    }
-    else
-    {
-      href = event;
-    }
+  if (typeof event === 'object')
+  {
+    href = $(this).attr('href');
+    event.preventDefault();
+  }
+  else
+  {
+    href = event;
+  }
 
-    <?php // Add a "Loading ..." message ?>
-    $('h2.date').text('<?php echo get_js_vocab('loading')?>')
-                .addClass('loading');
+  <?php // Add a "Loading ..." message ?>
+  $('h2.date').text('<?php echo get_js_vocab('loading')?>')
+              .addClass('loading');
 
-    if (updateBody.prefetched && updateBody.prefetched[href])
-    {
-      replaceBody(updateBody.prefetched[href], href);
-    }
-    else
-    {
-      <?php
-      // Keep track of the last Ajax request, because it's only that one that we're
-      // interested in: if the server is slow and the user clicks on a succession
-      // of dates, we only want to show the data for the last date.
-      ?>
-      updateBody.lastRequest = href;
-      <?php
-      // We don't want a refresh to happen while we're waiting for the next date.
-      ?>
-      refreshPage.disabled = true;
-      $.get({url: href, dataType: 'html'})
-        .done(function(response) {
-            <?php // Only process this response if it corresponds to the last request ?>
-            if (href === updateBody.lastRequest)
-            {
-              updateBody.lastRequest = null;
-              refreshPage.disabled = false;
-              replaceBody(response, href);
-            }
-          });
-    }
-  };
+  if (updateBody.prefetched && updateBody.prefetched[href])
+  {
+    replaceBody(updateBody.prefetched[href], href);
+  }
+  else
+  {
+    <?php
+    // Keep track of the last Ajax request, because it's only that one that we're
+    // interested in: if the server is slow and the user clicks on a succession
+    // of dates, we only want to show the data for the last date.
+    ?>
+    updateBody.lastRequest = href;
+    <?php
+    // We don't want a refresh to happen while we're waiting for the next date.
+    ?>
+    refreshPage.disabled = true;
+    $.get({url: href, dataType: 'html'})
+      .done(function(response) {
+        <?php // Only process this response if it corresponds to the last request ?>
+        if (href === updateBody.lastRequest)
+        {
+          updateBody.lastRequest = null;
+          refreshPage.disabled = false;
+          replaceBody(response, href);
+        }
+      });
+  }
+};
 
 
 <?php
 // Pre-fetch the prev and next pages to improve performance.  They are probably
 // the two most likely pages to be required.
 ?>
-var prefetch = function() {
+const prefetch = function() {
+  const prefetchRefreshRate = <?php echo $prefetch_refresh_rate ?? 0 ?>;
+
   <?php
-  // Don't pre-fetch if it's been disabled in the config
-  if (empty($prefetch_refresh_rate))
-  {
-    ?>
-    return;
-    <?php
-  }
-  // Don't pre-fetch if we're in the process of moving to a different date (no point)
-  // or if we're on a metered connection (would waste bandwidth).
-  ?>
-  if (updateBody.lastRequest || isMeteredConnection())
+  // Don't pre-fetch if it's been disabled in the config, or if we're in the process of moving to a different date
+  // (no point), or if we're on a metered connection (would waste bandwidth). ?>
+  if ((prefetchRefreshRate === 0) || updateBody.lastRequest || isMeteredConnection())
   {
     return;
   }
 
-  var activeConnections = 0;
-  var delay = <?php echo $prefetch_refresh_rate?> * 1000;
-  var hrefs = [];
+  let activeConnections = 0;
+  const delay = prefetchRefreshRate * 1000;
+  const hrefs = [];
 
   $('a.prefetch').each(function() {
     const a = $(this);
