@@ -13,7 +13,7 @@ http_headers(array("Content-type: application/x-javascript"),
 
 'use strict';
 
-var refreshListenerAdded = false;
+let refreshListenerAdded = false;
 
 <?php
 // If the table container is scrollable, then scroll so that the current time is visible.
@@ -485,7 +485,7 @@ const Timeline = {
 
 $(document).on('page_ready', function() {
 
-  var table = $('table.dwm_main');
+  const table = $('table.dwm_main');
   Timeline.clear();
 
   <?php
@@ -496,87 +496,87 @@ $(document).on('page_ready', function() {
   ?>
   table.on('tableload', function() {
 
-      var refreshRate;
+    let refreshRate;
 
-      sizeColumns();
+    sizeColumns();
 
-      if (args.kiosk)
-      {
-        refreshRate = <?php echo $kiosk_refresh_rate ?? 0; ?>;
-      }
-      else
-      {
-        refreshRate = <?php echo $refresh_rate ?? 0; ?>;
-      }
+    if (args.kiosk)
+    {
+      refreshRate = <?php echo $kiosk_refresh_rate ?? 0; ?>;
+    }
+    else
+    {
+      refreshRate = <?php echo $refresh_rate ?? 0; ?>;
+    }
 
-      if (refreshRate !== 0)
-      {
-        <?php
-        // Set a timeout to refresh the page.  When the refresh completes another tableload,
-        // and hence another timeout, will be triggered.
-        ?>
-        setTimeout(refreshPage, refreshRate * 1000);
-      }
-
+    if (refreshRate !== 0)
+    {
       <?php
-      // Add an event listener to detect a change in the visibility
-      // state.  We can then suspend Ajax refreshing when the page is
-      // hidden to save on server, client and network load.
-
-      // We also need to resume refreshing and refresh the pre-fetched
-      // pages when the page becomes visible again.
+      // Set a timeout to refresh the page.  When the refresh completes another tableload,
+      // and hence another timeout, will be triggered.
       ?>
-      var prefix = visibilityPrefix();
-      if (document.addEventListener &&
-          (prefix !== null) &&
-          !refreshListenerAdded)
-      {
-        document.addEventListener(prefix + "visibilitychange", refreshVisChanged);
-        refreshListenerAdded = true;
-      }
+      setTimeout(refreshPage, refreshRate * 1000);
+    }
 
-      <?php
-      if (!$enable_periods)
+    <?php
+    // Add an event listener to detect a change in the visibility
+    // state.  We can then suspend Ajax refreshing when the page is
+    // hidden to save on server, client and network load.
+
+    // We also need to resume refreshing and refresh the pre-fetched
+    // pages when the page becomes visible again.
+    ?>
+    const prefix = visibilityPrefix();
+    if (document.addEventListener &&
+        (prefix !== null) &&
+        !refreshListenerAdded)
+    {
+      document.addEventListener(prefix + "visibilitychange", refreshVisChanged);
+      refreshListenerAdded = true;
+    }
+
+    <?php
+    if (!$enable_periods)
+    {
+      // If required, add a timeline showing the current time. Also need to recalculate
+      //the timeline if the window is resized.
+      ?>
+      if ((args.kiosk && <?php echo ($show_timeline_kiosk) ? 'true' : 'false'?>) ||
+          (!args.kiosk && <?php echo($show_timeline) ? 'true' : 'false'?>))
       {
-        // If required, add a timeline showing the current time. Also need to recalculate
-        //the timeline if the window is resized.
-        ?>
-        if ((args.kiosk && <?php echo ($show_timeline_kiosk) ? 'true' : 'false'?>) ||
-            (!args.kiosk && <?php echo($show_timeline) ? 'true' : 'false'?>))
-        {
+        Timeline.show();
+        $(window).on('resize', function () {
           Timeline.show();
-          $(window).on('resize', function () {
-            Timeline.show();
-          });
-        }
-        <?php
+        });
       }
-      ?>
-
       <?php
-      // If we've got a second row in the header then we need to set the 'top' for each of
-      // its cells so that sticky headers work properly.
-      // Notes:
-      //   1. We set the top of the second row to be the bottom of the top row.  This is to avoid
-      //      a problem when the page is refreshed.
-      //   2. It would be simpler just to make the thead sticky, but that's not supported in all browsers.
-      ?>
-      var bottom = $('.dwm_main thead tr:first th:first').outerHeight();
-      $('.dwm_main thead tr:nth-child(2) th').css('top', bottom + 'px');
+    }
+    ?>
 
-      <?php
-      // Highlight the column header cells in the table and foot.
-      // TODO: this only works when the mouse is moved; the highlighting is lost when the
-      // TODO: page is automatically refreshed.
-      ?>
-      $('table.all_rooms td').on('mouseenter mouseleave', function(event) {
-        $('table.all_rooms')
-          .find('thead, tfoot')
-          .find('th:nth-child(' + ($(this).index() + 1) + ')')
-          .toggleClass('highlight', (event.type === 'mouseenter'));
-      });
+    <?php
+    // If we've got a second row in the header then we need to set the 'top' for each of
+    // its cells so that sticky headers work properly.
+    // Notes:
+    //   1. We set the top of the second row to be the bottom of the top row.  This is to avoid
+    //      a problem when the page is refreshed.
+    //   2. It would be simpler just to make the thead sticky, but that's not supported in all browsers.
+    ?>
+    const bottom = $('.dwm_main thead tr:first th:first').outerHeight();
+    $('.dwm_main thead tr:nth-child(2) th').css('top', bottom + 'px');
 
-    }).trigger('tableload');
+    <?php
+    // Highlight the column header cells in the table and foot.
+    // TODO: this only works when the mouse is moved; the highlighting is lost when the
+    // TODO: page is automatically refreshed.
+    ?>
+    $('table.all_rooms td').on('mouseenter mouseleave', function(event) {
+      $('table.all_rooms')
+        .find('thead, tfoot')
+        .find('th:nth-child(' + ($(this).index() + 1) + ')')
+        .toggleClass('highlight', (event.type === 'mouseenter'));
+    });
+
+  }).trigger('tableload');
 
   <?php
   // If the table exists and we've been given scroll positions in the URL query string, scroll to them so that we go
