@@ -400,6 +400,12 @@ function is_book_admin($rooms=null, $all=true) : bool
 {
   global $min_booking_admin_level;
 
+  // Admins are always booking admins
+  if (is_admin())
+  {
+    return true;
+  }
+
   if (is_array($rooms) && (count($rooms) > 0))
   {
     if ($all)
