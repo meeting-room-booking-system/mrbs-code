@@ -406,9 +406,13 @@ function is_book_admin($rooms=null, $all=true) : bool
     return true;
   }
 
-  if (is_array($rooms) && (count($rooms) > 0))
+  if (is_array($rooms))
   {
-    if ($all)
+    if (count($rooms) == 0)
+    {
+      return false;
+    }
+    elseif ($all)
     {
       // We want the user to be a booking admin for all the rooms,
       // so if for any one room they are not, then return false.
