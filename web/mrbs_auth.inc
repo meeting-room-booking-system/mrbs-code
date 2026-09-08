@@ -396,7 +396,7 @@ function is_admin() : bool
 //
 // Returns:  TRUE if the user is allowed has booking admin rights for
 //           the room(s); otherwise FALSE
-function is_book_admin($rooms=null, $all=true) : bool
+function is_book_admin($rooms=null, bool $all=true) : bool
 {
   global $min_booking_admin_level;
 
