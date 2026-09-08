@@ -418,6 +418,13 @@ function is_book_admin($room_ids=null, $all=true) : bool
   // If you are logged in then check whether you are a booking admin
   // for this room/these rooms.
   if (is_array($room_ids))
+  // Admins are always booking admins
+  if (is_admin())
+  {
+    return true;
+  }
+
+  if (is_array($rooms) && (count($rooms) > 0))
   {
     if (count($room_ids) == 0)
     {
