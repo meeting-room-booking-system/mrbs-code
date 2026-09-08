@@ -383,19 +383,19 @@ function is_admin() : bool
 }
 
 
-// Checks whether the current user has booking administration rights
-// for $rooms - ie is allowed to modify and delete other people's bookings
-// and to approve bookings.
-//
-// $rooms can be either a single scalar value or an array of room ids.  The default
-// value for $rooms is all rooms.  (At the moment $room is ignored, but is passed here
-// so that later MRBS can be enhanced to provide fine-grained permissions.)
-//
-// $all specifies whether the user must be a booking for all $rooms, or just some of
-// them, ie at least one.
-//
-// Returns:  TRUE if the user is allowed has booking admin rights for
-//           the room(s); otherwise FALSE
+/**
+ * Check whether the current user has booking administration rights for `$rooms`, ie is allowed to modify and delete
+ * other people's bookings and to approve bookings.
+ *
+ * Note that at the moment $rooms is ignored, but is passed here so that MRBS can be modified to provide fine-grained
+ * permissions.
+ *
+ * @param $rooms null|int|int[] Can be either a single scalar value or an array of room ids.  The default value is all
+ * rooms.
+ * @param bool $all Whether the user has to be a booking admin for all `$rooms` (`true`), or just at least one of them
+ * (`false`)
+ * @return bool
+ */
 function is_book_admin($rooms=null, bool $all=true) : bool
 {
   global $min_booking_admin_level;
