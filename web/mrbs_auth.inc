@@ -456,12 +456,9 @@ function is_book_admin($room_ids=null, $all=true) : bool
       return false;
     }
   }
-  elseif (is_null($room_ids))
+
+  if (is_null($room_ids) && !$all)
   {
-    if ($all)
-    {
-      return is_admin();
-    }
     // Not yet supported.  Could support it but need to decide what $room_ids=null means.
     // Does it mean all rooms in the system or just all rooms in the current area?
     throw new \Exception('$room_ids===null and $all===false not yet supported.');
