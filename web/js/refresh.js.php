@@ -82,6 +82,7 @@ const refreshPage = function refreshPage() {
   };
 
   const table = $('table.dwm_main');
+  refreshPage.timeoutRunning = false;
 
   <?php
   // Some reasons we may not want to refresh.  Note that we allow refreshing if we're on a
@@ -514,13 +515,14 @@ $(document).on('page_ready', function() {
       refreshRate = <?php echo $refresh_rate ?? 0; ?>;
     }
 
-    if (refreshRate !== 0)
+    if ((refreshRate !== 0) && !refreshPage.timeoutRunning)
     {
       <?php
       // Set a timeout to refresh the page.  When the refresh completes another tableload,
       // and hence another timeout, will be triggered.
       ?>
       setTimeout(refreshPage, refreshRate * 1000);
+      refreshPage.timeoutRunning = true;
     }
 
     <?php
