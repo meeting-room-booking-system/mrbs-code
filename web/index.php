@@ -513,7 +513,15 @@ $date_heading = get_date_heading($view, $year, $month, $day);
 
 if ($refresh)
 {
+  // Include the page context so that the JavaScript know which page this is
   echo json_encode(array(
+    'context' => [
+      'view' => $view,
+      'view_all' => $view_all,
+      'pageDate' => format_iso_date($year, $month, $day), // key to match that used by args
+      'area' => $area,
+      'room' => $room
+    ],
     'date_heading' => $date_heading,
     'inner_html' => $inner_html
   ));

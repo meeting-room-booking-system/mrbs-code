@@ -67,6 +67,20 @@ const sizeColumns = function () {
 
 const refreshPage = function refreshPage() {
 
+  <?php // Check whether the properties of subset match those of superset ?>
+  const hasMatchingSubset = function(superset, subset) {
+    for (const property in subset)
+    {
+      // We only want a weak equality test as some of the properties will have different types
+      // noinspection EqualityComparisonWithCoercionJS
+      if (superset[property] != subset[property])
+      {
+        return false;
+      }
+    }
+    return true;
+  };
+
   const table = $('table.dwm_main');
 
   <?php
@@ -98,18 +112,6 @@ const refreshPage = function refreshPage() {
     data.timetohighlight = args.timetohighlight;
   }
 
-  <?php
-  // Add a class of 'refreshable' to the table so that we know when the response comes
-  // back whether we can use it to refresh the table.   The problem is that it is
-  // possible - especially on slow connections - that in between the Ajax request being
-  // made and the response being returned, the user could have moved to a different day,
-  // which is just done by replacing the page body element.  In that case the refresh would
-  // come back and refresh the table with the wrong day's data.  By adding the 'refreshable'
-  // class to the table we ensure that this can't happen, because if the user moves to a
-  // different day the new HTML won't have the class.
-  ?>
-  table.addClass('refreshable');
-
   if (args.site)
   {
     data.site = args.site;
@@ -136,7 +138,10 @@ const refreshPage = function refreshPage() {
       refreshPage.inProgress = false;
       if (result && !isHidden() && !refreshPage.disabled)
       {
-        if (!table.hasClass('resizing') && table.hasClass('refreshable'))
+        // Check, using hasMatchingSubset, that the data that has been returned by the server
+        // is for the page that is currently being displayed, in case the user has navigated
+        // to a different page since the Ajax request was initiated.
+        if (!table.hasClass('resizing') && hasMatchingSubset(args, result.context))
         {
           $('.date_heading').empty().html(result.date_heading);
           table.empty().html(result.inner_html).trigger('tableload');
