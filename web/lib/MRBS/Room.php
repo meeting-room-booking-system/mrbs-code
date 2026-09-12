@@ -20,6 +20,11 @@ class Room extends Location
   }
 
 
+  /**
+   * Get an instance of a room given a room name and area.
+   *
+   * @param string $name The name of the room, which is case-insensitive.
+   */
   public static function getByNameAndArea(string $name, Area $area) : ?self
   {
     return self::getByColumns(['room_name' => $name, 'area_id' => $area->id]);
