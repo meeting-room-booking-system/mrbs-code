@@ -97,10 +97,10 @@ function validate_form_data(Room &$room)
   {
     $errors[] = 'invalid_area';
   }
-  // If so, check that the room name is not already used in the area
-  // (only do this if you're changing the room name or the area - if you're
-  // just editing the other details for an existing room we don't want to reject
-  // the edit because the room already exists!)
+  // If so, check that the room name is not already used in the area, unless it's just the same room name in a
+  // different case (the standard collation for room name is case-insensitive). (Only do this if we're changing the
+  // room name or the area - if we're just editing the other details for an existing room, we don't want to reject the
+  // edit because the room already exists.)
   elseif (($room->new_area != $room->old_area) || ($room->room_name != $room->old_room_name))
   {
     $proposed_room = Room::getByNameAndArea($room->room_name, $area);
