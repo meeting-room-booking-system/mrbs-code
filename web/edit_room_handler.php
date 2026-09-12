@@ -111,17 +111,18 @@ if (empty($errors))
     $errors[] = 'invalid_area';
     db()->rollback();
   }
-  // If so, check that the room name is not already used in the area
-  // (only do this if you're changing the room name or the area - if you're
-  // just editing the other details for an existing room we don't want to reject
-  // the edit because the room already exists!)
+  // If so, check that the room name is not already used in the area, unless it's just the same room name in a
+  // different case (the standard collation for room name is case-insensitive). (Only do this if we're changing the
+  // room name or the area - if we're just editing the other details for an existing room, we don't want to reject the
+  // edit because the room already exists.)
   elseif ( (($new_area != $old_area) || ($room_name != $old_room_name))
           && db()->query1("SELECT id
                                  FROM " . _tbl('room') . "
                                 WHERE room_name=:room_name
+                                  AND room_name!=:old_room_name
                                   AND area_id=:area_id
                                 LIMIT 1
-                           FOR UPDATE", array(":room_name" => $room_name, ":area_id" => $new_area)) > 0)
+                           FOR UPDATE", [':room_name' => $room_name, 'old_room_name' => $old_room_name, ':area_id' => $new_area]) > 0)
   {
     $errors[] = 'invalid_room_name';
     db()->rollback();
