@@ -101,10 +101,13 @@ function validate_form_data(Room &$room)
   // (only do this if you're changing the room name or the area - if you're
   // just editing the other details for an existing room we don't want to reject
   // the edit because the room already exists!)
-  elseif ((($room->new_area != $room->old_area) || ($room->room_name != $room->old_room_name)) &&
-          $room->exists())
+  elseif (($room->new_area != $room->old_area) || ($room->room_name != $room->old_room_name))
   {
-    $errors[] = 'invalid_room_name';
+    $proposed_room = Room::getByNameAndArea($room->room_name, $area);
+    if (isset($proposed_room) && ($proposed_room->id !== $room->id))
+    {
+      $errors[] = 'invalid_room_name';
+    }
   }
 
   return $errors;

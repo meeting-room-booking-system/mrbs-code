@@ -20,9 +20,9 @@ class Room extends Location
   }
 
 
-  public static function getByName($name) : ?object
+  public static function getByNameAndArea(string $name, Area $area) : ?self
   {
-    return self::getByColumn('room_name', $name);
+    return self::getByColumns(['room_name' => $name, 'area_id' => $area->id]);
   }
 
 
