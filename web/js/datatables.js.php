@@ -5,7 +5,7 @@ namespace MRBS;
 require "../defaultincludes.inc";
 
 http_headers(array("Content-type: application/x-javascript"),
-  60*30);  // 30 minute expiry
+  60*30);  // 30-minute expiry
 
 // See https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.pagesetup?view=openxml-2.8.1
 define('EXCEL_PAGE_SIZES', array(
@@ -41,65 +41,63 @@ else
 // Remember that some of the table initialisation operations, eg loading of the
 // language file, are asynchronous.
 ?>
-var initCompleteActions = function initCompleteActions(id, settings, json) {
+const initCompleteActions = function initCompleteActions(id, settings, json) {
   <?php // Make the table visible ?>
   $('.datatable_container').css('visibility', 'visible');
   <?php // Need to adjust column sizing after the table is made visible ?>
   $(id).DataTable().columns.adjust().draw();
-}
+};
 
 <?php
 // Get the types, which are assumed to be in a data-type in a <span> in the <th>
 // of the table
 ?>
-var getTypes = function getTypes(table) {
-    var type,
-        types = {},
-        result = [];
+const getTypes = function getTypes(table) {
+  const types = {};
+  const result = [];
 
-    table.find('thead tr:first th').each(function(i) {
-       var type = $(this).find('span').data('type');
+  table.find('thead tr:first th').each(function(i) {
+    const type = $(this).find('span').data('type');
 
-       if (type)
-       {
-         if (types[type] === undefined)
-         {
-           types[type] = [];
-         }
-         types[type].push(i);
-       }
-      });
-
-    for (type in types)
+    if (type)
     {
-      if (types.hasOwnProperty(type))
-      {
-        result.push({type: type,
-                     targets: types[type]});
-      }
+     if (types[type] === undefined)
+     {
+       types[type] = [];
+     }
+     types[type].push(i);
     }
+  });
 
-    return result;
-  };
+  for (const type in types)
+  {
+    if (types.hasOwnProperty(type))
+    {
+      result.push({type: type, targets: types[type]});
+    }
+  }
+
+  return result;
+};
 
 
 <?php
 // Extract email addresses from mailto: links in the columns defined by columnSelector and
 // copy them to the clipboard, optionally sorting the result.
 ?>
-var extractEmailAddresses = function(dt, columnSelector, sort) {
-  var result = [];
-  var message;
+const extractEmailAddresses = function(dt, columnSelector, sort) {
+  const result = [];
   const scheme = 'mailto:';
+  let message;
 
   $.each(dt.columns(columnSelector).data(), function (i, column) {
     $.each(column, function (j, value) {
       try {
-        var valueObject = $(value);
+        const valueObject = $(value);
         <?php // Need to search for an href in both this element and its descendants ?>
-        var href = valueObject.find('a').add(valueObject.filter('a')).attr('href');
+        const href = valueObject.find('a').add(valueObject.filter('a')).attr('href');
         if ((href !== undefined) && href.startsWith(scheme)) {
-          var address = href.substring(scheme.length);
+          const address = href.substring(scheme.length);
           if ((address !== '') && !result.includes(address)) {
             result.push(address);
           }
@@ -136,12 +134,12 @@ var extractEmailAddresses = function(dt, columnSelector, sort) {
 };
 
 
-var customizeExcel = function(xlsx) {
+const customizeExcel = function (xlsx) {
   <?php // See https://datatables.net/forums/discussion/45277/modify-page-orientation-in-xlxs-export ?>
-  var sheet = xlsx.xl.worksheets['sheet1.xml'];
-  var pageSetup = sheet.createElement('pageSetup');
+  const sheet = xlsx.xl.worksheets['sheet1.xml'];
+  const pageSetup = sheet.createElement('pageSetup');
   sheet.childNodes['0'].appendChild(pageSetup);
-  var settings = sheet.getElementsByTagName('pageSetup')[0];
+  const settings = sheet.getElementsByTagName('pageSetup')[0];
   settings.setAttribute("r:id", "rId1"); <?php // Relationship ID - do not change ?>
   settings.setAttribute('orientation', '<?php echo $excel_default_orientation ?>');
   settings.setAttribute('paperSize', '<?php echo $excel_paper_size ?>');
@@ -162,7 +160,7 @@ var customizeExcel = function(xlsx) {
 
 function makeDataTable(id, specificOptions, fixedColumnsOptions)
 {
-  var i,
+  let i,
       defaultOptions,
       mergedOptions,
       colVisIncludeCols,
@@ -171,12 +169,12 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
       dataTable,
       fixedColumns;
 
-  var buttonCommon = {
+  const buttonCommon = {
       exportOptions: {
         columns: ':visible',
         format: {
           body: function (data, row, column, node) {
-            var div = $('<div>' + data + '</div>');
+            const div = $('<div>' + data + '</div>');
             <?php
             // Remove any elements used for sorting, which are all <span>s that don't
             // have a class of 'normal' (which the CSS makes visible). Note that we cannot
@@ -186,14 +184,14 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
             ?>
             div.find('span:not(.normal)').remove();
             <?php // Apply the default export data stripping ?>
-            var result = $.fn.dataTable.Buttons.stripData(div.html());
+            let result = $.fn.dataTable.Buttons.stripData(div.html());
             <?php
             // If that is the empty string then it may be that the data is actually a form
             // and the text we want is the text in the submit button.
             ?>
             if (result === '')
             {
-              var value = div.find('input[type="submit"]').attr('value');
+              const value = div.find('input[type="submit"]').attr('value');
               if (value !== undefined)
               {
                 result = value;
