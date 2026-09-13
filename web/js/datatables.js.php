@@ -134,12 +134,12 @@ const extractEmailAddresses = function(dt, columnSelector, sort) {
 };
 
 
-var customizeExcel = function(xlsx) {
+const customizeExcel = function (xlsx) {
   <?php // See https://datatables.net/forums/discussion/45277/modify-page-orientation-in-xlxs-export ?>
-  var sheet = xlsx.xl.worksheets['sheet1.xml'];
-  var pageSetup = sheet.createElement('pageSetup');
+  const sheet = xlsx.xl.worksheets['sheet1.xml'];
+  const pageSetup = sheet.createElement('pageSetup');
   sheet.childNodes['0'].appendChild(pageSetup);
-  var settings = sheet.getElementsByTagName('pageSetup')[0];
+  const settings = sheet.getElementsByTagName('pageSetup')[0];
   settings.setAttribute("r:id", "rId1"); <?php // Relationship ID - do not change ?>
   settings.setAttribute('orientation', '<?php echo $excel_default_orientation ?>');
   settings.setAttribute('paperSize', '<?php echo $excel_paper_size ?>');
