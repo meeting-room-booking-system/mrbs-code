@@ -161,6 +161,7 @@ function datesInRange(startDate, endDate, excludeHiddenDays) {
 $(document).on('page_ready', function() {
 
   const locales = args.langPrefs;
+  let minicalendars;
 
   <?php
   // Set up datepickers.  We convert all inputs of type 'date' into flatpickr
@@ -436,7 +437,7 @@ $(document).on('page_ready', function() {
         }
         ?>
 
-        var minicalendars = flatpickr('span.minicalendar', config);
+        minicalendars = flatpickr('span.minicalendar', config);
 
         $.each(minicalendars, function (key, value) {
           let startDate, endDate;
