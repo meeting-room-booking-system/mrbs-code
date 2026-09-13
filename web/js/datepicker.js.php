@@ -189,7 +189,7 @@ $(document).on('page_ready', function() {
   //    everything    All other format strings are treated as 'Y-m-d'.
   //    else
   ?>
-  var formatDate = function(dateObj, formatStr) {
+  const formatDate = function(dateObj, formatStr) {
       <?php
       // If window.Intl is supported then we can format dates in the user's preferred
       // locale.  Otherwise, in practice just IE10, they have to make do with ISO
@@ -220,7 +220,7 @@ $(document).on('page_ready', function() {
     };
 
 
-  var onDayCreate = function(dObj, dStr, fp, dayElem) {
+  const onDayCreate = function(dObj, dStr, fp, dayElem) {
       <?php
       // If the datepicker is used for navigation, and this is a hidden day, and the user is
       // a booking admin, then add a class to the day so that it can be styled differently.
@@ -250,107 +250,103 @@ $(document).on('page_ready', function() {
   ?>
   function syncCals(instance)
   {
-    var thisId = instance.element.attributes.id.nodeValue,
-        thisIndex = parseInt(thisId.substring(3), 10),
-        currentMonth = parseInt(instance.currentMonth, 10),
-        currentYear = parseInt(instance.currentYear, 10);
+    const thisId = instance.element.attributes.id.nodeValue;
+    const thisIndex = parseInt(thisId.substring(3), 10);
+    const currentMonth = parseInt(instance.currentMonth, 10);
+    const currentYear = parseInt(instance.currentYear, 10);
 
     $.each(minicalendars, function(key, value) {
         if (value.element.attributes.id.nodeValue !== thisId)
         {
-          var index = parseInt(value.element.attributes.id.nodeValue.substring(3), 10);
+          const index = parseInt(value.element.attributes.id.nodeValue.substring(3), 10);
           value.jumpToDate(getISODate(currentYear, currentMonth + index - thisIndex, 1));
         }
       });
   }
 
 
-  var onMonthChange = function(selectedDates, dateStr, instance) {
-      syncCals(instance);
-    };
+  const onMonthChange = function (selectedDates, dateStr, instance) {
+    syncCals(instance);
+  };
 
-  var onYearChange = function(selectedDates, dateStr, instance) {
-      syncCals(instance);
-    };
+  const onYearChange = function (selectedDates, dateStr, instance) {
+    syncCals(instance);
+  };
 
-  var onMinicalChange = function(selectedDates, dateStr, instance) {
-      <?php
-      // The order of the query string parameters is important here.  It needs to be the
-      // same as the order in the Prev and Next navigation links so that the pre-fetched
-      // pages can be used when possible.
-      ?>
-      var href = 'index.php';
-      href += '?view=' + args.view;
-      href += '&page_date=' + dateStr;
-      href += '&area=' + args.area;
-      href += '&room=' + args.room;
-      if (args.site)
-      {
-        href += '&site=' + encodeURIComponent(args.site);
-      }
-      <?php
-      // Set the new date in the mini-calendar, in order to avoid the previous one
-      // still showing as selected.
-      // TODO: change the date in the other mini-calendar of the date appears there as well?
-      ?>
-      instance.setDate([selectedDates[0], selectedDates[0]], false);
-      updateBody(href);  <?php // Update the body via an Ajax call to avoid flickering ?>
-    };
+  const onMinicalChange = function (selectedDates, dateStr, instance) {
+    <?php
+    // The order of the query string parameters is important here.  It needs to be the
+    // same as the order in the Prev and Next navigation links so that the pre-fetched
+    // pages can be used when possible.
+    ?>
+    let href = 'index.php';
+    href += '?view=' + args.view;
+    href += '&page_date=' + dateStr;
+    href += '&area=' + args.area;
+    href += '&room=' + args.room;
+    if (args.site) {
+      href += '&site=' + encodeURIComponent(args.site);
+    }
+    <?php
+    // Set the new date in the mini-calendar, in order to avoid the previous one
+    // still showing as selected.
+    // TODO: change the date in the other mini-calendar of the date appears there as well?
+    ?>
+    instance.setDate([selectedDates[0], selectedDates[0]], false);
+    updateBody(href);  <?php // Update the body via an Ajax call to avoid flickering ?>
+  };
 
-  var lastValidDate = {};
+  const lastValidDate = {};
 
   <?php
   $date_format = get_date_format();
   ?>
 
-  var config = {
-      plugins: [iPadMobileFix()],
-      dateFormat: 'Y-m-d',
-      altInput: true,
-      altFormat: <?php echo "'" . get_date_format() . "'" ?>,
+  const config = {
+    plugins: [iPadMobileFix()],
+    dateFormat: 'Y-m-d',
+    altInput: true,
+    altFormat: <?php echo "'" . get_date_format() . "'" ?>,
+    <?php
+    if ($date_format == 'custom') {
+      echo "formatDate: formatDate,\n";
+    }
+    ?>
+    onDayCreate: onDayCreate,
+    locale: {firstDayOfWeek: <?php echo $weekstarts ?>},
+    onChange: function (selectedDates, dateStr, instance) {
+      const element = $(instance.element);
+      const submit = element.data('submit');
+      const elementName = element.attr('name');
       <?php
-      if ($date_format == 'custom')
-      {
-        echo "formatDate: formatDate,\n";
-      }
+      // Flatpickr allows the user to delete the date in the input field, even when allowInput
+      // is false, resulting in an empty string, which then causes problems for edit_entry_handler.php.
+      // See https://github.com/flatpickr/flatpickr/issues/936 and
+      // https://github.com/flatpickr/flatpickr/pull/2252 . At the time of writing the PR has not been
+      // merged.  To get round this we substitute an empty string for the last known valid date,
+      // but only for required inputs.
       ?>
-      onDayCreate: onDayCreate,
-      locale: {firstDayOfWeek: <?php echo $weekstarts ?>},
-      onChange: function(selectedDates, dateStr, instance) {
-        var element = $(instance.element);
-        var submit = element.data('submit');
-        var elementName = element.attr('name');
-        <?php
-        // Flatpickr allows the user to delete the date in the input field, even when allowInput
-        // is false, resulting in an empty string, which then causes problems for edit_entry_handler.php.
-        // See https://github.com/flatpickr/flatpickr/issues/936 and
-        // https://github.com/flatpickr/flatpickr/pull/2252 . At the time of writing the PR has not been
-        // merged.  To get round this we substitute an empty string for the last known valid date,
-        // but only for required inputs.
-        ?>
-        if (dateStr) {
-          lastValidDate[elementName] = dateStr;
-        }
-        else if (element.prop('required') && lastValidDate[elementName]) {
-          instance.setDate(lastValidDate[elementName]);
-        }
-        <?php // Submit will be set for the datepicker in the banner ?>
-        if (submit) {
-          $('#' + submit).trigger('submit');
-        }
-        else {
-          element.trigger('change');
-        }
-      },
-      onReady: function(selectedDates, dateStr, instance) {
-        if (instance.altInput.ariaLabel === null) {
-          instance.altInput.ariaLabel = instance.input.ariaLabel;
-        }
-        if (dateStr) {
-          lastValidDate[instance.element.getAttribute('name')] = dateStr;
-        }
+      if (dateStr) {
+        lastValidDate[elementName] = dateStr;
+      } else if (element.prop('required') && lastValidDate[elementName]) {
+        instance.setDate(lastValidDate[elementName]);
       }
-    };
+      <?php // Submit will be set for the datepicker in the banner ?>
+      if (submit) {
+        $('#' + submit).trigger('submit');
+      } else {
+        element.trigger('change');
+      }
+    },
+    onReady: function (selectedDates, dateStr, instance) {
+      if (instance.altInput.ariaLabel === null) {
+        instance.altInput.ariaLabel = instance.input.ariaLabel;
+      }
+      if (dateStr) {
+        lastValidDate[instance.element.getAttribute('name')] = dateStr;
+      }
+    }
+  };
 
 
   <?php
@@ -417,10 +413,10 @@ $(document).on('page_ready', function() {
     ?>
     if (!isMobile())
     {
-      var div = $('.minicalendars');
+      const div = $('.minicalendars');
       if (div.length > 0)
       {
-        for (var i = 0; i < 2; i++)
+        for (let i = 0; i < 2; i++)
         {
           <?php // Add the 'navigation' class so that the JavaScript knows it can use hidden days ?>
           div.append($('<span class="minicalendar navigation" id="cal' + i + '"></span>'));
@@ -443,40 +439,40 @@ $(document).on('page_ready', function() {
         var minicalendars = flatpickr('span.minicalendar', config);
 
         $.each(minicalendars, function (key, value) {
-            var startDate, endDate;
-            if (args.view === 'month')
-            {
-              startDate = monthStart(args.pageDate);
-              endDate = monthEnd(args.pageDate);
-            }
-            else if (args.view === 'week')
-            {
-              startDate = weekStart(args.pageDate, <?php echo $weekstarts?>);
-              endDate = weekEnd(args.pageDate, <?php echo $weekstarts?>);
-            }
-            else
-            {
-              startDate = args.pageDate;
-              endDate = startDate;
-            }
-            <?php
-            if (empty($hidden_days))
-            {
-              ?>
-              value.setDate([startDate, endDate]);
-              <?php
-            }
-            else
-            {
-              // If we've got hidden days then highlight in the mini-calendars those
-              // days in the range that are not hidden.
-              ?>
-              value.setDate(datesInRange(startDate, endDate, true));
-              <?php
-            }
+          let startDate, endDate;
+          if (args.view === 'month')
+          {
+            startDate = monthStart(args.pageDate);
+            endDate = monthEnd(args.pageDate);
+          }
+          else if (args.view === 'week')
+          {
+            startDate = weekStart(args.pageDate, <?php echo $weekstarts?>);
+            endDate = weekEnd(args.pageDate, <?php echo $weekstarts?>);
+          }
+          else
+          {
+            startDate = args.pageDate;
+            endDate = startDate;
+          }
+          <?php
+          if (empty($hidden_days))
+          {
             ?>
-            value.changeMonth(key);
-          });
+            value.setDate([startDate, endDate]);
+            <?php
+          }
+          else
+          {
+            // If we've got hidden days then highlight in the mini-calendars those
+            // days in the range that are not hidden.
+            ?>
+            value.setDate(datesInRange(startDate, endDate, true));
+            <?php
+          }
+          ?>
+          value.changeMonth(key);
+        });
 
         <?php
         // Align the top of the mini-calendars with the top of the navigation bar
