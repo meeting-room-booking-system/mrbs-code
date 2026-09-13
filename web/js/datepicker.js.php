@@ -65,7 +65,7 @@ function iPadMobileFix() {
 function getISODate(year, month, day)
 {
   <?php // toISOString() converts to UTC, so make the date a UTC date ?>
-  var date = new Date(Date.UTC(year, month, day));
+  const date = new Date(Date.UTC(year, month, day));
   return date.toISOString().split('T')[0];
 }
 
@@ -74,9 +74,9 @@ function getISODate(year, month, day)
 // format.  (Note that toISOString() returns a date in UTC time).
 function getLocalISODateString(date)
 {
-  var month = (date.getMonth() + 1).toString().padStart(2, '0');
-  var day = date.getDate().toString().padStart(2, '0');
-  var year = date.getFullYear().toString();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  const year = date.getFullYear().toString();
 
   return [year, month, day].join('-');
 }
@@ -98,8 +98,8 @@ function weekStart(date, weekStarts) {
   // date-time forms are interpreted as local time. This is due to a historical spec error
   // that was not consistent with ISO 8601 but could not be changed due to web compatibility."
   ?>
-  var d = new Date(date + "T00:00:00");
-  var diff = d.getDay() - weekStarts;
+  const d = new Date(date + "T00:00:00");
+  let diff = d.getDay() - weekStarts;
   if (diff < 0)
   {
     diff += 7;
@@ -110,21 +110,21 @@ function weekStart(date, weekStarts) {
 
 function weekEnd(date, weekStarts) {
   <?php // Need to add a time to make sure the date is interpreted as local rather than UTC. ?>
-  var d = new Date(weekStart(date, weekStarts) + "T00:00:00");
+  const d = new Date(weekStart(date, weekStarts) + "T00:00:00");
   d.setDate(d.getDate() + 6);
   return getLocalISODateString(d);
 }
 
 function monthStart(date) {
   <?php // Need to add a time to make sure the date is interpreted as local rather than UTC. ?>
-  var d = new Date(date + "T00:00:00");
+  const d = new Date(date + "T00:00:00");
   d.setDate(1);
   return getLocalISODateString(d);
 }
 
 function monthEnd(date) {
   <?php // Need to add a time to make sure the date is interpreted as local rather than UTC. ?>
-  var d = new Date(date + "T00:00:00");
+  const d = new Date(date + "T00:00:00");
   <?php
   // Set the date to the first of the month, because otherwise we will
   // advance by two months when incrementing the month below if we're at the
@@ -140,13 +140,13 @@ function monthEnd(date) {
 // Returns an array of dates in the range startDate..endDate, optionally
 // excluding hidden days.
 function datesInRange(startDate, endDate, excludeHiddenDays) {
-  var result=[];
+  const result = [];
   <?php // Need to add a time to make sure the date is interpreted as local rather than UTC. ?>
-  var e=new Date(endDate + "T00:00:00");
-  var hiddenDays = [<?php echo implode(',', $hidden_days)?>];
+  const e = new Date(endDate + "T00:00:00");
+  const hiddenDays = [<?php echo implode(',', $hidden_days)?>];
 
   <?php // dates can be compared using > and < but not == or === ?>
-  for (var d=new Date(startDate + "T00:00:00"); !(d>e); d.setDate(d.getDate()+1))
+  for (const d=new Date(startDate + "T00:00:00"); !(d>e); d.setDate(d.getDate()+1))
   {
     if (excludeHiddenDays && (hiddenDays.indexOf(d.getDay()) >= 0))
     {
