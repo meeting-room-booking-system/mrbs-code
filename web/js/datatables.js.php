@@ -85,19 +85,19 @@ const getTypes = function getTypes(table) {
 // Extract email addresses from mailto: links in the columns defined by columnSelector and
 // copy them to the clipboard, optionally sorting the result.
 ?>
-var extractEmailAddresses = function(dt, columnSelector, sort) {
-  var result = [];
-  var message;
+const extractEmailAddresses = function(dt, columnSelector, sort) {
+  const result = [];
   const scheme = 'mailto:';
+  let message;
 
   $.each(dt.columns(columnSelector).data(), function (i, column) {
     $.each(column, function (j, value) {
       try {
-        var valueObject = $(value);
+        const valueObject = $(value);
         <?php // Need to search for an href in both this element and its descendants ?>
-        var href = valueObject.find('a').add(valueObject.filter('a')).attr('href');
+        const href = valueObject.find('a').add(valueObject.filter('a')).attr('href');
         if ((href !== undefined) && href.startsWith(scheme)) {
-          var address = href.substring(scheme.length);
+          const address = href.substring(scheme.length);
           if ((address !== '') && !result.includes(address)) {
             result.push(address);
           }
