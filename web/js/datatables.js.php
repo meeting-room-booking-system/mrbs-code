@@ -53,34 +53,32 @@ const initCompleteActions = function initCompleteActions(id, settings, json) {
 // of the table
 ?>
 const getTypes = function getTypes(table) {
-    var type,
-        types = {},
-        result = [];
+  const types = {};
+  const result = [];
 
-    table.find('thead tr:first th').each(function(i) {
-       var type = $(this).find('span').data('type');
+  table.find('thead tr:first th').each(function(i) {
+    const type = $(this).find('span').data('type');
 
-       if (type)
-       {
-         if (types[type] === undefined)
-         {
-           types[type] = [];
-         }
-         types[type].push(i);
-       }
-      });
-
-    for (type in types)
+    if (type)
     {
-      if (types.hasOwnProperty(type))
-      {
-        result.push({type: type,
-                     targets: types[type]});
-      }
+     if (types[type] === undefined)
+     {
+       types[type] = [];
+     }
+     types[type].push(i);
     }
+  });
 
-    return result;
-  };
+  for (const type in types)
+  {
+    if (types.hasOwnProperty(type))
+    {
+      result.push({type: type, targets: types[type]});
+    }
+  }
+
+  return result;
+};
 
 
 <?php
