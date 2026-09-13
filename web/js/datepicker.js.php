@@ -323,7 +323,7 @@ $(document).on('page_ready', function() {
       // Flatpickr allows the user to delete the date in the input field, even when allowInput
       // is false, resulting in an empty string, which then causes problems for edit_entry_handler.php.
       // See https://github.com/flatpickr/flatpickr/issues/936 and
-      // https://github.com/flatpickr/flatpickr/pull/2252 . At the time of writing the PR has not been
+      // https://github.com/flatpickr/flatpickr/pull/2252. At the time of writing the PR has not been
       // merged.  To get round this we substitute an empty string for the last known valid date,
       // but only for required inputs.
       ?>
