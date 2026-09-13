@@ -160,7 +160,7 @@ const customizeExcel = function (xlsx) {
 
 function makeDataTable(id, specificOptions, fixedColumnsOptions)
 {
-  var i,
+  let i,
       defaultOptions,
       mergedOptions,
       colVisIncludeCols,
@@ -169,12 +169,12 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
       dataTable,
       fixedColumns;
 
-  var buttonCommon = {
+  const buttonCommon = {
       exportOptions: {
         columns: ':visible',
         format: {
           body: function (data, row, column, node) {
-            var div = $('<div>' + data + '</div>');
+            const div = $('<div>' + data + '</div>');
             <?php
             // Remove any elements used for sorting, which are all <span>s that don't
             // have a class of 'normal' (which the CSS makes visible). Note that we cannot
@@ -184,14 +184,14 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
             ?>
             div.find('span:not(.normal)').remove();
             <?php // Apply the default export data stripping ?>
-            var result = $.fn.dataTable.Buttons.stripData(div.html());
+            let result = $.fn.dataTable.Buttons.stripData(div.html());
             <?php
             // If that is the empty string then it may be that the data is actually a form
             // and the text we want is the text in the submit button.
             ?>
             if (result === '')
             {
-              var value = div.find('input[type="submit"]').attr('value');
+              const value = div.find('input[type="submit"]').attr('value');
               if (value !== undefined)
               {
                 result = value;
