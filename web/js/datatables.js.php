@@ -5,7 +5,7 @@ namespace MRBS;
 require "../defaultincludes.inc";
 
 http_headers(array("Content-type: application/x-javascript"),
-  60*30);  // 30 minute expiry
+  60*30);  // 30-minute expiry
 
 // See https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.pagesetup?view=openxml-2.8.1
 define('EXCEL_PAGE_SIZES', array(
@@ -41,18 +41,18 @@ else
 // Remember that some of the table initialisation operations, eg loading of the
 // language file, are asynchronous.
 ?>
-var initCompleteActions = function initCompleteActions(id, settings, json) {
+const initCompleteActions = function initCompleteActions(id, settings, json) {
   <?php // Make the table visible ?>
   $('.datatable_container').css('visibility', 'visible');
   <?php // Need to adjust column sizing after the table is made visible ?>
   $(id).DataTable().columns.adjust().draw();
-}
+};
 
 <?php
 // Get the types, which are assumed to be in a data-type in a <span> in the <th>
 // of the table
 ?>
-var getTypes = function getTypes(table) {
+const getTypes = function getTypes(table) {
     var type,
         types = {},
         result = [];
