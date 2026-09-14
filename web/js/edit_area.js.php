@@ -42,53 +42,55 @@ function toggleMode(speed)
 
 function getTimeString(time, twentyfourhour_format)
 {
-   <?php
-   // Converts a time (in minutes since midnight) into a string
-   // of the form hh:mm if twentyfourhour_format is true,
-   // otherwise of the form hh:mm am/pm.
+  <?php
+  // Converts a time (in minutes since midnight) into a string
+  // of the form hh:mm if twentyfourhour_format is true,
+  // otherwise of the form hh:mm am/pm.
 
-   // This function doesn't do a great job of replicating the PHP
-   // internationalised format, but is probably sufficient for a
-   // rarely used admin page.
-   ?>
-   var ap,
-       timeString,
-       minutes = time % 60;
-   time -= minutes;
-   var hour = time/60;
-   if (!twentyfourhour_format)
-   {
-     if (hour > 11)
-     {
-       ap = "<?php echo datetime_format(array('pattern' => 'a'), mktime(14, 0, 0)) ?>";
-     }
-     else
-     {
-       ap = "<?php echo datetime_format(array('pattern' => 'a'), mktime(10, 0, 0)) ?>";
-     }
-     if (hour > 12)
-     {
-       hour = hour - 12;
-     }
-     if (hour === 0)
-     {
+  // This function doesn't do a great job of replicating the PHP
+  // internationalised format, but is probably sufficient for a
+  // rarely used admin page.
+  ?>
+  let ap;
+  let timeString;
+  let minutes = time % 60;
+  time -= minutes;
+  let hour = time/60;
+
+  if (!twentyfourhour_format)
+  {
+    if (hour > 11)
+    {
+      ap = "<?php echo datetime_format(array('pattern' => 'a'), mktime(14, 0, 0)) ?>";
+    }
+    else
+    {
+      ap = "<?php echo datetime_format(array('pattern' => 'a'), mktime(10, 0, 0)) ?>";
+    }
+    if (hour > 12)
+    {
+      hour = hour - 12;
+    }
+    if (hour === 0)
+    {
        hour = 12;
-     }
-   }
-   if (hour < 10)
-   {
-     hour   = "0" + hour;
-   }
-   if (minutes < 10)
-   {
-     minutes = "0" + minutes;
-   }
-   timeString = hour + ':' + minutes;
-   if (!twentyfourhour_format)
-   {
-     timeString += ap;
-   }
-   return timeString;
+    }
+  }
+
+  if (hour < 10)
+  {
+    hour   = "0" + hour;
+  }
+  if (minutes < 10)
+  {
+    minutes = "0" + minutes;
+  }
+  timeString = hour + ':' + minutes;
+  if (!twentyfourhour_format)
+  {
+    timeString += ap;
+  }
+  return timeString;
 } // function getTimeString()
 
 
