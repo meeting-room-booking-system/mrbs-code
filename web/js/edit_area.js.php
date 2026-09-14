@@ -5,14 +5,14 @@ namespace MRBS;
 require "../defaultincludes.inc";
 
 http_headers(array("Content-type: application/x-javascript"),
-             60*30);  // 30 minute expiry
+             60*30);  // 30-minute expiry
 ?>
 
 'use strict';
 
 <?php
 // Show or Hide the settings for Times and the note about Periods as
-// appropriate.  Also toggle the required property on the area_periods[]
+// appropriate.  Also, toggle the required property on the area_periods[]
 // inputs: if they are left as required when they are hidden, then the
 // browser will try and make you complete them, but throw an error because
 // they cannot be brought in to focus. ?>
@@ -195,9 +195,9 @@ function generateLastSlotSelect()
 
 <?php
 // Check to see if there's only one period name left and, if so,
-// disable the delete button, to make sure there's always at least one
+// disable the delete button to make sure there's always at least one
 // period.  (We could in theory have no period names, but it doesn't
-// have a practical use.  Besides, always having at least one makes the
+// have a practical use. Besides, always having at least one makes the
 // code a little simpler because there will always be something to clone.)
 ?>
 function checkForLastPeriodName()
