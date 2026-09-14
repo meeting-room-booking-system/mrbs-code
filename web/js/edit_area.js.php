@@ -117,7 +117,7 @@ function hhmmToMins(hhmm)
     return null;
   }
 
-  var array = hhmm.split(':');
+  const array = hhmm.split(':');
   return (parseInt(array[0], 10) * 60) + parseInt(array[1], 10);
 }
 
@@ -142,11 +142,12 @@ function generateLastSlotSelect()
   // Turn the last slot field into a select box that only contains permitted values
   // given the first slot and resolution
   ?>
-  var resMins, tCorrected,
-      firstSlot, lastSlot,
-      minsPerDay = <?php echo MINUTES_PER_DAY ?>;
+  let tCorrected;
+  let firstSlot;
+  let lastSlot;
+  const minsPerDay = <?php echo MINUTES_PER_DAY ?>;
+  const resMins = getResolutionMinutes();
 
-  resMins = getResolutionMinutes();
   if (isNaN(resMins) || (resMins === null) || (resMins === 0))
   {
     return;  <?php // avoid endless loops and divide by zero errors ?>
@@ -165,13 +166,13 @@ function generateLastSlotSelect()
   // We allow the "day" to go all the way past midnight and up to the start of the
   // next first slot.
   ?>
-  var lastPossible = minsPerDay + firstSlot - resMins;
-  var name = 'area_start_last_slot';
-  var element = $('[name="' + name + '"]');
+  const lastPossible = minsPerDay + firstSlot - resMins;
+  const name = 'area_start_last_slot';
+  const element = $('[name="' + name + '"]');
 
-  var select = $('<select>').attr('name', name);
+  const select = $('<select>').attr('name', name);
 
-  for (var t=firstSlot; t <= lastPossible; t += resMins)
+  for (let t=firstSlot; t <= lastPossible; t += resMins)
   {
     tCorrected = t % minsPerDay;  <?php // subtract one day if past midnight?>
     <?php // Calculate the closest option to the old last slot ?>
@@ -245,13 +246,13 @@ $(document).on('page_ready', function() {
   // icons because there must be more than one having added one.
   ?>
   $('#add_period').on('click', function() {
-      var lastPeriodName = $('#period_settings .period_name').last(),
-          clone = lastPeriodName.clone(true); <?php // duplicate data and events ?>
+    const lastPeriodName = $('#period_settings .period_name').last(),
+    clone = lastPeriodName.clone(true); <?php // duplicate data and events ?>
 
-      clone.find('input').val('');
-      clone.insertAfter(lastPeriodName).find('input').trigger('focus');
-      $('.delete_period').show();
-    });
+    clone.find('input').val('');
+    clone.insertAfter(lastPeriodName).find('input').trigger('focus');
+    $('.delete_period').show();
+  });
 
   <?php
   // Show or hide the period times, depending on whether the use_period_times checkbox is checked.
