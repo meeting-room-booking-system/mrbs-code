@@ -10,6 +10,7 @@ http_headers(array("Content-type: application/x-javascript"),
 
 'use strict';
 
+
 <?php
 // Show or Hide the settings for Times and the note about Periods as
 // appropriate.  Also, toggle the required property on the area_periods[]
@@ -39,59 +40,22 @@ function toggleMode(speed)
   }
 }
 
-
-function getTimeString(time, twentyfourhour_format)
+<?php
+// Converts a time (in minutes since midnight) into a string of the form HH:mm,
+// or in the format appropriate for the locale if localised is true.
+?>
+function getTimeString(minutes, localised)
 {
-  <?php
-  // Converts a time (in minutes since midnight) into a string
-  // of the form hh:mm if twentyfourhour_format is true,
-  // otherwise of the form hh:mm am/pm.
+  const date = new Date(Date.UTC(2026, 0)); // Choose any UTC date
+  date.setTime(date.getTime() + (minutes * 60000));
 
-  // This function doesn't do a great job of replicating the PHP
-  // internationalised format, but is probably sufficient for a
-  // rarely used admin page.
-  ?>
-  let ap;
-  let timeString;
-  let minutes = time % 60;
-  time -= minutes;
-  let hour = time/60;
-
-  if (!twentyfourhour_format)
+  if (localised)
   {
-    if (hour > 11)
-    {
-      ap = "<?php echo datetime_format(array('pattern' => 'a'), mktime(14, 0, 0)) ?>";
-    }
-    else
-    {
-      ap = "<?php echo datetime_format(array('pattern' => 'a'), mktime(10, 0, 0)) ?>";
-    }
-    if (hour > 12)
-    {
-      hour = hour - 12;
-    }
-    if (hour === 0)
-    {
-       hour = 12;
-    }
+    return date.toLocaleTimeString(args.langPrefs, {timeStyle: 'short', timeZone: 'UTC'});
   }
 
-  if (hour < 10)
-  {
-    hour   = "0" + hour;
-  }
-  if (minutes < 10)
-  {
-    minutes = "0" + minutes;
-  }
-  timeString = hour + ':' + minutes;
-  if (!twentyfourhour_format)
-  {
-    timeString += ap;
-  }
-  return timeString;
-} // function getTimeString()
+  return date.toUTCString().match(/\d{2}:\d{2}/)[0];
+}
 
 
 <?php // Get the resolution in minutes ?>
@@ -181,12 +145,12 @@ function generateLastSlotSelect()
       lastSlot = tCorrected;
     }
     select.append($('<option>')
-                  .val(getTimeString(tCorrected, true))
-                  .text(getTimeString(tCorrected, <?php echo (is_ampm() ? "false" : "true") ?>)));
+                  .val(getTimeString(tCorrected, false))
+                  .text(getTimeString(tCorrected, true)));
   }
 
   <?php // and make the selected option the new last slot value ?>
-  select.val(getTimeString(lastSlot, true));
+  select.val(getTimeString(lastSlot, false));
   <?php // finally, replace the element with the new <select> ?>
   element.replaceWith(select);
   $('#last_slot').css('visibility', 'visible');
@@ -207,9 +171,6 @@ function checkForLastPeriodName()
     $('.delete_period').hide();
   }
 }
-
-
-
 
 $(document).on('page_ready', function() {
 
