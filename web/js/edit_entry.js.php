@@ -10,7 +10,7 @@ http_headers(array("Content-type: application/x-javascript"),
 
 'use strict';
 
-var isBookAdmin;
+let isBookAdmin;
 
 <?php
 // Create a JavaScript version of the PHP $is_mandatory_fields variable
@@ -54,34 +54,34 @@ echo "};\n";
 // books the slot you are looking at.  If setting the timer
 // it also performs an immediate check.
 ?>
-var conflictTimer = function conflictTimer(set) {
-    <?php
-    if (!empty($ajax_refresh_rate))
-    {
-      ?>
-      if (set)
-      {
-        <?php
-        // (Note the config variable is in seconds, but the setInterval() function
-        // uses milliseconds)
-        // Only set the timer if the page is visible
-        ?>
-        if (!isHidden())
-        {
-          checkConflicts(true);
-          conflictTimer.id = window.setInterval(function() {
-              checkConflicts(true);
-            }, <?php echo $ajax_refresh_rate * 1000 ?>);
-        }
-      }
-      else if (typeof conflictTimer.id !== 'undefined')
-      {
-        window.clearInterval(conflictTimer.id);
-      }
-      <?php
-    }
+const conflictTimer = function conflictTimer(set) {
+  <?php
+  if (!empty($ajax_refresh_rate))
+  {
     ?>
-  };
+    if (set)
+    {
+      <?php
+      // (Note the config variable is in seconds, but the setInterval() function
+      // uses milliseconds)
+      // Only set the timer if the page is visible
+      ?>
+      if (!isHidden())
+      {
+        checkConflicts(true);
+        conflictTimer.id = window.setInterval(function() {
+            checkConflicts(true);
+          }, <?php echo $ajax_refresh_rate * 1000 ?>);
+      }
+    }
+    else if (typeof conflictTimer.id !== 'undefined')
+    {
+      window.clearInterval(conflictTimer.id);
+    }
+    <?php
+  }
+  ?>
+};
 
 
 <?php
@@ -89,105 +89,105 @@ var conflictTimer = function conflictTimer(set) {
 // if it's a repeating booking, (2) show/hide the repeat end date and skip fields and
 // (3) display the secondary repeat type fieldset appropriate to the selected repeat type.
 ?>
-var changeRepTypeDetails = function changeRepTypeDetails() {
-    var repType = parseInt($('input[name="rep_type"]:checked').val(), 10);
-    var isRepeat = (repType !== <?php echo RepeatRule::NONE ?>);
-    <?php
-    // Add a 'required' attribute to the rep_interval input to prevent users entering an
-    // empty string.  But remove it if it's not a repeating entry, because if they happen
-    // to have an empty string they won't see the validation message since the input will
-    // be hidden.
-    ?>
-    $('#rep_interval').prop('required', isRepeat);
-    <?php
-    // Add a 'required' attribute to the rep_end_date input if shown to prevent users
-    //  entering an empty string.  Show/hide the repeat end date and skip fields
-    ?>
-    $('#rep_end_date').prop('required', isRepeat).parent().toggle(isRepeat);
-    $('#skip').parent().toggle(isRepeat);
-    <?php // Show the appropriate details ?>
-    $('.rep_type_details').hide();
-    switch (repType)
-    {
-      case <?php echo RepeatRule::WEEKLY ?>:
-        $('#rep_weekly').show();
-        break;
-      case <?php echo RepeatRule::MONTHLY ?>:
-        $('#rep_monthly').show();
-        break;
-      default:
-        break;
-    }
-  };
+const changeRepTypeDetails = function changeRepTypeDetails() {
+  const repType = parseInt($('input[name="rep_type"]:checked').val(), 10);
+  const isRepeat = (repType !== <?php echo RepeatRule::NONE ?>);
+  <?php
+  // Add a 'required' attribute to the rep_interval input to prevent users entering an
+  // empty string.  But remove it if it's not a repeating entry, because if they happen
+  // to have an empty string they won't see the validation message since the input will
+  // be hidden.
+  ?>
+  $('#rep_interval').prop('required', isRepeat);
+  <?php
+  // Add a 'required' attribute to the rep_end_date input if shown to prevent users
+  //  entering an empty string.  Show/hide the repeat end date and skip fields
+  ?>
+  $('#rep_end_date').prop('required', isRepeat).parent().toggle(isRepeat);
+  $('#skip').parent().toggle(isRepeat);
+  <?php // Show the appropriate details ?>
+  $('.rep_type_details').hide();
+  switch (repType)
+  {
+    case <?php echo RepeatRule::WEEKLY ?>:
+      $('#rep_weekly').show();
+      break;
+    case <?php echo RepeatRule::MONTHLY ?>:
+      $('#rep_monthly').show();
+      break;
+    default:
+      break;
+  }
+};
 
 
 <?php
 // Function to change the units for the repeat interval to match the repeat type.
 ?>
-var changeRepIntervalUnits = function changeRepIntervalUnits() {
-    var repType = parseInt($('input[name="rep_type"]:checked').val(), 10);
-    var repInterval = parseInt($('input[name="rep_interval"]').val(), 10);
-    var units = $('#interval_units');
-    var text;
-    switch (repType)
-    {
-      case <?php echo RepeatRule::DAILY ?>:
-        text = (repInterval === 1) ? '<?php echo get_js_vocab('day') ?>' : '<?php echo get_js_vocab('days') ?>';
-        break;
-      case <?php echo RepeatRule::WEEKLY ?>:
-        text = (repInterval === 1) ? '<?php echo get_js_vocab('week') ?>' : '<?php echo get_js_vocab('weeks') ?>';
-        break;
-      case <?php echo RepeatRule::MONTHLY ?>:
-        text = (repInterval === 1) ? '<?php echo get_js_vocab('month') ?>' : '<?php echo get_js_vocab('months') ?>';
-        break;
-      case <?php echo RepeatRule::YEARLY ?>:
-        text = (repInterval === 1) ? '<?php echo get_js_vocab('year_lc') ?>' : '<?php echo get_js_vocab('years') ?>';
-        break;
-      default:
-        text = units.text();
-        break;
-    }
-    units.text(text);
+const changeRepIntervalUnits = function changeRepIntervalUnits() {
+  const repType = parseInt($('input[name="rep_type"]:checked').val(), 10);
+  const repInterval = parseInt($('input[name="rep_interval"]').val(), 10);
+  const units = $('#interval_units');
+  let text;
+  switch (repType)
+  {
+    case <?php echo RepeatRule::DAILY ?>:
+      text = (repInterval === 1) ? '<?php echo get_js_vocab('day') ?>' : '<?php echo get_js_vocab('days') ?>';
+      break;
+    case <?php echo RepeatRule::WEEKLY ?>:
+      text = (repInterval === 1) ? '<?php echo get_js_vocab('week') ?>' : '<?php echo get_js_vocab('weeks') ?>';
+      break;
+    case <?php echo RepeatRule::MONTHLY ?>:
+      text = (repInterval === 1) ? '<?php echo get_js_vocab('month') ?>' : '<?php echo get_js_vocab('months') ?>';
+      break;
+    case <?php echo RepeatRule::YEARLY ?>:
+      text = (repInterval === 1) ? '<?php echo get_js_vocab('year_lc') ?>' : '<?php echo get_js_vocab('years') ?>';
+      break;
+    default:
+      text = units.text();
+      break;
+  }
+  units.text(text);
 
-    units.parent().toggle(repType !== <?php echo RepeatRule::NONE ?>);
-  };
+  units.parent().toggle(repType !== <?php echo RepeatRule::NONE ?>);
+};
 
 
 // areaConfig returns the properties ('enable_periods', etc.) for an area,
 // by default the current area
-var areaConfig = function areaConfig(property, areaId) {
+const areaConfig = function areaConfig(property, areaId) {
 
-    var properties = ['enable_periods', 'n_periods', 'default_duration', 'max_duration_enabled',
-                      'max_duration_secs', 'max_duration_periods', 'max_duration_qty',
-                      'max_duration_units', 'timezone'];
-    var i, p, room;
+  const properties = ['enable_periods', 'n_periods', 'default_duration', 'max_duration_enabled',
+    'max_duration_secs', 'max_duration_periods', 'max_duration_qty',
+    'max_duration_units', 'timezone'];
+  let i, p, room;
 
-    if ($.inArray(property, properties) < 0)
-    {
-      throw new Error("areaConfig(): invalid property '" + property + "' passed to areaConfig");
-    }
+  if ($.inArray(property, properties) < 0)
+  {
+    throw new Error("areaConfig(): invalid property '" + property + "' passed to areaConfig");
+  }
 
-    if (areaId === undefined)
-    {
-      areaId = $('#area').val();
-    }
+  if (areaId === undefined)
+  {
+    areaId = $('#area').val();
+  }
 
-    if (areaConfig.data === undefined)
+  if (areaConfig.data === undefined)
+  {
+    areaConfig.data = [];
+  }
+  if (areaConfig.data[areaId] === undefined)
+  {
+    areaConfig.data[areaId] = {};
+    room = $('#rooms' + areaId);
+    for (i=0; i<properties.length; i++)
     {
-      areaConfig.data = [];
+      p = properties[i];
+      areaConfig.data[areaId][p] = room.data(p);
     }
-    if (areaConfig.data[areaId] === undefined)
-    {
-      areaConfig.data[areaId] = {};
-      room = $('#rooms' + areaId);
-      for (i=0; i<properties.length; i++)
-      {
-        p = properties[i];
-        areaConfig.data[areaId][p] = room.data(p);
-      }
-    }
-    return areaConfig.data[areaId][property];
-  };
+  }
+  return areaConfig.data[areaId][property];
+};
 
 
 <?php
@@ -201,9 +201,9 @@ function checkTimeSlots(jqDate)
 {
   if (!areaConfig('enable_periods'))
   {
-    var siblings = jqDate.siblings();
-    var select = jqDate.parent().parent().siblings('select:visible');
-    var slots = [];
+    const siblings = jqDate.siblings();
+    const select = jqDate.parent().parent().siblings('select:visible');
+    const slots = [];
     select.find('option').each(function() {
         slots.push($(this).val());
       });
@@ -211,13 +211,15 @@ function checkTimeSlots(jqDate)
     // We pass the id of the element as the request id so that we can match
     // the result to the request
     ?>
-    var params = {csrf_token: getCSRFToken(),
-                  id: select.attr('id'),
-                  day: parseInt(siblings.filter('input[id*="day"]').val(), 10),
-                  month: parseInt(siblings.filter('input[id*="month"]').val(), 10),
-                  year: parseInt(siblings.filter('input[id*="year"]').val(), 10),
-                  tz: areaConfig('timezone'),
-                  slots: slots};
+    const params = {
+      csrf_token: getCSRFToken(),
+      id: select.attr('id'),
+      day: parseInt(siblings.filter('input[id*="day"]').val(), 10),
+      month: parseInt(siblings.filter('input[id*="month"]').val(), 10),
+      year: parseInt(siblings.filter('input[id*="year"]').val(), 10),
+      tz: areaConfig('timezone'),
+      slots: slots
+    };
 
     if(args.site)
     {
@@ -244,20 +246,20 @@ function checkTimeSlots(jqDate)
 ?>
 function onAllDayClick()
 {
-  var form = $('#main');
+  const form = $('#main');
   if (form.length === 0)
   {
     return;
   }
 
-  var startSelect = form.find('#start_seconds'),
-      endSelect = form.find('#end_seconds'),
-      allDay = form.find('#all_day');
+  const startSelect = form.find('#start_seconds');
+  const endSelect = form.find('#end_seconds');
+  const allDay = form.find('#all_day');
 
-  var startDatepicker = form.find('#start_date'),
-      endDatepicker = form.find('#end_date');
+  const startDatepicker = form.find('#start_date');
+  const endDatepicker = form.find('#end_date');
 
-  var date, firstSlot, lastSlot;
+  let date, firstSlot, lastSlot;
 
   if (allDay.is(':checked')) // If checking the box...
   {
@@ -319,7 +321,7 @@ function onAllDayClick()
 ?>
 function validationMessages(areaId)
 {
-  var field, label;
+  let field, label;
   <?php
   // First, create a property in the vocab object for each of the mandatory fields.  The name and rooms field are
   // implicitly mandatory.
@@ -339,7 +341,7 @@ function validationMessages(areaId)
   // Then (a) fill each of those properties with an error message and (b) redefine
   // the HTML5 error message
   ?>
-  for (var key in validationMessages.vocab)
+  for (const key in validationMessages.vocab)
   {
     if (validationMessages.vocab.hasOwnProperty(key))
     {
@@ -401,9 +403,9 @@ function validationMessages(areaId)
 ?>
 function validate(form)
 {
-  var testInput = document.createElement("input");
-  var testSelect = document.createElement("select");
-  var validForm = true;
+  const testInput = document.createElement("input");
+  const testSelect = document.createElement("select");
+  let validForm = true;
 
   <?php
   // Mandatory fields (INPUT elements, except for checkboxes).
@@ -413,7 +415,7 @@ function validate(form)
   if (!("pattern" in testInput) || !("required" in testInput))
   {
     form.find('input').not('[type="checkbox"]').each(function() {
-      var id = $(this).attr('id');
+      const id = $(this).attr('id');
       if (validationMessages.vocab[id])
       {
         if (<?php echo REGEX_TEXT_NEG ?>.test($(this).val()))
@@ -437,7 +439,7 @@ function validate(form)
   if (!("required" in testInput))
   {
     form.find('input').filter('[type="checkbox"]').each(function() {
-      var id = $(this).attr('id');
+      const id = $(this).attr('id');
       if (validationMessages.vocab[id])
       {
         if (!$(this).is(':checked'))
