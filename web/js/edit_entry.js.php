@@ -93,9 +93,9 @@ const changeRepTypeDetails = function changeRepTypeDetails() {
   const repType = parseInt($('input[name="rep_type"]:checked').val(), 10);
   const isRepeat = (repType !== <?php echo RepeatRule::NONE ?>);
   <?php
-  // Add a 'required' attribute to the rep_interval input to prevent users entering an
+  // Add a 'required' attribute to the rep_interval input to prevent users from entering an
   // empty string.  But remove it if it's not a repeating entry, because if they happen
-  // to have an empty string they won't see the validation message since the input will
+  // to have an empty string they won't see the validation message, since the input will
   // be hidden.
   ?>
   $('#rep_interval').prop('required', isRepeat);
@@ -280,7 +280,7 @@ function onAllDayClick()
         (onAllDayClick.oldStartDatepicker === onAllDayClick.oldEndDatepicker))
     {
       <?php
-      // If the booking day spans midnight then the first and last slots
+      // If the booking day spans midnight, then the first and last slots
       // are going to be on different days.
       // This code works because new Date() with just a date string generates a UTC
       // date and toISOString() always returns a UTC datetime.
@@ -551,8 +551,8 @@ function validate(form)
   <?php
   // Form submit can take some time, especially if mails are enabled and
   // there are more than one recipient. To avoid users doing weird things
-  // like clicking more than one time on submit button, we hide it as soon
-  // it is clicked.
+  // like clicking more than once on the submit button, we hide it as soon
+  // as it is clicked.
   ?>
   form.find('input[type=submit]').prop('disabled', true);
 
