@@ -975,17 +975,16 @@ const reloadSlotSelector = function reloadSlotSelector(select, area) {
 };
 
 
-var updateSelectorData = function updateSelectorData(){
-    var selectors = ['area', 'start_seconds', 'end_seconds'];
-    var i, select;
+const updateSelectorData = function updateSelectorData(){
+  const selectors = ['area', 'start_seconds', 'end_seconds'];
 
-    for (i=0; i<selectors.length; i++)
-    {
-      select = $('#' + selectors[i]);
-      select.data('previous', select.data('current'));
-      select.data('current', select.val());
-    }
-  };
+  for (let i=0; i<selectors.length; i++)
+  {
+    const select = $('#' + selectors[i]);
+    select.data('previous', select.data('current'));
+    select.data('current', select.val());
+  }
+};
 
 
 function adjustSlotSelectors()
