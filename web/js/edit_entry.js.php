@@ -963,9 +963,7 @@ function adjustWidth(a, b)
   ?>
   a.css({width: "auto"});
   b.css({width: "auto"});
-  const aWidth = a.width();
-  const bWidth = b.width();
-  const maxWidth = Math.max(aWidth, bWidth) + 2;
+  const maxWidth = Math.max(a.width(), b.width()) + 2;
   a.width(maxWidth);
   b.width(maxWidth);
 }
