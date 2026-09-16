@@ -5,7 +5,7 @@ namespace MRBS;
 require "../defaultincludes.inc";
 
 http_headers(array("Content-type: application/x-javascript"),
-             60*30);  // 30 minute expiry
+             60*30);  // 30-minute expiry
 ?>
 
 'use strict';
@@ -51,7 +51,7 @@ echo "};\n";
 <?php
 // Set (if set is true) or clear (if set is false) a timer
 // to check for conflicts periodically in case someone else
-// books the slot you are looking at.  If setting the timer
+// books the slot you are looking at.  If setting the timer,
 // it also performs an immediate check.
 ?>
 const conflictTimer = function conflictTimer(set) {
@@ -93,9 +93,9 @@ const changeRepTypeDetails = function changeRepTypeDetails() {
   const repType = parseInt($('input[name="rep_type"]:checked').val(), 10);
   const isRepeat = (repType !== <?php echo RepeatRule::NONE ?>);
   <?php
-  // Add a 'required' attribute to the rep_interval input to prevent users entering an
+  // Add a 'required' attribute to the rep_interval input to prevent users from entering an
   // empty string.  But remove it if it's not a repeating entry, because if they happen
-  // to have an empty string they won't see the validation message since the input will
+  // to have an empty string they won't see the validation message, since the input will
   // be hidden.
   ?>
   $('#rep_interval').prop('required', isRepeat);
@@ -280,7 +280,7 @@ function onAllDayClick()
         (onAllDayClick.oldStartDatepicker === onAllDayClick.oldEndDatepicker))
     {
       <?php
-      // If the booking day spans midnight then the first and last slots
+      // If the booking day spans midnight, then the first and last slots
       // are going to be on different days.
       // This code works because new Date() with just a date string generates a UTC
       // date and toISOString() always returns a UTC datetime.
@@ -529,7 +529,8 @@ function validate(form)
     // Check that the repeat end date has been set (people often forget to do so).  If it's the
     // same as the entry end date then it probably hasn't.
     ?>
-    if ($('input[name="rep_end_date"]').val() === $('input[name="end_date"]').val())
+    const repEndDate = $('input[name="rep_end_date"]').val();
+    if (repEndDate === $('input[name="end_date"]').val())
     {
       if (!window.confirm("<?php echo get_js_vocab('confirm_rep_end_date') ?>"))
       {
@@ -540,7 +541,7 @@ function validate(form)
     // Check that the repeat end date is not before the start date.  If it is, nothing
     // will be booked, which is probably not what was intended.
     ?>
-    if ($('input[name="rep_end_date"]').val() < $('input[name="start_date"]').val())
+    if (repEndDate < $('input[name="start_date"]').val())
     {
       window.alert("<?php echo get_js_vocab('rep_end_date_before_start_date') ?>");
       return false;
@@ -550,8 +551,8 @@ function validate(form)
   <?php
   // Form submit can take some time, especially if mails are enabled and
   // there are more than one recipient. To avoid users doing weird things
-  // like clicking more than one time on submit button, we hide it as soon
-  // it is clicked.
+  // like clicking more than once on the submit button, we hide it as soon
+  // as it is clicked.
   ?>
   form.find('input[type=submit]').prop('disabled', true);
 
@@ -1059,8 +1060,8 @@ function adjustSlotSelectors()
     // We will try and be conservative and find a start time that includes the previous start time
     // and an end time that includes the previous end time.   This means that by default the
     // booking period will include the old booking period (unless we've hit the start or
-    // end of day).   But it does mean that as you switch between areas the booking period
-    // tends to get bigger:  if you switch fromn Area 1 to Area 2 and then back again it's
+    // end of the day).  But it does mean that as you switch between areas, the booking period
+    // tends to get bigger: if you switch from Area 1 to Area 2 and then back again it's
     // possible that the booking period for Area 1 is longer than it was originally.
     ?>
     if (oldEnablePeriods === enablePeriods)
@@ -1090,9 +1091,9 @@ function adjustSlotSelectors()
     }
     <?php
     // The modes are different, so it doesn't make any sense to match up old and new
-    // times/periods.   The best we can do is choose some sensible defaults, which
+    // times/periods.   The best we can do is to choose some sensible defaults, which
     // is to set the start to the first possible start, and the end to the start + the
-    // default duration (or the last possible end value if that is less)
+    // default duration (or the last possible end value if that is less).
     ?>
     else
     {
@@ -1470,7 +1471,7 @@ $(document).on('page_ready', function() {
 
         <?php
         // For each field which is only mandatory for some areas (i.e. the $is_mandatory_field value is an array),
-        // check whether the new area is in the array, and if so add the required attribute, otherwise remove it.
+        // check whether the new area is in the array, and if so, add the required attribute, otherwise remove it.
         ?>
         for (const [fieldName, value] of Object.entries(mandatoryFields))
         {
@@ -1794,8 +1795,8 @@ $(document).on('page_ready', function() {
 
   <?php
   // Put the booking name field in focus (but only for new bookings,
-  // ie when the field is empty:  if it's a new booking you have to
-  // complete that field, but if it's an existing booking you might
+  // ie when the field is empty: if it's a new booking, you have to
+  // complete that field; but if it's an existing booking, you might
   // want to edit any field)
   ?>
   const nameInput = form.find('#name');
