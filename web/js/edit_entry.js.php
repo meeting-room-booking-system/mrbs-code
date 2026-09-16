@@ -463,7 +463,7 @@ function validate(form)
   // the browser will let through a string consisting only of whitespace.
   ?>
   form.find('textarea').each(function() {
-    var id = $(this).attr('id');
+    const id = $(this).attr('id');
     if (validationMessages.vocab[id])
     {
       if (<?php echo REGEX_TEXT_NEG ?>.test($(this).val()))
@@ -486,7 +486,7 @@ function validate(form)
   if (!("required" in testSelect))
   {
     form.find('select').each(function() {
-      var id = $(this).attr('id');
+      const id = $(this).attr('id');
       if (validationMessages.vocab[id])
       {
         if ($(this).val() === '')
@@ -504,7 +504,7 @@ function validate(form)
   }
 
   <?php // Check that the start date is not after the end date ?>
-  var dateDiff = getDateDifference();
+  const dateDiff = getDateDifference();
   if (dateDiff < 0)
   {
     window.alert("<?php echo get_js_vocab('start_after_end_long')?>");
@@ -512,7 +512,7 @@ function validate(form)
   }
 
   <?php // Repeat checks ?>
-  var repType = form.find('input:radio[name=rep_type]:checked').val();
+  const repType = form.find('input:radio[name=rep_type]:checked').val();
   if ((repType !== undefined) && (parseInt(repType, 10) !== <?php echo RepeatRule::NONE ?>))
   {
     <?php
@@ -576,7 +576,7 @@ function checkConflicts(optional)
   <?php // Get the value of the field in the form ?>
   function getFormValue(formInput)
   {
-    var value;
+    let value;
     <?php
     // Scalar parameters (three types - checkboxes, radio buttons and the rest)
     ?>
@@ -605,7 +605,7 @@ function checkConflicts(optional)
       formInput.each(function() {
           if ((formInput.filter(':checkbox').length === 0) || $(this).is(':checked'))
           {
-            var thisValue = $(this).val();
+            const thisValue = $(this).val();
             if (Array.isArray(thisValue))
             {
               $.merge(value, thisValue);
@@ -646,10 +646,10 @@ function checkConflicts(optional)
   // button - but how can you tell that it was the clicking of the submit button that
   // caused the change event?]
   ?>
-  var timeout = 200; <?php // ms ?>
+  const timeout = 200; <?php // ms ?>
   window.setTimeout(function() {
-    var params = {};
-    var form = $('form#main');
+    const params = {};
+    const form = $('form#main');
     <?php
     // Don't do anything if (a) the form doesn't exist (which it won't if the user
     // hasn't logged in) or (b) if the submit button has been pressed
@@ -681,7 +681,7 @@ function checkConflicts(optional)
     // Load the params object with the values of all the form fields that are not
     // disabled and are not submit buttons of one kind or another
     ?>
-    var relevantFields = form.find('[name]').not(':disabled, [type="submit"], [type="button"], [type="image"]');
+    const relevantFields = form.find('[name]').not(':disabled, [type="submit"], [type="button"], [type="image"]');
     relevantFields.each(function() {
         <?php
         // Go through each of the fields and if we haven't got the value for a name
@@ -725,10 +725,10 @@ function checkConflicts(optional)
         else {
           $('#checks').show();
           checkConflicts.nOutstanding--;
-          var conflictDiv = $('#conflict_check');
-          var scheduleDetails = $('#schedule_details');
-          var policyDetails = $('#policy_details');
-          var titleText, detailsHTML;
+          const conflictDiv = $('#conflict_check');
+          const scheduleDetails = $('#schedule_details');
+          const policyDetails = $('#policy_details');
+          let titleText, detailsHTML;
           if (result.conflicts.length === 0)
           {
             conflictDiv.attr('class', 'good');
@@ -754,8 +754,8 @@ function checkConflicts(optional)
           // notices (this happens when an admin user makes a booking that an ordinary user
           // would not be allowed to); otherwise "bad".  Content and styling are supplied by CSS.
           ?>
-          var policyDiv = $('#policy_check');
-          var rulesList;
+          const policyDiv = $('#policy_check');
+          let rulesList;
           if (result.violations.errors.length === 0)
           {
             if (result.violations.notices.length === 0)
@@ -797,7 +797,7 @@ function checkConflicts(optional)
 // Get the current vocab (in the appropriate language) for periods,
 // minutes, hours and days
 ?>
-var vocab = {};
+const vocab = {};
 vocab.periods = {singular: '<?php echo get_js_vocab("period_lc") ?>',
                  plural:   '<?php echo get_js_vocab("periods") ?>'};
 vocab.minutes = {singular: '<?php echo get_js_vocab("minute_lc") ?>',
@@ -813,7 +813,7 @@ vocab.days    = {singular: '<?php echo get_js_vocab("day") ?>',
 ?>
 function durFormat(r)
 {
-  var lastChar;
+  let lastChar;
 
   r = r.toFixed(2);
   r = parseFloat(r);
@@ -847,12 +847,12 @@ function durFormat(r)
 ?>
 function getDuration(from, to, days)
 {
-  var duration, durUnits;
-  var text = '';
-  var currentArea = $('#area').data('current');
-  var enablePeriods = areaConfig('enable_periods');
-  var durDays;
-  var minutesPerDay = <?php echo MINUTES_PER_DAY ?>;
+  let duration, durUnits;
+  let text = '';
+  const currentArea = $('#area').data('current');
+  const enablePeriods = areaConfig('enable_periods');
+  let durDays;
+  const minutesPerDay = <?php echo MINUTES_PER_DAY ?>;
 
 
   durUnits = (enablePeriods) ? '<?php echo "periods" ?>' : '<?php echo "minutes" ?>';
