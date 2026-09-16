@@ -978,9 +978,9 @@ const reloadSlotSelector = function reloadSlotSelector(select, area) {
 const updateSelectorData = function updateSelectorData(){
   const selectors = ['area', 'start_seconds', 'end_seconds'];
 
-  for (let i=0; i<selectors.length; i++)
+  for (const selector of selectors)
   {
-    const select = $('#' + selectors[i]);
+    const select = $('#' + selector);
     select.data('previous', select.data('current'));
     select.data('current', select.val());
   }
