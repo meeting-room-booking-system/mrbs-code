@@ -683,17 +683,17 @@ function checkConflicts(optional)
     ?>
     const relevantFields = form.find('[name]').not(':disabled, [type="submit"], [type="button"], [type="image"]');
     relevantFields.each(function() {
-        <?php
-        // Go through each of the fields and if we haven't got the value for a name
-        // then go and get it.  (Remember that arrays can give more than one field
-        // with the same name
-        ?>
-        var fieldName = $(this).attr('name');
-        if (params[fieldName] === undefined)
-        {
-          params[fieldName] = getFormValue(relevantFields.filter('[name=' + fieldName.replace('[', '\\[').replace(']', '\\]') + ']'));
-        }
-      });
+      <?php
+      // Go through each of the fields and if we haven't got the value for a name
+      // then go and get it.  (Remember that arrays can give more than one field
+      // with the same name
+      ?>
+      const fieldName = $(this).attr('name');
+      if (params[fieldName] === undefined)
+      {
+        params[fieldName] = getFormValue(relevantFields.filter('[name=' + fieldName.replace('[', '\\[').replace(']', '\\]') + ']'));
+      }
+    });
 
     <?php
     // For some reason I don't understand, posting an empty array will
@@ -701,11 +701,11 @@ function checkConflicts(optional)
     // that problem, delete the property if the array (really an object) is empty
     ?>
     $.each(params, function(i, val) {
-        if ((typeof(val) === 'object') && ((val === null) || (val.length === 0)))
-        {
-          delete params[i];
-        }
-      });
+      if ((typeof(val) === 'object') && ((val === null) || (val.length === 0)))
+      {
+        delete params[i];
+      }
+    });
 
     if(args.site)
     {
@@ -741,7 +741,7 @@ function checkConflicts(optional)
             detailsHTML = "<p>";
             titleText = '<?php echo escape_js(html_entity_decode(get_vocab("conflict"))) ?>' + "\n\n";
             detailsHTML += titleText + "<\/p>";
-            var conflictsList = getErrorList(result.conflicts);
+            const conflictsList = getErrorList(result.conflicts);
             detailsHTML += conflictsList.html;
             titleText += conflictsList.text;
           }
@@ -911,15 +911,15 @@ function getDuration(from, to, days)
 ?>
 function getDateDifference()
 {
-  var diff,
-      secondsPerDay = <?php echo SECONDS_PER_DAY ?>,
-      start = $('#start_date').val().split('-'),
-      startDate = new Date(parseInt(start[0], 10),
-                           parseInt(start[1], 10) - 1,
-                           parseInt(start[2], 10),
-                           12),
-      endDate = $('#end_date'),
-      end;
+  let diff;
+  const secondsPerDay = <?php echo SECONDS_PER_DAY ?>;
+  const start = $('#start_date').val().split('-');
+  const startDate = new Date(parseInt(start[0], 10),
+    parseInt(start[1], 10) - 1,
+    parseInt(start[2], 10),
+    12);
+  let endDate = $('#end_date');
+  let end;
 
   if (endDate.length === 0)
   {
@@ -971,10 +971,10 @@ function adjustWidth(a, b)
 }
 
 
-var reloadSlotSelector = function reloadSlotSelector(select, area) {
-    select.html($('#' + select.attr('id') + area).html())
-          .val(select.data('current'));
-  };
+const reloadSlotSelector = function reloadSlotSelector(select, area) {
+  select.html($('#' + select.attr('id') + area).html())
+    .val(select.data('current'));
+};
 
 
 var updateSelectorData = function updateSelectorData(){
