@@ -1001,27 +1001,27 @@ function adjustSlotSelectors()
   //     to have a go at finding a time/period in the new area as close
   //     as possible to the one that was selected in the old area.
   ?>
-  var area = $('#area'),
-      oldArea = area.data('previous'),
-      currentArea = area.data('current');
+  const area = $('#area');
+  const oldArea = area.data('previous');
+  const currentArea = area.data('current');
 
-  var enablePeriods    = areaConfig('enable_periods'),
-      oldEnablePeriods = areaConfig('enable_periods', oldArea),
-      defaultDuration  = areaConfig('default_duration');
+  const enablePeriods = areaConfig('enable_periods');
+  const oldEnablePeriods = areaConfig('enable_periods', oldArea);
+  const defaultDuration = areaConfig('default_duration');
 
-  var startSelect = $('#start_seconds'),
-      endSelect = $('#end_seconds'),
-      allDay = $('#all_day');
+  const startSelect = $('#start_seconds');
+  const endSelect = $('#end_seconds');
+  const allDay = $('#all_day');
 
-  var startKeepDisabled = startSelect.hasClass('keep_disabled'),
-      endKeepDisabled = endSelect.hasClass('keep_disabled'),
-      allDayKeepDisabled = allDay.hasClass('keep_disabled');
+  const startKeepDisabled = startSelect.hasClass('keep_disabled');
+  const endKeepDisabled = endSelect.hasClass('keep_disabled');
+  const allDayKeepDisabled = allDay.hasClass('keep_disabled');
 
-  var oldStartValue = parseInt(startSelect.data('previous'), 10),
-      oldEndValue = parseInt(endSelect.data('previous'), 10);
+  const oldStartValue = parseInt(startSelect.data('previous'), 10);
+  const oldEndValue = parseInt(endSelect.data('previous'), 10);
 
-  var nbsp = '\u00A0',
-      startValue, endValue, firstValue, lastValue, optionClone;
+  const nbsp = '\u00A0';
+  let startValue, endValue, firstValue, lastValue, optionClone;
 
   if (startSelect.length === 0)
   {
@@ -1126,7 +1126,7 @@ function adjustSlotSelectors()
     }
   }
 
-  var dateDifference = getDateDifference();
+  const dateDifference = getDateDifference();
 
   <?php
   // If All Day isn't checked then we need to work out whether the start
@@ -1136,7 +1136,7 @@ function adjustSlotSelectors()
   ?>
   if (!allDay.is(':checked'))
   {
-    var newState = (dateDifference < 0);
+    const newState = (dateDifference < 0);
     if (newState || startKeepDisabled)
     {
       startSelect.prop('disabled', true);
@@ -1175,82 +1175,81 @@ function adjustSlotSelectors()
 
   $('#end_seconds' + currentArea).find('option').each(function(i) {
 
-      var thisValue = parseInt($(this).val(), 10),
-          nPeriods           = areaConfig('n_periods'),
-          maxDurationEnabled = areaConfig('max_duration_enabled'),
-          maxDurationSecs    = areaConfig('max_duration_secs'),
-          maxDurationPeriods = areaConfig('max_duration_periods'),
-          maxDurationQty     = areaConfig('max_duration_qty'),
-          maxDurationUnits   = areaConfig('max_duration_units'),
-          secondsPerDay      = <?php echo SECONDS_PER_DAY ?>,
-          duration,
-          maxDuration;
+    const thisValue = parseInt($(this).val(), 10);
+    const nPeriods = areaConfig('n_periods');
+    const maxDurationEnabled = areaConfig('max_duration_enabled');
+    const maxDurationSecs = areaConfig('max_duration_secs');
+    const maxDurationPeriods = areaConfig('max_duration_periods');
+    const maxDurationQty = areaConfig('max_duration_qty');
+    const maxDurationUnits = areaConfig('max_duration_units');
+    const secondsPerDay      = <?php echo SECONDS_PER_DAY ?>;
+    let duration, maxDuration;
 
-      <?php
-      // Limit the end slots to the maximum duration if that is enabled, if the
-      // user is not a booking admin
-      ?>
-      if (!isBookAdmin)
+    <?php
+    // Limit the end slots to the maximum duration if that is enabled, if the
+    // user is not a booking admin
+    ?>
+    if (!isBookAdmin)
+    {
+      if (maxDurationEnabled)
       {
-        if (maxDurationEnabled)
+        <?php
+        // Calculate the duration in periods or seconds
+        ?>
+        duration =  thisValue - startValue;
+        if (enablePeriods)
         {
-          <?php
-          // Calculate the duration in periods or seconds
-          ?>
-          duration =  thisValue - startValue;
-          if (enablePeriods)
-          {
-            duration = duration/60 + 1;  <?php // because of the way periods work ?>
-            duration += dateDifference * nPeriods;
-          }
-          else
-          {
-            duration += dateDifference * secondsPerDay;
-          }
-          maxDuration = (enablePeriods) ? maxDurationPeriods : maxDurationSecs;
-          if (duration > maxDuration)
-          {
-            if (i === 0)
-            {
-              endSelect.append($(this).val(thisValue).text(nbsp));
-              var errorMessage = '<?php echo get_js_vocab("max_booking_duration") ?>' + nbsp;
-              if (enablePeriods)
-              {
-                errorMessage += maxDurationPeriods + nbsp;
-                errorMessage += (maxDurationPeriods > 1) ? vocab.periods.plural : vocab.periods.singular;
-              }
-              else
-              {
-                errorMessage += maxDurationQty + nbsp + maxDurationUnits;
-              }
-              $('#end_time_error').text(errorMessage);
-            }
-            else
-            {
-              return false;
-            }
-          }
-        }
-      }
-
-      if ((thisValue > startValue) ||
-          ((thisValue === startValue) && enablePeriods) ||
-          (dateDifference !== 0))
-      {
-        optionClone = $(this).clone();
-        if (dateDifference < 0)
-        {
-          optionClone.text('<?php echo get_js_vocab("start_after_end")?>');
+          duration = duration/60 + 1;  <?php // because of the way periods work ?>
+          duration += dateDifference * nPeriods;
         }
         else
         {
-          optionClone.text($(this).text() + nbsp + nbsp +
-                           '(' + getDuration(startValue, thisValue, dateDifference) +
-                           ')');
+          duration += dateDifference * secondsPerDay;
         }
-        endSelect.append(optionClone);
+        maxDuration = (enablePeriods) ? maxDurationPeriods : maxDurationSecs;
+        if (duration > maxDuration)
+        {
+          if (i === 0)
+          {
+            endSelect.append($(this).val(thisValue).text(nbsp));
+            var errorMessage = '<?php echo get_js_vocab("max_booking_duration") ?>' + nbsp;
+            if (enablePeriods)
+            {
+              errorMessage += maxDurationPeriods + nbsp;
+              errorMessage += (maxDurationPeriods > 1) ? vocab.periods.plural : vocab.periods.singular;
+            }
+            else
+            {
+              errorMessage += maxDurationQty + nbsp + maxDurationUnits;
+            }
+            $('#end_time_error').text(errorMessage);
+          }
+          else
+          {
+            return false;
+          }
+        }
       }
-    });
+    }
+
+    if ((thisValue > startValue) ||
+        ((thisValue === startValue) && enablePeriods) ||
+        (dateDifference !== 0))
+    {
+      optionClone = $(this).clone();
+      if (dateDifference < 0)
+      {
+        optionClone.text('<?php echo get_js_vocab("start_after_end")?>');
+      }
+      else
+      {
+        optionClone.text($(this).text() + nbsp + nbsp +
+                         '(' + getDuration(startValue, thisValue, dateDifference) +
+                         ')');
+      }
+      endSelect.append(optionClone);
+    }
+  });
 
   firstValue = parseInt(endSelect.find('option').first().val(), 10);
   lastValue = parseInt(endSelect.find('option').last().val(), 10);
