@@ -1279,23 +1279,23 @@ function adjustSlotSelectors()
 } <?php // function adjustSlotSelectors() ?>
 
 
-var editEntryVisChanged = function editEntryVisChanged() {
-    <?php
-    // Clear the conflict timer and then restart it.   We want
-    // a check to be performed immediately the page becomes
-    // visible again.
-    ?>
-    conflictTimer(false);
-    conflictTimer(true);
-  };
+const editEntryVisChanged = function editEntryVisChanged() {
+  <?php
+  // Clear the conflict timer and then restart it.   We want
+  // a check to be performed immediately the page becomes
+  // visible again.
+  ?>
+  conflictTimer(false);
+  conflictTimer(true);
+};
 
 
 function populateFromSessionStorage(form)
 {
-  var storedData = sessionStorage.getItem('form_data');
+  const storedData = sessionStorage.getItem('form_data');
   if (storedData)
   {
-    var form_data = JSON.parse(storedData);
+    const form_data = JSON.parse(storedData);
 
     <?php
     // Before we populate the form we have to set the area select to the correct
@@ -1311,7 +1311,7 @@ function populateFromSessionStorage(form)
     });
 
     <?php // Now iterate through the data again and populate the form ?>
-    var selects = {};
+    const selects = {};
 
     $.each(form_data, function (index, field)
     {
@@ -1321,9 +1321,9 @@ function populateFromSessionStorage(form)
         return;
       }
 
-      var el = $('[name="' + field.name + '"]'),
-        tagName = el.prop('tagName'),
-        type;
+      const el = $('[name="' + field.name + '"]');
+      const tagName = el.prop('tagName');
+      let type;
 
       <?php // Some of the variables, eg 'top', won't have a corresponding field ?>
       if (tagName === undefined)
@@ -1373,7 +1373,7 @@ function populateFromSessionStorage(form)
     });
 
     <?php // Now assign values to the selects ?>
-    for (var property in selects)
+    for (const property in selects)
     {
       $('[name="' + property + '"]').val(selects[property]).change();
     }
@@ -1386,8 +1386,8 @@ function populateFromSessionStorage(form)
       //   <datalist id="yyy">
       // and we want to copy the value from the hidden input to the visible one
       ?>
-      var prev1 = $(this).prev();
-      var prev2 = prev1.prev();
+      const prev1 = $(this).prev();
+      const prev2 = prev1.prev();
       if ($(this).attr('id') === prev2.attr('list'))
       {
         prev2.val(prev1.val());
@@ -1415,12 +1415,10 @@ $(document).on('page_ready', function() {
 
   isBookAdmin = args.isBookAdmin;
 
-  var form = $('#main'),
-      areaSelect = $('#area'),
-      startAndEndDates = $('#start_date, #end_date'),
-      startSelect,
-      endSelect,
-      allDay;
+  const form = $('#main');
+  let areaSelect = $('#area');
+  const startAndEndDates = $('#start_date, #end_date');
+  let startSelect, endSelect, allDay;
 
   <?php
   // If there's only one enabled area in the database there won't be an area
@@ -1452,50 +1450,50 @@ $(document).on('page_ready', function() {
       .data('current', areaSelect.val())
       .data('previous', areaSelect.val())
       .on('change', function() {
-          var newArea = $(this).val();
+        const newArea = $(this).val();
 
-          updateSelectorData();
+        updateSelectorData();
 
-          <?php // Switch room selects ?>
-          var roomSelect = $('#rooms');
-          roomSelect.html($('#rooms' + newArea).html());
+        <?php // Switch room selects ?>
+        const roomSelect = $('#rooms');
+        roomSelect.html($('#rooms' + newArea).html());
 
-          <?php // Switch start time select ?>
-          reloadSlotSelector($('#start_seconds'), newArea);
+        <?php // Switch start time select ?>
+        reloadSlotSelector($('#start_seconds'), newArea);
 
-          <?php // Switch all day checkbox ?>
-          var allDayCheckbox = $('#all_day');
-          allDayCheckbox.html($('#all_day' + newArea).html());
+        <?php // Switch all day checkbox ?>
+        const allDayCheckbox = $('#all_day');
+        allDayCheckbox.html($('#all_day' + newArea).html());
 
-          <?php // Switch end time select ?>
-          reloadSlotSelector($('#end_seconds'), newArea);
+        <?php // Switch end time select ?>
+        reloadSlotSelector($('#end_seconds'), newArea);
 
-          <?php
-          // For each field which is only mandatory for some areas (i.e. the $is_mandatory_field value is an array),
-          // check whether the new area is in the array, and if so add the required attribute, otherwise remove it.
-          ?>
-          for (const [fieldName, value] of Object.entries(mandatoryFields))
+        <?php
+        // For each field which is only mandatory for some areas (i.e. the $is_mandatory_field value is an array),
+        // check whether the new area is in the array, and if so add the required attribute, otherwise remove it.
+        ?>
+        for (const [fieldName, value] of Object.entries(mandatoryFields))
+        {
+          if (Array.isArray(value))
           {
-            if (Array.isArray(value))
+            const field = $('[name="' + fieldName + '"]');
+            if (value.includes(parseInt(newArea)))
             {
-              const field = $('[name="' + fieldName + '"]');
-              if (value.includes(parseInt(newArea)))
-              {
-                field.prop('required', true);
-              }
-              else
-              {
-                field.prop('required', false);
-                <?php // Clear any existing error messages ?>
-                field[0].setCustomValidity('');
-              }
+              field.prop('required', true);
+            }
+            else
+            {
+              field.prop('required', false);
+              <?php // Clear any existing error messages ?>
+              field[0].setCustomValidity('');
             }
           }
+        }
 
-          <?php // Reset the validation messages ?>
-          validationMessages(newArea);
-          adjustSlotSelectors();
-        });
+        <?php // Reset the validation messages ?>
+        validationMessages(newArea);
+        adjustSlotSelectors();
+      });
 
   $('input[name="all_day"]').on('click', function() {
       onAllDayClick();
@@ -1540,8 +1538,6 @@ $(document).on('page_ready', function() {
     onAllDayClick.oldEndDatepicker = form.find('#end_date').val();
   }
 
-
-
   <?php
   // Set up the validation messages, but only if the function exists (which it
   // won't if we're on the login page)
@@ -1563,7 +1559,7 @@ $(document).on('page_ready', function() {
 
   form.on('submit', function()
   {
-    var result = true;
+    let result = true;
     if ($(this).data('submit') === 'save_button')
     {
       <?php // Only validate the form if the Save button was pressed ?>
@@ -1620,7 +1616,7 @@ $(document).on('page_ready', function() {
   // Use a click event for checkboxes as it seems that in some browsers the event fires
   // before the value is changed.
   ?>
-  var formFields = form.find('input.date, [name]').not(':disabled, [type="submit"], [type="button"], [type="image"]');
+  const formFields = form.find('input.date, [name]').not(':disabled, [type="submit"], [type="button"], [type="image"]');
   formFields.filter(':checkbox')
             .on('click', function() {
                 checkConflicts();
@@ -1636,16 +1632,16 @@ $(document).on('page_ready', function() {
   // dialog box we add an extra tab where we're going to put the dialog close
   // button and then we hide the dialog itself
   ?>
-  var tabsHTML =
-'<div id="check_tabs">' +
-'<ul id="details_tabs">' +
-'<li><a href="#schedule_details"><?php echo get_js_vocab('schedule') ?></a></li>' +
-'<li><a href="#policy_details"><?php echo get_js_vocab('policy') ?></a></li>' +
-'<li id="ui-tab-dialog-close"></li>' +
-'</ul>' +
-'<div id="schedule_details"></div>' +
-'<div id="policy_details"></div>' +
-'</div>';
+  const tabsHTML =
+    '<div id="check_tabs">' +
+    '<ul id="details_tabs">' +
+    '<li><a href="#schedule_details"><?php echo get_js_vocab('schedule') ?></a></li>' +
+    '<li><a href="#policy_details"><?php echo get_js_vocab('policy') ?></a></li>' +
+    '<li id="ui-tab-dialog-close"></li>' +
+    '</ul>' +
+    '<div id="schedule_details"></div>' +
+    '<div id="policy_details"></div>' +
+    '</div>';
 
   $('<div>').attr('id', 'check_results')
             .css('display', 'none')
@@ -1653,65 +1649,64 @@ $(document).on('page_ready', function() {
             .appendTo(form);
 
   $('#conflict_check, #policy_check').on('click', function manageTabs() {
-      var tabId,
-          tabIndex,
-          checkResults = $('#check_results'),
-          checkTabs = $('#check_tabs');
-      <?php
-      // Work out which tab should be selected
-      // (Slightly long-winded using a switch, but there may be more tabs in future)
-      ?>
-      switch ($(this).attr('id'))
-      {
-        case 'policy_check':
-          tabId = 'policy_details';
-          break;
-        case 'conflict_check':
-        default:
-          tabId = 'schedule_details';
-          break;
-      }
-      tabIndex = $('#details_tabs a[href="#' + tabId + '"]').parent().index();
+    let tabId, tabIndex;
+    const checkResults = $('#check_results');
+    const checkTabs = $('#check_tabs');
+    <?php
+    // Work out which tab should be selected
+    // (Slightly long-winded using a switch, but there may be more tabs in future)
+    ?>
+    switch ($(this).attr('id'))
+    {
+      case 'policy_check':
+        tabId = 'policy_details';
+        break;
+      case 'conflict_check':
+      default:
+        tabId = 'schedule_details';
+        break;
+    }
+    tabIndex = $('#details_tabs a[href="#' + tabId + '"]').parent().index();
 
-      <?php
-      // If we've already created the dialog and tabs, then all we have
-      // to do is re-open the dialog if it has previously been closed and
-      // select the tab corresponding to the div that was clicked
-      ?>
-      if (manageTabs.alreadyExists)
+    <?php
+    // If we've already created the dialog and tabs, then all we have
+    // to do is re-open the dialog if it has previously been closed and
+    // select the tab corresponding to the div that was clicked
+    ?>
+    if (manageTabs.alreadyExists)
+    {
+      if (!checkResults.dialog("isOpen"))
       {
-        if (!checkResults.dialog("isOpen"))
-        {
-          checkResults.dialog("open");
-        }
-        checkTabs.tabs('option', 'active', tabIndex);
-        return;
+        checkResults.dialog("open");
       }
-      <?php
-      // We want to create a set of tabs that appear inside a dialog box,
-      // with the whole structure being draggable.   Thanks to dbroox at
-      // http://forum.jquery.com/topic/combining-ui-dialog-and-tabs for the solution.
-      ?>
-      checkTabs.tabs();
       checkTabs.tabs('option', 'active', tabIndex);
-      checkResults.dialog({'width': 400,
-                           'height': 200,
-                           'minWidth': 300,
-                           'minHeight': 150,
-                           'draggable': true});
-      <?php //steal the close button ?>
-      var detailsTabs = $('#details_tabs');
-      detailsTabs.append($('button.ui-dialog-titlebar-close'));
-      <?php //move the tabs out of the content and make them draggable ?>
-      $('.ui-dialog').addClass('ui-tabs')
-                     .prepend(detailsTabs)
-                     .draggable('option', 'handle', '#details_tabs');
-      <?php //switch the titlebar class ?>
-      $('.ui-dialog-titlebar').remove();
-      detailsTabs.addClass('ui-dialog-titlebar');
+      return;
+    }
+    <?php
+    // We want to create a set of tabs that appear inside a dialog box,
+    // with the whole structure being draggable.   Thanks to dbroox at
+    // http://forum.jquery.com/topic/combining-ui-dialog-and-tabs for the solution.
+    ?>
+    checkTabs.tabs();
+    checkTabs.tabs('option', 'active', tabIndex);
+    checkResults.dialog({'width': 400,
+                         'height': 200,
+                         'minWidth': 300,
+                         'minHeight': 150,
+                         'draggable': true});
+    <?php //steal the close button ?>
+    const detailsTabs = $('#details_tabs');
+    detailsTabs.append($('button.ui-dialog-titlebar-close'));
+    <?php //move the tabs out of the content and make them draggable ?>
+    $('.ui-dialog').addClass('ui-tabs')
+                   .prepend(detailsTabs)
+                   .draggable('option', 'handle', '#details_tabs');
+    <?php //switch the titlebar class ?>
+    $('.ui-dialog-titlebar').remove();
+    detailsTabs.addClass('ui-dialog-titlebar');
 
-      manageTabs.alreadyExists=true;
-    });
+    manageTabs.alreadyExists=true;
+  });
 
   <?php
   // Finally, set a timer so that conflicts are periodically checked for,
@@ -1730,7 +1725,7 @@ $(document).on('page_ready', function() {
     //     the case if multi-day bookings are not allowed)
     ?>
 
-    var endDate = $('#end_date');
+    const endDate = $('#end_date');
 
     if ($(this).attr('id') === 'start_date')
     {
@@ -1747,8 +1742,8 @@ $(document).on('page_ready', function() {
     ?>
     if (getDateDifference() < 0)
     {
-      var selector = ($(this).attr('id') === 'start_date') ? '#end_date' : '#start_date';
-      var fp = document.querySelector(selector)._flatpickr;
+      const selector = ($(this).attr('id') === 'start_date') ? '#end_date' : '#start_date';
+      const fp = document.querySelector(selector)._flatpickr;
       fp.setDate($(this).val());
     }
 
@@ -1773,8 +1768,8 @@ $(document).on('page_ready', function() {
   });
 
   startAndEndDates.each(function() {
-      checkTimeSlots($(this));
-    });
+    checkTimeSlots($(this));
+  });
 
   $('input[name="rep_interval"]').on('change', changeRepIntervalUnits);
 
@@ -1788,7 +1783,7 @@ $(document).on('page_ready', function() {
   // state.  We can then suspend Ajax checking when the page is
   // hidden to save on server, client and network load.
   ?>
-  var prefix = visibilityPrefix();
+  const prefix = visibilityPrefix();
   if (document.addEventListener &&
       (prefix !== null))
   {
@@ -1803,7 +1798,7 @@ $(document).on('page_ready', function() {
   // complete that field, but if it's an existing booking you might
   // want to edit any field)
   ?>
-  var nameInput = form.find('#name');
+  const nameInput = form.find('#name');
 
   if (nameInput.length && !(nameInput.prop('disabled') || nameInput.val().length))
   {
@@ -1818,24 +1813,23 @@ $(document).on('page_ready', function() {
   // is checked we need to trigger a change event on them so that they set their own
   // disabled properties appropriately.
   ?>
-  var allowRegistration = $('#allow_registration');
+  const allowRegistration = $('#allow_registration');
   allowRegistration.on('change', function() {
-      var registration = $('#registration');
-      var allowRegistrationChecked = $(this).is(':checked');
-      registration.find('input, select').not($(this)).prop('disabled', !allowRegistrationChecked);
-      if (allowRegistrationChecked)
-      {
-        registration.find('.enabler').trigger('change');
-      }
-    })
-    .trigger('change');
+    const registration = $('#registration');
+    const allowRegistrationChecked = $(this).is(':checked');
+    registration.find('input, select').not($(this)).prop('disabled', !allowRegistrationChecked);
+    if (allowRegistrationChecked)
+    {
+      registration.find('.enabler').trigger('change');
+    }
+  }).trigger('change');
 
   <?php
   // Enable the checkboxes which may have been disabled, otherwise their values
   // will not be posted.
   ?>
   form.on('submit', function() {
-      $('#registration').find('input[type="checkbox"]').prop('disabled', false);
-    });
+    $('#registration').find('input[type="checkbox"]').prop('disabled', false);
+  });
 
 });
