@@ -1212,7 +1212,7 @@ function adjustSlotSelectors()
           if (i === 0)
           {
             endSelect.append($(this).val(thisValue).text(nbsp));
-            var errorMessage = '<?php echo get_js_vocab("max_booking_duration") ?>' + nbsp;
+            let errorMessage = '<?php echo get_js_vocab("max_booking_duration") ?>' + nbsp;
             if (enablePeriods)
             {
               errorMessage += maxDurationPeriods + nbsp;
@@ -1553,7 +1553,7 @@ $(document).on('page_ready', function() {
   // triggered by a Submit button being pressed, and if so, not to send an Ajax request.
   ?>
   form.find('[type="submit"], [type="button"], [type="image"]').on('click', function() {
-    var trigger = $(this).attr('name');
+    const trigger = $(this).attr('name');
     $(this).closest('form').data('submit', trigger);
   });
 
