@@ -148,13 +148,13 @@ const visibilityPrefix = function visibilityPrefix() {
   if (typeof visibilityPrefix.prefix === 'undefined')
   {
     visibilityPrefix.prefix = null;
-    for (var i=0; i<prefixes.length; i++)
+    for (const prefix of prefixes)
     {
-      let testProperty = prefixes[i];
-      testProperty += (prefixes[i] === '') ? 'hidden' : 'Hidden';
+      let testProperty = prefix;
+      testProperty += (prefix === '') ? 'hidden' : 'Hidden';
       if (testProperty in document)
       {
-        visibilityPrefix.prefix = prefixes[i];
+        visibilityPrefix.prefix = prefix;
         break;
       }
     }
