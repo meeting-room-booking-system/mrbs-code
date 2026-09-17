@@ -96,9 +96,9 @@ jQuery.fn.extend({
           ?>
         })
         .next('.select2-container').each(function() {
-            var container = $(this);
-            container.width(container.width() + 5);
-          });
+          const container = $(this);
+          container.width(container.width() + 5);
+        });
     }
     return($(this));
   }
@@ -115,19 +115,18 @@ function getMaxWidth (selection) {
 
 function getErrorList(errors)
 {
-  var result = {html: '', text: ''},
-      patternSpan = /<span[\s\S]*span>/gi,
-      patternTags = /<\S[^><]*>/g,
-      str;
+  const result = {html: '', text: ''};
+  const patternSpan = /<span[\s\S]*span>/gi;
+  const patternTags = /<\S[^><]*>/g;
 
   result.html += "<ul>";
 
-  for (var i=0; i<errors.length; i++)
+  for (let i=0; i<errors.length; i++)
   {
     result.html += "<li>" + errors[i] + "<\/li>";
     result.text += '(' + (i+1).toString() + ') ';
     <?php // strip out the <span> and its contents and then all other tags ?>
-    str = errors[i].replace(patternSpan, '').replace(patternTags, '');
+    let str = errors[i].replace(patternSpan, '').replace(patternTags, '');
     <?php // undo the htmlspecialchars() ?>
     result.text += $('<div>').html(str).text();
     result.text += "  \n";
@@ -143,27 +142,26 @@ function getErrorList(errors)
 // Gets the correct prefix to use (if any) with the page visibility API.
 // Returns null if not supported.
 ?>
-var visibilityPrefix = function visibilityPrefix() {
-    var prefixes = ['', 'webkit', 'moz', 'ms', 'o'];
-    var testProperty;
+const visibilityPrefix = function visibilityPrefix() {
+  const prefixes = ['', 'webkit', 'moz', 'ms', 'o'];
 
-    if (typeof visibilityPrefix.prefix === 'undefined')
+  if (typeof visibilityPrefix.prefix === 'undefined')
+  {
+    visibilityPrefix.prefix = null;
+    for (var i=0; i<prefixes.length; i++)
     {
-      visibilityPrefix.prefix = null;
-      for (var i=0; i<prefixes.length; i++)
+      let testProperty = prefixes[i];
+      testProperty += (prefixes[i] === '') ? 'hidden' : 'Hidden';
+      if (testProperty in document)
       {
-        testProperty = prefixes[i];
-        testProperty += (prefixes[i] === '') ? 'hidden' : 'Hidden';
-        if (testProperty in document)
-        {
-          visibilityPrefix.prefix = prefixes[i];
-          break;
-        }
+        visibilityPrefix.prefix = prefixes[i];
+        break;
       }
     }
+  }
 
-    return visibilityPrefix.prefix;
-  };
+  return visibilityPrefix.prefix;
+};
 
 <?php
 // Determine if the page is hidden from the user (eg if it has been minimised
