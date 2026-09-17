@@ -174,28 +174,28 @@ $(document).on('page_ready', function() {
   if (($auth["session"] == "php") && !empty($auth["session_php"]["inactivity_expire_time"]))
   {
     ?>
-    var recordActivity = function recordActivity() {
-        var d = new Date(),
-            t = d.getTime()/1000;
-        <?php
-        // Only tell the server that there's been some user activity if we're coming up to
-        // the inactivity timeout
-        ?>
-        if ((typeof recordActivity.lastRecorded === 'undefined') ||
-            ((t - recordActivity.lastRecorded) > (<?php echo $auth["session_php"]["inactivity_expire_time"]?> - 1)))
+    const recordActivity = function recordActivity() {
+      const d = new Date();
+      const t = d.getTime() / 1000;
+      <?php
+      // Only tell the server that there's been some user activity if we're coming up to
+      // the inactivity timeout
+      ?>
+      if ((typeof recordActivity.lastRecorded === 'undefined') ||
+          ((t - recordActivity.lastRecorded) > (<?php echo $auth["session_php"]["inactivity_expire_time"]?> - 1)))
+      {
+        recordActivity.lastRecorded = t;
+
+        const params = {activity: 1};
+        if(args.site)
         {
-          recordActivity.lastRecorded = t;
-
-          var params = {activity: 1};
-          if(args.site)
-          {
-            params.site = args.site;
-          }
-
-          $.post('ajax/record_activity.php', params, function() {
-            });
+          params.site = args.site;
         }
-      };
+
+        $.post('ajax/record_activity.php', params, function() {
+          });
+      }
+    };
 
     $(document).on('keydown mousemove mousedown', function() {
         recordActivity();
@@ -217,11 +217,11 @@ $(document).on('page_ready', function() {
   }).appendTo('form[action="search.php"]');
 
   $('header a[href^="edit_users.php"]').each(function() {
-      var href = $(this).attr('href');
-      href += (href.indexOf('?') < 0) ? '?' : '&';
-      href += 'datatable=1';
-      $(this).attr('href', href);
-    });
+    let href = $(this).attr('href');
+    href += (href.indexOf('?') < 0) ? '?' : '&';
+    href += 'datatable=1';
+    $(this).attr('href', href);
+  });
 
   <?php
   // There are some forms that have multiple submit buttons, eg a "Back" and "Save"
@@ -233,45 +233,44 @@ $(document).on('page_ready', function() {
   // button with this class per form.)
   ?>
   $('form input.default_action').each(function() {
-      var defaultSubmitButton = $(this);
-      $(this).parents('form').find('input').on('keypress', function(event) {
-          if (event.which === 13)  // the Enter key
-          {
-            defaultSubmitButton.trigger('click');
-            return false;
-          }
-          else
-          {
-            return true;
-          }
-        });
+    const defaultSubmitButton = $(this);
+    $(this).parents('form').find('input').on('keypress', function(event) {
+      if (event.which === 13)  // the Enter key
+      {
+        defaultSubmitButton.trigger('click');
+        return false;
+      }
+      else
+      {
+        return true;
+      }
     });
+  });
 
   <?php
   // Where we've got enabling checkboxes, apply a change event to them so that
   // when the enabling checkbox is changed the associated inputs are enabled or
-  // disabled as appropriate.   Also trigger the change event when the page is loaded
+  // disabled as appropriate. Also trigger the change event when the page is loaded
   // so that the inputs are enabled/disabled correctly initially.
   ?>
   $('.enabler').on('change', function(){
-      var enablerChecked = $(this).is(':checked');
-      var elements;
-      switch ($(this).attr('name'))
-      {
-        <?php // Some of the groups are structured differently ?>
-        case 'area_max_duration_enabled':
-          elements = $('[name^="area_max_duration"]').not($(this));
-          break;
-        case 'registrant_limit_enabled':
-          elements = $('[name="registrant_limit"]');
-          break;
-        default:
-          elements = $(this).nextAll('input, select')
-          break;
-      }
-      elements.prop('disabled', !enablerChecked);
-    })
-    .trigger('change');
+    const enablerChecked = $(this).is(':checked');
+    let elements;
+    switch ($(this).attr('name'))
+    {
+      <?php // Some of the groups are structured differently ?>
+      case 'area_max_duration_enabled':
+        elements = $('[name^="area_max_duration"]').not($(this));
+        break;
+      case 'registrant_limit_enabled':
+        elements = $('[name="registrant_limit"]');
+        break;
+      default:
+        elements = $(this).nextAll('input, select')
+        break;
+    }
+    elements.prop('disabled', !enablerChecked);
+  }).trigger('change');
 
 
   if (supportsDatalist())
@@ -289,8 +288,8 @@ $(document).on('page_ready', function() {
     // or radio button.
     ?>
     $('input[list]').each(function() {
-      var input = $(this),
-          hiddenInput = $('<input type="hidden">');
+      const input = $(this);
+      const hiddenInput = $('<input type="hidden">');
 
       <?php
       // Create a hidden input with the id, name and value of the original input.  Then remove the id and
@@ -346,51 +345,51 @@ $(document).on('page_ready', function() {
     // support the <datalist> element.
     ?>
     $('datalist').each(function() {
-        var datalist = $(this);
-        var options = [];
-        datalist.parent().find('option').each(function() {
-            var option = {};
-            option.label = $(this).text();
-            option.value = $(this).val();
-            options.push(option);
-          });
-        var minLength = 0;
-        <?php
-        // Work out a suitable value for the autocomplete minLength
-        // option, ie the number of characters that must be typed before
-        // a list of options appears.   We want to avoid presenting a huge
-        // list of options.
-        if (isset($autocomplete_length_breaks) && is_array($autocomplete_length_breaks))
-        {
-          ?>
-          var breaks = [<?php echo implode(',', $autocomplete_length_breaks) ?>];
-          var nOptions = options.length;
-          var i=0;
-          while ((i<breaks.length) && (nOptions >= breaks[i]))
-          {
-            i++;
-            minLength++;
-          }
-          <?php
-        }
-        ?>
-        var formInput = datalist.prev();
-        formInput.empty().autocomplete({
-            source: options,
-            minLength: minLength
-          });
-        <?php
-        // If the minLength is 0, then the autocomplete widget doesn't do
-        // quite what you might expect and you need to force it to display
-        // the available options when it receives focus
-        ?>
-        if (minLength === 0)
-        {
-          formInput.on('focus', function() {
-              $(this).autocomplete('search', '');
-            });
-        }
+      const datalist = $(this);
+      const options = [];
+      datalist.parent().find('option').each(function() {
+        const option = {};
+        option.label = $(this).text();
+        option.value = $(this).val();
+        options.push(option);
       });
+      let minLength = 0;
+      <?php
+      // Work out a suitable value for the autocomplete minLength
+      // option, ie the number of characters that must be typed before
+      // a list of options appears.   We want to avoid presenting a huge
+      // list of options.
+      if (isset($autocomplete_length_breaks) && is_array($autocomplete_length_breaks))
+      {
+        ?>
+        const breaks = [<?php echo implode(',', $autocomplete_length_breaks) ?>];
+        const nOptions = options.length;
+        let i = 0;
+        while ((i<breaks.length) && (nOptions >= breaks[i]))
+        {
+          i++;
+          minLength++;
+        }
+        <?php
+      }
+      ?>
+      const formInput = datalist.prev();
+      formInput.empty().autocomplete({
+          source: options,
+          minLength: minLength
+        });
+      <?php
+      // If the minLength is 0, then the autocomplete widget doesn't do
+      // quite what you might expect and you need to force it to display
+      // the available options when it receives focus
+      ?>
+      if (minLength === 0)
+      {
+        formInput.on('focus', function() {
+            $(this).autocomplete('search', '');
+          });
+      }
+    });
   }
 
   <?php // Add a fallback for browsers that don't support the time input ?>
@@ -429,18 +428,18 @@ $(document).on('page_ready', function() {
 
   <?php // And add the password visibility toggling mechanism ?>
   $('.eye svg').on('mousedown', function(e) {
-      e.preventDefault();
-      var parent = $(this).parent();
-      var grandparent = parent.parent();
-      var input = grandparent.find('input');
-      var newType = (parent.hasClass('off')) ? 'password' : 'text';
-      grandparent.find('.eye svg').toggle();
-      input.attr('type', newType);
-    });
+    e.preventDefault();
+    const parent = $(this).parent();
+    const grandparent = parent.parent();
+    const input = grandparent.find('input');
+    const newType = (parent.hasClass('off')) ? 'password' : 'text';
+    grandparent.find('.eye svg').toggle();
+    input.attr('type', newType);
+  });
 
   <?php // De-obfuscate email addresses ?>
   $('.contact').each(function() {
-    var decoded = base64Decode($(this).data('html'));
+    const decoded = base64Decode($(this).data('html'));
     if (decoded !== false) {
       $(this).replaceWith(decoded);
     }
@@ -448,8 +447,8 @@ $(document).on('page_ready', function() {
 
   <?php // Add client-side validation of the file upload size ?>
   $('input[type="file"]').on('change input', function(e) {
-    var maxFileSize = $(this).closest('form').find('[name="MAX_FILE_SIZE"]').val();
-    var message = '<?php echo get_js_vocab("max_allowed_file_size", ini_get('upload_max_filesize'))?>'
+    const maxFileSize = $(this).closest('form').find('[name="MAX_FILE_SIZE"]').val();
+    const message = '<?php echo get_js_vocab("max_allowed_file_size", ini_get('upload_max_filesize'))?>';
     <?php // Check that we know MAX_FILE_SIZE and for browser support ?>
     if(maxFileSize && e.target.files && e.target.files.length === 1) {
       if (e.target.files[0].size > maxFileSize) {
