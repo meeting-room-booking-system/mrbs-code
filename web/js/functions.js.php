@@ -5,31 +5,22 @@ namespace MRBS;
 require "../defaultincludes.inc";
 
 http_headers(array("Content-type: application/x-javascript"),
-             60*30);  // 30 minute expiry
+             60*30);  // 30-minute expiry
 ?>
 
 'use strict';
 
-// Decodes a base64 encoded string.  Returns false if it can't be decoded.
+// Decode a base64 encoded string.  Returns false if it can't be decoded.
 // See https://stackoverflow.com/questions/30106476/using-javascripts-atob-to-decode-base64-doesnt-properly-decode-utf-8-strings
 function base64Decode(string)
 {
-  if (typeof TextDecoder === "undefined")
+  if ((typeof TextDecoder === 'undefined') || (typeof Uint8Array.fromBase64 === 'undefined'))
   {
+    console.debug("MRBS: base64Decode() failed because this browser does not support both TextDecoder and Uint8Array.fromBase64");
     return false;
   }
-  <?php
-  // We can use const and let here because it's only IE and Opera Mini that
-  // don't support them and neither of them support TextDecoder.
-  ?>
-  const text = atob(string);
-  const length = text.length;
-  const bytes = new Uint8Array(length);
-  for (let i = 0; i < length; i++) {
-    bytes[i] = text.charCodeAt(i);
-  }
-  const decoder = new TextDecoder(); // default is utf-8
-  return decoder.decode(bytes);
+
+  return new TextDecoder().decode(Uint8Array.fromBase64(string));
 }
 
 <?php
