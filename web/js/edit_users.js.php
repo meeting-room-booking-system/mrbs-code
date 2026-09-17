@@ -5,7 +5,7 @@ namespace MRBS;
 require "../defaultincludes.inc";
 
 http_headers(array("Content-type: application/x-javascript"),
-             60*30);  // 30 minute expiry
+             60*30);  // 30-minute expiry
 ?>
 
 'use strict';
@@ -14,10 +14,10 @@ $(document).on('page_ready', function() {
 
   <?php // Turn the list of users into a dataTable ?>
 
-  var tableOptions = {};
+  const tableOptions = {};
 
   <?php // Use an Ajax source - gives much better performance for large tables ?>
-  var queryString = window.location.search;
+  const queryString = window.location.search;
   tableOptions.ajax = 'edit_users.php' + queryString;
 
   <?php // Get the types and feed those into dataTables ?>
@@ -29,7 +29,7 @@ $(document).on('page_ready', function() {
     },
     {
       <?php
-      // Add in an extra button to copy email addresses as a comma separated list so
+      // Add in an extra button to copy email addresses as a comma-separated list so
       // that they can be pasted into an address field in an email client.
       ?>
       extend: 'copy',
