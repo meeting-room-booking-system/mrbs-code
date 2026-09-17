@@ -5,12 +5,14 @@ namespace MRBS;
 require "../defaultincludes.inc";
 
 http_headers(array("Content-type: application/x-javascript"),
-             60*30);  // 30 minute expiry
+             60*30);  // 30-minute expiry
 ?>
 
 'use strict';
 
 $(document).on('page_ready', function() {
+
+  let idleTimer;
 
   function resetTimer()
   {
@@ -28,10 +30,8 @@ $(document).on('page_ready', function() {
     window.location.replace(url);
   }
 
-  var idleTimer;
-
   <?php
-  // If it's the exit page then (a) disable everything except the exit form and
+  // If it's the exit page, then (a) disable everything except the exit form and
   // (b) set a timeout on the page.
   ?>
   if ($('#kiosk_exit').length) {
@@ -51,8 +51,8 @@ $(document).on('page_ready', function() {
   <?php // Otherwise, toggle the area and room selects depending on the mode ?>
   else {
     $('[name="mode"]').on('change', function () {
-      var isRoom = ($('input[name="mode"]:checked').val() === 'room');
-      var form = $('#kiosk_enter');
+      const isRoom = ($('input[name="mode"]:checked').val() === 'room');
+      const form = $('#kiosk_enter');
       form.find('[name="area"]').parent().toggle(!isRoom);
       form.find('[name="room"]').parent().toggle(isRoom);
     }).trigger('change');
