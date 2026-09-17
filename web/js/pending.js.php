@@ -5,7 +5,7 @@ namespace MRBS;
 require "../defaultincludes.inc";
 
 http_headers(array("Content-type: application/x-javascript"),
-             60*30);  // 30 minute expiry
+             60*30);  // 30-minute expiry
 ?>
 
 'use strict';
@@ -14,18 +14,18 @@ $(document).on('page_ready', function() {
 
   <?php
   // Turn the table into a datatable, with subtables that appear/disappear when
-  // the control is clicked, with the subtables also being datatables.  Note though
+  // the control is clicked, with the subtables also being datatables.  Note, though,
   // that the main and sub-datatables are independent and we only display the main search
   // box which just applies to the main table rows.  (I suppose it would be possible to do
   // something clever with the main search box and get it to search the subtables as well)
   ?>
-  var maintable = $('#pending_table'),
-      subtables,
-      startTimeCol = maintable.find('thead tr:first th.header_start_time').index(),
-      tableOptions,
-      pendingDataTable,
-      i,
-      colVisIncludeCols;
+  const maintable = $('#pending_table');
+  const startTimeCol = maintable.find('thead tr:first th.header_start_time').index();
+  let subtables,
+    tableOptions,
+    pendingDataTable,
+    i,
+    colVisIncludeCols;
 
   <?php
   // Add a '-' control to the subtables and make them close on clicking it
@@ -35,14 +35,14 @@ $(document).on('page_ready', function() {
 
 
   $(document).on('click', 'table.sub th.control', function () {
-      var nTr = $(this).closest('.table_container').parent().prev(),
-          serial = $(this).parent().parent().parent().attr('id').replace('subtable_', '');
+    const nTr = $(this).closest('.table_container').parent().prev();
+    const serial = $(this).parent().parent().parent().attr('id').replace('subtable_', '');
 
-      $('#subtable_' + serial + '_wrapper').slideUp( function () {
-          pendingDataTable.row(nTr).child.hide();
-          nTr.show();
-        });
+    $('#subtable_' + serial + '_wrapper').slideUp( function () {
+      pendingDataTable.row(nTr).child.hide();
+      nTr.show();
     });
+  });
 
   <?php
   // Detach all the subtables from the DOM (detach keeps a copy) so that they
@@ -58,38 +58,38 @@ $(document).on('page_ready', function() {
 
   $(document).on('click', 'td.control', function () {
 
-      var nTr = $(this).parent(),
-          serial = nTr.attr('id').replace('row_', ''),
-          subtableId = 'subtable_' + serial,
-          subtable = subtables.find('#' + subtableId).parent().clone(),
-          columnDefs = [],
-          subDataTable;
+    const nTr = $(this).parent();
+    const serial = nTr.attr('id').replace('row_', '');
+    const subtableId = 'subtable_' + serial;
+    const subtable = subtables.find('#' + subtableId).parent().clone();
+    let columnDefs = [];
+    let subDataTable;
 
-      <?php
-      // We want the columns in the main and sub tables to align.  So
-      // find the widths of the main table columns and use those values
-      // to set the widths of the subtable columns.
-      ?>
-      maintable.find('tr').eq(0).find('th').each(function(i){
-          columnDefs.push({width: ($(this).outerWidth()) + "px",
-                           targets: i});
-        });
+    <?php
+    // We want the columns in the main and sub tables to align.  So
+    // find the widths of the main table columns and use those values
+    // to set the widths of the subtable columns.
+    ?>
+    maintable.find('tr').eq(0).find('th').each(function(i){
+        columnDefs.push({width: ($(this).outerWidth()) + "px",
+                         targets: i});
+      });
 
-      columnDefs.push({orderable: false, targets: 0});
-      columnDefs = columnDefs.concat(getTypes(subtable));
+    columnDefs.push({orderable: false, targets: 0});
+    columnDefs = columnDefs.concat(getTypes(subtable));
 
-      nTr.hide();
-      pendingDataTable.row(nTr).child(subtable.get(0)).show();
-      subtable.closest('td').addClass('table_container');
+    nTr.hide();
+    pendingDataTable.row(nTr).child(subtable.get(0)).show();
+    subtable.closest('td').addClass('table_container');
 
-      subDataTable = $('#' + subtableId).DataTable({autoWidth: false,
-                                                    paging: false,
-                                                    dom: 't',
-                                                    order: [[startTimeCol, 'asc']],
-                                                    columnDefs: columnDefs});
+    subDataTable = $('#' + subtableId).DataTable({autoWidth: false,
+                                                  paging: false,
+                                                  dom: 't',
+                                                  order: [[startTimeCol, 'asc']],
+                                                  columnDefs: columnDefs});
 
-      $('#subtable_' + serial + '_wrapper').hide().slideDown();
-    });
+    $('#subtable_' + serial + '_wrapper').hide().slideDown();
+  });
 
   <?php // Turn the table into a datatable ?>
   tableOptions = {order: [[startTimeCol, 'asc']]};

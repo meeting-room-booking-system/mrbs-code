@@ -5,7 +5,7 @@ namespace MRBS;
 require '../defaultincludes.inc';
 
 http_headers(array("Content-type: application/x-javascript"),
-             60*30);  // 30 minute expiry
+             60*30);  // 30-minute expiry
 ?>
 
 'use strict';
@@ -310,8 +310,8 @@ $(document).on('page_ready', function() {
   if (args.kiosk)
   {
     <?php // We need to use a jQuery UI dialog because we can't time out a confirm box ?>
-    var dialog = $('<div id="dialog_exit_kiosk"></div>');
-    var timeout;
+    const dialog = $('<div id="dialog_exit_kiosk"></div>');
+    let timeout;
 
     $(document.body).on('click keypress', function(e) {
 
@@ -327,7 +327,7 @@ $(document).on('page_ready', function() {
           buttons: [
             {text: "<?php echo get_js_vocab('ok')?>",
               click: function() {
-                var href = 'kiosk.php?kiosk=' + encodeURIComponent(args.kiosk);
+                let href = 'kiosk.php?kiosk=' + encodeURIComponent(args.kiosk);
                 href += '&area=' + encodeURIComponent(args.area);
                 href += '&room=' + encodeURIComponent(args.room);
                 if (args.site)

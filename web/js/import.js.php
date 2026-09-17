@@ -5,13 +5,13 @@ namespace MRBS;
 require "../defaultincludes.inc";
 
 http_headers(array("Content-type: application/x-javascript"),
-                   60*30);  // 30 minute expiry
+                   60*30);  // 30-minute expiry
 ?>
 
 'use strict';
 
 function checkSourceType(object) {
-  var isFile = (object.val() === 'file');
+  const isFile = (object.val() === 'file');
   $('#field_file').toggle(isFile);
   $('#field_url').toggle(!isFile);
   <?php
@@ -36,9 +36,9 @@ $(document).on('page_ready', function() {
   // checkbox changes.
   ?>
   $('input[name="ignore_location"]').on('change', function() {
-      var ignoreLocation = $(this).is(':checked');
-      $('#location_parsing').toggle(!ignoreLocation);
-      $('#ignore_location_settings').toggle(ignoreLocation);
-    }).trigger('change');
+    const ignoreLocation = $(this).is(':checked');
+    $('#location_parsing').toggle(!ignoreLocation);
+    $('#ignore_location_settings').toggle(ignoreLocation);
+  }).trigger('change');
 
 });

@@ -5,10 +5,12 @@ namespace MRBS;
 require "../defaultincludes.inc";
 
 http_headers(array("Content-type: application/x-javascript"),
-             60*30);  // 30 minute expiry
+             60*30);  // 30-minute expiry
 ?>
 
 'use strict';
+
+let args;
 
 <?php
 global $autocomplete_length_breaks;
@@ -16,30 +18,30 @@ global $autocomplete_length_breaks;
 // Function to determine whether the browser supports the HTML5
 // <datalist> element.
 ?>
-var supportsDatalist = function supportsDatalist() {
-    <?php
-    // The first two conditions work for most browsers.   The third condition is
-    // necessary for Safari, which, certainly for versions up to 6.0, the latest at
-    // the time of writing, return true for the first two conditions even though
-    // it doesn't support <datalist>.
-    ?>
-    return ('list' in document.createElement('input')) &&
-           ('options' in document.createElement('datalist')) &&
-           (window.HTMLDataListElement !== undefined);
-  };
+const supportsDatalist = function supportsDatalist() {
+  <?php
+  // The first two conditions work for most browsers.   The third condition is
+  // necessary for Safari, which, certainly for versions up to 6.0, the latest at
+  // the time of writing, returns true for the first two conditions even though
+  // it doesn't support <datalist>.
+  ?>
+  return ('list' in document.createElement('input')) &&
+    ('options' in document.createElement('datalist')) &&
+    (window.HTMLDataListElement !== undefined);
+};
 
 
 <?php
 // If we are operating on a wide screen when the standard form fieldsets are
-// displayed as tables, then make sure that the left hand column in the standard
+// displayed as tables, then make sure that the left-hand column in the standard
 // form is of constant width.  If there are multiple fieldsets then each fieldset
 // will have its own width, as the display:table only applies to that fieldset.
 ?>
-var adjustLabelWidths = function adjustLabelWidths() {
-  var standardFieldset = $('.standard fieldset');
+const adjustLabelWidths = function adjustLabelWidths() {
+  const standardFieldset = $('.standard fieldset');
   if ((standardFieldset.length !== 0) && (standardFieldset.css('display') === 'table'))
   {
-    var labels = standardFieldset.children('div').children('label').not('.rep_type_details label');
+    const labels = standardFieldset.children('div').children('label').not('.rep_type_details label');
     <?php // Let the labels find their natural widths ?>
     labels.width('auto');
     <?php // Add on one pixel to avoid what look to be like rounding problems in some browsers ?>
@@ -50,7 +52,7 @@ var adjustLabelWidths = function adjustLabelWidths() {
 
 function fillUsernameFields()
 {
-  var select = $('.ajax_usernames');
+  const select = $('.ajax_usernames');
 
   <?php // We don't want to fire off an unnecessary POST request ?>
   if (select.length === 0)
@@ -59,107 +61,103 @@ function fillUsernameFields()
   }
 
   select.each(function() {
-      <?php // Turn the create_by select into a fancy select box. ?>
-      var el = $(this);
-      el.mrbsSelect(el.hasClass('datalist'));
-      <?php
-      // Add a class to the body so that we can modify the CSS when the load
-      // is in progress, eg by adding an animated GIF.  We remove the class
-      // once the Ajax data has arrived.
-      ?>
-      $('body').addClass('ajax-loading');
-    });
+    <?php // Turn the create_by select into a fancy select box. ?>
+    const el = $(this);
+    el.mrbsSelect(el.hasClass('datalist'));
+    <?php
+    // Add a class to the body so that we can modify the CSS when the load
+    // is in progress, eg by adding an animated GIF.  We remove the class
+    // once the Ajax data has arrived.
+    ?>
+    $('body').addClass('ajax-loading');
+  });
 
   <?php
   // Fire off an Ajax request to get the data.  We do this because some authentication
   // schemes, eg LDAP, will take a long time to return the data if there are very many
-  // users and we don't want to hold up the page load.  Most of the time the data won't
+  // users, and we don't want to hold up the page load.  Most of the time the data won't
   // even be needed anyway because the booking will be made in the name of the current
   // user.
   //
   // Select2 offers an Ajax option, but it is not particularly suitable because (a) the
   // Ajax request is not fired until the Select2 element is opened, which means the clock
   // doesn't start ticking until then and (b) a new request is fired whenever the search
-  // term is changed.  It does though offer some nice features such as pagination and
+  // term is changed.  It does, though, offer some nice features such as pagination and
   // query terms, but these still aren't going to help much.  And LDAP searches of the
   // form "*TERM*" can be expensive.
 
   // See https://select2.org/data-sources/ajax for more details
   ?>
   $.post({
-      url: 'ajax/usernames.php',
-      dataType: 'json',
-      data: {csrf_token: getCSRFToken(), site: args.site},
-      success: function(data) {
-          select.each(function() {
-              var el = $(this);
-              var newOption;
-              <?php
-              // Get the current option (there will only be one) so we know
-              // which one should be selected in the new list
-              // Convert usernames to strings before being converted to upper case
-              // in case the usernames look like ints, for example if ids are being
-              // used for usernames.
-              ?>
-              var currentOption = el.find('option').first();
-              var currentValue = currentOption.val();
-              var currentValueUpper = currentValue.toString().toUpperCase();
-              var currentText = currentOption.text();
-              <?php
-              // Remove the existing option, because it will be in the new dataset in
-              // the correct position.
-              ?>
-              el.empty();
-              <?php
-              // Add the new data, selecting the option that was previously selected
-              ?>
-              var foundCurrent = false;
-              $.each(data, function(index, option) {
-                  if (option.username !== null)
-                  {
-                    // Make it a case-insensitive comparison as usernames are case-insensitive
-                    var selected = (option.username.toString().toUpperCase() === currentValueUpper);
-                    foundCurrent = foundCurrent || selected;
-                    var newOption = new Option(option.display_name, option.username, selected, selected);
-                    el.append(newOption);
-                  }
-                });
-              <?php
-              // It's possible that the creator of the booking is no longer a user (they may have left
-              // the organisation and been deleted from the user list).  If that's the case and we haven't
-              // found them while running through the user list, then add them and make them the selected
-              // option.  (Ideally the list should perhaps be sorted again, but then we'd have to worry
-              // about locales. And having the original creator at the end of the list perhaps draws attention
-              // to the fact that they no longer exist).
-              ?>
-              if (!foundCurrent)
-              {
-                newOption = new Option(currentText, currentValue, true, true);
-                el.append(newOption);
-              }
-              <?php
-              // If there was one, close the Select2 control and refresh it.  If it was open before the
-              // close, then reopen it after the refresh.
-              //
-              ?>
-              if (el.hasClass('select2-hidden-accessible'))
-              {
-                var wasOpen = el.select2('isOpen');
-                el.select2('close').trigger('change');
-                if (wasOpen)
-                {
-                  el.select2('open');
-                }
-              }
-            });
-          $('body').removeClass('ajax-loading');
+    url: 'ajax/usernames.php',
+    dataType: 'json',
+    data: {csrf_token: getCSRFToken(), site: args.site},
+    success: function(data) {
+      select.each(function() {
+        const el = $(this);
+        let newOption;
+        <?php
+        // Get the current option (there will only be one) so we know
+        // which one should be selected in the new list
+        // Convert usernames to strings before being converted to upper case
+        // in case the usernames look like ints; for example, when ids are being
+        // used for usernames.
+        ?>
+        const currentOption = el.find('option').first();
+        const currentValue = currentOption.val();
+        const currentValueUpper = currentValue.toString().toUpperCase();
+        const currentText = currentOption.text();
+        <?php
+        // Remove the existing option, because it will be in the new dataset in
+        // the correct position.
+        ?>
+        el.empty();
+        <?php
+        // Add the new data, selecting the option that was previously selected
+        ?>
+        let foundCurrent = false;
+        $.each(data, function(index, option) {
+          if (option.username !== null)
+          {
+            // Make it a case-insensitive comparison as usernames are case-insensitive
+            const selected = (option.username.toString().toUpperCase() === currentValueUpper);
+            foundCurrent = foundCurrent || selected;
+            const newOption = new Option(option.display_name, option.username, selected, selected);
+            el.append(newOption);
+          }
+        });
+        <?php
+        // It's possible that the creator of the booking is no longer a user (they may have left
+        // the organisation and been deleted from the user list).  If that's the case and we haven't
+        // found them while running through the user list, then add them and make them the selected
+        // option.  (Ideally the list should perhaps be sorted again, but then we'd have to worry
+        // about locales. And having the original creator at the end of the list perhaps draws attention
+        // to the fact that they no longer exist).
+        ?>
+        if (!foundCurrent)
+        {
+          newOption = new Option(currentText, currentValue, true, true);
+          el.append(newOption);
         }
-    });
+        <?php
+        // If there was one, close the Select2 control and refresh it.  If it was open before the
+        // close, then reopen it after the refresh.
+        //
+        ?>
+        if (el.hasClass('select2-hidden-accessible'))
+        {
+          const wasOpen = el.select2('isOpen');
+          el.select2('close').trigger('change');
+          if (wasOpen)
+          {
+            el.select2('open');
+          }
+        }
+      });
+      $('body').removeClass('ajax-loading');
+    }
+  });
 }
-
-
-var args;
-
 
 $(document).on('page_ready', function() {
 
@@ -176,28 +174,28 @@ $(document).on('page_ready', function() {
   if (($auth["session"] == "php") && !empty($auth["session_php"]["inactivity_expire_time"]))
   {
     ?>
-    var recordActivity = function recordActivity() {
-        var d = new Date(),
-            t = d.getTime()/1000;
-        <?php
-        // Only tell the server that there's been some user activity if we're coming up to
-        // the inactivity timeout
-        ?>
-        if ((typeof recordActivity.lastRecorded === 'undefined') ||
-            ((t - recordActivity.lastRecorded) > (<?php echo $auth["session_php"]["inactivity_expire_time"]?> - 1)))
+    const recordActivity = function recordActivity() {
+      const d = new Date();
+      const t = d.getTime() / 1000;
+      <?php
+      // Only tell the server that there's been some user activity if we're coming up to
+      // the inactivity timeout
+      ?>
+      if ((typeof recordActivity.lastRecorded === 'undefined') ||
+          ((t - recordActivity.lastRecorded) > (<?php echo $auth["session_php"]["inactivity_expire_time"]?> - 1)))
+      {
+        recordActivity.lastRecorded = t;
+
+        const params = {activity: 1};
+        if(args.site)
         {
-          recordActivity.lastRecorded = t;
-
-          var params = {activity: 1};
-          if(args.site)
-          {
-            params.site = args.site;
-          }
-
-          $.post('ajax/record_activity.php', params, function() {
-            });
+          params.site = args.site;
         }
-      };
+
+        $.post('ajax/record_activity.php', params, function() {
+          });
+      }
+    };
 
     $(document).on('keydown mousemove mousedown', function() {
         recordActivity();
@@ -219,11 +217,11 @@ $(document).on('page_ready', function() {
   }).appendTo('form[action="search.php"]');
 
   $('header a[href^="edit_user.php"]').each(function() {
-      var href = $(this).attr('href');
-      href += (href.indexOf('?') < 0) ? '?' : '&';
-      href += 'datatable=1';
-      $(this).attr('href', href);
-    });
+    let href = $(this).attr('href');
+    href += (href.indexOf('?') < 0) ? '?' : '&';
+    href += 'datatable=1';
+    $(this).attr('href', href);
+  });
 
   <?php
   // There are some forms that have multiple submit buttons, eg a "Back" and "Save"
@@ -231,49 +229,48 @@ $(document).on('page_ready', function() {
   // to result in a "Save" rather than "Back".    So in these cases we have assigned
   // a class of 'default_action' to the one that we want to be executed when we hit
   // Enter.   (Note that it is a class rather than an id just in case we have two or
-  // more such forms on a page.   However we should ensure that there is only one
+  // more such forms on a page. However we should ensure that there is only one
   // button with this class per form.)
   ?>
   $('form input.default_action').each(function() {
-      var defaultSubmitButton = $(this);
-      $(this).parents('form').find('input').on('keypress', function(event) {
-          if (event.which === 13)  // the Enter key
-          {
-            defaultSubmitButton.trigger('click');
-            return false;
-          }
-          else
-          {
-            return true;
-          }
-        });
+    const defaultSubmitButton = $(this);
+    $(this).parents('form').find('input').on('keypress', function(event) {
+      if (event.which === 13)  // the Enter key
+      {
+        defaultSubmitButton.trigger('click');
+        return false;
+      }
+      else
+      {
+        return true;
+      }
     });
+  });
 
   <?php
   // Where we've got enabling checkboxes, apply a change event to them so that
   // when the enabling checkbox is changed the associated inputs are enabled or
-  // disabled as appropriate.   Also trigger the change event when the page is loaded
+  // disabled as appropriate. Also trigger the change event when the page is loaded
   // so that the inputs are enabled/disabled correctly initially.
   ?>
   $('.enabler').on('change', function(){
-      var enablerChecked = $(this).is(':checked');
-      var elements;
-      switch ($(this).attr('name'))
-      {
-        <?php // Some of the groups are structured differently ?>
-        case 'area_max_duration_enabled':
-          elements = $('[name^="area_max_duration"]').not($(this));
-          break;
-        case 'registrant_limit_enabled':
-          elements = $('[name="registrant_limit"]');
-          break;
-        default:
-          elements = $(this).nextAll('input, select')
-          break;
-      }
-      elements.prop('disabled', !enablerChecked);
-    })
-    .trigger('change');
+    const enablerChecked = $(this).is(':checked');
+    let elements;
+    switch ($(this).attr('name'))
+    {
+      <?php // Some of the groups are structured differently ?>
+      case 'area_max_duration_enabled':
+        elements = $('[name^="area_max_duration"]').not($(this));
+        break;
+      case 'registrant_limit_enabled':
+        elements = $('[name="registrant_limit"]');
+        break;
+      default:
+        elements = $(this).nextAll('input, select')
+        break;
+    }
+    elements.prop('disabled', !enablerChecked);
+  }).trigger('change');
 
 
   if (supportsDatalist())
@@ -291,8 +288,8 @@ $(document).on('page_ready', function() {
     // or radio button.
     ?>
     $('input[list]').each(function() {
-      var input = $(this),
-          hiddenInput = $('<input type="hidden">');
+      const input = $(this);
+      const hiddenInput = $('<input type="hidden">');
 
       <?php
       // Create a hidden input with the id, name and value of the original input.  Then remove the id and
@@ -348,51 +345,51 @@ $(document).on('page_ready', function() {
     // support the <datalist> element.
     ?>
     $('datalist').each(function() {
-        var datalist = $(this);
-        var options = [];
-        datalist.parent().find('option').each(function() {
-            var option = {};
-            option.label = $(this).text();
-            option.value = $(this).val();
-            options.push(option);
-          });
-        var minLength = 0;
-        <?php
-        // Work out a suitable value for the autocomplete minLength
-        // option, ie the number of characters that must be typed before
-        // a list of options appears.   We want to avoid presenting a huge
-        // list of options.
-        if (isset($autocomplete_length_breaks) && is_array($autocomplete_length_breaks))
-        {
-          ?>
-          var breaks = [<?php echo implode(',', $autocomplete_length_breaks) ?>];
-          var nOptions = options.length;
-          var i=0;
-          while ((i<breaks.length) && (nOptions >= breaks[i]))
-          {
-            i++;
-            minLength++;
-          }
-          <?php
-        }
-        ?>
-        var formInput = datalist.prev();
-        formInput.empty().autocomplete({
-            source: options,
-            minLength: minLength
-          });
-        <?php
-        // If the minLength is 0, then the autocomplete widget doesn't do
-        // quite what you might expect and you need to force it to display
-        // the available options when it receives focus
-        ?>
-        if (minLength === 0)
-        {
-          formInput.on('focus', function() {
-              $(this).autocomplete('search', '');
-            });
-        }
+      const datalist = $(this);
+      const options = [];
+      datalist.parent().find('option').each(function() {
+        const option = {};
+        option.label = $(this).text();
+        option.value = $(this).val();
+        options.push(option);
       });
+      let minLength = 0;
+      <?php
+      // Work out a suitable value for the autocomplete minLength
+      // option, ie the number of characters that must be typed before
+      // a list of options appears.   We want to avoid presenting a huge
+      // list of options.
+      if (isset($autocomplete_length_breaks) && is_array($autocomplete_length_breaks))
+      {
+        ?>
+        const breaks = [<?php echo implode(',', $autocomplete_length_breaks) ?>];
+        const nOptions = options.length;
+        let i = 0;
+        while ((i<breaks.length) && (nOptions >= breaks[i]))
+        {
+          i++;
+          minLength++;
+        }
+        <?php
+      }
+      ?>
+      const formInput = datalist.prev();
+      formInput.empty().autocomplete({
+          source: options,
+          minLength: minLength
+        });
+      <?php
+      // If the minLength is 0, then the autocomplete widget doesn't do
+      // quite what you might expect and you need to force it to display
+      // the available options when it receives focus
+      ?>
+      if (minLength === 0)
+      {
+        formInput.on('focus', function() {
+            $(this).autocomplete('search', '');
+          });
+      }
+    });
   }
 
   <?php // Add a fallback for browsers that don't support the time input ?>
@@ -431,18 +428,18 @@ $(document).on('page_ready', function() {
 
   <?php // And add the password visibility toggling mechanism ?>
   $('.eye svg').on('mousedown', function(e) {
-      e.preventDefault();
-      var parent = $(this).parent();
-      var grandparent = parent.parent();
-      var input = grandparent.find('input');
-      var newType = (parent.hasClass('off')) ? 'password' : 'text';
-      grandparent.find('.eye svg').toggle();
-      input.attr('type', newType);
-    });
+    e.preventDefault();
+    const parent = $(this).parent();
+    const grandparent = parent.parent();
+    const input = grandparent.find('input');
+    const newType = (parent.hasClass('off')) ? 'password' : 'text';
+    grandparent.find('.eye svg').toggle();
+    input.attr('type', newType);
+  });
 
   <?php // De-obfuscate email addresses ?>
   $('.contact').each(function() {
-    var decoded = base64Decode($(this).data('html'));
+    const decoded = base64Decode($(this).data('html'));
     if (decoded !== false) {
       $(this).replaceWith(decoded);
     }
@@ -450,8 +447,8 @@ $(document).on('page_ready', function() {
 
   <?php // Add client-side validation of the file upload size ?>
   $('input[type="file"]').on('change input', function(e) {
-    var maxFileSize = $(this).closest('form').find('[name="MAX_FILE_SIZE"]').val();
-    var message = '<?php echo get_js_vocab("max_allowed_file_size", ini_get('upload_max_filesize'))?>'
+    const maxFileSize = $(this).closest('form').find('[name="MAX_FILE_SIZE"]').val();
+    const message = '<?php echo get_js_vocab("max_allowed_file_size", ini_get('upload_max_filesize'))?>';
     <?php // Check that we know MAX_FILE_SIZE and for browser support ?>
     if(maxFileSize && e.target.files && e.target.files.length === 1) {
       if (e.target.files[0].size > maxFileSize) {
