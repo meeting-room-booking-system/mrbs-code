@@ -5,7 +5,7 @@ namespace MRBS;
 require "../defaultincludes.inc";
 
 http_headers(array("Content-type: application/x-javascript"),
-             60*30);  // 30 minute expiry
+             60*30);  // 30-minute expiry
 ?>
 
 'use strict';
@@ -17,9 +17,9 @@ $(document).on('page_ready', function() {
   // The div is hidden while we are manipulating it so that it doesn't flicker;
   // we have to make it visible when we have finished
   ?>
-  var summaryDiv = $('#div_summary'),
-      summaryHead = summaryDiv.find('thead'),
-      tableOptions;
+  const summaryDiv = $('#div_summary');
+  const summaryHead = summaryDiv.find('thead');
+  let tableOptions;
 
   summaryHead.find('tr:first th:odd').attr('colspan', '2');
   summaryHead.find('tr:first th:even').not(':first').remove();
@@ -34,23 +34,23 @@ $(document).on('page_ready', function() {
   // Report button is pressed then re-enable the iCal button.
   ?>
   $('input[name="output"]').on('change', function() {
-      var output = $(this).filter(':checked').val(),
-          formatButtons = $('input[name="output_format"]'),
-          icalButton = formatButtons.filter('[value="' + <?php echo OUTPUT_ICAL ?> + '"]');
+    const output = $(this).filter(':checked').val();
+    const formatButtons = $('input[name="output_format"]');
+    const icalButton = formatButtons.filter('[value="' + <?php echo OUTPUT_ICAL ?> + '"]');
 
-      if (output === '<?php echo SUMMARY ?>')
+    if (output === '<?php echo SUMMARY ?>')
+    {
+      icalButton.prop('disabled', true);
+      if (icalButton.is(':checked'))
       {
-        icalButton.prop('disabled', true);
-        if (icalButton.is(':checked'))
-        {
-          formatButtons.filter('[value="' + <?php echo OUTPUT_HTML ?> + '"]').attr('checked', 'checked');
-        }
+        formatButtons.filter('[value="' + <?php echo OUTPUT_HTML ?> + '"]').attr('checked', 'checked');
       }
-      else
-      {
-        icalButton.prop('disabled', false);
-      }
-    }).trigger('change');
+    }
+    else
+    {
+      icalButton.prop('disabled', false);
+    }
+  }).trigger('change');
 
 
   <?php
@@ -64,14 +64,14 @@ $(document).on('page_ready', function() {
   // for older browsers
   ?>
   tableOptions.ajax = {
-      url: 'report.php' + ((args.site) ? '?site=' + args.site : ''),
-      method: 'POST',
-      processData: false,
-      contentType: false,
-      data: function() {
-          return new FormData($('#report_form')[0]);
-        }
-    };
+    url: 'report.php' + ((args.site) ? '?site=' + args.site : ''),
+    method: 'POST',
+    processData: false,
+    contentType: false,
+    data: function() {
+        return new FormData($('#report_form')[0]);
+      }
+  };
 
   <?php
   // Add in a hidden input to the form so that we can tell if we are using DataTables
