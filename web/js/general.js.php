@@ -16,30 +16,30 @@ global $autocomplete_length_breaks;
 // Function to determine whether the browser supports the HTML5
 // <datalist> element.
 ?>
-var supportsDatalist = function supportsDatalist() {
-    <?php
-    // The first two conditions work for most browsers.   The third condition is
-    // necessary for Safari, which, certainly for versions up to 6.0, the latest at
-    // the time of writing, return true for the first two conditions even though
-    // it doesn't support <datalist>.
-    ?>
-    return ('list' in document.createElement('input')) &&
-           ('options' in document.createElement('datalist')) &&
-           (window.HTMLDataListElement !== undefined);
-  };
+const supportsDatalist = function supportsDatalist() {
+  <?php
+  // The first two conditions work for most browsers.   The third condition is
+  // necessary for Safari, which, certainly for versions up to 6.0, the latest at
+  // the time of writing, return true for the first two conditions even though
+  // it doesn't support <datalist>.
+  ?>
+  return ('list' in document.createElement('input')) &&
+    ('options' in document.createElement('datalist')) &&
+    (window.HTMLDataListElement !== undefined);
+};
 
 
 <?php
 // If we are operating on a wide screen when the standard form fieldsets are
-// displayed as tables, then make sure that the left hand column in the standard
+// displayed as tables, then make sure that the left-hand column in the standard
 // form is of constant width.  If there are multiple fieldsets then each fieldset
 // will have its own width, as the display:table only applies to that fieldset.
 ?>
-var adjustLabelWidths = function adjustLabelWidths() {
-  var standardFieldset = $('.standard fieldset');
+const adjustLabelWidths = function adjustLabelWidths() {
+  const standardFieldset = $('.standard fieldset');
   if ((standardFieldset.length !== 0) && (standardFieldset.css('display') === 'table'))
   {
-    var labels = standardFieldset.children('div').children('label').not('.rep_type_details label');
+    const labels = standardFieldset.children('div').children('label').not('.rep_type_details label');
     <?php // Let the labels find their natural widths ?>
     labels.width('auto');
     <?php // Add on one pixel to avoid what look to be like rounding problems in some browsers ?>
@@ -50,7 +50,7 @@ var adjustLabelWidths = function adjustLabelWidths() {
 
 function fillUsernameFields()
 {
-  var select = $('.ajax_usernames');
+  const select = $('.ajax_usernames');
 
   <?php // We don't want to fire off an unnecessary POST request ?>
   if (select.length === 0)
@@ -59,16 +59,16 @@ function fillUsernameFields()
   }
 
   select.each(function() {
-      <?php // Turn the create_by select into a fancy select box. ?>
-      var el = $(this);
-      el.mrbsSelect(el.hasClass('datalist'));
-      <?php
-      // Add a class to the body so that we can modify the CSS when the load
-      // is in progress, eg by adding an animated GIF.  We remove the class
-      // once the Ajax data has arrived.
-      ?>
-      $('body').addClass('ajax-loading');
-    });
+    <?php // Turn the create_by select into a fancy select box. ?>
+    const el = $(this);
+    el.mrbsSelect(el.hasClass('datalist'));
+    <?php
+    // Add a class to the body so that we can modify the CSS when the load
+    // is in progress, eg by adding an animated GIF.  We remove the class
+    // once the Ajax data has arrived.
+    ?>
+    $('body').addClass('ajax-loading');
+  });
 
   <?php
   // Fire off an Ajax request to get the data.  We do this because some authentication
@@ -87,79 +87,77 @@ function fillUsernameFields()
   // See https://select2.org/data-sources/ajax for more details
   ?>
   $.post({
-      url: 'ajax/usernames.php',
-      dataType: 'json',
-      data: {csrf_token: getCSRFToken(), site: args.site},
-      success: function(data) {
-          select.each(function() {
-              var el = $(this);
-              var newOption;
-              <?php
-              // Get the current option (there will only be one) so we know
-              // which one should be selected in the new list
-              // Convert usernames to strings before being converted to upper case
-              // in case the usernames look like ints, for example if ids are being
-              // used for usernames.
-              ?>
-              var currentOption = el.find('option').first();
-              var currentValue = currentOption.val();
-              var currentValueUpper = currentValue.toString().toUpperCase();
-              var currentText = currentOption.text();
-              <?php
-              // Remove the existing option, because it will be in the new dataset in
-              // the correct position.
-              ?>
-              el.empty();
-              <?php
-              // Add the new data, selecting the option that was previously selected
-              ?>
-              var foundCurrent = false;
-              $.each(data, function(index, option) {
-                  if (option.username !== null)
-                  {
-                    // Make it a case-insensitive comparison as usernames are case-insensitive
-                    var selected = (option.username.toString().toUpperCase() === currentValueUpper);
-                    foundCurrent = foundCurrent || selected;
-                    var newOption = new Option(option.display_name, option.username, selected, selected);
-                    el.append(newOption);
-                  }
-                });
-              <?php
-              // It's possible that the creator of the booking is no longer a user (they may have left
-              // the organisation and been deleted from the user list).  If that's the case and we haven't
-              // found them while running through the user list, then add them and make them the selected
-              // option.  (Ideally the list should perhaps be sorted again, but then we'd have to worry
-              // about locales. And having the original creator at the end of the list perhaps draws attention
-              // to the fact that they no longer exist).
-              ?>
-              if (!foundCurrent)
-              {
-                newOption = new Option(currentText, currentValue, true, true);
-                el.append(newOption);
-              }
-              <?php
-              // If there was one, close the Select2 control and refresh it.  If it was open before the
-              // close, then reopen it after the refresh.
-              //
-              ?>
-              if (el.hasClass('select2-hidden-accessible'))
-              {
-                var wasOpen = el.select2('isOpen');
-                el.select2('close').trigger('change');
-                if (wasOpen)
-                {
-                  el.select2('open');
-                }
-              }
-            });
-          $('body').removeClass('ajax-loading');
+    url: 'ajax/usernames.php',
+    dataType: 'json',
+    data: {csrf_token: getCSRFToken(), site: args.site},
+    success: function(data) {
+      select.each(function() {
+        const el = $(this);
+        let newOption;
+        <?php
+        // Get the current option (there will only be one) so we know
+        // which one should be selected in the new list
+        // Convert usernames to strings before being converted to upper case
+        // in case the usernames look like ints, for example if ids are being
+        // used for usernames.
+        ?>
+        const currentOption = el.find('option').first();
+        const currentValue = currentOption.val();
+        const currentValueUpper = currentValue.toString().toUpperCase();
+        const currentText = currentOption.text();
+        <?php
+        // Remove the existing option, because it will be in the new dataset in
+        // the correct position.
+        ?>
+        el.empty();
+        <?php
+        // Add the new data, selecting the option that was previously selected
+        ?>
+        let foundCurrent = false;
+        $.each(data, function(index, option) {
+          if (option.username !== null)
+          {
+            // Make it a case-insensitive comparison as usernames are case-insensitive
+            const selected = (option.username.toString().toUpperCase() === currentValueUpper);
+            foundCurrent = foundCurrent || selected;
+            const newOption = new Option(option.display_name, option.username, selected, selected);
+            el.append(newOption);
+          }
+        });
+        <?php
+        // It's possible that the creator of the booking is no longer a user (they may have left
+        // the organisation and been deleted from the user list).  If that's the case and we haven't
+        // found them while running through the user list, then add them and make them the selected
+        // option.  (Ideally the list should perhaps be sorted again, but then we'd have to worry
+        // about locales. And having the original creator at the end of the list perhaps draws attention
+        // to the fact that they no longer exist).
+        ?>
+        if (!foundCurrent)
+        {
+          newOption = new Option(currentText, currentValue, true, true);
+          el.append(newOption);
         }
-    });
+        <?php
+        // If there was one, close the Select2 control and refresh it.  If it was open before the
+        // close, then reopen it after the refresh.
+        //
+        ?>
+        if (el.hasClass('select2-hidden-accessible'))
+        {
+          const wasOpen = el.select2('isOpen');
+          el.select2('close').trigger('change');
+          if (wasOpen)
+          {
+            el.select2('open');
+          }
+        }
+      });
+      $('body').removeClass('ajax-loading');
+    }
+  });
 }
 
-
-var args;
-
+var  args;
 
 $(document).on('page_ready', function() {
 
