@@ -22,7 +22,7 @@ const supportsDatalist = function supportsDatalist() {
   <?php
   // The first two conditions work for most browsers.   The third condition is
   // necessary for Safari, which, certainly for versions up to 6.0, the latest at
-  // the time of writing, return true for the first two conditions even though
+  // the time of writing, returns true for the first two conditions even though
   // it doesn't support <datalist>.
   ?>
   return ('list' in document.createElement('input')) &&
@@ -75,14 +75,14 @@ function fillUsernameFields()
   <?php
   // Fire off an Ajax request to get the data.  We do this because some authentication
   // schemes, eg LDAP, will take a long time to return the data if there are very many
-  // users and we don't want to hold up the page load.  Most of the time the data won't
+  // users, and we don't want to hold up the page load.  Most of the time the data won't
   // even be needed anyway because the booking will be made in the name of the current
   // user.
   //
   // Select2 offers an Ajax option, but it is not particularly suitable because (a) the
   // Ajax request is not fired until the Select2 element is opened, which means the clock
   // doesn't start ticking until then and (b) a new request is fired whenever the search
-  // term is changed.  It does though offer some nice features such as pagination and
+  // term is changed.  It does, though, offer some nice features such as pagination and
   // query terms, but these still aren't going to help much.  And LDAP searches of the
   // form "*TERM*" can be expensive.
 
@@ -100,7 +100,7 @@ function fillUsernameFields()
         // Get the current option (there will only be one) so we know
         // which one should be selected in the new list
         // Convert usernames to strings before being converted to upper case
-        // in case the usernames look like ints, for example if ids are being
+        // in case the usernames look like ints; for example, when ids are being
         // used for usernames.
         ?>
         const currentOption = el.find('option').first();
@@ -229,7 +229,7 @@ $(document).on('page_ready', function() {
   // to result in a "Save" rather than "Back".    So in these cases we have assigned
   // a class of 'default_action' to the one that we want to be executed when we hit
   // Enter.   (Note that it is a class rather than an id just in case we have two or
-  // more such forms on a page.   However we should ensure that there is only one
+  // more such forms on a page. However we should ensure that there is only one
   // button with this class per form.)
   ?>
   $('form input.default_action').each(function() {
