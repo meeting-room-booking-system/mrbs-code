@@ -96,9 +96,9 @@ jQuery.fn.extend({
           ?>
         })
         .next('.select2-container').each(function() {
-            var container = $(this);
-            container.width(container.width() + 5);
-          });
+          const container = $(this);
+          container.width(container.width() + 5);
+        });
     }
     return($(this));
   }
@@ -115,19 +115,18 @@ function getMaxWidth (selection) {
 
 function getErrorList(errors)
 {
-  var result = {html: '', text: ''},
-      patternSpan = /<span[\s\S]*span>/gi,
-      patternTags = /<\S[^><]*>/g,
-      str;
+  const result = {html: '', text: ''};
+  const patternSpan = /<span[\s\S]*span>/gi;
+  const patternTags = /<\S[^><]*>/g;
 
   result.html += "<ul>";
 
-  for (var i=0; i<errors.length; i++)
+  for (let i=0; i<errors.length; i++)
   {
     result.html += "<li>" + errors[i] + "<\/li>";
     result.text += '(' + (i+1).toString() + ') ';
     <?php // strip out the <span> and its contents and then all other tags ?>
-    str = errors[i].replace(patternSpan, '').replace(patternTags, '');
+    let str = errors[i].replace(patternSpan, '').replace(patternTags, '');
     <?php // undo the htmlspecialchars() ?>
     result.text += $('<div>').html(str).text();
     result.text += "  \n";
@@ -143,48 +142,45 @@ function getErrorList(errors)
 // Gets the correct prefix to use (if any) with the page visibility API.
 // Returns null if not supported.
 ?>
-var visibilityPrefix = function visibilityPrefix() {
-    var prefixes = ['', 'webkit', 'moz', 'ms', 'o'];
-    var testProperty;
+const visibilityPrefix = function visibilityPrefix() {
+  const prefixes = ['', 'webkit', 'moz', 'ms', 'o'];
 
-    if (typeof visibilityPrefix.prefix === 'undefined')
+  if (typeof visibilityPrefix.prefix === 'undefined')
+  {
+    visibilityPrefix.prefix = null;
+    for (const prefix of prefixes)
     {
-      visibilityPrefix.prefix = null;
-      for (var i=0; i<prefixes.length; i++)
+      let testProperty = prefix;
+      testProperty += (prefix === '') ? 'hidden' : 'Hidden';
+      if (testProperty in document)
       {
-        testProperty = prefixes[i];
-        testProperty += (prefixes[i] === '') ? 'hidden' : 'Hidden';
-        if (testProperty in document)
-        {
-          visibilityPrefix.prefix = prefixes[i];
-          break;
-        }
+        visibilityPrefix.prefix = prefix;
+        break;
       }
     }
+  }
 
-    return visibilityPrefix.prefix;
-  };
+  return visibilityPrefix.prefix;
+};
 
 <?php
 // Determine if the page is hidden from the user (eg if it has been minimised
 // or the tab is not visible).    Returns true, false or null (if not known).
 ?>
-var isHidden = function isHidden() {
-    var prefix;
-    prefix = visibilityPrefix();
-    switch (prefix)
-    {
-      case null:
-        return null;
-        break;
-      case '':
-        return document.hidden;
-        break;
-      default:
-        return document[prefix + 'Hidden'];
-        break;
-    }
-  };
+const isHidden = function isHidden() {
+  const prefix = visibilityPrefix();
+  switch (prefix) {
+    case null:
+      return null;
+      break;
+    case '':
+      return document.hidden;
+      break;
+    default:
+      return document[prefix + 'Hidden'];
+      break;
+  }
+};
 
 
 <?php
@@ -192,24 +188,23 @@ var isHidden = function isHidden() {
 ?>
 function throttle(fn, threshold, scope) {
 
-  var last,
-      deferTimer;
+  let last, deferTimer;
 
   threshold || (threshold = 250);
 
   return function () {
-    var context = scope || this,
-        now = +new Date(),
-        args = arguments;
+    const context = scope || this;
+    const now = +new Date();
+    const args = arguments;
 
     if (last && now < last + threshold)
     {
       // hold on to it
       clearTimeout(deferTimer);
       deferTimer = setTimeout(function () {
-          last = now;
-          fn.apply(context, args);
-        }, threshold);
+        last = now;
+        fn.apply(context, args);
+      }, threshold);
     }
     else
     {
@@ -225,11 +220,11 @@ function throttle(fn, threshold, scope) {
 ?>
 function isMeteredConnection()
 {
-  var connection = navigator.connection ||
-                   navigator.mozConnection ||
-                   navigator.webkitConnection ||
-                   navigator.msConnection ||
-                   null;
+  const connection = navigator.connection ||
+    navigator.mozConnection ||
+    navigator.webkitConnection ||
+    navigator.msConnection ||
+    null;
 
   if (connection === null)
   {
@@ -274,9 +269,12 @@ function getParameterByName(name, url)
     url = window.location.href;
   }
   name = name.replace(/[\[\]]/g, "\\$&");
-  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-      results = regex.exec(url);
-  if (!results) return null;
+  const regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
+  const results = regex.exec(url);
+  if (!results)
+  {
+    return null;
+  }
   if (!results[2])
   {
     return '';
