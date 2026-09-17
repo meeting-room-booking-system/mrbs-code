@@ -220,11 +220,11 @@ function throttle(fn, threshold, scope) {
 ?>
 function isMeteredConnection()
 {
-  var connection = navigator.connection ||
-                   navigator.mozConnection ||
-                   navigator.webkitConnection ||
-                   navigator.msConnection ||
-                   null;
+  const connection = navigator.connection ||
+    navigator.mozConnection ||
+    navigator.webkitConnection ||
+    navigator.msConnection ||
+    null;
 
   if (connection === null)
   {
@@ -269,9 +269,12 @@ function getParameterByName(name, url)
     url = window.location.href;
   }
   name = name.replace(/[\[\]]/g, "\\$&");
-  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-      results = regex.exec(url);
-  if (!results) return null;
+  const regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
+  const results = regex.exec(url);
+  if (!results)
+  {
+    return null;
+  }
   if (!results[2])
   {
     return '';
