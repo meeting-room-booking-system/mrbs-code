@@ -167,22 +167,20 @@ const visibilityPrefix = function visibilityPrefix() {
 // Determine if the page is hidden from the user (eg if it has been minimised
 // or the tab is not visible).    Returns true, false or null (if not known).
 ?>
-var isHidden = function isHidden() {
-    var prefix;
-    prefix = visibilityPrefix();
-    switch (prefix)
-    {
-      case null:
-        return null;
-        break;
-      case '':
-        return document.hidden;
-        break;
-      default:
-        return document[prefix + 'Hidden'];
-        break;
-    }
-  };
+const isHidden = function isHidden() {
+  const prefix = visibilityPrefix();
+  switch (prefix) {
+    case null:
+      return null;
+      break;
+    case '':
+      return document.hidden;
+      break;
+    default:
+      return document[prefix + 'Hidden'];
+      break;
+  }
+};
 
 
 <?php
@@ -190,24 +188,23 @@ var isHidden = function isHidden() {
 ?>
 function throttle(fn, threshold, scope) {
 
-  var last,
-      deferTimer;
+  let last, deferTimer;
 
   threshold || (threshold = 250);
 
   return function () {
-    var context = scope || this,
-        now = +new Date(),
-        args = arguments;
+    const context = scope || this;
+    const now = +new Date();
+    const args = arguments;
 
     if (last && now < last + threshold)
     {
       // hold on to it
       clearTimeout(deferTimer);
       deferTimer = setTimeout(function () {
-          last = now;
-          fn.apply(context, args);
-        }, threshold);
+        last = now;
+        fn.apply(context, args);
+      }, threshold);
     }
     else
     {
