@@ -173,6 +173,7 @@ $(document).on('page_ready', function() {
           }
 
           const progress = progressContainer.find('progress');
+          const deletionTimerLabel = 'MRBS batch deletion';
           let success = true;
           let totalDeleted = 0;
 
@@ -214,7 +215,7 @@ $(document).on('page_ready', function() {
                     if ($debug)
                     {
                       ?>
-                      console.log((Date.now() - startTime)/1000 + " seconds");
+                      console.timeEnd(deletionTimerLabel);
                       <?php
                     }
                     ?>
@@ -239,7 +240,7 @@ $(document).on('page_ready', function() {
           if ($debug)
           {
             ?>
-            var startTime = Date.now();
+            console.time(deletionTimerLabel);
             <?php
           }
           ?>
