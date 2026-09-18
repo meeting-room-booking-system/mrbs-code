@@ -12,7 +12,6 @@ http_headers(array("Content-type: application/x-javascript"),
 
 $(document).on('page_ready', function() {
 
-  const searchForm = $('#search_form');
   const table = $('#search_results');
   let tableOptions;
 
