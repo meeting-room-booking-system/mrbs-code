@@ -949,7 +949,7 @@ $(document).on('page_ready', function() {
     let mouseDown = false;
 
     const downHandler = function(e) {
-      <?php // Ignore the click if the user is not allowed to make a boooking in this slot. ?>
+      <?php // Ignore the click if the user is not allowed to make a booking in this slot. ?>
       if ($(e.target).hasClass('not_allowed'))
       {
         return;
@@ -1512,7 +1512,7 @@ $(document).on('page_ready', function() {
       }
 
       // Give some visual feedback that the change is being saved.   Note that the span
-      // is inserted after the elemement rather than appended, because if it's a child
+      // is inserted after the element rather than appended, because if it's a child
       // then any opacity rule that is applied to the parent will also apply to the child.
       ?>
       booking.addClass('saving')
