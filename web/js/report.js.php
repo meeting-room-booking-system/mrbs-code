@@ -85,8 +85,8 @@ $(document).on('page_ready', function() {
       value: '1'
     }).appendTo('#report_form');
 
-  var table = $('#report_table'),
-      reportTable;
+  const table = $('#report_table');
+  let reportTable;
 
   <?php
   // Get the types and feed those into dataTables
@@ -100,21 +100,21 @@ $(document).on('page_ready', function() {
   {
     ?>
 
-    var addDeleteButton = function addDeleteButton() {
+    const addDeleteButton = function addDeleteButton() {
 
-      var data;
-      var batches;
-      var nBatches;
-      var nEntries;
-      var progressContainer = $('<div id="progress_container"></div>');
-      var requests;
-      var requestsCompleted;
-      var requestsAborted;
+      const progressContainer = $('<div id="progress_container"></div>');
+      let data;
+      let batches;
+      let nBatches;
+      let nEntries;
+      let requests;
+      let requestsCompleted;
+      let requestsAborted;
 
       <?php // Initialise the delete button and progress bar ?>
       function initDeleteButton()
       {
-        var title = '<?php echo get_js_vocab("deleting_n_entries") ?>';
+        let title = '<?php echo get_js_vocab("deleting_n_entries") ?>';
         data = reportTable.rows({filter: 'applied'}).data().toArray();
         nEntries = data.length;
         requests = [];
@@ -166,120 +166,123 @@ $(document).on('page_ready', function() {
       <?php // Add a delete button ?>
       $('<button id="delete_button"><?php echo get_js_vocab("delete_entries") ?><\/button>')
         .on('click', function() {
-            if (nEntries === 0) {
-              return;
-            }
 
-            <?php
-            // Fire off an Ajax POST request.  Upon completion fire off another one until there
-            // are none left.
-            ?>
-            var postBatch = function(batch) {
-              var params = {
-                csrf_token: getCSRFToken(),
-                <?php // The ids are JSON encoded to avoid hitting the php.ini max_input_vars limit ?>
-                ids: JSON.stringify(batch)
-              };
-              if (args.site) {
-                params.site = args.site;
-              }
-              <?php // Save the XHR request in case we need to abort it ?>
-              requests.push($.post(
-                  'ajax/del_entries.php',
-                  params,
-                  function (result) {
-                    var isInt = /^\s*\d+\s*$/;
-                    requestsCompleted++;
-                    if (isInt.test(result)) {
-                      totalDeleted += parseInt(result, 10);
-                      progress.val(totalDeleted).text(totalDeleted);
-                    } else {
-                      success = false;
-                    }
-                    <?php // Fire off another request if there is one ?>
-                    var batch = batches.pop();
-                    if (batch !== undefined) {
-                      postBatch(batch);
-                    }
-                    <?php // Otherwise check whether everything has finished ?>
-                    else if (requestsCompleted + requestsAborted >= nBatches) {
-                      <?php
-                      // Log the time it took to delete the entries if we're got $debug set.
-                      if ($debug)
-                      {
-                        ?>
-                        console.log((Date.now() - startTime)/1000 + " seconds");
-                        <?php
-                      }
-                      ?>
-                      if (!success) {
-                        window.alert("<?php echo get_js_vocab('delete_entries_failed') ?>");
-                      }
-                      reloadReport();
-                    }
+          if (nEntries === 0)
+          {
+            return;
+          }
+
+          const progress = progressContainer.find('progress');
+          let success = true;
+          let totalDeleted = 0;
+
+          <?php
+          // Fire off an Ajax POST request.  Upon completion fire off another one until there
+          // are none left.
+          ?>
+          const postBatch = function(batch) {
+            const params = {
+              csrf_token: getCSRFToken(),
+              <?php // The ids are JSON encoded to avoid hitting the php.ini max_input_vars limit ?>
+              ids: JSON.stringify(batch)
+            };
+            if (args.site) {
+              params.site = args.site;
+            }
+            <?php // Save the XHR request in case we need to abort it ?>
+            requests.push($.post(
+                'ajax/del_entries.php',
+                params,
+                function (result) {
+                  const isInt = /^\s*\d+\s*$/;
+                  requestsCompleted++;
+                  if (isInt.test(result)) {
+                    totalDeleted += parseInt(result, 10);
+                    progress.val(totalDeleted).text(totalDeleted);
+                  } else {
+                    success = false;
                   }
-                )
-              )
-            }
-
-            var message = "<?php echo get_js_vocab('delete_entries_warning') ?>";
-            message = message.replace('%s', nEntries.toLocaleString(args.langPrefs));
-            if (!window.confirm(message)) {
-              return;
-            }
-            var progress = progressContainer.find('progress');
-            var success = true;
-            var totalDeleted = 0;
-            <?php
-            // If $debug is set record how long it takes to delete the entries
-            if ($debug)
-            {
-              ?>
-              var startTime = Date.now();
-              <?php
-            }
-            ?>
-
-            progress.attr('max', nEntries).val(0).text('0');
-            progressContainer.show();
-            <?php
-            // We're going to split the POST requests into batches because if a
-            // single POST request is too large we could get a 406 error. The POST
-            // requests are fired off asynchronously, so we need to count them all
-            // back before we know that we've finished.
-            ?>
-            var batchSize = <?php echo $del_entries_ajax_batch_size ?>,
-                batch = [],
-                i;
-
-            batches = [];
-
-            for (i=0; i<nEntries; i++) {
-              batch.push($(data[i][0]).siblings('a').data('id'));
-              if (batch.length >= batchSize) {
-                batches.push(batch);
-                batch = [];
-              }
-            }
-            if (batch.length > 0) {
-              batches.push(batch);
-            }
-            <?php
-            // Dispatch the batches (if any) setting off parallel Ajax requests up to the maximum
-            // number determined by the config settings.  When each request completes it will set
-            // off another one until all the batches have been processed.
-            ?>
-            nBatches = batches.length;
-            if (nBatches > 0) {
-              $('#report_table_processing').css('visibility', 'visible');
-              for (i=0; i<<?php echo $del_entries_parallel_requests ?>; i++) {
-                batch = batches.pop();
-                if (batch !== undefined) {
-                  postBatch(batch);
+                  <?php // Fire off another request if there is one ?>
+                  const batch = batches.pop();
+                  if (batch !== undefined) {
+                    postBatch(batch);
+                  }
+                  <?php // Otherwise check whether everything has finished ?>
+                  else if (requestsCompleted + requestsAborted >= nBatches) {
+                    <?php
+                    // Log the time it took to delete the entries if we're got $debug set.
+                    if ($debug)
+                    {
+                      ?>
+                      console.log((Date.now() - startTime)/1000 + " seconds");
+                      <?php
+                    }
+                    ?>
+                    if (!success) {
+                      window.alert("<?php echo get_js_vocab('delete_entries_failed') ?>");
+                    }
+                    reloadReport();
+                  }
                 }
+              )
+            )
+          }
+
+          let message = "<?php echo get_js_vocab('delete_entries_warning') ?>";
+          message = message.replace('%s', nEntries.toLocaleString(args.langPrefs));
+          if (!window.confirm(message)) {
+            return;
+          }
+
+          <?php
+          // If $debug is set record how long it takes to delete the entries
+          if ($debug)
+          {
+            ?>
+            var startTime = Date.now();
+            <?php
+          }
+          ?>
+
+          progress.attr('max', nEntries).val(0).text('0');
+          progressContainer.show();
+          <?php
+          // We're going to split the POST requests into batches because if a
+          // single POST request is too large we could get a 406 error. The POST
+          // requests are fired off asynchronously, so we need to count them all
+          // back before we know that we've finished.
+          ?>
+          let batchSize = <?php echo $del_entries_ajax_batch_size ?>;
+          let batch = [];
+
+          batches = [];
+
+          for (let i=0; i<nEntries; i++) {
+            batch.push($(data[i][0]).siblings('a').data('id'));
+            if (batch.length >= batchSize) {
+              batches.push(batch);
+              batch = [];
+            }
+          }
+          if (batch.length > 0) {
+            batches.push(batch);
+          }
+          <?php
+          // Dispatch the batches (if any) setting off parallel Ajax requests up to the maximum
+          // number determined by the config settings.  When each request completes it will set
+          // off another one until all the batches have been processed.
+          ?>
+          nBatches = batches.length;
+          if (nBatches > 0) {
+            $('#report_table_processing').css('visibility', 'visible');
+            for (let i=0; i<<?php echo $del_entries_parallel_requests ?>; i++) {
+              batch = batches.pop();
+              if (batch !== undefined) {
+                postBatch(batch);
               }
             }
-          })
+          }
+        })
         .insertAfter('#report_table_paginate');
 
       <?php // While deletion is in progress disable all interaction except with the cancel button ?>
@@ -329,7 +332,7 @@ $(document).on('page_ready', function() {
   // tell DataTables not to use the saved state, otherwise it will confuse the user
   // who has just changed the "Sort by" option on the report form.
   ?>
-  var sortColumns = table.data('sortColumns');
+  const sortColumns = table.data('sortColumns');
   if ((sortColumns !== undefined) && (sortColumns.length))
   {
     tableOptions.order = [];
