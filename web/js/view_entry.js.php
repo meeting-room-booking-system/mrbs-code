@@ -12,7 +12,7 @@ http_headers(array("Content-type: application/x-javascript"),
 
 $(document).on('page_ready', function() {
 
-  var tableOptions = {};
+  const tableOptions = {};
 
   <?php // If we're an admin then add a "Copy email addresses" button ?>
   if (args.isAdmin) {
