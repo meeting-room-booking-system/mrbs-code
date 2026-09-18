@@ -284,7 +284,6 @@ const Table = {
 
   init: function() {
     const table = $(Table.selector);
-    const container = table.parent();
     <?php
     // TODO: rename bookedMap to something more descriptive.
     // Initialise the bookedMap, which is an array of booked slots and slots that are not
