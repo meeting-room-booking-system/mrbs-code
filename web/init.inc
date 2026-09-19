@@ -2,9 +2,74 @@
 declare(strict_types=1);
 namespace MRBS;
 
-// Site-specific php.ini settings
 use MRBS\Errors\Errors;
 
+/**
+ * Returns the base URL for MRBS.  If the config variable $url_base is set, then that overrides the automatic
+ * calculation.  A '/' will be appended to the end of the string, unless it is empty or already ends in a '/'.
+ *
+ * IMPORTANT: this function must be initialised by calling it from a script at the top level of the MRBS web directory.
+ */
+function url_base() : string
+{
+  global $url_base, $server;
+
+  // Store the result in a static variable so that the function can be initialised by calling it from the top level.
+  static $result = null;
+
+  if (!isset($result))
+  {
+    // Use the $url_base if there is one and it is well-formed.
+    if (isset($url_base))
+    {
+      $parsed_url = parse_url($url_base);
+      if ($parsed_url === false)
+      {
+        trigger_error('Cannot parse $url_base of "' . $url_base . '"', E_USER_WARNING);
+      }
+    }
+
+    // Otherwise construct it from the $_SERVER variables if we can.
+    if (empty($parsed_url) && isset($server['HTTP_HOST']))
+    {
+      $parsed_url = [
+        'host' => $server['HTTP_HOST'],
+        'path' => dirname(url_path())
+      ];
+    }
+
+    // If we haven't got any URL parts, then return an empty string.
+    if (empty($parsed_url))
+    {
+      $result = '';
+    }
+    // Otherwise tidy up the URL parts and rebuild it.
+    else
+    {
+      // Add a scheme if we haven't got one
+      if (!isset($parsed_url['scheme']))
+      {
+        $parsed_url['scheme'] = is_https() ? 'https' : 'http';
+      }
+      // Remove any query and fragment (which shouldn't be there anyway, but just in case)
+      unset($parsed_url['query'], $parsed_url['fragment']);
+      // Rebuild the URL
+      $result = build_url($parsed_url);
+      // Add a trailing '/' if there isn't one already.
+      if (!str_ends_with($result, '/'))
+      {
+        $result .= '/';
+      }
+    }
+  }
+
+  return $result;
+}
+
+// Initialise url_base().
+url_base();
+
+// Site-specific php.ini settings
 if (!empty($ini_directives))
 {
   foreach ($ini_directives as $option => $value)
