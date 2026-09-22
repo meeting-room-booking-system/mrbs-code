@@ -6,8 +6,8 @@
  */
 namespace OpenPsa\Ranger\Provider;
 
-use IntlDateFormatter;
 use OpenPsa\Ranger\Ranger;
+use IntlDateFormatter;
 
 class DeProvider implements Provider
 {
