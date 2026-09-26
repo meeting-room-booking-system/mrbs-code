@@ -74,7 +74,7 @@ class Wp
    * @param int|string $value
    * @return WP_User|false
    */
-  public static function get_user_by(string $field, $value) : object
+  public static function get_user_by(string $field, $value)
   {
     return get_user_by($field, $value);
   }
