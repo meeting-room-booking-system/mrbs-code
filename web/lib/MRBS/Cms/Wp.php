@@ -110,7 +110,7 @@ class Wp
    * @param mixed $thing
    * @return bool
    */
-  public static function is_wp_error(mixed $thing): bool
+  public static function is_wp_error($thing): bool
   {
     return is_wp_error($thing);
   }
