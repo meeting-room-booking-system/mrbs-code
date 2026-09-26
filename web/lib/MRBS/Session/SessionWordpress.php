@@ -3,10 +3,8 @@ declare(strict_types=1);
 namespace MRBS\Session;
 
 use MRBS\User;
+use MRBS\Cms\Wp;
 use function MRBS\auth;
-
-require_once MRBS_ROOT . '/auth/cms/wordpress.inc';
-
 
 class SessionWordpress extends SessionWithLogin
 {
@@ -20,12 +18,12 @@ class SessionWordpress extends SessionWithLogin
 
   public function getCurrentUser() : ?User
   {
-    if (!is_user_logged_in())
+    if (!Wp::is_user_logged_in())
     {
       return parent::getCurrentUser();
     }
 
-    $mrbs_user = wp_get_current_user();
+    $mrbs_user = Wp::wp_get_current_user();
 
     return auth()->getUser($mrbs_user->user_login);
   }
@@ -44,12 +42,12 @@ class SessionWordpress extends SessionWithLogin
     $credentials['user_login'] = $username;
     $credentials['user_password'] = $password;
     $credentials['remember'] = false;
-    $wp_user = wp_signon($credentials);
+    $wp_user = Wp::wp_signon($credentials);
 
-    if (is_wp_error($wp_user))
+    if (Wp::is_wp_error($wp_user))
     {
       $errors = $wp_user;
-      $error_message = apply_filters('login_errors', $wp_user->get_error_message());
+      $error_message = Wp::apply_filters('login_errors', $wp_user->get_error_message());
       // The WordPress error message contains HTML so don't escape it.
       $this->authGet($this->form['target_url'], $this->form['returl'], $error_message, true);
       exit(); // unnecessary because authGet() exits, but just included for clarity
@@ -68,7 +66,7 @@ class SessionWordpress extends SessionWithLogin
 
   public function logoffUser(?string $redirect_url = null) : void
   {
-    wp_logout();
+    Wp::wp_logout();
     parent::logoffUser($redirect_url);
   }
 
