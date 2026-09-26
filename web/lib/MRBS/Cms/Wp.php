@@ -16,15 +16,25 @@ use function wp_get_current_user;
 use function wp_logout;
 use function wp_signon;
 
-define('WP_USE_THEMES', false);
+
+
+// WordPress changes the default timezone, so save it and then restore it later.
+$mrbs_timezone = date_default_timezone_get();
 
 // WordPress shares some global variables with MRBS, so we need to save the MRBS
 // ones before loading WP and then restore them afterwards.
 $mrbs_month = $month ?? null;
 $mrbs_theme = $theme ?? null;
+
+// Load WordPress
+define('WP_USE_THEMES', false);
 require_once MRBS_ROOT . '/'. $auth['wordpress']['rel_path'] . '/wp-load.php';
+
+// Restore the MRBS settings
 $theme = $mrbs_theme;
 $month = $mrbs_month;
+date_default_timezone_set($mrbs_timezone);
+
 
 /**
  * A Helper class for WordPress functions that allows the loading of WordPress to be postponed
