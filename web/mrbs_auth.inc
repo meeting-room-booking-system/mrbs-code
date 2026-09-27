@@ -204,6 +204,7 @@ function checkAuthorised($page, $just_check=false)
 {
   global $view, $view_all, $year, $month, $day, $area, $room;
   global $returl;
+  global $auth;
 
   // Get the minimum authorisation level for this page
   $required_level = get_page_level($page);
@@ -233,7 +234,12 @@ function checkAuthorised($page, $just_check=false)
   if (session_status() === PHP_SESSION_ACTIVE)
   {
     Form::getToken();
-    session_write_close();
+    // Closing the session if we're running Joomla leads to problems (eg CSRF token not stored)/
+    // TODO: need to rethink this
+    if ($auth['session'] != 'joomla')
+    {
+      session_write_close();
+    }
   }
 
   if (isset($result))
