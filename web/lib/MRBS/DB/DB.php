@@ -14,7 +14,7 @@ use function MRBS\mrbs_ignore_user_abort;
 abstract class DB
 {
   const DB_SCHEMA_VERSION = 82;
-  const DB_SCHEMA_VERSION_LOCAL = 1;
+  const DB_SCHEMA_VERSION_LOCAL = 2;
 
   const DB_DEFAULT_PORT = null;
   const DB_DBO_DRIVER = null;
