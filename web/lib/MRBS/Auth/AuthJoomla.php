@@ -3,17 +3,19 @@ declare(strict_types=1);
 namespace MRBS\Auth;
 
 use Joomla\CMS\Factory;
+use MRBS\Cms\Joomla;
 use MRBS\Joomla\JFactory;
 use MRBS\User;
-
-require_once MRBS_ROOT . '/auth/cms/joomla.inc';
 
 
 class AuthJoomla extends Auth
 {
+  private $joomla;
+
   public function __construct()
   {
     $this->checkSessionMatchesType();
+    $this->joomla = Joomla::getInstance();
   }
 
 
@@ -23,16 +25,7 @@ class AuthJoomla extends Auth
     #[\SensitiveParameter]
     ?string $pass)
   {
-    if (version_compare(JVERSION, '5.0', '<'))
-    {
-      $mainframe = JFactory::getApplication('site');
-    }
-    else
-    {
-      $mainframe = Factory::getApplication('site');
-    }
-
-    return $mainframe->login(array('username' => $user, 'password' => $pass)) ? $user : false;
+    return $this->joomla->app()->login(array('username' => $user, 'password' => $pass)) ? $user : false;
   }
 
 
