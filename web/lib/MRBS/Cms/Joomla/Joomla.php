@@ -93,12 +93,14 @@ class Joomla
 
 
   /**
-   * Get a user by id.
+   * Get a user by id or username.
    *
+   * @param null|int|string $id The user to load - Can be an integer or string - If string, it is converted to ID
+   * automatically.
    * @return JUser | Joomla\CMS\User\User A Joomla User object for Joomla 5.0 and above, otherwise a JUser object. If
    * the id does not exist an object is still returned, but the properties will be null.
    */
-  public function getUser(?int $id=null) : object
+  public function getUser($id=null) : object
   {
     if (version_compare(JVERSION, '5.0', '<'))
     {
