@@ -2,9 +2,6 @@
 
 namespace MRBS\Cms\Joomla;
 
-require_once MRBS_ROOT . '/auth/cms/joomla.inc';
-
-
 class JFactory extends \JFactory {
 
   // NOTE:  JFactory::getUser() seems to reset the timezone to the user's
