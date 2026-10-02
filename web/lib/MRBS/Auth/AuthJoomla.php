@@ -86,14 +86,7 @@ class AuthJoomla extends Auth
     foreach($groups as $group)
     {
       // Include child groups by doing it recursively
-      if (version_compare(JVERSION, '5.0', '<'))
-      {
-        $user_ids = array_merge($user_ids, \JAccess::getUsersByGroup($group, $recursive = true));
-      }
-      else
-      {
-        $user_ids = array_merge($user_ids, \Joomla\CMS\Access\Access::getUsersByGroup($group, $recursive = true));
-      }
+      $user_ids = array_merge($user_ids, Joomla::getInstance()->getUsersByGroup($group, true));
     }
 
     $user_ids = array_unique($user_ids);

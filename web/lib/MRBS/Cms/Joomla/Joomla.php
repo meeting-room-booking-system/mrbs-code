@@ -2,14 +2,16 @@
 declare(strict_types=1);
 namespace MRBS\Cms\Joomla;
 
+use JAccess;
+use Joomla\CMS\Access\Access;
 use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Language;
 use Joomla\CMS\Session\Session;
 
 /**
- * A Helper class for Joomla! that allows the initialisation of Joomla! to be postponed
- * until the last moment.
+ * A helper class for Joomla! that (a) allows the initialisation of Joomla! to be postponed until
+ * the last moment and (b) provides an abstraction layer that hides differences in Joomla versions.
  */
 class Joomla
 {
@@ -87,6 +89,22 @@ class Joomla
     }
 
     return $this->session;
+  }
+
+
+  public function getUsersByGroup(int $groupId, bool $recursive=false) : array
+  {
+    if (!$this->is_started)
+    {
+      $this->start();
+    }
+
+    if (version_compare(JVERSION, '5.0', '<'))
+    {
+      return JAccess::getUsersByGroup($groupId, $recursive);
+    }
+
+    return Access::getUsersByGroup($groupId, $recursive);
   }
 
 
