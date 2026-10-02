@@ -137,15 +137,7 @@ class AuthJoomla extends Auth
     // it with direct access to the database.
 
     // Get a db connection.
-    if (version_compare(JVERSION, '5.0', '<'))
-    {
-      $db = JFactory::getDbo();
-    }
-    else
-    {
-      $db = Factory::getDbo();
-    }
-
+    $db = Joomla::getInstance()->getDbo();
 
     // Create a new query object.
     $query = $db->getQuery(true);

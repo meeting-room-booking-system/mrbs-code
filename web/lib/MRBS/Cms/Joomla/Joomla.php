@@ -93,6 +93,28 @@ class Joomla
 
 
   /**
+   * Get a database object
+   *
+   * @return Joomla\Database\Mysql\PdoDriver | JDatabaseDriverPdo
+   */
+  public function getDbo() : object
+  {
+    if (!$this->is_started)
+    {
+      $this->start();
+    }
+
+    // Get a db connection.
+    if (version_compare(JVERSION, '5.0', '<'))
+    {
+      return JFactory::getDbo();
+    }
+
+    return Factory::getDbo();
+  }
+
+
+  /**
    * Get a user by id or username.
    *
    * @param null|int|string $id The user to load - Can be an integer or string - If string, it is converted to ID
@@ -102,6 +124,11 @@ class Joomla
    */
   public function getUser($id=null) : object
   {
+    if (!$this->is_started)
+    {
+      $this->start();
+    }
+
     if (version_compare(JVERSION, '5.0', '<'))
     {
       return JFactory::getUser($id);
