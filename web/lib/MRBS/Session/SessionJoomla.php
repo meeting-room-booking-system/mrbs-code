@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace MRBS\Session;
 
-use MRBS\Cms\Joomla;
+use MRBS\Cms\Joomla\Joomla;
 use MRBS\User;
 use function MRBS\auth;
 

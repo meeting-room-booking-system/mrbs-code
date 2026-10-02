@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace MRBS\Cms;
+namespace MRBS\Cms\Joomla;
 
 use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Factory;

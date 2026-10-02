@@ -3,7 +3,7 @@ declare(strict_types=1);
 namespace MRBS\Auth;
 
 use Joomla\CMS\Factory;
-use MRBS\Cms\Joomla;
+use MRBS\Cms\Joomla\Joomla;
 use MRBS\Joomla\JFactory;
 use MRBS\User;
 
