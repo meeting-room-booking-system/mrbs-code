@@ -75,13 +75,13 @@ class AuthJoomla extends Auth
   // Return an array of MRBS users, indexed by 'username' and 'display_name'
   public function getUsernames() : array
   {
-    $result = array();
+    $result = [];
 
     // We only want MRBS users, not all the Joomla users
     $groups = self::getMRBSGroups();
 
     // Get the user ids associated with those groups
-    $user_ids = array();
+    $user_ids = [];
 
     foreach($groups as $group)
     {
@@ -95,14 +95,7 @@ class AuthJoomla extends Auth
     // be using the Joomla API abstraction.
     foreach ($user_ids as $user_id)
     {
-      if (version_compare(JVERSION, '5.0', '<'))
-      {
-        $user = JFactory::getUser((int)$user_id);
-      }
-      else
-      {
-        $user = Factory::getUser((int)$user_id);
-      }
+      $user = Joomla::getInstance()->getUser(intval($user_id));
       // Check to see that the user has a username. The result of getUser() on a user_id that doesn't exist is,
       // strangely, a user object with all properties set to null.  In theory (?) all the user_ids returned by
       // getUsersByGroup() should exist, but there has been a case where this is not so.  See

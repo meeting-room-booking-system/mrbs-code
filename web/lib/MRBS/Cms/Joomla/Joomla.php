@@ -92,6 +92,23 @@ class Joomla
   }
 
 
+  /**
+   * Get a user by id.
+   *
+   * @return JUser | Joomla\CMS\User\User A Joomla User object for Joomla 5.0 and above, otherwise a JUser object. If
+   * the id does not exist an object is still returned, but the properties will be null.
+   */
+  public function getUser(?int $id=null) : object
+  {
+    if (version_compare(JVERSION, '5.0', '<'))
+    {
+      return JFactory::getUser($id);
+    }
+
+    return Factory::getUser($id);
+  }
+
+
   public function getUsersByGroup(int $groupId, bool $recursive=false) : array
   {
     if (!$this->is_started)
