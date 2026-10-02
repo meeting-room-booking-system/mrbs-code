@@ -5,6 +5,7 @@ namespace MRBS\Cms\Joomla;
 use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Language;
+use Joomla\CMS\Session\Session;
 
 /**
  * A Helper class for Joomla! that allows the initialisation of Joomla! to be postponed
@@ -75,7 +76,10 @@ class Joomla
   }
 
 
-  public function session()
+  /**
+   * Get the Joomla session object
+   */
+  public function session() : Session
   {
     if (!$this->is_started)
     {
@@ -135,7 +139,7 @@ class Joomla
       $container->alias('session.web', 'session.web.site')
         ->alias('session', 'session.web.site')
         ->alias('JSession', 'session.web.site')
-        ->alias(\Joomla\CMS\Session\Session::class, 'session.web.site')
+        ->alias(Session::class, 'session.web.site')
         ->alias(\Joomla\Session\Session::class, 'session.web.site')
         ->alias(\Joomla\Session\SessionInterface::class, 'session.web.site');
 
