@@ -5,7 +5,6 @@ namespace MRBS\Cms\Joomla;
 use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Language;
-use MRBS\Joomla\JFactory;
 
 /**
  * A Helper class for Joomla! that allows the initialisation of Joomla! to be postponed
