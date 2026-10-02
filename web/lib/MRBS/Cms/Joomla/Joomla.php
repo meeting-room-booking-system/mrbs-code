@@ -111,6 +111,11 @@ class Joomla
   }
 
 
+  /**
+   * Return a list of user Ids contained in a Group
+   *
+   * @return int[]
+   */
   public function getUsersByGroup(int $groupId, bool $recursive=false) : array
   {
     if (!$this->is_started)
