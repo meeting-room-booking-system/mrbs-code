@@ -78,7 +78,7 @@ class AuthJoomla extends Auth
     $result = [];
 
     // We only want MRBS users, not all the Joomla users
-    $groups = self::getMRBSGroups();
+    $groups = $this->getMRBSGroups();
 
     // Get the user ids associated with those groups
     $user_ids = [];
@@ -86,7 +86,7 @@ class AuthJoomla extends Auth
     foreach($groups as $group)
     {
       // Include child groups by doing it recursively
-      $user_ids = array_merge($user_ids, Joomla::getInstance()->getUsersByGroup($group, true));
+      $user_ids = array_merge($user_ids, $this->joomla->getUsersByGroup($group, true));
     }
 
     $user_ids = array_unique($user_ids);
@@ -95,7 +95,7 @@ class AuthJoomla extends Auth
     // be using the Joomla API abstraction.
     foreach ($user_ids as $user_id)
     {
-      $user = Joomla::getInstance()->getUser($user_id);
+      $user = $this->joomla->getUser($user_id);
       // Check to see that the user has a username. The result of getUser() on a user_id that doesn't exist is,
       // strangely, a user object with all properties set to null.  In theory (?) all the user_ids returned by
       // getUsersByGroup() should exist, but there has been a case where this is not so.  See
@@ -121,7 +121,7 @@ class AuthJoomla extends Auth
 
 
   // Get an array of Joomla groups that have MRBS user or admin rights
-  private static function getMRBSGroups() : array
+  private function getMRBSGroups() : array
   {
     global $auth;
 
@@ -137,7 +137,7 @@ class AuthJoomla extends Auth
     // it with direct access to the database.
 
     // Get a db connection.
-    $db = Joomla::getInstance()->getDbo();
+    $db = $this->joomla->getDbo();
 
     // Create a new query object.
     $query = $db->getQuery(true);
