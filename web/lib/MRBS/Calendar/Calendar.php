@@ -416,7 +416,13 @@ abstract class Calendar
       $html .= '<button type="button" class="room-info-button"' .
         ' title="' . escape_html($button_title) . '"' .
         ' aria-label="' . escape_html($button_title) . '">' .
-        '<span aria-hidden="true">&#9432;</span></button>';
+        '<svg class="room-info-icon" xmlns="http://www.w3.org/2000/svg"' .
+        ' width="16" height="16" viewBox="0 0 24 24" fill="none"' .
+        ' stroke="currentColor" stroke-width="1.75" stroke-linecap="round"' .
+        ' aria-hidden="true" focusable="false">' .
+        '<circle cx="12" cy="12" r="9" />' .
+        '<path d="M12 11v6M12 7h.01" />' .
+        '</svg></button>';
       $html .= '<template class="room-info-content">' . $room['custom_html'] . '</template>';
     }
     $html .= "</th>\n";

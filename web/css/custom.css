@@ -5,13 +5,21 @@
   color: inherit;
   cursor: pointer;
   font: inherit;
+  line-height: 1;
   margin-inline-start: 0.25rem;
   padding: 0.1rem 0.2rem;
   vertical-align: middle;
 }
 
-.room-info-button:hover {
-  opacity: 0.75;
+.room-info-icon {
+  display: block;
+  opacity: 0.65;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.room-info-button:hover .room-info-icon {
+  opacity: 1;
+  transform: scale(1.1);
 }
 
 .room-info-button:focus-visible {
