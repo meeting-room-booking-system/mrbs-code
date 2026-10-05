@@ -17,6 +17,7 @@ use RuntimeException;
 // Standalone, offline regression test. Uses the bundled HTTP mock handler and
 // the real SAML user lookup and notification address-building functions.
 require_once __DIR__ . '/../web/lib/autoload.inc';
+require_once __DIR__ . '/../web/functions_global.inc';
 require_once __DIR__ . '/../web/functions.inc';
 require_once __DIR__ . '/../web/functions_mail.inc';
 
