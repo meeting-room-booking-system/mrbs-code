@@ -5,13 +5,13 @@ namespace MRBS;
 use DateInterval;
 use DateTimeZone;
 use Email\Parse;
+use IntlDatePatternGenerator;
 use InvalidArgumentException;
 use MRBS\Form\Field;
 use MRBS\Form\FieldSelect;
 use MRBS\ICalendar\RFC5545;
 use IntlDateFormatter;
 use MRBS\Intl\IntlDateFormatterFactory;
-use MRBS\Intl\IntlDatePatternGenerator;
 use PHPMailer\PHPMailer\PHPMailer;
 use TypeError;
 
