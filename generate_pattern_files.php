@@ -33,13 +33,15 @@ $locales = \ResourceBundle::getLocales('');
 
 echo "<h2>Skeleton files</h2>\n";
 
-$skeletons = array(
+$skeletons = [
   'd',
   'dEMMM',
   'dMMM',
   'dMMMM',
-  'MMMMy'
-);
+  'MMMy',
+  'MMMMy',
+  'y'
+];
 
 foreach ($skeletons as $skeleton) {
   $filename = "$dir/skeletons/$skeleton.ini";
