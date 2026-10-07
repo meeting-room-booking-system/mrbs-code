@@ -2,31 +2,24 @@
 declare(strict_types=1);
 namespace MRBS\Intl;
 
-// A class provides a basic emulation of PHP's IntlDateFormatter class.
-//
-// The emulation uses the deprecated function strftime() and is only necessary for older
-// PHP systems where the Intl extension isn't available.  Eventually the emulation can be
-// dispensed with.
-//
-// Note that some servers have out of date versions of the ICU library that can't be updated
-// easily.  In those cases better results can sometimes be achieved by using strftime() and
-// this can be forced by explicitly using this class.
-
 use DateTimeInterface;
 use MRBS\Exception;
 use MRBS\Language;
 use MRBS\System;
 
-// We need to check that the 'intl' extension is loaded because earlier versions of
-// MRBS had the IntlDateFormatter emulation class at the top level in lib.  If users
-// have upgraded by just overwriting files without deleting that file, then it will
-// be picked up by the class_exists() test and used instead of the more up-to-date
-// emulation below.
-
-// Note that there is a polyfill for IntlDateFormatter available at
-// https://github.com/symfony/polyfill-intl-icu, but it is limited to the 'en' locale.
-// There are also backwards compatibility versions of strftime() available, but
-// IntlDateFormatter is a more powerful solution.
+/**
+ * A class providing a basic emulation of PHP's IntlDateFormatter class.
+ *
+ * The emulation uses the deprecated function strftime() and is only necessary for older PHP systems where the Intl
+ * extension isn't available.  Eventually the emulation can be dispensed with.
+ *
+ * Note that some servers have out of date versions of the ICU library that can't be updated easily.  In those cases
+ * better results can sometimes be achieved by using strftime() and this can be forced by explicitly using this class.
+ *
+ * Note that there is a polyfill for IntlDateFormatter available at https://github.com/symfony/polyfill-intl-icu, but it
+ * is limited to the 'en' locale. There are also backwards compatibility versions of strftime() available, but
+ * IntlDateFormatter is a more powerful solution.
+ */
 class IntlDateFormatter
 {
   const FULL = 0;
@@ -175,30 +168,30 @@ class IntlDateFormatter
   }
 
 
-// Format a local time/date according to locale settings, returning the
-// result as a UTF-8 string.  This function is based on strftime()
-// $time can be an int or a float (union type declarations not supported until PHP 8.0)
-// $locale can either be a string or an array of locales.  If $locale
-// is not set then the current locale is used.
-//
-// This method extends the standard PHP strftime() function and adds extra formats:
-//
-//  %f  Numeric representation of the month 	      1 (for January) through 12 (for December)
-//      without leading zeroes.  Won't
-//      necessarily work in locales that don't
-//      use [0..9] for the month.
-//
-//  %i  One/two digit day of the month, with no     1 to 31
-//      leading space
-//
-//  %o  Hour in 12-hour format, with no space       1 through 12
-//      preceding single digits
-//
-//  %q  Minute in the hour, with no leading zero    4
-//
-//  %v  Seconds, with no leading zero
-//
-//  %E  Day of year, with no leading zeroes
+  // Format a local time/date according to locale settings, returning the
+  // result as a UTF-8 string.  This function is based on strftime()
+  // $time can be an int or a float (union type declarations not supported until PHP 8.0)
+  // $locale can either be a string or an array of locales.  If $locale
+  // is not set then the current locale is used.
+  //
+  // This method extends the standard PHP strftime() function and adds extra formats:
+  //
+  //  %f  Numeric representation of the month 	      1 (for January) through 12 (for December)
+  //      without leading zeroes.  Won't
+  //      necessarily work in locales that don't
+  //      use [0..9] for the month.
+  //
+  //  %i  One/two digit day of the month, with no     1 to 31
+  //      leading space
+  //
+  //  %o  Hour in 12-hour format, with no space       1 through 12
+  //      preceding single digits
+  //
+  //  %q  Minute in the hour, with no leading zero    4
+  //
+  //  %v  Seconds, with no leading zero
+  //
+  //  %E  Day of year, with no leading zeroes
   private function strftimePlus(string $format, int $timestamp): string
   {
     $server_os = System::getServerOSFamily();
