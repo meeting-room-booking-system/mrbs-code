@@ -20,7 +20,6 @@ class Joomla
   private static $instance;
   private $is_started;
   private $app;
-  private $mainframe;
   private $session;
 
 
