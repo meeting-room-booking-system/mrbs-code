@@ -108,7 +108,7 @@ class Joomla
     }
 
     // Get a db connection.
-    if (version_compare(JVERSION, '5.0', '<'))
+    if (version_compare($this->version, '5.0', '<'))
     {
       return JFactory::getDbo();
     }
@@ -132,7 +132,7 @@ class Joomla
       $this->start();
     }
 
-    if (version_compare(JVERSION, '5.0', '<'))
+    if (version_compare($this->version, '5.0', '<'))
     {
       return JFactory::getUser($id);
     }
@@ -153,7 +153,7 @@ class Joomla
       $this->start();
     }
 
-    if (version_compare(JVERSION, '5.0', '<'))
+    if (version_compare($this->version, '5.0', '<'))
     {
       return JAccess::getUsersByGroup($groupId, $recursive);
     }
@@ -186,12 +186,12 @@ class Joomla
 
   private function start()
   {
-    if (!defined('JVERSION'))
+    if (!isset($this->version))
     {
       throw new \Exception("Joomla! version not known");
     }
 
-    if (version_compare(JVERSION, '4.0', '<'))
+    if (version_compare($this->version, '4.0', '<'))
     {
       $this->app = JFactory::getApplication('site');
       $this->app->initialise();
@@ -220,7 +220,7 @@ class Joomla
       // Build the namespace map and load the language (necessary from Joomla 4.3.0 onwards - see
       // https://groups.google.com/g/joomla-dev-general/c/55J2s9hhMxA/m/IpBrs3HZAgAJ?utm_medium=email&utm_source=footer&pli=1
       // and https://joomla.stackexchange.com/questions/32145/joomla-4-error-when-i-use-getarticleroute/32146#32146)
-      if (version_compare(JVERSION, '4.3.0', '>='))
+      if (version_compare($this->version, '4.3.0', '>='))
       {
         $this->app->createExtensionNamespaceMap();
         $lang = Language::getInstance('en');  // doesn't matter which language as we never use it
@@ -231,7 +231,7 @@ class Joomla
       Factory::$application = $this->app;
     }
 
-    if (version_compare(JVERSION, '5.0', '<'))
+    if (version_compare($this->version, '5.0', '<'))
     {
       $this->session = JFactory::getSession();
     }
