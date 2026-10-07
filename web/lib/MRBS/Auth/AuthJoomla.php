@@ -38,7 +38,10 @@ class AuthJoomla extends Auth
 
     if (empty($joomla_user->id))
     {
-      return new User($username);
+      // If the username is set and the Joomla user id is empty then that's because the user has been deleted from
+      // Joomla, but we still have their booking in MRBS, so create an MRBS user; or if the username is not set it means
+      // that we were trying to get the currently logged-in user and there isn't one, so return NULL.
+      return (isset($username)) ? new User($username) : null;
     }
 
     if ($joomla_user->guest)
