@@ -11,6 +11,8 @@ use IntlDateFormatter;
 use DateTime;
 use DateTimeImmutable;
 use InvalidArgumentException;
+use IntlDatePatternGenerator;
+use RuntimeException;
 use OpenPsa\Ranger\Provider\DefaultProvider;
 
 class Ranger
@@ -86,6 +88,16 @@ class Ranger
     private $pattern;
 
     /**
+     * @var int|null
+     */
+    private $max_precision;
+
+    /**
+     * @var string|null
+     */
+    private $generated_pattern;
+
+    /**
      * @var array
      */
     private $pattern_mask;
@@ -157,6 +169,26 @@ class Ranger
     }
 
     /**
+     * Limit precision to the given value (e.g. Ranger::MONTH or Ranger::YEAR).
+     *
+     * @param int|null $precision One of the Ranger constants. Pass null to reset
+     * @throws RuntimeException If IntlDatePatternGenerator is not available (PHP < 8.1)
+     * @return self
+     */
+    public function setPrecision($precision)
+    {
+        if ($precision !== null && !class_exists(IntlDatePatternGenerator::class)) {
+            throw new RuntimeException('setPrecision() requires IntlDatePatternGenerator (PHP 8.1+ with ext-intl)');
+        }
+        if ($precision !== $this->max_precision) {
+            $this->max_precision = $precision;
+            $this->pattern_mask = [];
+            $this->precision = 0;
+        }
+        return $this;
+    }
+
+    /**
      * @param string $separator
      * @return self
      */
@@ -187,9 +219,9 @@ class Ranger
         $start = $this->prepare_date($start);
         $end = $this->prepare_date($end);
 
-        $best_match = $this->find_best_match($start, $end);
-
         $this->parse_pattern();
+
+        $best_match = $this->find_best_match($start, $end);
 
         $start_tokens = $this->tokenize($start);
         $end_tokens = $this->tokenize($end);
@@ -274,9 +306,17 @@ class Ranger
      */
     private function get_range_separator(int $best_match) : string
     {
+        if ($this->precision <= self::YEAR) {
+            // year-only ranges (e.g. 2015–2020) never need padding
+            return $this->range_separator;
+        }
         $intl = new IntlDateFormatter($this->locale, $this->date_type, $this->time_type);
 
         $provider_class = 'OpenPsa\\Ranger\\Provider\\' . ucfirst(substr($intl->getLocale(), 0, 2)) . 'Provider';
+
+        if ($this->generated_pattern !== null) {
+            $intl->setPattern($this->generated_pattern);
+        }
 
         if (!class_exists($provider_class)) {
             $provider_class = DefaultProvider::class;
@@ -294,7 +334,7 @@ class Ranger
     {
         $tokens = [];
 
-        if ($this->date_type === IntlDateFormatter::NONE && $this->time_type === IntlDateFormatter::NONE) {
+        if ($this->pattern === '') {
             // why would you want this?
             return $tokens;
         }
@@ -332,7 +372,7 @@ class Ranger
         $end_copy = clone $end;
 
         // ignore the date if it's not output
-        if ($this->date_type === IntlDateFormatter::NONE) {
+        if (!$this->has_date_fields()) {
             $end_copy->setDate($start->format('Y'), $start->format('m'), $start->format('d'));
         }
 
@@ -354,10 +394,16 @@ class Ranger
             }
         }
 
+        if (   $best_match === self::YEAR
+            && $this->has_field(self::QUARTER)
+            && ceil($start->format('n') / 3) == ceil($end_copy->format('n') / 3)) {
+            $best_match = self::QUARTER;
+        }
+
         //set to same time to avoid DST problems
         $end_copy->setTimestamp((int) $start->format('U'));
         if (   $start->format('T') !== $end_copy->format('T')
-            || (   $this->time_type !== IntlDateFormatter::NONE
+            || (   $this->precision > self::DAY
                 && $best_match < self::DAY)) {
             $best_match = self::NO_MATCH;
         }
@@ -371,19 +417,23 @@ class Ranger
             return;
         }
 
-        $this->pattern = $pattern = '';
+        $this->pattern = '';
+        $date_pattern = $time_pattern = '';
         if ($this->date_type !== IntlDateFormatter::NONE) {
             $intl = new IntlDateFormatter($this->locale, $this->date_type, IntlDateFormatter::NONE);
-            $pattern .= $intl->getPattern();
-            if ($this->time_type !== IntlDateFormatter::NONE) {
-                $pattern .= "'" . $this->date_time_separator . "'";
-            }
+            $date_pattern = $this->reduce_pattern($intl->getPattern());
         }
-
         if ($this->time_type !== IntlDateFormatter::NONE) {
             $intl = new IntlDateFormatter($this->locale, IntlDateFormatter::NONE, $this->time_type);
-            $pattern .= $intl->getPattern();
+            $time_pattern = $this->reduce_pattern($intl->getPattern());
         }
+
+        $pattern = $date_pattern;
+        if ($date_pattern !== '' && $time_pattern !== '') {
+            $pattern .= "'" . $this->date_time_separator . "'";
+        }
+        $pattern .= $time_pattern;
+        $this->generated_pattern = $this->max_precision !== null ? $pattern : null;
 
         $esc_active = false;
         $part = ['content' => '', 'delimiter' => false];
@@ -430,6 +480,61 @@ class Ranger
             $this->pattern .= $char;
         }
         $this->push_to_mask($part);
+    }
+
+    /**
+     * Remove all fields below max_precision and let ICU build a pattern from the rest
+     */
+    private function reduce_pattern(string $pattern) : string
+    {
+        if ($this->max_precision === null) {
+            return $pattern;
+        }
+        $skeleton = '';
+        $esc_active = false;
+        $has_month = false;
+        foreach (str_split($pattern) as $char) {
+            if ($char == $this->escape_character) {
+                $esc_active = !$esc_active;
+            } elseif (   !$esc_active
+                      && array_key_exists($char, $this->pattern_characters)) {
+                if ($this->pattern_characters[$char] <= $this->max_precision) {
+                    $skeleton .= $char;
+                }
+                $has_month = $has_month || $this->pattern_characters[$char] === self::MONTH;
+            }
+        }
+        if ($this->max_precision === self::QUARTER && $has_month) {
+            // locale patterns don't contain quarters, so show them instead of the month.
+            // The width is explicit because older ICU versions render a single Q as numeric
+            $skeleton .= 'QQQ';
+        }
+        if ($skeleton === '') {
+            return '';
+        }
+        return (new IntlDatePatternGenerator($this->locale))->getBestPattern($skeleton);
+    }
+
+    private function has_field(int $unit) : bool
+    {
+        foreach ($this->pattern_mask as $part) {
+            if (!$part['delimiter'] && $part['content'] === $unit) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function has_date_fields() : bool
+    {
+        foreach ($this->pattern_mask as $part) {
+            if (   !$part['delimiter']
+                && $part['content'] >= self::ERA // timezone fields
+                && $part['content'] <= self::DAY) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
