@@ -2,9 +2,7 @@
 declare(strict_types=1);
 namespace MRBS\Auth;
 
-use Joomla\CMS\Factory;
 use MRBS\Cms\Joomla\Joomla;
-use MRBS\Cms\Joomla\JFactory;
 use MRBS\User;
 
 
@@ -36,16 +34,9 @@ class AuthJoomla extends Auth
       return null;
     }
 
-    if (version_compare(JVERSION, '5.0', '<'))
-    {
-      $joomla_user = JFactory::getUser($username);
-    }
-    else
-    {
-      $joomla_user = Factory::getUser($username);
-    }
+    $joomla_user = $this->joomla->getUser($username);
 
-    if ($joomla_user === false)
+    if (empty($joomla_user->id))
     {
       return new User($username);
     }

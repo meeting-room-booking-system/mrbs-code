@@ -21,8 +21,10 @@ class JFactory extends \JFactory {
       $user_id = \JUserHelper::getUserId($username);
       if (is_null($user_id))
       {
-        // The user doesn't exist
-        return false;
+        // The user doesn't exist.  Set the user_id to zero, which guarantees that parent::getUser() will return
+        // a user that doesn't exist (the id will be 0 and the username NULL).  (Note: this assumes the default
+        // installation of Joomla, ie AUTOINCREMENT hasn't been set to a value other than 1.)
+        $user_id = 0;
       }
     }
     else
