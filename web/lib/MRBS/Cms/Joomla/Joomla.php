@@ -15,6 +15,8 @@ use Joomla\CMS\Session\Session;
  */
 class Joomla
 {
+  public $version;
+
   private static $instance;
   private $is_started;
   private $app;
@@ -27,6 +29,7 @@ class Joomla
     // We load the Joomla files now because of the problem with the incompatible LoggerInterface
     // declarations between MRBS and Joomla, but we delay starting Joomla until later.
     $this->load();
+    $this->version = JVERSION;
   }
 
 

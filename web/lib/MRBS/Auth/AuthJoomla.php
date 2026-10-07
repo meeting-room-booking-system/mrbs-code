@@ -49,7 +49,7 @@ class AuthJoomla extends Auth
     $user = new User($joomla_user->username);
     $user->display_name = $joomla_user->name;
     $user->email = $joomla_user->email;
-    $user->level = self::getUserLevel($joomla_user);
+    $user->level = $this->getUserLevel($joomla_user);
 
     return $user;
   }
@@ -153,11 +153,11 @@ class AuthJoomla extends Auth
   }
 
 
-  private static function getUserLevel(object $joomla_user) : int
+  private function getUserLevel(object $joomla_user) : int
   {
     global $auth;
 
-    $required_class = (version_compare(JVERSION, '5.0', '<')) ? 'MRBS\Cms\Joomla\JUser' : 'Joomla\CMS\User\User';
+    $required_class = (version_compare($this->joomla->version, '5.0', '<')) ? 'MRBS\Cms\Joomla\JUser' : 'Joomla\CMS\User\User';
     $actual_class = get_class($joomla_user);
     if ($actual_class !== $required_class)
     {
