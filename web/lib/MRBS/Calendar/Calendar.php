@@ -366,6 +366,8 @@ abstract class Calendar
   //    $vars    an associative array containing the variables to be used to build the link
   protected function roomCellHTML(array $room, array $vars) : string
   {
+    global $auth, $show_room_info_in_calendar;
+
     $link = 'index.php?' . http_build_query($vars, '', '&');
     $link = multisite($link);
 
@@ -390,6 +392,10 @@ abstract class Calendar
     }
 
     $title = get_vocab($tag) . "\n\n" . $room['description'];
+    $show_info = !empty($show_room_info_in_calendar) &&
+                 !empty($auth['allow_custom_html']) &&
+                 !empty($room['show_info_calendar']) &&
+                 (trim($room['custom_html'] ?? '') !== '');
     $html = '';
     $html .= '<th data-room="' . escape_html($room['id']) . '">';
     $html .= '<a href="' . escape_html($link) . '"' .
@@ -404,6 +410,21 @@ abstract class Calendar
     $html .= '">' . escape_html($room['capacity']);
     $html .= '</span>';
     $html .= '</a>';
+    if ($show_info)
+    {
+      $button_title = get_vocab('viewroom') . ': ' . $room['room_name'];
+      $html .= '<button type="button" class="room-info-button"' .
+        ' title="' . escape_html($button_title) . '"' .
+        ' aria-label="' . escape_html($button_title) . '">' .
+        '<svg class="room-info-icon" xmlns="http://www.w3.org/2000/svg"' .
+        ' width="16" height="16" viewBox="0 0 24 24" fill="none"' .
+        ' stroke="currentColor" stroke-width="1.75" stroke-linecap="round"' .
+        ' aria-hidden="true" focusable="false">' .
+        '<circle cx="12" cy="12" r="9" />' .
+        '<path d="M12 11v6M12 7h.01" />' .
+        '</svg></button>';
+      $html .= '<template class="room-info-content">' . $room['custom_html'] . '</template>';
+    }
     $html .= "</th>\n";
     return $html;
   }

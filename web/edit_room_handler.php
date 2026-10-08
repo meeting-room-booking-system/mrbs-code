@@ -24,7 +24,8 @@ $form_vars = array(
   'capacity'         => 'int',
   'room_admin_email' => 'string',
   'invalid_types'    => 'array',
-  'custom_html'      => 'string'
+  'custom_html'      => 'string',
+  'show_info_calendar' => 'string'
 );
 
 foreach($form_vars as $var => $var_type)
@@ -177,6 +178,10 @@ if (empty($errors))
           case 'custom_html':
             $assign_array[] = "custom_html=?";
             $sql_params[] = $custom_html;
+            break;
+          case 'show_info_calendar':
+            $assign_array[] = "show_info_calendar=?";
+            $sql_params[] = (!empty($show_info_calendar)) ? 1 : 0;
             break;
           // then look at any user defined fields
           default:
