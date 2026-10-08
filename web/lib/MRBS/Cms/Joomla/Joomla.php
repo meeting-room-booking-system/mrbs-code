@@ -15,6 +15,9 @@ use Joomla\CMS\Session\Session;
  */
 class Joomla
 {
+  /**
+   * @var string The Joomla version
+   */
   public $version;
 
   private static $instance;
@@ -161,7 +164,10 @@ class Joomla
   }
 
 
-  private function load()
+  /**
+   * Load (`require_once`) the Joomla files
+   */
+  private function load() : void
   {
     global $auth;
 
@@ -183,7 +189,10 @@ class Joomla
   }
 
 
-  private function start()
+  /**
+   * Start the Joomla site application.
+   */
+  private function start() : void
   {
     if (!isset($this->version))
     {
