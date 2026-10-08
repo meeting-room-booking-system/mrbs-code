@@ -74,11 +74,7 @@ class Joomla
    */
   public function app() : SiteApplication
   {
-    if (!$this->is_started)
-    {
-      $this->start();
-    }
-
+    $this->startIfNotAlreadyStarted();
     return $this->app;
   }
 
@@ -88,11 +84,7 @@ class Joomla
    */
   public function session() : Session
   {
-    if (!$this->is_started)
-    {
-      $this->start();
-    }
-
+    $this->startIfNotAlreadyStarted();
     return $this->session;
   }
 
@@ -104,10 +96,7 @@ class Joomla
    */
   public function getDbo() : object
   {
-    if (!$this->is_started)
-    {
-      $this->start();
-    }
+    $this->startIfNotAlreadyStarted();
 
     // Get a db connection.
     if (version_compare($this->version, '5.0', '<'))
@@ -129,10 +118,7 @@ class Joomla
    */
   public function getUser($id=null) : object
   {
-    if (!$this->is_started)
-    {
-      $this->start();
-    }
+    $this->startIfNotAlreadyStarted();
 
     if (version_compare($this->version, '5.0', '<'))
     {
@@ -150,10 +136,7 @@ class Joomla
    */
   public function getUsersByGroup(int $groupId, bool $recursive=false) : array
   {
-    if (!$this->is_started)
-    {
-      $this->start();
-    }
+    $this->startIfNotAlreadyStarted();
 
     if (version_compare($this->version, '5.0', '<'))
     {
@@ -190,10 +173,15 @@ class Joomla
 
 
   /**
-   * Start the Joomla site application.
+   * Start the Joomla site application, if it hasn't already been started.
    */
-  private function start() : void
+  private function startIfNotAlreadyStarted() : void
   {
+    if ($this->is_started)
+    {
+      return;
+    }
+
     if (!isset($this->version))
     {
       throw new \Exception("Joomla! version not known");
