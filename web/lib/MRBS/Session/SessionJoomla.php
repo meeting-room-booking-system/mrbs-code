@@ -67,7 +67,14 @@ class SessionJoomla extends SessionWithLogin
 
   public function logoffUser(?string $redirect_url = null) : void
   {
+    // Joomla destroys the session on logout.  We need to preserve the kiosk_password_hash, so
+    // get it before the logout and re-set it afterwards.
+    $kiosk_password_hash = $this->get('kiosk_password_hash');
     $this->joomla->app()->logout();
+    if (isset($kiosk_password_hash))
+    {
+      $this->set('kiosk_password_hash', $kiosk_password_hash);
+    }
     parent::logoffUser($redirect_url);
   }
 }
