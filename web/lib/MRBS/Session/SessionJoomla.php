@@ -2,13 +2,9 @@
 declare(strict_types=1);
 namespace MRBS\Session;
 
-use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Language;
-use MRBS\Joomla\JFactory;
+use MRBS\Cms\Joomla\Joomla;
 use MRBS\User;
 use function MRBS\auth;
-
-require_once MRBS_ROOT . '/auth/cms/joomla.inc';
 
 
 class SessionJoomla extends SessionWithLogin
@@ -16,66 +12,13 @@ class SessionJoomla extends SessionWithLogin
 
   private const NAMESPACE = 'MRBS';
 
-  private $app;
-  private $session;
+  private $joomla;
 
   public function __construct()
   {
     $this->checkTypeMatchesSession();
 
-    if (!defined('JVERSION'))
-    {
-      throw new \Exception("Joomla! version not known");
-    }
-
-    if (version_compare(JVERSION, '4.0', '<'))
-    {
-      $this->app = JFactory::getApplication('site');
-      $this->app->initialise();
-    }
-    else
-    {
-      // Thanks to Alex Chartier and Emmanuel Ingelaere.
-      // See https://groups.google.com/g/joomla-dev-general/c/55J2s9hhMxA
-
-      // Boot the DI container
-      $container = Factory::getContainer();
-
-      // Alias the session service keys to the web session service as that is the primary session backend for this application.
-      // In addition to aliasing "common" service keys, we also create aliases for the PHP classes to ensure autowiring objects
-      // is supported.  This includes aliases for aliased class names, and the keys for aliased class names should be considered
-      // deprecated to be removed when the class name alias is removed as well.
-      $container->alias('session.web', 'session.web.site')
-                ->alias('session', 'session.web.site')
-                ->alias('JSession', 'session.web.site')
-                ->alias(\Joomla\CMS\Session\Session::class, 'session.web.site')
-                ->alias(\Joomla\Session\Session::class, 'session.web.site')
-                ->alias(\Joomla\Session\SessionInterface::class, 'session.web.site');
-
-      // Instantiate the application.
-      $this->app = $container->get(\Joomla\CMS\Application\SiteApplication::class);
-      // Build the namespace map and load the language (necessary from Joomla 4.3.0 onwards - see
-      // https://groups.google.com/g/joomla-dev-general/c/55J2s9hhMxA/m/IpBrs3HZAgAJ?utm_medium=email&utm_source=footer&pli=1
-      // and https://joomla.stackexchange.com/questions/32145/joomla-4-error-when-i-use-getarticleroute/32146#32146)
-      if (version_compare(JVERSION, '4.3.0', '>='))
-      {
-        $this->app->createExtensionNamespaceMap();
-        $lang = Language::getInstance('en');  // doesn't matter which language as we never use it
-        $this->app->loadLanguage($lang);
-      }
-
-      // Set the application as global app
-      Factory::$application = $this->app;
-    }
-
-    if (version_compare(JVERSION, '5.0', '<'))
-    {
-      $this->session = JFactory::getSession();
-    }
-    else
-    {
-      $this->session = Factory::getSession();
-    }
+    $this->joomla = Joomla::getInstance();
 
     parent::__construct();
   }
@@ -88,7 +31,7 @@ class SessionJoomla extends SessionWithLogin
 
   public function get(string $name)
   {
-    return $this->session->get($name, null, self::NAMESPACE);
+    return $this->joomla->session()->get($name, null, self::NAMESPACE);
   }
 
 
@@ -99,13 +42,13 @@ class SessionJoomla extends SessionWithLogin
 
   public function set(string $name, $value) : void
   {
-    $this->session->set($name, $value, self::NAMESPACE);
+    $this->joomla->session()->set($name, $value, self::NAMESPACE);
   }
 
 
   public function unset(string $name) : void
   {
-    $this->session->clear($name, self::NAMESPACE);
+    $this->joomla->session()->clear($name, self::NAMESPACE);
   }
 
 
@@ -124,7 +67,26 @@ class SessionJoomla extends SessionWithLogin
 
   public function logoffUser(?string $redirect_url = null) : void
   {
-    $this->app->logout();
+    // Joomla destroys the session on logout.  We need to preserve the kiosk session variables, so
+    // get them before the logout and re-set them afterwards.
+    $kiosk_vars = ['kiosk_password_hash', 'kiosk_url'];
+    foreach ($kiosk_vars as $var)
+    {
+      $$var = $this->get($var);
+    }
+
+    // Log out the Joomla user
+    $this->joomla->app()->logout();
+
+    // Restore the kiosk variables
+    foreach ($kiosk_vars as $var)
+    {
+      if (isset($$var))
+      {
+        $this->set($var, $$var);
+      }
+    }
+
     parent::logoffUser($redirect_url);
   }
 }

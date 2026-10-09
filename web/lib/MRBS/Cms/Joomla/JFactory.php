@@ -1,9 +1,6 @@
 <?php
 
-namespace MRBS\Joomla;
-
-require_once MRBS_ROOT . '/auth/cms/joomla.inc';
-
+namespace MRBS\Cms\Joomla;
 
 class JFactory extends \JFactory {
 
@@ -24,8 +21,10 @@ class JFactory extends \JFactory {
       $user_id = \JUserHelper::getUserId($username);
       if (is_null($user_id))
       {
-        // The user doesn't exist
-        return false;
+        // The user doesn't exist.  Set the user_id to zero, which guarantees that parent::getUser() will return
+        // a user that doesn't exist (the id will be 0 and the username NULL).  (Note: this assumes the default
+        // installation of Joomla, ie AUTOINCREMENT hasn't been set to a value other than 1.)
+        $user_id = 0;
       }
     }
     else
@@ -35,7 +34,7 @@ class JFactory extends \JFactory {
 
     // need to cast the object to MRBS\JUser to avoid more
     // Joomla timezone problems
-    $result = self::cast('MRBS\Joomla\JUser', parent::getUser($user_id));
+    $result = self::cast('MRBS\Cms\Joomla\JUser', parent::getUser($user_id));
     date_default_timezone_set($tz);
     return $result;
   }
