@@ -1053,6 +1053,12 @@ function toTimeString(int &$dur, &$units, bool $translate=true, ?string $max_uni
     $dur = sprintf('%.3f', $dur);
     $dur = rtrim($dur, '0');  // removes trailing zeros
   }
+  // Convert any single integer values from the plural to the singular
+  elseif ($dur === 1)
+  {
+    // TODO: This isn't very elegant. Eventually we should use something like the intl MessageFormatter class.
+    $units = rtrim($units, 's');
+  }
 
   // Translate into local language if required
   if ($translate)

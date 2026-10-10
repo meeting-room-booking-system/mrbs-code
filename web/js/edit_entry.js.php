@@ -141,7 +141,7 @@ const changeRepIntervalUnits = function changeRepIntervalUnits() {
       text = (repInterval === 1) ? '<?php echo get_js_vocab('month') ?>' : '<?php echo get_js_vocab('months') ?>';
       break;
     case <?php echo RepeatRule::YEARLY ?>:
-      text = (repInterval === 1) ? '<?php echo get_js_vocab('year_lc') ?>' : '<?php echo get_js_vocab('years') ?>';
+      text = (repInterval === 1) ? '<?php echo get_js_vocab('year') ?>' : '<?php echo get_js_vocab('years') ?>';
       break;
     default:
       text = units.text();
@@ -801,9 +801,9 @@ function checkConflicts(optional)
 const vocab = {};
 vocab.periods = {singular: '<?php echo get_js_vocab("period_lc") ?>',
                  plural:   '<?php echo get_js_vocab("periods") ?>'};
-vocab.minutes = {singular: '<?php echo get_js_vocab("minute_lc") ?>',
+vocab.minutes = {singular: '<?php echo get_js_vocab("minute") ?>',
                  plural:   '<?php echo get_js_vocab("minutes") ?>'};
-vocab.hours   = {singular: '<?php echo get_js_vocab("hour_lc") ?>',
+vocab.hours   = {singular: '<?php echo get_js_vocab("hour") ?>',
                  plural:   '<?php echo get_js_vocab("hours") ?>'};
 vocab.days    = {singular: '<?php echo get_js_vocab("day") ?>',
                  plural:   '<?php echo get_js_vocab("days") ?>'};
