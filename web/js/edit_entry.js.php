@@ -799,7 +799,7 @@ function checkConflicts(optional)
 // minutes, hours and days
 ?>
 const vocab = {};
-vocab.periods = {singular: '<?php echo get_js_vocab("period_lc") ?>',
+vocab.periods = {singular: '<?php echo get_js_vocab("period") ?>',
                  plural:   '<?php echo get_js_vocab("periods") ?>'};
 vocab.minutes = {singular: '<?php echo get_js_vocab("minute") ?>',
                  plural:   '<?php echo get_js_vocab("minutes") ?>'};

@@ -55,7 +55,7 @@ $vocab["date"]               = "日期";
 $vocab["start_date"]         = "起始時間";
 $vocab["end_date"]           = "結束時間";
 $vocab["time"]               = "時間";
-$vocab["period"]             = "Period";
+$vocab["period_title"]       = "Period";
 $vocab["duration"]           = "持續時間";
 $vocab["seconds"]            = "秒";
 $vocab["minutes"]            = "分";
@@ -77,7 +77,7 @@ $vocab["rep_end_date"]       = "結束重覆的日期";
 $vocab["rep_rep_day"]        = "重覆的星期";
 $vocab["ctrl_click"]         = "用Control+滑鼠右鍵可以重覆選擇";
 $vocab["entryid"]            = "登記序號 ";
-$vocab["repeat_id"]          = "重覆序號 "; 
+$vocab["repeat_id"]          = "重覆序號 ";
 $vocab["brief_description"]  = "簡要說明.";
 
 // Used in view_entry.php
@@ -98,7 +98,7 @@ $vocab["sched_conflict"]     = "時段衝突";
 $vocab["conflict"]           = "此時段已被預約";
 $vocab["too_many_entries"]   = "這個選擇造成太多輸入.<br>請重新選擇!";
 $vocab["returncal"]          = "查看日程表";
-$vocab["failed_to_acquire"]  = "無法存取資料庫"; 
+$vocab["failed_to_acquire"]  = "無法存取資料庫";
 
 // Authentication stuff
 $vocab["accessdenied"]       = "限制存取";

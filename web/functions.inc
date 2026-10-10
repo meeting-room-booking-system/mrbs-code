@@ -1451,7 +1451,16 @@ function get_duration(int $start_time, int $end_time, bool $enable_periods, int 
     else
     {
       $result['duration'] = $n_periods;
-      $result['dur_units'] = ($translate) ? get_vocab('periods') : 'periods';
+      // Convert any single integer values from the plural to the singular
+      // TODO: This isn't very elegant. Eventually we should use something like the intl MessageFormatter class.
+      if ($n_periods === 1)
+      {
+        $result['dur_units'] = ($translate) ? get_vocab('period') : 'period';
+      }
+      else
+      {
+        $result['dur_units'] = ($translate) ? get_vocab('periods') : 'periods';
+      }
     }
   }
   else
