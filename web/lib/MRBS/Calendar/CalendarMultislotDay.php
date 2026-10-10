@@ -115,7 +115,7 @@ class CalendarMultislotDay extends CalendarMultislot
     }
     elseif ($enable_periods)
     {
-      $tag = 'period';
+      $tag = 'period_title';
     }
     else
     {

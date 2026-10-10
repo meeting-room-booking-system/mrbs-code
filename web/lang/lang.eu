@@ -55,7 +55,7 @@ $vocab["date"]               = "Data";
 $vocab["start_date"]         = "Hasiera data";
 $vocab["end_date"]           = "Amaiera data";
 $vocab["time"]               = "Ordua";
-$vocab["period"]             = "Periodoa";
+$vocab["period_title"]       = "Periodoa";
 $vocab["duration"]           = "Iraupena";
 $vocab["seconds"]            = "segunduak";
 $vocab["minutes"]            = "minutuak";
@@ -77,7 +77,7 @@ $vocab["rep_end_date"]       = "Errepikapenaren bukaera data";
 $vocab["rep_rep_day"]        = "Errepikapenaren eguna";
 $vocab["ctrl_click"]         = "Elementu bat gehiago aukeratzeko Kontrol-klik egin";
 $vocab["entryid"]            = "IDa sartu";
-$vocab["repeat_id"]          = "IDa errepikatu"; 
+$vocab["repeat_id"]          = "IDa errepikatu";
 $vocab["brief_description"]  = "Deskribapen laburra.";
 
 // Used in view_entry.php
@@ -98,7 +98,7 @@ $vocab["sched_conflict"]     = "Planifikazio-gatazka";
 $vocab["conflict"]           = "Erreserba berria beste erreserba hauekin bateraezina da:";
 $vocab["too_many_entries"]   = "Aukeratu duzunak arazoak sortzen ditu.<br>Aukera(k) berriz aztertu, mesedez";
 $vocab["returncal"]          = "Egutegiaren bistara itzuli, mesedez";
-$vocab["failed_to_acquire"]  = "Datubasera sartzeko arazoa"; 
+$vocab["failed_to_acquire"]  = "Datubasera sartzeko arazoa";
 
 // Authentication stuff
 $vocab["accessdenied"]       = "Ezin zara sartu";
