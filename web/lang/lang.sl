@@ -57,7 +57,7 @@ $vocab["date"]               = "Datum";
 $vocab["start_date"]         = "Začetni čas";
 $vocab["end_date"]           = "Končni čas";
 $vocab["time"]               = "Čas";
-$vocab["period"]             = "Ponavljajoč";
+$vocab["period_title"]       = "Ponavljajoč";
 $vocab["duration"]           = "Trajanje (za decimalko uporabi piko)";
 $vocab["seconds"]            = "sekund";
 $vocab["minutes"]            = "minut";
@@ -79,7 +79,7 @@ $vocab["rep_end_date"]       = "Datum konca ponavljanj";
 $vocab["rep_rep_day"]        = "Ponavljaj dni";
 $vocab["ctrl_click"]         = "Uporabite Ctrl+klik za izbiro več prostorov";
 $vocab["entryid"]            = "ID vnosa ";
-$vocab["repeat_id"]          = "ID ponavljanj"; 
+$vocab["repeat_id"]          = "ID ponavljanj";
 $vocab["brief_description"]  = "kratek opis.";
 
 // Used in view_entry.php
