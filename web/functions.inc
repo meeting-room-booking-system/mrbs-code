@@ -1083,7 +1083,7 @@ function to_time_string(int $seconds, bool $translate=true, ?string $max_unit=nu
     $value = rtrim($value, '0');  // removes trailing zeros
   }
   // Convert any single integer values from the plural to the singular
-  elseif ($dur === 1)
+  elseif ($value === 1)
   {
     // TODO: This isn't very elegant. Eventually we should use something like the intl MessageFormatter class.
     $units = rtrim($units, 's');
