@@ -51,7 +51,7 @@ class Wp
    */
   public static function apply_filters(string $hook_name, $value, ...$args)
   {
-    return apply_filters($hook_name, $args, $value);
+    return apply_filters($hook_name, $value, $args);
   }
 
 
