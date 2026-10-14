@@ -260,15 +260,19 @@ $mrbs_company = "Your Company";   // This line must always be uncommented ($mrbs
 $theme = "default";
 
 // Use the $custom_css_url to override the standard MRBS CSS.
-//$custom_css_url = 'css/custom.css';
+$custom_css_url = 'css/custom.css';
 
 // Use the $custom_js_url to add your own JavaScript.
-//$custom_js_url = 'js/custom.js';
+$custom_js_url = 'js/custom.js';
 
 
 /*******************
  * Calendar settings
  *******************/
+
+// Set to true to allow rooms with the per-room option enabled to display their
+// custom HTML in a dialog from the calendar.  Custom HTML must also be enabled.
+$show_room_info_in_calendar = false;
 
 // MRBS has two different modes of operation: "times" and "periods".   "Times"
 // based bookings allow you to define regular consecutive booking slots, eg every

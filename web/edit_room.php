@@ -250,6 +250,18 @@ function get_fieldset_general(array $data) : ElementFieldset
     $fieldset->addElement($field);
   }
 
+  // Show additional room information in the calendar
+  if (is_admin())
+  {
+    $field = new FieldInputCheckbox();
+    $field->setLabel(get_vocab('show_info_calendar'))
+          ->setLabelAttribute('title', get_vocab('show_info_calendar_note'))
+          ->setControlAttributes(array('name'     => 'show_info_calendar',
+                                       'disabled' => $disabled))
+          ->setChecked(!empty($data['show_info_calendar']));
+    $fieldset->addElement($field);
+  }
+
   // Then the custom fields
   $fields = get_custom_fields($data);
   $fieldset->addElements($fields);

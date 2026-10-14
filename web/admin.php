@@ -461,6 +461,7 @@ if (is_admin() || !empty($enabled_areas))
               case 'description':
               case 'invalid_types':
               case 'room_admin_email':
+              case 'show_info_calendar':
                 $text = get_vocab($field['name']);
                 break;
               // any user defined fields

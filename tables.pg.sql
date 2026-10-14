@@ -96,6 +96,7 @@ CREATE TABLE mrbs_room
   room_admin_email  text,
   invalid_types     varchar(255) DEFAULT NULL,
   custom_html       text,
+  show_info_calendar smallint DEFAULT 0 NOT NULL,
 
   CONSTRAINT mrbs_uq_room_name UNIQUE (area_id, room_name)
 );
@@ -251,6 +252,6 @@ CREATE TRIGGER update_mrbs_repeat_timestamp BEFORE UPDATE ON mrbs_repeat FOR EAC
 CREATE TRIGGER update_mrbs_users_timestamp BEFORE UPDATE ON mrbs_users FOR EACH ROW EXECUTE PROCEDURE update_timestamp_column();
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '82');
+  VALUES ('db_version', '83');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ('local_db_version', '1');
