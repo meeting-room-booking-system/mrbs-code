@@ -37,8 +37,32 @@ class AuthExt extends Auth
 
     // Generate the command line
     $cmd = $auth["prog"] . ' ' . $auth["params"];
-    $cmd = str_replace('#USERNAME#', escapeshellarg($user), $cmd);
-    $cmd = str_replace('#PASSWORD#', escapeshellarg($pass), $cmd);
+    $username_placeholder = '#USERNAME#';
+    $password_placeholder = '#PASSWORD#';
+
+    // A placeholder inside a quoted region will break argument handling because escapeshellarg()
+    // adds its own quotes. Check both quote types, regardless of OS.
+    foreach (["'", '"'] as $q)
+    {
+      $dq = preg_quote($q, '/');
+      $up = preg_quote($username_placeholder, '/');
+      $pp = preg_quote($password_placeholder, '/');
+
+      if (preg_match("/{$dq}[^{$dq}]*(?:{$up}|{$pp})[^{$dq}]*{$dq}/", $cmd))
+      {
+        throw new \Exception(
+          "A placeholder in \$auth['params'] appears inside a {$q}-quoted string. " .
+          "This will produce a broken or exploitable command line."
+        );
+      }
+    }
+
+    // Use a non-recursive substitution, to prevent being attacked by having a placeholder in one of
+    // the user-supplied values.
+    $cmd = strtr($cmd, [
+      $username_placeholder => escapeshellarg($user),
+      $password_placeholder => escapeshellarg($pass),
+    ]);
 
     // Run the program
     exec($cmd, $output, $ret);
