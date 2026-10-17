@@ -424,7 +424,8 @@ The arguments in $auth["params"] can be supplied as a whitespace-separated
 string or as an array of strings. A string is split on whitespace; it is not
 parsed as a shell command. Use an array when an argument itself contains
 spaces. On PHP versions before 7.4, MRBS uses exec() on non-Windows systems;
-external authentication using this fallback is not supported on Windows.
+external authentication on Windows is only available on PHP 8.1 >= PHP 8.1.29,
+PHP 8.2 >= 8.2.20, PHP 8.3 >= 8.3.8 or PHP 8.4.0 and greater.
 
     - The name of the selected program in $auth["prog"].
     Don't forget to prefix it with "./" under Unix and ensure that the

@@ -1,6 +1,8 @@
 <?php
 namespace MRBS\Auth;
 
+use MRBS\System;
+
 /**
  * Authentication scheme that uses an external script as the source for user authentication.
  *
@@ -22,6 +24,27 @@ namespace MRBS\Auth;
  */
 class AuthExt extends Auth
 {
+
+  public function __construct()
+  {
+    if (System::getServerOSFamily() == "Windows")
+    {
+      // We don't support PHP < 7.4 because exec() is not safe on Windows.
+      // And proc_open() is not safe on Windows when running PHP 8.0 or below, PHP 8.1 before 8.1.29,
+      // PHP 8.2 before 8.2.20 or PHP 8.3 before 8.3.8. See https://nvd.nist.gov/vuln/detail/cve-2024-5585.
+      if (PHP_VERSION_ID < 80129 ||
+          (PHP_VERSION_ID >= 80200 && PHP_VERSION_ID < 80220) ||
+          (PHP_VERSION_ID >= 80300 && PHP_VERSION_ID < 80308) )
+      {
+        $message = 'External authentication on Windows is not supported on this version of PHP (' . PHP_VERSION . ').';
+        throw new \Exception($message);
+      }
+    }
+
+    // There's no parent constructor to call.
+  }
+
+
   public function validateUser(
     #[\SensitiveParameter]
     ?string $user,
@@ -82,11 +105,6 @@ class AuthExt extends Auth
     }
     else
     {
-      if (\MRBS\System::getServerOSFamily() == "Windows")
-      {
-        throw new \Exception('External authentication using exec() is not supported on Windows.');
-      }
-
       $cmd = implode(' ', array_map('escapeshellarg', $arguments));
       exec($cmd, $output, $ret);
     }
