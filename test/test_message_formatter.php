@@ -53,6 +53,7 @@ function test_format()
 
   do_format('en', "{0,number,integer} monkeys on {1,number,integer} trees", [4560, 123]);
   do_format('de', "{0,number,integer} Affen auf {1,number,integer} Bäumen", [4560, 123]);
+  do_format('ar', "{0,number,integer} monkeys on {1,number,integer} trees", [4560, 123]);
 
   echo "</tbody>\n";
   echo "</table>\n";
