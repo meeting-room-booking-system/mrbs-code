@@ -56,6 +56,16 @@ function test_format()
   do_format('ar', "{0,number,integer} monkeys on {1,number,integer} trees", [4560, 123]);
   do_format('fa', "{0,number,integer} monkeys on {1,number,integer} trees", [4560, 123]);
 
+  $pattern = "There {apple, plural,
+            =0 {are no apples}
+            =1 {is one apple...}
+            other {are # apples!}
+        }";
+  do_format('en', $pattern, ['apple' => 0]);
+  do_format('en', $pattern, ['apple' => 1000]);
+  do_format('de', $pattern, ['apple' => 0]);
+  do_format('de', $pattern, ['apple' => 1000]);
+
   echo "</tbody>\n";
   echo "</table>\n";
 }
