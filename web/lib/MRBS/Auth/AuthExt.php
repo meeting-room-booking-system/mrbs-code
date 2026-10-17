@@ -9,9 +9,10 @@ namespace MRBS\Auth;
  *     $auth["realm"] = "MRBS"; // Or any other string
  *     $auth["type"] = "ext";
  *     $auth["prog"] = "authenticationprogram"; // The full path to the external script
- *     $auth["params"] = "<...>"; // Parameters to pass to the script; #USERNAME# and #PASSWORD#
- *                                // will be expanded to the values typed by the user, e.g.
- *                                // "/etc/htpasswd #USERNAME# #PASSWORD#"
+ *     $auth["params"] = "<...>"; // Space-separated arguments; #USERNAME# and #PASSWORD#
+ *                                // are expanded, e.g. "/etc/htpasswd #USERNAME# #PASSWORD#"
+ *     // Alternatively, use an array when arguments contain spaces:
+ *     $auth["params"] = ["/etc/htpasswd", "#USERNAME#", "#PASSWORD#"];
  *
  * Then, you may configure admin users:
  *
@@ -35,37 +36,61 @@ class AuthExt extends Auth
       return false;
     }
 
-    // Generate the command line
-    $cmd = $auth["prog"] . ' ' . $auth["params"];
+    $params = $auth["params"] ?? '';
+    if (is_string($params))
+    {
+      $params = (trim($params) === '') ? [] : preg_split('/\s+/', trim($params));
+    }
+    elseif (!is_array($params))
+    {
+      throw new \InvalidArgumentException('$auth["params"] must be a string or an array of strings.');
+    }
+
     $username_placeholder = '#USERNAME#';
     $password_placeholder = '#PASSWORD#';
 
-    // A placeholder inside a quoted region will break argument handling because escapeshellarg()
-    // adds its own quotes. Check both quote types, regardless of OS.
-    foreach (["'", '"'] as $q)
+    $arguments = [$auth["prog"]];
+    foreach ($params as $param)
     {
-      $dq = preg_quote($q, '/');
-      $up = preg_quote($username_placeholder, '/');
-      $pp = preg_quote($password_placeholder, '/');
-
-      if (preg_match("/{$dq}[^{$dq}]*(?:{$up}|{$pp})[^{$dq}]*{$dq}/", $cmd))
+      if (!is_string($param))
       {
-        throw new \Exception(
-          "A placeholder in \$auth['params'] appears inside a {$q}-quoted string. " .
-          "This will produce a broken or exploitable command line."
-        );
+        throw new \InvalidArgumentException('$auth["params"] must contain only strings.');
       }
+
+      $arguments[] = strtr($param, [
+        $username_placeholder => $user,
+        $password_placeholder => $pass,
+      ]);
     }
 
-    // Use a non-recursive substitution, to prevent being attacked by having a placeholder in one of
-    // the user-supplied values.
-    $cmd = strtr($cmd, [
-      $username_placeholder => escapeshellarg($user),
-      $password_placeholder => escapeshellarg($pass),
-    ]);
+    if (PHP_VERSION_ID >= 70400)
+    {
+      error_log("Using proc_open() for external authentication.");
+      $process = proc_open($arguments, [
+        0 => ['pipe', 'r'],
+        1 => ['pipe', 'w'],
+      ], $pipes);
 
-    // Run the program
-    exec($cmd, $output, $ret);
+      if (!is_resource($process))
+      {
+        return false;
+      }
+
+      fclose($pipes[0]);
+      stream_get_contents($pipes[1]);
+      fclose($pipes[1]);
+      $ret = proc_close($process);
+    }
+    else
+    {
+      if (\MRBS\System::getServerOSFamily() == "Windows")
+      {
+        throw new \Exception('External authentication using exec() is not supported on Windows.');
+      }
+
+      $cmd = implode(' ', array_map('escapeshellarg', $arguments));
+      exec($cmd, $output, $ret);
+    }
 
     // If it succeeded, return success
     if ($ret == 0)
