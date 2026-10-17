@@ -304,7 +304,10 @@ class MessageFormatter
                     throw new \DomainException('Found PHP float with absolute value too large for 64 bit integer argument.');
                 }
 
-                return preg_replace('/\B(?=(?:\d{3})+$)/', ',', (string) (int) $arg);
+                // Use the MRBS version of NumberFormatter: if we are using this version of MessageFormatter, we can't
+                // use the intl version anyway.
+                $number_formatter = new NumberFormatter($locale, NumberFormatter::DEFAULT_STYLE);
+                return $number_formatter->format($arg);
 
             case 'none':
                 return $arg;
