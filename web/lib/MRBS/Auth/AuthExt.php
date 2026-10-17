@@ -106,7 +106,7 @@ class AuthExt extends Auth
     }
     else
     {
-      // We can't get here if we're running Windows - see the constructor.
+      // We can't get here at all if we're running Windows - see the constructor.
       $cmd = implode(' ', array_map('escapeshellarg', $arguments));
       exec($cmd, $output, $ret);
     }
