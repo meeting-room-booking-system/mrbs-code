@@ -65,7 +65,6 @@ class AuthExt extends Auth
 
     if (PHP_VERSION_ID >= 70400)
     {
-      error_log("Using proc_open() for external authentication.");
       $process = proc_open($arguments, [
         0 => ['pipe', 'r'],
         1 => ['pipe', 'w'],
