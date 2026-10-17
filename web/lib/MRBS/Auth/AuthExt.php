@@ -88,6 +88,13 @@ class AuthExt extends Auth
 
     if (PHP_VERSION_ID >= 70400)
     {
+      // If we're running Windows, we can only get here on certain versions of PHP.  See the constructor.
+      if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
+      {
+        $message = 'External authentication on Windows is not supported on this version of PHP (' . PHP_VERSION . ').';
+        throw new \Exception($message);
+      }
+
       $process = proc_open($arguments, [
         0 => ['pipe', 'r'],
         1 => ['pipe', 'w'],
@@ -105,6 +112,7 @@ class AuthExt extends Auth
     }
     else
     {
+      // We can't get here if we're running Windows - see the constructor.
       $cmd = implode(' ', array_map('escapeshellarg', $arguments));
       exec($cmd, $output, $ret);
     }
