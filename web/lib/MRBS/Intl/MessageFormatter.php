@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * Copyright © 2008 by Yii Software LLC (http://www.yiisoft.com)
