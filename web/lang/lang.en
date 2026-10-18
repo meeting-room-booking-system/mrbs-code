@@ -390,12 +390,12 @@ $vocab["password_twice"]        = "If you wish to change the password, please ty
 $vocab["passwords_not_eq"]      = "The passwords did not match!";
 $vocab["password_not_unique"]   = "Another user with the same email address is already using that password.";
 $vocab["password_invalid"]      = "The password does not conform to the policy.  It must contain at least:";
-$vocab["policy_length"]         = "%d character(s)";
-$vocab["policy_alpha"]          = "%d letter(s)";
-$vocab["policy_lower"]          = "%d lower-case letter(s)";
-$vocab["policy_upper"]          = "%d upper-case letter(s)";
-$vocab["policy_numeric"]        = "%d numeric character(s)";
-$vocab["policy_special"]        = "%d special character(s)";
+$vocab["policy_length"]         = "{0, plural, =1 {# character} other {# characters}}";
+$vocab["policy_alpha"]          = "{0, plural, =1 {# letter} other {# letters}}";
+$vocab["policy_lower"]          = "{0, plural, =1 {# lower-case letter} other {# lower-case letters}}";
+$vocab["policy_upper"]          = "{0, plural, =1 {# upper-case letter} other {# upper-case letters}}";
+$vocab["policy_numeric"]        = "{0, plural, =1 {# numeric character} other {# numeric characters}}";
+$vocab["policy_special"]        = "{0, plural, =1 {# special character} other {# special characters}}";
 $vocab["add_new_user"]          = "Add a new user";
 $vocab["action"]                = "Action";
 $vocab["user"]                  = "User";

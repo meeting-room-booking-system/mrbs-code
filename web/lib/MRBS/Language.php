@@ -422,14 +422,13 @@ class Language
   /**
    * Gets the vocab string for a given tag and locale.
    *
+   * The string can be an intl MessageFormatter pattern, or a string that can be formatted using sprintf().
+   *
    * @param mixed ...$values Optional values to be inserted into the string, as for sprintf()
    * @return string The vocab string, or the tag itself if there is no string.
    */
   public function getVocab(string $tag, string $locale, ...$values) : string
   {
-    //  Maybe in the future we should switch to using the MessageFormatter
-    //  class as it is more powerful.   However, the Intl extension isn't present
-    //  in all PHP installations and so the class would have to be emulated.
     static $vocab;
 
     if (!isset($vocab[$locale]))
@@ -443,7 +442,21 @@ class Language
       return $tag;
     }
 
-    return (count($values) === 0) ? $vocab[$locale][$tag] : sprintf($vocab[$locale][$tag], ...$values);
+    // If the vocab string looks like an intl MessageFormatter pattern, use MessageFormatter to format it.
+    if (preg_match('/{.*}/', $vocab[$locale][$tag]))
+    {
+      $message_formatter = new \MessageFormatter($locale, $vocab[$locale][$tag]);
+      return $message_formatter->format($values);
+    }
+
+    // Or if there are values to insert, use sprintf to format the string.
+    if (count($values) > 0)
+    {
+      return sprintf($vocab[$locale][$tag], ...$values);
+    }
+
+    // Otherwise, return the vocab string as-is.
+    return $vocab[$locale][$tag];
   }
 
 
