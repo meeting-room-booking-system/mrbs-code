@@ -392,9 +392,11 @@ abstract class Calendar
     }
 
     $title = get_vocab($tag) . "\n\n" . $room['description'];
+    // Room details require authentication even when the calendar is public.
     $show_info = !empty($show_room_info_in_calendar) &&
                  !empty($auth['allow_custom_html']) &&
                  !empty($room['show_info_calendar']) &&
+                 checkAuthorised('edit_room.php', true) &&
                  (trim($room['custom_html'] ?? '') !== '');
     $html = '';
     $html .= '<th data-room="' . escape_html($room['id']) . '">';
@@ -413,9 +415,12 @@ abstract class Calendar
     if ($show_info)
     {
       $button_title = get_vocab('viewroom') . ': ' . $room['room_name'];
+      // Keep trusted HTML escaped until the dialog is opened. It must not be
+      // parsed as part of the calendar markup (eg a closing template tag).
       $html .= '<button type="button" class="room-info-button"' .
         ' title="' . escape_html($button_title) . '"' .
-        ' aria-label="' . escape_html($button_title) . '">' .
+        ' aria-label="' . escape_html($button_title) . '"' .
+        ' data-room-info="' . escape_html($room['custom_html']) . '">' .
         '<svg class="room-info-icon" xmlns="http://www.w3.org/2000/svg"' .
         ' width="16" height="16" viewBox="0 0 24 24" fill="none"' .
         ' stroke="currentColor" stroke-width="1.75" stroke-linecap="round"' .
@@ -423,7 +428,6 @@ abstract class Calendar
         '<circle cx="12" cy="12" r="9" />' .
         '<path d="M12 11v6M12 7h.01" />' .
         '</svg></button>';
-      $html .= '<template class="room-info-content">' . $room['custom_html'] . '</template>';
     }
     $html .= "</th>\n";
     return $html;
