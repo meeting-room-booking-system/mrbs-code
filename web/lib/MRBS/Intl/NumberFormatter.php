@@ -171,11 +171,20 @@ class NumberFormatter
   {
     $locale_switcher = new LocaleSwitcher(LC_NUMERIC, $this->locale);
     $locale_switcher->switch();
-
     $locale_info = localeconv();
-
     $locale_switcher->restore();
-    return number_format($num, 0, $locale_info['decimal_point'], $locale_info['thousands_sep']);
+
+    // intl seems to use 3 decimal places by default
+    $result = number_format($num, 3, $locale_info['decimal_point'], $locale_info['thousands_sep']);
+    if (str_contains($result, $locale_info['decimal_point']))
+    {
+      // intl seems to trim any trailing zeros
+      $result = rtrim($result, ' 0');
+      // Finally, trim any decimal point at the end
+      $result = rtrim($result, $locale_info['decimal_point']);
+    }
+
+    return $result;
   }
 
 
