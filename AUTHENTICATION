@@ -424,7 +424,7 @@ If you want to use an external authentication program, set $auth["type"] =
     Don't forget to prefix it with "./" under Unix and ensure that the
     program is executable by the "user" that the webserver runs as.
     Example:
-    $auth["prog"] = "./cryt_passwd.pl";
+    $auth["prog"] = "./crypt_passwd.pl";
 
     - The arguments to pass to the above program in $auth["params"].
 
