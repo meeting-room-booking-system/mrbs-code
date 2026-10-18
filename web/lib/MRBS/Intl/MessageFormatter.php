@@ -297,7 +297,7 @@ class MessageFormatter
                 }
 
                 if ('integer' !== ($token[2] ?? null)) {
-                    return self::formatNumber((float) $arg, null !== $format ? 0 : 3);
+                    return self::formatNumberLocale((float) $arg, $locale, null !== $format ? 0 : 3);
                 }
 
                 // Like intl, which truncates the argument to a 64-bit integer when no space surrounds "integer"
@@ -305,10 +305,7 @@ class MessageFormatter
                     throw new \DomainException('Found PHP float with absolute value too large for 64 bit integer argument.');
                 }
 
-                // Use the MRBS version of NumberFormatter: if we are using this version of MessageFormatter, we can't
-                // use the intl version anyway.
-                $number_formatter = new NumberFormatter($locale, NumberFormatter::DEFAULT_STYLE);
-                return $number_formatter->format($arg);
+                return self::formatNumberLocale($arg, $locale);
 
             case 'none':
                 return $arg;
@@ -355,7 +352,7 @@ class MessageFormatter
                 $message = false;
                 $offset = 0;
                 $arg = (float) $arg; // like intl, which reads the argument as a double
-                $number = self::formatNumber($arg);
+                $number = self::formatNumberLocale($arg, $locale);
                 for ($i = 0; 1 + $i < $c; ++$i) {
                     if (\is_array($plural[$i]) || !\is_array($plural[1 + $i])) {
                         throw new \DomainException('Message pattern is invalid.');
@@ -366,7 +363,7 @@ class MessageFormatter
                         $pos = strpos(str_replace(["\n", "\r", "\t"], ' ', $selector), ' ', 7);
                         $offset = (int) trim(substr($selector, 7, $pos - 7));
                         $selector = trim(substr($selector, 1 + $pos, \strlen($selector)));
-                        $number = self::formatNumber($arg - $offset);
+                        $number = self::formatNumberLocale($arg - $offset, $locale);
                     }
                     // Explicit values take precedence over keywords
                     if ('=' === $selector[0] && (float) substr($selector, 1, \strlen($selector)) == $arg) {
@@ -466,5 +463,16 @@ class MessageFormatter
         $fraction = rtrim(substr($digits, \strlen($digits) - $maxFractionDigits), '0');
 
         return $sign.preg_replace('/\B(?=(?:\d{3})+$)/', ',', $int).('' === $fraction ? '' : '.'.$fraction);
+    }
+
+  /**
+   * Formats a number, taking account of the locale.
+   */
+    private static function formatNumberLocale($number, string $locale, int $maxFractionDigits = 3): string
+    {
+      // Use the MRBS version of NumberFormatter: if we are using this version of MessageFormatter, we can't
+      // use the intl version anyway.
+      $number_formatter = new NumberFormatter($locale, NumberFormatter::DEFAULT_STYLE);
+      return $number_formatter->format($number);
     }
 }
