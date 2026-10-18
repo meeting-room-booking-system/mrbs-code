@@ -91,4 +91,5 @@ if (!in_array('intl', $loaded_extensions))
   die("This test needs the 'intl' PHP extension to be loaded.");
 }
 
+test_constants('MessageFormatter');
 test_format();
