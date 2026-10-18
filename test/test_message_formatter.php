@@ -51,11 +51,17 @@ function test_format()
   echo thead_html(['locale', 'pattern', 'values']);
   echo "<tbody>\n";
 
+  // integer numbers
   do_format('en', "{0,number,integer} monkeys on {1,number,integer} trees", [4560, 123]);
   do_format('de', "{0,number,integer} Affen auf {1,number,integer} Bäumen", [4560, 123]);
   do_format('ar', "{0,number,integer} monkeys on {1,number,integer} trees", [4560, 123]);
   do_format('fa', "{0,number,integer} monkeys on {1,number,integer} trees", [4560, 123]);
 
+  // float numbers
+  do_format('en', "{0,number} monkeys per tree", [4560/123]);
+  do_format('de', "{0,number} Affen pro Baum", [4560/123]);
+
+  // plurals
   $pattern = "There {apple, plural,
             =0 {are no apples}
             =1 {is one apple...}
