@@ -72,6 +72,16 @@ function test_format()
   do_format('de', $pattern, ['apple' => 0]);
   do_format('de', $pattern, ['apple' => 1000]);
 
+  $pattern = "There {0, plural,
+            =0 {are no apples}
+            =1 {is one apple...}
+            other {are # apples!}
+        }";
+  do_format('en', $pattern, [0]);
+  do_format('en', $pattern, [1000]);
+  do_format('de', $pattern, [0]);
+  do_format('de', $pattern, [1000]);
+
   echo "</tbody>\n";
   echo "</table>\n";
 }
