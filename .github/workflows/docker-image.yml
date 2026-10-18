@@ -2,9 +2,10 @@ name: Docker image
 
 on:
   push:
-    # Publish `main` as Docker `latest` image.
+    # Publish `main` as Docker `latest` image, and `roles` as the `roles` image.
     branches:
       - main
+      - roles
 
     # Publish `v1.2.3` tags as releases.
     tags:
