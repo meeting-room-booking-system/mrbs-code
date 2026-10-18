@@ -7,8 +7,7 @@ which were being used to book meetings. They were slow, hard to edit and only
 at the reception desk. I thought that a nice web-based system would be much
 nicer.
 
-Some parts of this are based on WebCalender 0.9.4 by Craig Knudsen
-([http://www.radix.net/~cknudsen/webcalendar/](http://www.radix.net/~cknudsen/webcalendar/)) but there is now very little
+Some parts of this are based on WebCalender 0.9.4 by Craig Knudsen but there is now very little
 which is similar. There are fundamental design goal differences between
 WebCalendar and MRBS - WC is for individuals, MRBS is for meeting rooms.
 
