@@ -1,0 +1,34 @@
+name: Cleanup untagged images
+
+on:
+  schedule:
+    - cron: "0 3 * * 0"
+
+  # Manual runs are a dry run unless the input is unticked.
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: Only report what would be deleted
+        type: boolean
+        default: true
+
+  # Pull requests changing this workflow get a dry run so the output can be checked.
+  pull_request:
+    paths:
+      - .github/workflows/cleanup-images.yml
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    steps:
+      - uses: snok/container-retention-policy@v3.1.0
+        with:
+          account: meeting-room-booking-system
+          token: ${{ secrets.GITHUB_TOKEN }}
+          image-names: mrbs
+          tag-selection: untagged
+          cut-off: 1w
+          # Scheduled runs delete; pull requests and manual runs follow the dry-run setting above.
+          dry-run: ${{ github.event_name == 'pull_request' || inputs.dry-run == true }}
