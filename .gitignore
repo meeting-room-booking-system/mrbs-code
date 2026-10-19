@@ -11,3 +11,4 @@ web/config.inc.php
 /hg-code.iml
 /nbproject
 /.vs
+__pycache__
