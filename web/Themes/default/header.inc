@@ -37,6 +37,7 @@ function print_head(bool $simple=false) : void
   }
 
   echo "<meta name=\"robots\" content=\"noindex, nofollow, noarchive\">\n";
+  echo "<link rel=\"shortcut icon\" type=\"image/x-icon\" href=\"favicon.ico\">\n";
 
   if (($refresh_rate != 0) && (this_page(false, '.php') == 'index'))
   {
