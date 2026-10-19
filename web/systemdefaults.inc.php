@@ -270,6 +270,12 @@ $theme = "default";
  * Calendar settings
  *******************/
 
+// Set to true to allow rooms with the per-room option enabled to display their
+// custom HTML in a dialog from the calendar. Custom HTML must also be enabled.
+// This displays unsanitized HTML from trusted administrators, with the same
+// access requirement as the room details page.
+$show_room_info_in_calendar = false;
+
 // MRBS has two different modes of operation: "times" and "periods".   "Times"
 // based bookings allow you to define regular consecutive booking slots, eg every
 // half an hour from 7.00 am to 7.00 pm.   "Periods" based bookings are useful
