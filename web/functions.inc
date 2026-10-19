@@ -2803,7 +2803,7 @@ function is_get_request() : bool
 {
   global $server;
 
-  return ($server['REQUEST_METHOD'] === 'GET');
+  return (isset($server['REQUEST_METHOD']) && $server['REQUEST_METHOD'] === 'GET');
 }
 
 
