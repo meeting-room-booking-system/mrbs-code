@@ -1475,6 +1475,45 @@ function get_duration(int $start_time, int $end_time, bool $enable_periods, int 
 }
 
 
+function get_duration_string(int $start_time, int $end_time, int $area_id, ?string $locale=null) : string
+{
+  static $area_details = [];
+
+  if (!isset($area_details[$area_id]))
+  {
+    if (null === ($area_details[$area_id] = get_area_details($area_id)))
+    {
+      throw new \Exception("Invalid area ID '$area_id'");
+    }
+  }
+
+  if (!isset($locale))
+  {
+    $locale = Language::getInstance()->getWebLocale();
+  }
+
+  if ($area_details[$area_id]['enable_periods'])
+  {
+    $periods_per_day = count(json_decode($area_details[$area_id]['periods'], true));
+    $total_periods = get_period_interval($start_time, $end_time, $area_id);  // this handles DST
+    $n_days = intval($total_periods/$periods_per_day);
+    $n_periods = $total_periods % $periods_per_day;
+    $day_string = ($n_days > 0) ? get_vocab('duration_days', [$n_days]) : null;
+    $period_string = ($n_days > 0) ? get_vocab('duration_periods', [$n_periods]) : null;
+    if (isset($day_string) && isset($period_string))
+    {
+      return get_vocab('days_and_periods', $day_string, $period_string);
+    }
+    else
+    {
+      return (isset($day_string)) ? $day_string : $period_string;
+    }
+  }
+
+  return get_duration_string_times($start_time, $end_time, $area_id, $locale);
+}
+
+
 // Escape a PHP variable for use in HTML
 function escape_html($value)
 {
