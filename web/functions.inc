@@ -1498,8 +1498,8 @@ function get_duration_string(int $start_time, int $end_time, int $area_id, ?stri
     $total_periods = get_period_interval($start_time, $end_time, $area_id);  // this handles DST
     $n_days = intval($total_periods/$periods_per_day);
     $n_periods = $total_periods % $periods_per_day;
-    $day_string = ($n_days > 0) ? get_vocab('duration_days', [$n_days]) : null;
-    $period_string = ($n_days > 0) ? get_vocab('duration_periods', [$n_periods]) : null;
+    $day_string = ($n_days > 0) ? get_vocab('duration_days', $n_days) : null;
+    $period_string = ($n_periods > 0) ? get_vocab('duration_periods', $n_periods) : null;
     if (isset($day_string) && isset($period_string))
     {
       return get_vocab('days_and_periods', $day_string, $period_string);
