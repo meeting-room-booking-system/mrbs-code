@@ -17,7 +17,7 @@ $vocab["report"]             = "Report";
 $vocab["admin"]              = "Admin";
 $vocab["help"]               = "Help";
 $vocab["search"]             = "Search";
-$vocab["outstanding"]        = "{0, plural, =0 {No pending bookings} =1 {# pending booking} other {# pending bookings}}";
+$vocab["outstanding"]        = "{0, plural, zero {No pending bookings} one {# pending booking} other {# pending bookings}}";
 
 // Used in index.php
 $vocab["bookingsfor"]        = "Bookings for";
@@ -393,12 +393,12 @@ $vocab["password_twice"]        = "If you wish to change the password, please ty
 $vocab["passwords_not_eq"]      = "The passwords did not match!";
 $vocab["password_not_unique"]   = "Another user with the same email address is already using that password.";
 $vocab["password_invalid"]      = "The password does not conform to the policy.  It must contain at least:";
-$vocab["policy_length"]         = "{0, plural, =1 {# character} other {# characters}}";
-$vocab["policy_alpha"]          = "{0, plural, =1 {# letter} other {# letters}}";
-$vocab["policy_lower"]          = "{0, plural, =1 {# lower-case letter} other {# lower-case letters}}";
-$vocab["policy_upper"]          = "{0, plural, =1 {# upper-case letter} other {# upper-case letters}}";
-$vocab["policy_numeric"]        = "{0, plural, =1 {# numeric character} other {# numeric characters}}";
-$vocab["policy_special"]        = "{0, plural, =1 {# special character} other {# special characters}}";
+$vocab["policy_length"]         = "{0, plural, one {# character} other {# characters}}";
+$vocab["policy_alpha"]          = "{0, plural, one {# letter} other {# letters}}";
+$vocab["policy_lower"]          = "{0, plural, one {# lower-case letter} other {# lower-case letters}}";
+$vocab["policy_upper"]          = "{0, plural, one {# upper-case letter} other {# upper-case letters}}";
+$vocab["policy_numeric"]        = "{0, plural, one {# numeric character} other {# numeric characters}}";
+$vocab["policy_special"]        = "{0, plural, one {# special character} other {# special characters}}";
 $vocab["add_new_user"]          = "Add a new user";
 $vocab["action"]                = "Action";
 $vocab["user"]                  = "User";
