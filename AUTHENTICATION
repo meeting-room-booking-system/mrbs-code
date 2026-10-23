@@ -232,7 +232,7 @@ Which session scheme to choose
 The session scheme is the way the user and password is queried and recorded.
 
 The default session scheme is 'php'.  Some authentication schemes, eg 'joomla',
-'wordpress', 'cas' and 'saml' require you to use their own session schemes. The
+'wordpress', 'cas', 'keycloak' and 'saml' require you to use their own session schemes. The
 others are left in for historical reasons:
 
 +---------+------------------------------+--------------------+----------------+
@@ -889,6 +889,57 @@ do that.
 
 https://simplesamlphp.org/docs/stable/simplesamlphp-install
 https://simplesamlphp.org/docs/stable/simplesamlphp-sp
+
+
+Keycloak with SAML Authentication
+--------------------------------
+
+The ordinary 'saml' scheme can only retrieve contact details for the currently
+logged-in user. When an administrator approves, edits or deletes another user's
+booking, the booker's email address is therefore unavailable. The 'keycloak'
+scheme adds a Keycloak Admin REST API lookup for that user's current email and
+display name, while retaining SimpleSamlPhp for login and access control.
+
+First configure and verify SAML login as above. The SAML username attribute must
+contain the Keycloak username (not the user's ID, or a different email alias).
+Then set BOTH schemes to 'keycloak', keeping all your $auth['saml'] settings:
+
+$auth['type'] = 'keycloak';
+$auth['session'] = 'keycloak';
+$auth['keycloak']['server_url'] = 'https://keycloak.example.com';
+$auth['keycloak']['realm'] = 'myrealm';
+$auth['keycloak']['client_id'] = 'mrbs-directory';
+$auth['keycloak']['client_secret'] = 'replace-with-your-client-secret';
+
+server_url is the Keycloak installation URL, without '/realms/myrealm'. Include
+any deployment prefix such as '/auth'. Use HTTPS with a trusted certificate in
+production. Keep the client secret in your private MRBS configuration.
+
+In Keycloak, create a separate OpenID Connect client in the same realm, with
+Client authentication and Service account roles enabled. This client is for
+directory queries; keep your existing SAML client for interactive login. Grant
+the service account the 'view-users' role from the 'realm-management' client,
+and include that role in its client scope mappings. No user-management or
+realm-admin role is required. See:
+
+https://www.keycloak.org/docs/latest/server_admin/index.html#_service_accounts
+https://www.keycloak.org/docs-api/latest/rest-api/index.html#_users
+
+Only an exact username match is used. Missing users or missing/invalid email
+addresses do not produce a booker recipient. Directory failures are logged
+without credentials or response data; login and the current user's SAML details
+remain available. Directory results never grant MRBS access or administrator
+rights. This does not add OIDC login, or directory support for other SAML IdPs.
+
+For a deployment check, make a booking as one user, log in as an administrator
+in another session, and approve, edit and delete that booking. With the relevant
+mail options enabled (including $mail_settings['booker']), each notification
+should include the booker's current Keycloak email address. Also check a new
+booking notification and your existing SAML user/admin access rules.
+
+The offline regression test can be run with:
+
+php test/test_auth_keycloak.php
 
 
 Wix Authentication

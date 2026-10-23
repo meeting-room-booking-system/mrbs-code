@@ -1107,16 +1107,16 @@ $report_presentation_field_order = array();
  * Authentication settings - read AUTHENTICATION
  ***********************************************/
 
-// NOTE: if you are using the 'joomla', 'saml' or 'wordpress' authentication type,
+// NOTE: if you are using the 'joomla', 'keycloak', 'saml' or 'wordpress' authentication type,
 // then you must use the corresponding session scheme.
 
 $auth["type"] = "db"; // How to validate the user/password. One of
                       // "auth_basic", "cas", "config", "crypt", "db", "db_ext", "idcheck",
-                      // "imap", "imap_php", "joomla", "ldap", "none", "nw", "pop3",
+                      // "imap", "imap_php", "joomla", "keycloak", "ldap", "none", "nw", "pop3",
                       // "saml", "wix" or "wordpress".
 
 $auth["session"] = "php"; // How to get and keep the user ID. One of
-                          // "cas", "cookie", "host", "http", "ip", "joomla", "nt",
+                          // "cas", "cookie", "host", "http", "ip", "joomla", "keycloak", "nt",
                           // "omni", "php", "remote_user", "saml" or "wordpress".
 
 // Configuration parameters for 'cookie' session scheme
@@ -1528,6 +1528,15 @@ $auth['saml']['disable_mrbs_session_init'] = false;
 //
 // https://simplesamlphp.org/docs/stable/simplesamlphp-install
 // https://simplesamlphp.org/docs/stable/simplesamlphp-sp
+
+
+// 'auth_keycloak' configuration settings. Use the 'keycloak' authentication
+// type AND session scheme, together with your existing $auth['saml'] settings.
+// See AUTHENTICATION for the read-only service account setup.
+//$auth['keycloak']['server_url'] = 'https://keycloak.example.com';
+//$auth['keycloak']['realm'] = 'myrealm';
+//$auth['keycloak']['client_id'] = 'mrbs-directory';
+//$auth['keycloak']['client_secret'] = 'replace-with-your-client-secret';
 
 
 // 'auth_wix' configuration settings

@@ -85,6 +85,7 @@ if (!isset($auth['session']))
   {
     case 'cas':
     case 'joomla':
+    case 'keycloak':
     case 'saml':
     case 'wordpress':
       $auth['session'] = $auth['type'];
