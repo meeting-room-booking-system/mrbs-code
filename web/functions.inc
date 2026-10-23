@@ -1502,7 +1502,7 @@ function get_duration_string(int $start_time, int $end_time, int $area_id, ?stri
     $period_string = ($n_periods > 0) ? get_vocab('duration_periods', $n_periods) : null;
     if (isset($day_string) && isset($period_string))
     {
-      return get_vocab('days_and_periods', $day_string, $period_string);
+      return get_vocab('days_and_subunits', $day_string, $period_string);
     }
     else
     {

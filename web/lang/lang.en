@@ -106,7 +106,7 @@ $vocab["period"]             = "period";
 $vocab["periods"]            = "periods";
 $vocab["duration_days"]      = "{0, plural, one {# day} other {# days}}";
 $vocab["duration_periods"]   = "{0, plural, one {# period} other {# periods}}";
-$vocab["days_and_periods"]   = '%1$s, %2$s'; // 1=days, 2=periods
+$vocab["days_and_subunits"]  = '%1$s, %2$s'; // 1=days, 2=subunits (eg periods/hours)
 $vocab["all_day"]            = "All day";
 $vocab["area"]               = "Area";
 $vocab["type"]               = "Type";
