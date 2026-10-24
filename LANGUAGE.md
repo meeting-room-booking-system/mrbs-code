@@ -1,4 +1,4 @@
-        MRBS Language Support
+# MRBS Language Support
 
 Each "lang.*" file (in the web/lang/ directory) contains the text strings
 for a language.  Not all of these files are complete.  Note that MRBS always
@@ -10,15 +10,24 @@ you will see "Your browser is set to use "xx" language". If no "lang.xx"
 file is available, copy "lang.en" to "lang.xx" (replace xx with the code
 you found in Admin), and then edit the file to change the English strings
 to your language.  For example, you might
-change: $vocab["gototoday"] = "Go To Today";
-    to: $vocab["gototoday"] = "gehe zum heutigen Tag";
+change:
+
+~~~php
+$vocab["gototoday"] = "Go To Today";
+~~~
+
+to:
+
+~~~php
+$vocab["gototoday"] = "gehe zum heutigen Tag";
+~~~
 
 You will then find that MRBS starts to use your language file
 automatically. If you are having trouble getting this to work, see the
 language section of config.inc.php.
 
 If you would like to complete or improve an existing language file, the
-"checklang.php" script included in the distribution can help. Copy this
+`checklang.php` script included in the distribution can help. Copy this
 to your web server area.
 Now use your browser to access:
          http://your-host-and-dir/checklang.php?lang=xx
@@ -32,5 +41,5 @@ If you do create or improve a language file, please post a message about
 it on the mailing list, so it can be included in future releases. Thanks!
 
 Important note: You should not use any HTML entities in the translation
-other than &nbsp;. If you need to use any other characters you should
+other than `&nbsp;`. If you need to use any other characters you should
 just encode those characters in utf-8.
