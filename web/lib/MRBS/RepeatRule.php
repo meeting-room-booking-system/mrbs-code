@@ -99,7 +99,7 @@ class RepeatRule
           return ($repeat_interval == 1) ? get_mail_vocab('month') : get_mail_vocab('months');
           break;
         case RepeatRule::YEARLY:
-          return ($repeat_interval == 1) ? get_mail_vocab('year_lc') : get_mail_vocab('years');
+          return ($repeat_interval == 1) ? get_mail_vocab('year') : get_mail_vocab('years');
           break;
         default:
           return '';
@@ -119,7 +119,7 @@ class RepeatRule
         return ($repeat_interval == 1) ? get_vocab('month') : get_vocab('months');
         break;
       case RepeatRule::YEARLY:
-        return ($repeat_interval == 1) ? get_vocab('year_lc') : get_vocab('years');
+        return ($repeat_interval == 1) ? get_vocab('year') : get_vocab('years');
         break;
       default:
         return '';

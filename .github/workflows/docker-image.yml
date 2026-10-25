@@ -19,22 +19,27 @@ env:
 jobs:
   # Build and smoke-test the image for PRs (safe for forked PRs)
   test:
+    name: test (PHP ${{ matrix.php }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['7.2', '8.2', '8.3', '8.4', '8.5']
     permissions:
       contents: read
-    services:
-      db:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: mrbs
-          MYSQL_USER: mrbs
-          MYSQL_PASSWORD: mrbs
-        ports:
-          - 3306:3306
-
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
+
+      - name: Start MySQL
+        run: |
+          # mysql_native_password is disabled by default in 8.4, but PHP < 7.4 needs it
+          docker run -d --name mrbs-db \
+            -e MYSQL_ROOT_PASSWORD=root \
+            -e MYSQL_DATABASE=mrbs \
+            -e MYSQL_USER=mrbs \
+            -e MYSQL_PASSWORD=mrbs \
+            -p 3306:3306 \
+            mysql:8.4 --mysql-native-password=ON
 
       - name: Wait for DB
         run: |
@@ -44,9 +49,24 @@ jobs:
       - name: Load MySQL schema
         run: |
           mysql -h 127.0.0.1 -uroot -proot mrbs < tables.my.sql
+          # PHP < 7.4 does not support MySQL 8's default caching_sha2_password
+          mysql -h 127.0.0.1 -uroot -proot -e "ALTER USER 'mrbs'@'%' IDENTIFIED WITH mysql_native_password BY 'mrbs'"
+
+      - name: Load test fixtures
+        run: |
+          mysql -h 127.0.0.1 -uroot -proot mrbs < test/ci/fixtures.my.sql
+
+      - uses: docker/setup-buildx-action@v4
 
       - name: Build image (test)
-        run: docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          load: true
+          tags: ${{ env.IMAGE_NAME }}
+          build-args: PHP_VERSION=${{ matrix.php }}
+          cache-from: type=gha,scope=php-${{ matrix.php }}
+          cache-to: type=gha,scope=php-${{ matrix.php }},mode=max
 
       - name: Run container (connect to service DB via host-gateway)
         run: |
@@ -75,6 +95,12 @@ jobs:
         run: |
           curl -fsS http://localhost:8080/ || (docker logs mrbs-test && exit 1)
           curl -fsS http://localhost:8080/reset_password.php | grep -qi 'reset' || true
+
+      - name: Functional tests
+        run: |
+          python3 -m pip install -r test/ci/requirements.txt
+          python3 -m pytest test/ci -v || (docker logs mrbs-test && exit 1)
+
       - name: Stop test container
         if: always()
         run: docker stop mrbs-test || true
@@ -83,18 +109,26 @@ jobs:
   # See also https://docs.docker.com/docker-hub/builds/
   push:
     runs-on: ubuntu-latest
-    # Only run this job on pushes or on PRs from the same repository
-    # (skip PRs opened from forks which don't have access to repository secrets)
-    if: ${{ github.event.pull_request == null || github.event.pull_request.head.repo.full_name == github.repository }}
+    # Only publish from pushes to main or tags (not PRs), and only if the tests pass
+    needs: test
+    if: ${{ github.event_name == 'push' }}
     permissions:
       packages: write
       contents: read
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
+
+      - uses: docker/setup-buildx-action@v4
 
       - name: Build image
-        run: docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          load: true
+          tags: ${{ env.IMAGE_NAME }}
+          # Reuse the layers cached by the default PHP version in the test job
+          cache-from: type=gha,scope=php-8.4
 
       - name: Log in to registry
         # This is where you will update the personal access token to GITHUB_TOKEN

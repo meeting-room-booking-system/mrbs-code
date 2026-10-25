@@ -166,9 +166,12 @@ if (method_exists(session(), 'processForm'))
 
 // If we're in kiosk mode make sure somebody's not trying to get to anywhere other than
 // index.php with a kiosk query string parameter, kiosk.php or one of the js/***.js.php pages.
-if (is_kiosk_mode() &&
-    !((isset($server['REQUEST_URI']) && preg_match('/index\.php\?.*kiosk=/', $server['REQUEST_URI'])) ||
-      (isset($server['SCRIPT_NAME']) && preg_match('/kiosk\.php$|js\/.+\.js\.php$/', $server['SCRIPT_NAME']) )))
+// [Save the is_kiosk_mode() test until last so that we avoid using sessions, unless absolutely necessary.  As sessions
+// are only started on some session types, eg Joomla, when the session variables are required, this improves loading
+// times for pages that don't need sessions, eg the *.js.php files.]
+if (!(isset($server['REQUEST_URI']) && preg_match('/index\.php\?.*kiosk=/', $server['REQUEST_URI'])) &&
+    !(isset($server['SCRIPT_NAME']) && preg_match('/kiosk\.php$|js\/.+\.js\.php$/', $server['SCRIPT_NAME'])) &&
+    is_kiosk_mode())
 {
   $location = (session()->isset('kiosk_url')) ? session()->get('kiosk_url') : "index.php?kiosk=$kiosk_default_mode";
   location_header(multisite($location));

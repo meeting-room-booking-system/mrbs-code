@@ -2,18 +2,18 @@
 declare(strict_types=1);
 namespace MRBS\Auth;
 
-use Joomla\CMS\Factory;
-use MRBS\Joomla\JFactory;
+use MRBS\Cms\Joomla\Joomla;
 use MRBS\User;
-
-require_once MRBS_ROOT . '/auth/cms/joomla.inc';
 
 
 class AuthJoomla extends Auth
 {
+  private $joomla;
+
   public function __construct()
   {
     $this->checkSessionMatchesType();
+    $this->joomla = Joomla::getInstance();
   }
 
 
@@ -23,16 +23,7 @@ class AuthJoomla extends Auth
     #[\SensitiveParameter]
     ?string $pass)
   {
-    if (version_compare(JVERSION, '5.0', '<'))
-    {
-      $mainframe = JFactory::getApplication('site');
-    }
-    else
-    {
-      $mainframe = Factory::getApplication('site');
-    }
-
-    return $mainframe->login(array('username' => $user, 'password' => $pass)) ? $user : false;
+    return $this->joomla->app()->login(array('username' => $user, 'password' => $pass)) ? $user : false;
   }
 
 
@@ -43,18 +34,14 @@ class AuthJoomla extends Auth
       return null;
     }
 
-    if (version_compare(JVERSION, '5.0', '<'))
-    {
-      $joomla_user = JFactory::getUser($username);
-    }
-    else
-    {
-      $joomla_user = Factory::getUser($username);
-    }
+    $joomla_user = $this->joomla->getUser($username);
 
-    if ($joomla_user === false)
+    if (empty($joomla_user->id))
     {
-      return new User($username);
+      // If the username is set and the Joomla user id is empty then that's because the user has been deleted from
+      // Joomla, but we still have their booking in MRBS, so create an MRBS user; or if the username is not set it means
+      // that we were trying to get the currently logged-in user and there isn't one, so return NULL.
+      return (isset($username)) ? new User($username) : null;
     }
 
     if ($joomla_user->guest)
@@ -65,7 +52,7 @@ class AuthJoomla extends Auth
     $user = new User($joomla_user->username);
     $user->display_name = $joomla_user->name;
     $user->email = $joomla_user->email;
-    $user->level = self::getUserLevel($joomla_user);
+    $user->level = $this->getUserLevel($joomla_user);
 
     return $user;
   }
@@ -82,25 +69,18 @@ class AuthJoomla extends Auth
   // Return an array of MRBS users, indexed by 'username' and 'display_name'
   public function getUsernames() : array
   {
-    $result = array();
+    $result = [];
 
     // We only want MRBS users, not all the Joomla users
-    $groups = self::getMRBSGroups();
+    $groups = $this->getMRBSGroups();
 
     // Get the user ids associated with those groups
-    $user_ids = array();
+    $user_ids = [];
 
     foreach($groups as $group)
     {
       // Include child groups by doing it recursively
-      if (version_compare(JVERSION, '5.0', '<'))
-      {
-        $user_ids = array_merge($user_ids, \JAccess::getUsersByGroup($group, $recursive = true));
-      }
-      else
-      {
-        $user_ids = array_merge($user_ids, \Joomla\CMS\Access\Access::getUsersByGroup($group, $recursive = true));
-      }
+      $user_ids = array_merge($user_ids, $this->joomla->getUsersByGroup($group, true));
     }
 
     $user_ids = array_unique($user_ids);
@@ -109,14 +89,7 @@ class AuthJoomla extends Auth
     // be using the Joomla API abstraction.
     foreach ($user_ids as $user_id)
     {
-      if (version_compare(JVERSION, '5.0', '<'))
-      {
-        $user = JFactory::getUser((int)$user_id);
-      }
-      else
-      {
-        $user = Factory::getUser((int)$user_id);
-      }
+      $user = $this->joomla->getUser($user_id);
       // Check to see that the user has a username. The result of getUser() on a user_id that doesn't exist is,
       // strangely, a user object with all properties set to null.  In theory (?) all the user_ids returned by
       // getUsersByGroup() should exist, but there has been a case where this is not so.  See
@@ -142,7 +115,7 @@ class AuthJoomla extends Auth
 
 
   // Get an array of Joomla groups that have MRBS user or admin rights
-  private static function getMRBSGroups() : array
+  private function getMRBSGroups() : array
   {
     global $auth;
 
@@ -158,15 +131,7 @@ class AuthJoomla extends Auth
     // it with direct access to the database.
 
     // Get a db connection.
-    if (version_compare(JVERSION, '5.0', '<'))
-    {
-      $db = JFactory::getDbo();
-    }
-    else
-    {
-      $db = Factory::getDbo();
-    }
-
+    $db = $this->joomla->getDbo();
 
     // Create a new query object.
     $query = $db->getQuery(true);
@@ -191,11 +156,11 @@ class AuthJoomla extends Auth
   }
 
 
-  private static function getUserLevel(object $joomla_user) : int
+  private function getUserLevel(object $joomla_user) : int
   {
     global $auth;
 
-    $required_class = (version_compare(JVERSION, '5.0', '<')) ? 'MRBS\Joomla\JUser' : 'Joomla\CMS\User\User';
+    $required_class = (version_compare($this->joomla->version, '5.0', '<')) ? 'MRBS\Cms\Joomla\JUser' : 'Joomla\CMS\User\User';
     $actual_class = get_class($joomla_user);
     if ($actual_class !== $required_class)
     {

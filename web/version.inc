@@ -2,6 +2,48 @@
 declare(strict_types=1);
 namespace MRBS;
 
+// Runs git with the given arguments and returns the first line of its output, or null on any
+// failure.  Stderr is captured and discarded so that, for example, a shell's "git: not found"
+// is not printed on the console.
+function run_git(string $git_command, array $args) : ?string
+{
+  if (!function_exists('proc_open') || function_disabled('proc_open'))
+  {
+    return null;
+  }
+
+  $command = array_merge([$git_command], $args);
+
+  // Before PHP 7.4 proc_open() only accepts a string, which is run by a shell
+  if (PHP_VERSION_ID < 70400)
+  {
+    $command = implode(' ', array_map('escapeshellarg', $command));
+  }
+
+  $process = @proc_open($command, [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
+
+  if (!is_resource($process))
+  {
+    return null;
+  }
+
+  fclose($pipes[0]);
+  $stdout = stream_get_contents($pipes[1]);
+  stream_get_contents($pipes[2]);
+  fclose($pipes[1]);
+  fclose($pipes[2]);
+
+  if ((proc_close($process) !== 0) || ($stdout === false))
+  {
+    return null;
+  }
+
+  $result = strtok(trim($stdout), "\r\n");
+
+  return (is_string($result) && ($result !== '')) ? $result : null;
+}
+
+
 // This should probably be a class, but you can only have protected
 // class members in PHP 5, so we won't bother
 
@@ -14,22 +56,16 @@ function get_mrbs_version() : string
 
   $mrbs_version = "MRBS $mrbs_version_number";
 
-  if (function_exists('exec') && !function_disabled('exec'))
+  // We are only interested in success, so any failure just leaves out the git details
+  $branch = run_git($git_command, ['-C', MRBS_ROOT, 'rev-parse', '--abbrev-ref', 'HEAD']);
+
+  if (isset($branch))
   {
-    $git_executable = escapeshellarg($git_command);
-    $git_work_tree = escapeshellarg(MRBS_ROOT);
+    $commit = run_git($git_command, ['-C', MRBS_ROOT, 'rev-parse', '--short', 'HEAD']);
 
-    // Suppress any errors because we are only interested in success
-    $git_out = @exec("$git_executable -C $git_work_tree rev-parse --abbrev-ref HEAD", $output, $retval);
-
-    if (($retval == 0) && (strlen($git_out)))
+    if (isset($commit))
     {
-      $git_out2 = @exec("$git_executable -C $git_work_tree rev-parse --short HEAD", $output, $retval);
-
-      if (($retval == 0) && (strlen($git_out2)))
-      {
-        $mrbs_version .= "+git ($git_out $git_out2)";
-      }
+      $mrbs_version .= "+git ($branch $commit)";
     }
   }
 

@@ -729,7 +729,7 @@ function mrbsCheckPolicy(array $booking, ?int $ignore_entry_id=null, ?int $ignor
         if ($booking['end_time'] > $max_endtime)
         {
           $tag = (empty($exempt_types['max_duration_periods'])) ? 'max_booking_duration' : 'max_booking_duration_type';
-          $units = ($max_duration_periods > 1) ? get_vocab("periods") : get_vocab("period_lc");
+          $units = ($max_duration_periods > 1) ? get_vocab("periods") : get_vocab("period");
           $violations[] = get_vocab($tag, $max_duration_periods, $units, get_type_vocab($booking['type']));
         }
       }

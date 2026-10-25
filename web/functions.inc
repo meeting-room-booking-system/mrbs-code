@@ -5,13 +5,13 @@ namespace MRBS;
 use DateInterval;
 use DateTimeZone;
 use Email\Parse;
+use IntlDatePatternGenerator;
 use InvalidArgumentException;
 use MRBS\Form\Field;
 use MRBS\Form\FieldSelect;
 use MRBS\ICalendar\RFC5545;
 use IntlDateFormatter;
 use MRBS\Intl\IntlDateFormatterFactory;
-use MRBS\Intl\IntlDatePatternGenerator;
 use PHPMailer\PHPMailer\PHPMailer;
 use TypeError;
 
@@ -1053,6 +1053,12 @@ function toTimeString(int &$dur, &$units, bool $translate=true, ?string $max_uni
     $dur = sprintf('%.3f', $dur);
     $dur = rtrim($dur, '0');  // removes trailing zeros
   }
+  // Convert any single integer values from the plural to the singular
+  elseif ($dur === 1)
+  {
+    // TODO: This isn't very elegant. Eventually we should use something like the intl MessageFormatter class.
+    $units = rtrim($units, 's');
+  }
 
   // Translate into local language if required
   if ($translate)
@@ -1445,7 +1451,16 @@ function get_duration(int $start_time, int $end_time, bool $enable_periods, int 
     else
     {
       $result['duration'] = $n_periods;
-      $result['dur_units'] = ($translate) ? get_vocab('periods') : 'periods';
+      // Convert any single integer values from the plural to the singular
+      // TODO: This isn't very elegant. Eventually we should use something like the intl MessageFormatter class.
+      if ($n_periods === 1)
+      {
+        $result['dur_units'] = ($translate) ? get_vocab('period') : 'period';
+      }
+      else
+      {
+        $result['dur_units'] = ($translate) ? get_vocab('periods') : 'periods';
+      }
     }
   }
   else
@@ -2788,7 +2803,7 @@ function is_get_request() : bool
 {
   global $server;
 
-  return ($server['REQUEST_METHOD'] === 'GET');
+  return (isset($server['REQUEST_METHOD']) && $server['REQUEST_METHOD'] === 'GET');
 }
 
 

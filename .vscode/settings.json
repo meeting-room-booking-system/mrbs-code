@@ -1,0 +1,13 @@
+{
+  "files.associations":
+  {
+    "README.sqlapi": "plaintext",
+    "INSTALL": "plaintext",
+    "UPGRADE": "plaintext",
+    "AUTHENTICATION": "plaintext",
+    "COPYING": "plaintext",
+    "LICENSE": "plaintext",
+    "LANGUAGE": "plaintext",
+    "ChangeLog": "plaintext",
+  }
+}
