@@ -39,12 +39,13 @@ See [AUTHENTICATION](AUTHENTICATION) for information about user authentication/p
 
 ## Requirements
 
-- PHP 7.2 or above with MySQL and/or PostgreSQL support
+- PHP 7.2.5 or above with MySQL and/or PostgreSQL support
 - MySQL (5.5.3 and above) or PostgreSQL 9.6 or above
 - Any web server that is supported by PHP
 
 ### Recommended
 
+- The `intl` and `mbstring` PHP extensions.
 - JavaScript-enabled browser
 - PHP module connection to the server (also called SAPI) if you want to use any
 	of the basic HTTP authentication schemes provided.
