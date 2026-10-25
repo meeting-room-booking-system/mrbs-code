@@ -83,10 +83,31 @@ If you do create or improve a language file, please submit a Pull Request. Thank
 
 ## Language File Formats
 
+### Encoding
 The files are UTF-8 encoded.
 
-Some of the language strings include conversion specifications for `sprintf()`, for example `%s` or `%d`.  Be
-careful when the conversion specifications also include an argument index, for example `%1$s`,
+### Variable substitution
+Variable substitution in language strings can be handled in two different ways:
+
+#### 1. Using sprintf() conversion specifications
+For example `%s` or `%d` as in `"%d days"`.  This was the old way that MRBS used for variable substitution and
+not all strings have been converted yet. Even when they have been, it will probably still be supported for
+compatibility with existing `$vocab_override` configuration settings.
+
+Be careful when the conversion specifications also include an argument index, for example `%1$s`,
 to ensure that the language string is enclosed in single, rather than double quotes; otherwise, PHP will
 try and interpret the `$` as the start of a variable name, and generate an error because
 the variable name is not defined.
+
+#### 2. Using PHP's intl extension MessageFormatter patterns
+For example `"{0, plural, one {# day} other {# days}}"`.  This
+is the recommended method for variable substitution in language strings as it provides more flexibility and better
+localisation.  The handling of plurals, for example, differs from language to language, with some languages using
+different forms of the noun depending on the number of items.  Slovenian, for example, can have different forms
+for one, two, few and other.  Other languages have different forms for zero and many. The `intl` extension will
+generate the appropriate keyword (`zero`, `one`, `two`, `few`, `many`, or `other`) given the language and the number
+of items.
+
+Although the `intl` extension is recommended for best results, MRBS provides a very basic fallback mechanism if
+it is not available.  However the fallback will only produce `one` if the quantity is 1, otherwise `other`. For this
+reason all MessageFormatter patterns used in MRBS for plurals should contain an `other` option.
