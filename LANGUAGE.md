@@ -81,7 +81,7 @@ you will see the results of checking all available language files.
 
 If you do create or improve a language file, please submit a Pull Request. Thanks!
 
-# Language File Formats
+## Language File Formats
 
 The files are UTF-8 encoded.
 
