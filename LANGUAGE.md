@@ -108,6 +108,7 @@ for one, two, few and other.  Other languages have different forms for zero and 
 generate the appropriate keyword (`zero`, `one`, `two`, `few`, `many`, or `other`) given the language and the number
 of items.
 
-Although the `intl` extension is recommended for best results, MRBS provides a very basic fallback mechanism if
-it is not available.  However the fallback will only produce `one` if the quantity is 1, otherwise `other`. For this
+Although the `intl` extension is recommended for the best results, MRBS provides a fallback mechanism if
+it is not available.  However, the fallback is very basic and, for plurals, will only produce `one` if the
+quantity is 1, otherwise `other`. For this
 reason all MessageFormatter patterns used in MRBS for plurals should contain an `other` option.
