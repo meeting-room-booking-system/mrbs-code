@@ -39,7 +39,7 @@ See [AUTHENTICATION](AUTHENTICATION) for information about user authentication/p
 
 ## Requirements
 
-- PHP 7.2 or above with MySQL and/or PostgreSQL support
+- PHP 7.2.5 or above with MySQL and/or PostgreSQL support
 - MySQL (5.5.3 and above) or PostgreSQL 8.2 or above
 - Any web server that is supported by PHP
 
