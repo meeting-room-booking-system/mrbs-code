@@ -45,6 +45,7 @@ See [AUTHENTICATION](AUTHENTICATION) for information about user authentication/p
 
 ### Recommended
 
+- The `intl` and `mbstring` PHP extensions.
 - JavaScript-enabled browser
 - PHP module connection to the server (also called SAPI) if you want to use any
 	of the basic HTTP authentication schemes provided.
