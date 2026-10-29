@@ -1487,10 +1487,7 @@ function get_duration_string(int $start_time, int $end_time, int $area_id, ?stri
     }
   }
 
-  if (!isset($locale))
-  {
-    $locale = Language::getInstance()->getWebLocale();
-  }
+  $locale = $locale ?? Language::getInstance()->getWebLocale();
 
   if ($area_details[$area_id]['enable_periods'])
   {
@@ -1530,26 +1527,16 @@ function get_duration_string_times(int $start_time, int $end_time, ?string $loca
 {
   global $timezone;
 
-  if (!isset($locale))
-  {
-    $locale = Language::getInstance()->getWebLocale();
-  }
-
-  if (!isset($tzid))
-  {
-    $tzid = $timezone;
-  }
-
-  if (!isset($max_unit))
-  {
-    $max_unit = 'years';
-  }
+  $locale = $locale ?? Language::getInstance()->getWebLocale();
+  $tzid = $tzid ?? $timezone;
+  $max_unit = $max_unit ?? 'years';
 
   $duration = $end_time - $start_time;
   // Correct the duration if it crosses a DST boundary so that it is expressed as a nominal duration.
   // For example, 12 noon to 12 noon crossing a DST boundary is 24 hours.
   $duration -= cross_dst($start_time, $end_time, $tzid);
 
+  list('value' => $value, 'units' => $units) = to_time_string_canonical();
   // TODO
   // fill in from toTimeString
 }
