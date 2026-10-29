@@ -1541,13 +1541,13 @@ function get_duration_string(int $start_time, int $end_time, int $area_id, ?stri
  * example, if the duration is 24 hours and `$max_unit` is set to 'hours' the result will be 24 hours rather than 1 day.
  * @return string
  */
-function get_duration_string_times(int $start_time, int $end_time, ?string $locale=null, ?string $tzid=null, ?string $max_unit=null) : string
+function get_duration_string_times(int $start_time, int $end_time, ?string $locale=null, ?string $tzid=null, string $max_unit='weeks') : string
 {
+  // TODO: 'years' are not proper years; they are periods of 52 weeks.  Remove them?
   global $timezone;
 
   $locale = $locale ?? Language::getInstance()->getWebLocale();
   $tzid = $tzid ?? $timezone;
-  $max_unit = $max_unit ?? 'years';
 
   $duration = $end_time - $start_time;
   // Correct the duration if it crosses a DST boundary so that it is expressed as a nominal duration.
