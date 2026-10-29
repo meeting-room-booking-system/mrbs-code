@@ -988,38 +988,37 @@ function print_footer(bool $and_exit=false) : void
 }
 
 
-// Converts a duration of $dur seconds into a duration of
-// $dur $units
-// $max_unit can be set to 'seconds', 'minutes', 'hours', etc. and
-// is used to specify a maximum size of unit to use.  For example if
-// it is set to 'minutes', 3600 seconds will give 60 minutes rather
-// than 1 hour.
-function toTimeString(int &$dur, &$units, bool $translate=true, ?string $max_unit=null)
+/**
+ * Convert a duration of seconds into the largest unit of time that has a value greater than or equal to 1.
+ * For example, 3600 seconds will give 1 hour, 86400 seconds will give 1 day, etc.
+ *
+ * @param int $seconds
+ * @param 'seconds'|'minutes'|'hours'|'days'|'weeks'|'years' $max_unit
+ * @return array{value: int, units: 'seconds'|'minutes'|'hours'|'days'|'weeks'|'years'}
+ */
+function to_time_string_canonical(int $seconds, string $max_unit='years') : array
 {
-  if (!isset($max_unit))
-  {
-    $max_unit = 'years';
-  }
+  $value = $seconds;
 
-  if (($max_unit != 'seconds') && (abs($dur) >= 60) && ($dur % 60 == 0))
+  if (($max_unit != 'seconds') && (abs($value) >= 60) && ($value % 60 == 0))
   {
-    $dur /= 60;
+    $value /= 60;
 
-    if (($max_unit != 'minutes') && (abs($dur) >= 60) && ($dur % 60 == 0))
+    if (($max_unit != 'minutes') && (abs($value) >= 60) && ($value % 60 == 0))
     {
-      $dur /= 60;
+      $value /= 60;
 
-      if(($max_unit != 'hours') && ((abs($dur) >= 24) && ($dur % 24 == 0)))
+      if(($max_unit != 'hours') && ((abs($value) >= 24) && ($value % 24 == 0)))
       {
-        $dur /= 24;
+        $value /= 24;
 
-        if(($max_unit != 'days') && ((abs($dur) >= DAYS_PER_WEEK) && ($dur % DAYS_PER_WEEK == 0)))
+        if(($max_unit != 'days') && ((abs($value) >= DAYS_PER_WEEK) && ($value % DAYS_PER_WEEK == 0)))
         {
-          $dur /= DAYS_PER_WEEK;
+          $value /= DAYS_PER_WEEK;
 
-          if (($max_unit != 'weeks') && ((abs($dur) >= 52) && ($dur % 52 == 0)))
+          if (($max_unit != 'weeks') && ((abs($value) >= 52) && ($value % 52 == 0)))
           {
-            $dur  /= 52;
+            $value  /= 52;
             $units = 'years';
           }
           else
@@ -1046,6 +1045,25 @@ function toTimeString(int &$dur, &$units, bool $translate=true, ?string $max_uni
   {
     $units = 'seconds';
   }
+
+  return ['value' => $value, 'units' => $units];
+}
+
+
+// Converts a duration of $dur seconds into a duration of
+// $dur $units
+// $max_unit can be set to 'seconds', 'minutes', 'hours', etc. and
+// is used to specify a maximum size of unit to use.  For example if
+// it is set to 'minutes', 3600 seconds will give 60 minutes rather
+// than 1 hour.
+function toTimeString(int &$dur, &$units, bool $translate=true, ?string $max_unit=null)
+{
+  if (!isset($max_unit))
+  {
+    $max_unit = 'years';
+  }
+
+  list('value' => $dur, 'units' => $units) = to_time_string_canonical($dur, $max_unit);
 
   // Limit any floating point values to three decimal places
   if (is_float($dur))
@@ -1519,7 +1537,7 @@ function get_duration_string(int $start_time, int $end_time, int $area_id, ?stri
  * @param string|null $locale The locale to use for the result. If NULL, the current setting for browser output is used.
  * @param string|null $tzid The timezone that the start and end times are in. If NULL, the timezone for the current area
  * is used.
- * @param null|'seconds|minutes|hours|days|weeks|years' $max_unit The maximum unit of time to use for the duration. For
+ * @param null|'seconds'|'minutes'|'hours'|'days'|'weeks'|'years' $max_unit The maximum unit of time to use for the duration. For
  * example, if the duration is 24 hours and `$max_unit` is set to 'hours' the result will be 24 hours rather than 1 day.
  * @return string
  */
@@ -1536,7 +1554,7 @@ function get_duration_string_times(int $start_time, int $end_time, ?string $loca
   // For example, 12 noon to 12 noon crossing a DST boundary is 24 hours.
   $duration -= cross_dst($start_time, $end_time, $tzid);
 
-  list('value' => $value, 'units' => $units) = to_time_string_canonical();
+  list('value' => $value, 'units' => $units) = to_time_string_canonical($duration, $max_unit);
   // TODO
   // fill in from toTimeString
 }
