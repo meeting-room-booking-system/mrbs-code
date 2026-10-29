@@ -1555,8 +1555,8 @@ function get_duration_string_times(int $start_time, int $end_time, ?string $loca
   $duration -= cross_dst($start_time, $end_time, $tzid);
 
   list('value' => $value, 'units' => $units) = to_time_string_canonical($duration, $max_unit);
-  // TODO
-  // fill in from toTimeString
+
+  return Language::getInstance()->getVocab("duration_$units", $locale, $value);
 }
 
 // Escape a PHP variable for use in HTML
