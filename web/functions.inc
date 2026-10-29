@@ -1510,9 +1510,49 @@ function get_duration_string(int $start_time, int $end_time, int $area_id, ?stri
     }
   }
 
-  return get_duration_string_times($start_time, $end_time, $area_id, $locale);
+  return get_duration_string_times($start_time, $end_time, $locale, $area_details[$area_id]['timezone']);
 }
 
+
+/**
+ * Get a time duration as a string, for example "2 hours" or "1 jour".
+ *
+ * @param int $start_time A Unix timestamp
+ * @param int $end_time A Unix timestamp
+ * @param string|null $locale The locale to use for the result. If NULL, the current setting for browser output is used.
+ * @param string|null $tzid The timezone that the start and end times are in. If NULL, the timezone for the current area
+ * is used.
+ * @param null|'seconds|minutes|hours|days|weeks|years' $max_unit The maximum unit of time to use for the duration. For
+ * example, if the duration is 24 hours and `$max_unit` is set to 'hours' the result will be 24 hours rather than 1 day.
+ * @return string
+ */
+function get_duration_string_times(int $start_time, int $end_time, ?string $locale=null, ?string $tzid=null, ?string $max_unit=null) : string
+{
+  global $timezone;
+
+  if (!isset($locale))
+  {
+    $locale = Language::getInstance()->getWebLocale();
+  }
+
+  if (!isset($tzid))
+  {
+    $tzid = $timezone;
+  }
+
+  if (!isset($max_unit))
+  {
+    $max_unit = 'years';
+  }
+
+  $duration = $end_time - $start_time;
+  // Correct the duration if it crosses a DST boundary so that it is expressed as a nominal duration.
+  // For example, 12 noon to 12 noon crossing a DST boundary is 24 hours.
+  $duration -= cross_dst($start_time, $end_time, $tzid);
+
+  // TODO
+  // fill in from toTimeString
+}
 
 // Escape a PHP variable for use in HTML
 function escape_html($value)
@@ -2576,16 +2616,23 @@ function is_invalid_datetime(int $hour, int $minute, int $second, int $month, in
  *
  * @param int $start A Unix timestamp
  * @param int $end A Unix timestamp
+ * @param string|null $tzid The timezone to use (defaults to the current timezone)
  * @return int The modification in seconds.
+ * @throws \DateInvalidTimeZoneException
  */
-function cross_dst(int $start, int $end) : int
+function cross_dst(int $start, int $end, ?string $tzid=null) : int
 {
   global $timezone;
+
+  if (!isset($tzid))
+  {
+    $tzid = $timezone;
+  }
 
   // Calculate the modification using the DateTimeZone information rather than date('I', $time),
   // because not all DST transitions are 1 hour.  For example, Lord Howe Island in Australia
   // has a 30-minute transition.
-  $thisDateTimeZone = new DateTimeZone($timezone);
+  $thisDateTimeZone = new DateTimeZone($tzid);
   $startDateTime = (new DateTime('now', $thisDateTimeZone))->setTimestamp($start);
   $endDateTime = (new DateTime('now', $thisDateTimeZone))->setTimestamp($end);
   return $startDateTime->getOffset() - $endDateTime->getOffset();
