@@ -82,7 +82,13 @@ $vocab["years"]              = "év";
 // gkiss - ez nem biztos hogy jó!
 $vocab["period"]             = "ismétlődés";
 $vocab["periods"]            = "ismétlődés";
+$vocab["duration_seconds"]   = "{0, plural, one {# másodperc} other {# másodperc}}";
+$vocab["duration_minutes"]   = "{0, plural, one {# perc} other {# perc}}";
+$vocab["duration_hours"]     = "{0, plural, one {# óra} other {# óra}}";
 $vocab["duration_days"]      = "{0, plural, one {# nap} other {# nap}}";
+$vocab["duration_weeks"]     = "{0, plural, one {# hét} other {# hét}}";
+$vocab["duration_months"]    = "{0, plural, one {# hónap} other {# hónap}}";
+$vocab["duration_years"]     = "{0, plural, one {# év} other {# év}}";
 $vocab["duration_periods"]   = "{0, plural, one {# ismétlődés} other {# ismétlődés}}";
 $vocab["all_day"]            = "Egész nap";
 $vocab["area"]               = "Hely";
