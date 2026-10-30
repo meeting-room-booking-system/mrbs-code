@@ -1493,7 +1493,7 @@ function get_duration(int $start_time, int $end_time, bool $enable_periods, int 
 }
 
 
-function get_duration_string(int $start_time, int $end_time, int $area_id, ?string $locale=null) : string
+function get_duration_string(int $start_time, int $end_time, int $area_id, ?string $lang=null) : string
 {
   static $area_details = [];
 
@@ -1505,7 +1505,7 @@ function get_duration_string(int $start_time, int $end_time, int $area_id, ?stri
     }
   }
 
-  $locale = $locale ?? Language::getInstance()->getWebLocale();
+  $lang = $lang ?? Language::getInstance()->getWebLang();
 
   if ($area_details[$area_id]['enable_periods'])
   {
@@ -1513,11 +1513,11 @@ function get_duration_string(int $start_time, int $end_time, int $area_id, ?stri
     $total_periods = get_period_interval($start_time, $end_time, $area_id);  // this handles DST
     $n_days = intval($total_periods/$periods_per_day);
     $n_periods = $total_periods % $periods_per_day;
-    $day_string = ($n_days > 0) ? Language::getInstance()->getVocab('duration_days', $locale, $n_days) : null;
-    $period_string = ($n_periods > 0) ? Language::getInstance()->getVocab('duration_periods', $locale, $n_periods) : null;
+    $day_string = ($n_days > 0) ? Language::getInstance()->getVocab('duration_days', $lang, $n_days) : null;
+    $period_string = ($n_periods > 0) ? Language::getInstance()->getVocab('duration_periods', $lang, $n_periods) : null;
     if (isset($day_string) && isset($period_string))
     {
-      return Language::getInstance()->getVocab('days_and_subunits', $locale, $day_string, $period_string);
+      return Language::getInstance()->getVocab('days_and_subunits', $lang, $day_string, $period_string);
     }
     else
     {
@@ -1525,7 +1525,7 @@ function get_duration_string(int $start_time, int $end_time, int $area_id, ?stri
     }
   }
 
-  return get_duration_string_times($start_time, $end_time, $locale, $area_details[$area_id]['timezone']);
+  return get_duration_string_times($start_time, $end_time, $lang, $area_details[$area_id]['timezone']);
 }
 
 
@@ -1534,19 +1534,19 @@ function get_duration_string(int $start_time, int $end_time, int $area_id, ?stri
  *
  * @param int $start_time A Unix timestamp
  * @param int $end_time A Unix timestamp
- * @param string|null $locale The locale to use for the result. If NULL, the current setting for browser output is used.
+ * @param string|null $lang The language to use for the result. If NULL, the current setting for browser output is used.
  * @param string|null $tzid The timezone that the start and end times are in. If NULL, the timezone for the current area
  * is used.
  * @param null|'seconds'|'minutes'|'hours'|'days'|'weeks'|'years' $max_unit The maximum unit of time to use for the duration. For
  * example, if the duration is 24 hours and `$max_unit` is set to 'hours' the result will be 24 hours rather than 1 day.
  * @return string
  */
-function get_duration_string_times(int $start_time, int $end_time, ?string $locale=null, ?string $tzid=null, string $max_unit='weeks') : string
+function get_duration_string_times(int $start_time, int $end_time, ?string $lang=null, ?string $tzid=null, string $max_unit='weeks') : string
 {
   // TODO: 'years' are not proper years; they are periods of 52 weeks.  Remove them?
   global $timezone;
 
-  $locale = $locale ?? Language::getInstance()->getWebLocale();
+  $lang = $lang ?? Language::getInstance()->getWebLang();
   $tzid = $tzid ?? $timezone;
 
   $duration = $end_time - $start_time;
@@ -1556,7 +1556,7 @@ function get_duration_string_times(int $start_time, int $end_time, ?string $loca
 
   list('value' => $value, 'units' => $units) = to_time_string_canonical($duration, $max_unit);
 
-  return Language::getInstance()->getVocab("duration_$units", $locale, $value);
+  return Language::getInstance()->getVocab("duration_$units", $lang, $value);
 }
 
 // Escape a PHP variable for use in HTML
