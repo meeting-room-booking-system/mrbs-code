@@ -115,8 +115,8 @@ class MessageFormatter
     public function setPattern(string $pattern)
     {
         try {
-            $tokens = self::tokenizePattern($pattern);
-            self::validateTokens($tokens);
+            $tokens = MessageFormatterHelper::tokenizePattern($pattern);
+            MessageFormatterHelper::validateTokens($tokens);
             $this->tokens = $tokens;
             $this->pattern = $pattern;
         } catch (\DomainException $e) {
@@ -169,105 +169,6 @@ class MessageFormatter
         return implode('', $tokens);
     }
 
-    private static function validateTokens(array $tokens): void
-    {
-        foreach ($tokens as $token) {
-            if (!\is_array($token)) {
-                continue;
-            }
-            $type = isset($token[1]) ? trim($token[1]) : 'none';
-            switch ($type) {
-                case 'none':
-                case 'number':
-                case 'date':
-                case 'time':
-                case 'spellout':
-                case 'ordinal':
-                case 'duration':
-                case 'choice':
-                    break;
-                case 'selectordinal':
-                case 'plural':
-                case 'select':
-                    if (!isset($token[2])) {
-                        throw new \DomainException('Message pattern is invalid.');
-                    }
-                    $sub = self::tokenizePattern($token[2]);
-                    $c = \count($sub);
-                    if ($c < 2) {
-                        throw new \DomainException('Message pattern is invalid.');
-                    }
-                    $hasOther = false;
-                    for ($i = 0; 1 + $i < $c; $i += 2) {
-                        if (\is_array($sub[$i]) || !\is_array($sub[1 + $i])) {
-                            throw new \DomainException('Message pattern is invalid.');
-                        }
-                        $selector = trim($sub[$i]);
-                        if ('select' !== $type && 0 === $i && 0 === strncmp($selector, 'offset:', 7)) {
-                            $offsetEnd = strpos(str_replace(["\n", "\r", "\t"], ' ', $selector), ' ', 7);
-                            $selector = false !== $offsetEnd ? trim(substr($selector, 1 + $offsetEnd)) : '';
-                        }
-                        if ('other' === $selector) {
-                            $hasOther = true;
-                        }
-                        self::validateTokens(self::tokenizePattern(implode(',', $sub[1 + $i])));
-                    }
-                    if (!$hasOther) {
-                        throw new \DomainException('Message pattern is invalid.');
-                    }
-                    break;
-                default:
-                    throw new \DomainException('Message pattern is invalid.');
-            }
-        }
-    }
-
-    private static function tokenizePattern($pattern)
-    {
-        if (false === $start = $pos = strpos($pattern, '{')) {
-            return [$pattern];
-        }
-
-        $depth = 1;
-        $tokens = [substr($pattern, 0, $pos)];
-
-        while (true) {
-            $open = strpos($pattern, '{', 1 + $pos);
-            $close = strpos($pattern, '}', 1 + $pos);
-
-            if (false === $open) {
-                if (false === $close) {
-                    break;
-                }
-                $open = \strlen($pattern);
-            }
-
-            if ($close > $open) {
-                ++$depth;
-                $pos = $open;
-            } else {
-                --$depth;
-                $pos = $close;
-            }
-
-            if (0 === $depth) {
-                $tokens[] = explode(',', substr($pattern, 1 + $start, $pos - $start - 1), 3);
-                $start = 1 + $pos;
-                $tokens[] = substr($pattern, $start, $open - $start);
-                $start = $open;
-            }
-
-            if (0 !== $depth && (false === $open || false === $close)) {
-                break;
-            }
-        }
-
-        if ($depth) {
-            throw new \DomainException('Message pattern is invalid.');
-        }
-
-        return $tokens;
-    }
 
     /**
      * Parses pattern based on ICU grammar.
@@ -317,7 +218,7 @@ class MessageFormatter
                 if (!isset($token[2])) {
                     throw new \DomainException('Message pattern is invalid.');
                 }
-                $select = self::tokenizePattern($token[2]);
+                $select = MessageFormatterHelper::tokenizePattern($token[2]);
                 $c = \count($select);
                 $message = false;
                 for ($i = 0; 1 + $i < $c; ++$i) {
@@ -330,7 +231,7 @@ class MessageFormatter
                     }
                 }
                 if (false !== $message) {
-                    return self::parseTokens(self::tokenizePattern($message), $values, $locale);
+                    return self::parseTokens(MessageFormatterHelper::tokenizePattern($message), $values, $locale);
                 }
                 break;
 
@@ -347,7 +248,7 @@ class MessageFormatter
                 if (!isset($token[2])) {
                     throw new \DomainException('Message pattern is invalid.');
                 }
-                $plural = self::tokenizePattern($token[2]);
+                $plural = MessageFormatterHelper::tokenizePattern($token[2]);
                 $c = \count($plural);
                 $message = false;
                 $offset = 0;
@@ -379,7 +280,7 @@ class MessageFormatter
                     }
                 }
                 if (false !== $message) {
-                    $message = self::tokenizePattern(implode(',', $message));
+                    $message = MessageFormatterHelper::tokenizePattern(implode(',', $message));
                     // Replace # outside of nested arguments only
                     foreach ($message as $j => $part) {
                         if (\is_string($part)) {
@@ -465,9 +366,10 @@ class MessageFormatter
         return $sign.preg_replace('/\B(?=(?:\d{3})+$)/', ',', $int).('' === $fraction ? '' : '.'.$fraction);
     }
 
-  /**
-   * Formats a number, taking account of the locale.
-   */
+
+    /**
+     * Formats a number, taking account of the locale.
+     */
     private static function formatNumberLocale($number, string $locale, int $maxFractionDigits = 3): string
     {
       // Use the MRBS version of NumberFormatter: if we are using this version of MessageFormatter, we can't
@@ -475,4 +377,5 @@ class MessageFormatter
       $number_formatter = new NumberFormatter($locale, NumberFormatter::DEFAULT_STYLE);
       return $number_formatter->format($number);
     }
+
 }
