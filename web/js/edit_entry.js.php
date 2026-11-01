@@ -792,50 +792,8 @@ function checkConflicts(optional)
       }, 'json');
   }, timeout);  <?php // setTimeout() ?>
 
-} <?php // function checkConflicts()
+} <?php // function checkConflicts() ?>
 
-
-// Get the current vocab (in the appropriate language) for periods,
-// minutes, hours and days
-?>
-const vocab = {};
-vocab.periods = {singular: '<?php echo get_js_vocab("period") ?>',
-                 plural:   '<?php echo get_js_vocab("periods") ?>'};
-vocab.minutes = {singular: '<?php echo get_js_vocab("minute") ?>',
-                 plural:   '<?php echo get_js_vocab("minutes") ?>'};
-vocab.hours   = {singular: '<?php echo get_js_vocab("hour") ?>',
-                 plural:   '<?php echo get_js_vocab("hours") ?>'};
-vocab.days    = {singular: '<?php echo get_js_vocab("day") ?>',
-                 plural:   '<?php echo get_js_vocab("days") ?>'};
-
-
-<?php
-// Removes any trailing zeroes after the decimal point.
-?>
-function durFormat(r)
-{
-  let lastChar;
-
-  r = r.toFixed(2);
-  r = parseFloat(r);
-  r = r.toLocaleString(args.langPrefs);
-
-  if ((r.indexOf('.') >= 0) || (r.indexOf(',') >= 0))
-  {
-    while (r.slice(-1) === '0')
-    {
-      r = r.slice(0, -1);
-    }
-
-    lastChar = r.slice(-1);
-    if ((lastChar === '.') || (lastChar === ','))
-    {
-      r = r.slice(0, -1);
-    }
-  }
-
-  return r;
-}
 
 <?php
 // Returns a string giving the duration having chosen sensible units,
