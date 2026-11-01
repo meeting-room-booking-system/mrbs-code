@@ -806,6 +806,10 @@ function checkConflicts(optional)
 ?>
 function getDuration(from, to, days)
 {
+  // TODO: 1. Escape vocab strings for JavaScript?
+  // TODO: 2. Use $vocab["days_and_subunits"]
+  // TODO: 3. Use args.langs as well as/ instead of $lang?
+
   let duration, durUnits;
   let text = '';
   const currentArea = $('#area').data('current');
