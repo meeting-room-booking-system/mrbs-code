@@ -424,10 +424,11 @@ class Language
    *
    * The string can be an intl MessageFormatter pattern, or a string that can be formatted using sprintf().
    *
+   * @param bool $raw If true, return the raw vocab string without value substitution.
    * @param mixed ...$values Optional values to be inserted into the string, as for sprintf()
    * @return string The vocab string, or the tag itself if there is no string.
    */
-  public function getVocab(string $tag, string $locale, ...$values) : string
+  public function getVocab(string $tag, string $locale, bool $raw=false, ...$values) : string
   {
     static $vocab;
 
@@ -440,6 +441,11 @@ class Language
     if (!isset($vocab[$locale][$tag]))
     {
       return $tag;
+    }
+
+    if ($raw)
+    {
+      return $vocab[$locale][$tag];
     }
 
     // If the vocab string looks like an intl MessageFormatter pattern, use MessageFormatter to format it.

@@ -25,7 +25,7 @@ require_once "mrbs_sql.inc";
  */
 function get_vocab(string $tag, ...$values) : string
 {
-  return Language::getInstance()->getVocab($tag, Language::getInstance()->getWebLang(), ...$values);
+  return Language::getInstance()->getVocab($tag, Language::getInstance()->getWebLang(), false, ...$values);
 }
 
 
@@ -35,7 +35,7 @@ function get_vocab(string $tag, ...$values) : string
  */
 function get_mail_vocab(string $tag, ...$values) : string
 {
-  return Language::getInstance()->getVocab($tag, Language::getInstance()->getMailLang(), ...$values);
+  return Language::getInstance()->getVocab($tag, Language::getInstance()->getMailLang(), false, ...$values);
 }
 
 
@@ -1513,11 +1513,11 @@ function get_duration_string(int $start_time, int $end_time, int $area_id, ?stri
     $total_periods = get_period_interval($start_time, $end_time, $area_id);  // this handles DST
     $n_days = intval($total_periods/$periods_per_day);
     $n_periods = $total_periods % $periods_per_day;
-    $day_string = ($n_days > 0) ? Language::getInstance()->getVocab('duration_days', $lang, $n_days) : null;
-    $period_string = ($n_periods > 0) ? Language::getInstance()->getVocab('duration_periods', $lang, $n_periods) : null;
+    $day_string = ($n_days > 0) ? Language::getInstance()->getVocab('duration_days', $lang, false, $n_days) : null;
+    $period_string = ($n_periods > 0) ? Language::getInstance()->getVocab('duration_periods', $lang, false, $n_periods) : null;
     if (isset($day_string) && isset($period_string))
     {
-      return Language::getInstance()->getVocab('days_and_subunits', $lang, $day_string, $period_string);
+      return Language::getInstance()->getVocab('days_and_subunits', $lang, false, $day_string, $period_string);
     }
     else
     {
@@ -1556,7 +1556,7 @@ function get_duration_string_times(int $start_time, int $end_time, ?string $lang
 
   list('value' => $value, 'units' => $units) = to_time_string_canonical($duration, $max_unit);
 
-  return Language::getInstance()->getVocab("duration_$units", $lang, $value);
+  return Language::getInstance()->getVocab("duration_$units", $lang, false, $value);
 }
 
 // Escape a PHP variable for use in HTML

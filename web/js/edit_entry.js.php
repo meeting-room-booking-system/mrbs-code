@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace MRBS;
 
-require "../defaultincludes.inc";
+use MRBS\Intl\MessageFormatterHelper;require "../defaultincludes.inc";
 
 http_headers(array("Content-type: application/x-javascript"),
              60*30);  // 30-minute expiry
@@ -855,6 +855,17 @@ function getDuration(from, to, days)
   let durDays;
   const minutesPerDay = <?php echo MINUTES_PER_DAY ?>;
 
+  const pluralStrings = {};
+  <?php
+  $lang = Language::getInstance()->getWebLang();
+  echo "const lang = '$lang';\n";
+  foreach (['minutes', 'hours', 'days', 'periods'] as $units)
+  {
+    $pattern = Language::getInstance()->getVocab("duration_$units", $lang, true);
+    $plural_strings = MessageFormatterHelper::getPluralStrings($pattern);
+    echo "pluralStrings.$units = " . json_encode($plural_strings) . ";\n";
+  }
+  ?>
 
   durUnits = (enablePeriods) ? '<?php echo "periods" ?>' : '<?php echo "minutes" ?>';
   duration = Math.floor((to - from) / 60);
@@ -878,30 +889,24 @@ function getDuration(from, to, days)
   if (!enablePeriods && (duration >= 60))
   {
     durUnits = "hours";
-    duration = durFormat(duration/60);
+    duration = duration/60;
   }
 
-  <?php
-  // As durFormat returns a string, duration can now be either
-  // a number or a string, so convert it to a string so that we
-  // know what we are dealing with
-  ?>
-  duration = duration.toString();
+  const pluralRules = new Intl.PluralRules(lang);
+  const numberFormat = new Intl.NumberFormat(lang);
 
   if (days !== 0)
   {
-    text += days + ' ';
-    text += (days === 1) ? vocab.days.singular : vocab.days.plural;
+    text += pluralStrings.days[pluralRules.select(days)].replace('#', numberFormat.format(days));
     if (duration !== '0')
     {
       text +=  ', ';
     }
   }
 
-  if (duration !== '0')
+  if (duration !== 0)
   {
-    text += duration + ' ';
-    text += (duration === '1') ? vocab[durUnits].singular : vocab[durUnits].plural;
+    text += pluralStrings[durUnits][pluralRules.select(duration)].replace('#', numberFormat.format(duration));
   }
 
   return text;
