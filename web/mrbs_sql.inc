@@ -1768,6 +1768,8 @@ function mrbsApproveEntry($id, $series)
 
   if (($start_times !== FALSE) && (count($start_times) != 0))
   {
+    // Not all database drivers will have returned an array of ints
+    $start_times = array_map('intval', $start_times);
     $sql = "UPDATE " . _tbl('entry') . "
                SET status=status&(~" . STATUS_AWAITING_APPROVAL . "),
                    ical_sequence=ical_sequence+1
