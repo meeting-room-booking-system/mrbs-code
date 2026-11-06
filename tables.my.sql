@@ -89,6 +89,7 @@ CREATE TABLE mrbs_room
   room_admin_email text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   invalid_types    varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'JSON encoded',
   custom_html      text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  show_info_calendar tinyint DEFAULT 0 NOT NULL,
 
   PRIMARY KEY (id),
   FOREIGN KEY (area_id)
@@ -247,6 +248,6 @@ CREATE TABLE mrbs_users
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '82');
+  VALUES ( 'db_version', '83');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');

@@ -574,6 +574,8 @@ $vocab["max_secs_per_year"]       = "Maximum time per year";
 $vocab["max_secs_per_future"]     = "Maximum time in the future";
 $vocab["custom_html"]             = "Custom HTML";
 $vocab["custom_html_note"]        = "This field can be used for displaying your own HTML, for example an embedded Google map";
+$vocab["show_info_calendar"]      = "Show additional information in the calendar";
+$vocab["show_info_calendar_note"] = "Display a button in the calendar that opens this room's custom HTML";
 $vocab["email_list_note"]         = "Enter a list of email addresses separated by commas";
 $vocab["mode"]                    = "Mode";
 $vocab["mode_periods"]            = "Periods";
@@ -734,4 +736,3 @@ $vocab["session_expired"]    = "Your session has expired.";
 $vocab["browser_not_supported"] = "Unfortunately your browser isn't supported by %s.  You will need to upgrade to a more " .
                                   "recent version, or else use another browser.";
 $vocab["back"]               = "Back";
-

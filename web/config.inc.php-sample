@@ -89,4 +89,9 @@ $db_persist = false;
    to change the default configuration. Do _NOT_ modify systemdefaults.inc.php
    or areadefaults.inc.php.  */
 
+// To allow selected rooms to display their custom HTML in a dialog from the
+// calendar, enable both settings below.  Then edit each room and select
+// "Show additional information in the calendar".
+//$auth['allow_custom_html'] = true;
+//$show_room_info_in_calendar = true;
 
