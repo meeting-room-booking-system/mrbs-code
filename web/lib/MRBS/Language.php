@@ -440,7 +440,8 @@ class Language
     // Return the tag itself if we can't find a vocab string
     if (!isset($vocab[$locale][$tag]))
     {
-      return $tag;
+      // Vocab strings are trusted as they are supplied by the site, but tags cannot be trusted, so escape them here.
+      return escape_html($tag);
     }
 
     if ($raw)

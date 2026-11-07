@@ -1,10 +1,147 @@
 [============================]
-[   Mrbs NEWS Legend:        ]
+[   MRBS NEWS Legend:        ]
 [                            ]
 [ + Added feature            ]
 [ * Improved/changed feature ]
 [ - Bug fixed (we hope)      ]
 [============================]
+
+-------------------------------------------------------------------------------
+Version 1.12.3 (Sat 7th November 2026):
+
+[-] Fix command injection vulnerability in 'ext' authentication by running the external
+ program with proc_open() and an array of arguments, rather than building a shell command
+ line.  $auth["params"] can now also be an array, which should be used if an argument
+ contains spaces; a string is split on whitespace.  Thanks to Artur Chlebicki (GitHub:
+ @Artur12555) for reporting the vulnerability.  See GitHub Security Advisory
+ GHSA-m25x-gcj8-36f9.
+
+[*] Do not support 'ext' authentication on Windows when using a version of PHP affected by
+ CVE-2024-5585.
+
+[-] Prevent reflected XSS attacks by escaping unknown tags in language strings.  Thanks
+ to leediay153 (GitHub: @leediay153) for reporting the vulnerability.  See GitHub
+ Security Advisory GHSA-5wqw-q7gh-j65v.
+
+[-] Fix bug causing an uncaught exception when moving a room to an area that
+ already has a room with the same name.
+
+[-] Prevent "git: not found" appearing on the console when git is unavailable.
+ See GitHub PR #4068.
+
+[*] Remove use of the deprecated Is class by upgrading Guzzle to Version 7.16.0,
+ Promises to Version 2.6.0 and Psr7 to Version 2.13.2.
+
+[-] Fix "Undefined array key REQUEST_METHOD" warning when running report.php
+ from the CLI when $report_unauthenticated_get_enabled is set.  See GitHub Issue
+ #3742.
+
+[-] Fix bug preventing logon to WordPress after an incorrect login.
+
+[-] Fix bug when logging in with a gmail.com/googlemail.com address using
+ PostgreSQL and 'db' authentication.  See GitHub Issue #4022.
+
+[-] Fix bug where administrators were not automatically booking
+ administrators.  See GitHub Issue #4038.
+
+[+] Add automatic refreshing of the current user's data after a configurable
+ interval.  See GitHub Issue #4004.
+
+[*] Upgrade to jQuery Version 4.0.0 and Select2 Version 4.1.0.
+
+[-] Fix bug introduced when jQuery was upgraded to Version 4 causing Search to
+ ignore the search string and from date.
+
+[-] Fix bug causing a DataTables error "Invalid JSON response".
+
+[-] Fix problem causing stale data from a previous Ajax refresh request to be
+ used after navigating to a different date.
+
+[-] Fix problems with drag selection when using the browser's Back button.
+
+[-] Fix TypeError when logging out from the index page when there is no public
+ access.
+
+[-] Fix bug causing a CSRF token mismatch when using a session scheme, eg 'http',
+ that does not require a login form.
+
+[*] Regenerate the session ID if the user's access level changes.
+
+[*] Improve localisation of the start-of-last-slot selector when editing areas.
+
+[*] Upgrade to Release 3.9.0 of Email\Parse and add compatibility with PHP
+ versions earlier than 8.1.
+
+[*] Upgrade to PHPMailer Version 7.1.1.
+
+[-] Fix bug when using syntax_upsert() with an external database connection.
+
+[*] Improve performance when using the 'wordpress' and 'joomla' authentication types.
+ See GitHub Issue #4046.
+
+[-] Fix bug making it impossible to enter kiosk mode when using Joomla.
+
+[-] Fix bug preventing logon when using Joomla.
+
+[-] Use singular version of time units in durations, eg '1 hour' instead of '1 hours'.
+ See GitHub Issue #4061.
+
+[*] Update the Russian language file.  See GitHub PR #4060.
+
+[-] Fix representation of dates in week ranges when in the Norwegian locale.  See GitHub
+ Issue #4055.
+
+[-] Fix bug causing the correct DataTables language file not to be loaded when $url_base
+ is set.
+
+[-] Fix bug preventing a room name being changed when the only change is to the case of its
+ letters.
+
+[-] Fix bug causing a new refresh timer to be triggered each time an arrow navigation
+ button is clicked, resulting in more and more refresh requests.
+
+[-] Fix problem of Goto nav element overflowing its container on the view_entry page on
+ narrow screens (eg mobiles).
+
+[*] Fix PHP 8.6 deprecations.
+
+[*] Clarify the meaning of the username option for 'Derive creator from' in Import.  See
+ GitHub Issue #4041.
+
+[-] Fix bug if an event has no ORGANIZER.  See GitHub Issue #4041.
+
+[*] Determine MIME type server side, rather than relying on the uploaded import file data.
+ See GitHub Issue #4040.
+
+[-] Fix typo in $force_strftime config variable.  See GitHub Issue #4039.
+
+[-] Fix problem with opcache_reset() causing problems on some systems.  See GitHub Issue
+ #4037.
+
+[*] Update Spanish translation.  See GitHub PR #4036.
+
+[+] Add Galician translation.  See GitHub PR #4035.
+
+[-] Fix LDAP authentication failure on non-AD servers when using bind/search DN.  See
+ GitHub PR #4020.
+
+[-] Fix 'basic' authentication type.  See GitHub PR #4030.
+
+[-] Fix Git revision display in version information.  See GitHub PR #4026.
+
+[+] Add option of forcing unique email addresses when using 'db' authentication.  See
+ GitHub Issue #4023.
+
+[-] Prevent users with the same email address using the same password when resetting
+ passwords.  See GitHub Issue #4023.
+
+[-] Fix bug causing the wrong room to be selected when dragging right to left and not
+ reaching the left boundary.  See GitHub Issue #4012.
+
+[-] Fix TypeError when viewing an entry in an area where the timezone is NULL.
+
+[-] Fix Kiosk mode for those authentication schemes, eg OAuth2, that involve a redirect
+ after a logoff.
 
 -------------------------------------------------------------------------------
 Version 1.12.2 (Tue 26th May 2026):
