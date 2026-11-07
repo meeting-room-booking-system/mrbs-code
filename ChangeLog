@@ -1,4 +1,3025 @@
-commit 36e992196 (HEAD -> main)
+commit 8ee99c841 (HEAD -> security-1.12.3)
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Sat Oct 17 20:43:53 2026 +0100
+
+    Update AUTHENTICATION for new 'ext' restriction.
+    Add VS Code settings so it doesn't try to render plaintext docs as markdown.
+
+ AUTHENTICATION | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 7503e3b32
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 17 18:40:15 2026 +0100
+
+    Tweak comment.
+
+ web/lib/MRBS/Auth/AuthExt.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit cc3cd2444
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 17 18:37:20 2026 +0100
+
+    Remove code inserted by an over-enthusiastic IDE.
+
+ web/lib/MRBS/Auth/AuthExt.php | 6 ------
+ 1 file changed, 6 deletions(-)
+
+commit 823172bbe
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 17 18:16:38 2026 +0100
+
+    Add comments.
+
+ web/lib/MRBS/Auth/AuthExt.php | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+commit 09ddfd91a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 17 18:13:56 2026 +0100
+
+    Restrict support for external authentication on Windows taking account of CVE-2024-5585.
+
+ AUTHENTICATION                |  3 ++-
+ web/lib/MRBS/Auth/AuthExt.php | 28 +++++++++++++++++++++++-----
+ 2 files changed, 25 insertions(+), 6 deletions(-)
+
+commit 5cc5332e6
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Sat Oct 17 13:06:20 2026 +0100
+
+    Removed errant line of debug
+
+ web/lib/MRBS/Auth/AuthExt.php | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit fc1aa7a0a
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Sat Oct 17 12:59:51 2026 +0100
+
+    Fix external authentication process execution to use proc_open() when it can and
+    also to allow for an array of parameters to be passed to the external program.
+
+ AUTHENTICATION                | 26 ++++++++----
+ web/lib/MRBS/Auth/AuthExt.php | 75 ++++++++++++++++++++++-----------
+ 2 files changed, 68 insertions(+), 33 deletions(-)
+
+commit b144dd50c
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Thu Oct 15 22:57:53 2026 +0100
+
+    Fix 'ext' authentication vulnerabilities, thanks to Artur Chlebicki (GitHub: @Artur12555) as the reporter/discoverer.
+
+ web/lib/MRBS/Auth/AuthExt.php | 28 ++++++++++++++++++++++++++--
+ 1 file changed, 26 insertions(+), 2 deletions(-)
+
+commit 83b825385
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Nov 6 16:00:35 2026 +0000
+
+    Prevent reflected XSS attacks by escaping unknown tags in language strings.
+
+ web/lib/MRBS/Language.php | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit 26632e88b (origin/main, origin/HEAD, main)
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Nov 3 15:50:34 2026 +0000
+
+    Fix TypeError when approving a series of entries from pending.php.  See GitHub Issue #4074.
+
+ web/mrbs_sql.inc | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit 3aafab399
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Oct 26 17:28:56 2026 +0000
+
+    Upgrade to Guzzle 7.16.1.
+
+ web/lib/GuzzleHttp/CHANGELOG.md         |  8 ++++++++
+ web/lib/GuzzleHttp/Cookie/CookieJar.php | 25 ++++++++---------------
+ 2 files changed, 16 insertions(+), 17 deletions(-)
+
+commit 7c3b7792c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Oct 25 18:58:38 2026 +0000
+
+    Add recommendation for the PHP intl and mbstring extensions.
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 430beb49f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Oct 25 18:56:33 2026 +0000
+
+    Correct PHP version requirement
+
+ README.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit dfe59d868
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Oct 25 08:34:25 2026 +0000
+
+    Fix incorrect heading level.
+
+ LANGUAGE.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 4f8c92e2d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Oct 25 08:30:02 2026 +0000
+
+    Update LANGUAGE file.
+
+ LANGUAGE.md | 83 ++++++++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 65 insertions(+), 18 deletions(-)
+
+commit c8d375a1f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 24 18:11:45 2026 +0100
+
+    Convert LANGUAGE to .md format.
+
+ LANGUAGE => LANGUAGE.md | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
+
+commit 33cf5710e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Oct 23 15:45:13 2026 +0100
+
+    Fix bug introduced in recent commit [85eb57e] causing an uncaught exception when moving a room to an area that already has a room with the same name.
+
+ web/edit_room_handler.php | 85 +++++++++++++++++++++++--------------
+ 1 file changed, 53 insertions(+), 32 deletions(-)
+
+commit 8a1da26d3
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Mon Oct 19 19:42:43 2026 +0100
+
+    Prevent "git: not found" on the console when git is not available (#4068)
+    
+    * Prevent "git: not found" being output on the console when git is not available, by running git with proc_open().
+
+ web/version.inc | 62 +++++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 49 insertions(+), 13 deletions(-)
+
+commit 7ade835e4
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Oct 19 16:44:04 2026 +0100
+
+    Remove use of deprecated (in PHP 8.6) Is class by upgrading to Guzzle Version 7.16.0, Promises Version 2.6.0 and Psr7 Version 2.13.2.
+
+ web/lib/GuzzleHttp/CHANGELOG.md              | 23 ++++++++
+ .../GuzzleHttp/Handler/CurlMultiHandler.php  | 12 ++--
+ web/lib/GuzzleHttp/Handler/MockHandler.php   |  2 +-
+ web/lib/GuzzleHttp/Handler/StreamHandler.php | 40 +++++++------
+ web/lib/GuzzleHttp/Promise/EachPromise.php   | 12 ++--
+ .../GuzzleHttp/Promise/FulfilledPromise.php  |  2 +-
+ web/lib/GuzzleHttp/Promise/Is.php            | 55 ++++++++++++++++--
+ web/lib/GuzzleHttp/Promise/Promise.php       |  4 +-
+ .../GuzzleHttp/Promise/RejectedPromise.php   |  2 +-
+ web/lib/GuzzleHttp/Promise/State.php (new)   | 44 ++++++++++++++
+ web/lib/GuzzleHttp/Promise/Utils.php         |  8 +--
+ web/lib/GuzzleHttp/Psr7/CachingStream.php    |  2 +-
+ web/lib/GuzzleHttp/Psr7/StreamWrapper.php    |  5 ++
+ web/lib/GuzzleHttp/README.md                 |  4 +-
+ web/lib/GuzzleHttp/RequestOptions.php        |  2 +-
+ web/lib/GuzzleHttp/Utils.php                 |  2 +-
+ web/lib/GuzzleHttp/functions.php             |  2 +-
+ 17 files changed, 171 insertions(+), 50 deletions(-)
+
+commit 429e97be3
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Oct 19 14:17:09 2026 +0100
+
+    Fix "Undefined array key REQUEST_METHOD" warning when running report.php from the CLI and $report_unauthenticated_get_enabled is set.  See GitHub Issue #3742.
+
+ web/functions.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit af32fb080
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Sun Oct 18 20:38:36 2026 +0100
+
+    Add __pycache__ to .gitignore
+
+ .gitignore | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit dafb71ac0
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Sun Oct 18 20:35:26 2026 +0100
+
+    Add README and script for running the CI tests locally.
+
+ test/ci/README.md (new)       | 50 ++++++++++++++++++++++++
+ test/ci/run-local.sh (new +x) | 69 +++++++++++++++++++++++++++++++++
+ 2 files changed, 119 insertions(+)
+
+commit 0d6742555
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Sun Oct 18 20:22:23 2026 +0100
+
+    Remove broken link to WebCalendar in README.md
+
+ README.md | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+commit 7f237bc9c
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Sun Oct 18 20:08:31 2026 +0100
+
+    Add a weekly workflow to delete untagged container images. (#4065)
+
+ .github/workflows/cleanup-images.yml (new) | 34 ++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+
+commit f9ba2e9db
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Sun Oct 18 19:53:12 2026 +0100
+
+    Update Docker GitHub Actions to versions that run on Node.js 24.
+
+ .github/workflows/docker-image.yml | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 8a53378ec
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Sun Oct 18 19:47:50 2026 +0100
+
+    Expand CI testing
+    
+    Add functional tests with a test database, run against PHP 7.2 to 8.5 on MySQL 8.4 with Docker layer caching. Only publish the container image from pushes to main and tags, after the tests pass.
+
+ .github/workflows/docker-image.yml    |  70 +++++++---
+ Dockerfile                            |   7 +-
+ docker_app/docker-compose.yml         |   4 +-
+ test/ci/conftest.py (new)             |  27 ++++
+ test/ci/fixtures.my.sql (new)         |  44 +++++++
+ test/ci/helpers.py (new)              | 168 ++++++++++++++++++++++++
+ test/ci/requirements.txt (new)        |   2 +
+ test/ci/test_admin_access.py (new)    |  25 ++++
+ test/ci/test_areas.py (new)           |  48 +++++++
+ test/ci/test_bookings.py (new)        |  45 +++++++
+ test/ci/test_periods.py (new)         |  44 +++++++
+ test/ci/test_repeat_bookings.py (new) |  86 ++++++++++++
+ test/ci/test_report.py (new)          |  33 +++++
+ test/ci/test_rooms.py (new)           |  53 ++++++++
+ test/ci/test_search.py (new)          |  16 +++
+ test/ci/test_users.py (new)           |  81 ++++++++++++
+ test/ci/test_views.py (new)           |  52 ++++++++
+ 17 files changed, 784 insertions(+), 21 deletions(-)
+
+commit ab03240a8
+Merge: ce4386a1f bd499d81e
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Sun Oct 18 15:04:12 2026 +0100
+
+    Merge pull request #4034 from kocaemre/patch-1
+    
+    docs: add security policy guidance
+
+commit ce4386a1f
+Merge: 66c658439 759743d81
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Sun Oct 18 11:58:17 2026 +0100
+
+    Merge branch 'main' of github.com:meeting-room-booking-system/mrbs-code
+
+commit 66c658439
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Sun Oct 18 11:57:31 2026 +0100
+
+    Update README to Markdown format. Updated MRBS home page.
+
+ .vscode/settings.json (new)   | 13 ++++++++++
+ README => README.md           | 45 +++++++++++++++------------------
+ web/help.php                  |  2 +-
+ web/site_faq/site_faq.html    |  2 +-
+ web/site_faq/site_faq_ca.html |  2 +-
+ web/site_faq/site_faq_cs.html |  2 +-
+ web/site_faq/site_faq_de.html |  2 +-
+ web/site_faq/site_faq_es.html |  2 +-
+ web/site_faq/site_faq_fr.html |  2 +-
+ web/site_faq/site_faq_it.html |  2 +-
+ web/site_faq/site_faq_nl.html |  2 +-
+ web/site_faq/site_faq_sv.html |  2 +-
+ 12 files changed, 44 insertions(+), 34 deletions(-)
+
+commit 759743d81
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 17 15:03:06 2026 +0100
+
+    Fix typo.
+
+ AUTHENTICATION | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 090704306
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Tue Oct 13 19:59:54 2026 +0100
+
+    Add limited AGENTS.md for NEWS building instructions
+
+ AGENTS.md (new) | 45 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+
+commit 193941353
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Tue Oct 13 19:59:24 2026 +0100
+
+    Update version number for release of 1.12.3
+
+ web/version_num.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit cb496dfc9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Oct 11 15:28:25 2026 +0100
+
+    Fix bug introduced in recent commit causing a fatal error on incorrect login to WordPress
+
+ web/lib/MRBS/Cms/Wp.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 3d55a99b2
+Merge: 61693d9bd ba6a3ce1a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 10 18:01:11 2026 +0300
+
+    Merge pull request #4062 from meeting-room-booking-system/4061-duration-field-at-event-details-window-use-wrong-vocab-id-for-one-hour
+    
+    4061 duration field at event details window use wrong vocab id for one hour
+
+commit ba6a3ce1a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 10 15:59:15 2026 +0100
+
+    Use singular version of time unit when in Periods mode.  See GitHub Issue #4061.
+
+ web/functions.inc                               | 11 ++++++++++-
+ web/js/edit_entry.js.php                        |  2 +-
+ web/lang/lang.ca                                |  4 ++--
+ web/lang/lang.cs                                |  4 ++--
+ web/lang/lang.da                                |  3 ++-
+ web/lang/lang.de                                |  4 ++--
+ web/lang/lang.el                                |  7 ++++---
+ web/lang/lang.en                                |  4 ++--
+ web/lang/lang.es                                |  4 ++--
+ web/lang/lang.eu                                |  6 +++---
+ web/lang/lang.fi                                |  4 ++--
+ web/lang/lang.fr                                |  4 ++--
+ web/lang/lang.gl                                |  4 ++--
+ web/lang/lang.he                                |  4 ++--
+ web/lang/lang.hu                                |  4 ++--
+ web/lang/lang.id                                |  4 ++--
+ web/lang/lang.it                                |  4 ++--
+ web/lang/lang.ja                                |  4 ++--
+ web/lang/lang.ko                                |  2 +-
+ web/lang/lang.ms                                |  4 ++--
+ web/lang/lang.nb                                |  4 ++--
+ web/lang/lang.nl                                |  4 ++--
+ web/lang/lang.pl                                |  3 ++-
+ web/lang/lang.pt                                |  4 ++--
+ web/lang/lang.pt-br                             |  4 ++--
+ web/lang/lang.ro                                |  4 ++--
+ web/lang/lang.ru                                |  4 ++--
+ web/lang/lang.sk                                |  4 ++--
+ web/lang/lang.sl                                |  4 ++--
+ web/lang/lang.sr-latn-rs                        |  4 ++--
+ web/lang/lang.sv                                |  4 ++--
+ web/lang/lang.th                                |  4 ++--
+ web/lang/lang.tr                                |  4 ++--
+ web/lang/lang.zh-hans                           |  4 ++--
+ web/lang/lang.zh-hant                           |  6 +++---
+ web/lib/MRBS/Calendar/CalendarMultislotDay.php  |  2 +-
+ web/lib/MRBS/Calendar/CalendarMultislotWeek.php |  2 +-
+ web/mrbs_sql.inc                                |  2 +-
+ 38 files changed, 83 insertions(+), 71 deletions(-)
+
+commit e2d415972
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 10 12:32:31 2026 +0100
+
+    Use singular version of time unit when in Times mode.  See GitHub Issue #4061.
+
+ web/functions.inc           |  6 ++++++
+ web/js/edit_entry.js.php    |  6 +++---
+ web/lang/lang.ca            |  8 ++++----
+ web/lang/lang.cs            |  8 ++++----
+ web/lang/lang.de            |  8 ++++----
+ web/lang/lang.en            |  8 ++++----
+ web/lang/lang.es            |  8 ++++----
+ web/lang/lang.fi            |  8 ++++----
+ web/lang/lang.fr            |  8 ++++----
+ web/lang/lang.gl            |  8 ++++----
+ web/lang/lang.he            | 10 +++++-----
+ web/lang/lang.hu            |  8 ++++----
+ web/lang/lang.id            |  8 ++++----
+ web/lang/lang.it            |  8 ++++----
+ web/lang/lang.ja            |  8 ++++----
+ web/lang/lang.ms            | 12 ++++++------
+ web/lang/lang.nb            |  8 ++++----
+ web/lang/lang.nl            |  8 ++++----
+ web/lang/lang.pt            | 12 ++++++------
+ web/lang/lang.pt-br         |  8 ++++----
+ web/lang/lang.ro            |  8 ++++----
+ web/lang/lang.ru            |  8 ++++----
+ web/lang/lang.sk            |  8 ++++----
+ web/lang/lang.sr-latn-rs    |  8 ++++----
+ web/lang/lang.sv            |  8 ++++----
+ web/lang/lang.th            |  8 ++++----
+ web/lang/lang.tr            | 10 +++++-----
+ web/lang/lang.zh-hans       |  8 ++++----
+ web/lib/MRBS/RepeatRule.php |  4 ++--
+ 29 files changed, 121 insertions(+), 115 deletions(-)
+
+commit 61693d9bd
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Oct 8 18:04:18 2026 +0100
+
+    Improve speed of loading of pages when using Joomla authentication.
+
+ web/init.inc | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+commit 414d2fa0f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Oct 8 17:48:51 2026 +0100
+
+    Fix bug making it impossible to enter kiosk mode when using Joomla (additionally save the kiosk_url session variable).
+
+ web/lib/MRBS/Session/SessionJoomla.php | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
+
+commit 6e03e7154
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Oct 8 17:13:28 2026 +0100
+
+    Fix bug making it impossible to enter kiosk mode when using Joomla.
+
+ web/lib/MRBS/Session/SessionJoomla.php | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+commit 74d6e2af2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Oct 8 16:21:26 2026 +0100
+
+    Simplify code
+
+ web/lib/MRBS/Cms/Joomla/Joomla.php | 36 ++++++++++------------------
+ 1 file changed, 12 insertions(+), 24 deletions(-)
+
+commit dbe81cadb
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Oct 8 16:12:35 2026 +0100
+
+    Add return type declarations and DocBlocks
+
+ web/lib/MRBS/Cms/Joomla/Joomla.php | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+commit 75d03aa55
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Oct 7 18:16:23 2026 +0100
+
+    Fix bug introduced in recent commit
+
+ web/lib/MRBS/Auth/AuthJoomla.php | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+commit 7e0c33012
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Oct 7 17:57:04 2026 +0100
+
+    Remove unused property
+
+ web/lib/MRBS/Cms/Joomla/Joomla.php | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit 657f4a7a3
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Oct 7 17:54:25 2026 +0100
+
+    Simplify code
+
+ web/lib/MRBS/Cms/Joomla/Joomla.php | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+commit 38c8dab86
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Oct 7 17:47:31 2026 +0100
+
+    Move JVERSION into the Joomla abstraction layer
+
+ web/lib/MRBS/Auth/AuthJoomla.php   | 6 +++---
+ web/lib/MRBS/Cms/Joomla/Joomla.php | 3 +++
+ 2 files changed, 6 insertions(+), 3 deletions(-)
+
+commit 8619d3946
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Oct 7 17:40:26 2026 +0100
+
+    Convert to using Joomla abstraction layer
+
+ web/lib/MRBS/Auth/AuthJoomla.php     | 13 ++-----------
+ web/lib/MRBS/Cms/Joomla/JFactory.php |  6 ++++--
+ 2 files changed, 6 insertions(+), 13 deletions(-)
+
+commit fd8d1cc1e
+Merge: de0d98efc b823d6d49
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Oct 7 17:02:07 2026 +0100
+
+    Merge branch 'main' into joomla_improvements
+
+commit b823d6d49
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Oct 7 15:56:33 2026 +0100
+
+    Remove redundant comment and reformat comments.
+
+ web/lib/MRBS/Intl/IntlDateFormatter.php | 81 +++++++++++------------
+ 1 file changed, 37 insertions(+), 44 deletions(-)
+
+commit 06c33f943
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Oct 7 15:48:00 2026 +0100
+
+    Remove check for loaded state of the 'intl' extension now that there is a lib/IntlDatePatternGenerator.php file again.
+
+ .../MRBS/Intl/IntlDatePatternGenerator.php   | 66 +++++++-----------
+ 1 file changed, 26 insertions(+), 40 deletions(-)
+
+commit 72d9cfd23
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Oct 6 17:40:54 2026 +0100
+
+    Fix bug introduced in recent commits
+
+ web/functions.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 908aee71d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Oct 6 17:31:36 2026 +0100
+
+    Add new skeleton files for use by Ranger Version 0.7 and update existing skeleton and type files.
+
+ generate_pattern_files.php        |   8 +-
+ web/intl/skeletons/MMMMy.ini      |  54 +-
+ web/intl/skeletons/MMMy.ini (new) | 800 ++++++++++++++++++++++++++++
+ web/intl/skeletons/d.ini          |  18 +-
+ web/intl/skeletons/dEMMM.ini      |  24 +-
+ web/intl/skeletons/dMMM.ini       |  14 +-
+ web/intl/skeletons/dMMMM.ini      |  24 +-
+ web/intl/skeletons/y.ini (new)    | 800 ++++++++++++++++++++++++++++
+ web/intl/types/full_full.ini      | 512 +++++++++---------
+ web/intl/types/full_long.ini      | 512 +++++++++---------
+ web/intl/types/full_medium.ini    | 512 +++++++++---------
+ web/intl/types/full_none.ini      |  80 ++-
+ web/intl/types/full_short.ini     | 512 +++++++++---------
+ web/intl/types/long_full.ini      | 496 +++++++++--------
+ web/intl/types/long_long.ini      | 496 +++++++++--------
+ web/intl/types/long_medium.ini    | 496 +++++++++--------
+ web/intl/types/long_none.ini      |  70 ++-
+ web/intl/types/long_short.ini     | 496 +++++++++--------
+ web/intl/types/medium_full.ini    | 528 +++++++++---------
+ web/intl/types/medium_long.ini    | 524 +++++++++---------
+ web/intl/types/medium_medium.ini  | 524 +++++++++---------
+ web/intl/types/medium_none.ini    |  70 ++-
+ web/intl/types/medium_short.ini   | 524 +++++++++---------
+ web/intl/types/none_full.ini      | 262 +++++----
+ web/intl/types/none_long.ini      | 258 +++++----
+ web/intl/types/none_medium.ini    | 258 +++++----
+ web/intl/types/none_short.ini     | 258 +++++----
+ web/intl/types/short_full.ini     | 450 ++++++++--------
+ web/intl/types/short_long.ini     | 446 ++++++++--------
+ web/intl/types/short_medium.ini   | 446 ++++++++--------
+ web/intl/types/short_none.ini     |  30 +-
+ web/intl/types/short_short.ini    | 446 ++++++++--------
+ 32 files changed, 6159 insertions(+), 4789 deletions(-)
+
+commit 6a7633b78
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Oct 6 17:26:56 2026 +0100
+
+    Provide \IntlDatePatternGenerator class for use by Ranger Version 0.7
+
+ web/lib/IntlDatePatternGenerator.php (new) | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+commit 5a6952764
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Oct 6 17:25:24 2026 +0100
+
+    Update to Version 0.7
+
+ .../OpenPsa/Ranger/Provider/DeProvider.php   |  11 +-
+ web/lib/OpenPsa/Ranger/Ranger.php            | 129 +++++++++++++++--
+ 2 files changed, 126 insertions(+), 14 deletions(-)
+
+commit 94808bf5a
+Merge: 158f88f11 25abfb7a6
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Oct 6 16:29:48 2026 +0300
+
+    Merge pull request #4060 from drey182/patch-1
+    
+    Update lang.ru
+
+commit 25abfb7a6
+Author: drey182 <drey12@gmail.com>
+Date:   Tue Oct 6 14:35:03 2026 +0300
+
+    Update lang.ru
+
+ web/lang/lang.ru | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit b21ae1b3b
+Author: drey182 <drey12@gmail.com>
+Date:   Tue Oct 6 14:01:34 2026 +0300
+
+    Update lang.ru
+
+ web/lang/lang.ru | 596 +++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 473 insertions(+), 123 deletions(-)
+
+commit de0d98efc
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 3 05:47:11 2026 +0100
+
+    Simplify code
+
+ web/lib/MRBS/Auth/AuthJoomla.php | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+commit 14c7ec243
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Oct 2 14:22:57 2026 +0100
+
+    Add getDbo()
+
+ web/lib/MRBS/Auth/AuthJoomla.php   | 10 +---------
+ web/lib/MRBS/Cms/Joomla/Joomla.php | 27 +++++++++++++++++++++++++++
+ 2 files changed, 28 insertions(+), 9 deletions(-)
+
+commit 3448fcab9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Oct 2 13:53:41 2026 +0100
+
+    Correct DocBlock for getUsersByGroup()
+
+ web/lib/MRBS/Cms/Joomla/Joomla.php | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+commit 6c371746e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Oct 2 13:41:19 2026 +0100
+
+    Remove unnecessary cast
+
+ web/lib/MRBS/Auth/AuthJoomla.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 0fe33f8e5
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Oct 2 13:40:52 2026 +0100
+
+    Correct DocBlock for getUser()
+
+ web/lib/MRBS/Cms/Joomla/Joomla.php | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+commit b43028e2f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Oct 2 11:38:51 2026 +0100
+
+    Add getUser()
+
+ web/lib/MRBS/Auth/AuthJoomla.php   | 13 +++----------
+ web/lib/MRBS/Cms/Joomla/Joomla.php | 17 +++++++++++++++++
+ 2 files changed, 20 insertions(+), 10 deletions(-)
+
+commit 595438f5c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Oct 2 10:37:53 2026 +0100
+
+    Add getUsersByGroup()
+
+ web/lib/MRBS/Auth/AuthJoomla.php   |  9 +--------
+ web/lib/MRBS/Cms/Joomla/Joomla.php | 22 ++++++++++++++++++++--
+ 2 files changed, 21 insertions(+), 10 deletions(-)
+
+commit 736e72ed6
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Oct 2 10:06:44 2026 +0100
+
+    Add return type declaration
+
+ web/lib/MRBS/Cms/Joomla/Joomla.php | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+commit 2db14e6a0
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Oct 2 09:56:14 2026 +0100
+
+    Restructure - remove auth/cms/joomla.inc
+
+ web/auth/cms/joomla.inc (gone)       | 19 -------------------
+ web/lib/MRBS/Cms/Joomla/JFactory.php |  3 ---
+ 2 files changed, 22 deletions(-)
+
+commit 671cf8847
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Oct 2 09:39:26 2026 +0100
+
+    Restructure
+
+ web/lib/MRBS/Auth/AuthJoomla.php           | 4 ++--
+ web/lib/MRBS/{ => Cms}/Joomla/JFactory.php | 4 ++--
+ web/lib/MRBS/{ => Cms}/Joomla/JUser.php    | 2 +-
+ web/lib/MRBS/Cms/Joomla/Joomla.php         | 1 -
+ 4 files changed, 5 insertions(+), 6 deletions(-)
+
+commit 51f8d57b2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Oct 2 09:22:37 2026 +0100
+
+    Restructure
+
+ web/lib/MRBS/Auth/AuthJoomla.php         | 2 +-
+ web/lib/MRBS/Cms/{ => Joomla}/Joomla.php | 2 +-
+ web/lib/MRBS/Session/SessionJoomla.php   | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+commit bc7863ff4
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Oct 2 09:15:49 2026 +0100
+
+    Interim commit
+
+ web/lib/MRBS/Auth/AuthJoomla.php       |  17 +--
+ web/lib/MRBS/Cms/Joomla.php (new)      | 171 +++++++++++++++++++++++
+ web/lib/MRBS/Session/SessionJoomla.php |  71 +---------
+ 3 files changed, 183 insertions(+), 76 deletions(-)
+
+commit 158f88f11
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Sep 27 14:02:35 2026 +0100
+
+    Fix problem preventing logon when using Joomla.
+
+ web/mrbs_auth.inc | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+commit c44d55a3a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Sep 26 16:34:59 2026 +0100
+
+    Remove 'mixed' type declaration (not introduced until PHP 8).
+
+ web/lib/MRBS/Cms/Wp.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 2e8caa1bc
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Sep 26 13:41:34 2026 +0100
+
+    Fix TypeError
+
+ web/lib/MRBS/Cms/Wp.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit e9c5e645d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Sep 26 13:00:46 2026 +0100
+
+    Fix problem with WordPress changing the default timezone
+
+ web/lib/MRBS/Cms/Wp.php | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+commit 43c661120
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Sep 26 10:39:04 2026 +0100
+
+    Improve performance of WordPress integrations by delaying the loading of wp-load.php until it is actually needed.  This means that as it isn't needed for the *.css.php and *.js.php files initial loading of MRBS is much faster.  See GitHub Issue #4046.
+
+ web/auth/cms/wordpress.inc (gone)         |  10 --
+ web/lib/MRBS/Auth/AuthWordpress.php       |  14 +-
+ web/lib/MRBS/Cms/Wp.php (new)             | 158 ++++++++++++++++++++
+ web/lib/MRBS/Session/SessionWordpress.php |  16 +-
+ 4 files changed, 171 insertions(+), 27 deletions(-)
+
+commit 40e3c52e4
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Sep 25 07:41:05 2026 +0100
+
+    Update Ranger to V0.6.2, fixing further issue in GitHub Issue #4055.
+
+ .../OpenPsa/Ranger/Provider/NbProvider.php (new)    | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+commit e9989687e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Sep 22 11:44:54 2026 +0100
+
+    Update Ranger to V0.6.1, fixing GitHub Issue #4055.
+
+ .../Ranger/Provider/NnProvider.php (new)     | 11 ++++++++
+ .../Ranger/Provider/NoProvider.php (new)     | 24 ++++++++++++++++++
+ 2 files changed, 35 insertions(+)
+
+commit 1ec998fce
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Sep 22 08:47:49 2026 +0100
+
+    Update Ranger to V0.6.0
+
+ .../OpenPsa/Ranger/Provider/DeProvider.php   |  2 +-
+ .../Ranger/Provider/DefaultProvider.php      |  2 +-
+ web/lib/OpenPsa/Ranger/Ranger.php            | 23 ++++++++----------
+ 3 files changed, 12 insertions(+), 15 deletions(-)
+
+commit b0200ad0d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Sep 19 15:19:51 2026 +0100
+
+    Fix bug causing the correct DataTables language file not to be loaded when $url_base is set.
+
+ web/functions.inc        | 56 -------------------------------
+ web/init.inc             | 67 +++++++++++++++++++++++++++++++++++++-
+ web/js/datatables.js.php | 11 +------
+ 3 files changed, 67 insertions(+), 67 deletions(-)
+
+commit 1723e8258
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Sep 18 17:29:26 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/view_entry.js.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit f9c4fe05c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Sep 18 17:25:45 2026 +0100
+
+    Delete unused const.
+
+ web/js/search.js.php | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit 905695218
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Sep 18 17:23:36 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/search.js.php | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
+
+commit 11b725775
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Sep 18 17:15:38 2026 +0100
+
+    Fix typos in comments.
+
+ web/js/resizable.js.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 4e9582ffd
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Sep 18 17:11:47 2026 +0100
+
+    Delete unused const.
+
+ web/js/resizable.js.php | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit e3a062ed8
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Sep 18 17:08:35 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/resizable.js.php | 1761 ++++++++++++++++++-------------------
+ 1 file changed, 880 insertions(+), 881 deletions(-)
+
+commit f30fd3275
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Sep 18 15:40:03 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/report.js.php | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit 2a2178d3f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Sep 18 15:22:00 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/report.js.php | 233 +++++++++++++++++++++--------------------
+ 1 file changed, 118 insertions(+), 115 deletions(-)
+
+commit 69c9b24e9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 17 19:43:42 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/report.js.php | 52 +++++++++++++++++++++---------------------
+ 1 file changed, 26 insertions(+), 26 deletions(-)
+
+commit 35785bac0
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 17 19:38:59 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/pending.js.php | 94 ++++++++++++++++++++---------------------
+ 1 file changed, 47 insertions(+), 47 deletions(-)
+
+commit 670cf0e8f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 17 19:29:53 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/kiosk.js.php | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+commit ae04f67c3
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 17 19:27:10 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/init.js.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 2eb569a38
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 17 19:25:43 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/index.js.php | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 014e160d1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 17 19:22:11 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/import.js.php | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+commit 9a738f3a2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 17 19:19:17 2026 +0100
+
+    Tweak comments.
+
+ web/js/general.js.php | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+commit ea63ad9c3
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 17 19:14:33 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/general.js.php | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 83eb3c83a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 17 19:08:34 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/general.js.php | 221 ++++++++++++++++++++--------------------
+ 1 file changed, 110 insertions(+), 111 deletions(-)
+
+commit 4d6499bba
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 17 18:51:15 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/general.js.php | 190 ++++++++++++++++++++--------------------
+ 1 file changed, 94 insertions(+), 96 deletions(-)
+
+commit 6b42f8204
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 17 17:59:19 2026 +0100
+
+    Simplify code by taking advantage of Uint8Array.fromBase64().
+
+ web/js/functions.js.php | 21 ++++++---------------
+ 1 file changed, 6 insertions(+), 15 deletions(-)
+
+commit b807089b9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 17 17:02:08 2026 +0100
+
+    Update jQuery Redirect plugin to Version 1.2.0
+
+ web/js/functions.js.php | 24 ++++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
+
+commit c1cdf5bdd
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 17 16:38:10 2026 +0100
+
+    Delete unused function.
+
+ web/js/functions.js.php | 25 -------------------------
+ 1 file changed, 25 deletions(-)
+
+commit cc506871d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 17 16:18:25 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/functions.js.php | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
+
+commit a346c9466
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 17 16:14:05 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/functions.js.php | 45 ++++++++++++++++++---------------------
+ 1 file changed, 21 insertions(+), 24 deletions(-)
+
+commit c7af9ea16
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 17 14:31:32 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/functions.js.php | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 1597318d8
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 17 14:18:39 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/functions.js.php | 46 +++++++++++++++++++--------------------
+ 1 file changed, 22 insertions(+), 24 deletions(-)
+
+commit 52f37141f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 17 14:06:29 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/edit_users.js.php | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 00440cda8
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 16 17:57:30 2026 +0100
+
+    Tweak comments.
+
+ web/js/edit_entry.js.php | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+commit a692e3478
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 16 17:50:55 2026 +0100
+
+    Eliminate duplicate jQuery selector.
+
+ web/js/edit_entry.js.php | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit b6c4bd7a2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 16 17:46:01 2026 +0100
+
+    Tweak comments.
+
+ web/js/edit_entry.js.php | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+commit 5225f0f0d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 16 17:38:40 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/edit_entry.js.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit bf8113086
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 16 17:36:47 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/edit_entry.js.php | 284 ++++++++++++++++++-------------------
+ 1 file changed, 139 insertions(+), 145 deletions(-)
+
+commit 20d5afb93
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 16 17:12:21 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/edit_entry.js.php | 157 ++++++++++++++++++-------------------
+ 1 file changed, 78 insertions(+), 79 deletions(-)
+
+commit dd2ff5d56
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 16 16:59:51 2026 +0100
+
+    Simplify code.
+
+ web/js/edit_entry.js.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit c2fc3b7b6
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 16 16:54:44 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/edit_entry.js.php | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
+
+commit 618b506d6
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 16 16:50:21 2026 +0100
+
+    Simplify code.
+
+ web/js/edit_entry.js.php | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+commit 305cbd10d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 16 16:48:09 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/edit_entry.js.php | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit ba49f2b48
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 16 16:45:09 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/edit_entry.js.php | 60 +++++++++++++++++++-------------------
+ 1 file changed, 30 insertions(+), 30 deletions(-)
+
+commit 0f04fc0e1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 16 16:37:08 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/edit_entry.js.php | 48 +++++++++++++++++++-------------------
+ 1 file changed, 24 insertions(+), 24 deletions(-)
+
+commit 93e6c8516
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 16 16:29:41 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/edit_entry.js.php | 264 +++++++++++++++++++------------------
+ 1 file changed, 133 insertions(+), 131 deletions(-)
+
+commit 5308f5ea4
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Sep 15 18:44:01 2026 +0100
+
+    Improve localisation of start-of-last-slot selector when editing areas.
+
+ web/js/edit_area.js.php | 69 +++++++++------------------------------
+ 1 file changed, 15 insertions(+), 54 deletions(-)
+
+commit a17ffd2e1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Sep 14 17:35:18 2026 +0100
+
+    Tweaks to comments.
+
+ web/js/edit_area.js.php | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit fa4f2cc68
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Sep 14 17:32:41 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/edit_area.js.php | 33 +++++++++++++++++----------------
+ 1 file changed, 17 insertions(+), 16 deletions(-)
+
+commit 8c0f6c377
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Sep 14 17:00:52 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/edit_area.js.php | 94 ++++++++++++++++++++-------------------
+ 1 file changed, 48 insertions(+), 46 deletions(-)
+
+commit 00a19bb86
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Sep 13 18:57:55 2026 +0100
+
+    Tweak to comment.
+
+ web/js/datepicker.js.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit ac238a15a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Sep 13 18:56:01 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/datepicker.js.php | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit 1822c0919
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Sep 13 18:52:39 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/datepicker.js.php | 228 ++++++++++++++++++-------------------
+ 1 file changed, 112 insertions(+), 116 deletions(-)
+
+commit 7adbd629f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Sep 13 18:36:05 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/datepicker.js.php | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
+
+commit 67d437a6b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Sep 13 18:18:31 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/datatables.js.php | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+commit 7bd629dee
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Sep 13 18:10:43 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/datatables.js.php | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 303757a86
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Sep 13 18:04:43 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/datatables.js.php | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+commit 2d6b9bf19
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Sep 13 17:57:40 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/datatables.js.php | 48 ++++++++++++++++++--------------------
+ 1 file changed, 23 insertions(+), 25 deletions(-)
+
+commit 8678da1ff
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Sep 13 17:47:09 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/datatables.js.php | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 06f274dad
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Sep 13 17:42:25 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/admin.js.php | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 85eb57e1f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Sep 12 12:00:08 2026 +0100
+
+    Fix bug preventing a room name being changed when the only change is to the case of its letters.
+
+ web/edit_room_handler.php | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+commit a0a66e154
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 9 17:22:06 2026 +0100
+
+    Fix bug causing a new refresh timer to be triggered each time an arrow navigation button is clicked, resulting in more and more refresh requests.
+
+ web/js/refresh.js.php | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit b499b8468
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 9 16:57:19 2026 +0100
+
+    Fix problem that resulted in the data from a previous Ajax refresh request being used for the wrong date, if the user navigates to a new page in between the Ajax refresh request being initiated and the result being returned.  (There was a mechanism to prevent this but it wasn't always working.)
+
+ web/index.php         |  8 ++++++++
+ web/js/refresh.js.php | 31 ++++++++++++++++++-------------
+ 2 files changed, 26 insertions(+), 13 deletions(-)
+
+commit d34fd954b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Sep 8 13:58:35 2026 +0100
+
+    Convert comment to DocBlock
+
+ web/mrbs_auth.inc | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
+
+commit af14e8479
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Sep 8 13:48:32 2026 +0100
+
+    Add type declaration
+
+ web/mrbs_auth.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 8e4607a7b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Sep 8 13:42:01 2026 +0100
+
+    Fix potential problem when an empty array of rooms is passed to is_book_admin().
+
+ web/mrbs_auth.inc | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+commit 671b5ff17
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Sep 8 13:18:10 2026 +0100
+
+    Fix problem discovered when modifying is_book_admin() that admins are not automatically booking admins.  See GitHub Issue #4038.
+
+ web/mrbs_auth.inc | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit bd499d81e
+Author: Emre K <110906681+kocaemre@users.noreply.github.com>
+Date:   Tue Sep 8 06:10:23 2026 +0200
+
+    docs: add security policy guidance
+    
+    Signed-off-by: Emre K <110906681+kocaemre@users.noreply.github.com>
+
+ SECURITY.md (new) | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+commit 367ed6569
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Sep 7 22:31:33 2026 +0100
+
+    Replace let with const.
+
+ web/js/index.js.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 1611197db
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Sep 7 22:28:22 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/index.js.php | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit fd2073caf
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Sep 7 22:23:03 2026 +0100
+
+    Simplify code.
+
+ web/js/index.js.php | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
+
+commit 05f7ec109
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Sep 7 22:10:17 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/index.js.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 8f533cd11
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Sep 7 22:07:06 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/index.js.php | 84 +++++++++++++++++++++----------------------
+ 1 file changed, 42 insertions(+), 42 deletions(-)
+
+commit e66a6adff
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Sep 7 21:56:56 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/index.js.php | 142 +++++++++++++++++++++---------------------
+ 1 file changed, 71 insertions(+), 71 deletions(-)
+
+commit 3084c9f4e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Sep 7 21:50:07 2026 +0100
+
+    Simplify code.
+
+ web/js/index.js.php | 15 ++++-----------
+ 1 file changed, 4 insertions(+), 11 deletions(-)
+
+commit acc583e5c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Sep 7 21:41:22 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/index.js.php | 50 +++++++++++++++++++++----------------------
+ 1 file changed, 25 insertions(+), 25 deletions(-)
+
+commit b06235513
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Sep 7 18:16:35 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/refresh.js.php | 142 ++++++++++++++++++++--------------------
+ 1 file changed, 71 insertions(+), 71 deletions(-)
+
+commit 3d7334b90
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Sep 7 18:10:14 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/refresh.js.php | 107 ++++++++++++++++++++--------------------
+ 1 file changed, 53 insertions(+), 54 deletions(-)
+
+commit ae7dcbd5a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Sep 6 16:52:43 2026 +0100
+
+    Fix problem of Goto nav element overflowing its container on the view_entry page on narrow screens (eg mobiles).
+
+ web/css/mrbs.css.php | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit 2e2bfbf8f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Sep 6 13:41:21 2026 +0100
+
+    Change comment to DocBlock
+
+ web/lib/MRBS/Form/Form.php | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+commit 761063fa8
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Sep 6 13:37:07 2026 +0100
+
+    Fix bug resulting in a CSRF token mismatch when using as session scheme, eg 'http', that doesn't require a login form.  If there's no login form then there won't already be a token associated with the session.
+
+ web/mrbs_auth.inc | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+commit 44d778744
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Sep 5 18:28:02 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/refresh.js.php | 50 ++++++++++++++++++++---------------------
+ 1 file changed, 25 insertions(+), 25 deletions(-)
+
+commit 8d971947a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Sep 5 17:59:58 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/refresh.js.php | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit 0b2fe7793
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Sep 5 17:46:33 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/refresh.js.php | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
+
+commit c11a29f6e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Sep 5 11:37:26 2026 +0100
+
+    Correct comment.
+
+ web/lib/MRBS/SessionHandler/SessionHandlerAbstract.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 99ac4f39e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Sep 5 10:15:12 2026 +0100
+
+    Simplify code.
+
+ web/js/refresh.js.php | 42 ++++++++++++++++++++---------------------
+ 1 file changed, 20 insertions(+), 22 deletions(-)
+
+commit 56db08a66
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Sep 5 10:08:55 2026 +0100
+
+    Remove redundant variable declaration
+
+ web/js/refresh.js.php | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit 24e0ff819
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Sep 5 10:03:42 2026 +0100
+
+    Replace var with let or const.
+
+ web/js/refresh.js.php | 140 ++++++++++++++++++++--------------------
+ 1 file changed, 70 insertions(+), 70 deletions(-)
+
+commit b514e9689
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Sep 5 09:57:09 2026 +0100
+
+    Simplify code.
+
+ web/js/refresh.js.php | 143 ++++++++++++++++++++--------------------
+ 1 file changed, 70 insertions(+), 73 deletions(-)
+
+commit a581d99ca
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Sep 4 18:53:53 2026 +0100
+
+    Add comment on return value of read() method.
+
+ web/lib/MRBS/SessionHandler/SessionHandlerCookie.php | 3 +++
+ web/lib/MRBS/SessionHandler/SessionHandlerDb.php     | 3 +++
+ 2 files changed, 6 insertions(+)
+
+commit 48d976ab7
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Sep 4 18:27:54 2026 +0100
+
+    Fix bug causing two refresh interval timers to be set off in some circumstances (eg when the Ajax request takes longer to complete than the interval).
+
+ web/js/refresh.js.php | 53 +++++++++++++++--------------------------
+ 1 file changed, 19 insertions(+), 34 deletions(-)
+
+commit e7aac93c6
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Sep 4 16:38:58 2026 +0100
+
+    Fix PHP 8.6 deprecation message about missing create_sid() method in SessionHandlerCookie.
+
+ .../SessionHandlerAbstract.php (new)         | 115 +++++++++++
+ .../SessionHandler/SessionHandlerCookie.php  |  64 ++-----
+ .../MRBS/SessionHandler/SessionHandlerDb.php | 169 +++++++----------
+ 3 files changed, 197 insertions(+), 151 deletions(-)
+
+commit 49185ea88
+Merge: c436327e7 8837852c2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Sep 4 12:42:50 2026 +0100
+
+    Merge pull request #4048 from meeting-room-booking-system/4016-roles-adds-great-value-but-is-too-slow-for-a-production-environment-get_lock-on-mrbs_session-takes-515s-per-request
+    
+    4016 roles adds great value but is too slow for a production environment get lock on mrbs session takes 515s per request
+
+commit 8837852c2
+Merge: 02368c690 c436327e7
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 3 21:54:23 2026 +0100
+
+    Merge branch 'main' into 4016-roles-adds-great-value-but-is-too-slow-for-a-production-environment-get_lock-on-mrbs_session-takes-515s-per-request
+
+commit c436327e7
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 3 21:49:51 2026 +0100
+
+    Fix bug causing unnecessary duplicate refresh requests to be sent when neither the top nor bottom calendar navigation element is visible in the viewport.
+
+ web/js/index.js.php | 27 +++++++++++++++------------
+ 1 file changed, 15 insertions(+), 12 deletions(-)
+
+commit 02368c690
+Merge: a92a3075e f29356b06
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 3 15:06:53 2026 +0100
+
+    Merge branch 'main' into 4016-roles-adds-great-value-but-is-too-slow-for-a-production-environment-get_lock-on-mrbs_session-takes-515s-per-request
+
+commit f29356b06
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 3 14:18:42 2026 +0100
+
+    Guard against an (extremely unlikely) infinite loop in create_sid().
+
+ .../MRBS/SessionHandler/SessionHandlerDb.php | 20 +++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
+
+commit a92a3075e
+Merge: 22e062e1f 285807f69
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 3 08:44:41 2026 +0100
+
+    Merge branch 'main' into 4016-roles-adds-great-value-but-is-too-slow-for-a-production-environment-get_lock-on-mrbs_session-takes-515s-per-request
+
+commit 285807f69
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Sep 3 08:41:04 2026 +0100
+
+    Fix PHP 8.6 deprecation message about missing create_sid() method in SessionHandlerDb.
+
+ .../MRBS/SessionHandler/SessionHandlerDb.php   | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+commit 22e062e1f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Sep 2 14:30:52 2026 +0100
+
+    Call session_write_close() after checking authorisation in order to release the lock.
+
+ web/mrbs_auth.inc | 27 ++++++++++++++++++++-------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
+
+commit ec7a3ed9c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Sep 1 18:27:21 2026 +0100
+
+    Release lock on close and remove the need for a lock in updateTimestamp and validateId methods.
+
+ .../MRBS/SessionHandler/SessionHandlerDb.php | 23 +++++-------------
+ 1 file changed, 6 insertions(+), 17 deletions(-)
+
+commit 41c06d120
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Aug 29 18:10:06 2026 +0100
+
+    Simplify code
+
+ web/js/search.js.php | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+commit f7375d7cf
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Aug 29 17:45:11 2026 +0100
+
+    Fix bug introduced when jQuery was upgraded to V4 causing Search to ignore the search string and from date.
+
+ web/js/search.js.php | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
+
+commit 83bc7d4ce
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Aug 29 16:50:43 2026 +0100
+
+    Fix bug causing DataTable error "Invalid JSON response"
+
+ web/search.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 718857e9d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Aug 28 15:37:56 2026 +0100
+
+    Upgrade to Release 3.9.0 of Email\Parse.
+
+ web/lib/Email/Parse.php              | 1709 ++++++++++++------------
+ web/lib/Email/ParseContext.php (new) |  209 +++
+ web/lib/Email/README.md              |    2 +-
+ 3 files changed, 1096 insertions(+), 824 deletions(-)
+
+commit dd8d6415b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Aug 28 14:59:25 2026 +0100
+
+    Switch to using Email\ParseSingle() and Email\ParseMultiple() instead of the soon-to-be deprecated Email\Parse()
+
+ web/functions.inc       | 18 +++++++++---------
+ web/lib/MRBS/Mailer.php | 18 +++++++++---------
+ 2 files changed, 18 insertions(+), 18 deletions(-)
+
+commit 9915be626
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Aug 28 12:11:10 2026 +0100
+
+    Correct typo in comment.
+
+ web/lib/MRBS/Intl/IntlDateFormatter.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 28e007efb
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Aug 28 12:07:25 2026 +0100
+
+    Only suppress deprecation errors for strftime() when the PHP version is 8.1 or later.
+
+ web/lib/MRBS/Intl/IntlDateFormatter.php | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+commit 57c630156
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Aug 28 12:03:04 2026 +0100
+
+    Replace multiple E_DEPRECATED messages from the use of SORT_LOCALE_STRING in PHP 8.6 with a single E_USER_DEPRECATED message.
+
+ web/init.inc                   | 25 +++++++++++++++++--------
+ web/lib/MRBS/Intl/Collator.php | 19 +++++++++++++++----
+ 2 files changed, 32 insertions(+), 12 deletions(-)
+
+commit f3101ab1e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Aug 27 18:02:50 2026 +0100
+
+    Clarify the meaning of the username option for "Derive creator from" in Import.  See GitHub Issue #4041.
+
+ web/lang/lang.en | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 7fcd7a386
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Aug 27 17:37:42 2026 +0100
+
+    Fix bug if an event has no ORGANIZER.  See GitHub Issue #4041.
+
+ web/import.php | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit cf1dc98dc
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Aug 27 16:54:55 2026 +0100
+
+    Determine MIME type server side, rather than relying on the uploaded file data.  See GitHub Issue #4040.
+
+ web/import.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 64e88a97c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Aug 26 17:10:13 2026 +0100
+
+    Fix TypeError when trying to import a file with an unsupported MIME type.  See GitHub Issue #4040.
+
+ web/import.php | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+commit 646f344ea
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Aug 25 21:01:28 2026 +0100
+
+    Fix typo in `$force_strftime` config variable.  See GitHub Issue #4039.
+
+ web/systemdefaults.inc.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit b83feca87
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Aug 25 12:15:36 2026 +0100
+
+    Fix potential TypeError when modifying is_book_admin().  See GitHub Issue #4038.
+
+ web/mrbs_sql.inc | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 0fabc14ec
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Aug 24 18:46:02 2026 +0100
+
+    Add DocBlock for parse_addresses()
+
+ web/functions.inc | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+commit 3cdcff9a9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Aug 24 17:37:39 2026 +0100
+
+    Add emulation of get_debug_type().
+
+ web/functions_global.inc | 63 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+
+commit 5003b81da
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Aug 24 16:36:04 2026 +0100
+
+    Add file missing from last commit (Upgrade to Version 2.13.1 of GuzzleHttp\Psr7 to provide support for PHP 8.6)
+
+ web/lib/GuzzleHttp/Psr7/Rfc3986.php (new) | 25 +++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+commit a348cb2ed
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Aug 24 15:47:00 2026 +0100
+
+    Upgrade to Version 2.13.1 of GuzzleHttp\Psr7 to provide support for PHP 8.6
+
+ web/lib/GuzzleHttp/Psr7/AppendStream.php     |  49 +++
+ web/lib/GuzzleHttp/Psr7/BufferStream.php     |  45 +++
+ web/lib/GuzzleHttp/Psr7/CachingStream.php    |  79 +++-
+ web/lib/GuzzleHttp/Psr7/DroppingStream.php   |   9 +
+ web/lib/GuzzleHttp/Psr7/FnStream.php         |  51 ++-
+ web/lib/GuzzleHttp/Psr7/Header.php           |  52 ++-
+ web/lib/GuzzleHttp/Psr7/LimitStream.php      |  39 +-
+ web/lib/GuzzleHttp/Psr7/Message.php          | 164 ++++++++-
+ web/lib/GuzzleHttp/Psr7/MessageTrait.php     | 109 +++++-
+ web/lib/GuzzleHttp/Psr7/MimeType.php         | 194 ++++++----
+ web/lib/GuzzleHttp/Psr7/MultipartStream.php  | 179 ++++++++-
+ web/lib/GuzzleHttp/Psr7/NoSeekStream.php     |  18 +
+ web/lib/GuzzleHttp/Psr7/PumpStream.php       |  79 +++-
+ web/lib/GuzzleHttp/Psr7/Query.php            |  27 +-
+ web/lib/GuzzleHttp/Psr7/README.md            | 142 ++++---
+ web/lib/GuzzleHttp/Psr7/Request.php          |  44 ++-
+ web/lib/GuzzleHttp/Psr7/Response.php         |  30 +-
+ web/lib/GuzzleHttp/Psr7/Rfc7230.php          |  89 +++++
+ web/lib/GuzzleHttp/Psr7/ServerRequest.php    | 166 +++++++--
+ web/lib/GuzzleHttp/Psr7/Stream.php           |  47 ++-
+ .../GuzzleHttp/Psr7/StreamDecoratorTrait.php |  45 +++
+ web/lib/GuzzleHttp/Psr7/StreamWrapper.php    |   8 +-
+ web/lib/GuzzleHttp/Psr7/Uri.php              | 255 ++++++++++---
+ web/lib/GuzzleHttp/Psr7/UriComparator.php    |  14 +-
+ web/lib/GuzzleHttp/Psr7/UriNormalizer.php    |  59 ++-
+ web/lib/GuzzleHttp/Psr7/UriResolver.php      |  78 ++--
+ web/lib/GuzzleHttp/Psr7/Utils.php            | 325 +++++++++++++++--
+ 27 files changed, 2040 insertions(+), 356 deletions(-)
+
+commit 2c000d167
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Aug 24 15:39:34 2026 +0100
+
+    Upgrade to Version 2.5.3 of GuzzleHttp\Promise to provide support for PHP 8.6
+
+ web/lib/GuzzleHttp/Promise/Coroutine.php   |  5 +-
+ web/lib/GuzzleHttp/Promise/Create.php      | 10 +++
+ web/lib/GuzzleHttp/Promise/Each.php        | 23 ++++++
+ web/lib/GuzzleHttp/Promise/EachPromise.php | 74 ++++++++++++++++----
+ web/lib/GuzzleHttp/Promise/Utils.php       | 54 +++++++++++++-
+ 5 files changed, 151 insertions(+), 15 deletions(-)
+
+commit 1e1cc190d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Aug 24 15:35:38 2026 +0100
+
+    Upgrade to Version 7.15.5 of GuzzleHttp to provide support for PHP 8.6
+
+ web/lib/GuzzleHttp/CHANGELOG.md              |  402 ++-
+ web/lib/GuzzleHttp/Client.php                |  986 ++++++-
+ web/lib/GuzzleHttp/Cookie/CookieJar.php      |  115 +-
+ web/lib/GuzzleHttp/Cookie/FileCookieJar.php  |   30 +-
+ .../GuzzleHttp/Cookie/SessionCookieJar.php   |   32 +-
+ web/lib/GuzzleHttp/Cookie/SetCookie.php      |  181 +-
+ .../Exception/ConnectException.php           |    2 -
+ .../Exception/RequestException.php           |    4 +
+ web/lib/GuzzleHttp/Handler/CurlFactory.php   | 2312 ++++++++++++++--
+ web/lib/GuzzleHttp/Handler/CurlHandler.php   |   47 +-
+ .../GuzzleHttp/Handler/CurlMultiHandler.php  | 1295 ++++++++-
+ .../Handler/CurlShareHandleState.php (new)   |  182 ++
+ .../GuzzleHttp/Handler/CurlVersion.php (new) |  322 +++
+ web/lib/GuzzleHttp/Handler/EasyHandle.php    |   32 +-
+ .../GuzzleHttp/Handler/HeaderProcessor.php   |   57 +-
+ .../Handler/HostValidator.php (new)          |  198 ++
+ web/lib/GuzzleHttp/Handler/MockHandler.php   |    3 +-
+ web/lib/GuzzleHttp/Handler/Proxy.php         |   30 +
+ .../Handler/ProxyEnvironment.php (new)       |  121 +
+ web/lib/GuzzleHttp/Handler/StreamHandler.php |  731 ++++-
+ .../GuzzleHttp/Handler/TlsVersion.php (new)  |   84 +
+ web/lib/GuzzleHttp/HandlerStack.php          |   24 +-
+ web/lib/GuzzleHttp/MessageFormatter.php      |   13 +-
+ web/lib/GuzzleHttp/Middleware.php            |    2 +-
+ web/lib/GuzzleHttp/Multiplexing.php (new)    |   26 +
+ web/lib/GuzzleHttp/Pool.php                  |   14 +-
+ web/lib/GuzzleHttp/PrepareBodyMiddleware.php |    2 +-
+ web/lib/GuzzleHttp/README.md                 |   14 +-
+ web/lib/GuzzleHttp/RedirectMiddleware.php    |   36 +-
+ web/lib/GuzzleHttp/RequestOptions.php        |  274 +-
+ web/lib/GuzzleHttp/RetryMiddleware.php       |    8 +-
+ .../GuzzleHttp/TransportSharing.php (new)    |   14 +
+ web/lib/GuzzleHttp/UPGRADING.md              |   14 +-
+ web/lib/GuzzleHttp/Utils.php                 |  654 ++++-
+ web/lib/GuzzleHttp/functions.php             |  115 +-
+ 35 files changed, 7764 insertions(+), 612 deletions(-)
+
+commit dcae22649
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Aug 23 16:47:29 2026 +0100
+
+    Fix problem with opcache_reset() causing problems on some systems.  See GitHub Issue #4037.
+
+ web/lib/MRBS/Errors/Errors.php | 6 +++---
+ web/systemdefaults.inc.php     | 6 ++++++
+ 2 files changed, 9 insertions(+), 3 deletions(-)
+
+commit 77349a716
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Aug 23 09:22:55 2026 +0100
+
+    Provide a way of using the Email class that works on PHP 7.1+ that doesn't involve modifying the Email *71 release code.
+
+ web/functions.inc                          |  1 +
+ web/lib/Email/PHP71/EnumEmulation.php      |  2 +-
+ web/lib/Email/PHP71/LengthLimits.php       |  2 +-
+ web/lib/Email/PHP71/Parse.php              |  4 +-
+ web/lib/Email/PHP71/ParseErrorCode.php     |  2 +-
+ web/lib/Email/PHP71/ParseOptions.php       | 14 +++----
+ web/lib/Email/PHP71/ParseResult.php        |  2 +-
+ web/lib/Email/PHP71/ParsedEmailAddress.php |  2 +-
+ web/lib/Email/PHP71/ValidationSeverity.php |  2 +-
+ web/lib/MRBS/Mailer.php                    |  1 +
+ web/lib/MRBS/Parse.php (gone)              | 40 --------------------
+ web/lib/autoload.inc                       | 15 +++++++-
+ 12 files changed, 28 insertions(+), 59 deletions(-)
+
+commit 47a3f85cc
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Aug 22 18:08:24 2026 +0100
+
+    Upgrade to Release 3.8.0.71 of Email\Parse, for use with PHP versions >= 7.1 and < 8.1.
+
+ web/functions_global.inc                     |    6 +-
+ web/lib/Email/Branch2dot2/Parse.php (gone)   |  916 ---------
+ .../Branch2dot2/ParseOptions.php (gone)      |   92 -
+ web/lib/Email/Branch2dot2/README.md (gone)   |  205 --
+ .../{Branch2dot2 => PHP71}/.scrutinizer.yml  |    5 +
+ .../Email/{Branch2dot2 => PHP71}/.travis.yml |    0
+ web/lib/Email/PHP71/EnumEmulation.php (new)  |   87 +
+ web/lib/Email/{Branch2dot2 => PHP71}/LICENSE |    0
+ web/lib/Email/PHP71/LengthLimits.php (new)   |   58 +
+ web/lib/Email/PHP71/Parse.php (new)          | 1671 ++++++++++++++++
+ web/lib/Email/PHP71/ParseErrorCode.php (new) |  375 ++++
+ web/lib/Email/PHP71/ParseOptions.php (new)   |  720 +++++++
+ web/lib/Email/PHP71/ParseResult.php (new)    |   91 +
+ .../Email/PHP71/ParsedEmailAddress.php (new) |  303 +++
+ web/lib/Email/PHP71/README.md (new)          |  444 ++++
+ .../Email/PHP71/ValidationSeverity.php (new) |   42 +
+ .../{Branch2dot2 => PHP71}/autoload.php.dist |    0
+ .../{Branch2dot2 => PHP71}/composer.json     |   27 +-
+ web/lib/MRBS/Parse.php                       |    9 +-
+ 19 files changed, 3818 insertions(+), 1233 deletions(-)
+
+commit f6d5f9aae
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Aug 22 17:13:09 2026 +0100
+
+    Upgrade to Release 3.8.0 of Email\Parse.
+
+ web/lib/Email/Parse.php              | 202 ++++++++++++++++++++++---
+ web/lib/Email/ParseErrorCode.php     |  10 ++
+ web/lib/Email/ParseOptions.php       |  22 +++
+ web/lib/Email/ParsedEmailAddress.php |  15 +-
+ 4 files changed, 224 insertions(+), 25 deletions(-)
+
+commit a7a2af18a
+Merge: aa52338ff 476709050
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Aug 16 10:19:06 2026 +0100
+
+    Merge pull request #4036 from Danieldiazi/complete-spanish-translation
+    
+    Complete and polish Spanish translation
+
+commit aa52338ff
+Merge: f18b21a4e 31ef39385
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Aug 16 10:16:09 2026 +0100
+
+    Merge pull request #4035 from Danieldiazi/add-galician-translation
+    
+    Add Galician translation
+
+commit 476709050
+Author: Daniel <3638478+Danieldiazi@users.noreply.github.com>
+Date:   Sun Aug 16 11:06:32 2026 +0200
+
+    Fix positional placeholders in Spanish import error
+
+ web/lang/lang.es | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit b703ce47f
+Author: Daniel <3638478+Danieldiazi@users.noreply.github.com>
+Date:   Sat Aug 15 17:57:52 2026 +0200
+
+    Complete and polish Spanish translation
+
+ web/lang/lang.es | 178 +++++++++++++++++++++++++++------------------
+ 1 file changed, 106 insertions(+), 72 deletions(-)
+
+commit 31ef39385
+Author: Daniel <3638478+Danieldiazi@users.noreply.github.com>
+Date:   Sat Aug 15 17:55:23 2026 +0200
+
+    Add Galician translation
+
+ web/js/flatpickr/l10n/gl.js (new) |  70 +++
+ web/lang/lang.gl (new)            | 648 ++++++++++++++++++++++++++++
+ 2 files changed, 718 insertions(+)
+
+commit f18b21a4e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Aug 13 18:45:02 2026 +0100
+
+    Fix problem with session_regenerate_id() being called when there's no active session (resulting in an E_WARNING), which can happen if the user has already been logged off due to inactivity.
+
+ web/lib/MRBS/Session/SessionPhp.php | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
+
+commit 9ab1ce874
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Aug 12 16:02:52 2026 +0100
+
+    Upgrade Email\Parse to the latest release (3.6.0) and at the same time provide the latest code from the 2.2 branch for systems running on PHP versions less than 8.1. Implement MRBS\Parse as a wrapper for the two Email\Parse versions.
+
+ web/functions.inc                            |    1 -
+ web/lib/Email/.scrutinizer.yml               |   32 +-
+ .../Email/Branch2dot2/.scrutinizer.yml (new) |   29 +
+ web/lib/Email/Branch2dot2/.travis.yml (new)  |   14 +
+ web/lib/Email/Branch2dot2/LICENSE (new)      |   19 +
+ web/lib/Email/Branch2dot2/Parse.php (new)    |  916 ++++++++++++
+ .../Email/Branch2dot2/ParseOptions.php (new) |   92 ++
+ web/lib/Email/Branch2dot2/README.md (new)    |  205 +++
+ .../Branch2dot2/autoload.php.dist (new)      |   11 +
+ .../Email/Branch2dot2/composer.json (new)    |   61 +
+ web/lib/Email/LengthLimits.php (new)         |   40 +
+ web/lib/Email/Parse.php                      | 1160 ++++++++++++----
+ web/lib/Email/ParseErrorCode.php (new)       |  220 +++
+ web/lib/Email/ParseOptions.php               |  510 ++++++-
+ web/lib/Email/ParseResult.php (new)          |   72 +
+ web/lib/Email/ParsedEmailAddress.php (new)   |  217 +++
+ web/lib/Email/README.md                      |  469 +++++--
+ web/lib/Email/ValidationSeverity.php (new)   |   41 +
+ web/lib/Email/composer.json                  |   50 +-
+ web/lib/MRBS/Mailer.php                      |    1 -
+ web/lib/MRBS/Parse.php (new)                 |   43 +
+ 21 files changed, 3806 insertions(+), 397 deletions(-)
+
+commit 01e3407f3
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Aug 11 17:58:44 2026 +0100
+
+    Add emulation of mb_check_encoding()
+
+ web/functions_global.inc           | 10 ++++++
+ web/lib/MRBS/Mbstring/Mbstring.php | 49 ++++++++++++++++++++++++++++
+ web/lib/MRBS/Utf8/Utf8String.php   | 20 ++++++++++++
+ 3 files changed, 79 insertions(+)
+
+commit 3f31a4a59
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Aug 11 16:11:25 2026 +0100
+
+    Add emulation of mb_str_split()
+
+ test/test_mb.php                   | 21 ++++++++++++
+ web/functions_global.inc           | 24 ++++++++++++++
+ web/lib/MRBS/Mbstring/Mbstring.php | 48 ++++++++++++++++++++++++++++
+ 3 files changed, 93 insertions(+)
+
+commit 12b441739
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Aug 11 14:02:40 2026 +0100
+
+    Emulate PHP 8.6 deprecation message.
+
+ web/functions_global.inc | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+commit 3e10eb964
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Jul 30 17:40:59 2026 +0100
+
+    Remove the PEAR File libraries which are redundant now that AuthAuthBasic.php has been rewritten to avoid using them, as they are seriously out of date and unmaintained.
+
+ web/File/Passwd.php (gone)            | 411 ---------------
+ web/File/Passwd/Authbasic.php (gone)  | 381 --------------
+ web/File/Passwd/Authdigest.php (gone) | 348 -------------
+ web/File/Passwd/Common.php (gone)     | 370 --------------
+ web/File/Passwd/Custom.php (gone)     | 587 ---------------------
+ web/File/Passwd/Cvs.php (gone)        | 304 -----------
+ web/File/Passwd/Exception.php (gone)  |   2 -
+ web/File/Passwd/Smb.php (gone)        | 415 ---------------
+ web/File/Passwd/Unix.php (gone)       | 652 ------------------------
+ 9 files changed, 3470 deletions(-)
+
+commit 45673f78b
+Merge: f3314f50d 1d55fc7f6
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Jul 30 17:25:57 2026 +0100
+
+    Merge pull request #4031 from meeting-room-booking-system/4030-auth_basic-not-working
+    
+    Fix AuthBasic
+
+commit 1d55fc7f6
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Jul 30 17:23:10 2026 +0100
+
+    Re-apply changes which had somehow got lost
+
+ web/lib/MRBS/Auth/AuthAuthBasic.php          | 59 +++++++++++----
+ web/lib/WhiteHat101/Crypt/APR1_MD5.php (new) | 68 +++++++++++++++++
+ web/lib/WhiteHat101/Crypt/LICENSE (new)      | 22 ++++++
+ web/lib/WhiteHat101/Crypt/README.md (new)    | 70 ++++++++++++++++++
+ web/systemdefaults.inc.php                   |  3 +
+ 5 files changed, 206 insertions(+), 16 deletions(-)
+
+commit f3314f50d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Jul 29 17:25:09 2026 +0100
+
+    Restructure.
+
+ web/lib/MRBS/Auth/AuthAuthBasic.php | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+commit ee1b3bb3d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Jul 29 17:17:37 2026 +0100
+
+    Replace qualifier with an import.
+
+ web/lib/MRBS/Auth/AuthAuthBasic.php | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+commit ab0d4d4a9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Jul 29 17:16:45 2026 +0100
+
+    Throw exceptions if the configuration is not set properly, to make debugging easier.
+
+ web/lib/MRBS/Auth/AuthAuthBasic.php | 28 +++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
+
+commit 50f69a426
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Jul 29 17:07:28 2026 +0100
+
+    Add missing double-quotes in code example in comment
+
+ web/lib/MRBS/Auth/AuthAuthBasic.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 076bd5089
+Merge: 4ded8d5f3 cfafe3bcf
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Jul 29 16:42:45 2026 +0200
+
+    Merge pull request #4020 from strangechoice/fix/ldap-non-ad-bind
+    
+    Fix LDAP authentication failure on non-AD servers when using bind/search DN
+
+commit 4ded8d5f3
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Sun Jul 26 19:11:23 2026 +0100
+
+    Fix docker-image GitHub test to use MySQL to match Dockerfile
+
+ .github/workflows/docker-image.yml | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
+
+commit 8d09cd593
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Sun Jul 26 19:07:31 2026 +0100
+
+    Add basic functional testing to docker-image GitHub action
+
+ .github/workflows/docker-image.yml | 52 ++++++++++++++++++++++++++--
+ 1 file changed, 49 insertions(+), 3 deletions(-)
+
+commit be081db70
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Sun Jul 26 18:51:35 2026 +0100
+
+    Fix docker-image GitHub action for forks
+
+ .github/workflows/docker-image.yml | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+commit 80f60afc0
+Merge: c8404b4d4 ce91c601f
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Sun Jul 26 17:37:48 2026 +0100
+
+    Merge pull request #4026 from dborgards/fix/git_version
+    
+    Fix Git revision display in version information
+
+commit ce91c601f
+Author: Dietmar Borgards <2646931+dborgards@users.noreply.github.com>
+Date:   Sun Jul 26 16:18:52 2026 +0200
+
+    fix: show git revision on help page
+
+ test/test_version_git.php (new) | 36 +++++++++++++++++++++++++++++++
+ web/version.inc                 |  7 ++++--
+ 2 files changed, 41 insertions(+), 2 deletions(-)
+
+commit c8404b4d4
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jul 17 14:38:01 2026 +0100
+
+    Add option of forcing unique email addresses when using 'db' authentication.  See GitHub Issue #4023.
+
+ web/edit_users.php           | 22 ++++++++++++++++++----
+ web/lang/lang.en             |  1 +
+ web/lib/MRBS/Auth/AuthDb.php | 31 +++++++++++++++++++++++++++++++
+ web/systemdefaults.inc.php   |  2 ++
+ 4 files changed, 52 insertions(+), 4 deletions(-)
+
+commit 0755e57b3
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jul 17 13:27:25 2026 +0100
+
+    Use class constants instead of strings
+
+ web/edit_users.php     | 6 +++---
+ web/reset_password.php | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+commit c543ee5cd
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jul 17 13:11:22 2026 +0100
+
+    Convert comment to DocBlock.
+
+ web/lib/MRBS/Auth/AuthDb.php | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+commit 6fc2551e4
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jul 17 11:33:19 2026 +0100
+
+    Check that another user with the same email address isn't using the same password when resetting passwords.
+
+ web/reset_password.php         | 16 ++++++++++++++--
+ web/reset_password_handler.php | 21 ++++-----------------
+ 2 files changed, 18 insertions(+), 19 deletions(-)
+
+commit e9a0a5722
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jul 17 10:50:12 2026 +0100
+
+    Make third parameter to validatePasswords() non-optional
+
+ web/lib/MRBS/Auth/AuthDb.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 83ee09a8c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jul 17 10:26:57 2026 +0100
+
+    Restructure
+
+ web/edit_users.php           | 39 ++++++++-------------------------
+ web/lib/MRBS/Auth/AuthDb.php | 40 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 49 insertions(+), 30 deletions(-)
+
+commit 8b7a5f950
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jul 17 06:09:55 2026 +0100
+
+    Rename method.
+
+ web/edit_users.php             | 2 +-
+ web/lib/MRBS/Auth/Auth.php     | 4 ++--
+ web/reset_password_handler.php | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+commit 47bdec9f2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Jul 16 17:22:22 2026 +0100
+
+    Remove unnecessary parentheses.
+
+ web/edit_users.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 735c1d1ea
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Jul 16 16:47:45 2026 +0100
+
+    Prevent users with the same email address using the same password.  See GitHub Issue #4023.
+
+ web/edit_users.php           | 14 ++++++++++++++
+ web/lang/lang.en             |  1 +
+ web/lib/MRBS/Auth/AuthDb.php | 15 +++++----------
+ 3 files changed, 20 insertions(+), 10 deletions(-)
+
+commit 6751287d7
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Jul 16 14:20:55 2026 +0100
+
+    Fix bug when logging in with a gmail.com/googlemail.com address when using PostgreSQL and 'db' authentication and the local part of the address ends in any of 'a', 'c', 'e', 'g', 'i', l', 'm' or 'o'.  See GitHub Issue #4022.
+
+ web/lib/MRBS/Auth/AuthDb.php | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+commit cfafe3bcf
+Author: Sebastian Zerbe <zerbe@phil.hhu.de>
+Date:   Thu Jul 9 11:28:16 2026 +0200
+
+    Fix LDAP authentication failure on non-AD servers when using bind/search DN
+
+ web/lib/MRBS/Auth/AuthLdap.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 638e1cc30
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Jul 7 14:21:57 2026 +0100
+
+    Convert comment to DocBlock
+
+ web/lib/MRBS/DB/DB.php | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit 16c8dd6b5
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Jul 7 14:09:26 2026 +0100
+
+    Convert comment to DocBlock
+
+ web/lib/MRBS/DB/DB.php | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+commit c1945f6bb
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Jul 7 13:55:45 2026 +0100
+
+    Convert comment to DocBlock
+
+ web/lib/MRBS/DB/DB.php | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+commit ae4357946
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jul 4 17:49:36 2026 +0100
+
+    Simplify code by making use of clamp() function.
+
+ web/lib/MRBS/Periods.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 5f8e0a4b5
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jul 4 17:44:10 2026 +0100
+
+    Simplify code by making use of clamp() function.
+
+ web/functions.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 03b6f0bd8
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jul 4 17:16:52 2026 +0100
+
+    Add comments
+
+ web/functions_global.inc | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit f9ef5a8cb
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jul 4 17:15:32 2026 +0100
+
+    Add comment
+
+ web/functions_global.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 75846d45f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jul 4 17:13:24 2026 +0100
+
+    Add emulation of PHP 8.6's clamp() function
+
+ web/functions_global.inc | 46 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+
+commit d770cbb48
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Jun 18 14:29:31 2026 +0100
+
+    Allow query string parameter values such as "%3F" to be passed to location_header().
+
+ web/functions.inc | 29 ++++++++++++++++++++++-------
+ 1 file changed, 22 insertions(+), 7 deletions(-)
+
+commit 7c74c82c1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Jun 15 16:53:42 2026 +0100
+
+    Fix "Uncaught TypeError: Cannot read properties of undefined (reading 'scrollHeight')" when logging out from the index page and there is no public access.
+
+ web/js/refresh.js.php | 52 ++++++++++++++++++++---------------------
+ 1 file changed, 26 insertions(+), 26 deletions(-)
+
+commit 8f8048e0f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Jun 14 18:24:28 2026 +0100
+
+    Replace $.isArray() with Array.isArray(), following removal of $.isArray()
+
+ web/js/edit_entry.js.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 1d076e2f0
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Jun 14 18:13:36 2026 +0100
+
+    Upgrade to Select2 4.1.0
+
+ web/jquery/select2/dist/css/select2.css      |  771 +++++---
+ web/jquery/select2/dist/css/select2.min.css  |    2 +-
+ web/jquery/select2/dist/js/i18n/af.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/ar.js        |    4 +-
+ web/jquery/select2/dist/js/i18n/az.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/bg.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/bn.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/bs.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/ca.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/cs.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/da.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/de.js        |    4 +-
+ web/jquery/select2/dist/js/i18n/dsb.js       |    2 +-
+ web/jquery/select2/dist/js/i18n/el.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/en.js        |    4 +-
+ web/jquery/select2/dist/js/i18n/eo.js (new)  |    3 +
+ web/jquery/select2/dist/js/i18n/es.js        |    4 +-
+ web/jquery/select2/dist/js/i18n/et.js        |    4 +-
+ web/jquery/select2/dist/js/i18n/eu.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/fa.js        |    4 +-
+ web/jquery/select2/dist/js/i18n/fi.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/fr.js        |    4 +-
+ web/jquery/select2/dist/js/i18n/gl.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/he.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/hi.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/hr.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/hsb.js       |    2 +-
+ web/jquery/select2/dist/js/i18n/hu.js        |    4 +-
+ web/jquery/select2/dist/js/i18n/hy.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/id.js        |    4 +-
+ web/jquery/select2/dist/js/i18n/is.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/it.js        |    4 +-
+ web/jquery/select2/dist/js/i18n/ja.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/ka.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/km.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/ko.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/lb.js (new)  |    3 +
+ web/jquery/select2/dist/js/i18n/lt.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/lv.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/mk.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/ms.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/nb.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/ne.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/nl.js        |    4 +-
+ web/jquery/select2/dist/js/i18n/no.js (new)  |    3 +
+ web/jquery/select2/dist/js/i18n/pa.js (new)  |    3 +
+ web/jquery/select2/dist/js/i18n/pl.js        |    4 +-
+ web/jquery/select2/dist/js/i18n/ps.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/pt-BR.js     |    4 +-
+ web/jquery/select2/dist/js/i18n/pt.js        |    4 +-
+ web/jquery/select2/dist/js/i18n/ro.js        |    4 +-
+ web/jquery/select2/dist/js/i18n/ru.js        |    4 +-
+ web/jquery/select2/dist/js/i18n/sk.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/sl.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/sq.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/sr-Cyrl.js   |    2 +-
+ web/jquery/select2/dist/js/i18n/sr.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/sv.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/te.js (new)  |    3 +
+ web/jquery/select2/dist/js/i18n/th.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/tk.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/tr.js        |    4 +-
+ web/jquery/select2/dist/js/i18n/ug.js (new)  |    3 +
+ web/jquery/select2/dist/js/i18n/uk.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/vi.js        |    2 +-
+ web/jquery/select2/dist/js/i18n/zh-CN.js     |    2 +-
+ web/jquery/select2/dist/js/i18n/zh-TW.js     |    4 +-
+ web/jquery/select2/dist/js/select2.full.js   | 1507 +++++++---------
+ .../select2/dist/js/select2.full.min.js      |    4 +-
+ web/jquery/select2/dist/js/select2.js        |  926 ++++++----
+ web/jquery/select2/dist/js/select2.min.js    |    4 +-
+ 71 files changed, 1769 insertions(+), 1617 deletions(-)
+
+commit e50869f39
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Jun 14 18:11:44 2026 +0100
+
+    Upgrade to jQuery 4.0.0 (add files missing from last commit)
+
+ web/jquery/jquery-4.0.0.js (new)             | 9680 ++++++++++++++++
+ web/jquery/jquery-4.0.0.min.js (new)         |    2 +
+ web/jquery/jquery-migrate-4.0.2.js (new)     | 1086 ++
+ web/jquery/jquery-migrate-4.0.2.min.js (new) |    2 +
+ 4 files changed, 10770 insertions(+)
+
+commit 206b45f03
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Jun 14 18:07:51 2026 +0100
+
+    Upgrade to jQuery 4.0.0
+
+ web/jquery/jquery-3.7.1.js (gone)            | 10716 ---------------
+ web/jquery/jquery-3.7.1.min.js (gone)        |     2 -
+ web/jquery/jquery-migrate-3.5.0.js (gone)    |  1031 --
+ .../jquery-migrate-3.5.0.min.js (gone)       |     2 -
+ web/js.inc                                   |     6 +-
+ 5 files changed, 3 insertions(+), 11754 deletions(-)
+
+commit 831f60fb2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Jun 14 17:42:53 2026 +0100
+
+    Remove whitespace.
+
+ web/js/refresh.js.php | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit e342e18d3
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Jun 14 17:39:15 2026 +0100
+
+    Remove whitespace.
+
+ web/js/resizable.js.php | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit ccf70eadf
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Jun 14 17:36:58 2026 +0100
+
+    Fix problem causing the drag select box still to be shown when using the browser's Back button after a drag select.
+
+ web/js/resizable.js.php | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
+
+commit 028d32221
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Jun 14 17:33:41 2026 +0100
+
+    Fix TypeError when using the browser's Back button after making a drag select.
+
+ web/js/refresh.js.php | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+commit bcd152f35
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Jun 14 10:52:44 2026 +0100
+
+    Regenerate the session id if the user's level has changed.
+
+ web/lib/MRBS/Session/SessionPhp.php | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
+
+commit 513aebf80
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jun 13 14:57:30 2026 +0100
+
+    Unset the 'user_refreshed' variable on logout.
+
+ web/lib/MRBS/Session/SessionPhp.php | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+commit 25c057dc2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jun 13 14:52:33 2026 +0100
+
+    Add comment.
+
+ web/lib/MRBS/Session/SessionPhp.php | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit d589c0f70
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jun 13 14:47:46 2026 +0100
+
+    Only record the refresh time if we're going to be checking it.
+
+ web/lib/MRBS/Session/SessionPhp.php | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
+
+commit e8d27bbb3
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jun 13 14:43:23 2026 +0100
+
+    Record the refresh time in the session data if there isn't any already.
+
+ web/lib/MRBS/Session/SessionPhp.php | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+commit 9ab538deb
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jun 12 18:17:19 2026 +0100
+
+    Add DocBlocks
+
+ web/lib/MRBS/Calendar/Map.php | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+commit 5abbc71b2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jun 12 17:58:04 2026 +0100
+
+    Add return type declaration.
+
+ web/functions.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit b45f65bd8
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jun 12 17:55:04 2026 +0100
+
+    Remove redundant cast.
+
+ web/functions.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit d69c604c7
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jun 12 17:53:49 2026 +0100
+
+    Convert comment to DocBlock.
+
+ web/lib/MRBS/DB/DB.php | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
+
+commit 5115d6ebd
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jun 12 17:43:55 2026 +0100
+
+    Enhance comment.
+
+ web/lib/MRBS/Utf8/Utf8String.php | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+commit 468a66d62
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jun 12 17:40:23 2026 +0100
+
+    Remove unnecessary semicolon.
+
+ web/lib/MRBS/System.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit edfb5963a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jun 12 17:38:45 2026 +0100
+
+    Tweak comment
+
+ web/index.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit b689720b2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jun 12 17:36:36 2026 +0100
+
+    Add DocBlocks
+
+ web/index.php | 41 ++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 34 insertions(+), 7 deletions(-)
+
+commit c4c2a8b59
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jun 12 16:17:48 2026 +0100
+
+    Add DocBlock
+
+ web/lib/MRBS/System.php | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit dc3e01761
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jun 12 15:49:17 2026 +0100
+
+    Add DocBlock
+
+ web/lib/MRBS/System.php | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit 071ab86b5
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jun 12 15:45:06 2026 +0100
+
+    Add DocBlock
+
+ web/lib/MRBS/System.php | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+commit 0b6a00873
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jun 12 15:37:32 2026 +0100
+
+    Use PHP_OS_FAMILY to get the OS family, rather than trying to work it out for ourselves.
+
+ web/lib/MRBS/System.php | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+commit 7d2472707
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jun 12 15:22:08 2026 +0100
+
+    Fix some cases that were missed when testing for the return values of System::getServerOS.
+
+ web/lib/MRBS/System.php | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit c55723e60
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jun 12 15:19:29 2026 +0100
+
+    Rename method.
+
+ web/lib/MRBS/Intl/IntlDateFormatter.php |  2 +-
+ web/lib/MRBS/System.php                 | 10 +++++-----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+commit 3232f368c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jun 12 15:16:34 2026 +0100
+
+    Convert return values of System::getServerOS to match those of PHP_OS_FAMILY.
+
+ web/lib/MRBS/Intl/IntlDateFormatter.php |  4 +--
+ web/lib/MRBS/System.php                 | 33 ++++++++++++++---------
+ 2 files changed, 22 insertions(+), 15 deletions(-)
+
+commit a4503a0ab
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jun 12 12:15:50 2026 +0100
+
+    Add automatic refreshing of the current user's data after a configurable interval.  See GitHub Issue #4004.
+
+ web/lib/MRBS/Auth/Auth.php          |  5 ++---
+ web/lib/MRBS/Auth/AuthCas.php       |  2 +-
+ web/lib/MRBS/Auth/AuthDb.php        |  2 +-
+ web/lib/MRBS/Auth/AuthDbExt.php     |  2 +-
+ web/lib/MRBS/Auth/AuthIdcheck.php   |  2 +-
+ web/lib/MRBS/Auth/AuthJoomla.php    |  2 +-
+ web/lib/MRBS/Auth/AuthLdap.php      |  2 +-
+ web/lib/MRBS/Auth/AuthSaml.php      |  2 +-
+ web/lib/MRBS/Auth/AuthWix.php       |  2 +-
+ web/lib/MRBS/Auth/AuthWordpress.php |  2 +-
+ web/lib/MRBS/Session/SessionPhp.php | 25 +++++++++++++++++++++++++
+ web/systemdefaults.inc.php          |  6 ++++++
+ 12 files changed, 42 insertions(+), 12 deletions(-)
+
+commit 6f07ae861
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Jun 11 10:47:42 2026 +0100
+
+    Fix bug introduced by recent commit.  See GitHub Issue #4012.
+
+ web/js/resizable.js.php | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 2d6c74de4
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Jun 11 10:02:42 2026 +0100
+
+    Replace var with let and const.
+
+ web/js/resizable.js.php | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
+
+commit 4414aaa7a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Jun 11 09:58:03 2026 +0100
+
+    Remove comments duplicated elsewhere
+
+ web/js/resizable.js.php | 8 --------
+ 1 file changed, 8 deletions(-)
+
+commit 562fa8f98
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Jun 11 09:49:19 2026 +0100
+
+    Add comment
+
+ web/js/resizable.js.php | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+commit e259c6c64
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Jun 10 18:38:17 2026 +0100
+
+    Simplified the code when the direction is rtl.
+
+ web/js/resizable.js.php | 78 +++++++++++++++++++--------------------
+ 1 file changed, 38 insertions(+), 40 deletions(-)
+
+commit 29cb9f858
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Jun 10 16:22:23 2026 +0100
+
+    Fix bug causing the wrong room to be selected when dragging right to left and not reaching the left boundary.  See GitHub Issue #4012.
+
+ web/js/resizable.js.php | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
+
+commit 21df07b53
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Jun 9 15:20:16 2026 +0100
+
+    Fix comment
+
+ web/functions.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit fae2f20f1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Jun 9 15:18:55 2026 +0100
+
+    Fix TypeError when viewing an entry in an area where the timezone is NULL.
+
+ web/functions.inc | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit 7c5414678
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Jun 9 14:32:54 2026 +0100
+
+    Fix TypeError when an area's timezone is NULL.
+
+ web/search.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 681fcfc2a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jun 5 17:31:49 2026 +0100
+
+    Modify comment and convert to a DocBlock.
+
+ web/lib/MRBS/SessionHandler/SessionHandlerDb.php | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit a3f1e0235
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jun 5 17:12:35 2026 +0100
+
+    Fix problem introduced in recent commit that causes "session_regenerate_id(): Session ID cannot be regenerated when there is no active session" warning messages.
+
+ web/lib/MRBS/Session/SessionPhp.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit a2a6a1b28
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun May 31 06:31:55 2026 +0100
+
+    Improve code by including a logoffUser method in Session.php which will redirect if necessary.
+
+ web/kiosk.php                             | 10 ++--------
+ web/lib/MRBS/Session/Session.php          | 15 +++++++++++++++
+ web/lib/MRBS/Session/SessionCas.php       |  1 +
+ web/lib/MRBS/Session/SessionJoomla.php    |  1 +
+ web/lib/MRBS/Session/SessionPhp.php       |  1 +
+ web/lib/MRBS/Session/SessionWithLogin.php |  9 ---------
+ web/lib/MRBS/Session/SessionWordpress.php |  1 +
+ 7 files changed, 21 insertions(+), 17 deletions(-)
+
+commit 204b13e0b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun May 31 05:44:06 2026 +0100
+
+    Fix Kiosk mode for those authentication schemes, eg OAuth2, that involve a redirect after a logoff.
+
+ web/kiosk.php                             | 11 +++++---
+ web/lib/MRBS/Session/SessionCas.php       |  2 +-
+ web/lib/MRBS/Session/SessionCookie.php    |  8 ------
+ web/lib/MRBS/Session/SessionJoomla.php    |  2 +-
+ web/lib/MRBS/Session/SessionPhp.php       | 29 +++++++++------------
+ web/lib/MRBS/Session/SessionWithLogin.php |  6 ++++-
+ web/lib/MRBS/Session/SessionWordpress.php |  2 +-
+ 7 files changed, 28 insertions(+), 32 deletions(-)
+
+commit 3c54767bd
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu May 28 16:09:55 2026 +0100
+
+    Fix bug when using syntax_upsert() with an external database connection.
+
+ web/lib/MRBS/Columns.php     | 25 +++++++++++++++++++------
+ web/lib/MRBS/DB/DB.php       | 14 ++++++++++----
+ web/lib/MRBS/DB/DB_mysql.php |  2 ++
+ web/lib/MRBS/DB/DB_pgsql.php |  2 ++
+ 4 files changed, 33 insertions(+), 10 deletions(-)
+
+commit ae1b16469
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed May 27 16:17:56 2026 +0100
+
+    Restructure.
+
+ web/functions.inc        | 14 +++++++-------
+ web/grab_globals.inc.php |  8 +++++++-
+ web/import.php           |  4 ++--
+ 3 files changed, 16 insertions(+), 10 deletions(-)
+
+commit 48842461d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed May 27 15:48:08 2026 +0100
+
+    Reorder functions.
+
+ web/functions.inc | 83 +++++++++++++++++++++++----------------------
+ 1 file changed, 42 insertions(+), 41 deletions(-)
+
+commit 5aecccd34
+Merge: 593796480 ae0ddac6a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed May 27 15:46:22 2026 +0100
+
+    Merge remote-tracking branch 'origin/main'
+
+commit 593796480
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed May 27 15:42:43 2026 +0100
+
+    Rename function.
+
+ web/functions.inc | 2 +-
+ web/import.php    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 03361e579
+Merge: 38d51e05f 6c0235c64
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed May 27 15:40:05 2026 +0100
+
+    Merge branch 'post-1.12.2'
+
+commit ae0ddac6a
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Tue May 26 19:52:54 2026 +0100
+
+    Updated Github docker-image runner to use newer checkout action
+
+ .github/workflows/docker-image.yml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 38d51e05f (tag: v1.12.2)
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Tue May 26 19:24:19 2026 +0100
+
+    Update ChangeLog for release of 1.12.2
+
+ ChangeLog | 40 +++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 39 insertions(+), 1 deletion(-)
+
+commit 36e992196
 Merge: d767f02ed 8560437f7
 Author: John Beranek <jberanek@users.sourceforge.net>
 Date:   Tue May 26 19:21:38 2026 +0100
@@ -16,7 +3037,7 @@ Date:   Tue May 26 19:12:36 2026 +0100
  NEWS      |  23 +++++-
  2 files changed, 213 insertions(+), 41 deletions(-)
 
-commit 4f1126dc7 (origin/main, origin/HEAD)
+commit 4f1126dc7
 Merge: f3b534ec1 3edba0dc5
 Author: John Beranek <jberanek@users.sourceforge.net>
 Date:   Tue May 26 18:20:38 2026 +0100
@@ -24,6 +3045,13 @@ Date:   Tue May 26 18:20:38 2026 +0100
     Merge pull request #4009 from meeting-room-booking-system/ghsa-gh77-mpcm-f8r3
     
     Merges private fork ghsa-gh77-mpcm-f8r3
+
+commit 6c0235c64
+Merge: ff71b4c80 f3b534ec1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue May 26 17:09:40 2026 +0100
+
+    Merge branch 'main' into post-1.12.2
 
 commit f3b534ec1
 Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
@@ -43,6 +3071,17 @@ Date:   Tue May 26 17:06:50 2026 +0100
  web/lib/MRBS/ICalendar/Event.php | 5 +++++
  1 file changed, 5 insertions(+)
 
+commit ff71b4c80
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon May 25 14:00:54 2026 +0100
+
+    Fix bug when using syntax_upsert() with an external database connection.
+
+ web/lib/MRBS/DB/DB.php       | 8 ++++----
+ web/lib/MRBS/DB/DB_mysql.php | 2 +-
+ web/lib/MRBS/DB/DB_pgsql.php | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
 commit 0eda56c30
 Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
 Date:   Thu May 21 13:59:47 2026 +0100
@@ -52,6 +3091,22 @@ Date:   Thu May 21 13:59:47 2026 +0100
  web/lang/lang.ca | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
+commit b36731353
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue May 19 18:56:21 2026 +0100
+
+    Simplify code by using PDO::getAvailableDrivers() instead of checking for driver-specific constants.
+
+ web/lib/MRBS/DB/DBFactory.php | 76 +++++++++++++--------------------
+ 1 file changed, 29 insertions(+), 47 deletions(-)
+
+commit 570dfee88
+Merge: 0d9aa6c25 38d08836c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue May 19 18:07:35 2026 +0100
+
+    Merge branch 'main' into post-1.12.2
+
 commit 38d08836c
 Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
 Date:   Tue May 19 18:05:42 2026 +0100
@@ -60,6 +3115,21 @@ Date:   Tue May 19 18:05:42 2026 +0100
 
  web/lib/MRBS/DB/DBFactory.php | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 0d9aa6c25
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue May 19 17:20:16 2026 +0100
+
+    Upgrade to PHPMailer 7.1.1.
+
+ web/lib/PHPMailer/PHPMailer/PHPMailer.php    | 99 ++++++++++++++----
+ web/lib/PHPMailer/PHPMailer/POP3.php         | 25 +++--
+ web/lib/PHPMailer/PHPMailer/SMTP.php         |  4 +-
+ web/lib/PHPMailer/README.md                  |  8 +-
+ web/lib/PHPMailer/VERSION                    |  2 +-
+ .../PHPMailer/language/phpmailer.lang-nb.php |  2 +-
+ .../PHPMailer/language/phpmailer.lang-tr.php |  5 +
+ 7 files changed, 112 insertions(+), 33 deletions(-)
 
 commit 3edba0dc5 (origin/ghsa-grcg-5px7-rxqq)
 Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
@@ -103105,7 +106175,7 @@ Date:   Sat Apr 12 20:03:49 2008 +0000
  web/lang.cz (mode -x)       | 0
  7 files changed, 8 insertions(+), 8 deletions(-)
 
-commit d3aa0fd76 (tag: mrbs12_better_html_bp_mp1)
+commit d3aa0fd76
 Merge: 4c6a7da1d 53ad5e352
 Author: John Beranek <jberanek@users.sourceforge.net>
 Date:   Thu Apr 3 18:59:27 2008 +0000
@@ -103234,7 +106304,7 @@ Date:   Wed Jan 30 10:53:35 2008 +0000
     This commit was manufactured by cvs2svn to create branch
     'mrbs12_better_html'.
 
-commit f0992d07d (tag: mrbs12_better_html_bp, tag: mrbs-1_2_6_1)
+commit f0992d07d (tag: mrbs-1_2_6_1)
 Author: John Beranek <jberanek@users.sourceforge.net>
 Date:   Wed Jan 30 10:53:32 2008 +0000
 
@@ -104074,7 +107144,7 @@ Date:   Mon Apr 11 13:40:40 2005 +0000
  web/lang.ja | 382 +++++++++++++++++++++++++-------------------------
  1 file changed, 191 insertions(+), 191 deletions(-)
 
-commit 4f6cc97e1 (tag: mrbs-1_2-branch_lastmerge)
+commit 4f6cc97e1
 Author: John Beranek <jberanek@users.sourceforge.net>
 Date:   Tue Mar 29 13:26:27 2005 +0000
 
@@ -104310,7 +107380,7 @@ Date:   Mon Sep 13 15:47:31 2004 +0000
  web/config.inc.php | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit a63971f54 (tag: mrbs-1_2-branch_bp, tag: mrbs-1_2)
+commit a63971f54 (tag: mrbs-1_2)
 Author: unknown <devnull@localhost>
 Date:   Thu Sep 9 13:10:44 2004 +0000
 
