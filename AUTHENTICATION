@@ -420,6 +420,13 @@ External programs
 If you want to use an external authentication program, set $auth["type"] =
 "ext"; and set the additional parameters:
 
+The arguments in $auth["params"] can be supplied as a whitespace-separated
+string or as an array of strings. A string is split on whitespace; it is not
+parsed as a shell command. Use an array when an argument itself contains
+spaces. On PHP versions before 7.4, MRBS uses exec() on non-Windows systems;
+on Windows, it requires PHP 8.1.29+, 8.2.20+, 8.3.8+ or 8.4+ to avoid unsafe
+process invocation (CVE-2024-5585).
+
     - The name of the selected program in $auth["prog"].
     Don't forget to prefix it with "./" under Unix and ensure that the
     program is executable by the "user" that the webserver runs as.
@@ -429,9 +436,11 @@ If you want to use an external authentication program, set $auth["type"] =
     - The arguments to pass to the above program in $auth["params"].
 
     $auth["params"] = "passwd_file #USERNAME# #PASSWORD#";
+    // Or, to pass an argument containing spaces:
+    $auth["params"] = ["passwd_file", "#USERNAME#", "#PASSWORD#"];
     At runtime "#USERNAME#" and "#PASSWORD#" will get replaced with the username
-    and password that the user entered to login. The string can contain other
-    arguments in addition to the above two.
+    and password that the user entered to login. Array elements are passed as
+    individual arguments.
 
 
 Internal PHP Authentication Modules Configuration
@@ -1007,16 +1016,18 @@ AuthExt takes the following parameters in config.inc.php:
 $auth["type"] = "ext";
 
 $auth["prog"] = "the_pathname_of_your_program";
-$auth["params"] = "the arguments your program needs";
+$auth["params"] = ["the", "arguments", "your", "program", "needs"];
 
-AuthExt constructs a command line to execute like:
+AuthExt constructs an argument array, replacing placeholders within each
+argument:
 
-$cmd = $auth["prog"] . ' ' . $auth["params"];
+$command = [$auth["prog"], ...$auth["params"]];
 
-$cmd = preg_replace('/#USERNAME#/',$user,$cmd);
-$cmd = preg_replace('/#PASSWORD#/',$pass,$cmd);
+On PHP 7.4 and later this is run directly with proc_open(), without a shell.
+On earlier PHP versions it is converted to an escaped command line for exec();
+on Windows, the version requirements described above apply.
 
-This should allow a lot of flexibility with different authenticators.
+For arguments containing spaces, use the array form of $auth["params"].
 
 Creating a new session scheme
 ==============================
