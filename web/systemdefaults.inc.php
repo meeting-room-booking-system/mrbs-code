@@ -231,6 +231,8 @@ $mrbs_company = "Your Company";   // This line must always be uncommented ($mrbs
 // If links inside MRBS or in email notifications appear broken, then specify here the URL of
 // your MRBS root directory, as seen by the users. For example:
 // $url_base =  "http://example.com/mrbs";
+// Password reset emails are only sent if $url_base is set to a full URL (with scheme and host),
+// because the reset link is never built from request headers.
 
 
 /*******************

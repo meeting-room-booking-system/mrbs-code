@@ -540,6 +540,14 @@ function escape(string $string) : string
       $string = mrbs_nl2br(escape_html($string));
       break;
     case OUTPUT_CSV:
+      // Stop spreadsheet applications treating a value as a formula. Numeric
+      // values are left alone so that negative numbers are not altered.
+      if (($string !== '') &&
+          (strpbrk($string[0], "=+-@\t\r") !== false) &&
+          !is_numeric($string))
+      {
+        $string = "'" . $string;
+      }
       $string = str_replace('"', '""', $string);
       break;
     default:  // do nothing

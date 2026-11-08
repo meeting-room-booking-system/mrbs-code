@@ -266,7 +266,8 @@ class AuthDb extends AuthDbAbstract
    */
   public function canResetPassword() : bool
   {
-    return true;
+    // Reset emails can only be sent if $url_base is set, so hide the feature otherwise
+    return (self::getTrustedResetBase() !== null);
   }
 
 
@@ -557,6 +558,28 @@ class AuthDb extends AuthDbAbstract
   }
 
 
+  // Returns the base URL from $url_base, or null if it isn't set to a full URL.
+  // It deliberately doesn't fall back to HTTP_HOST or any other server variable.
+  private static function getTrustedResetBase() : ?string
+  {
+    global $url_base;
+
+    if (!isset($url_base) || !is_string($url_base) || ($url_base === ''))
+    {
+      return null;
+    }
+
+    $parsed = parse_url($url_base);
+    if (($parsed === false) || empty($parsed['scheme']) || empty($parsed['host']))
+    {
+      return null;
+    }
+
+    // With a scheme and host, url_base() uses only $url_base
+    return url_base();
+  }
+
+
   private function notifyUser(array $users, string $key) : bool
   {
     global $auth, $mail_settings;
@@ -610,7 +633,15 @@ class AuthDb extends AuthDbAbstract
         'key'       => $key
       );
     $query = http_build_query($vars, '', '&');
-    $href = url_base() . multisite("reset_password.php?$query");
+    // The link is emailed, so it must not be built from request headers or
+    // server variables, which a client can control.  Only $url_base is used.
+    $base = self::getTrustedResetBase();
+    if ($base === null)
+    {
+      trigger_error('Password reset email not sent: $url_base must be set to a full URL (with scheme and host).', E_USER_WARNING);
+      return false;
+    }
+    $href = $base . multisite("reset_password.php?$query");
     $body .= "<p><a href=\"$href\">" . get_vocab('reset_password') . "</a>.</p>";
 
     MailQueue::add(

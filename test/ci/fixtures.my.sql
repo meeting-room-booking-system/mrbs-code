@@ -41,4 +41,6 @@ VALUES
   (4, 1894975200, 1894980600, 0, 3, 'bob',   'bob',   'Training Session',    'E', 'New starter training',      0, 'ci-entry-4@example.com'),
   (5, 1895828400, 1895832000, 0, 1, 'alice', 'alice', 'Late January Workshop', 'E', 'Workshop on testing',     0, 'ci-entry-5@example.com'),
   -- Tue 2030-01-15, the "Break" period
-  (6, 1894708860, 1894708920, 0, 4, 'alice', 'alice', 'Period Lesson', 'E', 'Booked by period', 0, 'ci-entry-6@example.com');
+  (6, 1894708860, 1894708920, 0, 4, 'alice', 'alice', 'Period Lesson', 'E', 'Booked by period', 0, 'ci-entry-6@example.com'),
+  -- Name starts with '=' to check that CSV output is protected against spreadsheet formulas
+  (7, 1894626000, 1894629600, 0, 1, 'alice', 'alice', '=1+1 Formula Check', 'E', 'CSV formula check', 0, 'ci-entry-7@example.com');
