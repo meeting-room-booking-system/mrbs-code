@@ -826,7 +826,7 @@ function output_row(array $values, int $output_format, bool $body_row = true) : 
     }
     elseif ($output_format == OUTPUT_HTML)
     {
-      $line = '<tr>';
+      $line = "<tr>\n";
       foreach ($values as $key => $value)
       {
         $line .= ($body_row) ? '<td>' : '<th id="'. escape_html("col_$key") . '">';
@@ -834,6 +834,7 @@ function output_row(array $values, int $output_format, bool $body_row = true) : 
         $line .= ($body_row) ? '</td>' : '</th>';
         $line .= "\n";
       }
+      $line .= "</tr>\n";
     }
     echo $line;
   }
