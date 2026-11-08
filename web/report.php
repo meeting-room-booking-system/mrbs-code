@@ -529,35 +529,6 @@ function csv_conv(string $string) : string
 }
 
 
-// Escape a string for output
-function escape(string $string) : string
-{
-  global $output_format;
-
-  switch ($output_format)
-  {
-    case OUTPUT_HTML:
-      $string = mrbs_nl2br(escape_html($string));
-      break;
-    case OUTPUT_CSV:
-      // Stop spreadsheet applications treating a value as a formula. Numeric
-      // values are left alone so that negative numbers are not altered.
-      if (($string !== '') &&
-          (strpbrk($string[0], "=+-@\t\r") !== false) &&
-          !is_numeric($string))
-      {
-        $string = "'" . $string;
-      }
-      $string = str_replace('"', '""', $string);
-      break;
-    default:  // do nothing
-      break;
-  }
-
-  return $string;
-}
-
-
 // Wraps $string in a span with a data-type value of $data_type - but only for HTML output
 function type_wrap(string $string, string $data_type) : string
 {
@@ -729,11 +700,8 @@ function report_header() : void
       $value = trim($value, $nbsp);
       // And do an ordinary trim
       $value = trim($value);
-      // We don't escape HTML output here because the vocab strings are trusted.
-      // And some of them contain HTML entities such as &nbsp; on purpose
-      $values[$key] = escape($value);
+      $values[$key] = $value;
     }
-
   }
 
   $head_rows = array();
@@ -814,6 +782,29 @@ function close_summary() : void
 }
 
 
+/**
+ * Stop spreadsheet applications treating a value as a formula. Numeric values are left alone so that negative numbers
+ * are not altered.
+ *
+ * @param mixed $value
+ * @return string
+ */
+function escape_csv_formula($value) : string
+{
+  if (is_numeric($value))
+  {
+    return strval($value);
+  }
+
+  if (is_string($value) && ($value !== '') && (strpbrk($value[0], "=+-@\t\r") !== false))
+  {
+    $value = "'" . $value;
+  }
+
+  return $value;
+}
+
+
 // Output a table row.
 function output_row(array $values, int $output_format, bool $body_row = true) : void
 {
@@ -825,25 +816,48 @@ function output_row(array $values, int $output_format, bool $body_row = true) : 
   }
   else
   {
-    if ($output_format == OUTPUT_CSV)
+    switch ($output_format)
     {
-      $line = '"';
-      $line .= implode("\"$csv_col_sep\"", $values);
-      $line .= '"' . $csv_row_sep;
-      $line = csv_conv($line);
+      case OUTPUT_CSV:
+        $fp = fopen('php://temp', 'w+');
+        // Escape spreadsheet formulae.
+        $values = array_map(__NAMESPACE__ . '\escape_csv_formula', $values);
+        // fputcsv() escapes the rest of the output.
+        $escape = version_compare(PHP_VERSION, '7.4.0', '<') ? "\\" : '';
+        fputcsv($fp, $values, $csv_col_sep, '"', $escape);
+        rewind($fp);
+        $csv_contents = stream_get_contents($fp);
+        // Strip the default EOL character and add our own.
+        // Note: from PHP 8.1.0 this can be done with a sixth parameter to fputcsv().
+        $csv_contents = rtrim($csv_contents, "\n") . $csv_row_sep;
+        // Convert the string to the required character set.
+        $csv_contents = csv_conv($csv_contents);
+        fclose($fp);
+        echo $csv_contents;
+        break;
+
+      case OUTPUT_HTML:
+        $line = "<tr>\n";
+        foreach ($values as $key => $value)
+        {
+          $line .= ($body_row) ? '<td>' : '<th id="'. escape_html("col_$key") . '">';
+          if ($body_row)
+          {
+            // We don't escape HTML output in the header rows because the vocab strings are trusted.
+            // And some of them contain HTML entities such as &nbsp; on purpose
+            $line .= mrbs_nl2br(escape_html($value));
+          }
+          $line .= ($body_row) ? '</td>' : '</th>';
+          $line .= "\n";
+        }
+        $line .= "</tr>\n";
+        echo $line;
+        break;
+
+      default:
+        throw new \UnexpectedValueException("Unknown output format: $output_format");
+        break;
     }
-    elseif ($output_format == OUTPUT_HTML)
-    {
-      $line = '<tr>';
-      foreach ($values as $key => $value)
-      {
-        $line .= ($body_row) ? '<td>' : '<th id="'. escape_html("col_$key") . '">';
-        $line .= $value;
-        $line .= ($body_row) ? '</td>' : '</th>';
-        $line .= "\n";
-      }
-    }
-    echo $line;
   }
 }
 
@@ -947,7 +961,6 @@ function report_row(&$rows, $data)
         $duration_seconds -= cross_dst($data['start_time'], $data['end_time']);
         $d = get_duration($data['start_time'], $data['end_time'], $data['enable_periods'], $data['area_id']);
         $d_string = $d['duration'] . ' ' . $d['dur_units'];
-        $d_string = escape($d_string);
       case 'start_time':
         if ($data['enable_periods'])
         {
@@ -1031,7 +1044,7 @@ function report_row(&$rows, $data)
         }
         break;
     }
-    $value = escape(strval($value ?? ''));
+    $value = strval($value ?? '');
 
     // For HTML output we take special action for some fields
     if ($output_format == OUTPUT_HTML)
@@ -1130,7 +1143,7 @@ function get_sumby_name_from_row(array $row) : string
       break;
   }
 
-  return escape($name);
+  return $name;
 }
 
 
@@ -1161,9 +1174,9 @@ function accumulate_summary($row, &$count, &$hours, $report_start, $report_end,
   // Use brief description, created by or type as the name:
   $name = get_sumby_name_from_row($row);
   // Area and room separated by break (if HTML):
-  $room = escape($row['area_name']);
+  $room = $row['area_name'];
   $room .= ($output_format == OUTPUT_HTML) ? "<br>" : '/';
-  $room .= escape($row['room_name']);
+  $room .= $row['room_name'];
   // Accumulate the number of bookings for this room and name:
   increment_count($count, $room, $name, 1);
   // Accumulate hours/periods used, clipped to report range dates:
