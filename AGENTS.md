@@ -43,3 +43,13 @@ Use the exact style already used in the file:
 ### Release-note source
 
 Use the git history and the developer-provided release notes as the source of truth. When a developer list is available, treat it as the authoritative list of individual changes to include, while still preserving the conventional NEWS wording and grouping.
+
+### Reading commit messages
+
+Commit messages may follow the GitHub convention: the first line is a title, and any following lines are details, often as bullets after a blank line. Not every commit will use this format, so handle both forms:
+
+- Use the title as the basis for the NEWS bullet, rewritten into the NEWS style above if needed (e.g. `Fix LDAP injection in group filter` becomes `Fix LDAP injection ...`).
+- If the body has bullets, each bullet describing a distinct user-visible change becomes its own NEWS bullet, and bullets that are only internal detail are omitted.
+- If a commit has no body, use the title alone.
+- Keep any reporter credit and advisory or issue IDs given in the commit message, as they are part of the NEWS entry.
+- Write each NEWS bullet as a complete, readable sentence fragment that a site administrator can understand without seeing the commit. Do not paste raw commit text, such as stray line breaks, bullet markers or internal file names, into NEWS.
