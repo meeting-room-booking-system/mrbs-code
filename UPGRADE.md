@@ -19,7 +19,7 @@ See the advice in `INSTALL` about potentially creating a fresh `config.inc.php` 
 
 ## Upgrading to MRBS 1.12.4
 
-### Password reset requires `$url_base`
+### Password reset requires `$url_base` (including scheme and host)
 
 Password reset emails contain a link back to MRBS. Previously, if `$url_base` was not set, MRBS built this link from the HTTP `Host` header, which a client can control. The link is no longer built from request headers or server variables.
 
