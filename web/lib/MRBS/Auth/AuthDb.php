@@ -558,25 +558,26 @@ class AuthDb extends AuthDbAbstract
   }
 
 
-  // Returns the base URL from $url_base, or null if it isn't set to a full URL.
-  // It deliberately doesn't fall back to HTTP_HOST or any other server variable.
+  /**
+   * Returns the base URL from `$url_base`, or null if it isn't set to a full URL.
+   * It deliberately doesn't fall back to HTTP_HOST or any other server variable.
+   */
   private static function getTrustedResetBase() : ?string
   {
     global $url_base;
 
-    if (!isset($url_base) || !is_string($url_base) || ($url_base === ''))
+    if (isset($url_base) && is_string($url_base) && ($url_base !== ''))
     {
-      return null;
+      $parsed = parse_url($url_base);
+      if (($parsed !== false) && !empty($parsed['scheme']) && !empty($parsed['host']))
+      {
+        // With a scheme and host, url_base() uses only $url_base
+        return url_base();
+      }
     }
 
-    $parsed = parse_url($url_base);
-    if (($parsed === false) || empty($parsed['scheme']) || empty($parsed['host']))
-    {
-      return null;
-    }
-
-    // With a scheme and host, url_base() uses only $url_base
-    return url_base();
+    trigger_error('No trusted base available: $url_base must be set to a full URL (with scheme and host).', E_USER_WARNING);
+    return null;
   }
 
 
@@ -638,7 +639,6 @@ class AuthDb extends AuthDbAbstract
     $base = self::getTrustedResetBase();
     if ($base === null)
     {
-      trigger_error('Password reset email not sent: $url_base must be set to a full URL (with scheme and host).', E_USER_WARNING);
       return false;
     }
     $href = $base . multisite("reset_password.php?$query");
