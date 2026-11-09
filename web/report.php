@@ -856,13 +856,12 @@ function output_row(array $values, int $output_format, bool $body_row = true) : 
         // Note: from PHP 8.1.0 this can be done with a sixth parameter to fputcsv().
         if (str_ends_with($csv_contents, "\n"))
         {
-          $csv_contents = mb_substr($csv_contents, 0, -1);
+          $csv_contents = mb_substr($csv_contents, 0, -1) . $csv_row_sep;
         }
         else
         {
           throw new Exception("CSV output does not end with a newline");
         }
-        $csv_contents = rtrim($csv_contents, "\n") . $csv_row_sep;
         // Convert the string to the required character set.
         $csv_contents = csv_conv($csv_contents);
         fclose($fp);
