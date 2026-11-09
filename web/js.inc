@@ -93,15 +93,19 @@ if (null !== ($select2_lang_path = Language::getInstance()->getSelect2LangPath()
 }
 
 // dataTables initialisation
-if (in_array($page, array('admin', 'edit_users', 'pending', 'report', 'search', 'view_entry')))
+if (in_array($page, ['admin', 'edit_users', 'pending', 'report', 'search', 'view_entry']))
 {
   // Include the JavaScript for those pages that use dataTables
   // When constructing the DataTables download we want to include the following:
   //    DataTables styling framework
   //    DataTables package
-  //    Buttons, and all sub-options
-  //    ColReorder
-  //    FixedColumns
+  //    EXTENSIONS
+  //      Buttons, and all sub-options
+  //      ColReorder
+  //      FixedColumns
+  //    EXTERNAL LIBRARIES
+  //      JSZip
+  //      pdfmake
   echo script_html(($debug) ? 'jquery/datatables/datatables.js' : 'jquery/datatables/datatables.min.js', true);
   echo script_html('jquery/datatables/plugins.js', true);
   echo script_html("js/datatables.js.php?$query_string", true);
