@@ -854,6 +854,14 @@ function output_row(array $values, int $output_format, bool $body_row = true) : 
         $csv_contents = stream_get_contents($fp);
         // Strip the default EOL character and add our own.
         // Note: from PHP 8.1.0 this can be done with a sixth parameter to fputcsv().
+        if (str_ends_with($csv_contents, "\n"))
+        {
+          $csv_contents = mb_substr($csv_contents, 0, -1);
+        }
+        else
+        {
+          throw new Exception("CSV output does not end with a newline");
+        }
         $csv_contents = rtrim($csv_contents, "\n") . $csv_row_sep;
         // Convert the string to the required character set.
         $csv_contents = csv_conv($csv_contents);
