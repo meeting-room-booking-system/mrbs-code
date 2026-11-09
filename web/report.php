@@ -529,6 +529,27 @@ function csv_conv(string $string) : string
 }
 
 
+/**
+ * Escape a string for output.  Only HTML output is escaped here.  CSV escaping is done when the row is output.
+ */
+function escape(string $string) : string
+{
+  global $output_format;
+
+  switch ($output_format)
+  {
+    case OUTPUT_HTML:
+      $string = mrbs_nl2br(escape_html($string));
+      break;
+    default:
+      // Do nothing. CSV escaping is done when the row is output.
+      break;
+  }
+
+  return $string;
+}
+
+
 // Wraps $string in a span with a data-type value of $data_type - but only for HTML output
 function type_wrap(string $string, string $data_type) : string
 {
@@ -621,6 +642,9 @@ function report_header() : void
 
   foreach ($field_order_list as $field)
   {
+    // We don't escape HTML output here because the vocab strings are trusted, and some of them contain HTML entities
+    // such as &nbsp; on purpose.
+
     // We give some columns a type data value so that the JavaScript knows how to sort them
     // TODO: the 'title-*' plugins are now deprecated in DataTables.  Use the replacement.
     // TODO: is 'string' really necessary or does DataTables auto-detect? (But it is necessary
@@ -819,6 +843,7 @@ function output_row(array $values, int $output_format, bool $body_row = true) : 
     switch ($output_format)
     {
       case OUTPUT_CSV:
+        // Escaping for CSV is done here.
         $fp = fopen('php://temp', 'w+');
         // Escape spreadsheet formulae.
         $values = array_map(__NAMESPACE__ . '\escape_csv_formula', $values);
@@ -837,16 +862,13 @@ function output_row(array $values, int $output_format, bool $body_row = true) : 
         break;
 
       case OUTPUT_HTML:
+        // Escaping for HTML is done when the values are formed, not here.  That's because they may contain HTML,
+        // eg <a> and <span> tags.
         $line = "<tr>\n";
         foreach ($values as $key => $value)
         {
           $line .= ($body_row) ? '<td>' : '<th id="'. escape_html("col_$key") . '">';
-          if ($body_row)
-          {
-            // We don't escape HTML output in the header rows because the vocab strings are trusted.
-            // And some of them contain HTML entities such as &nbsp; on purpose
-            $line .= mrbs_nl2br(escape_html($value));
-          }
+          $line .= $value;
           $line .= ($body_row) ? '</td>' : '</th>';
           $line .= "\n";
         }
@@ -961,6 +983,7 @@ function report_row(&$rows, $data)
         $duration_seconds -= cross_dst($data['start_time'], $data['end_time']);
         $d = get_duration($data['start_time'], $data['end_time'], $data['enable_periods'], $data['area_id']);
         $d_string = $d['duration'] . ' ' . $d['dur_units'];
+        $d_string = escape($d_string);
       case 'start_time':
         if ($data['enable_periods'])
         {
@@ -1044,7 +1067,7 @@ function report_row(&$rows, $data)
         }
         break;
     }
-    $value = strval($value ?? '');
+    $value = escape(strval($value ?? ''));
 
     // For HTML output we take special action for some fields
     if ($output_format == OUTPUT_HTML)
@@ -1143,7 +1166,7 @@ function get_sumby_name_from_row(array $row) : string
       break;
   }
 
-  return $name;
+  return escape($name);
 }
 
 
@@ -1174,9 +1197,9 @@ function accumulate_summary($row, &$count, &$hours, $report_start, $report_end,
   // Use brief description, created by or type as the name:
   $name = get_sumby_name_from_row($row);
   // Area and room separated by break (if HTML):
-  $room = $row['area_name'];
+  $room = escape($row['area_name']);
   $room .= ($output_format == OUTPUT_HTML) ? "<br>" : '/';
-  $room .= $row['room_name'];
+  $room .= escape($row['room_name']);
   // Accumulate the number of bookings for this room and name:
   increment_count($count, $room, $name, 1);
   // Accumulate hours/periods used, clipped to report range dates:
