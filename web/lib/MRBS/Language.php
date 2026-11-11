@@ -46,6 +46,28 @@ class Language
   /**
    * Maps the non-standard language tag used in the filename onto the BCP 47 standard
    */
+  private const LANG_MAP_DATATABLES = [
+    'az-AZ' => 'az',  // No 'az' file is provided
+    'bs-BA' => 'bs',  // No 'bs' file is provided
+    'de-DE' => 'de',  // No 'de' file is provided
+    'es-ES' => 'es',  // No 'es' file is provided
+    'fr-FR' => 'fr',  // No 'fr' file is provided
+    'Ganda' => 'lg',
+    'it-IT' => 'it',  // No 'it' file is provided
+    'nl-NN' => 'nl',  // No 'nl' file is provided
+    'no-NB' => 'nb',  // Naming wrong
+    'no-NO' => 'nn',  // Naming wrong
+    'pt-PT' => 'pt',  // No 'pt' file is provided
+    'snd' => 'sd',    // Naming wrong
+    'sr-SP' => 'sr-Latn',  // Naming wrong
+    'sv-SE' => 'sv',  // No 'sv' file is provided
+    'uz-CR' => 'uz-Cyrl',  // Naming wrong
+    'zh-HANT' => 'zh-Hant'  // Naming wrong
+  ];
+
+  /**
+   * Maps the non-standard language tag used in the filename onto the BCP 47 standard
+   */
   private const LANG_MAP_FLATPICKR = [
     'at'      => 'de-at',
     'cat'     => 'ca',
@@ -93,6 +115,7 @@ class Language
     'datatables' => [
       'dir' => 'jquery/datatables/language',
       'suffix' => '.json',
+      'lang_map' => self::LANG_MAP_DATATABLES,
       'defaults' => ['en']
     ],
     'flatpickr' => [
