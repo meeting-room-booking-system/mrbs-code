@@ -17,7 +17,7 @@ MRBS database upgrades are in general not backwards compatible, ie you won't be 
 See the advice in `INSTALL` about potentially creating a fresh `config.inc.php` when you upgrade MRBS, especially for a major version change.
 
 
-## Upgrading to MRBS 1.12.4
+## Upgrading to MRBS 1.13.0
 
 ### Password reset requires `$url_base` (including scheme and host)
 
