@@ -94241,7 +94241,7 @@ Buttons.stripData = function (input, config) {
       // define the output as a string, which is done with a leading quote
       // mark. This should not be done on data which is just purely
       // numeric though.
-      if (!str.match(/^[+-]?\d+\.?\d*$/) && str.match(/^[=+\-@\t\r]/)) {
+      if (!(!isNaN(parseFloat(str)) && !isNaN(str - 0)) && str.match(/^[=+\-@\t\r]/)) {
             str = "'" + str;
         }
     }
