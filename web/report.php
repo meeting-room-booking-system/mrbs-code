@@ -1057,7 +1057,7 @@ function report_row(&$rows, $data)
           $value = "<span>$value</span>" .
                    '<a href="' . escape_html($href) . '"' .
                    ' data-id="' . intval($data['id']) . '"' .  // Cast to int as a precaution
-                   $value . '">' . $value . '</a>';  // $value already escaped
+                   '>' . $value . '</a>';  // $value already escaped
           break;
         case 'end_time':
           // Process the duration and then fall through to the end_time
