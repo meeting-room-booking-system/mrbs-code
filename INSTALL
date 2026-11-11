@@ -73,8 +73,9 @@ Unpack the software into a new temporary directory, something like this:
 MRBS comes with a sample configuration file "web/config.inc.php-sample" -
 this should be copied to "web/config.inc.php" and configured for your
 site. The minimum you generally need to configure are the timezone
-(unless your PHP configuration already defines the timezone) and the
-database access details.
+(unless your PHP configuration already defines the timezone), the
+database access details and, if you are using the default 'db'
+authentication type, $url_base.
 
 If you are upgrading from a previous version of MRBS, you should consider
 copying your changes to the "config.inc.php" file into a new copy

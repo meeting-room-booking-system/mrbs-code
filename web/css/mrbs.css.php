@@ -2684,15 +2684,17 @@ div.ColVis_collection button.ColVis_Button {
   clear: left;
 }
 
+.dt-container .clear {
+  clear: both;
+}
+
 .dt-container .dt-length,
 .dt-container .dt-info {
-  clear: both;
   float: left;
 }
 
 .dt-container .dt-search,
 .dt-container .dt-paging {
-  clear: right;
   float: right;
 }
 
