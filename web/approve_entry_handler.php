@@ -40,7 +40,7 @@ if (mb_strpos($returl, '?') === false)
 }
 
 
-if (isset($action))
+if (isset($action) && ($data !== false))
 {
   if (need_to_send_mail())
   {
