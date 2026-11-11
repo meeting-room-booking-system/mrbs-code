@@ -807,8 +807,8 @@ function close_summary() : void
 
 
 /**
- * Stop spreadsheet applications treating a value as a formula. Numeric values are left alone so that negative numbers
- * are not altered.
+ * Stop spreadsheet applications treating a value as a formula, by adding a text qualifier before the string. Numeric
+ * values are left alone so that negative numbers are not altered.
  *
  * @param mixed $value
  * @return string
