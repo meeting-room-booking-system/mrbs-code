@@ -114,7 +114,47 @@ jobs:
       - name: Functional tests
         run: |
           python3 -m pip install -r test/ci/requirements.txt
-          MRBS_URL_NOBASE=http://localhost:8081/ python3 -m pytest test/ci -v || (docker logs mrbs-test && docker logs mrbs-test-nobase && exit 1)
+          MRBS_URL_NOBASE=http://localhost:8081/ python3 -m pytest test/ci -v --junitxml=test-results.xml || (docker logs mrbs-test && docker logs mrbs-test-nobase && exit 1)
+
+      - name: Test summary
+        if: always()
+        env:
+          PHP_VERSION: ${{ matrix.php }}
+        run: |
+          python3 - <<'EOF' >> "$GITHUB_STEP_SUMMARY"
+          import os
+          import xml.etree.ElementTree as ET
+
+          php = os.environ['PHP_VERSION']
+          print(f'### Functional tests (PHP {php})')
+          print()
+          if not os.path.exists('test-results.xml'):
+              print('No test results were produced. The test run did not start.')
+          else:
+              cases = list(ET.parse('test-results.xml').getroot().iter('testcase'))
+              failed, skipped = [], 0
+              for case in cases:
+                  if case.find('failure') is not None or case.find('error') is not None:
+                      failed.append(case)
+                  elif case.find('skipped') is not None:
+                      skipped += 1
+              passed = len(cases) - len(failed) - skipped
+              print('| Passed | Failed | Skipped | Total |')
+              print('|---|---|---|---|')
+              print(f'| {passed} | {len(failed)} | {skipped} | {len(cases)} |')
+              if failed:
+                  print()
+                  print('#### Failed tests')
+                  print()
+                  print('| Test | Message |')
+                  print('|---|---|')
+                  for case in failed:
+                      node = case.find('failure')
+                      if node is None:
+                          node = case.find('error')
+                      msg = (node.get('message') or '').split('\n')[0].replace('|', '\\|')
+                      print(f"| `{case.get('classname')}::{case.get('name')}` | {msg} |")
+          EOF
 
       - name: PHP error log checks
         run: |
