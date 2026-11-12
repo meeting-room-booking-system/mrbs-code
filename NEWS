@@ -7,6 +7,44 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.13.0 (Thu 12th November 2026):
+
+[-] Fix LDAP injection in the authentication filter by escaping filter and DN values
+ with ldap_escape().  Thanks to Duc Anh Le (GitHub: @leediay153) for reporting the
+ vulnerability.  See GitHub Security Advisory GHSA-r543-f38c-cq6v.
+
+[-] Fix CSV formula injection in report exports, both from the server and from the
+ DataTables CSV export button, by prefixing values starting with =, +, -, @, TAB or CR
+ so that spreadsheet applications do not treat them as formulas.  Thanks to Duc Anh Le
+ (GitHub: @leediay153) for reporting the vulnerability.  See GitHub Security Advisory
+ GHSA-9rvp-v4ff-wpwr.
+
+[-] Fix password reset poisoning via Host header injection.  Password reset is now only
+ offered when $url_base is set, and the reset link is never built from HTTP_HOST or
+ SERVER_NAME.  $url_base must include the scheme and host; see UPGRADE.md.  Thanks to
+ Duc Anh Le (GitHub: @leediay153) for reporting the vulnerability.  See GitHub Security
+ Advisory GHSA-73cv-hx7f-9v27.
+
+[-] Prevent ordinary users from requesting more info about other users' bookings, and
+ from reminding admins about other users' bookings.  Thanks to tsurutanmen (GitHub:
+ @tsurutanmen) for reporting the vulnerability.  See GitHub Security Advisory
+ GHSA-rgxh-mqpj-353h.
+
+[*] Upgrade DataTables to Version 3.1.5, with Buttons 4.1.3, ColReorder 3.1.2 and
+ FixedColumns 6.1.2, and fix the print CSS and MRBS custom CSS following the upgrade.
+
+[*] Upgrade PHPMailer to Version 7.2.0.
+
+[-] Fix badly formed element in the brief description column of reports, which also
+ stopped DataTables from respecting the locale when sorting that column.
+
+[-] Add missing closing </tr> tags to reports and summaries.
+
+[-] Fix bug causing a TypeError when you log out while on the view_entry page, log back
+ in, edit the entry and then Save.  See GitHub Issue #4079.
+
+-------------------------------------------------------------------------------
+
 Version 1.12.3 (Sat 7th November 2026):
 
 [-] Fix command injection vulnerability in 'ext' authentication by running the external
