@@ -118,8 +118,7 @@ jobs:
 
       - name: PHP error log checks
         run: |
-          # Known bug, issue #4079: the main instance logs a get_booking_info() TypeError from a redirect
-          test/ci/check-php-log.sh mrbs-test 'get_booking_info\(\): Argument #1'
+          test/ci/check-php-log.sh mrbs-test
           # The nobase instance logs the "No trusted base" warning on every request by design (see AuthDb.php)
           test/ci/check-php-log.sh mrbs-test-nobase 'No trusted base available'
 

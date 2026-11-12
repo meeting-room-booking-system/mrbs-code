@@ -80,6 +80,5 @@ MRBS_URL="http://localhost:$MRBS_PORT/" MRBS_URL_NOBASE="http://localhost:$NOBAS
   "$VENV/bin/pytest" test/ci -p no:cacheprovider "$@"
 
 # The nobase instance logs the "No trusted base" warning on every request by design (see AuthDb.php)
-# The main instance has a known redirect bug that passes a null id to get_booking_info() (issue #4079)
-test/ci/check-php-log.sh "$APP" 'get_booking_info\(\): Argument #1'
+test/ci/check-php-log.sh "$APP"
 test/ci/check-php-log.sh "$NOBASE" 'No trusted base available'
