@@ -708,10 +708,7 @@ if (isset($returl) && ($returl !== ''))
   }
 }
 
-if (empty($returl) ||
-    in_array($returl, array('edit_entry.php',
-                            'edit_entry_handler.php',
-                            'search.php')))
+if (empty($returl) || in_array($returl, ['edit_entry.php', 'edit_entry_handler.php', 'search.php', 'view_entry.php']))
 {
   $returl = 'index.php';
 }

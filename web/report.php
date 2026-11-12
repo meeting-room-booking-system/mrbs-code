@@ -826,7 +826,7 @@ function output_row(array $values, int $output_format, bool $body_row = true) : 
     }
     elseif ($output_format == OUTPUT_HTML)
     {
-      $line = '<tr>';
+      $line = "<tr>\n";
       foreach ($values as $key => $value)
       {
         $line .= ($body_row) ? '<td>' : '<th id="'. escape_html("col_$key") . '">';
@@ -834,6 +834,7 @@ function output_row(array $values, int $output_format, bool $body_row = true) : 
         $line .= ($body_row) ? '</td>' : '</th>';
         $line .= "\n";
       }
+      $line .= "</tr>\n";
     }
     echo $line;
   }
@@ -1056,7 +1057,7 @@ function report_row(&$rows, $data)
           $value = "<span>$value</span>" .
                    '<a href="' . escape_html($href) . '"' .
                    ' data-id="' . intval($data['id']) . '"' .  // Cast to int as a precaution
-                   $value . '">' . $value . '</a>';  // $value already escaped
+                   '>' . $value . '</a>';  // $value already escaped
           break;
         case 'end_time':
           // Process the duration and then fall through to the end_time
