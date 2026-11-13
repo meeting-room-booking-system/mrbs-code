@@ -225,12 +225,14 @@ $mrbs_company = "Your Company";   // This line must always be uncommented ($mrbs
 //$mrbs_company_more_info = "You can put additional information here";  // e.g. "XYZ Department"
 
 // Uncomment this next line to have a link to your organisation in the header
-//$mrbs_company_url = "http://www.your_organisation.com/";
+//$mrbs_company_url = "https://www.your_organisation.com/";
 
 // This is to fix URL problems when using a proxy in the environment.
 // If links inside MRBS or in email notifications appear broken, then specify here the URL of
 // your MRBS root directory, as seen by the users. For example:
-// $url_base =  "http://example.com/mrbs";
+// $url_base =  "https://example.com/mrbs";
+// Password reset emails are only sent if $url_base is set to a full URL (with scheme and host),
+// because the reset link is never built from request headers.
 
 
 /*******************

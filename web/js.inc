@@ -93,16 +93,27 @@ if (null !== ($select2_lang_path = Language::getInstance()->getSelect2LangPath()
 }
 
 // dataTables initialisation
-if (in_array($page, array('admin', 'edit_users', 'pending', 'report', 'search', 'view_entry')))
+if (in_array($page, ['admin', 'edit_users', 'pending', 'report', 'search', 'view_entry']))
 {
   // Include the JavaScript for those pages that use dataTables
   // When constructing the DataTables download we want to include the following:
   //    DataTables styling framework
   //    DataTables package
-  //    Buttons, and all sub-options
-  //    ColReorder
-  //    FixedColumns
-  echo script_html(($debug) ? 'jquery/datatables/datatables.js' : 'jquery/datatables/datatables.min.js', true);
+  //    EXTENSIONS
+  //      Buttons, and all sub-options
+  //      ColReorder
+  //      FixedColumns
+  //    EXTERNAL LIBRARIES
+  //      JSZip
+  //      pdfmake
+
+  // NOTE: We have manually applied https://github.com/DataTables/Buttons/commit/b054cb5f7b6d0c51a6b5e45e2c6bdb5a2fe8c07a
+  // which fixes a security vulnerability in the Buttons extension that potentially allows formula injection using
+  // strings starting with '-' ot '+'.  This will appear in the next release of Buttons, ie the one after 4.1.3.  Until
+  // it does, we only offer the unminified version of DataTables, and if a new combined download is built beforehand
+  // then the patch should be reapplied.
+  // echo script_html(($debug) ? 'jquery/datatables/datatables.js' : 'jquery/datatables/datatables.min.js', true);
+  echo script_html('jquery/datatables/datatables.js', true);
   echo script_html('jquery/datatables/plugins.js', true);
   echo script_html("js/datatables.js.php?$query_string", true);
 }

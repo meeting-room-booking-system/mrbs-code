@@ -6,6 +6,8 @@ from html.parser import HTMLParser
 import requests
 
 BASE_URL = os.environ.get("MRBS_URL", "http://localhost:8080/")
+# A second instance without $url_base, where password reset is hidden
+NOBASE_URL = os.environ.get("MRBS_URL_NOBASE")
 PASSWORD = "testpass"
 
 # Fixture dates (see fixtures.my.sql)
@@ -91,11 +93,12 @@ def find_form(html, predicate, fields=None):
 
 
 class Client:
-  def __init__(self):
+  def __init__(self, base=BASE_URL):
+    self.base = base
     self.http = requests.Session()
 
   def url(self, path):
-    return BASE_URL.rstrip("/") + "/" + path.lstrip("/")
+    return self.base.rstrip("/") + "/" + path.lstrip("/")
 
   def get(self, path):
     response = self.http.get(self.url(path))

@@ -72,6 +72,12 @@ $db_tbl_prefix = $_ENV['MRBS_DB_TBL_PREFIX'] ?? 'mrbs_';
 // connections if you can.
 $db_persist = false;
 
+// Full URL of the site (scheme and host). Setting it enables password reset emails.
+if (!empty($_ENV['MRBS_URL_BASE']))
+{
+  $url_base = $_ENV['MRBS_URL_BASE'];
+}
+
 
 /* Add lines from systemdefaults.inc.php and areadefaults.inc.php below here
    to change the default configuration. Do _NOT_ modify systemdefaults.inc.php
