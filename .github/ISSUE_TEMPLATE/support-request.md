@@ -3,6 +3,7 @@ name: Support request
 about: To raise support requests.
 title: ''
 labels: support request
+type: Support Request
 assignees: ''
 
 ---

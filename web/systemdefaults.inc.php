@@ -225,12 +225,14 @@ $mrbs_company = "Your Company";   // This line must always be uncommented ($mrbs
 //$mrbs_company_more_info = "You can put additional information here";  // e.g. "XYZ Department"
 
 // Uncomment this next line to have a link to your organisation in the header
-//$mrbs_company_url = "http://www.your_organisation.com/";
+//$mrbs_company_url = "https://www.your_organisation.com/";
 
 // This is to fix URL problems when using a proxy in the environment.
 // If links inside MRBS or in email notifications appear broken, then specify here the URL of
 // your MRBS root directory, as seen by the users. For example:
-// $url_base =  "http://example.com/mrbs";
+// $url_base =  "https://example.com/mrbs";
+// Password reset emails are only sent if $url_base is set to a full URL (with scheme and host),
+// because the reset link is never built from request headers.
 
 
 /*******************
@@ -1124,6 +1126,15 @@ $auth["session_cookie"]["hash_algorithm"] = 'sha512';
 
 
 // Configuration parameters for 'php' session scheme
+
+// By default MRBS's PHP session scheme uses a custom session handler that encrypts and stores session data in the
+// database. This
+//   (a) is more secure, especially on shared servers;
+//   (b) avoids problems with ordinary sessions not working because the PHP session save directory is not writable; and
+//   (c) is more resilient in clustered environments.
+// However, there may be circumstances where it is preferable to use the the internal PHP session handler, in which
+// case set this to true.  Note that the session data is not encrypted when using the internal PHP handler.
+$auth['session_php']['use_internal_php_handler'] = false;
 
 // The session name
 // Unset this in your config file if you want to use the default session name

@@ -85,7 +85,7 @@ foreach ($color_types as $type => $col)
 // hide DataTable buttons in print
 ?>
 
-.ColVis_Button, .dataTables_filter, .dataTables_length, .dataTables_paginate {
+div.dt-buttons, .dt-search, .dt-length, .dt-info, .dt-paging {
   display: none;
 }
 

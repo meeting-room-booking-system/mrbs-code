@@ -277,7 +277,7 @@ class AuthLdap extends Auth
         {
           $f = "(&(".
             $object['config']['ldap_filter_user_attr'].
-            "=$user)($filter))";
+            "=" . ldap_escape($user, '', LDAP_ESCAPE_FILTER) . ")($filter))";
           $filter_dn = $object['config']['ldap_filter_base_dn'];
           $call = 'ldap_search';
         }
@@ -801,7 +801,7 @@ class AuthLdap extends Auth
             self::debug("initial bind was successful");
 
             $base_dn = self::$all_ldap_opts['ldap_base_dn'][$idx];
-            $filter = "(" . self::$all_ldap_opts['ldap_dn_search_attrib'][$idx] . "=$username)";
+            $filter = "(" . self::$all_ldap_opts['ldap_dn_search_attrib'][$idx] . "=" . ldap_escape($username, '', LDAP_ESCAPE_FILTER) . ")";
 
             self::debug("searching using base_dn '$base_dn' and filter '$filter'");
             $res = ldap_search($ldap, $base_dn, $filter);
@@ -816,7 +816,7 @@ class AuthLdap extends Auth
               {
                 $entries = ldap_get_entries($ldap, $res);
                 $dn = $entries[0]["dn"];
-                $user_search = self::$all_ldap_opts['ldap_user_attrib'][$idx] . "=" . $username;
+                $user_search = self::$all_ldap_opts['ldap_user_attrib'][$idx] . "=" . ldap_escape($username, '', LDAP_ESCAPE_FILTER);
                 self::debug("found one entry dn '$dn'");
               }
               else
@@ -829,8 +829,9 @@ class AuthLdap extends Auth
         else
         {
           // construct dn for user
-          $user_search = self::$all_ldap_opts['ldap_user_attrib'][$idx] . "=" . $username;
-          $dn = $user_search . "," . self::$all_ldap_opts['ldap_base_dn'][$idx];
+          $attrib = self::$all_ldap_opts['ldap_user_attrib'][$idx];
+          $user_search = $attrib . "=" . ldap_escape($username, '', LDAP_ESCAPE_FILTER);
+          $dn = $attrib . "=" . ldap_escape($username, '', LDAP_ESCAPE_DN) . "," . self::$all_ldap_opts['ldap_base_dn'][$idx];
 
           self::debug("constructed dn '$dn' and " .
                       "user_search '$user_search' using '" .

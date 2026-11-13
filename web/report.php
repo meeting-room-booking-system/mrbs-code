@@ -529,7 +529,9 @@ function csv_conv(string $string) : string
 }
 
 
-// Escape a string for output
+/**
+ * Escape a string for output.  Only HTML output is escaped here.  CSV escaping is done when the row is output.
+ */
 function escape(string $string) : string
 {
   global $output_format;
@@ -539,10 +541,8 @@ function escape(string $string) : string
     case OUTPUT_HTML:
       $string = mrbs_nl2br(escape_html($string));
       break;
-    case OUTPUT_CSV:
-      $string = str_replace('"', '""', $string);
-      break;
-    default:  // do nothing
+    default:
+      // Do nothing. CSV escaping is done when the row is output.
       break;
   }
 
@@ -642,6 +642,9 @@ function report_header() : void
 
   foreach ($field_order_list as $field)
   {
+    // We don't escape HTML output here because the vocab strings are trusted, and some of them contain HTML entities
+    // such as &nbsp; on purpose.
+
     // We give some columns a type data value so that the JavaScript knows how to sort them
     // TODO: the 'title-*' plugins are now deprecated in DataTables.  Use the replacement.
     // TODO: is 'string' really necessary or does DataTables auto-detect? (But it is necessary
@@ -721,11 +724,8 @@ function report_header() : void
       $value = trim($value, $nbsp);
       // And do an ordinary trim
       $value = trim($value);
-      // We don't escape HTML output here because the vocab strings are trusted.
-      // And some of them contain HTML entities such as &nbsp; on purpose
-      $values[$key] = escape($value);
+      $values[$key] = $value;
     }
-
   }
 
   $head_rows = array();
@@ -806,6 +806,29 @@ function close_summary() : void
 }
 
 
+/**
+ * Stop spreadsheet applications treating a value as a formula, by adding a text qualifier before the string. Numeric
+ * values are left alone so that negative numbers are not altered.
+ *
+ * @param mixed $value
+ * @return string
+ */
+function escape_csv_formula($value) : string
+{
+  if (is_numeric($value))
+  {
+    return strval($value);
+  }
+
+  if (is_string($value) && ($value !== '') && (strpbrk($value[0], "=+-@\t\r") !== false))
+  {
+    $value = "'" . $value;
+  }
+
+  return $value;
+}
+
+
 // Output a table row.
 function output_row(array $values, int $output_format, bool $body_row = true) : void
 {
@@ -817,26 +840,53 @@ function output_row(array $values, int $output_format, bool $body_row = true) : 
   }
   else
   {
-    if ($output_format == OUTPUT_CSV)
+    switch ($output_format)
     {
-      $line = '"';
-      $line .= implode("\"$csv_col_sep\"", $values);
-      $line .= '"' . $csv_row_sep;
-      $line = csv_conv($line);
+      case OUTPUT_CSV:
+        // Escaping for CSV is done here.
+        $fp = fopen('php://temp', 'w+');
+        // Escape spreadsheet formulae.
+        $values = array_map(__NAMESPACE__ . '\escape_csv_formula', $values);
+        // fputcsv() escapes the rest of the output.
+        $escape = version_compare(PHP_VERSION, '7.4.0', '<') ? "\\" : '';
+        fputcsv($fp, $values, $csv_col_sep, '"', $escape);
+        rewind($fp);
+        $csv_contents = stream_get_contents($fp);
+        // Strip the default EOL character and add our own.
+        // Note: from PHP 8.1.0 this can be done with a sixth parameter to fputcsv().
+        if (str_ends_with($csv_contents, "\n"))
+        {
+          $csv_contents = mb_substr($csv_contents, 0, -1) . $csv_row_sep;
+        }
+        else
+        {
+          throw new Exception("CSV output does not end with a newline");
+        }
+        // Convert the string to the required character set.
+        $csv_contents = csv_conv($csv_contents);
+        fclose($fp);
+        echo $csv_contents;
+        break;
+
+      case OUTPUT_HTML:
+        // Escaping for HTML is done when the values are formed, not here.  That's because they may contain HTML,
+        // eg <a> and <span> tags.
+        $line = "<tr>\n";
+        foreach ($values as $key => $value)
+        {
+          $line .= ($body_row) ? '<td>' : '<th id="'. escape_html("col_$key") . '">';
+          $line .= $value;
+          $line .= ($body_row) ? '</td>' : '</th>';
+          $line .= "\n";
+        }
+        $line .= "</tr>\n";
+        echo $line;
+        break;
+
+      default:
+        throw new \UnexpectedValueException("Unknown output format: $output_format");
+        break;
     }
-    elseif ($output_format == OUTPUT_HTML)
-    {
-      $line = "<tr>\n";
-      foreach ($values as $key => $value)
-      {
-        $line .= ($body_row) ? '<td>' : '<th id="'. escape_html("col_$key") . '">';
-        $line .= $value;
-        $line .= ($body_row) ? '</td>' : '</th>';
-        $line .= "\n";
-      }
-      $line .= "</tr>\n";
-    }
-    echo $line;
   }
 }
 

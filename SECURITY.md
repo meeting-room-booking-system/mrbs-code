@@ -6,7 +6,7 @@ Security updates are provided for the current MRBS release line.
 Please check the latest release and upgrade notes before reporting an issue:
 
 - [Latest MRBS releases](https://github.com/meeting-room-booking-system/mrbs-code/releases)
-- [Upgrade instructions](UPGRADE)
+- [Upgrade instructions](UPGRADE.md)
 
 ## Reporting a Vulnerability
 
