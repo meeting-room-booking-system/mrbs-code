@@ -93,14 +93,16 @@ if (null !== ($select2_lang_path = Language::getInstance()->getSelect2LangPath()
 }
 
 // dataTables initialisation
-if (in_array($page, array('admin',
-                          'edit_group',
-                          'edit_role',
-                          'edit_user',
-                          'pending',
-                          'report',
-                          'search',
-                          'view_entry')))
+if (in_array($page, [
+    'admin',
+    'edit_group',
+    'edit_role',
+    'edit_user',
+    'pending',
+    'report',
+    'search',
+    'view_entry']
+))
 {
   // Include the JavaScript for those pages that use dataTables
   // When constructing the DataTables download we want to include the following:
