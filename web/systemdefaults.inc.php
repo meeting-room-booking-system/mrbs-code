@@ -1137,6 +1137,15 @@ $auth["session_cookie"]["hash_algorithm"] = 'sha512';
 
 // Configuration parameters for 'php' session scheme
 
+// By default MRBS's PHP session scheme uses a custom session handler that encrypts and stores session data in the
+// database. This
+//   (a) is more secure, especially on shared servers;
+//   (b) avoids problems with ordinary sessions not working because the PHP session save directory is not writable; and
+//   (c) is more resilient in clustered environments.
+// However, there may be circumstances where it is preferable to use the the internal PHP session handler, in which
+// case set this to true.  Note that the session data is not encrypted when using the internal PHP handler.
+$auth['session_php']['use_internal_php_handler'] = false;
+
 // The session name
 // Unset this in your config file if you want to use the default session name
 $auth["session_php"]["session_name"] = 'MRBS_SESSID';
