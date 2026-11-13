@@ -40,17 +40,16 @@ if (mb_strpos($returl, '?') === false)
 }
 
 
-if (isset($action))
+if (isset($action) && ($data !== false))
 {
   if (need_to_send_mail())
   {
     $is_new_entry = TRUE;  // Treat it as a new entry unless told otherwise
   }
 
-  // If we have to approve or reject a booking, check that we have rights to do so
-  // for this room
-  if ((($action == "approve") || ($action == "reject"))
-       && !is_book_admin($room_id))
+  // The only people that should be using this page are booking admins or ordinary users sending reminders
+  // about their own bookings.
+  if (!(is_book_admin($room_id) || (($action === 'remind') && ($mrbs_username === $data['create_by']))))
   {
     showAccessDenied($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
     exit;

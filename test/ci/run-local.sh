@@ -20,12 +20,14 @@ KEEP=${KEEP:-0}
 NETWORK=mrbs-test
 DB=mrbs-test-db
 APP=mrbs-test-app
+NOBASE=mrbs-test-nobase
+NOBASE_PORT=$((MRBS_PORT + 1))
 IMAGE=mrbs-test:php$PHP_VERSION
 VENV=${TMPDIR:-/tmp}/mrbs-test-venv
 
 cleanup() {
   if [[ $KEEP != 1 ]]; then
-    docker rm -f "$APP" "$DB" >/dev/null 2>&1 || true
+    docker rm -f "$APP" "$NOBASE" "$DB" >/dev/null 2>&1 || true
     docker network rm "$NETWORK" >/dev/null 2>&1 || true
   fi
   find test/ci -name __pycache__ -prune -exec rm -rf {} + 2>/dev/null || true
@@ -37,7 +39,7 @@ if [[ ! -x $VENV/bin/pytest ]]; then
   "$VENV/bin/pip" install --quiet -r test/ci/requirements.txt
 fi
 
-docker rm -f "$APP" "$DB" >/dev/null 2>&1 || true
+docker rm -f "$APP" "$NOBASE" "$DB" >/dev/null 2>&1 || true
 docker network rm "$NETWORK" >/dev/null 2>&1 || true
 docker network create "$NETWORK" >/dev/null
 
@@ -58,12 +60,25 @@ mysql_root mrbs < test/ci/fixtures.my.sql
 echo "Building MRBS with PHP $PHP_VERSION"
 docker build --quiet --build-arg PHP_VERSION="$PHP_VERSION" -t "$IMAGE" . >/dev/null
 
-docker run -d --name "$APP" --network "$NETWORK" -p "$MRBS_PORT:80" \
-  -e MRBS_DB_SYSTEM=mysql -e MRBS_DB_HOST="$DB" -e MRBS_DB_DATABASE=mrbs \
-  -e MRBS_DB_USER=mrbs -e MRBS_DB_PASSWORD=mrbs \
-  "$IMAGE" >/dev/null
+run_app() { # name port extra-env...
+  local name=$1 port=$2
+  shift 2
+  docker run -d --name "$name" --network "$NETWORK" -p "$port:80" \
+    -v "$PWD/test/ci/php-test.ini:/usr/local/etc/php/conf.d/zz-ci.ini:ro" \
+    -e MRBS_DB_SYSTEM=mysql -e MRBS_DB_HOST="$DB" -e MRBS_DB_DATABASE=mrbs \
+    -e MRBS_DB_USER=mrbs -e MRBS_DB_PASSWORD=mrbs "$@" \
+    "$IMAGE" >/dev/null
+  until curl -fsS "http://localhost:$port/" >/dev/null 2>&1; do sleep 2; done
+}
 
-until curl -fsS "http://localhost:$MRBS_PORT/" >/dev/null 2>&1; do sleep 2; done
+# The main instance sets $url_base, so password reset is enabled; the nobase instance does not
+run_app "$APP" "$MRBS_PORT" -e MRBS_URL_BASE="http://localhost:$MRBS_PORT/"
+run_app "$NOBASE" "$NOBASE_PORT"
 
-echo "Running tests against http://localhost:$MRBS_PORT/"
-MRBS_URL="http://localhost:$MRBS_PORT/" "$VENV/bin/pytest" test/ci -p no:cacheprovider "$@"
+echo "Running tests against http://localhost:$MRBS_PORT/ and http://localhost:$NOBASE_PORT/"
+MRBS_URL="http://localhost:$MRBS_PORT/" MRBS_URL_NOBASE="http://localhost:$NOBASE_PORT/" \
+  "$VENV/bin/pytest" test/ci -p no:cacheprovider "$@"
+
+# The nobase instance logs the "No trusted base" warning on every request by design (see AuthDb.php)
+test/ci/check-php-log.sh "$APP"
+test/ci/check-php-log.sh "$NOBASE" 'No trusted base available'

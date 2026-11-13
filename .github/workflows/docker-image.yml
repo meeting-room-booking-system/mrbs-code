@@ -70,25 +70,40 @@ jobs:
 
       - name: Run container (connect to service DB via host-gateway)
         run: |
-          # Run container and make host.docker.internal available inside it so it can reach the Actions service
+          # Run containers and make host.docker.internal available inside them so they can reach the Actions service.
+          # The main container sets $url_base (password reset enabled); the nobase container does not.
           docker run --rm -d \
             --add-host=host.docker.internal:host-gateway \
+            -v "$PWD/test/ci/php-test.ini:/usr/local/etc/php/conf.d/zz-ci.ini:ro" \
             -e MRBS_DB_SYSTEM=mysql \
             -e MRBS_DB_HOST=host.docker.internal \
             -e MRBS_DB_DATABASE=mrbs \
             -e MRBS_DB_USER=mrbs \
             -e MRBS_DB_PASSWORD=mrbs \
+            -e MRBS_URL_BASE=http://localhost:8080/ \
             -p 8080:80 \
             --name mrbs-test $IMAGE_NAME
+          docker run --rm -d \
+            --add-host=host.docker.internal:host-gateway \
+            -v "$PWD/test/ci/php-test.ini:/usr/local/etc/php/conf.d/zz-ci.ini:ro" \
+            -e MRBS_DB_SYSTEM=mysql \
+            -e MRBS_DB_HOST=host.docker.internal \
+            -e MRBS_DB_DATABASE=mrbs \
+            -e MRBS_DB_USER=mrbs \
+            -e MRBS_DB_PASSWORD=mrbs \
+            -p 8081:80 \
+            --name mrbs-test-nobase $IMAGE_NAME
 
       - name: Wait for webserver
         run: |
-          # wait for Apache inside the container to start
-          for i in {1..30}; do
-            if curl -sSf http://localhost:8080/ >/dev/null; then
-              echo ready && break
-            fi
-            sleep 1
+          # wait for Apache inside the containers to start
+          for port in 8080 8081; do
+            for i in {1..30}; do
+              if curl -sSf http://localhost:$port/ >/dev/null; then
+                echo ready && break
+              fi
+              sleep 1
+            done
           done
 
       - name: HTTP smoke checks
@@ -99,11 +114,57 @@ jobs:
       - name: Functional tests
         run: |
           python3 -m pip install -r test/ci/requirements.txt
-          python3 -m pytest test/ci -v || (docker logs mrbs-test && exit 1)
+          MRBS_URL_NOBASE=http://localhost:8081/ python3 -m pytest test/ci -v --junitxml=test-results.xml || (docker logs mrbs-test && docker logs mrbs-test-nobase && exit 1)
 
-      - name: Stop test container
+      - name: Test summary
         if: always()
-        run: docker stop mrbs-test || true
+        env:
+          PHP_VERSION: ${{ matrix.php }}
+        run: |
+          python3 - <<'EOF' >> "$GITHUB_STEP_SUMMARY"
+          import os
+          import xml.etree.ElementTree as ET
+
+          php = os.environ['PHP_VERSION']
+          print(f'### Functional tests (PHP {php})')
+          print()
+          if not os.path.exists('test-results.xml'):
+              print('No test results were produced. The test run did not start.')
+          else:
+              cases = list(ET.parse('test-results.xml').getroot().iter('testcase'))
+              failed, skipped = [], 0
+              for case in cases:
+                  if case.find('failure') is not None or case.find('error') is not None:
+                      failed.append(case)
+                  elif case.find('skipped') is not None:
+                      skipped += 1
+              passed = len(cases) - len(failed) - skipped
+              print('| Passed | Failed | Skipped | Total |')
+              print('|---|---|---|---|')
+              print(f'| {passed} | {len(failed)} | {skipped} | {len(cases)} |')
+              if failed:
+                  print()
+                  print('#### Failed tests')
+                  print()
+                  print('| Test | Message |')
+                  print('|---|---|')
+                  for case in failed:
+                      node = case.find('failure')
+                      if node is None:
+                          node = case.find('error')
+                      msg = (node.get('message') or '').split('\n')[0].replace('|', '\\|')
+                      print(f"| `{case.get('classname')}::{case.get('name')}` | {msg} |")
+          EOF
+
+      - name: PHP error log checks
+        run: |
+          test/ci/check-php-log.sh mrbs-test
+          # The nobase instance logs the "No trusted base" warning on every request by design (see AuthDb.php)
+          test/ci/check-php-log.sh mrbs-test-nobase 'No trusted base available'
+
+      - name: Stop test containers
+        if: always()
+        run: docker stop mrbs-test mrbs-test-nobase || true
 
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/

@@ -46,12 +46,20 @@ abstract class Session
   /**
    * Get the session handler to use.
    *
-   * If the database session handler is not available, use the ordinary PHP session handler.
+   * If the database session handler is not available, or if the config variable
+   * `$auth['session_php']['use_internal_php_handler']` is truthy, use the ordinary PHP session handler.
    *
    * @return SessionHandlerDb|SessionHandler
    */
   protected function getSessionHandler()
   {
+    global $auth;
+
+    if (!empty($auth['session_php']['use_internal_php_handler']))
+    {
+      return new SessionHandler();
+    }
+
     // The sessions table was only created in Upgrade 56. We test for the schema version rather than the existence of
     // the table, because the table is renamed in later upgrades.
     if (db_schema_version(db()) < 56)

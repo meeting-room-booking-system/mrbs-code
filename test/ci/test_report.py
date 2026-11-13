@@ -31,3 +31,10 @@ class TestReport:
     assert "Training Session" in html
     assert "Team Standup" not in html
     assert "Late January Workshop" not in html
+
+  def test_csv_guards_formula_values(self, admin):
+    # A booking name starting with '=' must be prefixed so that spreadsheets don't evaluate it
+    text = self.report(admin, output_format="1")
+    assert "'=1+1 Formula Check" in text
+    assert "\"=1+1 Formula Check" not in text
+    assert ",=1+1 Formula Check" not in text
