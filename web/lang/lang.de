@@ -246,15 +246,20 @@ $vocab["no_simultaneous_bookings"]        = "Buchungen dürfen sich zeitlich nic
 $vocab["no_bookings_on_holidays"] = "Sie haben versucht, eine Buchung in den Ferien zu tätigen (%s)";
 $vocab["no_bookings_on_weekends"] = "Sie haben versucht, eine Buchung an einem Wochenende zu tätigen (%s)";
 $vocab["type_not_allowed"]        = 'Buchungen der Kategorie %1$s sind in %2$s nicht erlaubt';
+$vocab["type_not_allowed_day"]    = 'Buchungen der Kategorie %1$s sind am %2$s nicht erlaubt';
 $vocab["min_create_time_before"]  = 'Sie können keine Buchung erstellen, die in weniger als %1$d %2$s beginnt';
 $vocab["max_create_time_before"]  = 'Sie können keine Buchung erstellen, die in mehr als %1$d %2$s endet';
+$vocab["max_create_time_before_type"]  = 'Sie können keine Buchung der Kategorie %3$s erstellen, die in mehr als %1$d %2$s endet';
 $vocab["max_create_time_before_start"]  = 'Sie können keine Buchung erstellen, die in mehr als %1$d %2$s beginnt';
+$vocab["max_create_time_before_start_type"]  = 'Sie können keine Buchung der Kategorie %3$s erstellen, die in mehr als %1$d %2$s beginnt';
 $vocab["min_delete_time_before"]  = 'Sie können keine Buchung editieren oder löschen, die in weniger als %1$d %2$s beginnt';
 $vocab["max_delete_time_before"]  = 'Sie können keine Buchung editieren oder löschen, die in mehr als %1$d %2$s endet';
 $vocab["max_delete_time_before_start"]  = 'Sie können keine Buchung editieren oder löschen, die in mehr als %1$d %2$s beginnt';
 $vocab["earliest_booking_date"]   = "Der frühest mögliche Buchungstermin ist %s";
 $vocab["latest_booking_date"]     = "Der spätest mögliche Buchungstermin ist %s";
+$vocab["booking_opens_at"]        = "Buchungen sind täglich ab %s möglich";
 $vocab["max_booking_duration"]    = 'Die maximale Dauer einer Buchung beträgt %1$d %2$s';
+$vocab["max_booking_duration_type"]  = 'Die maximale Dauer einer Buchung der Kategorie %3$s beträgt %1$d %2$s';
 $vocab["max_per_day_global"]      = "Die maximale Anzahl an Buchungen pro Tag und Benutzer im gesamten System beträgt";
 $vocab["max_per_week_global"]     = "Die maximale Anzahl an Buchungen pro Woche und Benutzer im gesamten System beträgt";
 $vocab["max_per_month_global"]    = "Die maximale Anzahl an Buchungen pro Monat und Benutzer im gesamten System beträgt";
@@ -343,8 +348,11 @@ $vocab["upgrading_main_site"]      = "Aktualisierung der Hauptwebsite";
 $vocab["no_tables_found"]          = "Keine Tabellen gefunden";
 $vocab["upgrade_to_version"]       = "Aktualisierung auf Datenbankversion";
 $vocab["upgrade_to_local_version"] = "Aktualisiereung auf lokale Datenbankversion";
+$vocab["upgrade_summary"]          = "Aktualisierungszusammenfassung";
 $vocab["upgrade_completed"]        = "Aktualisierung der Datenbank abgeschlossen.";
-
+$vocab["no_connection"]            = "Es konnte keine Datenbankverbindung hergestellt werden.";
+$vocab["main_site_failed"]         = "Die Haupt-Webseite konnte nicht aktualisiert werden.";
+$vocab["failed_sites"]             = "Die folgenden Unterseiten konnten nicht aktualisiert werden:";
 // User access levels
 $vocab["level_0"]            = "keines";
 $vocab["level_1"]            = "Benutzer";
@@ -374,10 +382,11 @@ $vocab["administrator"]      = "Administrator";
 $vocab["unknown"]            = "Unbekannt";
 $vocab["ok"]                 = "OK";
 $vocab["show_my_entries"]    = "Klicken um alle meine anstehenden Einträge anzuzeigen";
-$vocab["no_users_initial"]   = "Keine Benutzer in der Datenbank, erlaube Erstellung erster Benutzer.";
+$vocab["no_users_initial"]   = "Herzlich willkommen bei MRBS! Keine Benutzer in der Datenbank, erlaube Erstellung des ersten Benutzers.";
 $vocab["no_users_create_first_admin"] = "Erstellen Sie ein Administratorkonto und melden sich mit diesem an, um weitere Benutzerkonten anzulegen.";
 $vocab["warning_last_admin"] = "Warnung!  Dies ist das letzte Administratorkonto. Dieses Konto kann nicht entfernt und ihm können auch nicht die Administrationsberechtigungen entzogen werden.  Anderenfalls würden Sie sich vom Zugang zu diesem System aussperren.";
-$vocab["copy_email_addresses"]  = "E-Mailadressen kopieren";
+$vocab["warning_last_admin"]    = "Warnung!  Dies ist der letzte Administrator, daher können die Admin-Rechte nicht entzogen oder das Benutzerkonto gelöscht werden, andernfalls verlieren Sie den Zugriff auf MRBS.";
+$vocab["copy_email_addresses"]  = "E-Mail Adressen kopieren";
 
 // Used in search.php
 $vocab["invalid_search"]     = "Leerer oder ungültiger Suchbegriff.";
@@ -440,6 +449,8 @@ $vocab["delete_entries_warning"] = "WARNUNG!  Alle Einträge, die den Suchkriter
                                    "Anzahl der zu löschenden Einträge: %s";
 $vocab["delete_entries_failed"] = "Die Einträge konnten nicht gelöscht werden.";
 $vocab["registered"]            = "Angemeldet";
+$vocab["unique_addresses_copied"]  = "%d einzigartige E-Mail-Adressen wurden in die Zwischenablage kopiert.";
+$vocab["clipboard_copy_failed"]    = "Kopieren in die Zwischenablage fehlgeschlagen.";
 
 // Used in admin.php
 $vocab["no_message"]         = "Zurzeit ist keine Systemnachricht zur Anzeige über dem Kalender eingestellt.";
@@ -550,14 +561,17 @@ $vocab["disabled_room_note"]      = "Wird dieser Raum deaktiviert, wird er nicht
 $vocab["book_ahead_note_periods"] = "Bei der Benutzung von Zeitblöcken werden Buchungszeiten in die Zukunft auf den nächsten ganzen Tag gerundet.";
 $vocab["invalid_types"]           = "Ungültige Kategorie";
 $vocab["invalid_types_note"]      = "Dies sind Kategorien, die in diesem Raum nicht verwendet werden dürfen.";
-
+$vocab["select_note"]             = "Verwende Strg-Klick um Optionen zu (de)selektieren";
 
 // Used in edit_users.php
 $vocab["name_empty"]         = "Sie müssen einen Namen angeben.";
 $vocab["name_not_unique"]    = "existiert bereits.  Bitte wählen Sie einen anderen Namen.";
+$vocab["email_not_unique"]    = "Ein anderer Benutzer mit dieser E-Mail Adresse existiert bereits.";
 $vocab["invalid_date"]        = "Das Feld '%s' muss ein gültiges Datum im Format YYYY-MM-DD enthalten.";
 $vocab["confirm_delete_user"] = "Möchten Sie diesen Benutzer wirklich löschen?";
-
+$vocab["confirm_delete_user_plus"]  = "Möchten Sie diesen Benutzer wirklich löschen? Er ist in " .
+                                      "Buchungen als Ersteller, Bearbeiter oder Teilnehmer beteiligt und das Löschen des Benutzers " .
+                                      "führt zu Datenverlust (z. B. Anzeigenamen und E-Mail Adresse).";
 // Used in del.php
 $vocab["deletefollowing"]    = "Dadurch werden die folgenden Einträge gelöscht";
 $vocab["and_n_more"]         = "und %s weitere";  // %s rather than %d because n is the output of NumberFormatter::format()
@@ -618,6 +632,9 @@ $vocab["area_room_delimiter_note"]  = "Trenn-Zeichen für die Bereichs- und Raum
                                       "Wird kein Trennzeichen erkannt, wird nach einem eindeutigen Raum mit dem selben " .
                                       "Namen wie die LOCATION gesucht";
 $vocab["area_room_create"]          = "Räume anlegen, wenn notwendig";
+$vocab["derive_creator_from"]         = "Ersteller ableiten von";
+$vocab["organizer_email_address"]     = "ORGANIZER E-Mail Adresse";
+$vocab["organizer_mrbs_username"]     = "ORGANIZER X-MRBS-USERNAME Attribut";
 $vocab["import_past"]               = "Importiere Buchungen in der Vergangenheit";
 $vocab["default_type"]              = "Standardtyp";
 $vocab["room_does_not_exist_no_area"] = "Raum existiert nicht - kein Bereich vorhanden";
@@ -633,11 +650,14 @@ $vocab["could_not_import"]          = "Import gescheitert";
 $vocab["import_no_SUMMARY"]           = "Importierte Buchung - keine SUMMARY verfügbar";  // This string cannot be empty
 $vocab["no_LOCATION"]               = "Das VEVENT behinhaltet keine LOCATION Eigenschaft";
 $vocab["invalid_RRULE"]             = "Fehlerhafte RRULE: FREQ Bereich fehlt";
+$vocab["invalid_RFC5545_day"]         = "Ungültiger Tag '%s'";
 $vocab["more_than_one_BYDAY"]       = "MRBS unterstützt keine mehrfachen BYDAY Werte, wenn FREQ=";
 $vocab["BYDAY_equals_5"]            = "MRBS unterstützt keinen BYDAY Wert von 5";
 $vocab["unsupported_FREQ"]          = "MRBS unterstützt kein FREQ=";
 $vocab["unsupported_COUNT"]         = "COUNT wird nicht durch unterstützt";
 $vocab["no_indefinite_repeats"]     = "Wiederholungen ohne Begrenzungen werden nicht unterstützt";
+$vocab["bad_timezone"]                = "Unbekannte oder defekte Zeitzone '%s'";
+$vocab["event_created_from_periods"]  = "Das Ereignis wurde aus einem Bereich exportiert, welcher Zeitblöcke verwendet.";
 $vocab["events_imported"]           = "Veranstaltungen importiert";
 $vocab["events_not_imported"]       = "Veranstaltungen nicht importiert";
 
