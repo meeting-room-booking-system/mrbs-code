@@ -297,8 +297,15 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   // Set the language file to be used
   if ($lang_file = Language::getInstance()->getDatatablesLangPath())
   {
+    // If the $url_base is set then use it, in case the site is behind a proxy.
+    $base = $url_base ?? '';
+    // Add a trailing '/' if there isn't one already.
+    if (($base !== '') && !str_ends_with($base, '/'))
+    {
+      $base .= '/';
+    }
     ?>
-    defaultOptions.language = {url: '<?php echo url_base() . $lang_file ?>'}
+    defaultOptions.language = {url: '<?php echo $base . $lang_file ?>'}
     <?php
   }
   ?>
