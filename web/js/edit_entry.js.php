@@ -806,7 +806,6 @@ function checkConflicts(optional)
 ?>
 function getDuration(from, to, days)
 {
-  // TODO: 1. Escape vocab strings for JavaScript?
   // TODO: 2. Use $vocab["days_and_subunits"]
   // TODO: 3. Use args.langs as well as/ instead of $lang?
   // TODO: 4. Handle case where pluralStrings doesn't have a key corresponding to pluralRules
@@ -826,6 +825,7 @@ function getDuration(from, to, days)
   {
     $pattern = Language::getInstance()->getVocab("duration_$units", $lang, true);
     $plural_strings = MessageFormatterHelper::getPluralStrings($pattern);
+    // No need to escape $plural_strings for JavaScript because json_encode() will do it for us.
     echo "pluralStrings.$units = " . json_encode($plural_strings) . ";\n";
   }
   ?>
