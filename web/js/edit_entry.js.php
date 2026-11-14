@@ -805,7 +805,6 @@ function checkConflicts(optional)
 //   - days   the number of days difference
 ?>
 function getDuration(from, to, days) {
-  // TODO: 4. Handle case where pluralStrings doesn't have a key corresponding to pluralRules
   let duration, durUnits;
   const currentArea = $('#area').data('current');
   const enablePeriods = areaConfig('enable_periods');
@@ -853,11 +852,11 @@ function getDuration(from, to, days) {
   let dayText, subText;
 
   if (days !== 0) {
-    dayText = pluralStrings.days[pluralRules.select(days)].replace('#', numberFormat.format(days));
+    dayText = pluralString(pluralStrings.days, pluralRules.select(days)).replace('#', numberFormat.format(days));
   }
 
   if (duration !== 0) {
-    subText = pluralStrings[durUnits][pluralRules.select(duration)].replace('#', numberFormat.format(duration));
+    subText = pluralString(pluralStrings[durUnits], pluralRules.select(duration)).replace('#', numberFormat.format(duration));
   }
 
   if ((days !== 0) && (duration !== 0)) {

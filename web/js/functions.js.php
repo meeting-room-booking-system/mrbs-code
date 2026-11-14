@@ -45,6 +45,31 @@ function isMobile()
   return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || isIos());
 }
 
+<?php
+// Return the string from the object pluralStrings corresponding to the category, which is the result of
+// Intl.PluralRules.select(), ie one of 'zero', 'one', 'two', 'few', 'many', 'other'.  If the category doesn't
+// exist then use 'other' ('other' must exist otherwise PHP's MessageFormatter will generate a warning).
+?>
+function pluralString(pluralStrings, category)
+{
+  if (category !== 'other')
+  {
+    if (category in pluralStrings)
+    {
+      return pluralStrings[category];
+    }
+    console.info("MRBS pluralString: category '" + category + "' not found in " + JSON.stringify(pluralStrings) + "; using 'other'.");
+  }
+
+  if ('other' in pluralStrings)
+  {
+    return pluralStrings['other'];
+  }
+
+  console.warn("MRBS pluralString: category 'other' not found in " + JSON.stringify(pluralStrings) + "; returning empty string.");
+  return '';
+}
+
 $.fn.reverse = [].reverse;
 
 $.fn.isHScrollable = function () {
