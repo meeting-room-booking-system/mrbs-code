@@ -482,7 +482,7 @@ function print_banner(?array $context, $simple=false, $omit_login=false) : void
         //Check for a Mbstring constant rather than using extension_loaded, which is sometimes disabled
         defined('MB_CASE_UPPER'))
     {
-      $url = multisite(url_base() . "/index.php?$query");
+      $url = multisite(url_base() . "index.php?$query");
       echo '<nav class="qr" title="' . escape_html($url) . "\">\n";
       $options = new QROptions([
         'outputType'  => QRCode::OUTPUT_MARKUP_SVG,
