@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace MRBS;
 
-require "../defaultincludes.inc";
+use MRBS\Intl\MessageFormatterHelper;require "../defaultincludes.inc";
 
 http_headers(array("Content-type: application/x-javascript"),
              60*30);  // 30-minute expiry
@@ -792,50 +792,8 @@ function checkConflicts(optional)
       }, 'json');
   }, timeout);  <?php // setTimeout() ?>
 
-} <?php // function checkConflicts()
+} <?php // function checkConflicts() ?>
 
-
-// Get the current vocab (in the appropriate language) for periods,
-// minutes, hours and days
-?>
-const vocab = {};
-vocab.periods = {singular: '<?php echo get_js_vocab("period") ?>',
-                 plural:   '<?php echo get_js_vocab("periods") ?>'};
-vocab.minutes = {singular: '<?php echo get_js_vocab("minute") ?>',
-                 plural:   '<?php echo get_js_vocab("minutes") ?>'};
-vocab.hours   = {singular: '<?php echo get_js_vocab("hour") ?>',
-                 plural:   '<?php echo get_js_vocab("hours") ?>'};
-vocab.days    = {singular: '<?php echo get_js_vocab("day") ?>',
-                 plural:   '<?php echo get_js_vocab("days") ?>'};
-
-
-<?php
-// Removes any trailing zeroes after the decimal point.
-?>
-function durFormat(r)
-{
-  let lastChar;
-
-  r = r.toFixed(2);
-  r = parseFloat(r);
-  r = r.toLocaleString(args.langPrefs);
-
-  if ((r.indexOf('.') >= 0) || (r.indexOf(',') >= 0))
-  {
-    while (r.slice(-1) === '0')
-    {
-      r = r.slice(0, -1);
-    }
-
-    lastChar = r.slice(-1);
-    if ((lastChar === '.') || (lastChar === ','))
-    {
-      r = r.slice(0, -1);
-    }
-  }
-
-  return r;
-}
 
 <?php
 // Returns a string giving the duration having chosen sensible units,
@@ -846,21 +804,31 @@ function durFormat(r)
 //   - to     the end time (in seconds since the start of the day)
 //   - days   the number of days difference
 ?>
-function getDuration(from, to, days)
-{
+function getDuration(from, to, days) {
   let duration, durUnits;
-  let text = '';
   const currentArea = $('#area').data('current');
   const enablePeriods = areaConfig('enable_periods');
   let durDays;
   const minutesPerDay = <?php echo MINUTES_PER_DAY ?>;
 
+  const pluralStrings = {};
+  <?php
+  // We have to use getWebLang() rather than args.langs, because the languages in args.lang are not guaranteed to have
+  // an associated vocab file in the lang directory.
+  $lang = Language::getInstance()->getWebLang();
+  echo "const lang = '" . escape_js($lang) . "';\n";
+  foreach (['minutes', 'hours', 'days', 'periods'] as $units) {
+    $pattern = Language::getInstance()->getVocab("duration_$units", $lang, true);
+    $plural_strings = MessageFormatterHelper::getPluralStrings($pattern);
+    // No need to escape $plural_strings for JavaScript because json_encode() will do it for us.
+    echo "pluralStrings.$units = " . json_encode($plural_strings) . ";\n";
+  }
+  ?>
 
   durUnits = (enablePeriods) ? '<?php echo "periods" ?>' : '<?php echo "minutes" ?>';
   duration = Math.floor((to - from) / 60);
 
-  if (enablePeriods)
-  {
+  if (enablePeriods) {
     duration++;  <?php // a period is a period rather than a point ?>
   }
 
@@ -868,43 +836,43 @@ function getDuration(from, to, days)
   // Adjust the days and duration so that 0 <= duration < minutesPerDay.    If we're using
   // periods then if necessary add/subtract multiples of the number of periods in a day
   ?>
-  durDays = Math.floor(duration/minutesPerDay);
-  if (durDays !== 0)
-  {
+  durDays = Math.floor(duration / minutesPerDay);
+  if (durDays !== 0) {
     days += durDays;
     duration -= durDays * ((enablePeriods) ? $('#start_seconds' + currentArea).find('option').length : minutesPerDay);
   }
 
-  if (!enablePeriods && (duration >= 60))
-  {
+  if (!enablePeriods && (duration >= 60)) {
     durUnits = "hours";
-    duration = durFormat(duration/60);
+    duration = duration / 60;
   }
 
-  <?php
-  // As durFormat returns a string, duration can now be either
-  // a number or a string, so convert it to a string so that we
-  // know what we are dealing with
-  ?>
-  duration = duration.toString();
+  const pluralRules = new Intl.PluralRules(lang);
+  const numberFormat = new Intl.NumberFormat(lang);
+  let dayText, subText;
 
-  if (days !== 0)
-  {
-    text += days + ' ';
-    text += (days === 1) ? vocab.days.singular : vocab.days.plural;
-    if (duration !== '0')
-    {
-      text +=  ', ';
-    }
+  if (days !== 0) {
+    dayText = pluralString(pluralStrings.days, pluralRules.select(days)).replace('#', numberFormat.format(days));
   }
 
-  if (duration !== '0')
-  {
-    text += duration + ' ';
-    text += (duration === '1') ? vocab[durUnits].singular : vocab[durUnits].plural;
+  if (duration !== 0) {
+    subText = pluralString(pluralStrings[durUnits], pluralRules.select(duration)).replace('#', numberFormat.format(duration));
   }
 
-  return text;
+  if ((days !== 0) && (duration !== 0)) {
+    <?php
+    // Concatenate the day and subunit text strings using the language template, replacing the placeholders, so that
+    // the combined string in JavaScript is presented the same way as it is in PHP.
+    ?>
+    const template = '<?php echo escape_js(Language::getInstance()->getVocab('days_and_subunits', $lang, true));?>';
+    return template.replace('%1$s', dayText).replace('%2$s', subText);
+  }
+
+  if (days !== 0) {
+    return dayText;
+  }
+
+  return subText;
 }
 
 <?php

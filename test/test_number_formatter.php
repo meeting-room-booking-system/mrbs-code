@@ -55,6 +55,10 @@ function test_format()
   do_format('fr', 1000000, \NumberFormatter::DEFAULT_STYLE);
   do_format('de', 1000000, \NumberFormatter::DEFAULT_STYLE);
 
+  do_format('en', 4560/123, \NumberFormatter::DEFAULT_STYLE);
+  do_format('fr', 4560/123, \NumberFormatter::DEFAULT_STYLE);
+  do_format('de', 4560/123, \NumberFormatter::DEFAULT_STYLE);
+
   echo "</tbody>\n";
   echo "</table>\n";
 }

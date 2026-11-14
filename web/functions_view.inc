@@ -249,7 +249,11 @@ function create_details_body(array $data, bool $as_html=false, bool $keep_privat
         $start_date = date_string($enable_periods, $data['start_time'], $data['area_id']);
         $tbody .= create_details_row(get_vocab("start_date"), $start_date, $as_html);
         // Duration
-        $tbody .= create_details_row(get_vocab("duration"), $data['duration'] . " " . get_vocab($data['dur_units']), $as_html);
+        $tbody .= create_details_row(
+          get_vocab('duration'),
+          get_duration_string($data['start_time'], $data['end_time'], $data['area_id']),
+          $as_html
+        );
         break;
 
       case 'end_time':
