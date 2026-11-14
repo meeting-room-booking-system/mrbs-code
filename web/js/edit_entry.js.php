@@ -805,9 +805,7 @@ function checkConflicts(optional)
 //   - days   the number of days difference
 ?>
 function getDuration(from, to, days) {
-  // TODO: 3. Use args.langs as well as/ instead of $lang?
   // TODO: 4. Handle case where pluralStrings doesn't have a key corresponding to pluralRules
-
   let duration, durUnits;
   const currentArea = $('#area').data('current');
   const enablePeriods = areaConfig('enable_periods');
@@ -816,8 +814,10 @@ function getDuration(from, to, days) {
 
   const pluralStrings = {};
   <?php
+  // We have to use getWebLang() rather than args.langs, because the languages in args.lang are not guaranteed to have
+  // an associated vocab file in the lang directory.
   $lang = Language::getInstance()->getWebLang();
-  echo "const lang = '$lang';\n";
+  echo "const lang = '" . escape_js($lang) . "';\n";
   foreach (['minutes', 'hours', 'days', 'periods'] as $units) {
     $pattern = Language::getInstance()->getVocab("duration_$units", $lang, true);
     $plural_strings = MessageFormatterHelper::getPluralStrings($pattern);
