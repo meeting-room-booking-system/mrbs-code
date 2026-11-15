@@ -2958,14 +2958,16 @@ function mrbsMakeBookings(array $bookings, ?int $id=null, bool $just_check=false
       {
         require_once "functions_mail.inc";
 
-        // Get room name and area name for email notifications.
-        $sql = "SELECT R.room_name, A.area_name
+        // Get room name and area id and name for email notifications.
+        $sql = "SELECT R.room_name, R.area_id, A.area_name
                   FROM " . _tbl('room') . " R, " . _tbl('area') . " A
                  WHERE R.id=? AND R.area_id = A.id
                  LIMIT 1";
         $res = db()->query($sql, array($booking['room_id']));
         $row = $res->next_row_keyed();
+        row_cast_columns($row, 'room');
         $booking['room_name'] = $row['room_name'];
+        $booking['area_id'] = $row['area_id'];
         $booking['area_name'] = $row['area_name'];
 
         // If this is a modified entry then get the previous entry data
