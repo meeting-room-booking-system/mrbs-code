@@ -503,8 +503,6 @@ class Event extends Component
     // TODO
     $special_fields = [
       'awaiting_approval',
-      'duration',
-      'dur_units',
       'private',
       'repeat_rule',
       'skip_list',
