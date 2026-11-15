@@ -1493,6 +1493,19 @@ function get_duration(int $start_time, int $end_time, bool $enable_periods, int 
 }
 
 
+/**
+ * Get the duration, expressed as a localised string, of an interval given a start time and end time.
+ *
+ * Corrects for DST changes so that the duration is what the user would expect to see.
+ * For example, 12 noon to 12 noon crossing a DST boundary is 24 hours.
+ *
+ * @param int $start_time Unix timestamp
+ * @param int $end_time Unix timestamp
+ * @param int $area_id The area id of the booking.
+ * @param string|null $lang The language to use for the result. If NULL, the current setting for browser output is used.
+ * @return string
+ * @throws \Exception
+ */
 function get_duration_string(int $start_time, int $end_time, int $area_id, ?string $lang=null) : string
 {
   static $area_details = [];
