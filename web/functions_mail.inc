@@ -489,12 +489,13 @@ function create_body(array $data, ?array $mail_previous, bool $series, string $a
                                     $compare, $as_html);
 
     // Duration
-    $new_duration = $data['duration'] . " " . get_mail_vocab($data['dur_units']);
-    $old_duration = $mail_previous['duration'] . " " . get_mail_vocab($mail_previous['dur_units']);
-    $body .= create_body_table_row (get_mail_vocab("duration"),
-                                    $new_duration,
-                                    $old_duration,
-                                    $compare, $as_html);
+    $lang = Language::getInstance()->getMailLang();
+    $body .= create_body_table_row (
+      get_mail_vocab('duration'),
+      get_duration_string($data['start_time'], $data['end_time'], $data['area_id'], $lang),
+      get_duration_string($mail_previous['start_time'], $mail_previous['end_time'], $mail_previous['area_id'], $lang),
+      $compare, $as_html
+    );
 
     // End time
     $this_endtime = $data['end_time'];
