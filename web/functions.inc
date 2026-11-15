@@ -1486,65 +1486,18 @@ function fit_to_booking_day(int $t, bool $back=true) : int
 
 
 /**
- * Get the duration of an interval given a start time and end time.
+ * Get the duration, expressed as a localised string, of an interval given a start time and end time.
  *
  * Corrects for DST changes so that the duration is what the user would expect to see.
  * For example, 12 noon to 12 noon crossing a DST boundary is 24 hours.
  *
  * @param int $start_time Unix timestamp
  * @param int $end_time Unix timestamp
- * @param bool $enable_periods Whether periods are being used
- * @param bool $translate Whether to translate into the browser language
- * @return array{value: int, units: string}
+ * @param int $area_id The area id of the booking.
+ * @param string|null $lang The language to use for the result. If NULL, the current setting for browser output is used.
+ * @return string
+ * @throws \Exception
  */
-function get_duration(int $start_time, int $end_time, bool $enable_periods, int $area_id, bool $translate=true) : array
-{
-  $result = array();
-
-  static $periods = array();
-
-  if (!isset($periods[$area_id]))
-  {
-    $periods[$area_id] = Area::getById($area_id)->periods;
-  }
-
-  if ($enable_periods)
-  {
-    $periods_per_day = count($periods[$area_id]);
-    $n_periods = get_period_interval($start_time, $end_time, $area_id);  // this handles DST
-    if (($n_periods % $periods_per_day) == 0)
-    {
-      $result['value'] =  intval($n_periods/$periods_per_day);
-      $result['units'] = ($translate) ? get_vocab('days') : 'days';
-    }
-    else
-    {
-      $result['value'] = $n_periods;
-      // Convert any single integer values from the plural to the singular
-      // TODO: This isn't very elegant. Eventually we should use something like the intl MessageFormatter class.
-      if ($n_periods === 1)
-      {
-        $result['units'] = ($translate) ? get_vocab('period') : 'period';
-      }
-      else
-      {
-        $result['units'] = ($translate) ? get_vocab('periods') : 'periods';
-      }
-    }
-  }
-  else
-  {
-    $seconds = $end_time - $start_time;
-    // Need to make DST correct in opposite direction to entry creation
-    // so that users see what they expect to see
-    $seconds -= cross_dst($start_time, $end_time);
-    $result = to_time_string($seconds, $translate);
-  }
-
-  return $result;
-}
-
-
 function get_duration_string(int $start_time, int $end_time, int $area_id, ?string $lang=null) : string
 {
   static $areas = [];
