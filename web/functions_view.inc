@@ -61,15 +61,6 @@ function create_details_body(array $data, bool $as_html=false, bool $keep_privat
   global $select_options, $booking_types;
   global $edit_entry_field_order;
 
-  // Get the duration if we haven't got it already
-  if (!isset($data['duration']))
-  {
-    // We will translate the units later
-    $d = get_duration($data['start_time'], $data['end_time'], $enable_periods, $data['area_id'], false);
-    $data['duration'] = $d['value'];
-    $data['dur_units'] = $d['units'];
-  }
-
   // Go through each of the columns and for each of them that can be made private
   // substitute the private text if the user is not allowed to see the data
   $private_text = get_vocab("unavailable");
