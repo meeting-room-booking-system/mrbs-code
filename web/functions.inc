@@ -25,7 +25,7 @@ require_once "mrbs_sql.inc";
  */
 function get_vocab(string $tag, ...$values) : string
 {
-  return Language::getInstance()->getVocab($tag, Language::getInstance()->getWebLang(), ...$values);
+  return Language::getInstance()->getVocab($tag, Language::getInstance()->getWebLang(), false, ...$values);
 }
 
 
@@ -35,7 +35,7 @@ function get_vocab(string $tag, ...$values) : string
  */
 function get_mail_vocab(string $tag, ...$values) : string
 {
-  return Language::getInstance()->getVocab($tag, Language::getInstance()->getMailLang(), ...$values);
+  return Language::getInstance()->getVocab($tag, Language::getInstance()->getMailLang(), false, ...$values);
 }
 
 
@@ -1015,22 +1015,19 @@ function print_footer(bool $and_exit=false) : void
 }
 
 
-// Converts a time of $seconds into a duration expressed as an array
-// indexed by 'value' and 'units'.
-// $max_unit can be set to 'seconds', 'minutes', 'hours', etc. and
-// is used to specify a maximum size of unit to use.  For example if
-// it is set to 'minutes', 3600 seconds will give 60 minutes rather
-// than 1 hour.
-function to_time_string(int $seconds, bool $translate=true, ?string $max_unit=null)
+/**
+ * Convert a duration of seconds into the largest unit of time that has a value greater than or equal to 1.
+ * For example, 3600 seconds will give 1 hour, 86400 seconds will give 1 day, etc.
+ *
+ * @param int $seconds
+ * @param 'seconds'|'minutes'|'hours'|'days'|'weeks'|'years' $max_unit
+ * @return array{value: int, units: 'seconds'|'minutes'|'hours'|'days'|'weeks'|'years'}
+ */
+function to_time_string_canonical(int $seconds, string $max_unit='years') : array
 {
   $value = $seconds;
 
-  if (!isset($max_unit))
-  {
-    $max_unit = 'years';
-  }
-
-  if (($max_unit != 'seconds') && (abs($value) >= 60)  && ($value % 60 == 0))
+  if (($max_unit != 'seconds') && (abs($value) >= 60) && ($value % 60 == 0))
   {
     $value /= 60;
 
@@ -1075,6 +1072,27 @@ function to_time_string(int $seconds, bool $translate=true, ?string $max_unit=nu
   {
     $units = 'seconds';
   }
+
+  return ['value' => $value, 'units' => $units];
+}
+
+
+// Converts a time of $seconds into a duration expressed as an array
+// indexed by 'value' and 'units'.
+// $max_unit can be set to 'seconds', 'minutes', 'hours', etc. and
+// is used to specify a maximum size of unit to use.  For example if
+// it is set to 'minutes', 3600 seconds will give 60 minutes rather
+// than 1 hour.
+function to_time_string(int $seconds, bool $translate=true, ?string $max_unit=null)
+{
+  $value = $seconds;
+
+  if (!isset($max_unit))
+  {
+    $max_unit = 'years';
+  }
+
+  list('value' => $value, 'units' => $units) = to_time_string_canonical($seconds, $max_unit);
 
   // Limit any floating point values to three decimal places
   if (is_float($value))
@@ -1524,6 +1542,73 @@ function get_duration(int $start_time, int $end_time, bool $enable_periods, int 
   }
 
   return $result;
+}
+
+
+function get_duration_string(int $start_time, int $end_time, int $area_id, ?string $lang=null) : string
+{
+  static $areas = [];
+
+  if (!isset($areas[$area_id]))
+  {
+    if (null === ($areas[$area_id] = Area::getById($area_id)))
+    {
+      throw new \Exception("Invalid area ID '$area_id'");
+    }
+  }
+
+  $lang = $lang ?? Language::getInstance()->getWebLang();
+
+  if ($areas[$area_id]->enable_periods)
+  {
+    $periods_per_day = count($areas[$area_id]->periods);
+    $total_periods = get_period_interval($start_time, $end_time, $area_id);  // this handles DST
+    $n_days = intval($total_periods/$periods_per_day);
+    $n_periods = $total_periods % $periods_per_day;
+    $day_string = ($n_days > 0) ? Language::getInstance()->getVocab('duration_days', $lang, false, $n_days) : null;
+    $period_string = ($n_periods > 0) ? Language::getInstance()->getVocab('duration_periods', $lang, false, $n_periods) : null;
+    if (isset($day_string) && isset($period_string))
+    {
+      return Language::getInstance()->getVocab('days_and_subunits', $lang, false, $day_string, $period_string);
+    }
+    else
+    {
+      return (isset($day_string)) ? $day_string : $period_string;
+    }
+  }
+
+  return get_duration_string_times($start_time, $end_time, $lang, $areas[$area_id]->timezone);
+}
+
+
+/**
+ * Get a time duration as a string, for example "2 hours" or "1 jour".
+ *
+ * @param int $start_time A Unix timestamp
+ * @param int $end_time A Unix timestamp
+ * @param string|null $lang The language to use for the result. If NULL, the current setting for browser output is used.
+ * @param string|null $tzid The timezone that the start and end times are in. If NULL, the timezone for the current area
+ * is used.
+ * @param null|'seconds'|'minutes'|'hours'|'days'|'weeks'|'years' $max_unit The maximum unit of time to use for the duration. For
+ * example, if the duration is 24 hours and `$max_unit` is set to 'hours' the result will be 24 hours rather than 1 day.
+ * @return string
+ */
+function get_duration_string_times(int $start_time, int $end_time, ?string $lang=null, ?string $tzid=null, string $max_unit='weeks') : string
+{
+  // TODO: 'years' are not proper years; they are periods of 52 weeks.  Remove them?
+  global $timezone;
+
+  $lang = $lang ?? Language::getInstance()->getWebLang();
+  $tzid = $tzid ?? $timezone;
+
+  $duration = $end_time - $start_time;
+  // Correct the duration if it crosses a DST boundary so that it is expressed as a nominal duration.
+  // For example, 12 noon to 12 noon crossing a DST boundary is 24 hours.
+  $duration -= cross_dst($start_time, $end_time, $tzid);
+
+  list('value' => $value, 'units' => $units) = to_time_string_canonical($duration, $max_unit);
+
+  return Language::getInstance()->getVocab("duration_$units", $lang, false, $value);
 }
 
 
