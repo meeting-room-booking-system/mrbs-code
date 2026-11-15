@@ -235,9 +235,10 @@ function display_entry_row(array $row) : void
   $link_str = date_string(!empty($row['enable_periods']), $row['start_time'], $row['area_id']);
   echo escape_html($link_str) . "</a></td>";
 
-  $duration = get_duration($row['start_time'], $row['end_time'], !empty($row['enable_periods']), $row['area_id'], false);
+  $duration_string = get_duration_string($row['start_time'], $row['end_time'], $row['area_id']);
+  // $duration_seconds is needed for sorting.
   $duration_seconds = $row['end_time'] - $row['start_time'] - cross_dst($row['start_time'], $row['end_time']);
-  echo "<td><span title=\"" . $duration_seconds . "\"></span>" . escape_html($duration['duration'] . " " . get_vocab($duration['dur_units'])) . "</td>\n";
+  echo "<td><span title=\"" . $duration_seconds . "\"></span>" . escape_html($duration_string) . "</td>\n";
 
   // End date
   $end_date_str = date_string(!empty($row['enable_periods']), $row['end_time'], $row['area_id'], true);
