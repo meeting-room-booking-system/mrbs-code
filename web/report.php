@@ -985,11 +985,10 @@ function report_row(&$rows, $data)
       case 'end_time':
         // Calculate the duration and then fall through to calculating the end date
         // Need the duration in seconds for sorting.  Have to correct it for DST
-        // changes so that the user sees what he expects to see
+        // changes so that the users see what they expect to see.
         $duration_seconds = $data['end_time'] - $data['start_time'];
         $duration_seconds -= cross_dst($data['start_time'], $data['end_time']);
-        $d = get_duration($data['start_time'], $data['end_time'], $data['enable_periods'], $data['area_id']);
-        $d_string = $d['duration'] . ' ' . $d['dur_units'];
+        $d_string = get_duration_string($data['start_time'], $data['end_time'], $data['area_id']);
         $d_string = escape($d_string);
       case 'start_time':
         if ($data['enable_periods'])
