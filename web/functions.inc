@@ -1440,60 +1440,6 @@ function fit_to_booking_day(int $t, bool $back=true) : int
 
 
 /**
- * Get the duration of an interval given a start time and end time.
- *
- * Corrects for DST changes so that the duration is what the user would expect to see.
- * For example, 12 noon to 12 noon crossing a DST boundary is 24 hours.
- *
- * @param int $start_time Unix timestamp
- * @param int $end_time Unix timestamp
- * @param bool $enable_periods Whether periods are being used
- * @param bool $translate Whether to translate into the browser language
- * @return array{duration: int, dur_units: string}
- */
-function get_duration(int $start_time, int $end_time, bool $enable_periods, int $area_id, bool $translate=true) : array
-{
-  $result = array();
-
-  $period_names = get_period_names();
-
-  if ($enable_periods)
-  {
-    $periods_per_day = count($period_names[$area_id]);
-    $n_periods = get_period_interval($start_time, $end_time, $area_id);  // this handles DST
-    if (($n_periods % $periods_per_day) == 0)
-    {
-      $result['duration'] =  intval($n_periods/$periods_per_day);
-      $result['dur_units'] = ($translate) ? get_vocab('days') : 'days';
-    }
-    else
-    {
-      $result['duration'] = $n_periods;
-      // Convert any single integer values from the plural to the singular
-      // TODO: This isn't very elegant. Eventually we should use something like the intl MessageFormatter class.
-      if ($n_periods === 1)
-      {
-        $result['dur_units'] = ($translate) ? get_vocab('period') : 'period';
-      }
-      else
-      {
-        $result['dur_units'] = ($translate) ? get_vocab('periods') : 'periods';
-      }
-    }
-  }
-  else
-  {
-    $result['duration'] = $end_time - $start_time;
-    // Need to make DST correct in opposite direction to entry creation
-    // so that user see what he expects to see
-    $result['duration'] -= cross_dst($start_time, $end_time);
-    toTimeString($result['duration'], $result['dur_units'], $translate);
-  }
-  return $result;
-}
-
-
-/**
  * Get the duration, expressed as a localised string, of an interval given a start time and end time.
  *
  * Corrects for DST changes so that the duration is what the user would expect to see.
