@@ -2068,12 +2068,6 @@ function get_booking_info(int $id, bool $series, bool $silent=false)
     }
   }
 
-  // Now get the duration.
-  // Don't translate the units at this stage.   We'll translate them later.
-  $d = get_duration($row['start_time'], $row['end_time'], $row['enable_periods'], $row['area_id'], false);
-  $row['duration'] = $d['value'];
-  $row['dur_units'] = $d['units'];
-
   // Translate the status field into a set of booleans
   unpack_status($row);
 
@@ -2282,22 +2276,6 @@ function mrbsMakeBookings(array $bookings, ?int $id=null, bool $just_check=false
   // 1200 one day to 1200 the next, crossing a DST boundary.
   $duration_seconds = $common['end_time'] - $common['start_time'];
   $duration_seconds -= cross_dst($common['start_time'], $common['end_time']);
-  // Now get the duration, which will be needed for email notifications
-  // (We do this before we adjust for DST so that the user sees what they expect to see)
-  $duration = $duration_seconds;
-  $date = getdate($common['start_time']);
-
-  if ($enable_periods)
-  {
-    $period = (($date['hours'] - 12) * 60) + $date['minutes'];
-    $tmp = to_period_string($period, $duration, false);
-  }
-  else
-  {
-    $tmp = to_time_string($duration, false);
-  }
-  $duration = $tmp['value'];
-  $dur_units = $tmp['units'];
 
   // Expand a series into a list of start times:
   if ($bookings[0]['repeat_rule']->getType() != RepeatRule::NONE)
@@ -2567,9 +2545,6 @@ function mrbsMakeBookings(array $bookings, ?int $id=null, bool $just_check=false
     {
       $booking['skip_list'] = $skip_lists[$booking['room_id']];
     }
-    // The following elements are needed for email notifications
-    $booking['duration'] = $duration;
-    $booking['dur_units'] = $dur_units;
 
     if ($booking['repeat_rule']->getType() != RepeatRule::NONE)
     {
