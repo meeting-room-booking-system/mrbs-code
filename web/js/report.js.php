@@ -161,7 +161,7 @@ $(document).on('page_ready', function() {
       progressContainer.append('<span></span>')
         .append('<progress></progress>')
         .append('<button id="cancel_deletions"><?php echo get_js_vocab("cancel") ?></button>')
-        .insertAfter('#report_table_paginate');
+        .insertAfter('.dt-paging');
 
       <?php // Add a delete button ?>
       $('<button id="delete_button"><?php echo get_js_vocab("delete_entries") ?><\/button>')
@@ -284,7 +284,7 @@ $(document).on('page_ready', function() {
             }
           }
         })
-        .insertAfter('#report_table_paginate');
+        .insertAfter('.dt-paging');
 
       <?php // While deletion is in progress disable all interaction except with the cancel button ?>
       $(window).on('click keypress', function(e) {
