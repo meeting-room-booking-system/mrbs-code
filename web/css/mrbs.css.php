@@ -2848,6 +2848,14 @@ div.ColVis_collection button.ColVis_Button {
 }
 
 .dt-container .dt-length,
+.dt-container .dt-info,
+.dt-container .dt-search,
+.dt-container .dt-paging {
+  position: relative;
+  z-index: 100;
+}
+
+.dt-container .dt-length,
 .dt-container .dt-info {
   float: left;
 }
