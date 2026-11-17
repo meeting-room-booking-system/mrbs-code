@@ -36,3 +36,5 @@ $PHPMAILER_LANG['smtp_error']           = 'Erreur du serveur SMTP : ';
 $PHPMAILER_LANG['variable_set']         = 'Impossible d’initialiser ou de réinitialiser une variable : ';
 $PHPMAILER_LANG['imap_recommended']     = 'Il n’est pas recommandé d’utiliser l’analyseur d’adresses simplifié. Installez l’extension IMAP de PHP pour une analyse RFC822 plus complète.';
 $PHPMAILER_LANG['deprecated_argument']  = 'Argument obsolète : ';
+$PHPMAILER_LANG['imap_recommended']     = 'Il n’est pas recommandé d’utiliser l’analyseur d’adresses simplifié. Installez l’extension IMAP de PHP pour une analyse RFC822 plus complète.';
+$PHPMAILER_LANG['deprecated_argument']  = 'Argument obsolète : ';
