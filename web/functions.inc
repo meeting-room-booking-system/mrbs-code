@@ -507,6 +507,9 @@ function get_cookie_path()
   {
     // REQUEST_URI isn't set on all PHP systems, so fall back to PHP_SELF
     $cookie_path = $server['REQUEST_URI'] ?? $server['PHP_SELF'];
+    // Remove any query string and fragment first. They can contain slashes which
+    // would otherwise be mistaken for the end of the path.
+    $cookie_path = preg_replace('/[?#].*$/s', '', $cookie_path); 
     // Strip off everything after the last '/'
     $cookie_path = preg_replace('/[^\/]*$/', '', $cookie_path);
     // Some cases have been observed of the cookie path being set to, for example,
