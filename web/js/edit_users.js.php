@@ -22,24 +22,25 @@ $(document).on('page_ready', function() {
 
   <?php // Get the types and feed those into dataTables ?>
   tableOptions.columnDefs = getTypes($('#users_table'));
-  tableOptions.buttons = [
-    {
-      <?php // The first button is assumed to be the colvis button ?>
-      extend: 'colvis'
-    },
-    {
-      <?php
-      // Add in an extra button to copy email addresses as a unique, sorted, comma-separated
-      // list so that they can be pasted into an address field in an email client.
-      // Useful for sending messages to those booked on a certain day or in a certain room.
-      ?>
-      text: '<?php echo get_js_vocab('copy_email_addresses') ?>',
-      action: function (e, dt, node, config) {
-        <?php // Don't sort the addresses because it makes comparison with the table easier ?>
-        extractEmailAddresses(dt, '#col_email', false);
+  <?php
+  // If there is an email column, add an extra button to copy email addresses as a unique, comma-separated list so
+  // that they can be pasted into an address field in an email client. Useful for sending messages to all users.
+  ?>
+  if ($('#col_email').length) {
+    tableOptions.buttons = [
+      {
+        <?php // The first button is assumed to be the colvis button ?>
+        extend: 'colvis'
+      },
+      {
+        text: '<?php echo get_js_vocab('copy_email_addresses') ?>',
+        action: function (e, dt, node, config) {
+          <?php // Don't sort the addresses because it makes comparison with the table easier ?>
+          extractEmailAddresses(dt, '#col_email', false);
+        }
       }
-    }
-  ]
+    ]
+  }
   makeDataTable('#users_table', tableOptions, {leftColumns: 1});
 
 });
