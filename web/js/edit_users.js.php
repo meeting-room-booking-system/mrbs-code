@@ -29,19 +29,15 @@ $(document).on('page_ready', function() {
     },
     {
       <?php
-      // Add in an extra button to copy email addresses as a comma-separated list so
-      // that they can be pasted into an address field in an email client.
+      // Add in an extra button to copy email addresses as a unique, sorted, comma-separated
+      // list so that they can be pasted into an address field in an email client.
+      // Useful for sending messages to those booked on a certain day or in a certain room.
       ?>
-      extend: 'copy',
       text: '<?php echo get_js_vocab('copy_email_addresses') ?>',
-      header: false,
-      title: null,
-      customize: function(data) {
-          return data.replace(/\n/g, ', ').replace(/\r/g, '');
-        },
-      exportOptions: {
-          columns: '#col_email'
-        }
+      action: function (e, dt, node, config) {
+        <?php // Don't sort the addresses because it makes comparison with the table easier ?>
+        extractEmailAddresses(dt, '#col_email', false);
+      }
     }
   ]
   makeDataTable('#users_table', tableOptions, {leftColumns: 1});
