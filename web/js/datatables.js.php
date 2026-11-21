@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace MRBS;
 
-require "../defaultincludes.inc";
+use MRBS\Intl\MessageFormatterHelper;require "../defaultincludes.inc";
 
 http_headers(array("Content-type: application/x-javascript"),
   60*30);  // 30-minute expiry
@@ -117,8 +117,17 @@ const extractEmailAddresses = function(dt, columnSelector, sort) {
 
   navigator.clipboard.writeText(result.join(', '))
     .then(() => {
-      message = '<?php echo get_js_vocab('unique_addresses_copied')?>';
-      message = message.replace('%d', result.length.toString());
+      <?php
+      // We have to use getWebLang() rather than args.langs, because the languages in args.lang are not guaranteed to have
+      // an associated vocab file in the lang directory.
+      $lang = Language::getInstance()->getWebLang();
+      echo "const lang = '" . escape_js($lang) . "';\n";
+      $pattern = Language::getInstance()->getVocab('unique_addresses_copied', $lang, true);
+      $plural_strings = MessageFormatterHelper::getPluralStrings($pattern);
+      // No need to escape $plural_strings for JavaScript because json_encode() will do it for us.
+      echo "const pluralStrings = " . json_encode($plural_strings) . ";\n";
+      ?>
+      message = pluralString(pluralStrings, result.length, lang );
     })
     .catch((err) => {
       message = '<?php echo get_js_vocab('clipboard_copy_failed')?>';
