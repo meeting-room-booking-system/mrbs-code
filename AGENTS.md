@@ -59,7 +59,12 @@ Commit messages may follow the GitHub convention: the first line is a title, and
 Releases are made from `main`, using the release tools in the `mrbs-tools` repository that sits alongside this one.
 
 1. Merge the release changes into `main`.
-2. Update NEWS for the release, following the NEWS guidance above.
-3. Rebuild `ChangeLog` from git just before tagging, using the `mrbs_git_cl` script in `mrbs-tools/changelog/`. Do not hand-edit it.
-4. Tag with `tagrelease.pl X.Y.Z` from `mrbs-tools`. This creates a signed tag and lists the outgoing commits.
-5. Push `main` and the new tag to `origin` together.
+2. Commit the `web/version_num.inc` change on its own first, so that the version bump is a separate commit.
+3. Update NEWS for the release, following the NEWS guidance above.
+4. Rebuild `ChangeLog` from git, using the `mrbs_git_cl` script in `mrbs-tools/changelog/` (run from the root of this repository). Do not hand-edit it.
+5. Commit NEWS and `ChangeLog` together.
+6. Tag with `tagrelease.pl X.Y.Z` from `mrbs-tools`. This creates a signed tag and lists the outgoing commits.
+7. Push `main` and the new tag to `origin` together.
+8. Prepare a release note for the GitHub release and present it for review before publishing. Follow the style of previous releases (see `gh release view vX.Y.Z`), using GitHub's richer markdown (headings, bold upgrade notes, bullet lists) rather than the plain-text layout of NEWS. Include any upgrade notes, security fixes with GHSA IDs and reporter credit, changes and bug fixes, then the closing "See NEWS or ChangeLog in the release for more details." and sign-off.
+
+Never commit without GPG signing; if signing fails, ask the user to unlock their key.
