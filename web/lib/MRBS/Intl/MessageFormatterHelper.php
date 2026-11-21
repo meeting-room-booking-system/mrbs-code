@@ -59,17 +59,26 @@ class MessageFormatterHelper
    * Example 2: "He has {0, plural, one {# mouse} other {# mice}}." will produce `['one' => 'He has # mouse.',
    * 'other' => 'He has # mice.']`.
    *
-   * @param string $pattern
-   * @return array{'zero'|'one'|'two'|'few'|'many'|'other': string}
+   * @param string $string Either a MessageFormatter pattern, or, for backwards compatibility, a string with conversion
+   * specifications intended for use with `sprintf()`.
+   * @return array{'zero'|'one'|'two'|'few'|'many'|'other': string}|string If a MessageFormatter pattern was provided
+   * an array indexed by category; otherwise a string for use with `sprintf()`.
    */
-  public static function getPluralStrings(string $pattern): array
+  public static function getPluralStrings(string $string)
   {
+    // If it doesn't look like a MessageFormatter pattern, just return ther string
+    if (!preg_match('/{.*}/', $string))
+    {
+      return $string;
+    }
+
+    // Otherwise break the pattern down into categories
     try
     {
       $result = [];
       $prefix = '';
       $suffix = '';
-      $tokens = self::tokenizePattern($pattern);
+      $tokens = self::tokenizePattern($string);
       self::validateTokens($tokens);
 
       foreach ($tokens as $token)

@@ -47,11 +47,19 @@ function isMobile()
 
 
 <?php
-// Return the string from the object pluralStrings corresponding to the value.  The result will have the
-// value formatted for the locale and use the appropriate plural form for the locale.
+// Return the string from pluralStrings corresponding to the value.  If pluralStrings is an object, then the result will
+// have the value formatted for the locale and use the appropriate plural form for the locale.  Otherwise, if it's a
+// string, it will be assumed to be for use with sprintf() and have the conversion specifier replaced by the value.
 ?>
 function pluralString(pluralStrings, value, locale)
 {
+  // If it's a string, then it's an old style PHP sprintf() substitution
+  if (typeof pluralStrings === 'string')
+  {
+    return pluralStrings.replace('%d', value.toString());
+  }
+
+  // Otherwise use PluralRules
   let category = (new Intl.PluralRules(locale)).select(value);
 
   if ((category !== 'other') && !(category in pluralStrings))

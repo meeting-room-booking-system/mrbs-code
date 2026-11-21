@@ -127,7 +127,7 @@ const extractEmailAddresses = function(dt, columnSelector, sort) {
       // No need to escape $plural_strings for JavaScript because json_encode() will do it for us.
       echo "const pluralStrings = " . json_encode($plural_strings) . ";\n";
       ?>
-      message = pluralString(pluralStrings, result.length, lang );
+      message = pluralString(pluralStrings, result.length, lang);
     })
     .catch((err) => {
       message = '<?php echo get_js_vocab('clipboard_copy_failed')?>';
