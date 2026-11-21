@@ -45,57 +45,59 @@ function isMobile()
   return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || isIos());
 }
 
+
 <?php
-// Return the string from the object pluralStrings corresponding to the category, which is the result of
-// Intl.PluralRules.select(), ie one of 'zero', 'one', 'two', 'few', 'many', 'other'.  If the category doesn't
-// exist then use 'other' ('other' must exist otherwise PHP's MessageFormatter will generate a warning).
+// Return the string from the object pluralStrings corresponding to the value.  The result will have the
+// value formatted for the locale and use the appropriate plural form for the locale.
 ?>
-function pluralString(pluralStrings, category)
+function pluralString(pluralStrings, value, locale)
 {
-  if (category !== 'other')
+  let category = (new Intl.PluralRules(locale)).select(value);
+
+  if ((category !== 'other') && !(category in pluralStrings))
   {
-    if (category in pluralStrings)
-    {
-      return pluralStrings[category];
-    }
     console.info("MRBS pluralString: category '" + category + "' not found in " + JSON.stringify(pluralStrings) + "; using 'other'.");
+    category = 'other';
   }
 
-  if ('other' in pluralStrings)
+  if ((category === 'other') && !(category in pluralStrings))
   {
-    return pluralStrings['other'];
+    console.warn("MRBS pluralString: category 'other' not found in " + JSON.stringify(pluralStrings) + "; returning empty string.");
+    return '';
   }
 
-  console.warn("MRBS pluralString: category 'other' not found in " + JSON.stringify(pluralStrings) + "; returning empty string.");
-  return '';
+  const numberFormat = new Intl.NumberFormat(locale);
+
+  return pluralStrings[category].replace('#', numberFormat.format(value));
 }
+
 
 $.fn.reverse = [].reverse;
 
 $.fn.isHScrollable = function () {
-  return this[0].scrollWidth > this[0].clientWidth;
+return this[0].scrollWidth > this[0].clientWidth;
 };
 
 $.fn.isVScrollable = function () {
-  return this[0].scrollHeight > this[0].clientHeight;
+return this[0].scrollHeight > this[0].clientHeight;
 };
 
 jQuery.fn.extend({
 
-  <?php
-  // Turn a select element into a fancy Select2 field control.  This wrapper function also
-  // (a) only does anything if we are using tags or are not on a mobile device, unless useOnMobile
-  //     is true, because the native select elements on mobile devices tend to be better.
-  //     [Could maybe turn the element from a <select> into a <datalist> if we are using tags?]
-  // (b) wraps the select element in a <div> because in some places, eg in forms,  MRBS uses
-  //     a table structure and because Select2 adds a sibling element the table structure is
-  //     ruined.
-  // (c) adjusts the width of the select2 container because Select2 doesn't always get it right
-  //     resulting in a '...'
-  //
-  // Get the best available language
-  $select2_lang = basename(Language::getInstance()->getSelect2LangPath(), '.js');
-  ?>
+<?php
+// Turn a select element into a fancy Select2 field control.  This wrapper function also
+// (a) only does anything if we are using tags or are not on a mobile device, unless useOnMobile
+//     is true, because the native select elements on mobile devices tend to be better.
+//     [Could maybe turn the element from a <select> into a <datalist> if we are using tags?]
+// (b) wraps the select element in a <div> because in some places, eg in forms,  MRBS uses
+//     a table structure and because Select2 adds a sibling element the table structure is
+//     ruined.
+// (c) adjusts the width of the select2 container because Select2 doesn't always get it right
+//     resulting in a '...'
+//
+// Get the best available language
+$select2_lang = basename(Language::getInstance()->getSelect2LangPath(), '.js');
+?>
   mrbsSelect: function(tags, useOnMobile) {
     if (tags || useOnMobile || !isMobile())
     {
