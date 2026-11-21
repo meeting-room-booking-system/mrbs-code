@@ -1,4 +1,353 @@
-commit d0673643a (HEAD -> main)
+commit 1c1aa53ba (HEAD -> main)
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Sat Nov 21 10:44:35 2026 +0000
+
+    Update release process in AGENTS.md
+    
+    Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+
+ AGENTS.md | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+commit 30925a27f
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Sat Nov 21 10:44:30 2026 +0000
+
+    Update version number to 1.13.1
+    
+    Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+
+ web/version_num.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 9ce76801a (origin/main, origin/HEAD)
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sat Nov 21 07:00:50 2026 +0000
+
+    Simplify code.
+
+ web/js/edit_users.js.php | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit abf36d723
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sat Nov 21 06:52:38 2026 +0000
+
+    Only show the "Copy email addresses" button if there is an email column.
+
+ web/js/edit_users.js.php | 35 ++++++++++++++++++-----------------
+ 1 file changed, 18 insertions(+), 17 deletions(-)
+
+commit 45ba127ef
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sat Nov 21 06:27:39 2026 +0000
+
+    Make the "Copy email addresses" button on the Users page only show unique addresses.
+
+ web/js/edit_users.js.php | 18 +++++++-----------
+ 1 file changed, 7 insertions(+), 11 deletions(-)
+
+commit e3334bfdb (origin/messageformatter)
+Merge: e7158aff4 1c62f30a3
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Nov 20 16:19:57 2026 +0000
+
+    Merge pull request #4089 from vittorio-alfieri/patch-1
+    
+    Sanitize cookie path by removing query strings
+
+commit 1c62f30a3
+Author: vittorio-alfieri <125898953+vittorio-alfieri@users.noreply.github.com>
+Date:   Fri Nov 20 13:44:59 2026 +0100
+
+    Sanitize cookie path by removing query strings
+    
+    Add regex to remove query strings and fragments from cookie path.
+    Sometimes, with alternative authentication sessions, the path contains a portion of the query string that compromises the cookie mechanism.
+
+ web/functions.inc | 3 +++
+ 1 file changed, 3 insertions(+)
+
+commit e7158aff4
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Nov 17 11:55:21 2026 +0000
+
+    Update PHPMailer language file which must somehow have been missed by a previous commit.
+
+ web/lib/PHPMailer/language/phpmailer.lang-fr.php | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit bb43f1bb0
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Nov 17 11:54:12 2026 +0000
+
+    Update to Guzzle 7.16.2 and PSR7 2.13.3
+
+ web/lib/GuzzleHttp/CHANGELOG.md              | 13 ++++++++++
+ web/lib/GuzzleHttp/Handler/CurlFactory.php   |  8 ++++++
+ .../GuzzleHttp/Handler/CurlMultiHandler.php  | 24 +++++++++++++++---
+ web/lib/GuzzleHttp/Handler/StreamHandler.php |  9 +++++++
+ web/lib/GuzzleHttp/Psr7/Header.php           |  9 +++----
+ 5 files changed, 55 insertions(+), 8 deletions(-)
+
+commit d2f656cc7
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Tue Nov 17 08:30:23 2026 +0000
+
+    Fix bug, introduced after the upgrade to the latest version of DataTables, that caused the paging select and search box not to be able to be put into focus. See GitHub Issue #4087.
+
+ web/css/mrbs.css.php | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+commit 83f117cb1
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Mon Nov 16 13:58:49 2026 +0000
+
+    Fix bug, introduced after the upgrade to the latest version of DataTables, that caused the Bulk Delete button not to be shown on the Report page.
+
+ web/js/report.js.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit a71033ffc
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sun Nov 15 17:50:07 2026 +0000
+
+    Add a tool for showing which plural categories ('zero', 'one', 'two', 'few', 'many' and 'other') are used by which locales and for what values.
+
+ message_formatter_categories.php (new) | 57 ++++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
+
+commit 2d5adfe29
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sun Nov 15 14:47:22 2026 +0000
+
+    Remove redundant code
+
+ web/functions.inc | 54 ---------------------------------------------
+ 1 file changed, 54 deletions(-)
+
+commit 0e1a6ee23
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sun Nov 15 14:45:26 2026 +0000
+
+    Add DocBlock
+
+ web/functions.inc | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+commit 296fdec7f
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sun Nov 15 14:37:24 2026 +0000
+
+    Remove redundant code.
+
+ web/lib/MRBS/ICalendar/Event.php |  2 --
+ web/mrbs_sql.inc                 | 22 ----------------------
+ 2 files changed, 24 deletions(-)
+
+commit 485fb0f64
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sun Nov 15 14:19:01 2026 +0000
+
+    Convert mail notifications to use MessageFormatter durations.
+
+ web/functions_mail.inc | 13 +++++++------
+ web/mrbs_sql.inc       |  6 ++++--
+ 2 files changed, 11 insertions(+), 8 deletions(-)
+
+commit 1e25e6579
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sun Nov 15 11:45:45 2026 +0000
+
+    Remove redundant code
+
+ web/functions_view.inc | 9 ---------
+ 1 file changed, 9 deletions(-)
+
+commit 647326abd
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sun Nov 15 11:40:30 2026 +0000
+
+    Convert pending.php to use MessageFormatter durations.
+
+ web/pending.php | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit 8976b9e02
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sun Nov 15 10:57:20 2026 +0000
+
+    Convert reports to use MessageFormatter durations.
+
+ web/report.php | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+commit e644666ec
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sat Nov 14 18:25:49 2026 +0000
+
+    Fall back to using 'other' if the required category doesn't exist in the language strings.
+
+ web/js/edit_entry.js.php |  5 ++---
+ web/js/functions.js.php  | 25 +++++++++++++++++++++++++
+ 2 files changed, 27 insertions(+), 3 deletions(-)
+
+commit d1dbd9f42
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sat Nov 14 12:13:28 2026 +0000
+
+    Remove TODO (consideration of whether to use args.lang - we can't).  Add escaping of the language for good measure.
+
+ web/js/edit_entry.js.php | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 1ad3e4986
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sat Nov 14 11:54:53 2026 +0000
+
+    Use the 'days_and_subunits' language string so that the combined string is presented the same way by JavaScript as it is by PHP.
+
+ web/js/edit_entry.js.php | 51 +++++++++++++++++++-------------------
+ 1 file changed, 26 insertions(+), 25 deletions(-)
+
+commit 309d7e528
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sat Nov 14 11:05:06 2026 +0000
+
+    Remove TODO (consideration of need for escaping)
+
+ web/js/edit_entry.js.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 4584b4632
+Merge: 921ecdbe9 da23b951c
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sat Nov 14 10:26:53 2026 +0000
+
+    Merge branch 'main' into messageformatter
+
+commit da23b951c
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sat Nov 14 10:01:10 2026 +0000
+
+    Fix bug in the kiosk mode QR code that resulted in the URL having two forward slashes instead of one (url_base() already ensures that there is a trailing slash).
+
+ web/Themes/default/header.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 4facae366
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sat Nov 14 06:42:29 2026 +0000
+
+    Improve fix for GitHub Issue #4082 by handling properly the case when $url_base is set but doesn't have a trailing '/'.
+
+ web/js/datatables.js.php | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+commit 93c608bb5
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Fri Nov 13 16:13:23 2026 +0000
+
+    Fix bug resulting in a DataTables error if $url_base is not set.  See GitHub Issue #4082.
+
+ web/js/datatables.js.php | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit a0f66f9ca
+Merge: 5b6507f1b 172044b2c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Nov 13 13:51:40 2026 +0000
+
+    Merge pull request #4083 from Stachelritter/lang-de
+    
+    Add new vocabulary entries for German localization
+
+commit 921ecdbe9
+Merge: 6e38790ee 5b6507f1b
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Fri Nov 13 13:41:12 2026 +0000
+
+    Merge branch 'main' into messageformatter
+
+commit 5b6507f1b
+Merge: 5c1637fbd 3b23db8c7
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Fri Nov 13 13:31:41 2026 +0000
+
+    Merge remote-tracking branch 'origin/main'
+
+commit 5c1637fbd
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Fri Nov 13 13:30:26 2026 +0000
+
+    Add config setting allowing the default internal PHP session handler to be used instead of the custom DB handler.  See GitHub Issue #4066.
+
+ web/lib/MRBS/Session/Session.php | 10 +++++++++-
+ web/systemdefaults.inc.php       |  9 +++++++++
+ 2 files changed, 18 insertions(+), 1 deletion(-)
+
+commit 172044b2c
+Author: Fabian Ascheberg <88002233+Stachelritter@users.noreply.github.com>
+Date:   Fri Nov 13 14:13:50 2026 +0100
+
+    Fix duplicate warning message for last admin
+
+ web/lang/lang.de | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit 7157bb870
+Author: Fabian Ascheberg <88002233+Stachelritter@users.noreply.github.com>
+Date:   Fri Nov 13 14:10:30 2026 +0100
+
+    Add new vocabulary entries for German localization
+
+ web/lang/lang.de | 30 +++++++++++++++++++++++++-----
+ 1 file changed, 25 insertions(+), 5 deletions(-)
+
+commit 3b23db8c7
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Thu Nov 12 20:22:28 2026 +0000
+
+    Add test summary to Docker image workflow
+    
+    Write the functional test results to a JUnit XML file and publish a
+    per-PHP-version summary table to the workflow run summary page, so
+    results can be seen without opening the logs.
+    
+    Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+
+ .github/workflows/docker-image.yml | 42 +++++++++++++++++++++++++++-
+ 1 file changed, 41 insertions(+), 1 deletion(-)
+
+commit c831969e3
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Thu Nov 12 20:01:33 2026 +0000
+
+    Set issue types in issue templates
+    
+    Add the matching organisation issue type to each issue template, so
+    new Bug, Feature and Support Request issues are typed automatically.
+    Existing labels are kept.
+    
+    Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+
+ .github/ISSUE_TEMPLATE/bug_report.md      | 1 +
+ .github/ISSUE_TEMPLATE/feature_request.md | 1 +
+ .github/ISSUE_TEMPLATE/support-request.md | 1 +
+ 3 files changed, 3 insertions(+)
+
+commit 383c98214 (tag: v1.13.0)
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Thu Nov 12 18:55:00 2026 +0000
+
+    Rebuild ChangeLog for 1.13.0
+    
+    Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+
+ ChangeLog | 732 +++++++++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 693 insertions(+), 39 deletions(-)
+
+commit d0673643a
 Author: John Beranek <jberanek@users.sourceforge.net>
 Date:   Thu Nov 12 18:54:44 2026 +0000
 
@@ -33,7 +382,7 @@ Date:   Thu Nov 12 18:51:46 2026 +0000
     
     Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
 
-commit 8495918ac (origin/main, origin/HEAD)
+commit 8495918ac
 Author: campbell-m <github@campbellmorrison.co.uk>
 Date:   Thu Nov 12 13:05:31 2026 +0000
 
@@ -610,6 +959,13 @@ Date:   Sun Nov 8 14:44:52 2026 +0000
  web/report.php | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
+commit 6e38790ee (ghsa-73cv/messageformatter)
+Merge: 76dbca317 4f259a727
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sat Nov 7 18:33:02 2026 +0000
+
+    Merge branch 'main' into messageformatter
+
 commit 4f259a727
 Merge: c88553d23 299686ed6
 Author: campbell-m <github@campbellmorrison.co.uk>
@@ -746,6 +1102,195 @@ Date:   Tue Nov 3 15:50:34 2026 +0000
  web/mrbs_sql.inc | 2 ++
  1 file changed, 2 insertions(+)
 
+commit 76dbca317 (ghsa-rgxh/messageformatter)
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Nov 1 18:54:26 2026 +0000
+
+    Add TODO
+
+ web/js/edit_entry.js.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 70ff1582a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Nov 1 17:47:35 2026 +0000
+
+    Add TODOs
+
+ web/js/edit_entry.js.php | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+commit a554c556c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Nov 1 17:43:31 2026 +0000
+
+    Remove redundant code
+
+ web/js/edit_entry.js.php | 44 +-------------------------------------
+ 1 file changed, 1 insertion(+), 43 deletions(-)
+
+commit baa8a444a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Nov 1 17:40:31 2026 +0000
+
+    Convert JavaScript to use PluralRules.
+
+ web/functions.inc         | 12 ++++++------
+ web/js/edit_entry.js.php  | 31 ++++++++++++++++++-------------
+ web/lib/MRBS/Language.php |  8 +++++++-
+ 3 files changed, 31 insertions(+), 20 deletions(-)
+
+commit 5c1426f76
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 31 18:24:15 2026 +0000
+
+    Implement getPluralStrings() method.
+
+ web/lib/MRBS/Intl/MessageFormatter.php       | 119 +---------
+ .../Intl/MessageFormatterHelper.php (new)    | 208 +++++++++++++++++
+ 2 files changed, 219 insertions(+), 108 deletions(-)
+
+commit f092a710b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Oct 30 16:10:23 2026 +0000
+
+    Fix bug caused by using the web locale, not the web language.
+
+ web/functions.inc | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+
+commit 12b701b0f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Oct 30 12:11:23 2026 +0000
+
+    Add remaining translations.
+
+ web/lang/lang.gl         | 6 ++++++
+ web/lang/lang.he         | 6 ++++++
+ web/lang/lang.hu         | 6 ++++++
+ web/lang/lang.id         | 6 ++++++
+ web/lang/lang.it         | 6 ++++++
+ web/lang/lang.ja         | 6 ++++++
+ web/lang/lang.ko         | 6 ++++++
+ web/lang/lang.ms         | 6 ++++++
+ web/lang/lang.nb         | 8 +++++++-
+ web/lang/lang.nl         | 6 ++++++
+ web/lang/lang.pl         | 6 ++++++
+ web/lang/lang.pt         | 6 ++++++
+ web/lang/lang.pt-br      | 6 ++++++
+ web/lang/lang.ro         | 6 ++++++
+ web/lang/lang.ru         | 6 ++++++
+ web/lang/lang.sk         | 6 ++++++
+ web/lang/lang.sl         | 6 ++++++
+ web/lang/lang.sr-latn-rs | 6 ++++++
+ web/lang/lang.sv         | 6 ++++++
+ web/lang/lang.th         | 6 ++++++
+ web/lang/lang.tr         | 6 ++++++
+ web/lang/lang.zh-hans    | 6 ++++++
+ web/lang/lang.zh-hant    | 6 ++++++
+ 23 files changed, 139 insertions(+), 1 deletion(-)
+
+commit c42a02a4c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Oct 29 18:24:50 2026 +0000
+
+    Add translations for fi and fr.
+
+ web/lang/lang.fi | 6 ++++++
+ web/lang/lang.fr | 6 ++++++
+ 2 files changed, 12 insertions(+)
+
+commit 3ea152141
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Oct 29 18:13:37 2026 +0000
+
+    Add translations for da, de and el.
+
+ web/lang/lang.da | 6 ++++++
+ web/lang/lang.de | 6 ++++++
+ web/lang/lang.el | 6 ++++++
+ 3 files changed, 18 insertions(+)
+
+commit 18d63cda2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Oct 29 17:57:54 2026 +0000
+
+    Add translations for ca and cs
+
+ web/lang/lang.ca | 6 ++++++
+ web/lang/lang.cs | 6 ++++++
+ 2 files changed, 12 insertions(+)
+
+commit 1a4814b28
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Oct 29 17:28:45 2026 +0000
+
+    Change default max_unit to 'weeks'
+
+ web/functions.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 6af4b9b5c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Oct 29 17:23:42 2026 +0000
+
+    Times durations working - English translation only
+
+ web/lang/lang.en | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit 16ec5f102
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Oct 29 17:15:41 2026 +0000
+
+    Made periods string respect locale.
+
+ web/functions.inc | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit c2625698f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Oct 29 17:10:11 2026 +0000
+
+    Interim commit
+
+ web/functions.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 60acb3281
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Oct 29 17:01:12 2026 +0000
+
+    Restructure
+
+ web/functions.inc | 64 +++++++++++++++++++++++++++++----------------
+ 1 file changed, 41 insertions(+), 23 deletions(-)
+
+commit 4fc482dce
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Oct 29 16:31:45 2026 +0000
+
+    Interim commit
+
+ web/functions.inc | 23 +++++------------------
+ 1 file changed, 5 insertions(+), 18 deletions(-)
+
+commit 1a75c7b80
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Oct 29 15:23:16 2026 +0000
+
+    Interim commit
+
+ web/functions.inc | 53 ++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 50 insertions(+), 3 deletions(-)
+
+commit f2077b9a6
+Merge: 0f5f4ce98 3aafab399
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Oct 26 17:30:57 2026 +0000
+
+    Merge branch 'main' into messageformatter
+
 commit 3aafab399
 Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
 Date:   Mon Oct 26 17:28:56 2026 +0000
@@ -755,6 +1300,22 @@ Date:   Mon Oct 26 17:28:56 2026 +0000
  web/lib/GuzzleHttp/CHANGELOG.md         |  8 ++++++++
  web/lib/GuzzleHttp/Cookie/CookieJar.php | 25 ++++++++---------------
  2 files changed, 16 insertions(+), 17 deletions(-)
+
+commit 0f5f4ce98
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Oct 25 19:05:23 2026 +0000
+
+    Tweak wording.
+
+ LANGUAGE.md | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit 1c6d372da
+Merge: 30a39760b 7c3b7792c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Oct 25 19:02:00 2026 +0000
+
+    Merge branch 'main' into messageformatter
 
 commit 7c3b7792c
 Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
@@ -774,6 +1335,22 @@ Date:   Sun Oct 25 18:56:33 2026 +0000
  README.md | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
+commit 30a39760b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Oct 25 18:54:32 2026 +0000
+
+    Update for MessageFormatter.
+
+ LANGUAGE.md | 25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
+
+commit e719f613f
+Merge: 8092ae61c dfe59d868
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Oct 25 08:37:05 2026 +0000
+
+    Merge branch 'main' into messageformatter
+
 commit dfe59d868
 Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
 Date:   Sun Oct 25 08:34:25 2026 +0000
@@ -782,6 +1359,13 @@ Date:   Sun Oct 25 08:34:25 2026 +0000
 
  LANGUAGE.md | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 8092ae61c
+Merge: 88cf25a82 4f8c92e2d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Oct 25 08:32:15 2026 +0000
+
+    Merge branch 'main' into messageformatter
 
 commit 4f8c92e2d
 Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
@@ -801,6 +1385,39 @@ Date:   Sat Oct 24 18:11:45 2026 +0100
  LANGUAGE => LANGUAGE.md | 19 ++++++++++++++-----
  1 file changed, 14 insertions(+), 5 deletions(-)
 
+commit 88cf25a82
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 24 17:36:02 2026 +0100
+
+    Convert periods durations to use MessageFormatter for remaining languages
+
+ web/lang/lang.fi         | 2 ++
+ web/lang/lang.fr         | 2 ++
+ web/lang/lang.gl         | 2 ++
+ web/lang/lang.he         | 2 ++
+ web/lang/lang.hu         | 2 ++
+ web/lang/lang.id         | 2 ++
+ web/lang/lang.it         | 2 ++
+ web/lang/lang.ja         | 2 ++
+ web/lang/lang.ko         | 2 ++
+ web/lang/lang.ms         | 2 ++
+ web/lang/lang.nb         | 2 ++
+ web/lang/lang.nl         | 2 ++
+ web/lang/lang.pl         | 2 ++
+ web/lang/lang.pt         | 2 ++
+ web/lang/lang.pt-br      | 2 ++
+ web/lang/lang.ro         | 2 ++
+ web/lang/lang.ru         | 2 ++
+ web/lang/lang.sk         | 2 ++
+ web/lang/lang.sl         | 2 ++
+ web/lang/lang.sr-latn-rs | 2 ++
+ web/lang/lang.sv         | 2 ++
+ web/lang/lang.th         | 2 ++
+ web/lang/lang.tr         | 2 ++
+ web/lang/lang.zh-hans    | 2 ++
+ web/lang/lang.zh-hant    | 2 ++
+ 25 files changed, 50 insertions(+)
+
 commit 33cf5710e
 Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
 Date:   Fri Oct 23 15:45:13 2026 +0100
@@ -809,6 +1426,52 @@ Date:   Fri Oct 23 15:45:13 2026 +0100
 
  web/edit_room_handler.php | 85 +++++++++++++++++++++++--------------
  1 file changed, 53 insertions(+), 32 deletions(-)
+
+commit 9a2bf95f1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Oct 23 13:33:30 2026 +0100
+
+    Convert periods durations to use MessageFormatter (some languages still outstanding)
+
+ web/functions.inc | 2 +-
+ web/lang/lang.ca  | 2 ++
+ web/lang/lang.cs  | 2 ++
+ web/lang/lang.da  | 3 +++
+ web/lang/lang.de  | 2 ++
+ web/lang/lang.el  | 3 +++
+ web/lang/lang.en  | 2 +-
+ web/lang/lang.es  | 2 ++
+ web/lang/lang.eu  | 2 ++
+ 9 files changed, 18 insertions(+), 2 deletions(-)
+
+commit e0219aa3a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Oct 20 18:31:55 2026 +0100
+
+    Fix bug
+
+ web/functions.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 829ab2a43
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Oct 20 17:58:40 2026 +0100
+
+    Change "=0" and "=1" to "zero" and "one"
+
+ web/lang/lang.en | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+commit 6c749339d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Oct 20 17:54:57 2026 +0100
+
+    Started on converting durations.
+
+ web/functions.inc      | 39 +++++++++++++++++++++++++++++++++++++++
+ web/functions_view.inc |  6 +++++-
+ web/lang/lang.en       |  3 +++
+ 3 files changed, 47 insertions(+), 1 deletion(-)
 
 commit 8a1da26d3
 Author: John Beranek <jberanek@users.sourceforge.net>
@@ -820,6 +1483,22 @@ Date:   Mon Oct 19 19:42:43 2026 +0100
 
  web/version.inc | 62 +++++++++++++++++++++++++++++++++++++----------
  1 file changed, 49 insertions(+), 13 deletions(-)
+
+commit 57a085b0f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Oct 19 18:52:54 2026 +0100
+
+    Convert pending bookings language tag to a MessageFormatter pattern to provide pluralisation support.
+
+ web/lang/lang.en | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit dcde79121
+Merge: 7357b020b 7ade835e4
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Oct 19 16:46:56 2026 +0100
+
+    Merge branch 'main' into messageformatter
 
 commit 7ade835e4
 Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
@@ -845,6 +1524,13 @@ Date:   Mon Oct 19 16:44:04 2026 +0100
  web/lib/GuzzleHttp/Utils.php                 |  2 +-
  web/lib/GuzzleHttp/functions.php             |  2 +-
  17 files changed, 171 insertions(+), 50 deletions(-)
+
+commit 7357b020b
+Merge: e89b5ccf2 429e97be3
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Oct 19 16:04:51 2026 +0100
+
+    Merge branch 'main' into messageformatter
 
 commit 429e97be3
 Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
@@ -928,6 +1614,34 @@ Date:   Sun Oct 18 19:47:50 2026 +0100
  test/ci/test_views.py (new)           |  52 ++++++++
  17 files changed, 784 insertions(+), 21 deletions(-)
 
+commit e89b5ccf2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Oct 18 17:45:34 2026 +0100
+
+    Add the ability to handle intl MessageFormatter patterns in vocab strings.
+
+ web/lang/lang.en          | 12 ++++++------
+ web/lib/MRBS/Language.php | 21 +++++++++++++++++----
+ 2 files changed, 23 insertions(+), 10 deletions(-)
+
+commit 444aa782a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Oct 18 17:11:38 2026 +0100
+
+    Add further test for plurals.
+
+ test/test_message_formatter.php | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+commit ccbfb4bee
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Oct 18 17:00:37 2026 +0100
+
+    Fix test for plurals.
+
+ web/lib/MRBS/Intl/MessageFormatter.php | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
+
 commit ab03240a8
 Merge: ce4386a1f bd499d81e
 Author: John Beranek <jberanek@users.sourceforge.net>
@@ -936,6 +1650,33 @@ Date:   Sun Oct 18 15:04:12 2026 +0100
     Merge pull request #4034 from kocaemre/patch-1
     
     docs: add security policy guidance
+
+commit 09598754c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Oct 18 14:34:28 2026 +0100
+
+    Add constants test for MessageFormatter
+
+ test/test_message_formatter.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit d712050bb
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Oct 18 14:29:55 2026 +0100
+
+    Fix NumberFormatter for floats.
+
+ web/lib/MRBS/Intl/NumberFormatter.php | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
+
+commit 15ce097c2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Oct 18 12:16:00 2026 +0100
+
+    Add float test
+
+ test/test_number_formatter.php | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 commit ce4386a1f
 Merge: 66c658439 759743d81
@@ -963,6 +1704,71 @@ Date:   Sun Oct 18 11:57:31 2026 +0100
  web/site_faq/site_faq_nl.html |  2 +-
  web/site_faq/site_faq_sv.html |  2 +-
  12 files changed, 44 insertions(+), 34 deletions(-)
+
+commit fdbc8c451
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Oct 18 11:29:59 2026 +0100
+
+    Add float test
+
+ test/test_message_formatter.php | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit 430aee08b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 17 17:14:08 2026 +0100
+
+    Add plural test for MessageFormatter.
+
+ test/test_message_formatter.php | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+commit 2edd147c7
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 17 16:39:29 2026 +0100
+
+    Turn on strict_types for MessageFormatter class.
+
+ web/lib/MRBS/Intl/MessageFormatter.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit a97855b25
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 17 16:36:02 2026 +0100
+
+    Add Persian locale test.
+
+ test/test_message_formatter.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 6b9673e2e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 17 16:31:54 2026 +0100
+
+    Add Arabic locale test.
+
+ test/test_message_formatter.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 1a5002a9f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 17 16:28:51 2026 +0100
+
+    Fix for 'de' locale formatting in MessageFormatter.
+
+ web/lib/MRBS/Intl/MessageFormatter.php | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+commit 06f8938a2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Oct 17 16:13:57 2026 +0100
+
+    First version of MessageFormatter.  Only supporting English locales.
+
+ test/test_message_formatter.php (new)        |  76 +++
+ web/lib/MRBS/Intl/MessageFormatter.php (new) | 466 +++++++++++++++++
+ web/lib/MessageFormatter.php (new)           |   7 +
+ 3 files changed, 549 insertions(+)
 
 commit 759743d81
 Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
