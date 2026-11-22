@@ -1652,15 +1652,19 @@ function get_repeat(int $repeat_id) : ?array
   return $row;
 }
 
-// Update the time of last reminding.
-// If the entry is part of a repeating series, then also increment
-// the last reminder time in the repeat table and all the individual
-// entries.  (Although strictly speaking the reminder time should apply
-// either to a series or an individual entry, we update everything to
-// prevent users bombarding admins with reminder emails)
-//
-// Returns the number of tuples affected if OK (a number >= 0).
-// Returns -1 on error; use the DB class error() method to get the error message.
+
+/**
+ * Update the time of last reminding.
+ *
+ * If the entry is part of a repeating series, then also increment the last reminder time in the repeat table and all
+ * the individual entries.  (Although strictly speaking the reminder time should apply either to a series or an
+ * individual entry, we update everything to prevent users bombarding admins with reminder emails.)
+ *
+ * @param int $id
+ * @param bool $series
+ * @return int The number of tuples affected if OK (a number >= 0); otherwise -1 on error (use the DB class `error()`
+ * method to get the error message).
+ */
 function update_last_reminded(int $id, bool $series) : int
 {
   $now = time();
