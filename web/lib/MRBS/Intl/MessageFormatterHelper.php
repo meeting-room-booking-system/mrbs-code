@@ -50,24 +50,54 @@ namespace MRBS\Intl;
 class MessageFormatterHelper
 {
   /**
-   * Convert a simple pattern to an array of plural strings.  Useful for converting MRBS vocab messages for use by
-   * Javascript's `Intl.PluralRules`.
+   * Convert a simple pattern containing just one plural placeholder to an array of plural strings.  Useful for
+   * converting MRBS vocab messages for use by JavaScript's `Intl.PluralRules`.
    *
-   * For example, `{0, plural, one {# sekunda} few {# sekundy} many {# sekund} other {# sekund}}` will produce
-   * `['one' => '# sekunda'], 'few' => '# sekundy', 'many' => '# sekund', 'other' => '# sekund']`.
+   * Example 1: "{0, plural, one {# sekunda} few {# sekundy} many {# sekund} other {# sekund}}" will produce
+   * `['one' => '# sekunda', 'few' => '# sekundy', 'many' => '# sekund', 'other' => '# sekund']`.
    *
-   * @param string $pattern
-   * @return array{'zero'|'one'|'two'|'few'|'many'|'other': string}
+   * Example 2: "He has {0, plural, one {# mouse} other {# mice}}." will produce `['one' => 'He has # mouse.',
+   * 'other' => 'He has # mice.']`.
+   *
+   * @param string $string Either a MessageFormatter pattern, or, for backwards compatibility, a string with conversion
+   * specifications intended for use with `sprintf()`.
+   * @return array{'zero'|'one'|'two'|'few'|'many'|'other': string}|string If a MessageFormatter pattern was provided
+   * an array indexed by category; otherwise a string for use with `sprintf()`.
    */
-  public static function getPluralStrings(string $pattern): array
+  public static function getPluralStrings(string $string)
   {
+    // If it doesn't look like a MessageFormatter pattern, just return ther string
+    if (!preg_match('/{.*}/', $string))
+    {
+      return $string;
+    }
+
+    // Otherwise break the pattern down into categories
     try
     {
       $result = [];
-      $tokens = self::tokenizePattern($pattern);
+      $prefix = '';
+      $suffix = '';
+      $tokens = self::tokenizePattern($string);
       self::validateTokens($tokens);
+
       foreach ($tokens as $token)
       {
+        // If it's just a plain string, then add it to the prefix string ot the suffix string, depending on whether
+        // we've already had the plural placeholder.  We will need to add these to the final results.
+        if (is_string($token) && ($token !== ''))
+        {
+          if (count($result) === 0)
+          {
+            $prefix .= $token;
+          }
+          else
+          {
+            $suffix .= $token;
+          }
+          continue;
+        }
+        // If it's not a placeholder with a 'plural' argument, ignore it.
         if (!is_array($token) || !isset($token[1]) || trim($token[1]) !== 'plural')
         {
           continue;
@@ -76,6 +106,7 @@ class MessageFormatterHelper
         {
           throw new \DomainException("Invalid plural token");
         }
+        // We've got a plural placeholder.  Get the strings for the plural categories.
         $plural_tokens = self::tokenizePattern($token[2]);
         self::validateTokens($plural_tokens);
 
@@ -93,7 +124,6 @@ class MessageFormatterHelper
           $result[$keyword] = $string_tokens[0];
         }
       }
-      return $result;
     }
     catch (\DomainException $e)
     {
@@ -101,6 +131,13 @@ class MessageFormatterHelper
       return [];
     }
 
+    // Finally, add the prefix and suffix to the strings.
+    foreach ($result as &$value)
+    {
+      $value = $prefix . $value . $suffix;
+    }
+
+    return $result;
   }
 
 

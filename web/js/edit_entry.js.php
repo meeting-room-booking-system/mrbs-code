@@ -847,16 +847,14 @@ function getDuration(from, to, days) {
     duration = duration / 60;
   }
 
-  const pluralRules = new Intl.PluralRules(lang);
-  const numberFormat = new Intl.NumberFormat(lang);
   let dayText, subText;
 
   if (days !== 0) {
-    dayText = pluralString(pluralStrings.days, pluralRules.select(days)).replace('#', numberFormat.format(days));
+    dayText = pluralString(pluralStrings.days, days, lang);
   }
 
   if (duration !== 0) {
-    subText = pluralString(pluralStrings[durUnits], pluralRules.select(duration)).replace('#', numberFormat.format(duration));
+    subText = pluralString(pluralStrings[durUnits], duration, lang);
   }
 
   if ((days !== 0) && (duration !== 0)) {
