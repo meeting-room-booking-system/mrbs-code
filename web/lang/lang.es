@@ -458,7 +458,10 @@ $vocab["na"]                    = "[N/A]";
 $vocab["compound_name"]	           = '%1$s (%2$s)'; // 1: username, 2: display name
 $vocab["registrant_registered_by"] = '%1$s (por %2$s)'; // 1: Registrant, 2: Registered by
 $vocab["registrant_username_and_registered_by"] =   '%1$s (%2$s) (por %3$s)'; // 2: Registrant username, 2: Registrant display name, 3: Registered by
-$vocab["unique_addresses_copied"] =  "%d direcciones de correo únicas copiadas al portapapeles.";
+$vocab["unique_addresses_copied"]  = "{0, plural," .
+                                     " one {# dirección de correo electrónico única copiada}" .
+                                     " other {# direcciones de correo únicas copiadas}}" .
+                                     " al portapapeles.";
 $vocab["clipboard_copy_failed"] =  "No se pudo copiar al portapapeles.";
 
 // Used in admin.php

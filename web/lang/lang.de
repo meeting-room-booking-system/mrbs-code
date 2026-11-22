@@ -512,7 +512,10 @@ $vocab["delete_entries_warning"] = "WARNUNG!  Alle Einträge, die den Suchkriter
                                    "Anzahl der zu löschenden Einträge: %s";
 $vocab["delete_entries_failed"] = "Die Einträge konnten nicht gelöscht werden.";
 $vocab["registered"]            = "Angemeldet";
-$vocab["unique_addresses_copied"]  = "%d einzigartige E-Mail-Adressen wurden in die Zwischenablage kopiert.";
+$vocab["unique_addresses_copied"]  = "{0, plural," .
+                                     " one {# einzigartige E-Mail-Adresse}" .
+                                     " other {# einzigartige E-Mail-Adressen}}" .
+                                     " wurden in die Zwischenablage kopiert.";
 $vocab["clipboard_copy_failed"]    = "Kopieren in die Zwischenablage fehlgeschlagen.";
 
 // Used in admin.php

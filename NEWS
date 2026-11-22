@@ -7,6 +7,53 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.13.1 (Sat 21st November 2026):
+
+[+] Add support for intl MessageFormatter patterns in language strings, giving better
+ handling of plurals in languages that have more than one plural form.  A basic fallback
+ is provided if the intl extension is not available.  See LANGUAGE.md.
+
+[*] Convert durations (in the user interface, reports, pending bookings and email
+ notifications) and the pending bookings language string to use MessageFormatter
+ patterns so that plurals are handled correctly for each language.
+
+[+] Add config setting $auth['session_php']['use_internal_php_handler'] allowing the
+ default internal PHP session handler to be used instead of the custom database handler.
+ See GitHub Issue #4066.
+
+[*] Update language files, adding new German vocabulary entries.  Thanks to Fabian
+ Ascheberg (GitHub: @Stachelritter) for the German translations.  See GitHub PR #4083.
+
+[-] Fix duplicate warning message for the last admin in the German language file.
+
+[-] Fix bug, introduced after the upgrade to DataTables 3.1.5, that caused the paging
+ select and search box not to be able to be put into focus.  See GitHub Issue #4087.
+
+[-] Fix bug, introduced after the upgrade to DataTables 3.1.5, that caused the Bulk
+ Delete button not to be shown on the Report page.
+
+[-] Fix bug resulting in a DataTables error if $url_base is not set, and handle the case
+ when $url_base does not have a trailing '/'.  See GitHub Issue #4082.
+
+[-] Fix bug in the kiosk mode QR code that resulted in the URL having two forward slashes
+ instead of one.
+
+[-] Sanitize the session cookie path by removing query strings and fragments, which
+ could break the cookie mechanism when using alternative authentication sessions.
+ Thanks to Vittorio Alfieri (GitHub: @vittorio-alfieri).  See GitHub PR #4089.
+
+[*] Make the "Copy email addresses" button on the Users page only copy unique addresses,
+ and only show it if there is an email column.
+
+[*] Upgrade Guzzle to Version 7.16.2 and PSR-7 to Version 2.13.3.
+
+[-] Update PHPMailer language file which had been missed in the previous upgrade.
+
+[+] Add a tool, message_formatter_categories.php, for showing which plural categories
+ are used by which locales and for what values.
+
+-------------------------------------------------------------------------------
+
 Version 1.13.0 (Thu 12th November 2026):
 
 [-] Fix LDAP injection in the authentication filter by escaping filter and DN values
