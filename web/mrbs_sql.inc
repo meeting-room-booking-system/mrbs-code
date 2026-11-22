@@ -1661,7 +1661,7 @@ function get_repeat(int $repeat_id) : ?array
 //
 // Returns the number of tuples affected if OK (a number >= 0).
 // Returns -1 on error; use the DB class error() method to get the error message.
-function update_last_reminded($id, $series)
+function update_last_reminded(int $id, bool $series) : int
 {
   $now = time();
   if ($series)
