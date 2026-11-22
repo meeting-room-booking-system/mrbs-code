@@ -495,6 +495,9 @@ function get_compound_name(?string $username) : string
 }
 
 
+/**
+ * Get the cookie path.
+ */
 function get_cookie_path()
 {
   global $cookie_path_override, $server;
@@ -509,7 +512,7 @@ function get_cookie_path()
     $cookie_path = $server['REQUEST_URI'] ?? $server['PHP_SELF'];
     // Remove any query string and fragment first. They can contain slashes which
     // would otherwise be mistaken for the end of the path.
-    $cookie_path = preg_replace('/[?#].*$/s', '', $cookie_path); 
+    $cookie_path = preg_replace('/[?#].*$/s', '', $cookie_path);
     // Strip off everything after the last '/'
     $cookie_path = preg_replace('/[^\/]*$/', '', $cookie_path);
     // Some cases have been observed of the cookie path being set to, for example,
@@ -636,6 +639,10 @@ function url_validate_remote(string $url): ?string
 }
 
 
+/**
+ * Determine whether the site's scheme is HTTPS.  Note that this cannot be relied on as the server variables can be
+ * spoofed by the client.
+ */
 function is_https() : bool
 {
   global $server;
@@ -850,7 +857,9 @@ function remove_query_parameter(string $location, string $name) : string
 }
 
 
-// Adds the site parameter in the query string if necessary
+/**
+ * Add the site parameter in the query string if running in multisite mode.
+ */
 function multisite(string $location) : string
 {
   global $multisite, $site;
@@ -865,8 +874,10 @@ function multisite(string $location) : string
 }
 
 
-// Add a version parameter to a filename in order to force the use of the new
-// file instead of the cached version
+/**
+ * Add the modification time as a version parameter to a filename in order to force the use of the new file
+ * instead of the cached version.
+ */
 function add_version(string $filename) : string
 {
   $url_path = parse_url($filename, PHP_URL_PATH);
