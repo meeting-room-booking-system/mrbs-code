@@ -158,7 +158,7 @@ $vocab["missing_mandatory_field"] = "Non è stato inserito il valore per il camp
 $vocab["confirmed"]               = "Confermato";
 $vocab["start_after_end"]         = "Giorno di inizio dopo giorno di fine";
 $vocab["start_after_end_long"]    = "Errore: il giorno di inizio non può essere dopo il giorno di fine.";
-$vocab["invalid_rep_interval"]     = "L'intervallo di ripetizione non può essere vuoto.";
+$vocab["invalid_rep_interval"]     = "L'intervallo di ripetizione deve essere maggiore di zero.";
 $vocab["confirm_rep_end_date"]     = "Sembra che ti sia dimenticato di inserire la data finale del " .
                                      "periodo. Vuoi comunque continuare?";
 $vocab["rep_end_date_before_start_date"] = "La data finale deve essere successiva alla data iniziale.";
