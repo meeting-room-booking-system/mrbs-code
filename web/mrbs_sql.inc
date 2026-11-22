@@ -1660,8 +1660,8 @@ function get_repeat(int $repeat_id) : ?array
  * the individual entries.  (Although strictly speaking the reminder time should apply either to a series or an
  * individual entry, we update everything to prevent users bombarding admins with reminder emails.)
  *
- * @param int $id
- * @param bool $series
+ * @param int $id The id of the entry or, if `$series` is true, the repeat_id of the series.
+ * @param bool $series Whether the id refers to an individual entry or a series.
  * @return int The number of tuples affected if OK (a number >= 0); otherwise -1 on error (use the DB class `error()`
  * method to get the error message).
  */
