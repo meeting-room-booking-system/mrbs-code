@@ -1475,15 +1475,12 @@ function mrbsCreateEntry(string $table, array $data) : int
   return db()->insert_id($table, "id");
 }
 
-/** mrbsCreateSingleEntry()
+/**
  *
- * Create a single (non-repeating) entry in the database
+ * Create a single (non-repeating) entry in the database.
  *
- * $data      - An array containing the entry details
- *
- * Returns:
- *   0        - An error occurred while inserting the entry
- *   non-zero - The entry's ID
+ * @param array $data The entry details.
+ * @return int The new entry's id, or 0 on failure.
  */
 function mrbsCreateSingleEntry(array $data) : int
 {
