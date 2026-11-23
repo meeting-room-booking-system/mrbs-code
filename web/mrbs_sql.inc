@@ -1652,52 +1652,72 @@ function get_repeat(int $repeat_id) : ?array
   return $row;
 }
 
-// Update the time of last reminding.
-// If the entry is part of a repeating series, then also increment
-// the last reminder time in the repeat table and all the individual
-// entries.  (Although strictly speaking the reminder time should apply
-// either to a series or an individual entry, we update everything to
-// prevent users bombarding admins with reminder emails)
-//
-// Returns the number of tuples affected if OK (a number >= 0).
-// Returns -1 on error; use the DB class error() method to get the error message.
-function update_last_reminded($id, $series)
-{
-  $now = time();
-  if ($series)
-  {
-    $sql = "UPDATE " . _tbl('repeat') . "
-               SET reminded=?,
-                   ical_sequence=ical_sequence+1
-             WHERE id=?";
-    db()->command($sql, array($now, $id));
 
-    $sql = "UPDATE " . _tbl('entry') . "
-               SET reminded=?,
-                   ical_sequence=ical_sequence+1
-             WHERE repeat_id=?";
-    return db()->command($sql, array($now, $id));
-  }
-  else
+/**
+ * Update the time of last reminder.
+ *
+ * If the entry is part of a repeating series, then increment the last reminder time in the repeat table and all
+ * the individual entries.  (Although strictly speaking the reminder time should apply either to a series or an
+ * individual entry, we update everything to prevent users bombarding admins with reminder emails.)
+ *
+ * @param int $id The id of the entry or, if `$series` is true, the repeat_id of the series.
+ * @param bool $series Whether the id refers to an individual entry or a series.
+ * @return bool TRUE on success, otherwise FALSE
+ */
+function update_last_reminded(int $id, bool $series) : bool
+{
+  try
   {
-    $sql = "UPDATE " . _tbl('entry') . "
-               SET reminded=?,
-                   ical_sequence=ical_sequence+1
-             WHERE id=?";
-    if (db()->command($sql, array($now,$id)) > 0)
+    db()->begin();
+    $now = time();
+
+    if (!$series)
     {
+      // If this is a single entry that's part of a series we'll deal with it below.
       $repeat_id = get_repeat_id($id);
-      if (isset($repeat_id))
+
+      // Otherwise, update the reminded time for the entry.
+      if (!isset($repeat_id))
       {
-        $sql = "UPDATE " . _tbl('repeat') . "
-                   SET reminded=?,
+        $sql = "UPDATE " . _tbl('entry') . "
+                   SET reminded=:reminded,
                        ical_sequence=ical_sequence+1
-                 WHERE id=?";
-        return db()->command($sql, array($now,$id));
+                 WHERE id=:entry_id";
+        db()->command($sql, [':reminded' => $now, ':entry_id' => $id]);
+        db()->commit();
+        return true;
       }
     }
+    else
+    {
+      $repeat_id = $id;
+    }
+
+    // We've got a series.
+
+    // Update the repeat table
+    $sql = "UPDATE " . _tbl('repeat') . "
+               SET reminded=:reminded,
+                   ical_sequence=ical_sequence+1
+             WHERE id=:repeat_id";
+    db()->command($sql, [':reminded' => $now, ':repeat_id' => $repeat_id]);
+
+    // Update all the entries in that series
+    $sql = "UPDATE " . _tbl('entry') . "
+               SET reminded=:reminded,
+                   ical_sequence=ical_sequence+1
+             WHERE repeat_id=:repeat_id";
+    db()->command($sql, [':reminded' => $now, ':repeat_id' => $repeat_id]);
+
+    db()->commit();
+    return true;
   }
-  return -1;
+  catch (\Exception $e)
+  {
+    db()->rollback();
+    trigger_error($e->getMessage(), E_USER_WARNING);
+    return false;
+  }
 }
 
 // Update the entry/repeat tables with details about the last More Info
