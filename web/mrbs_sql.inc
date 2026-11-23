@@ -1487,21 +1487,20 @@ function mrbsCreateSingleEntry(array $data) : int
   // Make sure that any entry is of a positive duration.
   // This is to trap potential negative duration created when DST comes
   // into effect
-  if ($data['end_time'] > $data['start_time'])
-  {
-    // If we're about to create an individual member of a series for the first time
-    // then give it a recurrence-id equivalent to the start time.  It should always
-    // keep this value, even if the start time is subsequently changed.
-    if ($data['entry_type'] == ENTRY_RPT_ORIGINAL)
-    {
-      $data['ical_recur_id'] = Property::convertTimestamps($data['start_time'])[0];
-    }
-    return mrbsCreateEntry(_tbl('entry'), $data);
-  }
-  else
+  if ($data['end_time'] <= $data['start_time'])
   {
     return 0;
   }
+
+  // If we're about to create an individual member of a series for the first time
+  // then give it a recurrence-id equivalent to the start time.  It should always
+  // keep this value, even if the start time is subsequently changed.
+  if ($data['entry_type'] == ENTRY_RPT_ORIGINAL)
+  {
+    $data['ical_recur_id'] = Property::convertTimestamps($data['start_time'])[0];
+  }
+
+  return mrbsCreateEntry(_tbl('entry'), $data);
 }
 
 
