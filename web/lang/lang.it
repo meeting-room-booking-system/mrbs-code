@@ -164,7 +164,7 @@ $vocab["confirm_rep_end_date"]     = "Sembra che ti sia dimenticato di inserire 
 $vocab["rep_end_date_before_start_date"] = "La data finale deve essere successiva alla data iniziale.";
 $vocab["type_reserved_for_admins"] = "La tipologia '%s' è riservata agli amministratori";
 $vocab["multiroom_not_allowed"]    = "Non sei autorizzato a fare prenotazioni per più stanze.";
-$vocab["edit_entry_nonexistent_room"] = "Stai cercando di creare o modificare una voce che non esiste. " .
+$vocab["edit_entry_nonexistent_room"] = "Stai cercando di creare o modificare una prenotazione per una stanza che non esiste. " .
                                         "La causa potrebbe essere che stai utilizzando un riferimento che non è più valido. " .
                                         "Non è consigliabile utilizzare riferimento che portano direttamente al modulo di prenotazione. " .
                                         "È meglio aprire il modulo di prenotazione dalla vista calendario.";
@@ -217,7 +217,7 @@ $vocab["cancel_registration"]     = "Cancella registrazione";
 $vocab["registered_by"]           = "Registrato da";
 $vocab["registered_on"]           = "Registrato il";
 $vocab["event_full"]              = "Non ci sono posti disponibili.";
-$vocab["confirm_del_registrant"]  = "Sei sicuro di voler cancellare la tua registrazione per '%s'?";
+$vocab["confirm_del_registrant"]  = "Sei sicuro di voler cancellare la registrazione di '%s'?";
 
 // Used in edit_entry_handler.php
 $vocab["error"]                  = "Errore";
@@ -432,6 +432,14 @@ $vocab["delete_entries_warning"] = "ATTENZIONE! Questa operazione cancellerà tu
                                    "L’operazione non può essere annullata. Vuoi continuare?\n\n" .
                                    "Numero totale di prenotazioni che verranno cancellate: %s";
 $vocab["delete_entries_failed"] = "Non è stato possibile cancellare i valori.";
+$vocab["cancel"]                = "Annulla";
+$vocab["registered"]            = "Registrato";
+//$vocab["na"]                    = Use the same as above, for consistency.
+//$vocab["compound_name"]            = Use the same as above, for consistency.
+//$vocab["registrant_registered_by"] = Use the same as above, for consistency.
+//$vocab["registrant_username_and_registered_by"] = '%1$s (%2$s) (by %3$s)';  Use the same as above, for consistency.
+$vocab["unique_addresses_copied"]  = "{0, plural, one {# indirizzo e-mail univoco copiato} other {# indirizzi e-mail univoci copiati}} nella clipboard.";
+$vocab["clipboard_copy_failed"]    = "Copia nella clipboard fallita.";
 
 // Used in admin.php
 $vocab["edit"]               = "Modifica";
@@ -555,7 +563,7 @@ $vocab["import_icalendar"]            = "Importa un file iCalendar";
 $vocab["area_room_settings"]          = "Aree e stanze";
 $vocab["other_settings"]              = "Altre impostazioni";
 $vocab["import_intro"]                = "Questo modulo ti permette di importare in MRBS un file iCalendar che rispetti RFC 5545. " .
-                                        "Verranno importati solo gli eventi multipli che hanno un tipo equivalente in MRBS.";
+                                        "Verranno importati solo gli eventi ricorrenti dotati di una regola di ricorrenza il cui tipo di ripetizione sia equivalente a uno di quelli supportati in MRBS.";
 $vocab["supported_file_types"]        = "Sono supportati i seguenti tipi di file:";
 $vocab["import_text_file"]            = "File iCalendar non compressi";
 $vocab["import_zip"]                  = "Archivi zip, inclusi file multipli in un archivio";
