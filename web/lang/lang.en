@@ -747,3 +747,11 @@ $vocab["browser_not_supported"] = "Unfortunately your browser isn't supported by
                                   "recent version, or else use another browser.";
 $vocab["back"]               = "Back";
 
+// Used in Google OAuth2 Autentication
+$vocab["login_with_google"]           = "Log in with Google";
+$vocab["google_login_failed"]         = "Google login failed. Please try again.";
+$vocab["google_login_domain_not_allowed"] = "Your Google account does not belong to an organisation that is allowed to log in here.";
+$vocab["google_login_no_account"]     = "You do not have an account. Please ask an administrator to create one for you.";
+$vocab["google_login_name_too_long"]  = "Your email address is too long to be used as a username. Please ask an administrator.";
+$vocab["google_login_not_configured"] = "Google login has not been configured.";
+$vocab["login_notice"]                = "";

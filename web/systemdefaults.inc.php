@@ -1605,6 +1605,30 @@ define('COOKIEHASH', md5($domain_name));
 */
 
 
+// 'Sign in with Google' (Google Workspace) settings.  This is an alternative to the normal login form and
+// needs $auth['type'] = 'db' and $auth['session'] = 'php' (or 'cookie'). 
+// Read the "Google Workspace sign-in" section of AUTHENTICATION.
+// Set this to true to turn Google sign-in on.  The client ID, client secret and allowed domains below must
+// also be set.  IMPORTANT: when it is on, users whose username is an email address at one of the allowed
+// domains can ONLY log in with Google, even if they have a password.
+$auth['google']['enable'] = false;
+// OAuth client ID and secret from the Google Cloud console (APIs & Services > Credentials)
+$auth['google']['client_id'] = '';
+$auth['google']['client_secret'] = '';
+// Google Workspace domains whose users may log in, as a comma separated string, eg 'example.com,example.org'
+$auth['google']['allowed_domains'] = '';
+// Set this to true to create a user automatically the first time somebody logs in, if they don't already have one
+$auth['google']['auto_create_users'] = false;
+// An optional regular expression (including delimiters) which an email address must match for the user to
+// be created automatically, eg '/^[a-z]+\.[a-z]+@example\.com$/'.  Users that don't match can still log in
+// if they already exist.  If empty, every address in the allowed domains matches.
+$auth['google']['auto_create_regex_filter'] = '';
+// Level (rights) given to automatically created users: 0 = none, 1 = ordinary user, 2 = admin, 3 = users admin.
+$auth['google']['default_level'] = 0;
+// Redirect URI registered with Google.  Leave empty to use <MRBS base URL>/google_callback.php
+$auth['google']['redirect_uri'] = '';
+
+
 // General settings
 
 // Allow users just to enter the local-part of their email address (provided that

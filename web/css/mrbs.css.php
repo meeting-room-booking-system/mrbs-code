@@ -2901,5 +2901,52 @@ nav.qr {
   transform: translateY(-50%);
 }
 
+/* --- CSS to be used for Google Authentication  --- */
+.google_login {
+  clear: left;
+  padding-top: 1.5em;
+  text-align: center;
+}
 
+a.google_login_button:link,
+a.google_login_button:visited,
+a.google_login_button:hover {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 40px;
+  padding: 0 16px 0 12px;
+  border: 1px solid #747775;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #1f1f1f;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+}
 
+a.google_login_button:hover {
+  background-color: #f1f1f1;
+}
+
+a.google_login_button:focus-visible {
+  outline: 2px solid #0b57d0;
+  outline-offset: 2px;
+}
+
+a.google_login_button svg {
+  display: block;
+  flex: none;
+  margin-right: 10px;
+}
+
+/* personalized message into login page */
+.login_notice {
+  max-width: 32rem;
+  margin: 1rem 0;
+  padding: 0.85rem 1rem;
+  background-color: <?php echo $login_notice_font_color ?>;
+  border-left: 4px solid <?php echo $login_notice_border_color ?>;
+  color: <?php echo $login_notice_back_color ?>;
+  line-height: 1.45;
+}

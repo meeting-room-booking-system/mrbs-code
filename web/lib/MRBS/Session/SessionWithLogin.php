@@ -5,11 +5,14 @@ namespace MRBS\Session;
 use MRBS\Form\ElementA;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementP;
+use MRBS\Form\ElementDiv;
+use MRBS\Form\ElementSpan;
 use MRBS\Form\FieldDiv;
 use MRBS\Form\FieldInputPassword;
 use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\Form;
+use MRBS\GoogleLogin;
 use function MRBS\auth;
 use function MRBS\get_form_var;
 use function MRBS\get_vocab;
@@ -262,9 +265,23 @@ abstract class SessionWithLogin extends Session
       $form->addElement($fieldset);
     }
 
+    // show "Sign in with Google" login, if it has been configured
+    if (GoogleLogin::isEnabled())
+    {
+      $form->addElement(GoogleLogin::getButtonElement($target_url));
+    }
+       
     $form->render();
 
-
+    // show a login notice panel, if it has been configured
+    $notice = get_vocab('login_notice');
+    if (($notice !== 'login_notice') && ($notice !== ''))
+    {
+      $div = new ElementDiv();
+      $div->addClass('login_notice')
+        ->setText($notice, false, true);
+      $div->render();
+    }
 
     // Print footer and exit
     print_footer(true);

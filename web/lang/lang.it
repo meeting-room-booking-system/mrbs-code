@@ -635,3 +635,12 @@ $vocab["session_expired"]    = "La tua sessione è scaduta.";
 $vocab["browser_not_supported"] = "Purtroppo il tuo browser non è supportato da %s." .
                                   "Aggiorna il browser a una versione più recente oppure utilizza un altro browser.";																							   
 $vocab["back"]               = "Indietro";
+
+// Used in Google OAuth2 Autentication
+$vocab["login_with_google"]           = "Accedi con Google";
+$vocab["google_login_failed"]         = "Accesso con Google non riuscito. Riprova.";
+$vocab["google_login_domain_not_allowed"] = "Il tuo account Google non appartiene a un'organizzazione autorizzata ad accedere.";
+$vocab["google_login_no_account"]     = "Non hai un account. Chiedi a un amministratore di crearne uno per te.";
+$vocab["google_login_name_too_long"]  = "Il tuo indirizzo email è troppo lungo per essere usato come nome utente. Contatta un amministratore.";
+$vocab["google_login_not_configured"] = "L'accesso con Google non è stato configurato.";
+$vocab["login_notice"]                = "";

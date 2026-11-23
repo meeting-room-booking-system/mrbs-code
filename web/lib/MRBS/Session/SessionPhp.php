@@ -4,6 +4,7 @@ namespace MRBS\Session;
 
 use MRBS\SessionHandler\Cookie;
 use MRBS\User;
+use MRBS\GoogleLogin;
 use function MRBS\auth;
 use function MRBS\get_form_var;
 use function MRBS\is_ajax;
@@ -19,6 +20,14 @@ class SessionPhp extends SessionWithLogin
   public function __construct()
   {
     global $auth, $server;
+
+    // Google sends the browser back to MRBS with a cross-site redirect.  With SameSite=Strict the browser would
+    // not send the session cookie with that request and the login would fail, so use Lax, as is done for
+    // the CAS and SAML sessions.
+    if (GoogleLogin::isEnabled())
+    {
+      $this->samesite = self::SAMESITE_LAX;
+    }
 
     parent::__construct();
 
@@ -168,6 +177,15 @@ class SessionPhp extends SessionWithLogin
     // Problems have been reported on Windows IIS with session data not being
     // written out without a call to session_write_close()
     session_write_close();
+  }
+
+
+  // Logs on a user who has already been authenticated by some other means, eg by "Sign in with Google", so that
+  // there is no password to check.  The caller is responsible for making sure that $username really is the
+  // user who has been authenticated.
+  public function logonVerifiedUser(string $username) : void
+  {
+    $this->logonUser($username);
   }
 
 

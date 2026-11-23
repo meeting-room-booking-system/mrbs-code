@@ -24,6 +24,10 @@ $minical_today_color            = "#bdd4de";    // used for highlighting today
 $header_back_color              = $banner_back_color;  // background colour for headers
 $flatpickr_highlight_color      = $banner_back_color;  // used for highlighting the date
 
+$login_notice_font_color        = $standard_font_color; // font colour for login notice
+$login_notice_back_color        = #eef3fa;            // background colour for login notice
+$login_notice_border_color      = $banner_back_color;   // border colour for login notice
+
 $admin_table_header_back_color  = $header_back_color;     // background colour for header and also border colour for table cells
 $admin_table_header_sep_color   = $body_background_color; // vertical separator colour in header
 $admin_table_header_font_color  = $header_font_color;     // font colour for header
