@@ -2945,8 +2945,8 @@ a.google_login_button svg {
   max-width: 32rem;
   margin: 1rem 0;
   padding: 0.85rem 1rem;
-  background-color: <?php echo $login_notice_font_color ?>;
+  background-color: <?php echo $login_notice_back_color ?>;
   border-left: 4px solid <?php echo $login_notice_border_color ?>;
-  color: <?php echo $login_notice_back_color ?>;
+  color: <?php echo $login_notice_font_color ?>;
   line-height: 1.45;
 }

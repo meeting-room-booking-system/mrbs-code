@@ -270,8 +270,6 @@ abstract class SessionWithLogin extends Session
     {
       $form->addElement(GoogleLogin::getButtonElement($target_url));
     }
-       
-    $form->render();
 
     // show a login notice panel, if it has been configured
     $notice = get_vocab('login_notice');
@@ -283,6 +281,8 @@ abstract class SessionWithLogin extends Session
       $div->render();
     }
 
+    $form->render();
+    
     // Print footer and exit
     print_footer(true);
   }
