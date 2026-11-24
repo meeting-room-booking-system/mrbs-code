@@ -59,6 +59,42 @@ class AuthExt extends Auth
       return false;
     }
 
+    $params = $this->getParams();
+
+    $username_placeholder = '#USERNAME#';
+    $password_placeholder = '#PASSWORD#';
+
+    $arguments = [$auth["prog"]];
+    foreach ($params as $param)
+    {
+      $arguments[] = strtr($param, [
+        $username_placeholder => $user,
+        $password_placeholder => $pass,
+      ]);
+    }
+
+    $ret = $this->run($arguments);
+
+    // If it succeeded, return success
+    if ($ret == 0)
+    {
+      return $user;
+    }
+
+    // return failure
+    return false;
+  }
+
+
+  /**
+   * Get $auth["params"] as an array of strings.
+   *
+   * @return string[]
+   */
+  protected function getParams(): array
+  {
+    global $auth;
+
     $params = $auth["params"] ?? '';
     if (is_string($params))
     {
@@ -69,23 +105,32 @@ class AuthExt extends Auth
       throw new \InvalidArgumentException('$auth["params"] must be a string or an array of strings.');
     }
 
-    $username_placeholder = '#USERNAME#';
-    $password_placeholder = '#PASSWORD#';
-
-    $arguments = [$auth["prog"]];
     foreach ($params as $param)
     {
       if (!is_string($param))
       {
         throw new \InvalidArgumentException('$auth["params"] must contain only strings.');
       }
-
-      $arguments[] = strtr($param, [
-        $username_placeholder => $user,
-        $password_placeholder => $pass,
-      ]);
     }
 
+    return $params;
+  }
+
+
+  /**
+   * Run an external program without going through a shell (except on PHP < 7.4,
+   * where the arguments are escaped), optionally sending it some input on stdin.
+   *
+   * @param string[] $arguments  The program followed by its arguments
+   * @param string|null $stdin   Data to send to the program's standard input
+   * @return int  The exit code of the program, or -1 if it could not be run
+   */
+  protected function run(
+    array $arguments,
+    #[\SensitiveParameter]
+    ?string $stdin = null
+  ): int
+  {
     if (PHP_VERSION_ID >= 70400)
     {
       // If we're running Windows, we can only get here on certain versions of PHP.  See the constructor.
@@ -96,29 +141,35 @@ class AuthExt extends Auth
 
       if (!is_resource($process))
       {
-        return false;
+        return -1;
       }
 
+      if (isset($stdin))
+      {
+        fwrite($pipes[0], $stdin);
+      }
       fclose($pipes[0]);
       stream_get_contents($pipes[1]);
       fclose($pipes[1]);
-      $ret = proc_close($process);
-    }
-    else
-    {
-      // We can't get here at all if we're running Windows - see the constructor.
-      $cmd = implode(' ', array_map('escapeshellarg', $arguments));
-      exec($cmd, $output, $ret);
+      return proc_close($process);
     }
 
-    // If it succeeded, return success
-    if ($ret == 0)
+    // We can't get here at all if we're running Windows - see the constructor.
+    $cmd = implode(' ', array_map('escapeshellarg', $arguments));
+
+    if (isset($stdin))
     {
-      return $user;
+      $p = popen($cmd, 'w');
+      if (!$p)
+      {
+        return -1;
+      }
+      fwrite($p, $stdin);
+      return pclose($p);
     }
 
-    // return failure
-    return false;
+    exec($cmd, $output, $ret);
+    return $ret;
   }
 
 }
