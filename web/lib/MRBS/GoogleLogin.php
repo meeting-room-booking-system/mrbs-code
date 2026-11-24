@@ -49,20 +49,23 @@ class GoogleLogin
    */
   public static function isEnabled() : bool
   {
-    global $auth;
-
-    // Users are looked up in, and created in, the MRBS users table, so this only works with the 'db' authentication
-    // type, and the session must be one that can log in a user without a password (the 'php' and 'cookie' ones,
+    // Users are looked up in, and created in, the MRBS users table, so this only works with the 'db', 'google' authentication
+    // type, and the session must be one that can log in a user without a password (the 'google', 'php' and 'cookie' ones,
     // which are the ones that have SessionPhp::logonVerifiedUser()).
     //
     // NOTE: this must only look at the configuration and not call session(), because it is called while the
     // session is being constructed.
-    return !empty($auth['google']['enable']) &&
-           (($auth['type'] ?? null) === 'db') &&
-           in_array($auth['session'] ?? null, ['php', 'cookie'], true) &&
-           !empty($auth['google']['client_id']) &&
-           !empty($auth['google']['client_secret']) &&
-           !empty(self::getAllowedDomains());
+    global $auth;
+
+      $valid_types = ['db', 'google'];
+      $valid_sessions = ['php', 'cookie', 'google'];
+
+      return !empty($auth['google']['enable']) &&
+            in_array($auth['type'] ?? null, $valid_types, true) &&
+            in_array($auth['session'] ?? null, $valid_sessions, true) &&
+            !empty($auth['google']['client_id']) &&
+            !empty($auth['google']['client_secret']) &&
+            !empty(self::getAllowedDomains());
   }
 
 
