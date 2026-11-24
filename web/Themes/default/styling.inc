@@ -25,7 +25,7 @@ $header_back_color              = $banner_back_color;  // background colour for 
 $flatpickr_highlight_color      = $banner_back_color;  // used for highlighting the date
 
 $login_notice_font_color        = $standard_font_color; // font colour for login notice
-$login_notice_back_color        = #eef3fa;            // background colour for login notice
+$login_notice_back_color        = "#eef3fa";          // background colour for login notice
 $login_notice_border_color      = $banner_back_color;   // border colour for login notice
 
 $admin_table_header_back_color  = $header_back_color;     // background colour for header and also border colour for table cells
