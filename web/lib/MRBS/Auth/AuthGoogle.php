@@ -4,14 +4,20 @@ namespace MRBS\Auth;
 
 use MRBS\GoogleLogin;
 use function MRBS\_tbl;
-use function MRBS\parse_email;
 
 class AuthGoogle extends AuthDb
 {
+  public function __construct()
+  {
+    // Die with a clear message if $auth['session'] is not 'google'
+    $this->checkSessionMatchesType();
+    parent::__construct();
+  }
+
   /**
-   * Valida username/email e password, escludendo gli utenti abilitati al solo accesso con Google.
+   * Validate a username/email and password pair, excluding users restricted to Google sign-in.
    *
-   * @param string|null $user Username o indirizzo email
+   * @param string|null $user Username or email address
    * @param string|null $pass Password
    * @return string|false
    */
@@ -28,16 +34,15 @@ class AuthGoogle extends AuthDb
 
     $valid_usernames = [];
 
-    if (($valid_username = $this->validateUsernameLocal($user, $pass)) !== false)
+    if (($valid_username = $this->validateUsername($user, $pass)) !== false)
     {
       $valid_usernames[] = $valid_username;
     }
 
-    // Riutilizza AuthDb::validateEmail() (public)
     $valid_usernames = array_merge($valid_usernames, $this->validateEmail($user, $pass));
     $valid_usernames = array_unique($valid_usernames);
 
-    // Scarta gli utenti che possono accedere esclusivamente tramite Google
+    // Exclude accounts that can only sign in via Google
     $valid_usernames = array_values(array_filter($valid_usernames, function ($username) {
       return !GoogleLogin::isGoogleOnlyUser($username);
     }));
@@ -55,10 +60,9 @@ class AuthGoogle extends AuthDb
     return false;
   }
 
-
   /**
-   * Impedisce l'invio del link di reset password se l'account (o tutti gli account
-   * associati all'email) è abilitato al solo accesso con Google.
+   * Prevent sending a password reset link if the account (or all accounts matching
+   * the email address) is restricted to Google sign-in.
    */
   public function requestPassword(?string $login) : bool
   {
@@ -69,25 +73,28 @@ class AuthGoogle extends AuthDb
 
     $candidate_usernames = [];
 
-    // 1. Ricerca per username (usa getUserFresh(), public in AuthDb)
+    // 1. Lookup by username
     $user = $this->getUserFresh($login);
     if (isset($user))
     {
       $candidate_usernames[] = $user->username;
     }
 
-    // 2. Ricerca per email (se abilitata)
+    // 2. Lookup by email (if enabled)
     if ($this->canValidateByEmail())
     {
-      $candidate_usernames = array_merge(
-        $candidate_usernames,
-        $this->findUsernamesByEmail($login)
-      );
+      foreach ($this->getUsersByEmail($login) as $row)
+      {
+        if (isset($row['name']))
+        {
+          $candidate_usernames[] = $row['name'];
+        }
+      }
     }
 
     $candidate_usernames = array_unique($candidate_usernames);
 
-    // Se esistono candidati ma sono tutti Google-only, blocca il reset
+    // Block password reset if all matching candidates are Google-only users
     if (!empty($candidate_usernames))
     {
       $non_google_users = array_filter($candidate_usernames, function ($username) {
@@ -100,13 +107,12 @@ class AuthGoogle extends AuthDb
       }
     }
 
-    // Delega il resto della procedura (generazione token e invio mail) ad AuthDb
+    // Delegate token generation and email sending to AuthDb
     return parent::requestPassword($login);
   }
 
-
   /**
-   * Invalida qualsiasi token di reset password per gli utenti Google-only.
+   * Invalidate password reset tokens for Google-only users.
    */
   public function isValidReset(?string $user, ?string $key) : bool
   {
@@ -116,122 +122,5 @@ class AuthGoogle extends AuthDb
     }
 
     return parent::isValidReset($user, $key);
-  }
-
-
-  /**
-   * Replica locale di AuthDb::validateUsername() (dichiarato private nella classe padre).
-   */
-  private function validateUsernameLocal(
-    #[\SensitiveParameter]
-    string $user,
-    #[\SensitiveParameter]
-    string $pass)
-  {
-    $sql_params = [];
-    $sql = "SELECT password_hash, name
-              FROM " . _tbl('users') . "
-             WHERE " . $this->connection()->syntax_casesensitive_equals('name', mb_strtolower($user), $sql_params) . "
-             LIMIT 1";
-
-    $res = $this->connection()->query($sql, $sql_params);
-    $row = $res->next_row_keyed();
-
-    if (!isset($row['password_hash']))
-    {
-      return false;
-    }
-
-    if (substr($row['password_hash'], 0, 1) === '$')
-    {
-      $valid = password_verify($pass, $row['password_hash']);
-      if ($valid && password_needs_rehash($row['password_hash'], PASSWORD_DEFAULT))
-      {
-        $this->rehashLocal($pass, $row['name']);
-      }
-    }
-    else
-    {
-      $valid = (md5($pass) === $row['password_hash']);
-      if ($valid)
-      {
-        $this->rehashLocal($pass, $row['name']);
-      }
-    }
-
-    return $valid ? $row['name'] : false;
-  }
-
-
-  /**
-   * Aggiorna l'hash della password quando necessario.
-   */
-  private function rehashLocal(
-    #[\SensitiveParameter]
-    string $password,
-    string $username) : void
-  {
-    $sql_params = [password_hash($password, PASSWORD_DEFAULT)];
-    $condition = $this->connection()->syntax_casesensitive_equals('name', mb_strtolower($username), $sql_params);
-
-    $sql = "UPDATE " . _tbl('users') . "
-               SET password_hash=?
-             WHERE $condition";
-
-    $this->connection()->command($sql, $sql_params);
-  }
-
-
-  /**
-   * Restituisce tutti gli username associati a un indirizzo email (incluse le varianti Gmail),
-   * replicando la logica di AuthDb::getUsersByEmail() (private nel padre).
-   *
-   * @return string[]
-   */
-  private function findUsernamesByEmail(string $email) : array
-  {
-    global $auth;
-
-    if (mb_strpos($email, '@') === false)
-    {
-      if (empty($auth['allow_local_part_email']))
-      {
-        return [];
-      }
-      $sql_params = [$email];
-      $condition = "LOWER(?)=LOWER(" . $this->connection()->syntax_simple_split('email', '@', 1, $sql_params) . ")";
-    }
-    else
-    {
-      $address = parse_email($email);
-      if ($address === false)
-      {
-        return [];
-      }
-      if (in_array(mb_strtolower($address['domain']), ['gmail.com', 'googlemail.com']))
-      {
-        $sql_params = [str_replace('.', '', $address['local'])];
-        $condition = "LOWER(?) = REPLACE(REGEXP_REPLACE(LOWER(email), '@(gmail|googlemail)\.com$', ''), '.', '')";
-      }
-      else
-      {
-        $sql_params = [$email];
-        $condition = "LOWER(?)=LOWER(email)";
-      }
-    }
-
-    $sql = "SELECT name
-              FROM " . _tbl('users') . "
-             WHERE $condition";
-
-    $res = $this->connection()->query($sql, $sql_params);
-    $usernames = [];
-
-    while (false !== ($row = $res->next_row_keyed()))
-    {
-      $usernames[] = $row['name'];
-    }
-
-    return $usernames;
   }
 }

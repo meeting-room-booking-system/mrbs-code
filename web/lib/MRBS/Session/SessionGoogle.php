@@ -8,15 +8,18 @@ use function MRBS\get_vocab;
 use function MRBS\this_page;
 
 /**
- * Gestione delle sessioni PHP con supporto al redirect OAuth di Google,
- * al pulsante "Sign in with Google" e al pannello informativo login_notice.
+ * PHP session handler with Google OAuth redirect support, "Sign in with Google" button,
+ * and optional login_notice panel.
  */
 class SessionGoogle extends SessionPhp
 {
   public function __construct()
   {
-    // Google reindirizza il browser verso MRBS con una richiesta cross-site:
-    // con SameSite=Strict il cookie di sessione non verrebbe inviato al rientro.
+    // Die with a clear message if $auth['type'] is not 'google'
+    $this->checkTypeMatchesSession();
+
+    // Google redirects back across sites: with SameSite=Strict the session cookie
+    // would not be sent on return.
     if (GoogleLogin::isEnabled())
     {
       $this->samesite = self::SAMESITE_LAX;
@@ -25,20 +28,18 @@ class SessionGoogle extends SessionPhp
     parent::__construct();
   }
 
-
   /**
-   * Effettua il login di un utente già autenticato tramite Google,
-   * riutilizzando il metodo protected SessionPhp::logonUser().
+   * Log in a user already authenticated via Google by delegating to
+   * SessionPhp::logonUser().
    */
   public function logonVerifiedUser(string $username) : void
   {
     $this->logonUser($username);
   }
 
-
   /**
-   * Delega il rendering del form a SessionWithLogin::authGet() e inietta
-   * il pannello login_notice (prima del form) e il pulsante Google (dentro il form).
+   * Render the login form via SessionWithLogin::authGet() and inject the
+   * login_notice panel (before the form) and Google button (inside the form).
    */
   public function authGet(?string $target_url=null, ?string $returl=null, ?string $error=null, bool $raw=false) : void
   {
@@ -75,9 +76,9 @@ class SessionGoogle extends SessionPhp
     ob_start(function (string $html) use ($button_html, $notice_html) : string {
       if (preg_match('/<form\b[^>]*\bid=["\']logon["\'][^>]*>/i', $html, $matches, PREG_OFFSET_CAPTURE))
       {
-        $form_start = $matches[0][1];
+        $form_start = (int) $matches[0][1];
 
-        // Inserisce il pulsante Google prima della chiusura </form> di #logon
+        // Insert the Google button right before the closing </form> of #logon
         if ($button_html !== '')
         {
           $form_end = strpos($html, '</form>', $form_start);
@@ -87,7 +88,7 @@ class SessionGoogle extends SessionPhp
           }
         }
 
-        // Inserisce il div login_notice immediatamente prima di <form id="logon">
+        // Insert the login_notice div immediately before <form id="logon">
         if ($notice_html !== '')
         {
           $html = substr_replace($html, $notice_html, $form_start, 0);

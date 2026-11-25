@@ -1130,14 +1130,21 @@ added, managing a simple list of users in config.inc.php. Eventually there will
 also be another authentication module, using a table of users in the MRBS
 database.
 
+
 Google Workspace sign-in
 ========================
 
 MRBS can offer a "Log in with Google" button on the login page, in addition to
-the normal username/password form.  It uses OAuth 2.0 / OpenID Connect and
-works with the 'db' authentication type and the 'php' (or 'cookie') session
-scheme.  The email address is used as the username, so an existing user is
-matched by the email address stored in the users table (the 'name' column).
+the normal username/password form.  It uses OAuth 2.0 / OpenID Connect.  It is
+a module of its own, the 'google' authentication type with the 'google'
+session scheme, which extend the 'db' and 'php' ones (the users are in the
+MRBS users table, as with 'db').  The email address is used as the username,
+so an existing user is matched by the email address stored in the users table
+(the 'name' column).  Both settings are needed, and they must be the same,
+otherwise MRBS stops with a configuration error:
+
+    $auth['type']    = 'google';
+    $auth['session'] = 'google';
 
 Setting it up
 -------------
@@ -1156,13 +1163,17 @@ Setting it up
    in config.inc.php, and turn the feature on.  Do not commit the secret to a
    public repository:
 
+       $auth['type']                      = 'google';
+       $auth['session']                   = 'google';
        $auth['google']['enable']          = true;
        $auth['google']['client_id']       = '1234-abcd.apps.googleusercontent.com';
        $auth['google']['client_secret']   = '...';
        $auth['google']['allowed_domains'] = 'example.com, example.org';
 
    Setting $auth['google']['enable'] back to false turns Google sign-in off
-   again and everybody logs in with their password as before.
+   again and everybody logs in with their password, as with the 'db' type.
+   To stop using the Google module altogether, set $auth['type'] to 'db' and
+   $auth['session'] to 'php'.
 
 Who may log in
 --------------
@@ -1183,12 +1194,13 @@ If somebody passes these checks but has no user in MRBS yet, they are
 rejected unless $auth['google']['auto_create_users'] is true, in which case a
 user is created at their first login, with the email address as the username,
 the name from the Google account as the display name, and the level in
-$auth['google']['default_level'] (0 = none, 1 = user, 2 = admin; the default is 0, so a new user has to be
-given rights by an administrator).  The new user has no password.
+$auth['google']['default_level'] (0 = none, 1 = user, 2 = admin).  The
+default is 0, so a new user has to be given rights by an administrator.  The
+new user has no password.
 
-The optional $auth['google']['auto_create_regex_filter'] restricts which addresses
-are created automatically.  It is a regular expression, including delimiters,
-that is matched against the whole (lower case) email address, eg:
+The optional $auth['google']['auto_create_regex_filter'] restricts which
+addresses are created automatically.  It is a regular expression, including
+delimiters, that is matched against the whole (lower case) email address, eg:
 
     $auth['google']['auto_create_regex_filter'] = '/^[a-z]+\.[a-z]+@example\.com$/';
 
@@ -1196,7 +1208,7 @@ An address that does not match is not created, but a user who already exists
 can still log in.  An invalid expression creates nobody.
 
 Users who can only log in with Google
---------------------------------------
+-------------------------------------
 
 While $auth['google']['enable'] is true, a user whose username is an email
 address at one of the allowed domains can ONLY log in with Google, even if they
@@ -1215,6 +1227,6 @@ Limitations
 - Email addresses longer than the users.name column (30 characters by default)
   cannot be used for automatically created users.  Widen the column if needed.
 - Logging off from MRBS does not log you off from Google.
-- Google redirects the browser back to MRBS from another site, so when Google
-  sign-in is configured MRBS issues its session cookie with SameSite=Lax rather
+- Google redirects the browser back to MRBS from another site, so while Google
+  sign-in is enabled MRBS issues its session cookie with SameSite=Lax rather
   than Strict, as it already does for the CAS and SAML session schemes.

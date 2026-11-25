@@ -1115,11 +1115,11 @@ $report_presentation_field_order = array();
 $auth["type"] = "db"; // How to validate the user/password. One of
                       // "auth_basic", "cas", "config", "crypt", "db", "db_ext", "idcheck",
                       // "imap", "imap_php", "joomla", "ldap", "none", "nw", "pop3",
-                      // "saml", "wix" or "wordpress".
+                      // "saml", "wix", "wordpress" or "google".
 
 $auth["session"] = "php"; // How to get and keep the user ID. One of
                           // "cas", "cookie", "host", "http", "ip", "joomla", "nt",
-                          // "omni", "php", "remote_user", "saml" or "wordpress".
+                          // "omni", "php", "remote_user", "saml", "wordpress" or "google".
 
 // Configuration parameters for 'cookie' session scheme
 
@@ -1605,8 +1605,8 @@ define('COOKIEHASH', md5($domain_name));
 */
 
 
-// 'Sign in with Google' (Google Workspace) settings.  This is an alternative to the normal login form and
-// needs $auth['type'] = 'db' and $auth['session'] = 'php' (or 'cookie'). 
+// 'Sign in with Google' (Google Workspace) settings.  It is an alternative to the normal login form and
+// needs $auth['type'] = 'google' and $auth['session'] = 'google'.
 // Read the "Google Workspace sign-in" section of AUTHENTICATION.
 // Set this to true to turn Google sign-in on.  The client ID, client secret and allowed domains below must
 // also be set.  IMPORTANT: when it is on, users whose username is an email address at one of the allowed

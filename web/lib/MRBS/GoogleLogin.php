@@ -9,10 +9,10 @@ use MRBS\Form\ElementDiv;
 /**
  * "Sign in with Google" (OAuth 2.0 / OpenID Connect, authorisation code flow with PKCE) for Google Workspace.
  *
- * This works alongside the normal login form: it does not replace it.  It requires
+ * This works alongside the normal login form: it does not replace it. It requires
  *
- *     $auth['type']    = 'db';
- *     $auth['session'] = 'php';
+ *     $auth['type']    = 'google';
+ *     $auth['session'] = 'google';
  *
  * Users are identified by their (lower case) email address, which is used as the username in the users table.
  *
@@ -24,16 +24,19 @@ class GoogleLogin
   private const TOKEN_ENDPOINT = 'https://oauth2.googleapis.com/token';
   private const ISSUERS        = ['https://accounts.google.com', 'accounts.google.com'];
 
+  private const LOGIN_PAGE     = 'google_login.php';
+  private const CALLBACK_PAGE  = 'google_callback.php';
+
   // How long, in seconds, the user has to complete the login at Google.
   private const STATE_LIFETIME = 600;
 
   // The name of the session variable used to hold the state between the redirect and the callback.
   private const SESSION_KEY = 'google_oauth';
 
-  // Where to go after the login form is shown following an error.
-  private static $error_target = null;
+  // Fallback target after the login form is shown following an error.
+  private static ?string $error_target = null;
 
-  // The Google "G" logo.  It's inline so that there's no image file to install and nothing to load.  It must not
+  // The Google "G" logo. It's inline so that there's no image file to install and nothing to load. It must not
   // be altered: see https://developers.google.com/identity/branding-guidelines
   private const LOGO_SVG =
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="18" height="18" aria-hidden="true" focusable="false">' .
@@ -49,30 +52,25 @@ class GoogleLogin
    */
   public static function isEnabled() : bool
   {
-    // Users are looked up in, and created in, the MRBS users table, so this only works with the 'db', 'google' authentication
-    // type, and the session must be one that can log in a user without a password (the 'google', 'php' and 'cookie' ones,
-    // which are the ones that have SessionPhp::logonVerifiedUser()).
+    global $auth;
+
+    // Users are looked up in, and created in, the MRBS users table by the 'google' authentication type, and it
+    // is the 'google' session that shows the button and can log in a user without a password.
     //
     // NOTE: this must only look at the configuration and not call session(), because it is called while the
     // session is being constructed.
-    global $auth;
-
-      $valid_types = ['db', 'google'];
-      $valid_sessions = ['php', 'cookie', 'google'];
-
-      return !empty($auth['google']['enable']) &&
-            in_array($auth['type'] ?? null, $valid_types, true) &&
-            in_array($auth['session'] ?? null, $valid_sessions, true) &&
-            !empty($auth['google']['client_id']) &&
-            !empty($auth['google']['client_secret']) &&
-            !empty(self::getAllowedDomains());
+    return !empty($auth['google']['enable']) &&
+           (($auth['type'] ?? null) === 'google') &&
+           (($auth['session'] ?? null) === 'google') &&
+           !empty($auth['google']['client_id']) &&
+           !empty($auth['google']['client_secret']) &&
+           !empty(self::getAllowedDomains());
   }
 
-
   /**
-   * Whether this user can only log in with Google, and not with a password.  That is the case when Google
+   * Whether this user can only log in with Google, and not with a password. That is the case when Google
    * sign-in is enabled and the username is an email address at one of the allowed domains, even if the user
-   * has a password set.  Usernames that are not such an address (eg 'administrator') still use their password,
+   * has a password set. Usernames that are not such an address (eg 'administrator') still use their password,
    * so there is always a way in if Google sign-in is misconfigured.
    */
   public static function isGoogleOnlyUser(?string $username) : bool
@@ -82,24 +80,16 @@ class GoogleLogin
       return false;
     }
 
-    $username = mb_strtolower(trim($username));
+    $normalised = mb_strtolower(trim($username));
 
-    // Exactly one '@', with something in front of it
-    $at = strpos($username, '@');
-    if (($at === false) || ($at === 0) || (substr_count($username, '@') !== 1))
-    {
-      return false;
-    }
-
-    return in_array(substr($username, $at + 1), self::getAllowedDomains(), true);
+    return self::hasValidEmailDomain($normalised, self::getAllowedDomains());
   }
-
 
   /**
    * Returns the list of allowed domains, normalised to lower case.
    *
    * The config variable $auth['google']['allowed_domains'] is a string of comma separated domains, eg
-   * 'example.com, example.org'.  An array is also accepted.
+   * 'example.com, example.org'. An array is also accepted.
    *
    * @return string[]
    */
@@ -119,13 +109,12 @@ class GoogleLogin
       }));
   }
 
-
   /**
    * Returns the URL of the page that starts the login.
    */
   public static function getLoginUrl(?string $target_url=null) : string
   {
-    $url = 'google_login.php';
+    $url = self::LOGIN_PAGE;
 
     if (isset($target_url) && ($target_url !== ''))
     {
@@ -135,9 +124,8 @@ class GoogleLogin
     return multisite($url);
   }
 
-
   /**
-   * Returns the "Log in with Google" button for the login page, to be added to the login form.  It has to go
+   * Returns the "Log in with Google" button for the login page, to be added to the login form. It has to go
    * inside the form, rather than after it, because the form is floated (or, on some pages, is an item of a flex
    * container), so anything placed after it would end up beside it instead of underneath it.
    * The styling is in css/mrbs.css.php.
@@ -157,11 +145,10 @@ class GoogleLogin
     return $div;
   }
 
-
   /**
    * Starts the login by redirecting the browser to Google.
    *
-   * @param string|null $target_url  A local URL to go to after a successful login
+   * @param string|null $target_url A local URL to go to after a successful login
    */
   public static function start(?string $target_url=null) : void
   {
@@ -169,7 +156,7 @@ class GoogleLogin
 
     if (!self::isEnabled())
     {
-      self::fail('google_login_not_configured');
+      self::fail('google_login_not_configured', $target_url);
     }
 
     // The state protects against CSRF, the nonce against replay of an ID token and the PKCE verifier against
@@ -198,7 +185,7 @@ class GoogleLogin
         'code_challenge'        => self::base64UrlEncode(hash('sha256', $verifier, true)),
         'code_challenge_method' => 'S256',
         'prompt'                => 'select_account',
-        // This is only a hint to Google to show the right accounts.  It is NOT a security measure: the
+        // This is only a hint to Google to show the right accounts. It is NOT a security measure: the
         // domain is checked again, on the server, in handleCallback().
         'hd'                    => (count($domains) === 1) ? $domains[0] : '*'
       ];
@@ -210,31 +197,34 @@ class GoogleLogin
     exit;
   }
 
-
   /**
-   * Handles the redirect back from Google.  Either logs the user in and redirects to the target page, or
+   * Handles the redirect back from Google. Either logs the user in and redirects to the target page, or
    * shows the login form with an error message.
    */
   public static function handleCallback() : void
   {
+    global $auth;
+
     if (!self::isEnabled())
     {
       self::fail('google_login_not_configured');
     }
 
-    // The data stored when we started.  It can only be used once.
+    // The data stored when we started. It can only be used once.
     $saved = session()->get(self::SESSION_KEY);
     session()->unset(self::SESSION_KEY);
 
+    $error_target = null;
     if (is_array($saved) && isset($saved['target']) && is_string($saved['target']) && ($saved['target'] !== ''))
     {
-      self::$error_target = $saved['target'];
+      $error_target = $saved['target'];
+      self::$error_target = $error_target;
     }
 
     // Google reports problems, eg the user cancelling, in the 'error' parameter.
     if (null !== get_form_var('error', 'string'))
     {
-      self::fail('google_login_failed');
+      self::fail('google_login_failed', $error_target);
     }
 
     $code = get_form_var('code', 'string');
@@ -246,34 +236,34 @@ class GoogleLogin
         !hash_equals((string) $saved['state'], $state) ||
         ((time() - (int) $saved['created']) > self::STATE_LIFETIME))
     {
-      self::fail('google_login_failed');
+      self::fail('google_login_failed', $error_target);
     }
 
     $claims = self::fetchClaims($code, (string) $saved['verifier']);
 
-    if (($claims === null) || !self::validateClaims($claims, (string) $saved['nonce']))
+    if (($claims === null) || !self::validateClaims($claims, (string) $saved['nonce'], (string) $auth['google']['client_id']))
     {
-      self::fail('google_login_failed');
+      self::fail('google_login_failed', $error_target);
     }
 
     $email = mb_strtolower(trim($claims['email']));
 
-    // The domain check.  All of the following have to be true:
-    //   - Google says the email address is verified.  Without this anybody could claim somebody else's address.
-    //   - The 'hd' (hosted domain) claim is present and allowed.  Only Google Workspace accounts have an 'hd'
-    //     claim.  Checking just the domain of the email address is not enough, because an ordinary Google
+    // The domain check. All of the following have to be true:
+    //   - Google says the email address is verified. Without this anybody could claim somebody else's address.
+    //   - The 'hd' (hosted domain) claim is present and allowed. Only Google Workspace accounts have an 'hd'
+    //     claim. Checking just the domain of the email address is not enough, because an ordinary Google
     //     account can be created with a verified email address at any domain.
     //   - The domain of the email address itself is allowed.
     if (!self::isAllowedAccount($claims, $email))
     {
-      self::fail('google_login_domain_not_allowed');
+      self::fail('google_login_domain_not_allowed', $error_target);
     }
 
     $username = self::findUser($email);
 
     if (!isset($username))
     {
-      $username = self::createUser($email, $claims['name'] ?? '');
+      $username = self::createUser($email, $claims['name'] ?? '', $error_target);
     }
 
     session()->logonVerifiedUser($username);
@@ -283,17 +273,18 @@ class GoogleLogin
     location_header($target);
   }
 
-
   /**
-   * Shows the login form with an error message.  Never returns.
+   * Shows the login form with an error message. Never returns.
    */
-  private static function fail(string $vocab_key) : void
+  private static function fail(string $vocab_key, ?string $error_target=null) : void
   {
-    // Show the ordinary login form with the error.  The target URL has to be given explicitly: if we let it
+    $target = $error_target ?? self::$error_target ?? 'index.php';
+
+    // Show the ordinary login form with the error. The target URL has to be given explicitly: if we let it
     // default, it would be this page, with Google's one-time code in the query string.
     if (method_exists(session(), 'authGet'))
     {
-      session()->authGet(self::$error_target ?? 'index.php', null, get_vocab($vocab_key));
+      session()->authGet($target, null, get_vocab($vocab_key));
     }
 
     // Fallback, which shouldn't happen
@@ -301,7 +292,6 @@ class GoogleLogin
     echo escape_html(get_vocab($vocab_key));
     exit;
   }
-
 
   /**
    * Exchanges the authorisation code for the tokens and returns the claims in the ID token, or null on failure.
@@ -356,16 +346,13 @@ class GoogleLogin
     return (is_array($claims)) ? $claims : null;
   }
 
-
   /**
    * Validates the standard claims of the ID token.
    */
-  private static function validateClaims(array $claims, string $nonce) : bool
+  private static function validateClaims(array $claims, string $nonce, string $client_id) : bool
   {
-    global $auth;
-
     $aud = $claims['aud'] ?? null;
-    $aud_ok = (is_array($aud)) ? in_array($auth['google']['client_id'], $aud, true) : ($aud === $auth['google']['client_id']);
+    $aud_ok = (is_array($aud)) ? in_array($client_id, $aud, true) : ($aud === $client_id);
 
     return $aud_ok &&
            isset($claims['iss']) && in_array($claims['iss'], self::ISSUERS, true) &&
@@ -374,9 +361,8 @@ class GoogleLogin
            isset($claims['email']) && is_string($claims['email']) && ($claims['email'] !== '');
   }
 
-
   /**
-   * Checks that the account belongs to one of the allowed domains.  $email must already be normalised.
+   * Checks that the account belongs to one of the allowed domains. $email must already be normalised.
    */
   private static function isAllowedAccount(array $claims, string $email) : bool
   {
@@ -395,16 +381,24 @@ class GoogleLogin
       return false;
     }
 
-    // Exactly one '@', and something in front of it
-    $at = strpos($email, '@');
-    if (($at === false) || ($at === 0) || (substr_count($email, '@') !== 1))
+    return self::hasValidEmailDomain($email, $allowed);
+  }
+
+  /**
+   * Checks that $address has a single '@' with a non-empty local part and a domain in $allowed_domains.
+   *
+   * @param string[] $allowed_domains
+   */
+  private static function hasValidEmailDomain(string $address, array $allowed_domains) : bool
+  {
+    $at = strpos($address, '@');
+    if (($at === false) || ($at === 0) || (substr_count($address, '@') !== 1))
     {
       return false;
     }
 
-    return in_array(substr($email, $at + 1), $allowed, true);
+    return in_array(substr($address, $at + 1), $allowed_domains, true);
   }
-
 
   /**
    * Returns the username of an existing user, or null if there isn't one.
@@ -430,18 +424,19 @@ class GoogleLogin
     return $row['name'];
   }
 
-
   /**
    * Creates a new user, provided automatic creation is enabled and the email address matches the configured
-   * filter.  Returns the username.  If the user cannot be created then it shows an error and doesn't return.
+   * filter. Returns the username. If the user cannot be created then it shows an error and doesn't return.
    */
-  private static function createUser(string $email, string $display_name) : string
+  private static function createUser(string $email, string $display_name, ?string $error_target=null) : string
   {
     global $auth;
 
-    if (empty($auth['google']['auto_create_users']) || !self::matchesCreateFilter($email))
+    $filter = (string) ($auth['google']['auto_create_regex_filter'] ?? '');
+
+    if (empty($auth['google']['auto_create_users']) || !self::matchesCreateFilter($email, $filter))
     {
-      self::fail('google_login_no_account');
+      self::fail('google_login_no_account', $error_target);
     }
 
     $max_length = maxlength('users.name');
@@ -449,7 +444,7 @@ class GoogleLogin
     {
       error_log("MRBS Google login: cannot create user '$email' because the users.name column is limited to " .
                 "$max_length characters.");
-      self::fail('google_login_name_too_long');
+      self::fail('google_login_name_too_long', $error_target);
     }
 
     $display_name = trim($display_name);
@@ -471,7 +466,7 @@ class GoogleLogin
       if (null === ($username = self::findUser($email)))
       {
         error_log('MRBS Google login: could not create user: ' . $e->getMessage());
-        self::fail('google_login_failed');
+        self::fail('google_login_failed', $error_target);
       }
       return $username;
     }
@@ -479,17 +474,12 @@ class GoogleLogin
     return $email;
   }
 
-
   /**
-   * Checks the email address against the optional regular expression in $auth['google']['auto_create_regex_filter'].
+   * Checks the email address against the optional regular expression filter.
    * If there is no filter then every address in the allowed domains matches.
    */
-  private static function matchesCreateFilter(string $email) : bool
+  private static function matchesCreateFilter(string $email, string $filter='') : bool
   {
-    global $auth;
-
-    $filter = $auth['google']['auto_create_regex_filter'] ?? '';
-
     if ($filter === '')
     {
       return true;
@@ -510,13 +500,12 @@ class GoogleLogin
 
   private static function recordLogin(string $username) : void
   {
-    // Same as for the 'db' authentication type.  Don't change the timestamp.
+    // Same as for the 'db' authentication type. Don't change the timestamp.
     $sql = "UPDATE " . _tbl('users') . "
                SET last_login=?, timestamp=timestamp
              WHERE name=?";
     db()->command($sql, [time(), $username]);
   }
-
 
   private static function getRedirectUri() : string
   {
@@ -527,21 +516,18 @@ class GoogleLogin
       return $auth['google']['redirect_uri'];
     }
 
-    return url_base() . 'google_callback.php';
+    return url_base() . self::CALLBACK_PAGE;
   }
-
 
   private static function randomString(int $bytes=32) : string
   {
     return self::base64UrlEncode(random_bytes($bytes));
   }
 
-
   private static function base64UrlEncode(string $data) : string
   {
     return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
   }
-
 
   private static function base64UrlDecode(string $data) : string
   {
