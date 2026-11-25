@@ -26,6 +26,9 @@ abstract class DB
   protected $mutex_locks = array();
   protected $version_string = null;
 
+  // Whether this connection has an outstanding request to ignore user aborts.
+  private $transaction_ignores_user_abort = false;
+
 
   // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
   // The attribute is only recognised by PHP 8.2 and later.
@@ -281,19 +284,40 @@ abstract class DB
   /**
    * Begin a transaction.  If already inside a transaction, this is a no-op.
    *
+   * @param bool $read_committed Use READ COMMITTED isolation for the new transaction.
+   *                            Otherwise use the connection's default isolation level.
+   *                            An existing transaction's isolation level is unchanged.
+   *
    * @see PDO::beginTransaction()
    */
-  public function begin(): void
+  public function begin(bool $read_committed = false): void
   {
+    if ($this->dbh->inTransaction()) {
+      return;
+    }
+
     // Turn off ignore_user_abort until the transaction has been committed or rolled back.
     // See the warning at http://php.net/manual/en/features.persistent-connections.php
     // (Only applies to persistent connections, but we'll do it for all cases to keep
     // things simple)
     mrbs_ignore_user_abort(true);
-    if (!$this->dbh->inTransaction()) {
-      $this->dbh->beginTransaction();
+    $this->transaction_ignores_user_abort = true;
+    try {
+      $this->beginTransaction($read_committed);
+    }
+    catch (Throwable $e) {
+      // Setup may have failed either before or after the transaction started.
+      $this->rollback();
+      throw $e;
     }
   }
+
+
+  /**
+   * Start a new transaction with the requested isolation level.
+   * Called by begin() only when no transaction is active and user aborts are ignored.
+   */
+  abstract protected function beginTransaction(bool $read_committed): void;
 
 
   /**
@@ -303,10 +327,16 @@ abstract class DB
    */
   public function commit(): void
   {
-    if ($this->dbh->inTransaction()) {
-      $this->dbh->commit();
+    try {
+      if ($this->dbh->inTransaction()) {
+        $this->dbh->commit();
+      }
     }
-    mrbs_ignore_user_abort(false);
+    catch (Throwable $e) {
+      $this->rollback();
+      throw $e;
+    }
+    $this->restoreUserAbort();
   }
 
 
@@ -317,10 +347,24 @@ abstract class DB
    */
   public function rollback(): void
   {
-    if ($this->dbh && $this->dbh->inTransaction()) {
-      $this->dbh->rollBack();
+    try {
+      if ($this->dbh && $this->dbh->inTransaction()) {
+        $this->dbh->rollBack();
+      }
     }
-    mrbs_ignore_user_abort(false);
+    finally {
+      $this->restoreUserAbort();
+    }
+  }
+
+
+  // Release only this connection's request, and only once.
+  private function restoreUserAbort(): void
+  {
+    if ($this->transaction_ignores_user_abort) {
+      $this->transaction_ignores_user_abort = false;
+      mrbs_ignore_user_abort(false);
+    }
   }
 
 

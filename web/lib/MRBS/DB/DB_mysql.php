@@ -197,6 +197,17 @@ class DB_mysql extends DB
   }
 
 
+  protected function beginTransaction(bool $read_committed): void
+  {
+    if ($read_committed)
+    {
+      // MySQL sets isolation for the next transaction before BEGIN.
+      $this->command('SET TRANSACTION ISOLATION LEVEL READ COMMITTED');
+    }
+    $this->dbh->beginTransaction();
+  }
+
+
   // Quote a table or column name (which could be a qualified identifier, eg 'table.column')
   public function quote(string $identifier) : string
   {

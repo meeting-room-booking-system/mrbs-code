@@ -2,7 +2,6 @@
 declare(strict_types=1);
 namespace MRBS;
 
-use MRBS\DB\DBException;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\Form;
 
@@ -83,9 +82,11 @@ if ($type == "room")
   if (!empty($confirm))
   {
     // They have confirmed it already, so go blast!
-    db()->begin();
+    BookingLocks::beginTransaction(db());
     try
     {
+      BookingLocks::lockRooms(db(), [(int) $room]);
+
       // First take out all appointments for this room
       $sql = "DELETE FROM " . _tbl('entry') . " WHERE room_id=?";
       db()->command($sql, array($room));
@@ -97,7 +98,7 @@ if ($type == "room")
       $sql = "DELETE FROM " . _tbl('room') . " WHERE id=?";
       db()->command($sql, array($room));
     }
-    catch (DBException $e)
+    catch (\Throwable $e)
     {
       db()->rollback();
       throw $e;

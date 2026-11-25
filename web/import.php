@@ -667,7 +667,11 @@ function process_event(Event $event) : bool
                                       $am7);
     // Make the bookings
     $bookings = array($booking);
-    $result = mrbsMakeBookings($bookings, null, false, $skip);
+    $result = BookingLocks::transaction(db(), function () use ($bookings, $skip)
+    {
+      BookingLocks::lockRooms(db(), array_column($bookings, 'room_id'));
+      return mrbsMakeBookings($bookings, null, false, $skip);
+    });
 
     if ($result['valid_booking'])
     {

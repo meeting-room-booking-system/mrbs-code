@@ -66,14 +66,23 @@ foreach ($ids as $id)
 // Because we are not using mrbsDelEntry() we have to delete any orphaned
 // rows in the repeat table ourselves - but this does not take long.
 
-$sql = "DELETE FROM " . _tbl('entry') . "
-         WHERE id IN (" . implode(',', $ids) . ")";
-$result = db()->command($sql);
+$result = empty($ids) ? 0 : BookingLocks::transaction(db(),
+  function () use ($ids)
+  {
+    BookingLocks::lockRooms(db(), get_entry_room_ids($ids));
 
-// And delete any orphaned rows in the repeat table
-$sql = "DELETE FROM " . _tbl('repeat') . "
-         WHERE id NOT IN (SELECT repeat_id FROM " . _tbl('entry') . ")";
-$orphan_result = db()->command($sql);
+    $sql = "DELETE FROM " . _tbl('entry') . "
+             WHERE id IN (" . implode(',', $ids) . ")";
+    $result = db()->command($sql);
+
+    // And delete any orphaned rows in the repeat table
+    $sql = "DELETE FROM " . _tbl('repeat') . "
+             WHERE id NOT IN (SELECT repeat_id FROM " . _tbl('entry') . ")";
+    $orphan_result = db()->command($sql);
+
+    return $result;
+  }
+);
 
 
 echo $result;

@@ -88,6 +88,17 @@ class DB_pgsql extends DB
   }
 
 
+  protected function beginTransaction(bool $read_committed): void
+  {
+    $this->dbh->beginTransaction();
+    if ($read_committed)
+    {
+      // PostgreSQL sets isolation inside the new transaction.
+      $this->command('SET TRANSACTION ISOLATION LEVEL READ COMMITTED');
+    }
+  }
+
+
   // Quote a table or column name (which could be a qualified identifier, eg 'table.column')
 
   // NOTE:  We fold the identifier to lower case here even though it is quoted.   Unlike MySQL,

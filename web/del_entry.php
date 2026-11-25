@@ -79,7 +79,13 @@ if ($info = get_booking_info($id, FALSE, TRUE))
       }
     }
 
-    $start_times = mrbsDelEntry($id, $series, true);
+    $start_times = BookingLocks::transaction(db(),
+      function () use ($id, $series)
+      {
+        BookingLocks::lockRooms(db(), get_entry_room_ids([$id], $series));
+        return mrbsDelEntry($id, $series, true);
+      }
+    );
 
     // [At the moment MRBS does not inform the user if it was not able to delete
     // an entry, or, for a series, some entries in a series.  This could happen for

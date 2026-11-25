@@ -10,6 +10,27 @@ use MRBS\ICalendar\Property;
 
 define('INTERVAL_DAY', 0);
 
+/** Return the rooms occupied by entries, including their series when requested. */
+function get_entry_room_ids(array $ids, bool $series = false) : array
+{
+  if (empty($ids))
+  {
+    return [];
+  }
+
+  $table = db()->quote(_tbl('entry'));
+  $marks = implode(',', array_fill(0, count($ids), '?'));
+  $where = "id IN ($marks)";
+  $params = $ids;
+  if ($series)
+  {
+    $where .= " OR repeat_id IN (SELECT repeat_id FROM $table WHERE id IN ($marks) AND repeat_id > 0)";
+    $params = array_merge($params, $ids);
+  }
+  $rows = db()->query("SELECT DISTINCT room_id FROM $table WHERE $where", $params)->all_rows_keyed();
+  return array_map('intval', array_column($rows, 'room_id'));
+}
+
 /**
  * Cast the columns in a row returned by a database query to the appropriate types.
  *

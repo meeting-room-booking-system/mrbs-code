@@ -822,8 +822,14 @@ try
   //    (a) somebody else has already edited the booking and the original booking no longer exists; or
   //    (b) if there's some other problem, eg the database user hasn't been granted DELETE rights, in which
   //        case we would be left with two overlapping bookings.
-  db()->begin();
+  BookingLocks::beginTransaction(db());
   $transaction_ok = true;
+  $room_ids = array_column($bookings, 'room_id');
+  if ($this_id !== null)
+  {
+    $room_ids = array_merge($room_ids, get_entry_room_ids([$this_id], $edit_series));
+  }
+  BookingLocks::lockRooms(db(), $room_ids);
   $result = mrbsMakeBookings($bookings, $this_id, $just_check, $skip, $original_room_id, $send_mail, $edit_series);
 
   // If we weren't just checking and this was a successful booking and
@@ -857,8 +863,12 @@ try
     exit;
   }
 }
-catch (\Exception $e)
+catch (\Throwable $e)
 {
+  if (db()->inTransaction())
+  {
+    db()->rollback();
+  }
   if ($is_ajax)
   {
     trigger_error('Caught exception: ' . $e->getMessage(), E_USER_WARNING);
