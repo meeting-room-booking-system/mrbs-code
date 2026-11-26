@@ -597,13 +597,14 @@ function create_body(array $data, ?array $mail_previous, bool $series, string $a
       }
 
       // Repeat interval
+      $mail_lang = Language::getInstance()->getMailLang();
       $repeat_interval = $data['repeat_rule']->getInterval();
-      $new = $repeat_interval . ' ' . $data['repeat_rule']->getIntervalUnits(true);
+      $new = $repeat_interval . ' ' . $data['repeat_rule']->getIntervalUnits($mail_lang);
 
       $previous_repeat_interval = $mail_previous['repeat_rule']->getInterval();
       if (isset($previous_repeat_interval))
       {
-        $old = $previous_repeat_interval . ' ' . $mail_previous['repeat_rule']->getIntervalUnits(true);
+        $old = $previous_repeat_interval . ' ' . $mail_previous['repeat_rule']->getIntervalUnits($mail_lang);
       }
       else
       {
