@@ -1462,15 +1462,21 @@ $(document).on('page_ready', function() {
           if (Array.isArray(value))
           {
             const field = $('[name="' + fieldName + '"]');
-            if (value.includes(parseInt(newArea)))
+            <?php
+            // Check the field exists. It might have been defined in $is_mandatory_field, but not exist in the table.
+            ?>
+            if (field.length)
             {
-              field.prop('required', true);
-            }
-            else
-            {
-              field.prop('required', false);
-              <?php // Clear any existing error messages ?>
-              field[0].setCustomValidity('');
+              if (value.includes(parseInt(newArea)))
+              {
+                field.prop('required', true);
+              }
+              else
+              {
+                field.prop('required', false);
+                <?php // Clear any existing error messages ?>
+                field[0].setCustomValidity('');
+              }
             }
           }
         }

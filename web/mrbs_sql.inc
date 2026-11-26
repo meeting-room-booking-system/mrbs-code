@@ -1475,36 +1475,32 @@ function mrbsCreateEntry(string $table, array $data) : int
   return db()->insert_id($table, "id");
 }
 
-/** mrbsCreateSingleEntry()
+/**
  *
- * Create a single (non-repeating) entry in the database
+ * Create a single (non-repeating) entry in the database.
  *
- * $data      - An array containing the entry details
- *
- * Returns:
- *   0        - An error occurred while inserting the entry
- *   non-zero - The entry's ID
+ * @param array $data The entry details.
+ * @return int The new entry's id, or 0 on failure.
  */
 function mrbsCreateSingleEntry(array $data) : int
 {
   // Make sure that any entry is of a positive duration.
   // This is to trap potential negative duration created when DST comes
   // into effect
-  if ($data['end_time'] > $data['start_time'])
-  {
-    // If we're about to create an individual member of a series for the first time
-    // then give it a recurrence-id equivalent to the start time.  It should always
-    // keep this value, even if the start time is subsequently changed.
-    if ($data['entry_type'] == ENTRY_RPT_ORIGINAL)
-    {
-      $data['ical_recur_id'] = Property::convertTimestamps($data['start_time'])[0];
-    }
-    return mrbsCreateEntry(_tbl('entry'), $data);
-  }
-  else
+  if ($data['end_time'] <= $data['start_time'])
   {
     return 0;
   }
+
+  // If we're about to create an individual member of a series for the first time
+  // then give it a recurrence-id equivalent to the start time.  It should always
+  // keep this value, even if the start time is subsequently changed.
+  if ($data['entry_type'] == ENTRY_RPT_ORIGINAL)
+  {
+    $data['ical_recur_id'] = Property::convertTimestamps($data['start_time'])[0];
+  }
+
+  return mrbsCreateEntry(_tbl('entry'), $data);
 }
 
 
