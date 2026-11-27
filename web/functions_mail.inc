@@ -492,8 +492,8 @@ function create_body(array $data, ?array $mail_previous, bool $series, string $a
     $lang = Language::getInstance()->getMailLang();
     $body .= create_body_table_row (
       get_mail_vocab('duration'),
-      get_duration_string($data['start_time'], $data['end_time'], $data['area_id'], $lang),
-      get_duration_string($mail_previous['start_time'], $mail_previous['end_time'], $mail_previous['area_id'], $lang),
+      get_interval_string($data['start_time'], $data['end_time'], $data['area_id'], $lang),
+      get_interval_string($mail_previous['start_time'], $mail_previous['end_time'], $mail_previous['area_id'], $lang),
       $compare, $as_html
     );
 

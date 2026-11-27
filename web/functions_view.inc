@@ -242,7 +242,7 @@ function create_details_body(array $data, bool $as_html=false, bool $keep_privat
         // Duration
         $tbody .= create_details_row(
           get_vocab('duration'),
-          get_duration_string($data['start_time'], $data['end_time'], $data['area_id']),
+          get_interval_string($data['start_time'], $data['end_time'], $data['area_id']),
           $as_html
         );
         break;
