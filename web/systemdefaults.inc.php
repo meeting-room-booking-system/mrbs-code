@@ -601,13 +601,6 @@ $always_offer_view_all = false;
 // Default is 0
 $default_room = 0;
 
-// Define clipping behaviour for the cells in the day and week views.
-// Set to true if you want the cells in the day and week views to be clipped.   This
-// gives a table where all the rows have the same height, regardless of content.
-// Alternatively set to false if you want the cells to expand to fit the content.
-// (false not supported in IE6 and IE7 due to their incomplete CSS support)
-$clipped = true;
-
 // Define clipping behaviour for the cells in the month view.
 // Set to true if you want all entries to have the same height. The
 // short description may be clipped in this case. If set to false,
