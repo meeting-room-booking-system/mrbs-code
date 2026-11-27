@@ -1510,8 +1510,9 @@ function get_interval_string(int $start_time, int $end_time, int $area_id, ?stri
  * @param string|null $lang The language to use for the result. If NULL, the current setting for browser output is used.
  * @param string|null $tzid The timezone that the start and end times are in. If NULL, the timezone for the current area
  * is used.
- * @param null|'seconds'|'minutes'|'hours'|'days'|'weeks'|'years' $max_unit The maximum unit of time to use for the duration. For
- * example, if the duration is 24 hours and `$max_unit` is set to 'hours' the result will be 24 hours rather than 1 day.
+ * @param null|'seconds'|'minutes'|'hours'|'days'|'weeks'|'years' $max_unit The maximum unit of time to use for the
+ * duration. For example, if the duration is 24 hours and `$max_unit` is set to 'hours' the result will be 24 hours
+ * rather than 1 day.
  * @return string
  */
 function get_interval_string_times(int $start_time, int $end_time, ?string $lang=null, ?string $tzid=null, string $max_unit='weeks') : string
@@ -1527,10 +1528,30 @@ function get_interval_string_times(int $start_time, int $end_time, ?string $lang
   // For example, 12 noon to 12 noon crossing a DST boundary is 24 hours.
   $duration -= cross_dst($start_time, $end_time, $tzid);
 
-  list('value' => $value, 'units' => $units) = to_time_string_canonical($duration, $max_unit);
+  return get_duration_string_times($duration, $lang, $max_unit);
+}
+
+
+/**
+ * Turn a number of seconds into a duration string expressed as the largest unit of time that has a value greater
+ * than 1, expressed in the required language.  The number of seconds is a single value, not an interval, and therefore
+ * no account of DST changes can be made.
+ *
+ * @param int $seconds
+ * @param string|null $lang The language to use for the result. If NULL, the current setting for browser output is used.
+ * @param null|'seconds'|'minutes'|'hours'|'days'|'weeks'|'years' $max_unit The maximum unit of time to use for the
+ * * duration. For example, if the duration is 24 hours and `$max_unit` is set to 'hours' the result will be 24 hours
+ * * rather than 1 day.
+ * @return string
+ */
+function get_duration_string_times(int $seconds, ?string $lang=null, string $max_unit='weeks') : string
+{
+  $lang = $lang ?? Language::getInstance()->getWebLang();
+  list('value' => $value, 'units' => $units) = to_time_string_canonical($seconds, $max_unit);
 
   return Language::getInstance()->getVocab("duration_$units", $lang, false, $value);
 }
+
 
 // Escape a PHP variable for use in HTML
 function escape_html($value)
