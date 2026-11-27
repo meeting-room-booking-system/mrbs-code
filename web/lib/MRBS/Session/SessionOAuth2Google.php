@@ -3,15 +3,16 @@ declare(strict_types=1);
 namespace MRBS\Session;
 
 use MRBS\Form\ElementDiv;
-use MRBS\GoogleLogin;
+use MRBS\OAuth2Google;
 use function MRBS\get_vocab;
+use function MRBS\get_form_var;
 use function MRBS\this_page;
 
 /**
  * PHP session handler with Google OAuth redirect support, "Sign in with Google" button,
  * and optional login_notice panel.
  */
-class SessionGoogle extends SessionPhp
+class SessionOAuth2Google extends SessionPhp
 {
   public function __construct()
   {
@@ -20,7 +21,7 @@ class SessionGoogle extends SessionPhp
 
     // Google redirects back across sites: with SameSite=Strict the session cookie
     // would not be sent on return.
-    if (GoogleLogin::isEnabled())
+    if (OAuth2Google::isEnabled())
     {
       $this->samesite = self::SAMESITE_LAX;
     }
@@ -38,12 +39,37 @@ class SessionGoogle extends SessionPhp
   }
 
   /**
+   * Deals with the two requests that belong to "Log in with Google".  Called by session() once the session
+   * object has been fully constructed and registered, so it is safe to call session() from here and from
+   * GoogleLogin (see isCallback()).  On all other requests it does nothing, and costs only a look at the
+   * query string.
+   *
+   *   - The user has clicked on the button ('oAuth2_google' parameter): redirect the browser to Google.
+   *   - The browser has come back from Google ('state' and 'code' or 'error'): log the user on, or show
+   *     the login form with an error.
+   *
+   * Neither of them returns.
+   */
+  public function handleRequest() : void
+  {
+    if (OAuth2Google::isCallback())
+    {
+      OAuth2Google::handleCallback();
+    }
+    elseif (OAuth2Google::isStart())
+    {
+      // The page to go to afterwards is validated by location_header() when the login is complete
+      OAuth2Google::start(get_form_var('target_url', 'string'));
+    }
+  }
+
+  /**
    * Render the login form via SessionWithLogin::authGet() and inject the
    * login_notice panel (before the form) and Google button (inside the form).
    */
   public function authGet(?string $target_url=null, ?string $returl=null, ?string $error=null, bool $raw=false) : void
   {
-    $google_enabled = GoogleLogin::isEnabled();
+    $google_enabled = OAuth2Google::isEnabled();
     $notice = get_vocab('login_notice');
     $has_notice = (($notice !== 'login_notice') && ($notice !== ''));
 
@@ -58,7 +84,7 @@ class SessionGoogle extends SessionPhp
     {
       $resolved_target_url = $target_url ?? $this->form['target_url'] ?? this_page(true);
       ob_start();
-      GoogleLogin::getButtonElement($resolved_target_url)->render();
+      OAuth2Google::getButtonElement($resolved_target_url)->render();
       $button_html = ob_get_clean();
     }
 

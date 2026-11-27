@@ -2,10 +2,10 @@
 declare(strict_types=1);
 namespace MRBS\Auth;
 
-use MRBS\GoogleLogin;
+use MRBS\OAuth2Google;
 use function MRBS\_tbl;
 
-class AuthGoogle extends AuthDb
+class AuthOAuth2Google extends AuthDb
 {
   public function __construct()
   {
@@ -44,7 +44,7 @@ class AuthGoogle extends AuthDb
 
     // Exclude accounts that can only sign in via Google
     $valid_usernames = array_values(array_filter($valid_usernames, function ($username) {
-      return !GoogleLogin::isGoogleOnlyUser($username);
+      return !OAuth2Google::isGoogleOnlyUser($username);
     }));
 
     if (count($valid_usernames) === 1)
@@ -98,7 +98,7 @@ class AuthGoogle extends AuthDb
     if (!empty($candidate_usernames))
     {
       $non_google_users = array_filter($candidate_usernames, function ($username) {
-        return !GoogleLogin::isGoogleOnlyUser($username);
+        return !OAuth2Google::isGoogleOnlyUser($username);
       });
 
       if (empty($non_google_users))
@@ -116,7 +116,7 @@ class AuthGoogle extends AuthDb
    */
   public function isValidReset(?string $user, ?string $key) : bool
   {
-    if (!isset($user) || ($user === '') || GoogleLogin::isGoogleOnlyUser($user))
+    if (!isset($user) || ($user === '') || OAuth2Google::isGoogleOnlyUser($user))
     {
       return false;
     }

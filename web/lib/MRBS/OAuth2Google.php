@@ -11,21 +11,18 @@ use MRBS\Form\ElementDiv;
  *
  * This works alongside the normal login form: it does not replace it. It requires
  *
- *     $auth['type']    = 'google';
- *     $auth['session'] = 'google';
+ *     $auth['type']    = 'oAuth2_google';
+ *     $auth['session'] = 'oAuth2_google';
  *
  * Users are identified by their (lower case) email address, which is used as the username in the users table.
  *
  * See the "Google Workspace sign-in" section of the AUTHENTICATION file for the configuration.
  */
-class GoogleLogin
+class OAuth2Google
 {
   private const AUTH_ENDPOINT  = 'https://accounts.google.com/o/oauth2/v2/auth';
   private const TOKEN_ENDPOINT = 'https://oauth2.googleapis.com/token';
   private const ISSUERS        = ['https://accounts.google.com', 'accounts.google.com'];
-
-  private const LOGIN_PAGE     = 'google_login.php';
-  private const CALLBACK_PAGE  = 'google_callback.php';
 
   // How long, in seconds, the user has to complete the login at Google.
   private const STATE_LIFETIME = 600;
@@ -33,8 +30,8 @@ class GoogleLogin
   // The name of the session variable used to hold the state between the redirect and the callback.
   private const SESSION_KEY = 'google_oauth';
 
-  // Fallback target after the login form is shown following an error.
-  private static ?string $error_target = null;
+  /** @var string|null Fallback target after the login form is shown following an error. */
+  private static $error_target = null;
 
   // The Google "G" logo. It's inline so that there's no image file to install and nothing to load. It must not
   // be altered: see https://developers.google.com/identity/branding-guidelines
@@ -54,16 +51,16 @@ class GoogleLogin
   {
     global $auth;
 
-    // Users are looked up in, and created in, the MRBS users table by the 'google' authentication type, and it
-    // is the 'google' session that shows the button and can log in a user without a password.
+    // Users are looked up in, and created in, the MRBS users table by the 'oAuth2_google' authentication type, and it
+    // is the 'oAuth2_google' session that shows the button and can log in a user without a password.
     //
     // NOTE: this must only look at the configuration and not call session(), because it is called while the
     // session is being constructed.
-    return !empty($auth['google']['enable']) &&
-           (($auth['type'] ?? null) === 'google') &&
-           (($auth['session'] ?? null) === 'google') &&
-           !empty($auth['google']['client_id']) &&
-           !empty($auth['google']['client_secret']) &&
+    return !empty($auth['oAuth2_google']['enable']) &&
+           (($auth['type'] ?? null) === 'oAuth2_google') &&
+           (($auth['session'] ?? null) === 'oAuth2_google') &&
+           !empty($auth['oAuth2_google']['client_id']) &&
+           !empty($auth['oAuth2_google']['client_secret']) &&
            !empty(self::getAllowedDomains());
   }
 
@@ -88,7 +85,7 @@ class GoogleLogin
   /**
    * Returns the list of allowed domains, normalised to lower case.
    *
-   * The config variable $auth['google']['allowed_domains'] is a string of comma separated domains, eg
+   * The config variable $auth['oAuth2_google']['allowed_domains'] is a string of comma separated domains, eg
    * 'example.com, example.org'. An array is also accepted.
    *
    * @return string[]
@@ -97,7 +94,7 @@ class GoogleLogin
   {
     global $auth;
 
-    $setting = $auth['google']['allowed_domains'] ?? '';
+    $setting = $auth['oAuth2_google']['allowed_domains'] ?? '';
 
     $domains = (is_array($setting)) ? $setting : explode(',', (string) $setting);
     $domains = array_map(function ($domain) {
@@ -110,18 +107,22 @@ class GoogleLogin
   }
 
   /**
-   * Returns the URL of the page that starts the login.
+   * Returns the URL that starts the login, ie the target of the "Log in with Google" button.
+   * It is index.php with a 'oAuth2_google' parameter: the request is recognised and handled by
+   * SessionGoogle::handleRequest(), so no page of its own is needed.
+   *
+   * @param string|null $target_url  A local URL to go to after a successful login
    */
   public static function getLoginUrl(?string $target_url=null) : string
   {
-    $url = self::LOGIN_PAGE;
+    $params = ['oAuth2_google' => 1];
 
     if (isset($target_url) && ($target_url !== ''))
     {
-      $url .= '?' . http_build_query(['target_url' => $target_url], '', '&');
+      $params['target_url'] = $target_url;
     }
 
-    return multisite($url);
+    return multisite('index.php?' . http_build_query($params, '', '&'));
   }
 
   /**
@@ -176,7 +177,7 @@ class GoogleLogin
     $domains = self::getAllowedDomains();
 
     $params = [
-        'client_id'             => $auth['google']['client_id'],
+        'client_id'             => $auth['oAuth2_google']['client_id'],
         'redirect_uri'          => self::getRedirectUri(),
         'response_type'         => 'code',
         'scope'                 => 'openid email profile',
@@ -195,6 +196,15 @@ class GoogleLogin
 
     header('Location: ' . self::AUTH_ENDPOINT . '?' . http_build_query($params, '', '&', PHP_QUERY_RFC3986));
     exit;
+  }
+
+  /**
+   * Whether the current request is the one that starts the login, ie the user has clicked on the
+   * "Log in with Google" button.  Called on every page, so it only looks at the query string.
+   */
+  public static function isStart() : bool
+  {
+    return self::isEnabled() && (get_form_var('oAuth2_google', 'int') === 1);
   }
 
   /**
@@ -241,7 +251,7 @@ class GoogleLogin
 
     $claims = self::fetchClaims($code, (string) $saved['verifier']);
 
-    if (($claims === null) || !self::validateClaims($claims, (string) $saved['nonce'], (string) $auth['google']['client_id']))
+    if (($claims === null) || !self::validateClaims($claims, (string) $saved['nonce'], (string) $auth['oAuth2_google']['client_id']))
     {
       self::fail('google_login_failed', $error_target);
     }
@@ -272,6 +282,44 @@ class GoogleLogin
     $target = (isset($saved['target']) && ($saved['target'] !== '')) ? $saved['target'] : 'index.php';
     location_header($target);
   }
+
+
+  /**
+   * Whether the current request is Google's redirect back to MRBS after the user has signed in (or has cancelled).
+   *
+   * This is called on every page, so it has to be cheap and it must not act on a request that merely happens to
+   * have a 'code' or 'state' parameter.  All of the following have to be true:
+   *   - Google sign-in is enabled;
+   *   - the request has a 'state' and either a 'code' (success) or an 'error' (eg the user cancelled);
+   *   - the session holds the data saved by start() before the browser was sent to Google, and the 'state'
+   *     matches.  Without this anybody could send a forged request to the redirect URI.
+   *
+   * The state is compared here only to recognise the request.  handleCallback() checks it again, together with
+   * its age, before using the code.
+   */
+  public static function isCallback() : bool
+  {
+    if (!self::isEnabled())
+    {
+      return false;
+    }
+
+    // The cheap checks first: most requests have no 'state' and stop here.
+    $state = get_form_var('state', 'string');
+    if (!isset($state) ||
+        ((null === get_form_var('code', 'string')) && (null === get_form_var('error', 'string'))))
+    {
+      return false;
+    }
+
+    // hash_equals() for a constant time comparison.  The cast is needed because of strict_types.
+    $saved = session()->get(self::SESSION_KEY);
+
+    return is_array($saved) &&
+           isset($saved['state']) &&
+           hash_equals((string) $saved['state'], $state);
+  }
+
 
   /**
    * Shows the login form with an error message. Never returns.
@@ -309,8 +357,8 @@ class GoogleLogin
       $response = $client->post(self::TOKEN_ENDPOINT, [
           'form_params' => [
               'code'          => $code,
-              'client_id'     => $auth['google']['client_id'],
-              'client_secret' => $auth['google']['client_secret'],
+              'client_id'     => $auth['oAuth2_google']['client_id'],
+              'client_secret' => $auth['oAuth2_google']['client_secret'],
               'redirect_uri'  => self::getRedirectUri(),
               'grant_type'    => 'authorization_code',
               'code_verifier' => $verifier
@@ -432,9 +480,9 @@ class GoogleLogin
   {
     global $auth;
 
-    $filter = (string) ($auth['google']['auto_create_regex_filter'] ?? '');
+    $filter = (string) ($auth['oAuth2_google']['auto_create_regex_filter'] ?? '');
 
-    if (empty($auth['google']['auto_create_users']) || !self::matchesCreateFilter($email, $filter))
+    if (empty($auth['oAuth2_google']['auto_create_users']) || !self::matchesCreateFilter($email, $filter))
     {
       self::fail('google_login_no_account', $error_target);
     }
@@ -454,7 +502,7 @@ class GoogleLogin
     $sql = "INSERT INTO " . _tbl('users') . "
                         (level, name, display_name, password_hash, email)
                  VALUES (?, ?, ?, NULL, ?)";
-    $level = (int) ($auth['google']['default_level'] ?? 1);
+    $level = (int) ($auth['oAuth2_google']['default_level'] ?? 1);
 
     try
     {
@@ -490,7 +538,7 @@ class GoogleLogin
     if ($result === false)
     {
       // An invalid regular expression: fail closed
-      error_log("MRBS Google login: invalid \$auth['google']['auto_create_regex_filter']");
+      error_log("MRBS Google login: invalid \$auth['oAuth2_google']['auto_create_regex_filter']");
       return false;
     }
 
@@ -507,16 +555,28 @@ class GoogleLogin
     db()->command($sql, [time(), $username]);
   }
 
+  /**
+   * Returns the redirect URI, ie the address that Google sends the browser back to after the sign-in.
+   *
+   * It is index.php: the redirect is recognised and completed by SessionGoogle::handleRequest(), so no page of
+   * its own is needed.  The URI must be registered, exactly as it is returned here, as an "Authorised redirect
+   * URI" in the Google Cloud console, and the same value must be used both when sending the user to Google
+   * (start()) and when exchanging the code for the tokens (fetchClaims()), otherwise Google refuses the
+   * request. That is why both call this method.
+   *
+   * $auth['oAuth2_google']['redirect_uri'] overrides the default, eg if MRBS is behind a reverse proxy and cannot
+   * work out its own public URL.
+   */
   private static function getRedirectUri() : string
   {
     global $auth;
 
-    if (!empty($auth['google']['redirect_uri']))
+    if (!empty($auth['oAuth2_google']['redirect_uri']))
     {
-      return $auth['google']['redirect_uri'];
+      return $auth['oAuth2_google']['redirect_uri'];
     }
 
-    return url_base() . self::CALLBACK_PAGE;
+    return url_base() . 'index.php';
   }
 
   private static function randomString(int $bytes=32) : string

@@ -1115,11 +1115,11 @@ $report_presentation_field_order = array();
 $auth["type"] = "db"; // How to validate the user/password. One of
                       // "auth_basic", "cas", "config", "crypt", "db", "db_ext", "idcheck",
                       // "imap", "imap_php", "joomla", "ldap", "none", "nw", "pop3",
-                      // "saml", "wix", "wordpress" or "google".
+                      // "saml", "wix", "wordpress" or "oAuth2_google".
 
 $auth["session"] = "php"; // How to get and keep the user ID. One of
                           // "cas", "cookie", "host", "http", "ip", "joomla", "nt",
-                          // "omni", "php", "remote_user", "saml", "wordpress" or "google".
+                          // "omni", "php", "remote_user", "saml", "wordpress" or "oAuth2_google".
 
 // Configuration parameters for 'cookie' session scheme
 
@@ -1606,27 +1606,27 @@ define('COOKIEHASH', md5($domain_name));
 
 
 // 'Sign in with Google' (Google Workspace) settings.  It is an alternative to the normal login form and
-// needs $auth['type'] = 'google' and $auth['session'] = 'google'.
+// needs $auth['type'] = 'oAuth2_google' and $auth['session'] = 'oAuth2_google'.
 // Read the "Google Workspace sign-in" section of AUTHENTICATION.
 // Set this to true to turn Google sign-in on.  The client ID, client secret and allowed domains below must
 // also be set.  IMPORTANT: when it is on, users whose username is an email address at one of the allowed
 // domains can ONLY log in with Google, even if they have a password.
-$auth['google']['enable'] = false;
+$auth['oAuth2_google']['enable'] = false;
 // OAuth client ID and secret from the Google Cloud console (APIs & Services > Credentials)
-$auth['google']['client_id'] = '';
-$auth['google']['client_secret'] = '';
+$auth['oAuth2_google']['client_id'] = '';
+$auth['oAuth2_google']['client_secret'] = '';
 // Google Workspace domains whose users may log in, as a comma separated string, eg 'example.com,example.org'
-$auth['google']['allowed_domains'] = '';
+$auth['oAuth2_google']['allowed_domains'] = '';
 // Set this to true to create a user automatically the first time somebody logs in, if they don't already have one
-$auth['google']['auto_create_users'] = false;
+$auth['oAuth2_google']['auto_create_users'] = false;
 // An optional regular expression (including delimiters) which an email address must match for the user to
 // be created automatically, eg '/^[a-z]+\.[a-z]+@example\.com$/'.  Users that don't match can still log in
 // if they already exist.  If empty, every address in the allowed domains matches.
-$auth['google']['auto_create_regex_filter'] = '';
+$auth['oAuth2_google']['auto_create_regex_filter'] = '';
 // Level (rights) given to automatically created users: 0 = none, 1 = ordinary user, 2 = admin, 3 = users admin.
-$auth['google']['default_level'] = 0;
-// Redirect URI registered with Google.  Leave empty to use <MRBS base URL>/google_callback.php
-$auth['google']['redirect_uri'] = '';
+$auth['oAuth2_google']['default_level'] = 0;
+// Redirect URI registered with Google.  Leave empty to use <MRBS base URL>/index.php
+$auth['oAuth2_google']['redirect_uri'] = '';
 
 
 // General settings

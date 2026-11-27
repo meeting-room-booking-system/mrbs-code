@@ -266,4 +266,13 @@ abstract class Session
   {
   }
 
+  /**
+   * Called by session() once the session object has been fully constructed and registered, so that it is safe
+   * to call session() from here.  Does nothing by default; session schemes can override it to deal with
+   * something that arrives with the request, eg a redirect back from an identity provider.
+   */
+  public function handleRequest() : void
+  {
+  }
+
 }
