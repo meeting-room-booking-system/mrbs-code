@@ -1537,12 +1537,10 @@ function get_interval_string_times(int $start_time, int $end_time, ?string $lang
  * than 1, expressed in the required language.  The number of seconds is a single value, not an interval, and therefore
  * no account of DST changes can be made.
  *
- * @param int $seconds
  * @param string|null $lang The language to use for the result. If NULL, the current setting for browser output is used.
  * @param null|'seconds'|'minutes'|'hours'|'days'|'weeks'|'years' $max_unit The maximum unit of time to use for the
- * * duration. For example, if the duration is 24 hours and `$max_unit` is set to 'hours' the result will be 24 hours
- * * rather than 1 day.
- * @return string
+ * duration. For example, if the duration is 24 hours and `$max_unit` is set to 'hours' the result will be 24 hours
+ * rather than 1 day.
  */
 function get_duration_string_times(int $seconds, ?string $lang=null, string $max_unit='weeks') : string
 {
