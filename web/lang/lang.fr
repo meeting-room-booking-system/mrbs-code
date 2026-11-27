@@ -359,7 +359,7 @@ $vocab["unknown"]            = "Inconnu";
 $vocab["ok"]                 = "OK";
 $vocab["show_my_entries"]    = "Afficher mes réservations à venir";
 $vocab["no_users_initial"]   = "Pas d'utilisateur dans la base de données, vous pouvez créer l'utilisateur initial";
-"Avant de faire quoi que ce soit, vous devez créer un compte administrateur." .
+$vocab["no_users_create_first_admin"] = "Avant de faire quoi que ce soit, vous devez créer un compte administrateur." .
                                         "Connectez-vous ensuite avec ce compte et créez d'autres utilisateurs puis" .
                                         "les zones et les salles.";
 $vocab["warning_last_admin"]    = "Attention! Il s'agit du dernier admin et vous ne pouvez pas supprimer l'utilisateur ou supprimer les droits admin, sinon le système sera bloqué.";
