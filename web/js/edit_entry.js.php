@@ -1446,6 +1446,18 @@ $(document).on('page_ready', function() {
           updateSelectorData();
         });
 
+  <?php
+  // If there are types that are exempt from max_duration and the user is not a book admin, then we need to adjust the
+  // slot selectors when the type changes because the new type's exemption status may have changed.
+  if ((!empty($exempt_types['max_duration_periods']) || !empty($exempt_types['max_duration_secs'])) && !is_book_admin())
+  {
+    ?>
+    $('#type').on('change', function() {
+      adjustSlotSelectors();
+    });
+    <?php
+  }
+  ?>
 
   areaSelect
       .data('current', areaSelect.val())
