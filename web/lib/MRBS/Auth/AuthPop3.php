@@ -43,12 +43,13 @@ class AuthPop3 extends Auth
     }
 
     // Transfer the list of POP3 hosts to a new value to ensure that an array is always used.
-    // If a single value is passed then turn it into an array
-    $this->hosts = (is_array($pop3_host)) ? $pop3_host : array($pop3_host);
+    // If a single value is passed then turn it into an array.  Use array_values() so that
+    // hosts and ports are paired by position rather than by key.
+    $this->hosts = (is_array($pop3_host)) ? array_values($pop3_host) : array($pop3_host);
 
     // Create an array of the port numbers to match the number of
     // hosts if a single port number has been passed.
-    $this->ports = (is_array($pop3_port)) ? $pop3_port : array_pad($this->ports, count($this->hosts), $pop3_port);
+    $this->ports = (is_array($pop3_port)) ? array_values($pop3_port) : array_pad($this->ports, count($this->hosts), $pop3_port);
   }
 
 
@@ -60,6 +61,12 @@ class AuthPop3 extends Auth
   {
     // Check if we do not have a username/password
     if (!isset($user) || !isset($pass) || strlen($pass)==0)
+    {
+      return false;
+    }
+
+    // Reject line breaks, which would allow extra POP3 commands to be injected
+    if (preg_match('/[\r\n]/', $user . $pass))
     {
       return false;
     }
@@ -101,12 +108,18 @@ class AuthPop3 extends Auth
 
         // Read the response. If it's an OK then we're authenticated
         $response = fgets($stream, 1024);
-        if (str_starts_with($response, '+OK'))
+        if ($response !== false && str_starts_with($response, '+OK'))
         {
           fputs($stream, "QUIT\r\n");
+          fclose($stream);
           return $user;
         }
       }
+      fputs($stream, "QUIT\r\n");
+      fclose($stream);
+
+      // Reset the shared secret before trying traditional authentication
+      $shared_secret = '';
 
       // If we've still not authenticated then try using traditional methods.
       // Need to reconnect if we tried APOP
@@ -118,19 +131,32 @@ class AuthPop3 extends Auth
       }
 
       stream_set_timeout($stream, self::STREAM_TIMEOUT);
-      // Send standard POP3 USER and PASS commands
-      fputs($stream, "USER $user\r\n");
+
+      // Read the server greeting after reconnecting
       $response = fgets($stream, 1024);
-      if (str_starts_with($response, '+OK'))
+      if ($response !== false && str_starts_with($response, '+OK'))
       {
-        fputs($stream, "PASS $pass\r\n");
+        // Send standard POP3 USER and PASS commands
+        fputs($stream, "USER $user\r\n");
         $response = fgets($stream, 1024);
-        if (str_starts_with($response, '+OK'))
+        if ($response !== false && str_starts_with($response, '+OK'))
         {
-          return $user;
+          fputs($stream, "PASS $pass\r\n");
+          $response = fgets($stream, 1024);
+          if ($response !== false && str_starts_with($response, '+OK'))
+          {
+            fputs($stream, "QUIT\r\n");
+            fclose($stream);
+            return $user;
+          }
         }
       }
-      fputs($stream, "QUIT\r\n");
+      // Close the connection if we reach this point without authenticating
+      if ($stream !== false)
+      {
+        fputs($stream, "QUIT\r\n");
+        fclose($stream);
+      }
     }
 
     // Return failure

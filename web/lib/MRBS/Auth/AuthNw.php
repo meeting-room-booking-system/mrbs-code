@@ -2,7 +2,15 @@
 namespace MRBS\Auth;
 
 
-class AuthNw extends Auth
+/**
+ * Authentication scheme for Netware servers.  This is like AuthExt except that
+ * the program is always invoked as
+ *
+ *     $auth["prog"] -S <$auth["params"]> -U <username>
+ *
+ * and the password is passed to the program on its standard input.
+ */
+class AuthNw extends AuthExt
 {
   public function validateUser(
     #[\SensitiveParameter]
@@ -18,20 +26,10 @@ class AuthNw extends Auth
       return false;
     }
 
-    // Generate the command line
-    $cmd = $auth["prog"] . " -S " . $auth["params"] . " -U '$user'";
+    $arguments = array_merge([$auth["prog"], '-S'], $this->getParams(), ['-U', $user]);
 
     // Run the program, sending the password to stdin.
-    $p = popen($cmd, "w");
-
-    if (!$p)
-    {
-      return false;
-    }
-
-    fputs($p, $pass);
-
-    if (pclose($p) == 0)
+    if ($this->run($arguments, $pass) == 0)
     {
       return $user;
     }
