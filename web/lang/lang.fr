@@ -105,6 +105,14 @@ $vocab["year"]               = "année";
 $vocab["years"]              = "années";
 $vocab["period"]             = "période";
 $vocab["periods"]            = "périodes";
+$vocab["units_seconds"]      = "{0, plural, one {seconde} other {secondes}}";
+$vocab["units_minutes"]      = "{0, plural, one {minute} other {minutes}}";
+$vocab["units_hours"]        = "{0, plural, one {heure} other {heures}}";
+$vocab["units_days"]         = "{0, plural, one {jour} other {jours}}";
+$vocab["units_weeks"]        = "{0, plural, one {semaine} other {semaines}}";
+$vocab["units_months"]       = "{0, plural, one {mois} other {mois}}";
+$vocab["units_years"]        = "{0, plural, one {année} other {années}}";
+$vocab["units_periods"]      = "{0, plural, one {période} other {périodes}}";
 $vocab["duration_seconds"]   = "{0, plural, one {# seconde} other {# secondes}}";
 $vocab["duration_minutes"]   = "{0, plural, one {# minute} other {# minutes}}";
 $vocab["duration_hours"]     = "{0, plural, one {# heure} other {# heures}}";
@@ -351,7 +359,7 @@ $vocab["unknown"]            = "Inconnu";
 $vocab["ok"]                 = "OK";
 $vocab["show_my_entries"]    = "Afficher mes réservations à venir";
 $vocab["no_users_initial"]   = "Pas d'utilisateur dans la base de données, vous pouvez créer l'utilisateur initial";
-"Avant de faire quoi que ce soit, vous devez créer un compte administrateur." .
+$vocab["no_users_create_first_admin"] = "Avant de faire quoi que ce soit, vous devez créer un compte administrateur." .
                                         "Connectez-vous ensuite avec ce compte et créez d'autres utilisateurs puis" .
                                         "les zones et les salles.";
 $vocab["warning_last_admin"]    = "Attention! Il s'agit du dernier admin et vous ne pouvez pas supprimer l'utilisateur ou supprimer les droits admin, sinon le système sera bloqué.";

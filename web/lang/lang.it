@@ -55,7 +55,7 @@ $vocab["week_number"]        = "Settimana %s | ";
 $vocab["create_new_booking"] = "Crea nuova prenotazione";
 $vocab["select_area"]        = "Seleziona Area";
 $vocab["select_room"]        = "Seleziona Stanza";
-$vocab["all"]                = "<tutti>";				  
+$vocab["all"]                = "<tutti>";
 $vocab["exit_kiosk_mode_confirm"]    = "Uscire dalla modalità chiosco?";
 $vocab["close"]              = "Chiudi";
 $vocab["ok"]                 = "OK";
@@ -101,6 +101,14 @@ $vocab["year"]               = "anno";
 $vocab["years"]              = "anni";
 $vocab["period"]             = "periodo";
 $vocab["periods"]            = "periodi";
+$vocab["units_seconds"]      = "{0, plural, one {secondo} other {secondi}}";
+$vocab["units_minutes"]      = "{0, plural, one {minuto} other {minuti}}";
+$vocab["units_hours"]        = "{0, plural, one {ora} other {ore}}";
+$vocab["units_days"]         = "{0, plural, one {giorno} other {giorni}}";
+$vocab["units_weeks"]        = "{0, plural, one {settimana} other {settimane}}";
+$vocab["units_months"]       = "{0, plural, one {mese} other {mesi}}";
+$vocab["units_years"]        = "{0, plural, one {anno} other {anni}}";
+$vocab["units_periods"]      = "{0, plural, one {periodo} other {periodi}}";
 $vocab["duration_seconds"]   = "{0, plural, one {# secondo} other {# secondi}}";
 $vocab["duration_minutes"]   = "{0, plural, one {# minuto} other {# minuti}}";
 $vocab["duration_hours"]     = "{0, plural, one {# ora} other {# ore}}";
@@ -185,7 +193,7 @@ $vocab["confirmdel_series"]       = "Sei sicuro di voler cancellare tutta la ser
 $vocab["confirm_edit_series"]     = "ATTENZIONE! Ci sono utenti già registrati per eventi in questa serie, " .
                                     "modificare tutta la serie può causare la perdita dei loro nominativi. " .
                                     "Se vuoi conservare i nominativi devi modificare gli eventi uno alla volta " .
-                                    "utilizzando 'Modifica'.  Sei sicuro di voler continuare?";																								   
+                                    "utilizzando 'Modifica'.  Sei sicuro di voler continuare?";
 $vocab["returnprev"]              = "Ritorna alla Pagina Precedente";
 $vocab["invalid_entry_id"]        = "Entry ID non valido.";
 $vocab["invalid_series_id"]       = "Series ID non valido.";
@@ -256,7 +264,7 @@ $vocab["mail_body_del_entry"]     = "Una prenotazione è stata cancellata da  %s
 $vocab["new_value"]               = "Nuovo";
 $vocab["old_value"]               = "Vecchio";
 $vocab["reason"]                  = "Motivo";
-$vocab["info_requested"]          = "Informazioni richieste";								  
+$vocab["info_requested"]          = "Informazioni richieste";
 $vocab["cannot_change_approved_bookings"] = "Non è permesso cancellare o modificare una prenotazione già approvata";
 $vocab["min_create_time_before"]  = 'Non è possibile creare una prenotazione che inizia prima di %1$d %2$s';
 $vocab["max_create_time_before"]  = 'Non è possibile creare una prenotazione che finisce dopo %1$d %2$s';
@@ -264,7 +272,7 @@ $vocab["min_delete_time_before"]  = 'Non è possibile modificare o cancellare un
 $vocab["max_delete_time_before"]  = 'Non è possibile modificare o cancellare una prenotazione che finisce dopo %1$d %2$s';
 $vocab["earliest_booking_date"]   = "La data di prenotazione più lontana è %s";
 $vocab["latest_booking_date"]     = "L'ultima data di prenotazione è %s";
-$vocab["booking_opens_at"]        = "Le prenotazioni aprono alle %s ogni giorno";																   
+$vocab["booking_opens_at"]        = "Le prenotazioni aprono alle %s ogni giorno";
 $vocab["max_booking_duration"]    = 'La durata massima di una prenotazione è %1$d %2$s';
 $vocab["max_booking_duration_type"]  = 'La durata massima di una prenotazione di tipo %3$s è %1$d %2$s';
 $vocab["max_per_day_global"]      = "Il numero massimo di prenotazioni al giorno per utente nell'intero sistema è";
@@ -371,12 +379,12 @@ $vocab["show_my_entries"]    = "Clicca per visualizzare tutti gli inserimenti";
 $vocab["no_users_initial"]   = "Non ci sono utenti nel database che permettano la creazione iniziale di utenti";
 $vocab["no_users_create_first_admin"] = "Crea un utente configurato come Amministratore, quindi potrai effettuare il login e creare altri utenti.";
 $vocab["warning_last_admin"] = "Attenzione!  Questo è l'ultimo amministratore e non puoi ne cancellarlo ne togliergli i diritti, altrimenti rimarrai tagliato fuori dal sistema.";
-$vocab["copy_email_addresses"]  = "Copia indirizzi email";														   
+$vocab["copy_email_addresses"]  = "Copia indirizzi email";
 
 // Used in search.php
 $vocab["invalid_search"]     = "Valore di Ricerca vuoto o sbagliato.";
 $vocab["search_results"]     = "Risultati ricerca per '%s' da %s";
-$vocab["search_results_unlimited"] = "Risultati ricerca per '%s'";															   
+$vocab["search_results_unlimited"] = "Risultati ricerca per '%s'";
 $vocab["nothing_found"]      = "Nessun risultato trovato.";
 $vocab["records"]            = "Trovati ";
 $vocab["through"]            = " attraverso ";
@@ -423,7 +431,7 @@ $vocab["sort_room"]             = "Stanza";
 $vocab["fulldescription_short"] = "Descrizione completa";
 $vocab["both"]                  = "Tutti";
 $vocab["with"]                  = "con";
-$vocab["without"]               = "senza";										 
+$vocab["without"]               = "senza";
 $vocab["privacy_status"]        = "Stato privacy";
 $vocab["search_criteria"]       = "Criteri di ricerca";
 $vocab["presentation_options"]  = "Opzioni di presentazione";
@@ -633,7 +641,7 @@ $vocab["fatal_db_ext_error"] = "Errore irreversibile: il database esterno non è
 $vocab["fatal_no_tables"]    = "Errore irreversibile: le tabelle MRBS non esistono o non è possibile accedervi.";
 $vocab["session_expired"]    = "La tua sessione è scaduta.";
 $vocab["browser_not_supported"] = "Purtroppo il tuo browser non è supportato da %s." .
-                                  "Aggiorna il browser a una versione più recente oppure utilizza un altro browser.";																							   
+                                  "Aggiorna il browser a una versione più recente oppure utilizza un altro browser.";
 $vocab["back"]               = "Indietro";
 
 // Used in Google OAuth2 Autentication

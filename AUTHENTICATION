@@ -1029,6 +1029,17 @@ on Windows, the version requirements described above apply.
 
 For arguments containing spaces, use the array form of $auth["params"].
 
+The "nw" scheme (Netware) is a variant of "ext", implemented by the class
+"AuthNw" which extends AuthExt.  It runs the program as
+
+$command = [$auth["prog"], "-S", ...$auth["params"], "-U", $username];
+
+and sends the password to the program on its standard input instead of in
+the arguments.  There are no placeholders.  $auth["params"] is handled in
+the same way as for "ext": a string is split on whitespace and is not parsed
+as a shell command, so use the array form for arguments containing spaces or
+shell quoting.
+
 Creating a new session scheme
 ==============================
 
