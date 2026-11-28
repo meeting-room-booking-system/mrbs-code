@@ -478,8 +478,7 @@ function get_field_rooms($value, bool $disabled=false) : FieldSelect
         'data-max_duration_enabled'     => ($areas[$a]['max_duration_enabled']) ? 1 : 0,
         'data-max_duration_secs'        => $areas[$a]['max_duration_secs'],
         'data-max_duration_periods'     => $areas[$a]['max_duration_periods'],
-        'data-max_duration_qty'         => $areas[$a]['max_duration_qty'],
-        'data-max_duration_units'       => $areas[$a]['max_duration_units'],
+        'data-max_duration_string'      => $areas[$a]['max_duration_string'],
         'data-timezone'                 => $areas[$a]['timezone']
       ));
     $field->addElement($select);
@@ -1622,9 +1621,16 @@ while (false !== ($row = $res->next_row_keyed()))
   {
     $row['resolution'] = 60;
   }
-  // Generate some derived settings
-  $row['max_duration_qty'] = $row['max_duration_secs'];
-  toTimeString($row['max_duration_qty'], $row['max_duration_units']);
+  // Generate the maximum duration as a string, in the web language.
+  if ($row['enable_periods'])
+  {
+    $row['max_duration_string'] = get_vocab('duration_periods', $row['max_duration_periods']);
+  }
+  else
+  {
+    $row['max_duration_string'] = get_duration_string_times($row['max_duration_secs']);
+  }
+
   // Get the start and end of the booking day
   if ($row['enable_periods'])
   {

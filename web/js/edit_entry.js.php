@@ -175,9 +175,17 @@ const changeRepIntervalUnits = function changeRepIntervalUnits() {
 // by default the current area
 const areaConfig = function areaConfig(property, areaId) {
 
-  const properties = ['enable_periods', 'n_periods', 'default_duration', 'max_duration_enabled',
-    'max_duration_secs', 'max_duration_periods', 'max_duration_qty',
-    'max_duration_units', 'timezone'];
+  const properties = [
+    'enable_periods',
+    'n_periods',
+    'default_duration',
+    'max_duration_enabled',
+    'max_duration_secs',
+    'max_duration_periods',
+    'max_duration_string',
+    'timezone'
+  ];
+
   let i, p, room;
 
   if ($.inArray(property, properties) < 0)
@@ -1165,9 +1173,8 @@ function adjustSlotSelectors()
     const maxDurationEnabled = areaConfig('max_duration_enabled');
     const maxDurationSecs = areaConfig('max_duration_secs');
     const maxDurationPeriods = areaConfig('max_duration_periods');
-    const maxDurationQty = areaConfig('max_duration_qty');
-    const maxDurationUnits = areaConfig('max_duration_units');
-    const secondsPerDay      = <?php echo SECONDS_PER_DAY ?>;
+    const maxDurationString = areaConfig('max_duration_string');
+    const secondsPerDay = <?php echo SECONDS_PER_DAY ?>;
     let duration, maxDuration;
 
     <?php
@@ -1197,26 +1204,8 @@ function adjustSlotSelectors()
         {
           if (i === 0)
           {
-            let maxDurationString;
             endSelect.append($(this).val(thisValue).text(nbsp));
             let errorMessage = '<?php echo get_js_vocab("max_booking_duration") ?>';
-            <?php // TODO: use MessageFormatter for duration ?>
-            if (enablePeriods)
-            {
-              maxDurationString = maxDurationPeriods + nbsp;
-              if (maxDurationPeriods > 1)
-              {
-                maxDurationString += '<?php echo get_js_vocab('periods') ?>';
-              }
-              else
-              {
-                maxDurationString += '<?php echo get_js_vocab('period') ?>';
-              }
-            }
-            else
-            {
-              maxDurationString = maxDurationQty + nbsp + maxDurationUnits;
-            }
             errorMessage = errorMessage.replace('{duration}', maxDurationString);
             $('#end_time_error').text(errorMessage);
           }
