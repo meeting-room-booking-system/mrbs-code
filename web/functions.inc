@@ -22,6 +22,8 @@ require_once "mrbs_sql.inc";
 /**
  * A wrapper for Language::getVocab() to avoid (a) having to replace
  * get_vocab() everywhere, and (b) having to use the long method call.
+ *
+ * @see Language::getVocab()
  */
 function get_vocab(string $tag, ...$values) : string
 {
@@ -32,6 +34,8 @@ function get_vocab(string $tag, ...$values) : string
 /**
  * A wrapper for Language::getVocab() to avoid (a) having to replace
  * get_vocab() everywhere, and (b) having to use the long method call.
+ *
+ * @see Language::getVocab()
  */
 function get_mail_vocab(string $tag, ...$values) : string
 {

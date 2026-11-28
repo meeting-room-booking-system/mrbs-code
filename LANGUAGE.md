@@ -108,6 +108,8 @@ for one, two, few and other.  Other languages have different forms for zero and 
 generate the appropriate keyword (`zero`, `one`, `two`, `few`, `many`, or `other`) given the language and the number
 of items.
 
+Named variables can also be used in MessageFormatter patterns, for example `"The maximum duration of a booking is {duration}"`.
+
 Although the `intl` extension is recommended for the best results, MRBS provides a fallback mechanism if
 it is not available.  However, the fallback is very basic and, for plurals, will only produce `one` if the
 quantity is 1, otherwise `other`. For this

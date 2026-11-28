@@ -448,7 +448,8 @@ class Language
    * The string can be an intl MessageFormatter pattern, or a string that can be formatted using sprintf().
    *
    * @param bool $raw If true, return the raw vocab string without value substitution.
-   * @param mixed ...$values Optional values to be inserted into the string, as for sprintf()
+   * @param mixed ...$values Optional values to be inserted into the string, as for sprintf().  Alternatively a
+   * single array of values can be passed in, which will be used as the values array for the message formatter.
    * @return string The vocab string, or the tag itself if there is no string.
    */
   public function getVocab(string $tag, string $locale, bool $raw=false, ...$values) : string
@@ -476,7 +477,9 @@ class Language
     if (preg_match('/{.*}/', $vocab[$locale][$tag]))
     {
       $message_formatter = new \MessageFormatter($locale, $vocab[$locale][$tag]);
-      return $message_formatter->format($values);
+      // If the first value is an array (eg because we're using named variables), use it as the values array for the
+      // message formatter.
+      return $message_formatter->format(((count($values) > 0) && is_array($values[0])) ? $values[0] : $values);
     }
 
     // Or if there are values to insert, use sprintf to format the string.

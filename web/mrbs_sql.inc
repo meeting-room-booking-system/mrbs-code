@@ -729,8 +729,8 @@ function mrbsCheckPolicy(array $booking, ?int $ignore_entry_id=null, ?int $ignor
         if ($booking['end_time'] > $max_endtime)
         {
           $tag = (empty($exempt_types['max_duration_periods'])) ? 'max_booking_duration' : 'max_booking_duration_type';
-          $units = ($max_duration_periods > 1) ? get_vocab("periods") : get_vocab("period");
-          $violations[] = get_vocab($tag, $max_duration_periods, $units, get_type_vocab($booking['type']));
+          $duration = get_vocab('duration_periods', $max_duration_periods);
+          $violations[] = get_vocab($tag, ['duration' => $duration, 'type' => get_type_vocab($booking['type'])]);
         }
       }
     }
@@ -738,9 +738,8 @@ function mrbsCheckPolicy(array $booking, ?int $ignore_entry_id=null, ?int $ignor
             ($booking['end_time'] - $booking['start_time'] > $max_duration_secs))
     {
       $tag = (empty($exempt_types['max_duration_secs'])) ? 'max_booking_duration' : 'max_booking_duration_type';
-      $max_duration = $max_duration_secs;
-      toTimeString($max_duration, $units);
-      $violations[] = get_vocab($tag, $max_duration, $units, get_type_vocab($booking['type']));
+      $duration = get_duration_string_times($max_duration_secs);
+      $violations[] = get_vocab($tag, ['duration' => $duration, 'type' => get_type_vocab($booking['type'])]);
     }
   }
 

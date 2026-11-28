@@ -1192,21 +1192,32 @@ function adjustSlotSelectors()
           duration += dateDifference * secondsPerDay;
         }
         maxDuration = (enablePeriods) ? maxDurationPeriods : maxDurationSecs;
+        <?php // TODO Take account of exempt types ?>
         if (duration > maxDuration)
         {
           if (i === 0)
           {
+            let maxDurationString;
             endSelect.append($(this).val(thisValue).text(nbsp));
-            let errorMessage = '<?php echo get_js_vocab("max_booking_duration") ?>' + nbsp;
+            let errorMessage = '<?php echo get_js_vocab("max_booking_duration") ?>';
+            <?php // TODO: use MessageFormatter for duration ?>
             if (enablePeriods)
             {
-              errorMessage += maxDurationPeriods + nbsp;
-              errorMessage += (maxDurationPeriods > 1) ? vocab.periods.plural : vocab.periods.singular;
+              maxDurationString = maxDurationPeriods + nbsp;
+              if (maxDurationPeriods > 1)
+              {
+                maxDurationString += '<?php echo get_js_vocab('periods') ?>';
+              }
+              else
+              {
+                maxDurationString += '<?php echo get_js_vocab('period') ?>';
+              }
             }
             else
             {
-              errorMessage += maxDurationQty + nbsp + maxDurationUnits;
+              maxDurationString = maxDurationQty + nbsp + maxDurationUnits;
             }
+            errorMessage = errorMessage.replace('{duration}', maxDurationString);
             $('#end_time_error').text(errorMessage);
           }
           else
