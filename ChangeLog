@@ -1,4 +1,388 @@
-commit 1c1aa53ba (HEAD -> main)
+commit d887c4c5a (HEAD -> main)
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Sat Nov 28 09:38:07 2026 +0000
+
+    Bump version number to 1.13.2
+    
+    Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+
+ web/version_num.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit fc072ddc7
+Merge: 7d7054d7d e7ed04e7a
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Sat Nov 28 09:37:57 2026 +0000
+
+    Merge branch 'fix-authnw-injection'
+    
+    Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+
+commit 7d7054d7d (origin/main, origin/HEAD)
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Fri Nov 27 15:59:33 2026 +0000
+
+    Fix bug causing an extra colon to appear after the DataTables labels when the French translations are being used.
+
+ web/css/mrbs.css.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 83e8cc618
+Merge: e41ccecee d67faac8c
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Fri Nov 27 15:09:42 2026 +0000
+
+    Merge branch 'messageformatter'
+
+commit d67faac8c
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Fri Nov 27 15:09:16 2026 +0000
+
+    Rename functions
+
+ web/functions.inc      | 8 ++++----
+ web/functions_mail.inc | 4 ++--
+ web/functions_view.inc | 2 +-
+ web/pending.php        | 2 +-
+ web/report.php         | 2 +-
+ 5 files changed, 9 insertions(+), 9 deletions(-)
+
+commit e41ccecee
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Fri Nov 27 14:30:17 2026 +0000
+
+    Fix bug causing vocab strings to be escaped twice (as demonstrated with the French translation).  This bug wasn't apparent until 83b8253.
+
+ web/edit_entry.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 22d3b4626
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Fri Nov 27 13:52:11 2026 +0000
+
+    Remove reference to $clipped as it is no longer supported.  See GitHub Issue #4094.
+
+ web/systemdefaults.inc.php | 7 -------
+ 1 file changed, 7 deletions(-)
+
+commit 29a37c32a
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Fri Nov 27 12:30:34 2026 +0000
+
+    Fix French translation for the tag 'no_users_create_first_admin'.
+
+ web/lang/lang.fr | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 376ead0cd (origin/messageformatter)
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Fri Nov 27 11:45:06 2026 +0000
+
+    Add remaining translations for units.
+
+ web/lang/lang.eu         |  8 ++++++++
+ web/lang/lang.fi         |  8 ++++++++
+ web/lang/lang.fr         |  8 ++++++++
+ web/lang/lang.gl         |  8 ++++++++
+ web/lang/lang.he         |  8 ++++++++
+ web/lang/lang.hu         |  8 ++++++++
+ web/lang/lang.id         |  8 ++++++++
+ web/lang/lang.it         | 24 ++++++++++++++++--------
+ web/lang/lang.ja         |  8 ++++++++
+ web/lang/lang.ko         |  8 ++++++++
+ web/lang/lang.ms         |  8 ++++++++
+ web/lang/lang.nb         |  8 ++++++++
+ web/lang/lang.nl         |  8 ++++++++
+ web/lang/lang.pt         |  8 ++++++++
+ web/lang/lang.pt-br      |  8 ++++++++
+ web/lang/lang.ro         |  8 ++++++++
+ web/lang/lang.ru         |  8 ++++++++
+ web/lang/lang.sk         |  8 ++++++++
+ web/lang/lang.sl         |  8 ++++++++
+ web/lang/lang.sr-latn-rs |  8 ++++++++
+ web/lang/lang.sv         |  8 ++++++++
+ web/lang/lang.th         |  8 ++++++++
+ web/lang/lang.tr         |  8 ++++++++
+ web/lang/lang.zh-hans    |  8 ++++++++
+ web/lang/lang.zh-hant    |  8 ++++++++
+ 25 files changed, 208 insertions(+), 8 deletions(-)
+
+commit 9883fb0fb
+Merge: 6f93bb727 9dcec7e76
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Fri Nov 27 08:59:10 2026 +0000
+
+    Merge branch 'main' into messageformatter
+
+commit 9dcec7e76
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Fri Nov 27 08:58:42 2026 +0000
+
+    Add missing Basque translations for durations.
+
+ web/lang/lang.eu | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit 6f93bb727
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Fri Nov 27 08:43:23 2026 +0000
+
+    Add Spanish translations for units
+
+ web/lang/lang.es | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+commit 44aba88e2
+Merge: 0a8e846a4 c9016db68
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Thu Nov 26 18:48:16 2026 +0000
+
+    Merge branch 'main' into messageformatter
+
+commit c9016db68
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Thu Nov 26 18:46:40 2026 +0000
+
+    Add missing Spanish translations for durations.
+
+ web/lang/lang.es | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit 0a8e846a4
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Thu Nov 26 18:36:21 2026 +0000
+
+    Convert repeat interval units to use MessageFormatter patterns (not all languages yet)
+
+ web/functions_mail.inc      |  5 ++--
+ web/js/edit_entry.js.php    | 56 +++++++++++++++++++++++------------
+ web/lang/lang.ca            |  8 +++++
+ web/lang/lang.cs            |  8 +++++
+ web/lang/lang.da            |  8 +++++
+ web/lang/lang.de            |  8 +++++
+ web/lang/lang.el            |  8 +++++
+ web/lang/lang.en            |  8 +++++
+ web/lang/lang.pl            |  8 +++++
+ web/lib/MRBS/RepeatRule.php | 43 ++++++++++-----------------
+ 10 files changed, 111 insertions(+), 49 deletions(-)
+
+commit 5ef1eb798
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Wed Nov 25 15:27:38 2026 +0000
+
+    Fix bug causing the edit_entry form not to be displayed after pressing the Back button following trying to make a booking resulting in a conflict.  The bug only manifests itself if the config variable $is_mandatory_field contains a field which doesn't exist in the database table.
+
+ web/js/edit_entry.js.php | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
+
+commit e7ed04e7a (ghsa-r36v/fix-authnw-injection, fix-authnw-injection)
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Tue Nov 24 22:46:40 2026 +0000
+
+    Fix authentication bypass and command injection in AuthPop3
+    
+    - Read the server greeting after reconnecting for USER/PASS authentication.
+      Previously the greeting was consumed as the USER response, so responses
+      were out of step and any password was accepted.
+    - Reject usernames and passwords containing CR or LF to prevent injection
+      of additional POP3 commands.
+    - Pair hosts and ports by position using array_values().
+    - Check for fgets() failures and send QUIT before closing connections.
+    
+    Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+
+ web/lib/MRBS/Auth/AuthPop3.php | 48 ++++++++++++++++++++++++--------
+ 1 file changed, 37 insertions(+), 11 deletions(-)
+
+commit 27a2a7379
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Tue Nov 24 16:49:32 2026 +0000
+
+    Fix command injection in AuthNw
+    
+    - AuthNw now extends AuthExt and runs the external program without a
+      shell, passing the username as a separate argument and the password on
+      stdin.
+    - Move the params handling and process execution in AuthExt into
+      protected methods so they can be shared.
+    - $auth['params'] for the nw scheme is now handled in the same way as for
+      the ext scheme.
+    - Document the nw scheme in AUTHENTICATION.
+    
+    Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+
+ AUTHENTICATION                | 11 ++++
+ web/lib/MRBS/Auth/AuthExt.php | 95 +++++++++++++++++++++++++--------
+ web/lib/MRBS/Auth/AuthNw.php  | 24 ++++-----
+ 3 files changed, 95 insertions(+), 35 deletions(-)
+
+commit cb0fad53f
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Mon Nov 23 17:28:15 2026 +0000
+
+    Simplify code
+
+ web/mrbs_sql.inc | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
+
+commit 8ba434810
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Mon Nov 23 17:22:04 2026 +0000
+
+    Fix DocBlock
+
+ web/mrbs_sql.inc | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
+
+commit e91de8f74
+Merge: 759a5856d ee9332d32
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Mon Nov 23 14:00:42 2026 +0000
+
+    Merge remote-tracking branch 'origin/main'
+
+commit 759a5856d
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Mon Nov 23 13:59:45 2026 +0000
+
+    Fix update_last_reminded which (a) was not updating the correct row in the repeat table and (b) was not updating all the other entries in a series.  Also enclosed the queries in a transaction.
+
+ web/mrbs_sql.inc | 78 ++++++++++++++++++++++++++++------------------
+ 1 file changed, 47 insertions(+), 31 deletions(-)
+
+commit ee9332d32
+Author: vittorio-alfieri <125898953+vittorio-alfieri@users.noreply.github.com>
+Date:   Mon Nov 23 14:29:31 2026 +0100
+
+    Updated Italian translation, thanks to @vittorio-alfieri
+    
+    * Update lang.it to 1.13.1
+    
+    I have updated the Italian translation, correcting several inaccurate entries to better reflect reality and adding various entries that were missing compared to the English version 1.13.1.
+    
+    * Update Italian translation for repetition interval error
+    
+    Co-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>
+    
+    * Update Italian language translations for clarity
+    
+    ---------
+    
+    Co-authored-by: Copilot Autofix powered by AI <175728472+Copilot@users.noreply.github.com>
+
+ web/lang/lang.it | 339 +++++++++++++++++++++++++++++++--------------
+ 1 file changed, 235 insertions(+), 104 deletions(-)
+
+commit a248933ca
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sun Nov 22 21:13:56 2026 +0000
+
+    Add comment.
+
+ web/mrbs_sql.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 84c1d8968
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sun Nov 22 21:07:35 2026 +0000
+
+    Convert comment to DocBlock
+
+ web/mrbs_sql.inc | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
+
+commit c0af5c60f
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sun Nov 22 21:01:26 2026 +0000
+
+    Add type declarations
+
+ web/mrbs_sql.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit f79e0daa8
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sun Nov 22 20:44:55 2026 +0000
+
+    Convert comments to DocBlocks
+
+ web/functions.inc | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
+
+commit 9f9dbbe15
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sun Nov 22 16:47:34 2026 +0000
+
+    Add a sites directory and a sites/README.md file, partly to explain what the directory is for and partly to persuade GitHub to commit an empty directory.
+
+ web/sites/README.md (new) | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+commit 964402837
+Merge: 6c1c18fb3 fdb0abb62
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sun Nov 22 10:30:17 2026 +0000
+
+    Merge branch 'messageformatter'
+
+commit fdb0abb62
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sun Nov 22 09:38:24 2026 +0000
+
+    Convert remaining translations for 'unique_addresses_copied' to use MessageFormatter patterns.
+
+ web/lang/lang.ca | 5 ++++-
+ web/lang/lang.de | 5 ++++-
+ web/lang/lang.en | 5 ++++-
+ web/lang/lang.es | 5 ++++-
+ web/lang/lang.gl | 4 +++-
+ web/lang/lang.nb | 5 ++++-
+ web/lang/lang.ru | 7 ++++++-
+ 7 files changed, 29 insertions(+), 7 deletions(-)
+
+commit 496ca68e3
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sun Nov 22 08:45:30 2026 +0000
+
+    Fix error in English translation.
+
+ web/lang/lang.en | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit a756ff9bc
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sat Nov 21 12:05:55 2026 +0000
+
+    Add backward compatibility so that old sprintf()-style strings are handled (users may have them in $vocab_override).
+
+ web/js/datatables.js.php                     |  2 +-
+ web/js/functions.js.php                      | 12 ++++++++++--
+ web/lib/MRBS/Intl/MessageFormatterHelper.php | 17 +++++++++++++----
+ 3 files changed, 24 insertions(+), 7 deletions(-)
+
+commit 3288caee7
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sat Nov 21 11:16:38 2026 +0000
+
+    Use MessageFormatter patterns for 'unique_addresses_copied' (English only at the moment).
+
+ web/js/datatables.js.php | 15 ++++++++++++---
+ web/lang/lang.en         |  2 +-
+ 2 files changed, 13 insertions(+), 4 deletions(-)
+
+commit 6c1c18fb3 (tag: v1.13.1)
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Sat Nov 21 10:44:43 2026 +0000
+
+    Update NEWS and rebuild ChangeLog for 1.13.1
+    
+    Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+
+ ChangeLog | 810 +++++++++++++++++++++++++++++++++++++++++++++++++++-
+ NEWS      |  47 +++
+ 2 files changed, 855 insertions(+), 2 deletions(-)
+
+commit 1c1aa53ba
 Author: John Beranek <jberanek@users.sourceforge.net>
 Date:   Sat Nov 21 10:44:35 2026 +0000
 
@@ -20,7 +404,24 @@ Date:   Sat Nov 21 10:44:30 2026 +0000
  web/version_num.inc | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit 9ce76801a (origin/main, origin/HEAD)
+commit 422f7a7a1
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sat Nov 21 10:41:50 2026 +0000
+
+    Simplify code.
+
+ web/js/edit_entry.js.php |  6 ++--
+ web/js/functions.js.php  | 60 ++++++++++++++++++++------------------
+ 2 files changed, 33 insertions(+), 33 deletions(-)
+
+commit ee87030ae
+Merge: f86ab7cc6 9ce76801a
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sat Nov 21 07:02:47 2026 +0000
+
+    Merge branch 'main' into messageformatter
+
+commit 9ce76801a
 Author: campbell-m <github@campbellmorrison.co.uk>
 Date:   Sat Nov 21 07:00:50 2026 +0000
 
@@ -47,7 +448,16 @@ Date:   Sat Nov 21 06:27:39 2026 +0000
  web/js/edit_users.js.php | 18 +++++++-----------
  1 file changed, 7 insertions(+), 11 deletions(-)
 
-commit e3334bfdb (origin/messageformatter)
+commit f86ab7cc6
+Author: campbell-m <github@campbellmorrison.co.uk>
+Date:   Sat Nov 21 05:30:31 2026 +0000
+
+    Improve getPluralStrings() so that it can handle patterns that have simple strings before and after the placeholder.
+
+ web/lib/MRBS/Intl/MessageFormatterHelper.php | 38 +++++++++++++++---
+ 1 file changed, 33 insertions(+), 5 deletions(-)
+
+commit e3334bfdb
 Merge: e7158aff4 1c62f30a3
 Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
 Date:   Fri Nov 20 16:19:57 2026 +0000

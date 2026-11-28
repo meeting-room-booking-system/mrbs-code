@@ -7,6 +7,47 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.13.2 (Sat 28th November 2026):
+
+[-] Fix command injection in 'nw' authentication by passing the username as a separate
+ argument to the external program, safely escaped on older PHP versions.  $auth["params"]
+ is now handled as in 'ext' authentication: shell syntax is no longer interpreted, so use
+ an array for arguments containing spaces.  'nw' authentication on Windows now has the
+ same PHP version restrictions as 'ext'.  Thanks to EZO Labs Security (GitHub:
+ @superbot-helper) for reporting the vulnerability.  See GitHub Security Advisory
+ GHSA-r36v-wm3p-29q6.
+
+[-] Fix an authentication bypass and command injection in 'pop3' authentication by
+ reading the server greeting after reconnecting and rejecting usernames and passwords
+ containing CR or LF.  Thanks to EZO Labs Security (GitHub: @superbot-helper) for
+ reporting the vulnerabilities.  See GitHub Security Advisory GHSA-r4hh-fv49-vh6c.
+
+[-] Fix reminder times not being updated for the correct repeating series and all its
+ entries when reminding admins about an individual booking in the series.
+
+[-] Fix bug causing the booking form not to be displayed after pressing Back following a
+ booking conflict when $is_mandatory_field contains a field not in the database table.
+
+[-] Fix vocabulary strings being escaped twice on the booking form.
+
+[-] Fix an extra colon appearing after DataTables labels in the French translation.
+
+[-] Fix the French translation for creating the first admin user.
+
+[*] Update the Italian translation, correcting and adding vocabulary entries.  Thanks to
+ Vittorio Alfieri (GitHub: @vittorio-alfieri).
+
+[*] Convert repeat interval units and the message for copied email addresses to use
+ MessageFormatter patterns, and add missing duration translations.
+
+[*] Support old sprintf()-style strings in $vocab_override for converted language strings.
+
+[*] Improve the MessageFormatter fallback to handle patterns with simple strings before
+ and after the placeholder.
+
+[*] Remove the obsolete $clipped configuration setting.  See GitHub Issue #4094.
+
+-------------------------------------------------------------------------------
 Version 1.13.1 (Sat 21st November 2026):
 
 [+] Add support for intl MessageFormatter patterns in language strings, giving better
