@@ -129,7 +129,7 @@ class AuthDb extends AuthDbAbstract
    *   false    - The pair are invalid or do not exist
    *   string   - The validated username
    */
-  private function validateUsername(
+  protected function validateUsername(
     #[\SensitiveParameter]
     ?string $user,
     #[\SensitiveParameter]
@@ -802,7 +802,7 @@ class AuthDb extends AuthDbAbstract
    *
    * @return array An array of rows for all users with the email address `$email`.
    */
-  private function getUsersByEmail(string $email) : array
+  protected function getUsersByEmail(string $email) : array
   {
     global $auth;
 

@@ -34,6 +34,8 @@ function session() : Session
   if (is_null($session_obj))
   {
     $session_obj = SessionFactory::create($auth['session']);
+    // $session_obj is now set, so session() can be called safely from the hook
+    $session_obj->handleRequest();
   }
 
   return $session_obj;
