@@ -1178,12 +1178,16 @@ function adjustSlotSelectors()
     let duration, maxDuration;
 
     <?php
-    // Limit the end slots to the maximum duration if that is enabled, if the
-    // user is not a booking admin
+    // If the user is not a booking admin, then limit the end slots to the maximum duration if that is enabled and
+    // the type is not exempt.
     ?>
     if (!isBookAdmin)
     {
-      if (maxDurationEnabled)
+      const exemptTypes = <?php echo json_encode($exempt_types) ?>;
+      const type = $('#type').val();
+      if (maxDurationEnabled &&
+          ((enablePeriods && (exemptTypes.max_duration_periods.indexOf(type) === -1)) ||
+           (!enablePeriods && (exemptTypes.max_duration_secs.indexOf(type) === -1))) )
       {
         <?php
         // Calculate the duration in periods or seconds
@@ -1199,13 +1203,25 @@ function adjustSlotSelectors()
           duration += dateDifference * secondsPerDay;
         }
         maxDuration = (enablePeriods) ? maxDurationPeriods : maxDurationSecs;
-        <?php // TODO Take account of exempt types ?>
+
         if (duration > maxDuration)
         {
           if (i === 0)
           {
+            let errorMessage;
             endSelect.append($(this).val(thisValue).text(nbsp));
-            let errorMessage = '<?php echo get_js_vocab("max_booking_duration") ?>';
+            if ((enablePeriods && exemptTypes.max_duration_periods.length) ||
+                (!enablePeriods && exemptTypes.max_duration_secs.length))
+            {
+              <?php // We don't need the admin booking types because we're not an admin ?>
+              const typeStrings = <?php echo json_encode(get_type_options(false)) ?>;
+              errorMessage = '<?php echo get_js_vocab("max_booking_duration_type") ?>';
+              errorMessage = errorMessage.replace('{type}', typeStrings[type]);
+            }
+            else
+            {
+              errorMessage = '<?php echo get_js_vocab("max_booking_duration") ?>';
+            }
             errorMessage = errorMessage.replace('{duration}', maxDurationString);
             $('#end_time_error').text(errorMessage);
           }
