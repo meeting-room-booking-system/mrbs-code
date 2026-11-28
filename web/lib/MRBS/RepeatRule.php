@@ -78,54 +78,41 @@ class RepeatRule
   }
 
 
-  // Returns the interval units, in the local language.  If $for_mail
-  // is set the mail language is used.
-  public function getIntervalUnits(bool $for_mail=false) : string
+  /**
+   * Get the interval units in the required language.
+   *
+   * @param ?string $lang The language to use; if not set then the web language is used.
+   */
+  public function getIntervalUnits(?string $lang=null) : string
   {
+    $lang = $lang ?? Language::getInstance()->getWebLang();
     $repeat_type = $this->getType();
-    $repeat_interval = $this->getInterval();
 
-    if ($for_mail)
+    if ($repeat_type !== RepeatRule::NONE)
     {
       switch ($repeat_type)
       {
         case RepeatRule::DAILY:
-          return ($repeat_interval == 1) ? get_mail_vocab('day') : get_mail_vocab('days');
+          $key = "days";
           break;
         case RepeatRule::WEEKLY:
-          return ($repeat_interval == 1) ? get_mail_vocab('week') : get_mail_vocab('weeks');
+          $key = "weeks";
           break;
         case RepeatRule::MONTHLY:
-          return ($repeat_interval == 1) ? get_mail_vocab('month') : get_mail_vocab('months');
+          $key = "months";
           break;
         case RepeatRule::YEARLY:
-          return ($repeat_interval == 1) ? get_mail_vocab('year') : get_mail_vocab('years');
+          $key = "years";
           break;
         default:
-          return '';
+          trigger_error("Invalid repeat type: $repeat_type", E_USER_WARNING);
           break;
       }
     }
 
-    switch ($repeat_type)
-    {
-      case RepeatRule::DAILY:
-        return ($repeat_interval == 1) ? get_vocab('day') : get_vocab('days');
-        break;
-      case RepeatRule::WEEKLY:
-        return ($repeat_interval == 1) ? get_vocab('week') : get_vocab('weeks');
-        break;
-      case RepeatRule::MONTHLY:
-        return ($repeat_interval == 1) ? get_vocab('month') : get_vocab('months');
-        break;
-      case RepeatRule::YEARLY:
-        return ($repeat_interval == 1) ? get_vocab('year') : get_vocab('years');
-        break;
-      default:
-        return '';
-        break;
-    }
+    return (isset($key)) ? Language::getInstance()->getVocab("units_$key", $lang, false, $this->getInterval()) : '';
   }
+
 
   public function getMonthlyAbsolute() : ?int
   {

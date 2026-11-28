@@ -126,28 +126,46 @@ const changeRepTypeDetails = function changeRepTypeDetails() {
 ?>
 const changeRepIntervalUnits = function changeRepIntervalUnits() {
   const repType = parseInt($('input[name="rep_type"]:checked').val(), 10);
-  const repInterval = parseInt($('input[name="rep_interval"]').val(), 10);
   const units = $('#interval_units');
-  let text;
-  switch (repType)
+
+  if (repType !== <?php echo RepeatRule::NONE ?>)
   {
-    case <?php echo RepeatRule::DAILY ?>:
-      text = (repInterval === 1) ? '<?php echo get_js_vocab('day') ?>' : '<?php echo get_js_vocab('days') ?>';
-      break;
-    case <?php echo RepeatRule::WEEKLY ?>:
-      text = (repInterval === 1) ? '<?php echo get_js_vocab('week') ?>' : '<?php echo get_js_vocab('weeks') ?>';
-      break;
-    case <?php echo RepeatRule::MONTHLY ?>:
-      text = (repInterval === 1) ? '<?php echo get_js_vocab('month') ?>' : '<?php echo get_js_vocab('months') ?>';
-      break;
-    case <?php echo RepeatRule::YEARLY ?>:
-      text = (repInterval === 1) ? '<?php echo get_js_vocab('year') ?>' : '<?php echo get_js_vocab('years') ?>';
-      break;
-    default:
-      text = units.text();
-      break;
+    const repInterval = parseInt($('input[name="rep_interval"]').val(), 10);
+    const pluralStrings = {};
+    <?php
+    // We have to use getWebLang() rather than args.langs, because the languages in args.lang are not guaranteed to have
+    // an associated vocab file in the lang directory.
+    $lang = Language::getInstance()->getWebLang();
+    echo "const lang = '" . escape_js($lang) . "';\n";
+    foreach (['days', 'weeks', 'months', 'years'] as $units) {
+      $pattern = Language::getInstance()->getVocab("units_$units", $lang, true);
+      $plural_strings = MessageFormatterHelper::getPluralStrings($pattern);
+      // No need to escape $plural_strings for JavaScript because json_encode() will do it for us.
+      echo "pluralStrings.$units = " . json_encode($plural_strings) . ";\n";
+    }
+    ?>
+    let key;
+
+    switch (repType)
+    {
+      case <?php echo RepeatRule::DAILY ?>:
+        key = 'days';
+        break;
+      case <?php echo RepeatRule::WEEKLY ?>:
+        key = 'weeks';
+        break;
+      case <?php echo RepeatRule::MONTHLY ?>:
+        key = 'months';
+        break;
+      case <?php echo RepeatRule::YEARLY ?>:
+        key = 'years';
+        break;
+      default:
+        console.warn("Unknown repeat type: " + repType);
+        break;
+    }
+    units.text((key === undefined) ? '' : pluralString(pluralStrings[key], repInterval, lang));
   }
-  units.text(text);
 
   units.parent().toggle(repType !== <?php echo RepeatRule::NONE ?>);
 };
@@ -1444,15 +1462,21 @@ $(document).on('page_ready', function() {
           if (Array.isArray(value))
           {
             const field = $('[name="' + fieldName + '"]');
-            if (value.includes(parseInt(newArea)))
+            <?php
+            // Check the field exists. It might have been defined in $is_mandatory_field, but not exist in the table.
+            ?>
+            if (field.length)
             {
-              field.prop('required', true);
-            }
-            else
-            {
-              field.prop('required', false);
-              <?php // Clear any existing error messages ?>
-              field[0].setCustomValidity('');
+              if (value.includes(parseInt(newArea)))
+              {
+                field.prop('required', true);
+              }
+              else
+              {
+                field.prop('required', false);
+                <?php // Clear any existing error messages ?>
+                field[0].setCustomValidity('');
+              }
             }
           }
         }

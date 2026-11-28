@@ -1466,7 +1466,7 @@ function fit_to_booking_day(int $t, bool $back=true) : int
  * @return string
  * @throws \Exception
  */
-function get_duration_string(int $start_time, int $end_time, int $area_id, ?string $lang=null) : string
+function get_interval_string(int $start_time, int $end_time, int $area_id, ?string $lang=null) : string
 {
   static $area_details = [];
 
@@ -1498,12 +1498,12 @@ function get_duration_string(int $start_time, int $end_time, int $area_id, ?stri
     }
   }
 
-  return get_duration_string_times($start_time, $end_time, $lang, $area_details[$area_id]['timezone']);
+  return get_interval_string_times($start_time, $end_time, $lang, $area_details[$area_id]['timezone']);
 }
 
 
 /**
- * Get a time duration as a string, for example "2 hours" or "1 jour".
+ * Get the duration of a "times mode" interval as a string, for example "2 hours" or "1 jour".
  *
  * @param int $start_time A Unix timestamp
  * @param int $end_time A Unix timestamp
@@ -1514,7 +1514,7 @@ function get_duration_string(int $start_time, int $end_time, int $area_id, ?stri
  * example, if the duration is 24 hours and `$max_unit` is set to 'hours' the result will be 24 hours rather than 1 day.
  * @return string
  */
-function get_duration_string_times(int $start_time, int $end_time, ?string $lang=null, ?string $tzid=null, string $max_unit='weeks') : string
+function get_interval_string_times(int $start_time, int $end_time, ?string $lang=null, ?string $tzid=null, string $max_unit='weeks') : string
 {
   // TODO: 'years' are not proper years; they are periods of 52 weeks.  Remove them?
   global $timezone;

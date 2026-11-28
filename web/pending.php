@@ -235,7 +235,7 @@ function display_entry_row(array $row) : void
   $link_str = date_string(!empty($row['enable_periods']), $row['start_time'], $row['area_id']);
   echo escape_html($link_str) . "</a></td>";
 
-  $duration_string = get_duration_string($row['start_time'], $row['end_time'], $row['area_id']);
+  $duration_string = get_interval_string($row['start_time'], $row['end_time'], $row['area_id']);
   // $duration_seconds is needed for sorting.
   $duration_seconds = $row['end_time'] - $row['start_time'] - cross_dst($row['start_time'], $row['end_time']);
   echo "<td><span title=\"" . $duration_seconds . "\"></span>" . escape_html($duration_string) . "</td>\n";

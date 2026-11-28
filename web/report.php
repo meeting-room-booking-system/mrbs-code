@@ -988,7 +988,7 @@ function report_row(&$rows, $data)
         // changes so that the users see what they expect to see.
         $duration_seconds = $data['end_time'] - $data['start_time'];
         $duration_seconds -= cross_dst($data['start_time'], $data['end_time']);
-        $d_string = get_duration_string($data['start_time'], $data['end_time'], $data['area_id']);
+        $d_string = get_interval_string($data['start_time'], $data['end_time'], $data['area_id']);
         $d_string = escape($d_string);
       case 'start_time':
         if ($data['enable_periods'])
